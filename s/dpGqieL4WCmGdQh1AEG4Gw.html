@@ -41,7 +41,7 @@
       <a href="https://blog.ops-coffee.cn/">
         <h1>运维咖啡吧</h1>
       </a>
-      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
     </div>
   </header>
 
@@ -122,16 +122,16 @@
 
 <h1 id="_3">流程管控</h1>
 <p>以数据库的密码管理为样例来介绍下我们的流程</p>
-<p><img alt="" src="/static/images/20181029.s01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20181029.s01.png" /></p>
 <ol>
 <li>运维通过加密系统生成RSA秘钥对，并将秘钥对放在生产服务器上，通知开发秘钥在服务器上的存放路径，由开发写在项目代码配置文件中</li>
 <li>DBA创建数据库账号密码，通过上一步运维生成的秘钥对密码进行加密，并将加密后的字符串给到开发写在项目代码配置文件中</li>
 </ol>
 <p>秘钥跟代码分离，这样在整个过程中，开发、运维都无法接触到数据库密码，每个角色得到的信息都够用且最少，减少中间出错或泄露的可能</p>
 <p>以上流程中，生成秘钥对和通过秘钥对密码进行加密我们已经在web端实现了这个功能，可以方便运维及DBA进行操作，界面如下：</p>
-<p><img alt="" src="/static/images/20181029.s02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20181029.s02.png" /></p>
 <p>以上界面为运维操作界面，可以生成秘钥、查看秘钥、下载秘钥</p>
-<p><img alt="" src="/static/images/20181029.s03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20181029.s03.png" /></p>
 <p>以上界面为DBA操作界面，可以选择秘钥并对密码进行加密生成加密后密文</p>
 <p>两个界面按权限划分，运维只能看到第一个界面，DBA只能看到第二个</p>
 <h1 id="_4">写在最后</h1>
@@ -184,7 +184,7 @@
 
         <div class="nav-cell clearfix">
             <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
-            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+            <img alt="" loading="lazy" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png" />
         </div>
     </div>
   </div>

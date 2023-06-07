@@ -41,7 +41,7 @@
       <a href="https://blog.ops-coffee.cn/">
         <h1>运维咖啡吧</h1>
       </a>
-      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
     </div>
   </header>
 
@@ -54,15 +54,15 @@
 <p>陆续有小伙伴问我能否写篇文章介绍一下配置中心的管理UI（Kerrigan）的实现，咖啡君就通过本篇文章来介绍Kerrigan的设计思路，以及用到的技术和部分核心代码，由于kerrigan有过一次改版，所以界面会与上面文章中的截图有出入</p>
 <h2 id="_1">界面与功能</h2>
 <p>用户登陆进入会看到一个简单的统计页面，展示配置文件相关数据</p>
-<p><img alt="" src="/static/images/20191220.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20191220.01.png" /></p>
 <p>这个实现非常简单就是对数据库数据进行查询统计，都是类似于下边这样的语句输出的结果</p>
 <div class="codehilite"><pre><span></span><code><span class="err">Config.objects.all().count()</span>
 </code></pre></div>
 
 <p>当点击“我的项目”标签时，会出现所有的项目，在这里可以搜索你要操作的项目，或是新建/导入项目</p>
-<p><img alt="" src="/static/images/20191220.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20191220.02.png" /></p>
 <p>当点击“新建/导入项目”时，可以选择从CMDB同步项目，或者自己填写项目名称新建配置中心中的项目，但由于我们配置中心和CMDB是打通的，配置中心里的所有项目都来源于CMDB，保证项目信息一致性，所以新建项目功能并没有被用到</p>
-<p><img alt="" src="/static/images/20191220.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20191220.03.png" /></p>
 <p>与CMDB系统的同步是通过http协议进行了，当点击“与CMDB同步”按钮时，会发送个get请求到cmdb服务器获取项目信息，cmdb采用<a href="/s/Kgj_5ydnT2W4Gt0vrw7gtw">JWT认证</a>，主要代码如下：</p>
 <div class="codehilite"><pre><span></span><code><span class="n">headers</span> <span class="o">=</span> <span class="err">{</span>
     <span class="ss">&quot;WWW-Authenticate&quot;</span><span class="p">:</span> <span class="ss">&quot;Token&quot;</span><span class="p">,</span>
@@ -74,7 +74,7 @@
 </code></pre></div>
 
 <p>在我的项目页面点击项目时，会进入项目的配置管理页面，这个页面列出了项目下的所有配置文件，也可以通过右上角的“添加配置”按钮添加配置文件</p>
-<p><img alt="" src="/static/images/20191220.04.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20191220.04.png" /></p>
 <p>当添加配置文件时，会做三件事情：</p>
 <ol>
 <li>配置文件表（Config）添加一条新数据</li>
@@ -142,9 +142,9 @@
 
 <p>除了History表操作之外，对于etcd的操作以及下边要说到的发布功能也是在signales里完成的，signals可以简化代码强化逻辑</p>
 <p>当点击“编辑”按钮后，会进入配置文件编辑页面，在这里可以修改、保存或发布配置文件，也可以拿当前配置文件与已发布配置文件做对比</p>
-<p><img alt="" src="/static/images/20191220.05.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20191220.05.png" /></p>
 <p>这里“保存”和“发布”的区别在于，保存只会将配置文件保存在Kerrigan内，不会修改etcd里的数据，从而实现客户端不更新，而发布会直接修改etcd里的数据，客户端能够直接更新，对于未发布的配置文件，当你点击配置文件时会有如下的提示，你可以对比或者发布</p>
-<p><img alt="" src="/static/images/20191220.06.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20191220.06.png" /></p>
 <p>判断是否发布主要是在Config表里加入了<code>is_published</code>字段，同样通过signals的post_save信号在每次保存时检查这个字段，如果为True，则修改对应etcd的值，否则不处理</p>
 <div class="codehilite"><pre><span></span><code><span class="err">@</span><span class="n">receiver</span><span class="p">(</span><span class="n">signals</span><span class="o">.</span><span class="n">post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">Config</span><span class="p">)</span>
 <span class="n">def</span> <span class="n">migrate_notify_post</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">created</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -158,15 +158,15 @@
 </code></pre></div>
 
 <p>系统中多次出现“对比”功能，都指的是当前配置文件和已发布配置文件的对比，通过对比可以清晰的看出修改的内容，对比结果展示如下</p>
-<p><img alt="" src="/static/images/20191220.07.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20191220.07.png" /></p>
 <p>对比功能主要用到了difflib模块，主要代码如下：</p>
 <div class="codehilite"><pre><span></span><code><span class="err">difflib.HtmlDiff().make_file(src_value, diff_value, context=True, numlines=3)</span>
 </code></pre></div>
 
 <p>每一次的添加或者修改都会往History表里写入一条新数据，“历史版本”便是直接读的History表，展示出谁在什么时间修改了什么内容</p>
-<p><img alt="" src="/static/images/20191220.08.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20191220.08.png" /></p>
 <p>当点击历史版本时可以查看此版本的配置文件内容，同时在必要的时候回滚，有了历史版本的内容，回滚也只是将历史内容覆盖到etcd</p>
-<p><img alt="" src="/static/images/20191220.09.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20191220.09.png" /></p>
 <p>至此，Kerrigan介绍完成，其最主要的功能是通过web浏览器来操作etcd里的KV数据，在此基础上做了扩展，对每一次的修改都做了记录，以实现实用的保存、发布、历史、回滚等功能</p>
 <p>最后再回顾一下整个配置中心的工作流程，配置管理员通过Kerrigan来添加或修改配置文件，Kerrigan记录修改，同时将修改同步至etcd，客户端上的confd服务在检测到etcd对应key的数据发生变化时，会自动拉取数据覆盖至本地配置文件，然后配合<code>check_cmd</code>和<code>reload_cmd</code>指令对配置文件进行检查和重载，更多细节原理回顾文章<a href="/s/uGUvV4jl4YIvNztuepdC8A">『中小团队落地配置中心详解』</a></p>
 
@@ -213,7 +213,7 @@
 
         <div class="nav-cell clearfix">
             <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
-            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+            <img alt="" loading="lazy" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png" />
         </div>
     </div>
   </div>

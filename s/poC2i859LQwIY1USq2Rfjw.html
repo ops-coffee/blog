@@ -41,7 +41,7 @@
       <a href="https://blog.ops-coffee.cn/">
         <h1>运维咖啡吧</h1>
       </a>
-      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
     </div>
   </header>
 
@@ -70,7 +70,7 @@
 </code></pre></div>
 
 <p>配合zmodemjs的前端实现，最终的效果如下</p>
-<p><img alt="" src="/static/images/20191206.gif" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20191206.gif" /></p>
 <p>当我完成了Web上使用rzsz上传下载文件功能后，遇到了一个棘手的问题，无论是监控还是录像，在sz下载时会将下载的文件二进制显示在屏幕上，这主要是因为通过zmodemjs可以解析webssh中的二进制文件流为文件，而监控和录像不行解析，这就需要监控和录像时过滤掉文件二进制流，起初我想通过分析二进制流来判断这段流究竟是文件还是文本，但最后发现无法准确识别，一个稍微靠谱的方法是对binary流进行decode解码，但不能保证100%准确</p>
 <p>又深入研究了zmodem协议是如何实现识别的，发现了zmodem的实现原理</p>
 <p>在服务器上执行sz命令后，会先输出<code>**B00000000000000</code>这样的内容，标识文件下载开始，当文件下载结束后会输出<code>OO</code>，取这两个特殊标记之间的二进制流组合成文件，就是要下载的完整文件</p>
@@ -119,7 +119,7 @@
 
         <div class="nav-cell clearfix">
             <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
-            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+            <img alt="" loading="lazy" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png" />
         </div>
     </div>
   </div>

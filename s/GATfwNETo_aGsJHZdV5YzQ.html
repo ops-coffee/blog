@@ -41,7 +41,7 @@
       <a href="https://blog.ops-coffee.cn/">
         <h1>运维咖啡吧</h1>
       </a>
-      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
     </div>
   </header>
 
@@ -55,7 +55,7 @@
 </blockquote>
 <h1 id="_1">实现方法</h1>
 <p>先来看下流程图：</p>
-<p><img alt="image" src="/static/images/20180703.devops.png" /></p>
+<p><img alt="image" loading="lazy" src="/static/images/20180703.devops.png" /></p>
 <p>工程师本地开发，开发完成后提交代码到代码仓库，[自动]触发jenkins进行持续集成与部署，部署完成会收到结果邮件。项目运行过程中可通过日志系统查看程序日志，有异常会触发监控系统发送报警。从编码到上线后结果反馈都可以工程师自主完成，形成完整闭环，运维则负责提供完整流程的工具链及协助异常情况的处理，工作量减少了，效率却高了。</p>
 <ul>
 <li>自动触发jenkins部署通过svn和git的hooks来实现，是否自动触发根据项目内部沟通决定，我们目前没有自动触发，原因是QA在测试的过程中不希望被自动触发的部署打断，不过也可以方便的在jenkins上手动触发执行</li>
@@ -161,7 +161,7 @@
 
         <div class="nav-cell clearfix">
             <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
-            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+            <img alt="" loading="lazy" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png" />
         </div>
     </div>
   </div>

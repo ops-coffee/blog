@@ -41,7 +41,7 @@
       <a href="https://blog.ops-coffee.cn/">
         <h1>运维咖啡吧</h1>
       </a>
-      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
     </div>
   </header>
 
@@ -57,7 +57,7 @@
 <p>日常工作中经常会接到把数据库整库或单表从生产环境导入到测试环境或测试A导入到测试B等数据库、表之间的数据互导需求，这类操作没有太高技术含量还费时费力容易出错，最适合做到自动化的流程中，这便是overmind要实现的第二个功能：工单+自动化数据迁移。</p>
 <p>为什么需要工单？目前的流程都是通过邮件的方式，需求邮件到DBA，DBA执行导数据的操作。自动化的流程理论来说应该从头至尾都无需人工参与，但涉及到数据安全问题，还是需要DBA确认，所以加了工单。同时工单具有状态自助追踪，减少沟通成本等优点，后续也方便统计工单量等指标，以便优化服务与流程。同时为了能够保证工单及时被处理，我们每一步都会增加邮件和IM的通知，给用户最及时的反馈。</p>
 <p>数据迁移的工单流程很简单，用户提交工单，DBA进行审核，审核通过系统自动执行迁移操作，审核不通过流程结束。流程图图如下：</p>
-<p><img alt="" src="/static/images/20181110.00.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20181110.00.png" /></p>
 <p>流程中没有加入项目leader等的多层审核方式，主要是因为</p>
 <ol>
 <li>尽量跟之前的邮件流程保持一致，避免给用户制造麻烦</li>
@@ -120,13 +120,13 @@
 <p>导数据属于耗时操作，在web中应异步执行，这里采用了Celery来处理，这篇文章<a href="/s/lXrp3igYo9W2UuE5Gauysg">Django配置Celery执行异步任务和定时任务</a>有详细介绍Django中Celery的使用</p>
 <h1 id="_3">系统界面</h1>
 <p>工单列表页：普通用户只显示自己提交的工单，工单状态一目了然，还有实用的搜索功能</p>
-<p><img alt="" src="/static/images/20181110.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20181110.01.png" /></p>
 <p>提交工单页：overmind维护了一份数据库列表，供系统里所有的功能使用，这里也不例外</p>
-<p><img alt="" src="/static/images/20181110.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20181110.02.png" /></p>
 <p>工单审核页：审核页和详情页其实是同一个页面，只是根据工单不同的状态展示不同的元素</p>
-<p><img alt="" src="/static/images/20181110.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20181110.03.png" /></p>
 <p>工单详情页：这里会详细记录这个工单的所有信息，提交、审核、执行的整个过程完整状态</p>
-<p><img alt="" src="/static/images/20181110.04.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20181110.04.png" /></p>
 <h1 id="_4">写在最后</h1>
 <ol>
 <li>好的需求来源于日常的工作，重复的工作都可以自动化</li>
@@ -176,7 +176,7 @@
 
         <div class="nav-cell clearfix">
             <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
-            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+            <img alt="" loading="lazy" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png" />
         </div>
     </div>
   </div>

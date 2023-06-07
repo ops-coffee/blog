@@ -41,7 +41,7 @@
       <a href="https://blog.ops-coffee.cn/">
         <h1>运维咖啡吧</h1>
       </a>
-      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
     </div>
   </header>
 
@@ -51,10 +51,10 @@
 
         <p>团队刚刚接手了另外一个部门的运维工作，与我们所有基础环境上云所不同的是他们还是传统IDC模式，维护了大量的物理服务器，最近新买了一批服务器需要上架，装系统、做RAID、初始化环境，原本是希望机房在装系统的同时就把RAID给搞定的，但机房那边表示他们只负责系统安装，RAID配置不负责，故事由此开始</p>
 <p>由于前期跟机房不太顺畅的沟通加上本次机器较多处理起来非常繁琐，所以负责这个事情的小伙伴就跟我吐槽了一下</p>
-<p><img alt="" src="/static/images/20211111.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20211111.01.png" /></p>
 <p>首先这个吐槽我是能理解的，由于新接手的项目且这个项目有点特殊，还未接入我们已经成熟的自动化的体系，对于这类工作还是需要人肉处理，处理起来不仅繁琐还枯燥无味，所以我想这个任务就别压在一个人的身上了，团队内都分担一下，就让小伙伴整理文档</p>
 <p>小伙伴很快整理好了文档，不仅是快而且写的还很清晰，每一步操作都有具体的说明，阶段性的操作还会写成一个小脚本，简单贴一点示例如下</p>
-<p><img alt="" src="/static/images/20211111.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20211111.02.png" /></p>
 <p>文档非常清晰，操作总共就只有4个步骤，分别是安装<code>MegaCli</code>工具-&gt;磁盘做RAID-&gt;格式化磁盘-&gt;挂载到目录，看到文档我就立刻想到一个脚本全部搞定，便开始准备脚本，解决了几个问题，简单罗列如下</p>
 <p>操作第一步是上传<code>MegaCli</code>工具并安装，上传的这个操作就不太好做进脚本里，所以我就把工具包上传到了下载服务器，可以直接通过<code>wget</code>下载，这样脚本处理起来就方便了，但发现这些机器不通外网，只能内网访问，所以就上传到了其中一台机器上，然后临时开个http服务来提供下载，临时开http服务很简单，直接通过python的http模块一个命令就搞定</p>
 <p>python 2.x版本开启http服务的命令是：</p>
@@ -127,7 +127,7 @@
 
         <div class="nav-cell clearfix">
             <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
-            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+            <img alt="" loading="lazy" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png" />
         </div>
     </div>
   </div>

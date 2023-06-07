@@ -41,7 +41,7 @@
       <a href="https://blog.ops-coffee.cn/">
         <h1>运维咖啡吧</h1>
       </a>
-      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
     </div>
   </header>
 
@@ -50,7 +50,7 @@
         <h1 id="art-title">使用Django Cache引发的Bug处理</h1>
 
         <p>两年前写过一篇文章<a href="/s/JpnxTf-Z9vkKrwl8nXJljQ">Django开发中使用Cache缓存提升10倍效率</a>用来解决任务系统执行任务慢的问题，也就是在这个方案中引入了Django的Cache缓存系统，从此之后任务系统运行稳定，没再遇到其他问题。在加入新公司之后重新设计任务系统时依然沿用了这个方案，到现在新公司任务系统上线运行了近一年的时间，也稳定跑了跑了几千个任务没出现问题，这几天突然有小伙伴跟我反馈，任务日志被截断，没有显示全</p>
-<p><img alt="" src="/static/images/20230113.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20230113.01.png" /></p>
 <p>任务系统在之前一直运行稳定没有出现过日志截断的问题，我在想是不是最近更新了什么内容导致的bug，于是又运行了几个测试任务都正常。那大概率就是程序有bug，在某些特殊的情况下会触发，往往这种问题是最难解决的，我先仔细的去看了下代码，并没有发现什么问题，核心代码如下</p>
 <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Logger:</span>
     <span class="n">def</span> <span class="n">__init__</span>(<span class="nb">self</span>, <span class="n">tid</span>, <span class="k">state</span>=<span class="n">None</span>):
@@ -158,7 +158,7 @@
 
         <div class="nav-cell clearfix">
             <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
-            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+            <img alt="" loading="lazy" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png" />
         </div>
     </div>
   </div>

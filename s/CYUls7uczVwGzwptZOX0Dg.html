@@ -41,7 +41,7 @@
       <a href="https://blog.ops-coffee.cn/">
         <h1>运维咖啡吧</h1>
       </a>
-      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
     </div>
   </header>
 
@@ -57,7 +57,7 @@
 <p>Rsyslog作为syslog的增强升级版本已经在各linux发行版<strong>默认安装</strong>了，无需额外安装。</p>
 <h1 id="nginx">收集Nginx日志</h1>
 <p>ELK通过Rsyslog收集日志流程图如下：</p>
-<p><img alt="" src="/static/images/20180828.00.jpg" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20180828.00.jpg" /></p>
 <ol>
 <li>处理流程为：Nginx --syslog--&gt; Rsyslog --omkafka--&gt; Kafka --&gt; Logstash --&gt; Elasticsearch --&gt; Kibana</li>
 <li>Nginx产生日志通过syslog系统服务传给Rsyslog服务端，Rsyslog接收到日志后通过omkafka模块将日志写入Kafka，Logstash读取Kafka队列然后写入Elasticsearch，用户通过Kibana检索Elasticsearch里存储的日志</li>
@@ -227,15 +227,15 @@
 <ul>
 <li>打开Kibana添加<code>rsyslog-nginx-*</code>的Index，并选择timestamp，创建Index Pattern</li>
 </ul>
-<p><img alt="" src="/static/images/20180828.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20180828.02.png" /></p>
 <ul>
 <li>进入Discover页面，可以很直观的看到各个时间点请求量的变化，根据左侧Field实现简单过滤，例如我们想查看所有访问状态为404的uri，可以点击request_uri和status后边的add，这两项的内容将出现在右侧，然后点击status下边404状态码后边的加号，则只查看状态为404的请求，点击上方auto-refresh可以设置页面自动刷新时间</li>
 </ul>
-<p><img alt="" src="/static/images/20180828.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20180828.03.png" /></p>
 <ul>
 <li>通过各种条件的组合查询可以实现各种各样的需求，例如每秒请求、带宽占用、异常比例、慢响应、TOP IP、TOP URL等等各种情况，并且可以通过Visualize很方便的将这些信息绘制图标，生成Dashboard保存</li>
 </ul>
-<p><img alt="" src="/static/images/20180828.04.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20180828.04.png" /></p>
 <h1 id="_2">写在最后</h1>
 <ol>
 <li>Nginx的access log绝对是网站的一个宝藏，通过日志量的变化可以知道网站的流量情况，通过对status状态的分析可以知道我们提供服务的可靠性，通过对特定活动url的追踪可以实时了解活动的火爆程度，通过对某些条件的组合查询也能为网站运营提供建议和帮助，从而使我们的网站更友好更易用</li>
@@ -286,7 +286,7 @@
 
         <div class="nav-cell clearfix">
             <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
-            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+            <img alt="" loading="lazy" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png" />
         </div>
     </div>
   </div>

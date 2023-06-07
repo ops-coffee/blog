@@ -41,7 +41,7 @@
       <a href="https://blog.ops-coffee.cn/">
         <h1>运维咖啡吧</h1>
       </a>
-      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
     </div>
   </header>
 
@@ -54,7 +54,7 @@
 </blockquote>
 <h1 id="_1">背景</h1>
 <p>发布系统架构图简化如下：</p>
-<p><img alt="发布架构图" src="/static/images/20180724.01.png" /></p>
+<p><img alt="发布架构图" loading="lazy" src="/static/images/20180724.01.png" /></p>
 <p>管理员通过Jenkins调用“发布程序(代号varian，以下简称varian)”，发布程序会进行一系列的初始化操作，完成后生成Docker镜像上传到Docker仓库，容器集群更新镜像，用户通过负载均衡访问我们的容器集群。</p>
 <p>老的varian采用shell+python开发，配合Jenkins(jdk1.7)进行发布，因内部项目较多，写了很多兼容脚本，代码比较乱。我们计划对varian进行重构，完全采用python开发，各个功能模块化，不同类型的项目用乐高的思想拼装模块部署发布，降低耦合。并将jenkins升级到最新版本，jdk同样升级到1.8。新的varian已经开发完成，现在开始部署测试了，故事就由此开始。</p>
 <p>为了降低对现有项目的影响决定重新部署一套新的环境，完全测试通过后将老环境废弃，直接启用新环境，新环境信息如下：</p>
@@ -66,7 +66,7 @@
 <h1 id="_2">故障处理过程</h1>
 <h2 id="nginx403">解决nginx访问403的问题</h2>
 <p>通过Jenkins调用varian正常部署了一个静态项目（纯html，css，js等静态资源），通过负载均衡访问容器集群（参考上边架构图），发现页面样式无法加载，浏览器按F12调出控制台发现个CSS文件返回403状态
-<img alt="chrome F12调试" src="/static/images/20180724.02.png" /></p>
+<img alt="chrome F12调试" loading="lazy" src="/static/images/20180724.02.png" /></p>
 <p>web服务用的nginx，脑海里迅速过了一遍<strong>什么情况下nginx会返回403</strong>：</p>
 <hr />
 <ul>
@@ -188,7 +188,7 @@ umask值用来设置用户在创建文件时的默认权限，跟设置文件权
 
         <div class="nav-cell clearfix">
             <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
-            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+            <img alt="" loading="lazy" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png" />
         </div>
     </div>
   </div>

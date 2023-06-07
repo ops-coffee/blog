@@ -41,7 +41,7 @@
       <a href="https://blog.ops-coffee.cn/">
         <h1>运维咖啡吧</h1>
       </a>
-      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
     </div>
   </header>
 
@@ -230,12 +230,12 @@
 </code></pre></div>
 
 <p>最终效果如下：</p>
-<p><img alt="" src="/static/images/20201111.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20201111.01.png" /></p>
 <h2 id="_1">点击处理</h2>
 <p>bpmn.js给节点关联属性是通过右侧面板<code>Properties-panel</code>来实现的，其核心是对xml文件的修改，但我们并没有这样用，而是直接给每个节点关联一个表单，这个节点的所有数据都保存在这个表单里，后台单独存于数据库，这里所说的节点包含图形shape和连线SequenceFlow等流程图里的元素，节点ID与表单数据一一对应</p>
 <p>节点要关联表单数据，就需要用到我们上边添加的名为“属性”的按钮，当点击“属性”按钮时出现表单，因为不同类型的节点需要弹出不同的表单，所以在点击按钮之后主程序也需要知道点击的节点类型等数据，这就涉及到了组件间的数据传递，试了很多方法都不行，最终只能借助于借助于<code>store</code>来实现了，具体代码如下</p>
 <p>1.在store目录下新建modules目录，modules目录下创建模块化文件<code>bpmn.js</code>，目录结构如下</p>
-<p><img alt="" src="/static/images/20201111.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20201111.02.png" /></p>
 <p>2.在<code>bpmn.js</code>中编写如下代码</p>
 <div class="codehilite"><pre><span></span><code><span class="k">const</span> <span class="n">bpmn</span> <span class="o">=</span> <span class="p">{</span>
   <span class="n">state</span><span class="p">:</span> <span class="p">{</span>
@@ -356,7 +356,7 @@
 </code></pre></div>
 
 <p>最终实现的效果如下</p>
-<p><img alt="" src="/static/images/20201111.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20201111.03.png" /></p>
 <p>但这里有一个问题，就是当我在表单里修改了节点名称，也就是节点的name属性时不会同步到左侧的流程图节点上，那该如何实现同步呢？也很简单，修改下watch即可</p>
 <div class="codehilite"><pre><span></span><code><span class="n">watch</span><span class="p">:</span> <span class="p">{</span>
   <span class="n">task</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">{},</span>
@@ -427,7 +427,7 @@
 
         <div class="nav-cell clearfix">
             <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
-            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+            <img alt="" loading="lazy" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png" />
         </div>
     </div>
   </div>

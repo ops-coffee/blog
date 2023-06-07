@@ -41,7 +41,7 @@
       <a href="https://blog.ops-coffee.cn/">
         <h1>运维咖啡吧</h1>
       </a>
-      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
     </div>
   </header>
 
@@ -123,7 +123,7 @@
 
 <p>标准模式数据结构复杂但父子关系清晰，简单模式数据则相反，示例中我们使用了简单数据模式，需要配置simpleData的<code>enable</code>属性为true</p>
 <p>完成以上配置后可以看到页面效果如下</p>
-<p><img alt="" src="/static/images/20190816.tree01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20190816.tree01.png" /></p>
 <h2 id="django">Django</h2>
 <p>既然前端页面已经能够正常展示树了，后端就只需要返回前端对应的数据格式即可，Django中最简单的方式就是使用Foreignkey的自关联，模型设计如下：</p>
 <div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Department</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
@@ -178,7 +178,7 @@
 <p>注意在前端使用时需要用<code>{{data|safe}}</code>的方式，添加<code>|safe</code>主要是因为Django为了安全默认会对HTML、JS等语法标签进行转义，但我们所传给前端的数据不希望转义可以通过添加<code>|safe</code>来实现</p>
 <h2 id="demo">完整Demo</h2>
 <p>文章源码已上传至Github，除了以上基础代码外还包含下拉框加载树等功能，公众号后台回复<strong>06</strong>获取源码地址吧</p>
-<p><img alt="" src="/static/images/20190816.tree02.gif" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20190816.tree02.gif" /></p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
@@ -223,7 +223,7 @@
 
         <div class="nav-cell clearfix">
             <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
-            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+            <img alt="" loading="lazy" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png" />
         </div>
     </div>
   </div>

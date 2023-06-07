@@ -41,7 +41,7 @@
       <a href="https://blog.ops-coffee.cn/">
         <h1>运维咖啡吧</h1>
       </a>
-      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
     </div>
   </header>
 
@@ -50,7 +50,7 @@
         <h1 id="art-title">Django动态添加定时任务之django-celery的使用</h1>
 
         <p>定时任务和周期任务在我们日常工作中应用广泛，例如定时发布、周期巡检等，通常我们会借助Linux下的Crontab来实现，但如何将这一功能搬进我们自研的运维系统呢？借助django-celery即可轻松完成，本篇文章就通过<a href="/s/uXQbM4t11ICdzNofZyDeXA">自定义任务引擎Probius</a>中计划任务的实现来介绍django-celery的使用</p>
-<p><img alt="" src="/static/images/20201229.01.gif" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20201229.01.gif" /></p>
 <p>Celery是基于Python开发的一个分布式任务队列框架，主要用来实现异步任务，具体介绍和用法可以看我之前写的这篇文章：<a href="/s/lXrp3igYo9W2UuE5Gauysg">Django配置Celery执行异步任务和定时任务</a>，Django本身不支持异步，要想实现异步的话借助Celery是个不错的选择，上边这篇文章就提供了django集成celery的方法，但其配置稍微复杂，且不支持动态添加定时任务，django-celery的出现很好的解决了这个问题</p>
 <p>django-celery为django提供了celery集成，同时支持将结果存储在django的orm或cache中，最重要的是支持从数据库动态读取计划任务并执行，这也就是说我们只需要将需要执行的加护任务插入数据库，django-celery就可以自动发现并执行了，接下来就具体看下如何实现</p>
 <h2 id="_1">安装配置</h2>
@@ -173,7 +173,7 @@
 
 <h2 id="_5">动态添加</h2>
 <p>至此已经可以添加周期任务或定时任务了，但操作方式比较麻烦，还需要改动配置文件，说好的动态添加呢，别急这就来了，打开数据库会看到几张以<code>djcelery_</code>开头的表</p>
-<p><img alt="" src="/static/images/20201229.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20201229.02.png" /></p>
 <p>其中对于动态添加计划任务有用的是计划任务时间定义表<code>djcelery_crontabschedule</code>，循环任务时间定义表<code>djcelery_crontabschedule</code>，以及任务表<code>djcelery_periodictask</code></p>
 <p>只需要在对应的表里插入数据就ok了，以我在<a href="/s/uXQbM4t11ICdzNofZyDeXA">自定义任务引擎Probius</a>中的使用为例，前端会传递时间到view，view中关于定时任务的的大概处理逻辑如下</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">djcelery.models</span> <span class="kn">import</span> <span class="n">CrontabSchedule</span><span class="p">,</span> <span class="n">PeriodicTask</span>
@@ -210,7 +210,7 @@
 <p>最后往任务表<code>PeriodicTask</code>里插入任务，<code>name</code>为任务名称，具有唯一性，所以这里加了时间前缀防止重复，<code>task</code>为celery的task任务，字符串类型，在启动celery的时候就可以看到，<code>args</code>传给任务的参数，这里也可以用kwargs的字典形式传，就把<code>args</code>字段改成<code>kwargs</code>即可，<code>enabled</code>定义了这个任务是启动或关闭状态，<code>crontab</code>为循环任务时间实例，如果这里要用周期任务，就是每n秒n分循环执行这样的，只需要将<code>crontab</code>关联换成<code>interval</code>即可，那就需要事先往<code>IntervalSchedule</code>表里插入数据</p>
 <p>还记得开头settings.py配置文件中我们配置的<code>CELERYBEAT_SCHEDULER</code>吗？就因为有这个配置，所以当数据表里的数据变更之后，celery的beat程序就能监听到从而在配置的时间触发worker去执行任务</p>
 <p>至此，主要功能我们都已实现，django-celery的计划任务只能支持固定时间吗？其实不然，他支持的语法与linux下的crontab类似，像<code>hour='*/3,9-18'</code>这样的复杂语法也是支持的，在Probius中对于复杂语法我们也直接提供了更为灵活的自定义任务执行方式</p>
-<p><img alt="" src="/static/images/20201229.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20201229.03.png" /></p>
 <p>为了便于使用，减少学习成本，这里就直接用了linux下crontab的格式，传到后端后解析成对应的时间写入数据库。有些小伙伴跟我说开发出来的工具没人用，或者是其他部门推不动，项目开发中的这些个细节考虑到位，尽量减少用户学习使用成本，做的足够好用、易用，还怕没有人用嘛</p>
 
         <div>
@@ -256,7 +256,7 @@
 
         <div class="nav-cell clearfix">
             <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
-            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+            <img alt="" loading="lazy" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png" />
         </div>
     </div>
   </div>
