@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="overmind,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="运维效率之数据迁移自动化" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>运维效率之数据迁移自动化</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="运维效率之数据迁移自动化" />
+  <meta property="og:description" content="运维效率之数据迁移自动化" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">运维效率之数据迁移自动化</h1>
+
+        <blockquote>
+<p>overmind系统上线三个月，累计执行任务800+，自动审核执行SQL超过5000条，效率提升相当明显，离“一杯咖啡，轻松运维”的目标又进了一步。</p>
+</blockquote>
+<h1 id="_1">自吹自擂</h1>
+<p>起初在写overmind时就有考虑到之后的扩展，不仅仅是作为SQL自动审核执行的平台，更希望能将其打造成一个数据库自动化运维的专业系统，SQL自动审核执行作为第一个功能被开发了出来。三个月的使用后overmind得到了大家的认可，并且切切实实帮助我们节约了时间，这也给予了我这个非专业开发、半吊子DBA莫大的鼓励和信心。</p>
+<p>日常工作中经常会接到把数据库整库或单表从生产环境导入到测试环境或测试A导入到测试B等数据库、表之间的数据互导需求，这类操作没有太高技术含量还费时费力容易出错，最适合做到自动化的流程中，这便是overmind要实现的第二个功能：工单+自动化数据迁移。</p>
+<p>为什么需要工单？目前的流程都是通过邮件的方式，需求邮件到DBA，DBA执行导数据的操作。自动化的流程理论来说应该从头至尾都无需人工参与，但涉及到数据安全问题，还是需要DBA确认，所以加了工单。同时工单具有状态自助追踪，减少沟通成本等优点，后续也方便统计工单量等指标，以便优化服务与流程。同时为了能够保证工单及时被处理，我们每一步都会增加邮件和IM的通知，给用户最及时的反馈。</p>
+<p>数据迁移的工单流程很简单，用户提交工单，DBA进行审核，审核通过系统自动执行迁移操作，审核不通过流程结束。流程图图如下：</p>
+<p><img alt="" src="/static/images/20181110.00.png" /></p>
+<p>流程中没有加入项目leader等的多层审核方式，主要是因为</p>
+<ol>
+<li>尽量跟之前的邮件流程保持一致，避免给用户制造麻烦</li>
+<li>团队规模较小，数据敏感度DBA基本可以把控，同时会在通知邮件中加上相关的同事以知晓</li>
+</ol>
+<h1 id="_2">迁移功能</h1>
+<p>数据库迁移主要是利用mysql的导入导出功能，核心的命令就一个</p>
+<div class="codehilite"><pre><span></span><code><span class="err">mysqldump -h 10.82.9.19 -P 3306 -uops -pcoffee --default-character-set=utf8 --single-transaction --databases dbname | mysql -h 192.168.106.91 -P 3306 -uops -pcoffee --default-character-set=utf8 dbname</span>
+</code></pre></div>
+
+<p>以上命令是shell命令，在python下没有找到直接导入导出mysql数据的包，只能在python代码中调用shell命令，推荐使用subprocess模块，这个模块有着更加丰富的使用方法，方便获取最终的命令执行状态和输出结果，转换成完整的python类如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">PIPE</span>
+
+
+<span class="k">class</span> <span class="nc">Cmd</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">src_host</span> <span class="o">=</span> <span class="s1">&#39;10.82.9.19&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">src_port</span> <span class="o">=</span> <span class="mi">3306</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">src_database</span> <span class="o">=</span> <span class="s1">&#39;dbname&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">des_host</span> <span class="o">=</span> <span class="s1">&#39;192.168.106.91&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">des_port</span> <span class="o">=</span> <span class="mi">3306</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">des_database</span> <span class="o">=</span> <span class="s1">&#39;dbname&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tables</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="s1">&#39;ops&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s1">&#39;coffee&#39;</span>
+
+    <span class="k">def</span> <span class="nf">migration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># 利用mysqldump命令备份</span>
+        <span class="n">dump</span> <span class="o">=</span> <span class="s2">&quot;mysqldump -h </span><span class="si">%s</span><span class="s2"> -P </span><span class="si">%d</span><span class="s2"> -u</span><span class="si">%s</span><span class="s2"> -p</span><span class="si">%s</span><span class="s2"> --default-character-set=utf8 --single-transaction --databases </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">src_host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_port</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_database</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 如果是对表的导出则加上表名，是个字符串&#39;table1 table2 table3&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tables</span> <span class="o">!=</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="n">dump</span> <span class="o">+=</span> <span class="s1">&#39; --tables </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">tables</span>
+
+        <span class="c1"># 利用mysql命令导入</span>
+        <span class="n">mysql</span> <span class="o">=</span> <span class="s2">&quot;mysql -h </span><span class="si">%s</span><span class="s2"> -P </span><span class="si">%d</span><span class="s2"> -u</span><span class="si">%s</span><span class="s2"> -p</span><span class="si">%s</span><span class="s2"> --default-character-set=utf8 </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">des_host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">des_port</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">des_database</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 执行导出导入shell命令</span>
+        <span class="n">process</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> | </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dump</span><span class="p">,</span> <span class="n">mysql</span><span class="p">),</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">process_stdout</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+
+        <span class="c1"># 判断shell命令执行结果状态</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;迁移成功！&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">process_stdout</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+
+<span class="n">Cmd</span><span class="p">()</span><span class="o">.</span><span class="n">migration</span><span class="p">()</span>
+</code></pre></div>
+
+<p>这里采用了shell中的管道，管道用<code>|</code>符号分割两个命令，管道符前的命令正确输出作为管道符后命令的输入，好处是不需要生成单独的sql文件存放在磁盘上，也就不需要考虑文件删除，占用磁盘的问题，缺点是导出大的数据库时可能会造成OOM，这个要根据自身情况综合权衡。</p>
+<p>导数据属于耗时操作，在web中应异步执行，这里采用了Celery来处理，这篇文章<a href="/s/lXrp3igYo9W2UuE5Gauysg">Django配置Celery执行异步任务和定时任务</a>有详细介绍Django中Celery的使用</p>
+<h1 id="_3">系统界面</h1>
+<p>工单列表页：普通用户只显示自己提交的工单，工单状态一目了然，还有实用的搜索功能</p>
+<p><img alt="" src="/static/images/20181110.01.png" /></p>
+<p>提交工单页：overmind维护了一份数据库列表，供系统里所有的功能使用，这里也不例外</p>
+<p><img alt="" src="/static/images/20181110.02.png" /></p>
+<p>工单审核页：审核页和详情页其实是同一个页面，只是根据工单不同的状态展示不同的元素</p>
+<p><img alt="" src="/static/images/20181110.03.png" /></p>
+<p>工单详情页：这里会详细记录这个工单的所有信息，提交、审核、执行的整个过程完整状态</p>
+<p><img alt="" src="/static/images/20181110.04.png" /></p>
+<h1 id="_4">写在最后</h1>
+<ol>
+<li>好的需求来源于日常的工作，重复的工作都可以自动化</li>
+<li>关于数据库运维或者overmind有什么想法或建议欢迎交流</li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/6ztLq8Q591KnlQY33-YFdQ.html">📅 2018-11-10</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

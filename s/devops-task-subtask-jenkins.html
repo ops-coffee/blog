@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Jenkins,Jenkins,Jenkins,API,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="任务系统之Jenkins子任务" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>任务系统之Jenkins子任务</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="任务系统之Jenkins子任务" />
+  <meta property="og:description" content="任务系统之Jenkins子任务" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">任务系统之Jenkins子任务</h1>
+
+        <p>今天下班即开启五一假期，早上临时定了行程去山东日照，原本计划下班就出发，但下班看了看导航，这一路红得发黑，于是决定还是晚点再走，现在有时间了，写篇简单的技术文章来提升下Blog逐渐降低的技术内容含量吧</p>
+<p>之前有<a href="/task">一系列的文章</a>来介绍我们的任务系统，随着任务系统在项目间的推广，以及项目使用的深入，任务系统又增加了非常多实用又好用的功能，今天这篇文章就来介绍其中的一个：Jenkins子任务</p>
+<p>任务系统通过组合各种不同类型的子任务来完成复杂的任务流程，之前的子任务支持命令和脚本，支持审批和通知，能覆盖绝大部分的发布部署场景，但仍然有一部分项目因为各种各样的原因依然使用了Jenkins来发布部署，想让项目owner抛弃Jenkins而迁移到任务系统动力不足困难不小，于是我将Jenkins作为一个子任务类型给集成进了任务系统，原本Jenkins里的Job完全不用动就可以简单的集成进任务系统</p>
+<p><img alt="" src="/static/images/20230428.01.png" /></p>
+<p>Jenkins集成进任务系统，不仅仅是可以通过任务系统来执行Job而达到项目管理的统一，更重要的是可以借助于任务系统的审批/通知/并行/告警/定时/周期等等强大的功能来实现完整的发布部署任务流，同时由于我们任务系统完全兼容手机端，那对于发布部署任务将可以随时随地掏出手机来执行，运维的假期再也不用到哪都背着电脑了，多了一份逍遥与自在</p>
+<p>以一个模拟的Coffee项目更新流程为例，执行Jenkins的Job只是整个完整发布流程中的一步而已，通过任务系统可以将整个发布流程完美闭环，省去了很多沟通和认为操作过程</p>
+<p><img alt="" src="/static/images/20230428.02.png" /></p>
+<p>以上介绍了我们为什么需要将Jenkins集成进任务系统，同时也简单说明了将Jenkins的Job集成进任务系统通过任务系统执行的优势，那么接下来讲讲我们是如何将Jenkins集成进任务系统的，其实也很简单，借助于Jenkins完善的API</p>
+<p>Jenkins没有统一的API入口，而是采用了<code>{url}/api</code>的API样式，其中<code>{url}</code>代表Jenkins资源的URL，常见的Jenkins资源包括：站点、Job和Build，可以通过不同级别的URL地址查看到当前级别的API信息，例如：</p>
+<ul>
+<li>节点管理: https://jenkins.ops-coffee.cn/computer/api/</li>
+<li>认证管理: https://jenkins.ops-coffee.cn/credentials/api/</li>
+<li>插件管理: https://jenkins.ops-coffee.cn/pluginManager/api/</li>
+</ul>
+<p>结果支持两种返回格式，分别是JSON和XML，通过加不同的URL后缀来实现，例如：<code>https://jenkins.ops-coffee.cn/computer/api/json</code>返回json格式的数据，<code>https://jenkins.ops-coffee.cn/computer/api/xml</code>则返回xml格式的数据</p>
+<p>接入Jenkins子任务需要用到如下几个API：</p>
+<ol>
+<li>获取Job列表</li>
+</ol>
+<p>获取Job列表使用GET方法</p>
+<div class="codehilite"><pre><span></span><code><span class="c">https://jenkins.ops-coffee.cn/api/json</span>
+</code></pre></div>
+
+<ol>
+<li>获取Job详情</li>
+</ol>
+<p>获取Job详情使用Get方法</p>
+<div class="codehilite"><pre><span></span><code><span class="c">https://jenkins.ops-coffee.cn/job/{job-name}/api/json</span>
+</code></pre></div>
+
+<p>同时Job详情页面同时也能获取到Job所需要的参数</p>
+<ol>
+<li>执行Job</li>
+</ol>
+<p>执行Job通过POST方法，分为带参数和不带参数两个API，其中不带参数使用</p>
+<div class="codehilite"><pre><span></span><code><span class="c">https://jenkins.ops-coffee.cn/job/{job-name}/build</span>
+</code></pre></div>
+
+<p>带参数使用</p>
+<div class="codehilite"><pre><span></span><code><span class="c">https://jenkins.ops-coffee.cn/job/{job-name}/buildWithParameters?namespace=dev&amp;branch=master</span>
+</code></pre></div>
+
+<p>执行完Job后，需要获取到Job的BuildID，<strong>BuildID可以通过从返回结果header</strong>的<code>Location</code>里获取</p>
+<ol>
+<li>获取Build输出</li>
+</ol>
+<p>获取Build的Console输出使用GET方法，通过Build的Console输出我们可以实时获取Job的执行情况</p>
+<div class="codehilite"><pre><span></span><code><span class="c">https://jenkins.ops-coffee.cn/job/{job-name}/{build-id}/logText/progressiveText</span>
+</code></pre></div>
+
+<ol>
+<li>获取Build详情</li>
+</ol>
+<p>获取Build的详情使用GET方法，通过Build详情里的<code>result</code>能知道Job的执行状态及结果</p>
+<div class="codehilite"><pre><span></span><code><span class="c">https://jenkins.ops-coffee.cn/job/{job-name}/{build-id}/api/json</span>
+</code></pre></div>
+
+<ol>
+<li>停止Job执行</li>
+</ol>
+<p>停止Job执行使用POST方法，当Job执行的过程中不及我们预期需要紧急停止Job执行时需要借助此API来完成</p>
+<div class="codehilite"><pre><span></span><code><span class="c">https://jenkins.ops-coffee.cn/job/{job-name}/{build-id}/stop</span>
+</code></pre></div>
+
+<p>整个Jenkins子任务的集成我们主要用到了这几个API，关于Jenkins的API认证用到了最基本的AuthBase方式，一个完整的获取JobList的例子如下</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">JenkinsAPI:</span>
+    <span class="n">def</span> <span class="n">__init__</span>(<span class="nb">self</span>, <span class="n">domain</span>, <span class="n">username</span>, <span class="n">password</span>, <span class="n">verify</span>=<span class="nb">True</span>):
+        <span class="nb">self</span>.<span class="n">domain</span> = <span class="n">domain</span>
+
+        <span class="nb">self</span>.<span class="n">session</span> = <span class="n">requests</span>.<span class="n">Session</span>()
+        <span class="nb">self</span>.<span class="n">session</span>.<span class="nb">auth</span> = (<span class="n">username</span>, <span class="n">password</span>)
+        <span class="nb">self</span>.<span class="n">session</span>.<span class="n">verify</span> = <span class="n">verify</span>
+
+    <span class="n">def</span> <span class="n">job_list</span>(<span class="nb">self</span>):
+        <span class="n">try:</span>
+            <span class="nb">r</span> = <span class="nb">self</span>.<span class="n">session</span>.<span class="nb">get</span>(<span class="nb">self</span>.<span class="n">domain</span> + <span class="s">&#39;/api/json&#39;</span>)
+
+            <span class="k">return</span> <span class="nb">True</span>, <span class="nb">r</span>.<span class="n">status_code</span>, <span class="nb">r</span>.<span class="n">json</span>()
+        <span class="n">except</span> <span class="nb">Exception</span> <span class="n">as</span> <span class="n">e:</span>
+            <span class="k">return</span> <span class="nb">False</span>, <span class="mi">500</span>, <span class="s">&#39;获取Job List失败：&#39;</span> + <span class="n">str</span>(<span class="nb">e</span>)
+</code></pre></div>
+
+<p>有了这些API我们就能轻松的将Jenkins集成进任务系统了，在任务系统中执行Jenkins的Job也是非常的简单和方便，实时日志输出，以及随时可以终止执行，体验与Jenkins无异了</p>
+<p><img alt="" src="/static/images/20230428.03.png" /></p>
+<p>好了，文章就写到这里，看了下导航，拥堵稍稍缓解，但依然严重，洗个澡睡个觉，凌晨起床出发</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/devops-task-subtask-jenkins.html">📅 2023-04-28</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

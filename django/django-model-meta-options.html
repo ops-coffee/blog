@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,Model,Meta,Django,Model,Meta,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Django Model Meta选项" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Django Model Meta选项</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="Django Model Meta选项" />
+  <meta property="og:description" content="Django Model Meta选项" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django Model Meta选项</h1>
+
+        <p>Model内部Class Meta选项汇总</p>
+<h3 id="abstract">abstract</h3>
+<p>当abstract = true时，表示这个模型是一个抽象基类，抽象基类只能供其他model类引用，并不会实际创建表，例如</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">TimeBaseModel</span>(<span class="n">models</span>.<span class="n">Model</span>):
+    <span class="n">create_time</span> = <span class="n">models</span>.<span class="n">DateTimeField</span>(<span class="n">auto_now_add</span>=<span class="nb">True</span>, <span class="n">verbose_name</span>=<span class="s">&#39;创建时间&#39;</span>)
+    <span class="n">update_time</span> = <span class="n">models</span>.<span class="n">DateTimeField</span>(<span class="n">auto_now</span>=<span class="nb">True</span>, <span class="n">verbose_name</span>=<span class="s">&#39;更新时间&#39;</span>)
+
+    <span class="k">class</span> <span class="n">Meta:</span>
+        <span class="n">abstract</span> = <span class="nb">True</span>
+
+
+<span class="k">class</span> <span class="n">Project</span>(<span class="n">TimeBaseModel</span>):
+    <span class="n">english_name</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">16</span>, <span class="nb">unique</span>=<span class="nb">True</span>, <span class="n">verbose_name</span>=<span class="s">&#39;英文名称&#39;</span>)
+    <span class="n">chinese_name</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">32</span>, <span class="nb">unique</span>=<span class="nb">True</span>, <span class="n">verbose_name</span>=<span class="s">&#39;中文名称&#39;</span>)
+
+    <span class="n">def</span> <span class="n">__str__</span>(<span class="nb">self</span>):
+        <span class="k">return</span> <span class="nb">self</span>.<span class="n">english_name</span>
+</code></pre></div>
+
+<h3 id="db_table">db_table</h3>
+<p>定义数据库中表的名字，默认为app lale</p>
+<h3 id="indexes">indexes</h3>
+<p>主键</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">Customer</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">indexes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">models</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;last_name&#39;</span><span class="p">,</span> <span class="s1">&#39;first_name&#39;</span><span class="p">]),</span>
+            <span class="n">models</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;first_name&#39;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;first_name_idx&#39;</span><span class="p">),</span>
+        <span class="p">]</span>
+</code></pre></div>
+
+<h3 id="index_together">index_together</h3>
+<p>联合索引</p>
+<div class="codehilite"><pre><span></span><code><span class="err">index_together = [&quot;pub_date&quot;, &quot;deadline&quot;]</span>
+</code></pre></div>
+
+<p>以上表示pub_date和deadline会创建联合索引</p>
+<h3 id="unique_together">unique_together</h3>
+<p>联合唯一</p>
+<div class="codehilite"><pre><span></span><code><span class="err">unique_together = (&#39;parent&#39;, &#39;name&#39;,)</span>
+</code></pre></div>
+
+<p>以上表示parent和name两个字段联合唯一，也就是说数据库表里不会出现两条parent和name都相同的数据</p>
+<h3 id="ordering">ordering</h3>
+<p>对象的默认排序，用于获取对象列表时</p>
+<div class="codehilite"><pre><span></span><code><span class="err">ordering = [&#39;-pub_date&#39;, &#39;author&#39;]</span>
+</code></pre></div>
+
+<p>以上表示先按照<code>pub_date</code>降序，然后按照<code>author</code>升序</p>
+<h3 id="permissions">permissions</h3>
+<p>创建此对象时要输入权限表的额外权限</p>
+<div class="codehilite"><pre><span></span><code><span class="err">permissions = (</span>
+<span class="err">    (&quot;relation_select&quot;, &quot;业务关系查看权限&quot;),</span>
+<span class="err">    (&quot;relation_change&quot;, &quot;业务关系修改权限&quot;),</span>
+<span class="err">)</span>
+</code></pre></div>
+
+<h3 id="default_permissions">default_permissions</h3>
+<p>默认值为('add', 'change', 'delete', 'view') 。如果我们不需要任何默认的权限，可以将其设置为空列表</p>
+<div class="codehilite"><pre><span></span><code><span class="err">default_permissions = ()</span>
+</code></pre></div>
+
+<h3 id="app_label">app_label</h3>
+<p>如果在<code>INSTALLED_APPS</code>中定义了一个应用程序之外的模型，它必须声明属于哪个应用程序</p>
+<div class="codehilite"><pre><span></span><code><span class="err">app_label = &#39;myapp&#39;</span>
+</code></pre></div>
+
+<h3 id="verbose_name">verbose_name</h3>
+<p>对象的可读名称，单数</p>
+<h3 id="verbose_name_plural">verbose_name_plural</h3>
+<p>对象的可读名称，复数</p>
+<h3 id="base_manager_name">base_manager_name</h3>
+<p>管理器的属性名，例如默认的<code>objects</code></p>
+<h3 id="db_tablespace">db_tablespace</h3>
+<p>此模型要使用的 数据库表空间 名称。如果有设置的话，默认是项目的 DEFAULT_TABLESPACE 配置。如果后端不支持表空间，则忽略此选项</p>
+<h3 id="default_manager_name">default_manager_name</h3>
+<p>模型的 默认管理器的名称</p>
+<h3 id="default_related_name">default_related_name</h3>
+<p>从相关对象到这个对象的关系默认使用的名称。默认为 _set</p>
+<h3 id="get_latest_by">get_latest_by</h3>
+<p>模型中的字段名或字段名列表，通常是DateField，DateTimeField或IntegerField</p>
+<h3 id="managed">managed</h3>
+<p>默认为True，表示由Django来管理数据库表的生命周期。如果False，将不对该模型进行数据库表的创建、修改或删除操作</p>
+<p>如果该模型代表一个现有的表或一个通过其他方式创建的数据库视图，这一点很有用。这是在<code>managed=False</code>时唯一的区别。模型处理的所有其他方面都与正常情况完全相同</p>
+<h3 id="order_with_respect_to">order_with_respect_to</h3>
+<p>使该对象可以根据给定字段（通常是ForeignKey）进行排序</p>
+<h3 id="proxy">proxy</h3>
+<p>如果为True，作为另一个模型子类的模型将被视为代理模型</p>
+<h3 id="required_db_features">required_db_features</h3>
+<p>当前连接应具备的数据库特征列表，以便在迁移阶段考虑模型。例如，如果你将此列表设置为 ['gis_enabled']，则模型将只在支持 GIS 的数据库上同步</p>
+<h3 id="required_db_vendor">required_db_vendor</h3>
+<p>本模型所特有的支持的数据库厂商名称。目前的内置厂商名称是： <code>sqlite</code>、<code>postgresql</code>、<code>mysql</code>和<code>oracle</code>。如果该属性不为空，且当前连接厂商与之不匹配，则该模型将不会同步</p>
+<h3 id="constraints">constraints</h3>
+<p>定义约束列表</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">Customer</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">age</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">models</span><span class="o">.</span><span class="n">CheckConstraint</span><span class="p">(</span><span class="n">check</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">Q</span><span class="p">(</span><span class="n">age__gte</span><span class="o">=</span><span class="mi">18</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;age_gte_18&#39;</span><span class="p">),</span>
+        <span class="p">]</span>
+</code></pre></div>
+
+<h3 id="label">label</h3>
+<p>只读，返回<code>app_label.object_name</code></p>
+<h3 id="label_lower">label_lower</h3>
+<p>只读，返回<code>app_label.model_name</code></p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/django/django-model-meta-options.html">📅 2022-08-03</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

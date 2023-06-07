@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="SSH,None,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="服务器SSH密钥管理规范" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>服务器SSH密钥管理规范</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="服务器SSH密钥管理规范" />
+  <meta property="og:description" content="服务器SSH密钥管理规范" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">服务器SSH密钥管理规范</h1>
+
+        <h1 id="ssh">服务器SSH密钥管理规范</h1>
+<h2 id="_1">密钥使用说明</h2>
+<ol>
+<li>ssh用户名默认为邮箱前缀</li>
+<li>使用RSA类型SSH密钥对，长度不小于2048</li>
+<li>生成的key必须要配置passphrase</li>
+<li>密钥对生成后请自行妥善保管，任何情况下都不得将私钥提供给他人</li>
+<li>建议为私钥保留备份（压缩为Zip并添加密码），避免密钥丢失</li>
+</ol>
+<h2 id="_2">建议生成方法</h2>
+<p>推荐使用Linux系统命令<code>ssh-keygen -t rsa -b 2048</code>生成密钥对</p>
+<div class="codehilite"><pre><span></span><code><span class="err">ops-coffee@onlinegame:~$ ssh-keygen -t rsa -b 2048</span>
+<span class="err">Generating public/private rsa key pair.</span>
+<span class="err">Enter file in which to save the key (/home/ops-coffee/.ssh/id_rsa): </span>
+<span class="err">Created directory &#39;/home/ops-coffee/.ssh&#39;.</span>
+<span class="err">Enter passphrase (empty for no passphrase): </span>
+<span class="err">Enter same passphrase again: </span>
+<span class="err">Your identification has been saved in /home/ops-coffee/.ssh/id_rsa.</span>
+<span class="err">Your public key has been saved in /home/ops-coffee/.ssh/id_rsa.pub.</span>
+<span class="err">The key fingerprint is:</span>
+<span class="c">21:d2:db:70:05:44:7d:c0:4a:1e:94:bd:8e:19:cd:09 ops-coffee@onlinegame.ops-coffee.cn</span>
+<span class="err">The key&#39;s randomart image is:</span>
+<span class="err">+--[ RSA 2048]----+</span>
+<span class="err">|       +=*o.     |</span>
+<span class="err">|     .  E.+ .    |</span>
+<span class="err">|    . +oo* +     |</span>
+<span class="err">|     . *+.=      |</span>
+<span class="err">|      . S=       |</span>
+<span class="err">|        o .      |</span>
+<span class="err">|                 |</span>
+<span class="err">|                 |</span>
+<span class="err">|                 |</span>
+<span class="err">+-----------------+</span>
+</code></pre></div>
+
+<p>生成的公钥格式如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="err">ops-coffee@onlinegame:~$ cat ~/.ssh/id_rsa.pub </span>
+<span class="err">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCrxA9WuM/cTLiQ06Fj/DnygPeBz3Mka3dt/tmxIK5T1hmHceurD6eZ6x0K/hOhsJVZb3AXdAQyeLYLXtKF9r5xoo1idmSoxrLa+YWedFcCy2rjnrKPeSwhlIJoHhJNqUzm3+JLyZLzK5cTqbXibHWKjPU/s4hgZ2LItbb+zbqB9jgzWf70QQ03jRf9T82TFjjZLrptghwmINpC7LfYfkKQy9Gi9KyIm0OhqkIwq5epoXEOU87Vw5ZXXMqNwdk3yO/e0mil8gXHxOt+YoQCLjNC2Ydc+uPdX86GEINlUXaHT7NRZGJN5J79fh83qi7pSYstqGNWOmQjw0VWjPtKL2Gr ops-coffee@onlinegame.ops-coffee.cn</span>
+</code></pre></div>
+
+<h2 id="_3">密钥使用场景</h2>
+<ol>
+<li>服务器系统登陆</li>
+<li>gitlab拉取提交代码</li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/t/server-ssh-specification.html">📅 2019-05-21</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/规范文档/">🏷️ 规范文档</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

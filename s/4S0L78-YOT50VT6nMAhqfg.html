@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="python,eval,ast,literal,eval,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="python函数eval与ast.literal_eval的区别" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>python函数eval与ast.literal_eval的区别</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="python函数eval与ast.literal_eval的区别" />
+  <meta property="og:description" content="python函数eval与ast.literal_eval的区别" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">python函数eval与ast.literal_eval的区别</h1>
+
+        <blockquote>
+<p>一分钟学个小知识</p>
+</blockquote>
+<p><code>eval</code>与<code>ast.literal_eval</code>都可以将字符串还原成它能够转化成的数据类型，例如</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">literal_eval</span>
+<span class="o">&gt;&gt;&gt;</span> 
+<span class="o">&gt;&gt;&gt;</span> <span class="n">data1</span> <span class="o">=</span> <span class="s2">&quot;[&#39;ops-coffee&#39;,&#39;cn&#39;]&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">data2</span> <span class="o">=</span> <span class="s2">&quot;{&#39;title&#39;:&#39;运维咖啡吧&#39;,&#39;url&#39;:&#39;https://ops-coffee.cn&#39;}&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> 
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">data1</span><span class="p">),</span><span class="nb">type</span><span class="p">(</span><span class="n">data2</span><span class="p">))</span>
+<span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">str</span><span class="s1">&#39;&gt; &lt;class &#39;</span><span class="nb">str</span><span class="s1">&#39;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> 
+<span class="o">&gt;&gt;&gt;</span> 
+<span class="o">&gt;&gt;&gt;</span> 
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a1</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">data1</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">a1</span><span class="p">))</span>
+<span class="p">[</span><span class="s1">&#39;ops-coffee&#39;</span><span class="p">,</span> <span class="s1">&#39;cn&#39;</span><span class="p">]</span> <span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">list</span><span class="s1">&#39;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> 
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a2</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">data2</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">a2</span><span class="p">))</span>
+<span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;运维咖啡吧&#39;</span><span class="p">,</span> <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://ops-coffee.cn&#39;</span><span class="p">}</span> <span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">dict</span><span class="s1">&#39;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> 
+<span class="o">&gt;&gt;&gt;</span> 
+<span class="o">&gt;&gt;&gt;</span> 
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b1</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">data1</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">b1</span><span class="p">))</span>
+<span class="p">[</span><span class="s1">&#39;ops-coffee&#39;</span><span class="p">,</span> <span class="s1">&#39;cn&#39;</span><span class="p">]</span> <span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">list</span><span class="s1">&#39;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> 
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b2</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">data2</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">b2</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">b2</span><span class="p">))</span>
+<span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;运维咖啡吧&#39;</span><span class="p">,</span> <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://ops-coffee.cn&#39;</span><span class="p">}</span> <span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">dict</span><span class="s1">&#39;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> 
+<span class="o">&gt;&gt;&gt;</span> 
+</code></pre></div>
+
+<p>除了可以对数据类型进行转换外，他们还可以对字符串的输入做处理，例如</p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; eval(&#39;1+1&#39;)</span>
+<span class="err">2</span>
+<span class="err">&gt;&gt;&gt; </span>
+<span class="err">&gt;&gt;&gt; </span>
+<span class="err">&gt;&gt;&gt; literal_eval(&#39;1+1&#39;)</span>
+<span class="err">2</span>
+</code></pre></div>
+
+<p>那么他们有何区别呢？</p>
+<p><code>eval</code>会对所有他能解析的字符串都做处理，而<code>literal_eval</code>则会判断需要处理的内容处理后是不是合法的python类型，如果是则处理，否则不处理</p>
+<p>例如在以下例子中</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">std</span> <span class="o">=</span> <span class="n">input</span><span class="p">(</span><span class="s1">&#39;please input: &#39;</span><span class="p">)</span>
+<span class="n">please</span> <span class="n">input</span><span class="p">:</span> <span class="n">__import__</span><span class="p">(</span><span class="s1">&#39;os&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;ls /&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;out: &#39;</span><span class="p">,</span><span class="n">eval</span><span class="p">(</span><span class="n">std</span><span class="p">))</span>
+<span class="n">bin</span>  <span class="n">boot</span>  <span class="n">dev</span>  <span class="n">etc</span> <span class="n">lib</span> <span class="n">lost</span><span class="o">+</span><span class="n">found</span>  <span class="n">opt</span>  <span class="n">proc</span>  <span class="n">root</span>  <span class="n">run</span>  <span class="n">sbin</span>  <span class="n">selinux</span>  <span class="n">srv</span>    <span class="k">static</span>  <span class="n">sys</span>  <span class="n">tmp</span>  <span class="n">usr</span>  <span class="k">var</span>
+<span class="n">out</span><span class="p">:</span>  <span class="mi">0</span>
+<span class="o">&gt;&gt;&gt;</span> 
+</code></pre></div>
+
+<p><code>eval</code>处理了输入的指令，这是非常危险的，在这里仅仅是用了<code>ls</code>查看做测试，如果是<code>rm</code>之类的指令后果就会很严重，而对于<code>literal_eval</code>则会去判断要解析的内容是否安全，不安全就报错</p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; </span>
+<span class="err">&gt;&gt;&gt; print(&#39;out: &#39;,literal_eval(std))</span>
+<span class="err">Traceback (most recent call last):</span>
+<span class="err">  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="err">  File &quot;/usr/local/lib/python3.6/ast.py&quot;, line 85, in literal_eval</span>
+<span class="err">    return _convert(node_or_string)</span>
+<span class="err">  File &quot;/usr/local/lib/python3.6/ast.py&quot;, line 84, in _convert</span>
+<span class="err">    raise ValueError(&#39;malformed node or string: &#39; + repr(node))</span>
+<span class="c">ValueError: malformed node or string: &lt;_ast.Call object at 0x7f3b192a24a8&gt;</span>
+<span class="err">&gt;&gt;&gt; </span>
+</code></pre></div>
+
+<p>所以使用<code>literal_eval</code>可大大降低系统风险，有着更为安全的表现</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/4S0L78-YOT50VT6nMAhqfg.html">📅 2020-04-16</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Python/">🏷️ Python</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

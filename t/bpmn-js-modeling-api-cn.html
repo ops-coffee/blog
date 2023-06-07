@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="bpmn,js,Modeling,API,bpmn,js,API,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="bpmn.js Modeling API 列表" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>bpmn.js Modeling API 列表</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="bpmn.js Modeling API 列表" />
+  <meta property="og:description" content="bpmn.js Modeling API 列表" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">bpmn.js Modeling API 列表</h1>
+
+        <p>原内容位于官方<a href="https://github.com/bpmn-io/bpmn-js-examples/tree/master/modeling-api">github的examples</a>下，这里给整理出来并部分进行了中文翻译以方便查看，可以借助浏览器的搜索功能进行快速检索，Chrome下搜索快捷键<code>ctrl+F</code>，Mac下搜索快捷键<code>Command+F</code></p>
+<h2 id="introduction-">Introduction - 介绍</h2>
+<div class="codehilite"><pre><span></span><code><span class="o">/**</span>
+ <span class="o">*</span> <span class="n">After</span> <span class="n">creating</span> <span class="n">a</span> <span class="n">new</span> <span class="n">instance</span> <span class="n">of</span> <span class="n">bpmn</span><span class="o">-</span><span class="n">js</span> <span class="n">you</span> <span class="n">can</span> <span class="n">access</span> <span class="n">any</span> <span class="n">module</span> <span class="n">of</span> <span class="n">bpmn</span><span class="o">-</span><span class="n">js</span> <span class="n">using</span>
+ <span class="o">*</span> <span class="n">modeler</span><span class="c1">#get.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">modules</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">example</span> <span class="n">are</span><span class="p">:</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">ElementFactory</span><span class="p">:</span> <span class="n">Creates</span> <span class="n">new</span> <span class="n">shapes</span> <span class="ow">and</span> <span class="n">connections</span><span class="o">.</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">ElementRegistry</span><span class="p">:</span> <span class="n">A</span> <span class="n">registry</span> <span class="n">of</span> <span class="n">all</span> <span class="n">shapes</span> <span class="ow">and</span> <span class="n">connections</span> <span class="n">of</span> <span class="n">the</span> <span class="n">diagram</span><span class="o">.</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">Modeling</span><span class="p">:</span> <span class="n">The</span> <span class="n">main</span> <span class="n">module</span> <span class="k">for</span> <span class="n">modeling</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">We</span> <span class="n">will</span> <span class="n">use</span> <span class="n">these</span> <span class="n">modules</span> <span class="n">to</span> <span class="n">create</span> <span class="n">a</span> <span class="n">new</span> <span class="n">shape</span><span class="p">,</span> <span class="n">add</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="n">diagram</span><span class="p">,</span> <span class="ow">and</span>
+ <span class="o">*</span> <span class="n">connect</span> <span class="n">it</span> <span class="n">to</span> <span class="n">an</span> <span class="n">existing</span> <span class="n">shape</span><span class="o">.</span>
+ <span class="o">*/</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="err">获取</span><span class="n">modules</span>
+<span class="k">const</span> <span class="n">elementFactory</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;elementFactory&#39;</span><span class="p">),</span>
+      <span class="n">elementRegistry</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;elementRegistry&#39;</span><span class="p">),</span>
+      <span class="n">modeling</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;modeling&#39;</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="err">根据</span><span class="n">ID获取Process和shape</span>
+<span class="k">const</span> <span class="n">process</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Process_1&#39;</span><span class="p">),</span>
+      <span class="n">startEvent</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;StartEvent_1&#39;</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="err">新建</span><span class="n">Shape</span>
+<span class="k">const</span> <span class="n">task</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="o">.</span><span class="n">createShape</span><span class="p">({</span> <span class="n">type</span><span class="p">:</span> <span class="s1">&#39;bpmn:Task&#39;</span> <span class="p">});</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="err">添加新的</span><span class="n">shape到当前流程图</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">createShape</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">100</span> <span class="p">},</span> <span class="n">process</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="n">You</span> <span class="n">can</span> <span class="n">now</span> <span class="n">access</span> <span class="n">the</span> <span class="n">new</span> <span class="n">task</span> <span class="n">through</span> <span class="n">the</span> <span class="n">element</span> <span class="n">registry</span>
+<span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">));</span> <span class="o">//</span> <span class="n">Shape</span> <span class="p">{</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bpmn:Task&quot;</span><span class="p">,</span> <span class="o">...</span> <span class="p">}</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="err">创建连线</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">startEvent</span><span class="p">,</span> <span class="n">task</span><span class="p">);</span>
+</code></pre></div>
+
+<h2 id="business-objects-">Business Objects - 业务对象</h2>
+<div class="codehilite"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * Business objects are the model objects that hold all the BPMN-related properties of a shape or</span>
+<span class="cm"> * connection. They can be accessed through an element&#39;s `businessObject` property. Not all model</span>
+<span class="cm"> * objects are visible as shapes or connections. An event definition for example is a model object</span>
+<span class="cm"> * that is part of an event shape&#39;s business object.</span>
+<span class="cm"> *</span>
+<span class="cm"> * The entire BPMN model can be found here: https://github.com/bpmn-io/bpmn-moddle/blob/master/resources/bpmn/json/bpmn.json</span>
+<span class="cm"> *</span>
+<span class="cm"> * The modules used in this example are:</span>
+<span class="cm"> *</span>
+<span class="cm"> * * BpmnFactory: Creates new business objects.</span>
+<span class="cm"> * * ElementFactory: Creates new shapes and connections.</span>
+<span class="cm"> * * ElementRegistry: A registry of all shapes and connections of the diagram.</span>
+<span class="cm"> * * Modeling: The main module for modeling.</span>
+<span class="cm"> *</span>
+<span class="cm"> * We will use these modules to create a new business object representing a shape,</span>
+<span class="cm"> * add it to the diagram, and connect it to an existing shape.</span>
+<span class="cm"> */</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">获取modules</span>
+<span class="n">const</span> <span class="n">bpmnFactory</span> <span class="o">=</span> <span class="n">modeler</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="s1">&#39;bpmnFactory&#39;</span><span class="p">),</span>
+      <span class="n">elementFactory</span> <span class="o">=</span> <span class="n">modeler</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="s1">&#39;elementFactory&#39;</span><span class="p">),</span>
+      <span class="n">elementRegistry</span> <span class="o">=</span> <span class="n">modeler</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="s1">&#39;elementRegistry&#39;</span><span class="p">),</span>
+      <span class="n">modeling</span> <span class="o">=</span> <span class="n">modeler</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="s1">&#39;modeling&#39;</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="n">根据ID获取Process和shape</span>
+<span class="n">const</span> <span class="k">process</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="s1">&#39;Process_1&#39;</span><span class="p">),</span>
+      <span class="n">startEvent</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="s1">&#39;StartEvent_1&#39;</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="n">You</span> <span class="n">can</span> <span class="n">access</span> <span class="n">the</span> <span class="k">start</span> <span class="k">event</span><span class="s1">&#39;s business object</span>
+<span class="s1">console.log(startEvent.businessObject); // { &quot;$type&quot;: &quot;bpmn:StartEvent&quot;, ... }</span>
+
+<span class="s1">// (3) 通过BPMN factory的方式来创建对象</span>
+<span class="s1">const taskBusinessObject = bpmnFactory.create(&#39;</span><span class="n">bpmn</span><span class="o">:</span><span class="n">Task</span><span class="s1">&#39;, { id: &#39;</span><span class="n">Task_1</span><span class="s1">&#39;, name: &#39;</span><span class="n">Task</span><span class="s1">&#39; });</span>
+
+<span class="s1">// (4) 使用刚刚创建的业务对象创建一个新的shape</span>
+<span class="s1">const task = elementFactory.createShape({ type: &#39;</span><span class="n">bpmn</span><span class="o">:</span><span class="n">Task</span><span class="s1">&#39;, businessObject: taskBusinessObject });</span>
+
+<span class="s1">// (5) 添加新的shape到当前流程图</span>
+<span class="s1">modeling.createShape(task, { x: 400, y: 100 }, process);</span>
+
+<span class="s1">// Using the `id` property we specified you can now access the new task through the element registry</span>
+<span class="s1">console.log(elementRegistry.get(&#39;</span><span class="n">Task_1</span><span class="s1">&#39;)); // Shape { &quot;type&quot;: &quot;bpmn:Task&quot;, ... }</span>
+</code></pre></div>
+
+<h2 id="creating-shapes-">Creating Shapes - 创建形状</h2>
+<div class="codehilite"><pre><span></span><code><span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Now</span> <span class="n">that</span> <span class="n">we</span> <span class="n">have</span> <span class="n">created</span> <span class="n">our</span> <span class="n">first</span> <span class="n">shapes</span> <span class="n">let</span><span class="s1">&#39;s create some more complex shapes.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">modules</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">example</span> <span class="n">are</span><span class="p">:</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">BpmnFactory</span><span class="p">:</span> <span class="n">Creates</span> <span class="n">new</span> <span class="n">business</span> <span class="n">objects</span><span class="o">.</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">ElementFactory</span><span class="p">:</span> <span class="n">Creates</span> <span class="n">new</span> <span class="n">shapes</span> <span class="ow">and</span> <span class="n">connections</span><span class="o">.</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">ElementRegistry</span><span class="p">:</span> <span class="n">A</span> <span class="n">registry</span> <span class="n">of</span> <span class="n">all</span> <span class="n">shapes</span> <span class="ow">and</span> <span class="n">connections</span> <span class="n">of</span> <span class="n">the</span> <span class="n">diagram</span><span class="o">.</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">Modeling</span><span class="p">:</span> <span class="n">The</span> <span class="n">main</span> <span class="n">module</span> <span class="k">for</span> <span class="n">modeling</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">We</span> <span class="n">will</span> <span class="n">use</span> <span class="n">these</span> <span class="n">modules</span> <span class="n">to</span> <span class="n">create</span> <span class="n">some</span> <span class="n">more</span> <span class="n">shapes</span> <span class="n">including</span> <span class="n">a</span> <span class="n">BoundaryEvent</span> <span class="ow">and</span>
+ <span class="o">*</span> <span class="n">a</span> <span class="n">SubProcess</span><span class="o">.</span>
+ <span class="o">*/</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="err">获取</span><span class="n">modules</span>
+<span class="k">const</span> <span class="n">bpmnFactory</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;bpmnFactory&#39;</span><span class="p">),</span>
+      <span class="n">elementFactory</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;elementFactory&#39;</span><span class="p">),</span>
+      <span class="n">elementRegistry</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;elementRegistry&#39;</span><span class="p">),</span>
+      <span class="n">modeling</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;modeling&#39;</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="err">根据</span><span class="n">ID获取Process和shape</span>
+<span class="k">const</span> <span class="n">process</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Process_1&#39;</span><span class="p">),</span>
+      <span class="n">startEvent</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;StartEvent_1&#39;</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="err">创建一个</span><span class="n">service</span> <span class="n">task类型的shape</span>
+<span class="k">const</span> <span class="n">serviceTask</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="o">.</span><span class="n">createShape</span><span class="p">({</span> <span class="n">type</span><span class="p">:</span> <span class="s1">&#39;bpmn:ServiceTask&#39;</span> <span class="p">});</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="err">使用</span><span class="n">appendShape将新的service</span> <span class="n">task类型的shape添加到现有流程图中</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">appendShape</span><span class="p">(</span><span class="n">startEvent</span><span class="p">,</span> <span class="n">serviceTask</span><span class="p">,</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">100</span> <span class="p">},</span> <span class="n">process</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="err">创建一个</span><span class="n">boundary</span> <span class="n">event边界事件类型的shape</span>
+<span class="k">const</span> <span class="n">boundaryEvent</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="o">.</span><span class="n">createShape</span><span class="p">({</span> <span class="n">type</span><span class="p">:</span> <span class="s1">&#39;bpmn:BoundaryEvent&#39;</span> <span class="p">});</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="err">将新边界事件添加到流程图中，并将其附加到</span><span class="n">serviceTask</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">createShape</span><span class="p">(</span><span class="n">boundaryEvent</span><span class="p">,</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">140</span> <span class="p">},</span> <span class="n">serviceTask</span><span class="p">,</span> <span class="p">{</span> <span class="n">attach</span><span class="p">:</span> <span class="bp">true</span> <span class="p">});</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="err">创建</span><span class="n">sub</span> <span class="n">process子流程类型的对象</span>
+<span class="k">const</span> <span class="n">eventSubProcessBusinessObject</span> <span class="o">=</span> <span class="n">bpmnFactory</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;bpmn:SubProcess&#39;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="n">triggeredByEvent</span><span class="p">:</span> <span class="bp">true</span><span class="p">,</span>
+  <span class="n">isExpanded</span><span class="p">:</span> <span class="bp">true</span>
+<span class="p">});</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="err">创建</span><span class="n">SubProcess子流程shape</span><span class="err">，并进行属性设置</span>
+<span class="k">const</span> <span class="n">eventSubProcess</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="o">.</span><span class="n">createShape</span><span class="p">({</span>
+  <span class="n">type</span><span class="p">:</span> <span class="s1">&#39;bpmn:SubProcess&#39;</span><span class="p">,</span>
+  <span class="n">businessObject</span><span class="p">:</span> <span class="n">eventSubProcessBusinessObject</span><span class="p">,</span>
+  <span class="n">isExpanded</span><span class="p">:</span> <span class="bp">true</span>
+<span class="p">});</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">9</span><span class="p">)</span> <span class="err">将</span><span class="n">sub</span> <span class="n">process子流程添加到流程中</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">createShape</span><span class="p">(</span><span class="n">eventSubProcess</span><span class="p">,</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">400</span> <span class="p">},</span> <span class="n">process</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="err">创建</span><span class="n">eventDefinitionType的计时器启动事件</span>
+<span class="k">const</span> <span class="n">timerStartEvent</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="o">.</span><span class="n">createShape</span><span class="p">({</span>
+  <span class="n">type</span><span class="p">:</span> <span class="s1">&#39;bpmn:StartEvent&#39;</span><span class="p">,</span>
+  <span class="n">eventDefinitionType</span><span class="p">:</span> <span class="s1">&#39;bpmn:TimerEventDefinition&#39;</span>
+<span class="p">});</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="err">添加新的</span><span class="n">timerStartEvent事件到当前流程的子流程中</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">createShape</span><span class="p">(</span><span class="n">timerStartEvent</span><span class="p">,</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">400</span> <span class="p">},</span> <span class="n">eventSubProcess</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="err">创建新的</span><span class="n">group</span> <span class="n">shape</span><span class="err">，并指定宽和高</span>
+<span class="k">const</span> <span class="n">group</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="o">.</span><span class="n">createShape</span><span class="p">({</span> <span class="n">type</span><span class="p">:</span> <span class="s1">&#39;bpmn:Group&#39;</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="mi">200</span> <span class="p">});</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">13</span><span class="p">)</span> <span class="err">将</span><span class="n">group</span> <span class="n">shape添加到现有的流程中</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">createShape</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="mi">325</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">100</span> <span class="p">},</span> <span class="n">process</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">14</span><span class="p">)</span> <span class="err">创建两个</span><span class="n">shape</span><span class="err">，并指定坐标</span>
+<span class="o">//</span> <span class="n">coordinates</span><span class="p">,</span> <span class="ow">not</span> <span class="n">absolute</span>
+<span class="k">const</span> <span class="n">messageStartEvent</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="o">.</span><span class="n">createShape</span><span class="p">({</span>
+  <span class="n">type</span><span class="p">:</span> <span class="s1">&#39;bpmn:StartEvent&#39;</span><span class="p">,</span>
+  <span class="n">eventDefinitionType</span><span class="p">:</span> <span class="s1">&#39;bpmn:MessageEventDefinition&#39;</span><span class="p">,</span>
+  <span class="n">x</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">y</span><span class="p">:</span> <span class="mi">22</span>
+<span class="p">});</span>
+
+<span class="k">const</span> <span class="n">userTask</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="o">.</span><span class="n">createShape</span><span class="p">({</span>
+  <span class="n">type</span><span class="p">:</span> <span class="s1">&#39;bpmn:UserTask&#39;</span><span class="p">,</span>
+  <span class="n">x</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="n">y</span><span class="p">:</span> <span class="mi">0</span>
+<span class="p">});</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="err">一次向流程图中添加多个</span><span class="n">shape</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">createElements</span><span class="p">([</span> <span class="n">messageStartEvent</span><span class="p">,</span> <span class="n">userTask</span> <span class="p">],</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">600</span> <span class="p">},</span> <span class="n">process</span><span class="p">);</span>
+</code></pre></div>
+
+<h2 id="connecting-shapes-">Connecting Shapes - 连线形状</h2>
+<div class="codehilite"><pre><span></span><code><span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Now</span> <span class="n">let</span><span class="s1">&#39;s look at the different ways of connecting shapes to each other.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">modules</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">example</span> <span class="n">are</span><span class="p">:</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">ElementFactory</span><span class="p">:</span> <span class="n">Creates</span> <span class="n">new</span> <span class="n">shapes</span> <span class="ow">and</span> <span class="n">connections</span><span class="o">.</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">ElementRegistry</span><span class="p">:</span> <span class="n">A</span> <span class="n">registry</span> <span class="n">of</span> <span class="n">all</span> <span class="n">shapes</span> <span class="ow">and</span> <span class="n">connections</span> <span class="n">of</span> <span class="n">the</span> <span class="n">diagram</span><span class="o">.</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">Modeling</span><span class="p">:</span> <span class="n">The</span> <span class="n">main</span> <span class="n">module</span> <span class="k">for</span> <span class="n">modeling</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">We</span> <span class="n">will</span> <span class="n">use</span> <span class="n">these</span> <span class="n">modules</span> <span class="n">to</span> <span class="n">create</span> <span class="n">shapes</span> <span class="ow">and</span> <span class="n">connect</span> <span class="n">them</span> <span class="n">on</span> <span class="n">two</span> <span class="n">different</span> <span class="n">ways</span><span class="o">.</span>
+ <span class="o">*/</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="err">获取</span><span class="n">modules</span>
+<span class="k">const</span> <span class="n">elementFactory</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;elementFactory&#39;</span><span class="p">),</span>
+      <span class="n">elementRegistry</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;elementRegistry&#39;</span><span class="p">),</span>
+      <span class="n">modeling</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;modeling&#39;</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="err">根据</span><span class="n">ID获取Process和shape</span>
+<span class="k">const</span> <span class="n">process</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Process_1&#39;</span><span class="p">),</span>
+      <span class="n">startEvent</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;StartEvent_1&#39;</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="err">创建一个</span><span class="n">shape</span>
+<span class="k">const</span> <span class="n">task</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="o">.</span><span class="n">createShape</span><span class="p">({</span> <span class="n">type</span><span class="p">:</span> <span class="s1">&#39;bpmn:Task&#39;</span> <span class="p">});</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="err">添加新的</span><span class="n">shape到流程图</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">createShape</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">100</span> <span class="p">},</span> <span class="n">process</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="err">用</span><span class="n">connect连接startEvent到新添加的shape</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">startEvent</span><span class="p">,</span> <span class="n">task</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="err">创建一个</span><span class="n">end</span> <span class="n">event类型的shape</span>
+<span class="k">const</span> <span class="n">endEvent</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="o">.</span><span class="n">createShape</span><span class="p">({</span> <span class="n">type</span><span class="p">:</span> <span class="s1">&#39;bpmn:EndEvent&#39;</span> <span class="p">});</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="err">添加新的</span><span class="n">endEvent类型的shape添加到流程图中</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">createShape</span><span class="p">(</span><span class="n">endEvent</span><span class="p">,</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">100</span> <span class="p">},</span> <span class="n">process</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="err">创建一条新的连线连接</span><span class="n">task</span> <span class="n">shape到endEvent事件</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">createConnection</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">endEvent</span><span class="p">,</span> <span class="p">{</span> <span class="n">type</span><span class="p">:</span> <span class="s1">&#39;bpmn:SequenceFlow&#39;</span> <span class="p">},</span> <span class="n">process</span><span class="p">);</span>
+</code></pre></div>
+
+<h2 id="collaborations-">Collaborations - 合作开发</h2>
+<div class="codehilite"><pre><span></span><code><span class="o">/**</span>
+ <span class="o">*</span> <span class="n">So</span> <span class="n">far</span> <span class="n">we</span><span class="s1">&#39;ve worked with processes. Let&#39;</span><span class="n">s</span> <span class="n">have</span> <span class="n">a</span> <span class="n">look</span> <span class="n">at</span> <span class="n">collaborations</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">modules</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">example</span> <span class="n">are</span><span class="p">:</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">ElementFactory</span><span class="p">:</span> <span class="n">Creates</span> <span class="n">new</span> <span class="n">shapes</span> <span class="ow">and</span> <span class="n">connections</span><span class="o">.</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">ElementRegistry</span><span class="p">:</span> <span class="n">A</span> <span class="n">registry</span> <span class="n">of</span> <span class="n">all</span> <span class="n">shapes</span> <span class="ow">and</span> <span class="n">connections</span> <span class="n">of</span> <span class="n">the</span> <span class="n">diagram</span><span class="o">.</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">Modeling</span><span class="p">:</span> <span class="n">The</span> <span class="n">main</span> <span class="n">module</span> <span class="k">for</span> <span class="n">modeling</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">We</span> <span class="n">will</span> <span class="n">use</span> <span class="n">these</span> <span class="n">modules</span> <span class="n">to</span> <span class="n">create</span> <span class="n">Participants</span><span class="p">,</span> <span class="n">add</span> <span class="n">them</span> <span class="n">to</span> <span class="n">the</span> <span class="n">diagram</span> <span class="p">(</span><span class="n">thereby</span>
+ <span class="o">*</span> <span class="n">turning</span> <span class="n">the</span> <span class="n">process</span> <span class="n">into</span> <span class="n">a</span> <span class="n">collaboration</span><span class="p">),</span> <span class="n">create</span> <span class="n">lanes</span> <span class="ow">and</span> <span class="n">connect</span> <span class="n">participants</span>
+ <span class="o">*</span> <span class="n">using</span> <span class="n">Message</span> <span class="n">Flows</span><span class="o">.</span>
+ <span class="o">*/</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="err">获取</span><span class="n">modules</span>
+<span class="k">const</span> <span class="n">elementFactory</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;elementFactory&#39;</span><span class="p">),</span>
+      <span class="n">elementRegistry</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;elementRegistry&#39;</span><span class="p">),</span>
+      <span class="n">modeling</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;modeling&#39;</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="err">根据</span><span class="n">ID获取Process和shape</span>
+<span class="k">const</span> <span class="n">process</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Process_1&#39;</span><span class="p">),</span>
+      <span class="n">startEvent</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;StartEvent_1&#39;</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="err">使用</span><span class="n">createParticipantShape创建一个新的Participant类型是shape</span>
+<span class="k">const</span> <span class="n">participant</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="o">.</span><span class="n">createParticipantShape</span><span class="p">({</span> <span class="n">type</span><span class="p">:</span> <span class="s1">&#39;bpmn:Participant&#39;</span> <span class="p">});</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="err">将新参与者添加到流程图中，从而将流程转变为协作流程</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">createShape</span><span class="p">(</span><span class="n">participant</span><span class="p">,</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">100</span> <span class="p">},</span> <span class="n">process</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="n">The</span> <span class="n">existing</span> <span class="n">start</span> <span class="n">event</span> <span class="k">is</span> <span class="n">now</span> <span class="n">a</span> <span class="n">child</span> <span class="n">of</span> <span class="n">the</span> <span class="n">participant</span>
+<span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">startEvent</span><span class="o">.</span><span class="n">parent</span><span class="p">);</span> <span class="o">//</span> <span class="n">Shape</span> <span class="p">{</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bpmn:Participant&quot;</span><span class="p">,</span> <span class="o">...</span> <span class="p">}</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="err">创建泳道</span>
+<span class="k">const</span> <span class="n">lane</span> <span class="o">=</span> <span class="n">modeling</span><span class="o">.</span><span class="n">addLane</span><span class="p">(</span><span class="n">participant</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="err">创建两个镶嵌的泳道</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">splitLane</span><span class="p">(</span><span class="n">lane</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="err">创建另一个</span><span class="n">participant类型的shape</span>
+<span class="k">const</span> <span class="n">collapsedParticipant</span> <span class="o">=</span> <span class="n">elementFactory</span>
+  <span class="o">.</span><span class="n">createParticipantShape</span><span class="p">({</span> <span class="n">type</span><span class="p">:</span> <span class="s1">&#39;bpmn:Participant&#39;</span><span class="p">,</span> <span class="n">isExpanded</span><span class="p">:</span> <span class="bp">false</span> <span class="p">});</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="err">添加</span><span class="n">participant到流程图中</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">createShape</span><span class="p">(</span><span class="n">collapsedParticipant</span><span class="p">,</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">500</span> <span class="p">},</span> <span class="n">process</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">9</span><span class="p">)</span> <span class="err">通过</span><span class="n">message消息连接两个participant</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">collapsedParticipant</span><span class="p">,</span> <span class="n">participant</span><span class="p">);</span>
+</code></pre></div>
+
+<h2 id="editing-elements-">Editing Elements - 编辑元素</h2>
+<div class="codehilite"><pre><span></span><code><span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Now</span><span class="p">,</span> <span class="n">let</span><span class="s1">&#39;s have a look at how you can edit existing elements.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">modules</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">example</span> <span class="n">are</span><span class="p">:</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">BpmnFactory</span><span class="p">:</span> <span class="n">Creates</span> <span class="n">new</span> <span class="n">business</span> <span class="n">objects</span><span class="o">.</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">ElementRegistry</span><span class="p">:</span> <span class="n">A</span> <span class="n">registry</span> <span class="n">of</span> <span class="n">all</span> <span class="n">shapes</span> <span class="ow">and</span> <span class="n">connections</span> <span class="n">of</span> <span class="n">the</span> <span class="n">diagram</span><span class="o">.</span>
+ <span class="o">*</span> <span class="o">*</span> <span class="n">Modeling</span><span class="p">:</span> <span class="n">The</span> <span class="n">main</span> <span class="n">module</span> <span class="k">for</span> <span class="n">modeling</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">We</span> <span class="n">will</span> <span class="n">use</span> <span class="n">these</span> <span class="n">modules</span> <span class="n">to</span> <span class="n">update</span> <span class="n">the</span> <span class="n">properties</span> <span class="n">of</span> <span class="n">two</span> <span class="n">existing</span> <span class="n">shapes</span><span class="o">.</span>
+ <span class="o">*/</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="err">获取</span><span class="n">modules</span>
+<span class="k">const</span> <span class="n">bpmnFactory</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;bpmnFactory&#39;</span><span class="p">),</span>
+      <span class="n">elementRegistry</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;elementRegistry&#39;</span><span class="p">),</span>
+      <span class="n">modeling</span> <span class="o">=</span> <span class="n">modeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;modeling&#39;</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="err">获取</span><span class="n">shapes</span>
+<span class="k">const</span> <span class="n">startEvent</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;StartEvent_1&#39;</span><span class="p">),</span>
+      <span class="n">exclusiveGateway</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ExclusiveGateway_1&#39;</span><span class="p">),</span>
+      <span class="n">sequenceFlow</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SequenceFlow_3&#39;</span><span class="p">),</span>
+      <span class="n">task</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Task_1&#39;</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="err">通过</span><span class="n">updateProperties来更改start</span> <span class="n">event的name属性</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">updateProperties</span><span class="p">(</span><span class="n">startEvent</span><span class="p">,</span> <span class="p">{</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;Foo&#39;</span> <span class="p">});</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="err">更改网关的</span><span class="n">defaultFlow属性</span>
+<span class="n">modeling</span><span class="o">.</span><span class="n">updateProperties</span><span class="p">(</span><span class="n">exclusiveGateway</span><span class="p">,</span> <span class="p">{</span>
+  <span class="n">default</span><span class="p">:</span> <span class="n">sequenceFlow</span><span class="o">.</span><span class="n">businessObject</span>
+<span class="p">});</span>
+
+<span class="o">//</span> <span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="err">将任务更改为</span><span class="n">multi</span><span class="o">-</span><span class="n">instance</span>
+<span class="k">const</span> <span class="n">multiInstanceLoopCharacteristics</span> <span class="o">=</span> <span class="n">bpmnFactory</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;bpmn:MultiInstanceLoopCharacteristics&#39;</span><span class="p">);</span>
+
+<span class="n">modeling</span><span class="o">.</span><span class="n">updateProperties</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="p">{</span>
+  <span class="n">loopCharacteristics</span><span class="p">:</span> <span class="n">multiInstanceLoopCharacteristics</span>
+<span class="p">});</span>
+</code></pre></div>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/t/bpmn-js-modeling-api-cn.html">📅 2020-11-11</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/BPMN/">🏷️ BPMN</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

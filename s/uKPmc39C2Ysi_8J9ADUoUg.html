@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,ORM,JSONField,Django,JSONField,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Django ORM中原生JSONField的使用方法" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Django ORM中原生JSONField的使用方法</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="Django ORM中原生JSONField的使用方法" />
+  <meta property="og:description" content="Django ORM中原生JSONField的使用方法" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django ORM中原生JSONField的使用方法</h1>
+
+        <blockquote>
+<p>带你尝鲜Django最新版重要更新JSONField的使用</p>
+</blockquote>
+<p>Django最新版v3.1的主要更新之一便是完善了对JSON数据存储的支持，新增<code>models.JSONField</code>和<code>forms.JSONField</code>，可在所有受支持的数据库后端上使用</p>
+<p>目前支持的数据库以及对应版本主要有<code>MariaDB 10.2.7+</code>,<code>MySQL 5.7.8+</code>,<code>Oracle</code>,<code>PostgreSQL</code>和<code>SQLite 3.9.0+</code>，但个别Django的查询方法可能与部分数据库不兼容，例如<code>contains</code>和<code>contained_by</code>就不支持Oracle和SQLite数据库</p>
+<h2 id="jsonfield">JSONField使用</h2>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">Hero</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">JSONField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+</code></pre></div>
+
+<p>通过<code>models.JSONField</code>可指定此字段为存储类型为JSON格式。<code>null=True</code>表示此字段可以为空，这个NULL指的是SQL NULL，如果想存储为JsonNULL，则可以使用<code>Value('null')</code>来实现</p>
+<div class="codehilite"><pre><span></span><code><span class="err">Hero.objects.create(name=&#39;coffee&#39;, data=Value(&#39;null&#39;))</span>
+</code></pre></div>
+
+<p>SQL NULL与JsonNULL的区别主要在<code>is_null</code>的查询上不同，可以通过以下这个示例来理解下</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Value</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Hero</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ops&#39;</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">Hero</span><span class="p">:</span> <span class="n">ops</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Hero</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;coffee&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">Value</span><span class="p">(</span><span class="s1">&#39;null&#39;</span><span class="p">))</span>
+<span class="o">&lt;</span><span class="n">Hero</span><span class="p">:</span> <span class="n">coffee</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Hero</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">Hero</span><span class="p">:</span> <span class="n">coffee</span><span class="o">&gt;</span><span class="p">]</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Hero</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">Value</span><span class="p">(</span><span class="s1">&#39;null&#39;</span><span class="p">))</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">Hero</span><span class="p">:</span> <span class="n">coffee</span><span class="o">&gt;</span><span class="p">]</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Hero</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ops&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Hero</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;coffee&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Hero</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">data__isnull</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">Hero</span><span class="p">:</span> <span class="n">ops</span><span class="o">&gt;</span><span class="p">]</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Hero</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">data__isnull</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">Hero</span><span class="p">:</span> <span class="n">coffee</span><span class="o">&gt;</span><span class="p">]</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<h2 id="jsonfield_1">JSONField查询</h2>
+<p>Json字段的查询方法，通过下边这个示例演示说明</p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; Hero.objects.create(name=&#39;ops-coffee.cn&#39;, data={</span>
+<span class="err">...     &#39;age&#39;: 12,</span>
+<span class="err">...     &#39;group&#39;: {</span>
+<span class="err">...         &#39;name&#39;: &#39;ow1&#39;,</span>
+<span class="err">...         &#39;skill&#39;: [</span>
+<span class="err">...             {&#39;name&#39;: &#39;swim&#39;, &#39;rank&#39;: &#39;A+&#39;},</span>
+<span class="err">...             {&#39;name&#39;: &#39;shot&#39;, &#39;rank&#39;: None}</span>
+<span class="err">...         ]</span>
+<span class="err">...     }</span>
+<span class="err">... })</span>
+<span class="err">&lt;Hero: ops-coffee.cn&gt;</span>
+<span class="err">&gt;&gt;&gt; Hero.objects.create(name=&#39;ops-coffee&#39;, data={&#39;age&#39;:16})</span>
+<span class="err">&lt;Hero: ops-coffee&gt;</span>
+</code></pre></div>
+
+<p>当想要查询<code>age</code>为<code>12</code>的数据时可以这样查询</p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; Hero.objects.filter(data__age=12)</span>
+<span class="err">&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;</span>
+</code></pre></div>
+
+<p>当想要查询<code>group</code>的<code>name</code>为<code>ow1</code>的数据时可以这样查询</p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; Hero.objects.filter(data__group__name=&#39;ow1&#39;)</span>
+<span class="err">&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;</span>
+</code></pre></div>
+
+<p>当想要查询<code>group</code>下<code>skill</code>中第一个数据的<code>name</code>值为<code>swim</code>的数据时可以这样查询</p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; Hero.objects.filter(data__group__skill__0__name=&#39;swim&#39;)</span>
+<span class="err">&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;</span>
+</code></pre></div>
+
+<p>当想要查找包含<code>group</code>键的所有数据时，可以通过<code>has_key</code>来实现</p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; Hero.objects.filter(data__has_key=&#39;group&#39;)</span>
+<span class="err">&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;</span>
+</code></pre></div>
+
+<p>当想要查找同时包含<code>group</code>键和<code>age</code>键的所有数据时，可以通过<code>has_keys</code>来实现</p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; Hero.objects.filter(data__has_keys=[&#39;group&#39;,&#39;age&#39;])</span>
+<span class="err">&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;</span>
+</code></pre></div>
+
+<p>当想要查找包含<code>group</code>键或者<code>age</code>键的所有数据时，可以通过<code>has_any_keys</code>来实现</p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; Hero.objects.filter(data__has_any_keys=[&#39;group&#39;,&#39;age&#39;])</span>
+<span class="err">&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;, &lt;Hero: ops-coffee&gt;]&gt;</span>
+</code></pre></div>
+
+<p>当想一次性查找包含<code>age</code>为<code>12</code>且<code>group</code>的<code>name</code>为<code>ow1</code>的数据时，可以通过<code>contains</code>来实现</p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; Hero.objects.filter(data__contains={&#39;age&#39;:12,&#39;group&#39;: {&#39;name&#39;: &#39;ow1&#39;}})</span>
+<span class="err">&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;</span>
+</code></pre></div>
+
+<p>JSONField除了支持以上查询方式外，对于ORM所提供的大部分其他查询方式同样支持，例如<code>icontains</code>,<code>endswith</code>,<code>iendswith</code>,<code>iexact</code>,<code>regex</code>,<code>iregex</code>, <code>startswith</code>,<code>istartswith</code>,<code>lt</code>,<code>lte</code>,<code>gt</code>,<code>gte</code>，使用起来也是非常方便</p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; Hero.objects.filter(data__age__lte=12)</span>
+<span class="err">&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;</span>
+<span class="err">&gt;&gt;&gt;</span>
+<span class="err">&gt;&gt;&gt; Hero.objects.filter(data__group__name__startswith=&#39;ow&#39;)</span>
+<span class="err">&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;</span>
+</code></pre></div>
+
+<h2 id="sqlite3">SQLite3报错处理</h2>
+<p>我在Windows下开发测试时，当<code>migrate</code>生成表的时候遇到了如下报错，这主要是因为SQLite不支持JSONFields导致的</p>
+<div class="codehilite"><pre><span></span><code><span class="err">SQLite does not support JSONFields</span>
+</code></pre></div>
+
+<p>解决方法为：</p>
+<p>先去sqlite官网下载对应的DLL软件包<code>https://www.sqlite.org/download.html</code>，然后替换掉当前使用的<code>sqlite3.dll文件</code>。例如我的windows为64位版本，所以下载了<code>sqlite-dll-win64-x64-3320300.zip</code>这个软件包，本地python的安装路径为<code>C:\python36</code>，直接将<code>C:\python36\DLLs\sqlite3.dll</code>用下载的软件包里的<code>sqlite3.dll</code>文件替换，然后再次运行<code>migrate</code>顺利创建了数据库表</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/uKPmc39C2Ysi_8J9ADUoUg.html">📅 2020-08-07</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

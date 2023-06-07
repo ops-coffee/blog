@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,None,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Django自定义错误页面配置" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Django自定义错误页面配置</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="Django自定义错误页面配置" />
+  <meta property="og:description" content="Django自定义错误页面配置" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django自定义错误页面配置</h1>
+
+        <blockquote>
+<p>基于Django 2.2版本实现</p>
+</blockquote>
+<p>Django下的错误类型主要有四种：
+- 400：客户端错误
+- 403：没有权限
+- 404：页面未找到
+- 500：服务器错误</p>
+<ol>
+<li>修改settings.py文件关闭DEBUG模式</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="err">DEBUG = False</span>
+</code></pre></div>
+
+<p>自定义错误页面在<code>Debug = True</code>时不生效</p>
+<ol>
+<li>创建错误页面，例如errors/403.html</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="err">You Don&#39;t have permission !</span>
+<span class="err">Please contact ops-coffee.cn</span>
+</code></pre></div>
+
+<ol>
+<li>view.py视图中创建自定义错误处理方法</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+
+<span class="k">def</span> <span class="nf">bad_request_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;errors/400.html&#39;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template_name</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">permission_denied_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;errors/403.html&#39;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template_name</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">page_not_found_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;errors/404.html&#39;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template_name</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">error_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;errors/500.html&#39;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template_name</span><span class="p">)</span>
+</code></pre></div>
+
+<ol>
+<li>urls.py中添加错误行为由自定义程序处理</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="err">handler400 = &#39;webapp.views.bad_request_view&#39;</span>
+<span class="err">handler403 = &#39;webapp.views.permission_denied_view&#39;</span>
+<span class="err">handler404 = &#39;webapp.views.page_not_found_view&#39;</span>
+<span class="err">handler500 = &#39;webapp.views.error_view&#39;</span>
+</code></pre></div>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/t/django-custom-error-page.html">📅 2019-05-21</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/日常技术/">🏷️ 日常技术</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

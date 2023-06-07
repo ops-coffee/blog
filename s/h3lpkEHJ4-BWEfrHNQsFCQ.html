@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,django,celery,Django,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Django动态添加定时任务之django-celery的使用" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Django动态添加定时任务之django-celery的使用</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="Django动态添加定时任务之django-celery的使用" />
+  <meta property="og:description" content="Django动态添加定时任务之django-celery的使用" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django动态添加定时任务之django-celery的使用</h1>
+
+        <p>定时任务和周期任务在我们日常工作中应用广泛，例如定时发布、周期巡检等，通常我们会借助Linux下的Crontab来实现，但如何将这一功能搬进我们自研的运维系统呢？借助django-celery即可轻松完成，本篇文章就通过<a href="/s/uXQbM4t11ICdzNofZyDeXA">自定义任务引擎Probius</a>中计划任务的实现来介绍django-celery的使用</p>
+<p><img alt="" src="/static/images/20201229.01.gif" /></p>
+<p>Celery是基于Python开发的一个分布式任务队列框架，主要用来实现异步任务，具体介绍和用法可以看我之前写的这篇文章：<a href="/s/lXrp3igYo9W2UuE5Gauysg">Django配置Celery执行异步任务和定时任务</a>，Django本身不支持异步，要想实现异步的话借助Celery是个不错的选择，上边这篇文章就提供了django集成celery的方法，但其配置稍微复杂，且不支持动态添加定时任务，django-celery的出现很好的解决了这个问题</p>
+<p>django-celery为django提供了celery集成，同时支持将结果存储在django的orm或cache中，最重要的是支持从数据库动态读取计划任务并执行，这也就是说我们只需要将需要执行的加护任务插入数据库，django-celery就可以自动发现并执行了，接下来就具体看下如何实现</p>
+<h2 id="_1">安装配置</h2>
+<p>1.安装<code>django-celery</code></p>
+<div class="codehilite"><pre><span></span><code><span class="err">pip install django-celery</span>
+</code></pre></div>
+
+<p>2.<code>settings.py</code>的<code>INSTALLED_APPS</code>中加入<code>djcelery</code></p>
+<div class="codehilite"><pre><span></span><code><span class="err">INSTALLED_APPS = [</span>
+<span class="err">    ...</span>
+<span class="err">    &#39;djcelery&#39;,</span>
+<span class="err">]</span>
+</code></pre></div>
+
+<p>3.<code>settings.py</code>中添加如下配置</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">djcelery</span>
+<span class="n">djcelery</span><span class="o">.</span><span class="n">setup_loader</span><span class="p">()</span>
+
+<span class="c1"># BROKER和BACKEND配置，这里用了本地的redis，其中1和2表示分别用redis的第一个和第二个db</span>
+<span class="n">BROKER_URL</span> <span class="o">=</span> <span class="s1">&#39;redis://localhost/1&#39;</span>
+<span class="n">CELERY_RESULT_BACKEND</span> <span class="o">=</span> <span class="s1">&#39;redis://localhost/2&#39;</span>
+
+<span class="c1"># celery 关闭UTC时区</span>
+<span class="n">CELERY_ENABLE_UTC</span> <span class="o">=</span> <span class="bp">False</span>
+
+<span class="c1"># celery 并发数设置，最多可以有20个任务同时运行</span>
+<span class="n">CELERYD_CONCURRENCY</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">CELERYD_MAX_TASKS_PER_CHILD</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="c1"># celery开启数据库调度器，数据库修改后即时生效</span>
+<span class="n">CELERYBEAT_SCHEDULER</span> <span class="o">=</span> <span class="s1">&#39;djcelery.schedulers.DatabaseScheduler&#39;</span>
+
+<span class="kn">from</span> <span class="nn">celery</span> <span class="kn">import</span> <span class="n">platforms</span>
+
+<span class="c1"># 允许root 用户运行celery</span>
+<span class="n">platforms</span><span class="o">.</span><span class="n">C_FORCE_ROOT</span> <span class="o">=</span> <span class="bp">True</span>
+</code></pre></div>
+
+<p>4.启动celery</p>
+<div class="codehilite"><pre><span></span><code><span class="err">python manage.py celery worker -l info</span>
+</code></pre></div>
+
+<p>至此就可以使用djcelery来处理异步任务了</p>
+<h2 id="_2">异步调用</h2>
+<p>具体的用法为在app根目录下添加一个<code>tasks.py</code>文件，在文件中编写函数，给函数添加上<code>shared_task</code>装饰器即可</p>
+<p>假设一个项目有如下目录结构</p>
+<div class="codehilite"><pre><span></span><code><span class="err">project</span>
+<span class="err">    - coffee</span>
+<span class="err">        - __init__.py</span>
+<span class="err">        - admin.py</span>
+<span class="err">        - app.py</span>
+<span class="err">        - models.py</span>
+<span class="err">        - tasks.py</span>
+<span class="err">        - tests.py</span>
+<span class="err">        - views.py</span>
+<span class="err">    - webapp</span>
+<span class="err">        - __init__.py</span>
+<span class="err">        - settings.py</span>
+<span class="err">        - urls.py</span>
+<span class="err">        - wsgi.py</span>
+<span class="err">    - manage.py</span>
+</code></pre></div>
+
+<p>我们在名为<code>coffee</code>的app下添加文件<code>tasks.py</code>，<code>tasks.py</code>文件内容如下</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">celery</span> <span class="kn">import</span> <span class="n">shared_task</span>
+
+
+<span class="nd">@shared_task</span>
+<span class="k">def</span> <span class="nf">welcome</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Welcome to ops-coffee.cn&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="bp">True</span>
+</code></pre></div>
+
+<p>然后就可以在view或其他地方异步调用这个<code>welcome</code>函数了</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">JsonResponse</span>
+<span class="kn">from</span> <span class="nn">coffee.tasks</span> <span class="kn">import</span> <span class="n">welcome</span>
+
+
+<span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">welcome</span><span class="o">.</span><span class="n">delay</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;welcome&quot;</span><span class="p">})</span>
+</code></pre></div>
+
+<h2 id="_3">周期任务</h2>
+<p>以上只是将任务变成了异步，如果我们想要周期执行<code>welcome</code>任务，该如何操作呢？</p>
+<p>1.首先需要执行<code>migrate</code>命令在数据库创建表</p>
+<div class="codehilite"><pre><span></span><code><span class="err">python manage.py migrate</span>
+</code></pre></div>
+
+<p>2.然后修改<code>settings.py</code>文件中添加<code>CELERYBEAT_SCHEDULE</code>配置</p>
+<div class="codehilite"><pre><span></span><code><span class="err">CELERYBEAT_SCHEDULE = {</span>
+<span class="err">    &#39;ops-coffee-1&#39;: {</span>
+<span class="err">        &#39;task&#39;: &#39;coffee.tasks.welcome&#39;,</span>
+<span class="err">        &#39;schedule&#39;: timedelta(seconds=20)</span>
+<span class="err">    },</span>
+<span class="err">    &#39;ops-coffee-2&#39;: {</span>
+<span class="err">        &#39;task&#39;: &#39;coffee.tasks.welcome&#39;,</span>
+<span class="err">        &#39;schedule&#39;: crontab(hour=17, minute=30),</span>
+<span class="err">    }</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>以上配置详细的解释可以看文章：<a href="/s/lXrp3igYo9W2UuE5Gauysg">Django配置Celery执行异步任务和定时任务</a></p>
+<p>3.最后启动beat</p>
+<div class="codehilite"><pre><span></span><code><span class="err">python manage.py celery beat -l info</span>
+</code></pre></div>
+
+<p>至此<code>welcome</code>任务就会在设置的时间执行了</p>
+<h3 id="_4">报错处理</h3>
+<p>PS: 启动beat时可能会有如下报错</p>
+<div class="codehilite"><pre><span></span><code><span class="n">TypeError</span><span class="o">:</span> <span class="n">can</span><span class="err">&#39;</span><span class="n">t</span> <span class="n">subtract</span> <span class="n">offset</span><span class="o">-</span><span class="n">naive</span> <span class="n">and</span> <span class="n">offset</span><span class="o">-</span><span class="n">aware</span> <span class="n">datetimes</span>
+</code></pre></div>
+
+<p>这主要是因为时区引起的，请修改时区相关的配置</p>
+<div class="codehilite"><pre><span></span><code><span class="err">TIME_ZONE = &#39;Asia/Shanghai&#39;</span>
+<span class="err">USE_TZ = False</span>
+</code></pre></div>
+
+<h2 id="_5">动态添加</h2>
+<p>至此已经可以添加周期任务或定时任务了，但操作方式比较麻烦，还需要改动配置文件，说好的动态添加呢，别急这就来了，打开数据库会看到几张以<code>djcelery_</code>开头的表</p>
+<p><img alt="" src="/static/images/20201229.02.png" /></p>
+<p>其中对于动态添加计划任务有用的是计划任务时间定义表<code>djcelery_crontabschedule</code>，循环任务时间定义表<code>djcelery_crontabschedule</code>，以及任务表<code>djcelery_periodictask</code></p>
+<p>只需要在对应的表里插入数据就ok了，以我在<a href="/s/uXQbM4t11ICdzNofZyDeXA">自定义任务引擎Probius</a>中的使用为例，前端会传递时间到view，view中关于定时任务的的大概处理逻辑如下</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">djcelery.models</span> <span class="kn">import</span> <span class="n">CrontabSchedule</span><span class="p">,</span> <span class="n">PeriodicTask</span>
+
+<span class="k">with</span> <span class="n">transaction</span><span class="o">.</span><span class="n">atomic</span><span class="p">():</span>
+    <span class="n">save_id</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">savepoint</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_c</span><span class="p">,</span> <span class="n">created</span> <span class="o">=</span> <span class="n">CrontabSchedule</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+            <span class="n">minute</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">minute</span><span class="p">),</span>
+            <span class="n">hour</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">hour</span><span class="p">),</span>
+            <span class="n">day_of_week</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">day_of_week</span><span class="p">),</span>
+            <span class="n">day_of_month</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">day_of_month</span><span class="p">),</span>
+            <span class="n">month_of_year</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">month_of_year</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H%M%S&#39;</span><span class="p">)</span>
+        <span class="n">_p</span> <span class="o">=</span> <span class="n">PeriodicTask</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">dt</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="s1">&#39;运维咖啡吧周期任务A&#39;</span><span class="p">,</span>
+            <span class="n">task</span><span class="o">=</span><span class="s1">&#39;coffee.tasks.welcome&#39;</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="mi">37</span><span class="p">],</span>
+            <span class="n">enabled</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">crontab</span><span class="o">=</span><span class="n">_c</span>
+        <span class="p">)</span>
+
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;计划任务添加成功&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">savepoint_rollback</span><span class="p">(</span><span class="n">save_id</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;添加计划任务失败，错误原因：&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+</code></pre></div>
+
+<p>通过<code>with transaction.atomic()</code>创建一个事物，保证时间和任务都能同时添加成功，否则就回滚</p>
+<p>然后通过<code>get_or_create</code>方法去检索循环任务时间定义表<code>CrontabSchedule</code>，如果有就获取到实例，没有就创建</p>
+<p>最后往任务表<code>PeriodicTask</code>里插入任务，<code>name</code>为任务名称，具有唯一性，所以这里加了时间前缀防止重复，<code>task</code>为celery的task任务，字符串类型，在启动celery的时候就可以看到，<code>args</code>传给任务的参数，这里也可以用kwargs的字典形式传，就把<code>args</code>字段改成<code>kwargs</code>即可，<code>enabled</code>定义了这个任务是启动或关闭状态，<code>crontab</code>为循环任务时间实例，如果这里要用周期任务，就是每n秒n分循环执行这样的，只需要将<code>crontab</code>关联换成<code>interval</code>即可，那就需要事先往<code>IntervalSchedule</code>表里插入数据</p>
+<p>还记得开头settings.py配置文件中我们配置的<code>CELERYBEAT_SCHEDULER</code>吗？就因为有这个配置，所以当数据表里的数据变更之后，celery的beat程序就能监听到从而在配置的时间触发worker去执行任务</p>
+<p>至此，主要功能我们都已实现，django-celery的计划任务只能支持固定时间吗？其实不然，他支持的语法与linux下的crontab类似，像<code>hour='*/3,9-18'</code>这样的复杂语法也是支持的，在Probius中对于复杂语法我们也直接提供了更为灵活的自定义任务执行方式</p>
+<p><img alt="" src="/static/images/20201229.03.png" /></p>
+<p>为了便于使用，减少学习成本，这里就直接用了linux下crontab的格式，传到后端后解析成对应的时间写入数据库。有些小伙伴跟我说开发出来的工具没人用，或者是其他部门推不动，项目开发中的这些个细节考虑到位，尽量减少用户学习使用成本，做的足够好用、易用，还怕没有人用嘛</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/h3lpkEHJ4-BWEfrHNQsFCQ.html">📅 2020-12-29</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

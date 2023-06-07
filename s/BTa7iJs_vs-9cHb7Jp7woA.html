@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="bpmn,js,Viewer,bpmn,js,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="最好用的流程编辑器bpmn-js系列之Viewer" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>最好用的流程编辑器bpmn-js系列之Viewer</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="最好用的流程编辑器bpmn-js系列之Viewer" />
+  <meta property="og:description" content="最好用的流程编辑器bpmn-js系列之Viewer" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">最好用的流程编辑器bpmn-js系列之Viewer</h1>
+
+        <blockquote>
+<p>最好用的流程编辑器bpmn-js系列文章</p>
+</blockquote>
+<p>上一篇文章<a href="/s/ZYFo4hqxPKlu6QTb-vg4ig">『最好用的流程编辑器bpmn-js系列之Modeler』</a>介绍了bpmn-js的modeler模式下的一些开发配置，这篇文章将会介绍Viewer模式的使用</p>
+<p>以下演示代码基于上一节搭建好的vue环境，使用bpmn版本为当前最新版7.3.0</p>
+<h2 id="_1">基本使用</h2>
+<p>Viewer的使用与Modeler并无太大区别，示例代码如下</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="n">template</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;containers&quot;</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;canvas&quot;</span> <span class="n">ref</span><span class="o">=</span><span class="s2">&quot;canvas&quot;</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">template</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">script</span><span class="o">&gt;</span>
+<span class="kn">import</span> <span class="nn">BpmnViewer</span> <span class="nn">from</span> <span class="s2">&quot;bpmn-js/lib/Viewer&quot;</span><span class="p">;</span>
+<span class="kn">import</span> <span class="p">{</span> <span class="n">xmlStr</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;../mock/xmlStr&quot;</span><span class="p">;</span>
+
+<span class="n">export</span> <span class="n">default</span> <span class="p">{</span>
+  <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;ops-coffee&quot;</span><span class="p">,</span>
+  <span class="n">mounted</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">this</span><span class="o">.</span><span class="n">init</span><span class="p">();</span>
+  <span class="p">},</span>
+  <span class="n">data</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="n">bpmnViewer</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+      <span class="n">container</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+      <span class="n">canvas</span><span class="p">:</span> <span class="n">null</span>
+    <span class="p">};</span>
+  <span class="p">},</span>
+  <span class="n">methods</span><span class="p">:</span> <span class="p">{</span>
+    <span class="n">init</span><span class="p">()</span> <span class="p">{</span>
+      <span class="n">const</span> <span class="n">canvas</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="err">$</span><span class="n">refs</span><span class="o">.</span><span class="n">canvas</span><span class="p">;</span>
+      <span class="n">this</span><span class="o">.</span><span class="n">bpmnViewer</span> <span class="o">=</span> <span class="n">new</span> <span class="n">BpmnViewer</span><span class="p">({</span>
+        <span class="n">container</span><span class="p">:</span> <span class="n">canvas</span>
+      <span class="p">});</span>
+
+      <span class="n">this</span><span class="o">.</span><span class="n">createNewDiagram</span><span class="p">();</span>
+    <span class="p">},</span>
+    <span class="n">async</span> <span class="n">createNewDiagram</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="n">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnViewer</span><span class="o">.</span><span class="n">importXML</span><span class="p">(</span><span class="n">xmlStr</span><span class="p">);</span>
+        <span class="n">const</span> <span class="p">{</span> <span class="n">warnings</span> <span class="p">}</span> <span class="o">=</span> <span class="n">result</span><span class="p">;</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">warnings</span><span class="p">);</span>
+      <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">warnings</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+<span class="o">&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<h2 id="_2">屏幕自适应</h2>
+<p>流程图渲染完成后可能会出现集中在画布左侧/右侧等情形，导致整体不够美观，通过<code>zoom</code>可以配置自适应画布，保证渲染图位于画布的中间位置</p>
+<div class="codehilite"><pre><span></span><code><span class="k">const</span> <span class="n">canvas</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnViewer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;canvas&quot;</span><span class="p">);</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="s2">&quot;fit-viewport&quot;</span><span class="p">,</span> <span class="s2">&quot;auto&quot;</span><span class="p">);</span>
+</code></pre></div>
+
+<h2 id="_3">自定义颜色设置</h2>
+<p>bpmn-js提供了三种修改颜色的方式，如果你想在Modeler（编辑）模式下修改颜色，推荐使用<code>setColor</code>方式，而Viewer（预览）模式则只能通过另外两种<code>overlay</code>和<code>Marker</code>方式来实现，以下为bpmn-js提供的三种修改颜色的方法</p>
+<h3 id="overlay">overlay</h3>
+<p>Viewer模式下可用</p>
+<p>先添加CSS</p>
+<div class="codehilite"><pre><span></span><code><span class="na">.highlight-overlay</span> <span class="err">{</span>
+    <span class="nl">background-color:</span> <span class="nf">green</span><span class="c1">;</span>
+    <span class="nl">opacity:</span> <span class="err">0</span><span class="nf">.4</span><span class="c1">;</span>
+    <span class="nl">pointer-events:</span> <span class="nf">none</span><span class="c1">;</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>然后修改节点颜色</p>
+<div class="codehilite"><pre><span></span><code><span class="k">var</span> <span class="n">overlays</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;overlays&#39;</span><span class="p">),</span>
+    <span class="n">elementRegistry</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;elementRegistry&#39;</span><span class="p">);</span>
+
+<span class="k">var</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Activity_0djl6l0&#39;</span><span class="p">);</span>
+
+<span class="k">var</span> <span class="o">$</span><span class="n">overlayHtml</span> <span class="o">=</span> <span class="o">$</span><span class="p">(</span><span class="s1">&#39;&lt;div class=&quot;highlight-overlay&quot;&gt;&#39;</span><span class="p">)</span>
+                        <span class="o">.</span><span class="n">css</span><span class="p">({</span>
+                          <span class="n">width</span><span class="p">:</span> <span class="n">shape</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+                          <span class="n">height</span><span class="p">:</span> <span class="n">shape</span><span class="o">.</span><span class="n">height</span>
+                        <span class="p">});</span>
+
+<span class="n">overlays</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;Activity_0djl6l0&#39;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="n">position</span><span class="p">:</span> <span class="p">{</span>
+    <span class="n">top</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">left</span><span class="p">:</span> <span class="mi">0</span>
+  <span class="p">},</span>
+  <span class="n">html</span><span class="p">:</span> <span class="o">$</span><span class="n">overlayHtml</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<h3 id="marker">Marker +</h3>
+<p>Viewer模式下可用</p>
+<p>先添加CSS</p>
+<div class="codehilite"><pre><span></span><code><span class="na">.highlight</span> <span class="no">.djs-visual</span> <span class="err">&gt;</span> <span class="p">:</span><span class="no">nth-child</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="err">{</span>
+    <span class="nl">stroke:</span> <span class="nf">green</span> <span class="p">!</span><span class="no">important</span><span class="c1">;</span>
+    <span class="nl">fill:</span> <span class="nf">rgba</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="no">.4</span><span class="p">)</span> <span class="p">!</span><span class="no">important</span><span class="c1">;</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>然后修改节点颜色</p>
+<div class="codehilite"><pre><span></span><code><span class="k">var</span> <span class="n">canvas</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;canvas&#39;</span><span class="p">);</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">addMarker</span><span class="p">(</span><span class="s1">&#39;Activity_0djl6l0&#39;</span><span class="p">,</span> <span class="s1">&#39;highlight&#39;</span><span class="p">);</span>
+</code></pre></div>
+
+<h3 id="setcolor">setColor</h3>
+<p>Modeler模式下可用</p>
+<div class="codehilite"><pre><span></span><code><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">importXML</span><span class="p">(</span><span class="n">diagramXML</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">elementRegistry</span> <span class="o">=</span> <span class="n">bpmnModeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;elementRegistry&#39;</span><span class="p">);</span>
+    <span class="k">var</span> <span class="n">elementToColor</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Flow_1xnf3iv&#39;</span><span class="p">);</span>
+
+    <span class="k">var</span> <span class="n">modeling</span> <span class="o">=</span> <span class="n">bpmnModeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;modeling&#39;</span><span class="p">);</span>
+    <span class="n">modeling</span><span class="o">.</span><span class="n">setColor</span><span class="p">([</span> <span class="n">elementToColor</span> <span class="p">],</span> <span class="p">{</span>
+      <span class="n">stroke</span><span class="p">:</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span>
+      <span class="n">fill</span><span class="p">:</span> <span class="s1">&#39;rgba(0, 80, 0, 0.4)&#39;</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<h3 id="_4">我们的使用示例</h3>
+<p>Viewer预览模式下，后端传递过来的xml数据里包含了<code>run_state</code>的标记，标识当前节点的状态，需要根据这个状态给节点渲染上对应的颜色</p>
+<p>xml文件大概如下，截取了包含<code>run_state</code>的一段</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;sequenceFlow</span> <span class="na">id=</span><span class="s">&quot;Flow_1d9q74f&quot;</span> <span class="na">sourceRef=</span><span class="s">&quot;Activity_1eq68tk&quot;</span> <span class="na">targetRef=</span><span class="s">&quot;Activity_0o8b5cf&quot;</span> <span class="na">run_state=</span><span class="s">&quot;3&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;scriptTask</span> <span class="na">id=</span><span class="s">&quot;Activity_0o8b5cf&quot;</span> <span class="na">name=</span><span class="s">&quot;脚本节点&quot;</span> <span class="na">run_state=</span><span class="s">&quot;5&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;incoming&gt;</span>Flow_1d9q74f<span class="nt">&lt;/incoming&gt;</span>
+  <span class="nt">&lt;outgoing&gt;</span>Flow_0b23d51<span class="nt">&lt;/outgoing&gt;</span>
+<span class="nt">&lt;/scriptTask&gt;</span>
+<span class="nt">&lt;sequenceFlow</span> <span class="na">id=</span><span class="s">&quot;Flow_0b23d51&quot;</span> <span class="na">sourceRef=</span><span class="s">&quot;Activity_0o8b5cf&quot;</span> <span class="na">targetRef=</span><span class="s">&quot;Event_0idqhms&quot;</span> <span class="na">run_state=</span><span class="s">&quot;4&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;intermediateCatchEvent</span> <span class="na">id=</span><span class="s">&quot;Event_0idqhms&quot;</span> <span class="na">name=</span><span class="s">&quot;定时&quot;</span> <span class="na">run_state=</span><span class="s">&quot;6&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;incoming&gt;</span>Flow_0b23d51<span class="nt">&lt;/incoming&gt;</span>
+  <span class="nt">&lt;outgoing&gt;</span>Flow_17tttbw<span class="nt">&lt;/outgoing&gt;</span>
+  <span class="nt">&lt;timerEventDefinition</span> <span class="na">id=</span><span class="s">&quot;TimerEventDefinition_1w7apdl&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/intermediateCatchEvent&gt;</span>
+<span class="nt">&lt;sequenceFlow</span> <span class="na">id=</span><span class="s">&quot;Flow_17tttbw&quot;</span> <span class="na">sourceRef=</span><span class="s">&quot;Event_0idqhms&quot;</span> <span class="na">targetRef=</span><span class="s">&quot;Activity_0qkzn5l&quot;</span> <span class="na">run_state=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;manualTask</span> <span class="na">id=</span><span class="s">&quot;Activity_0qkzn5l&quot;</span> <span class="na">name=</span><span class="s">&quot;手动节点&quot;</span> <span class="na">run_state=</span><span class="s">&quot;7&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;incoming&gt;</span>Flow_17tttbw<span class="nt">&lt;/incoming&gt;</span>
+  <span class="nt">&lt;outgoing&gt;</span>Flow_0h1ee5i<span class="nt">&lt;/outgoing&gt;</span>
+<span class="nt">&lt;/manualTask&gt;</span>
+</code></pre></div>
+
+<p>在页面加载完xml后，调用setColor的方法来设置颜色</p>
+<div class="codehilite"><pre><span></span><code><span class="n">setColor</span><span class="p">()</span> <span class="p">{</span>
+  <span class="o">//</span> <span class="n">access</span> <span class="n">viewer</span> <span class="n">components</span>
+  <span class="k">const</span> <span class="n">canvas</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnViewer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;canvas&quot;</span><span class="p">);</span>
+
+  <span class="o">//</span> <span class="err">获取到全部节点</span>
+  <span class="k">const</span> <span class="n">allShapes</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnViewer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;elementRegistry&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getAll</span><span class="p">();</span>
+
+  <span class="o">//</span><span class="err">循环节点添加颜色</span>
+  <span class="n">allShapes</span><span class="o">.</span><span class="n">forEach</span><span class="p">(</span><span class="n">element</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">shapeId</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">businessObject</span><span class="o">.</span><span class="n">id</span><span class="p">;</span>
+    <span class="k">const</span> <span class="n">shapeAttrs</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">businessObject</span><span class="o">.$</span><span class="n">attrs</span><span class="p">;</span>
+
+    <span class="o">//</span> <span class="n">add</span> <span class="n">marker</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">businessObject</span><span class="o">.$</span><span class="n">type</span> <span class="o">!=</span> <span class="s2">&quot;bpmn:Group&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">businessObject</span><span class="o">.$</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;bpmn:SequenceFlow&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">addMarker</span><span class="p">(</span><span class="n">shapeId</span><span class="p">,</span> <span class="s2">&quot;highlight-2&quot;</span> <span class="o">+</span> <span class="n">shapeAttrs</span><span class="o">.</span><span class="n">run_state</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">addMarker</span><span class="p">(</span><span class="n">shapeId</span><span class="p">,</span> <span class="s2">&quot;highlight-&quot;</span> <span class="o">+</span> <span class="n">shapeAttrs</span><span class="o">.</span><span class="n">run_state</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>设置颜色实际上就是通过<code>addMarker</code>方法给节点设置CSS，因为连线无需设置fill属性，对于连线有特殊的处理，对应的CSS如下</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;style&gt;</span>
+.highlight-0 .djs-visual &gt; :nth-child(1) {
+  stroke: black !important;
+}
+.highlight-1 .djs-visual &gt; :nth-child(1) {
+  stroke: black !important;
+  fill: #f8f8f8 !important;
+}
+.highlight-2 .djs-visual &gt; :nth-child(1) {
+  stroke: black !important;
+  fill: #cff5fa !important;
+}
+.highlight-3 .djs-visual &gt; :nth-child(1) {
+  stroke: black !important;
+  fill: #d7f6ce !important;
+}
+
+/* 连线 */
+.highlight-20 .djs-visual &gt; :nth-child(1) {
+  stroke: black !important;
+}
+.highlight-23 .djs-visual &gt; :nth-child(1) {
+  stroke: green !important;
+}
+.highlight-24 .djs-visual &gt; :nth-child(1) {
+  stroke: red !important;
+}
+<span class="nt">&lt;/style&gt;</span>
+</code></pre></div>
+
+<p>最后渲染完成的样子如下，未来我们的<a href="/s/eZX5qoJzuCSuLI98gSCtpw">【开源一站式DevOps平台CODO】</a>的流程图展示或许就长这个样子，期待一下吧</p>
+<p><img alt="" src="/static/images/20200915.01.png" /></p>
+<h2 id="viewer">Viewer模式下拖动</h2>
+<p>当流程图比较复杂，节点众多的时候，单单有屏幕自适应可能是不够的，我们还希望流程图可以拖动，bpmn-js的Viewer模式默认并不支持此功能，但提供了<code>diagram-js</code>插件来实现</p>
+<p>使用起来稍微复杂，但根据下边的步骤就能轻松搞定</p>
+<p>先在package.json中添加<code>diagram-js</code>，然后运行<code>npm install</code>安装<code>diagram-js</code></p>
+<div class="codehilite"><pre><span></span><code><span class="err">&quot;dependencies&quot;: {</span>
+<span class="err">    &quot;bpmn-js&quot;: &quot;^7.3.0&quot;,</span>
+<span class="err">    &quot;diagram-js&quot;: &quot;^5.0.0&quot;</span>
+<span class="err">},</span>
+</code></pre></div>
+
+<p>编写自定义Viewer添加<code>ZoomScrollModule</code>和<code>MoveCanvasModule</code>模块来扩展默认Viewer的功能，自定义Viewer文件位于<code>src/components/customBpmn/index.js</code>下，内容如下</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">inherits</span> <span class="nn">from</span> <span class="s2">&quot;inherits&quot;</span><span class="p">;</span>
+
+<span class="kn">import</span> <span class="nn">Viewer</span> <span class="nn">from</span> <span class="s2">&quot;bpmn-js/lib/Viewer&quot;</span><span class="p">;</span>
+
+<span class="kn">import</span> <span class="nn">ZoomScrollModule</span> <span class="nn">from</span> <span class="s2">&quot;diagram-js/lib/navigation/zoomscroll&quot;</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">MoveCanvasModule</span> <span class="nn">from</span> <span class="s2">&quot;diagram-js/lib/navigation/movecanvas&quot;</span><span class="p">;</span>
+
+<span class="n">function</span> <span class="n">CustomViewer</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Viewer</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">options</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">inherits</span><span class="p">(</span><span class="n">CustomViewer</span><span class="p">,</span> <span class="n">Viewer</span><span class="p">);</span>
+
+<span class="n">CustomViewer</span><span class="o">.</span><span class="n">prototype</span><span class="o">.</span><span class="n">_modules</span> <span class="o">=</span> <span class="p">[]</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">Viewer</span><span class="o">.</span><span class="n">prototype</span><span class="o">.</span><span class="n">_modules</span><span class="p">,</span> <span class="p">[</span>
+  <span class="n">ZoomScrollModule</span><span class="p">,</span>
+  <span class="n">MoveCanvasModule</span>
+<span class="p">]);</span>
+
+<span class="n">export</span> <span class="p">{</span> <span class="n">CustomModeler</span><span class="p">,</span> <span class="n">CustomViewer</span> <span class="p">};</span>
+</code></pre></div>
+
+<p>最后在页面中引用自定义Viewer</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="p">{</span> <span class="n">CustomViewer</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;../components/customBpmn&quot;</span><span class="p">;</span>
+</code></pre></div>
+
+<p>并将init初始化方法中的<code>BpmnViewer</code>替换为<code>CustomViewer</code>，然后刷新页面就会发现流程图可以拖动啦</p>
+<h2 id="_5">写在最后</h2>
+<p>接触bpmn-js不久，且第一次用VUE，边学边写，文章难免出错，各位多多包含。想要打造一个好用的适合自己的流程编辑器，需要了解的内容比较多，bpmn-js会分多篇文章来介绍，欢迎关注</p>
+<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.cn">https://bpmn.ops-coffee.cn</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/BTa7iJs_vs-9cHb7Jp7woA.html">📅 2020-09-15</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/BPMN/">🏷️ BPMN</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

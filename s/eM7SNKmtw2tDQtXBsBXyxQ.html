@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="varian,Jenkins,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="探秘varian：优雅的发布部署程序" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>探秘varian：优雅的发布部署程序</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="探秘varian：优雅的发布部署程序" />
+  <meta property="og:description" content="探秘varian：优雅的发布部署程序" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">探秘varian：优雅的发布部署程序</h1>
+
+        <blockquote>
+<p>上一篇文章<a href="/s/fl3OiX7xg9GVrj9G--a5-g">《记一次诡异的故障排查经历》</a>中有介绍到我们的部署程序varian，文章发布后有小伙伴对varian很感兴趣，今天就简单的介绍一下我们的varian，揭开她神秘的面纱~</p>
+</blockquote>
+<h1 id="varian">什么是varian</h1>
+<p>varian是我们基于Python3编写的一套部署程序，处在整个部署系统的中心，与CMDB、Jenkins、SVN/Git、镜像仓库Harbor、Kubernetes API、通知系统等都有交互，负责将源代码经过一系列的处理后打包成Docker镜像，并发布到各个环境，然后通知相关人员。简化后的varian架构如下：</p>
+<p><img alt="varian架构图" src="/static/images/20180730.varian.png" /></p>
+<h1 id="_1">项目环境介绍</h1>
+<ul>
+<li>项目数量：50+</li>
+<li>开发语言：php、java、nodejs</li>
+<li>代码版本管理工具：svn、git</li>
+<li>编译方式：maven、grunt、yarn</li>
+<li>通知方式：email、sms、im</li>
+</ul>
+<h1 id="varian_1">varian能解决我们哪些问题</h1>
+<p>说到解决的问题，要先聊一下部署系统经历的几个迭代版本：</p>
+<ol>
+<li>
+<p>最早项目比较少，所用架构及技术也比较单一，每个项目都单独维护了一个shell脚本做部署，脚本里配置了项目的所有信息，包含服务器列表、代码路径等项目特有信息和通知类型等公共信息，各项目脚本之间互不干涉。这样做的好处是每个项目部署发布逻辑都比较简单，修改任何一个项目都对其他项目无影响；但缺点也很明显，各个项目脚本分散，任何项目信息变更都需要取改这个脚本，且一些公共功能的修改就需要所有项目脚本都改一遍，难免不出问题。</p>
+</li>
+<li>
+<p>后来随着项目、服务器数量的增多，引入了CMDB来管理项目和主机的基本信息，纯shell的脚本也升级为了python+shell的脚本来维护编译部署，把一部分公共模块例如去CMDB拉取项目下的主机列表、邮件通知等从shell脚本中单独抽出来用python重构，并用python实现了一个主入口，所有项目部署都通过这个主入口进入，然后调用python或shell脚本来实现部署发布整过程，这样解决了脚本分散和公共模块更新所有项目脚本都要跟着修改的问题，但是添加一个新项目还是要手动更新一堆的脚本文件，效率低且易出错，各个项目处理逻辑各不相同，对需要熟悉她的新人很不友好。</p>
+</li>
+<li>
+<p>现在线上项目数量已经超过50+，且还在不断增多，微服务、容器化等新技术也不断加入，每天进行数十上百次的部署更新，对部署系统的健壮性，扩展性有了更高的要求。基于之前一步步的探索，采用微服务的设计理念，我们实现了现在这一套部署程序varian，效率高、易扩展、出错率大大降低且对新人友好，解决了以上遇到的所有问题。</p>
+</li>
+</ol>
+<h1 id="varian_2">varian究竟长何种模样</h1>
+<p>说了这么多，那varian究竟是个什么样子呢？</p>
+<h2 id="_2">设计思路</h2>
+<p>Lego积木，就是那种各个不同的小模块能拼装成各种各样的建筑的玩具。设计的思路也主要采用了lego的方式，把所有的功能都拆分成一个一个的python类，部署项目时就组装不同的类，例如一个最简单的纯静态web项目，组装了“拉代码模块”+“JS/CSS合并压缩模块”+“分发API模块”+“邮件通知模块”，如果是一个纯java api项目呢？组装“拉代码模块”+“maven编译模块”+“分发API模块”+“邮件通知模块”即可，从上边的例子可以就可以看出这种组装模块的优势。</p>
+<p><img alt="lego拼装模块" src="/static/images/20180730.lego.png" /></p>
+<p>所有模块可复用，来了一个新项目根据项目架构、开发语言等因素去判断目前的模块是否能够满足，如果可以满足就直接组装使用吧，如果确认过眼神，实在满足不了呢？那就新加一个模块，模块编写遵循简单可复用原则，需考虑到后续有类似功能可以直接使用此模块。</p>
+<p>可能会有疑问？那些各个项目不同的配置怎么办？例如代码路径。这里采用了逻辑（模块）跟配置拆分的设计方式，所有处理逻辑不涉及任何一个项目特有的属性，项目特有的属性都单独配置，我们采用CMDB来配置，CMDB里有一张deploy的表，表关联project，记录了项目的特殊属性，例如通知邮件列表等等，逻辑模块会调用CMDB API自动取出所需配置信息。</p>
+<h2 id="_3">实现方法</h2>
+<ul>
+<li>目录结构如下：</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="n">varian</span><span class="o">/</span>
+<span class="o">|--</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span> <span class="c1">#入口主函数</span>
+<span class="o">|--</span> <span class="n">module</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">__init__</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">notify</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">check</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="o">...</span><span class="err">更多模块</span>
+<span class="o">|--</span> <span class="n">project</span>
+    <span class="o">|--</span> <span class="n">website</span> <span class="c1">#项目名</span>
+    <span class="o">|</span>   <span class="o">|--</span> <span class="n">cache</span>   <span class="c1">#存放log等内容</span>
+    <span class="o">|</span>   <span class="o">|--</span> <span class="n">docker</span>  <span class="c1">#打包docker镜像目录</span>
+    <span class="o">|</span>   <span class="o">|--</span> <span class="n">svn</span>     <span class="c1">#svn源代码目录</span>
+</code></pre></div>
+
+<ul>
+<li>简化过的主函数<code>main.py</code>如下（代码随机删除。。意思对就行吧）</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span><span class="o">,</span><span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">module</span> <span class="kn">import</span> <span class="n">build</span><span class="p">,</span><span class="n">public</span>
+
+<span class="n">parser</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;deploys duang!!!&#39;</span><span class="p">)</span>
+
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="s1">&#39;pro_name&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="s1">&#39;env_name&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="s1">&#39;parameters&#39;</span><span class="p">,</span><span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+
+<span class="n">args</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">M</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pro_name</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">pro_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env_name</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">env_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">parameters</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_ob</span> <span class="o">=</span> <span class="n">build</span><span class="o">.</span><span class="n">BUILD</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pro_name</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">env_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">public_ob</span> <span class="o">=</span> <span class="n">public</span><span class="o">.</span><span class="n">PUBLIC</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pro_name</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">env_name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">maps</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;7&quot;</span><span class="p">:</span><span class="s2">&quot;self.build_ob.Maven_Build&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;14&quot;</span><span class="p">:</span><span class="s2">&quot;self.public_ob.Remove_Cache&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arg_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;dev&quot;</span><span class="p">,</span><span class="s2">&quot;qa&quot;</span><span class="p">,</span><span class="s2">&quot;hidden&quot;</span><span class="p">,</span><span class="s2">&quot;product&quot;</span><span class="p">):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">环境参数错误.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="bp">self</span><span class="o">.</span><span class="n">every_arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">arg_list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maps</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">every_arg</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">func_ob</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">()&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
+            <span class="k">exec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_ob</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">M</span><span class="p">()</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</code></pre></div>
+
+<ul>
+<li>modele下的模块函数，以maven编译模块为例</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nb">BUILD</span>(<span class="n">object</span>):
+    <span class="n">def</span> <span class="n">__init__</span>(<span class="nb">self</span>,<span class="n">pro_name</span>,<span class="n">env_name</span>):
+        <span class="nb">self</span>.<span class="n">pro_name</span> = <span class="n">pro_name</span>
+        <span class="nb">self</span>.<span class="n">env_name</span> = <span class="n">env_name</span>
+
+        <span class="nb">self</span>.<span class="n">svn_path</span> = (<span class="s">&quot;%s/project/%s/svn&quot;</span> % (<span class="n">sys</span>.<span class="nb">path</span>[<span class="mi">0</span>],<span class="nb">self</span>.<span class="n">pro_name</span>))
+
+    <span class="n">def</span> <span class="n">Maven_Build</span>(<span class="nb">self</span>):
+        <span class="nb">self</span>.<span class="nb">command</span> = <span class="n">str</span>(<span class="s">&quot;cd %s; mvn clean package -P%s -Dmaven.test.skip=true&quot;</span> % (
+            <span class="nb">self</span>.<span class="n">svn_path</span>, <span class="nb">self</span>.<span class="n">env_name</span>)
+        )
+
+        <span class="n">try:</span>
+            <span class="nb">print</span>(<span class="s">&quot;\nStart maven build in webapp.\n&quot;</span>)
+            <span class="nb">self</span>.<span class="nb">result</span> = <span class="n">os</span>.<span class="n">system</span>(<span class="nb">self</span>.<span class="nb">command</span>)
+            <span class="n">assert</span> <span class="nb">self</span>.<span class="nb">result</span> == <span class="mi">0</span>
+        <span class="n">except</span> <span class="n">AssertionError:</span>
+            <span class="nb">print</span>(<span class="s">&quot;\nMvn build error!\n&quot;</span>)
+            <span class="n">sys</span>.<span class="nb">exit</span>()  <span class="c1"># 异常退出，这个再模块中非常重要</span>
+</code></pre></div>
+
+<h2 id="_4">使用方法</h2>
+<ul>
+<li>控制台使用：</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="n">python</span> <span class="n">main</span><span class="p">.</span><span class="n">py</span> <span class="k">static</span> <span class="n">qa</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">6</span> <span class="mi">8</span>
+
+<span class="o">#</span> <span class="err">第一个参数为项目名</span>
+<span class="o">#</span> <span class="err">第二个参数为部署环境</span>
+<span class="o">#</span> <span class="err">后边的参数就是要构建的模块组合</span>
+</code></pre></div>
+
+<ul>
+<li>Jenkins使用：</li>
+</ul>
+<p>只需要将控制台命令贴到jenkins的构建步骤中当做shell执行即可</p>
+<h1 id="_5">总结</h1>
+<ol>
+<li>简单即是美</li>
+<li>适合自己的就是最好的</li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/eM7SNKmtw2tDQtXBsBXyxQ.html">📅 2018-07-31</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Probius,Prometheus,API,POD,Prometheus,HTTP,API,Prometheus,Grafana,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Probius+Prometheus通过API集成POD监控" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Probius+Prometheus通过API集成POD监控</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="Probius+Prometheus通过API集成POD监控" />
+  <meta property="og:description" content="Probius+Prometheus通过API集成POD监控" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Probius+Prometheus通过API集成POD监控</h1>
+
+        <p>上一篇文章<a href="/s/U88HPUYiVDar-7yBx3IoIA">Probius+Kubernetes任务系统如虎添翼</a>讲了我们把Kubernetes集成进了<a href="/s/uXQbM4t11ICdzNofZyDeXA">任务系统Probius</a>，上线后小伙伴反馈虽然摆脱了Kubernetes-Dashboard，但还是得去Grafana系统查看容器的监控数据，能否将容器监控也给集成进Probius呢？只要能优化流程提高效率那就必须给安排</p>
+<p>当前Kubernetes集群通过Prometheus来收集和存储监控数据同时借助Grafana来画图展示，Probius若想集成容器监控只需要获取Prometheus存储的容器数据并绘图展示即可，这里涉及到两块内容：1. 获取Prometheus中存储的POD数据，2. 根据获取到的POD数据进行画图展示，完成后的效果如下</p>
+<p><img alt="" src="/static/images/20211014.01.png" /></p>
+<h2 id="_1">获取数据</h2>
+<p>Prometheus提供<code>query</code>和<code>query_range</code>两个API来获取数据，<code>query</code>可以查询给定时间点的数据，而<code>query_range</code>支持查询给定时间段内的数据集合，对于我们的需求<code>query_range</code>再合适不过了</p>
+<div class="codehilite"><pre><span></span><code><span class="err">GET /api/v1/query_range</span>
+</code></pre></div>
+
+<p>API支持以下几个参数：</p>
+<p><strong>query</strong>：Prometheus查询表达式，string类型</p>
+<p><strong>start</strong>：开始时间，rfc3339或是unix_timestamp格式</p>
+<p><strong>end</strong>：结束时间，rfc3339或是unix_timestamp格式</p>
+<p><strong>step</strong>：步长，可以是<code>15s</code>这样的持续时间格式</p>
+<p><strong>timeout</strong>：超时时间</p>
+<p>根据这些信息就可以编写获取数据的程序了，大概如下</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">PrometheusApi:</span>
+    <span class="n">def</span> <span class="n">__init__</span>(<span class="nb">self</span>, <span class="nb">range</span>=<span class="mi">1</span>):
+        <span class="nb">self</span>.<span class="n">domain</span> = <span class="s">&quot;https://prometheus.ops-coffee.cn&quot;</span>
+
+        <span class="nb">self</span>.<span class="n">nowtime</span> = <span class="n">datetime</span>.<span class="n">datetime</span>.<span class="nb">now</span>(<span class="n">datetime</span>.<span class="nb">timezone</span>.<span class="nb">utc</span>)
+        <span class="nb">self</span>.<span class="n">start_time</span> = <span class="nb">self</span>.<span class="n">nowtime</span> - <span class="n">datetime</span>.<span class="n">timedelta</span>(<span class="n">hours</span>=<span class="n">int</span>(<span class="nb">range</span>))
+
+    <span class="n">def</span> <span class="n">get_pod_metric</span>(<span class="nb">self</span>, <span class="n">namespace</span>, <span class="n">pod</span>):
+        <span class="n">_data</span> = {<span class="s">&quot;datetime&quot;</span>: [], <span class="s">&quot;cpu&quot;</span>: {}, <span class="s">&quot;memory&quot;</span>: {}, <span class="s">&quot;bandwidth&quot;</span>: {}, <span class="s">&quot;iops&quot;</span>: {}}
+
+        <span class="c1"># cpu</span>
+        <span class="nb">params</span> = {
+            <span class="s">&quot;query&quot;</span>: <span class="s">&quot;sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=&#39;%s&#39;, pod=&#39;%s&#39;}) by (container)&quot;</span> % (
+                <span class="n">namespace</span>, <span class="n">pod</span>),
+            <span class="s">&quot;start&quot;</span>: <span class="nb">self</span>.<span class="n">start_time</span>.<span class="n">isoformat</span>(),
+            <span class="s">&quot;end&quot;</span>: <span class="nb">self</span>.<span class="n">nowtime</span>.<span class="n">isoformat</span>(),
+            <span class="s">&quot;step&quot;</span>: <span class="s">&quot;60s&quot;</span>
+        }
+        <span class="n">rc</span> = <span class="n">requests</span>.<span class="nb">get</span>(<span class="nb">self</span>.<span class="n">domain</span> + <span class="s">&#39;/api/v1/query_range&#39;</span>, <span class="nb">params</span>=<span class="nb">params</span>)
+
+        <span class="k">for</span> <span class="n">c</span> <span class="nb">in</span> <span class="n">rc</span>.<span class="n">json</span>().<span class="nb">get</span>(<span class="s">&#39;data&#39;</span>).<span class="nb">get</span>(<span class="s">&#39;result&#39;</span>):
+            <span class="n">_data</span>[<span class="s">&#39;cpu&#39;</span>][<span class="n">c</span>[<span class="s">&#39;metric&#39;</span>][<span class="s">&#39;container&#39;</span>]] = [<span class="n">j</span>[<span class="mi">1</span>] <span class="k">for</span> <span class="n">j</span> <span class="nb">in</span> <span class="n">c</span>[<span class="s">&#39;values&#39;</span>]]
+
+        <span class="k">return</span> <span class="nb">True</span>, <span class="mi">200</span>, <span class="n">_data</span>
+</code></pre></div>
+
+<p>这里如果对Prometheus的查询表达式不熟悉，可以直接去Grafana图形那复制表达式来使用，这里我把cpu\memory等需要展示的数据统一在一个函数里处理了，这样只需要根据namesapce、pod和时间范围就能获取到一个pod的所有监控数据，方便前端展示</p>
+<p>需要注意的是Prometheus默认使用的是UTC时间，所以在做时间处理时需要跟本地时间做转换</p>
+<h2 id="_2">画图展示</h2>
+<p>数据获取到了，下一步就是画图展示，这里采用了echarts，使用也非常简单，大概代码如下</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;tab-pane&quot;</span> <span class="na">id=</span><span class="s">&quot;tab-monitor&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-4&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;input-group&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;input-group-btn&quot;</span><span class="nt">&gt;&lt;button</span> <span class="na">class=</span><span class="s">&quot;btn btn-default&quot;</span><span class="nt">&gt;</span>选择实例<span class="nt">&lt;/button&gt;&lt;/div&gt;</span>
+        <span class="nt">&lt;select</span> <span class="na">class=</span><span class="s">&quot;form-control&quot;</span> <span class="na">id=</span><span class="s">&quot;id_pod_monitor&quot;</span> <span class="na">onchange=</span><span class="s">&quot;getPodMonitor()&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>------<span class="nt">&lt;/option&gt;</span>
+        <span class="nt">&lt;/select&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-2&quot;</span><span class="nt">&gt;</span>
+       <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;input-group&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;input-group-btn&quot;</span><span class="nt">&gt;&lt;button</span> <span class="na">class=</span><span class="s">&quot;btn btn-default&quot;</span><span class="nt">&gt;</span>时间范围<span class="nt">&lt;/button&gt;&lt;/div&gt;</span>
+          <span class="nt">&lt;select</span> <span class="na">class=</span><span class="s">&quot;form-control&quot;</span> <span class="na">id=</span><span class="s">&quot;id_pod_monitor_time&quot;</span> <span class="na">onchange=</span><span class="s">&quot;getPodMonitor()&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;1&quot;</span> <span class="na">selected=</span><span class="s">&quot;selected&quot;</span><span class="nt">&gt;</span>最近1小时<span class="nt">&lt;/option&gt;</span>
+            <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;4&quot;</span><span class="nt">&gt;</span>最近4小时<span class="nt">&lt;/option&gt;</span>
+            <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;24&quot;</span><span class="nt">&gt;</span>最近24小时<span class="nt">&lt;/option&gt;</span>
+            <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;48&quot;</span><span class="nt">&gt;</span>最近48小时<span class="nt">&lt;/option&gt;</span>
+            <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;72&quot;</span><span class="nt">&gt;</span>最近72小时<span class="nt">&lt;/option&gt;</span>
+          <span class="nt">&lt;/select&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-6&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;pull-right&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">&quot;btn btn-default&quot;</span> <span class="na">onclick=</span><span class="s">&quot;getPodMonitor()&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;glyphicon glyphicon-refresh&quot;</span><span class="nt">&gt;&lt;/span&gt;</span> 刷新
+        <span class="nt">&lt;/button&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span> <span class="na">style=</span><span class="s">&quot;margin-top:10px;&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-6&quot;</span> <span class="na">id=</span><span class="s">&quot;id_chart_cpu&quot;</span> <span class="na">style=</span><span class="s">&quot;position: relative; height: 300px;&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-6&quot;</span> <span class="na">id=</span><span class="s">&quot;id_chart_memory&quot;</span> <span class="na">style=</span><span class="s">&quot;position: relative; height: 300px;&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-6&quot;</span> <span class="na">id=</span><span class="s">&quot;id_chart_bandwidth&quot;</span> <span class="na">style=</span><span class="s">&quot;position: relative; height: 300px;&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-6&quot;</span> <span class="na">id=</span><span class="s">&quot;id_chart_iops&quot;</span> <span class="na">style=</span><span class="s">&quot;position: relative; height: 300px;&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+
+<span class="nt">&lt;script&gt;</span>
+    var chart_cpu = echarts.init(document.getElementById(&#39;id_chart_cpu&#39;)),
+        chart_memory = echarts.init(document.getElementById(&#39;id_chart_memory&#39;)),
+        chart_bandwidth = echarts.init(document.getElementById(&#39;id_chart_bandwidth&#39;)),
+        chart_iops = echarts.init(document.getElementById(&#39;id_chart_iops&#39;));
+
+    function getPodMonitor() {
+      var pod = $(&#39;#id_pod_monitor&#39;).val(), range = $(&#39;#id_pod_monitor_time&#39;).val();
+      $.get(&quot;/kubeops/namespace/<span class="cp">{{</span> <span class="nv">namespace</span> <span class="cp">}}</span>/pod/&quot; + pod + &quot;/monitor/?range=&quot;+ range +&quot;<span class="err">&amp;</span>format=json&quot;, function(data) {
+        if (data.state) {
+          let cpu_legend = new Array, cpu_series = new Array;
+          $.each(data.data.cpu, function (k, v) {
+            cpu_legend.push(k);
+            cpu_series.push({
+              data: v,
+              name: k,
+              type: &#39;line&#39;
+            });
+          })
+
+          chart_cpu.setOption(
+            {
+              title: {text: &#39;CPU使用(单位:core)&#39;},
+              tooltip: {trigger: &#39;axis&#39;},
+              legend: {data:cpu_legend},
+              xAxis: {data: data.data.datetime},
+              yAxis: {type: &#39;value&#39;},
+              series: cpu_series
+            }
+          )
+        }
+      })
+    }
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
+
+<p>echarts使用了最简单的折线图，也没有太多花里胡哨的东西，就是去后端取数据然后展示</p>
+<p>至此搞定Probius集成POD监控，虽然这只是一个小功能但却是很有用~</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/sOlBFC5FsSqVd78eFuxUyQ.html">📅 2021-10-14</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/任务系统/">🏷️ 任务系统</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

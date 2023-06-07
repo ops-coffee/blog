@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="sadmin,view,sadmin,view,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="sadmin view基类" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>sadmin view基类</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="sadmin view基类" />
+  <meta property="og:description" content="sadmin view基类" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">sadmin view基类</h1>
+
+        <p>Sadmin封装了两个基础类，分别是<code>ListCreateView</code>和<code>RetrieveUpdateDestroyView</code>，用来快捷的实现model的增删改查功能</p>
+<h2 id="listcreateview">ListCreateView</h2>
+<p>ListCreateView用来实现model（表）级别的操作，包括列出表里的数据，以及往表里插入数据，分别对应了<code>get</code>和<code>post</code>两个方法，用法如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">sadmin.commons.options</span> <span class="kn">import</span> <span class="n">ListCreateView</span><span class="p">,</span> <span class="n">RetrieveUpdateDestroyView</span>
+
+<span class="k">class</span> <span class="nc">TaskList</span><span class="p">(</span><span class="n">ListCreateView</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Task</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;engine/task.index.html&#39;</span>
+    <span class="n">permission</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;get&#39;</span><span class="p">:</span> <span class="s1">&#39;engine.task_select&#39;</span><span class="p">,</span> <span class="s1">&#39;post&#39;</span><span class="p">:</span> <span class="s1">&#39;engine.task_change&#39;</span><span class="p">}</span>
+</code></pre></div>
+
+<h5 id="_1">方法定义</h5>
+<p>接收两个方法，分别是<code>get</code>和<code>post</code></p>
+<p><strong>get：</strong> 获取数据列表</p>
+<p><strong>post：</strong> 添加单条数据</p>
+<h5 id="_2">变量定义</h5>
+<p>接收几个变量，分别是：<code>model</code>、<code>filter</code>、<code>orderby</code>、<code>list_display</code>、<code>search_fields</code>、<code>project_filter</code>、<code>queryset_limit</code>、<code>template</code>、<code>permission</code></p>
+<p><strong>model：</strong> 要操作的model</p>
+<p><strong>filter：</strong> 字符串，在默认QuerySet结尾增加filter，默认QuerySet是<code>self.model.objects.all()</code>或<code>self.model.objects.filter(is_deleted=False)</code>，根据model中是否有<code>is_deleted</code>字段来确定，当filter有值时，则会在QuerySet后跟上filter的值，例如<code>filter='.filter(state=8)'</code>，则最终的QuerySet语句就是<code>self.model.objects.all().filter(state=8)</code></p>
+<p><strong>orderby：</strong> 列表，根据orderby定义的排序列表，生成排序语句添加到QuerySet结尾，例如<code>orderby=['-id']</code>，则最终的QuerySet语句是<code>self.model.objects.all().order_by("-id")</code>，orderby位于QuerySet的末尾</p>
+<p><strong>list_display：</strong> 列表，定义要显示的字段，默认显示所有字段，如果<code>list_display</code>存在时则显示<code>list_display</code>定义的字段，主要在最终返回时过滤，通过<code>model_to_dict</code>的<code>fields</code>实现<code>model_to_dict(_data, fields=self.list_display, exclude=self.many_to_many_fields)</code>，所以当<code>list_display</code>与model定义的<code>to_dict</code>冲突时，以<code>to_dict</code>为准</p>
+<p><strong>search_fields：</strong> 列表，定义模糊搜索时搜索的字段，默认会搜索所有['GenericIPAddressField', 'CharField', 'TextField', 'EmailField', 'JSONField']类型的字段，若<code>search_fields</code>存在，则会在<code>search_fields</code>定义的字段中搜索</p>
+<p><strong>project_filter：</strong> 布尔值，定义是否根据project过滤，默认为True，当表字段中存在project字段时，仅过滤用户当前project的数据，用户当前project从两个地方获取，1.用户请求里的project参数，2.浏览器Cookies里的project参数</p>
+<p><strong>queryset_limit：</strong> 布尔值，定义是否限制数据展示条数，默认为True，也就是默认限制数据展示条数，默认最多展示100条数据，当需要一次性展示所有数据时，可以设置为False，注意：当表数据较多时设置为False会有性能问题</p>
+<p><strong>template：</strong> 字符串，定义list模板，如果模板为空则返回JsonResponse，如果模板不为空则返回render并附带<code>lPage</code>变量，可直接在模板中循环使用</p>
+<p><strong>permission：</strong> 字典，定义权限，字典类型，分别定义<code>get</code>和<code>post</code>的权限，permission的value除了权限定义字符串外，还有几个保留字段，分别是<code>superuser</code>、<code>login_user</code>、<code>anonymous_user</code>，详细用法如下</p>
+<ul>
+<li><code>superuser</code>：仅超级管理员有权限</li>
+<li><code>login_user</code>：所有登录用户都有权限</li>
+<li><code>anonymous_user</code>：所有人都可以访问，无论是否登录</li>
+</ul>
+<h5 id="_3">字段过滤</h5>
+<p>当请求包含字段参数时，则会根据字段参数过滤数据，例如请求：<code>?project=ops-coffee&amp;format=json</code>，则最终的QuerySet是<code>self.model.objects.all().filter(project="ops-coffee")</code></p>
+<h5 id="_4">排序</h5>
+<p>当请求包含sort参数时，可以根据sort参数的值进行排序，例如请求：<code>?sort=sortnum</code>，则最终的QuerySet是<code>self.model.objects.all().orderby('sortnum')</code>，请求的参数sort会和view中定义的变量orderby整合，具体的是sort+orderby取交集，sort在前，orderby在后，例如前端请求是<code>?sort=sortnum</code>，而view配置了orderby参数是<code>orderby=[-id]</code>，则最终的QuerySet会是<code>self.model.objects.all().orderby('sortnum','-id')</code>，sort一次可以传多个，多个用逗号隔开，例如<code>?sort=sortnum,name,age</code></p>
+<h4 id="_5">切片</h4>
+<p>当强求包含start和length参数时，可以根据start和length参数的值进行数据切片，例如请求：<code>?start=1&amp;length=10</code>，则最终的QuerySet是<code>self.model.objects.all()[1:11]</code></p>
+<h5 id="datatables">datatables兼容</h5>
+<p>当前端是datatables异步发来的请求时则会返回datatables所需要的最终格式，包含<code>draw</code>、<code>recordsTotal</code>、<code>recordsFiltered</code>、<code>data</code></p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+    <span class="s2">&quot;draw&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;draw&#39;</span><span class="p">)),</span>
+    <span class="s2">&quot;recordsTotal&quot;</span><span class="p">:</span> <span class="n">_recordsTotalCount</span><span class="p">,</span>
+    <span class="s2">&quot;recordsFiltered&quot;</span><span class="p">:</span> <span class="nb">eval</span><span class="p">(</span><span class="n">_queryset</span> <span class="o">+</span> <span class="s1">&#39;.count()&#39;</span><span class="p">),</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">_table_data</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h5 id="_6">自定义函数</h5>
+<p>当查询条件比较复杂，通过<code>filter</code>无法满足需求时，可以使用<code>get_queryset</code>自定义方法来定义更为复杂的查询条件。<code>get_queryset</code>返回一个queryset的字符串，这个字符串会跟后续的查询条件等拼接</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">TasklogList</span><span class="p">(</span><span class="n">ListCreateView</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
+<span class="w">    </span><span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TaskLog</span><span class="w"></span>
+<span class="w">    </span><span class="n">orderby</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">&#39;-id&#39;</span><span class="o">]</span><span class="w"></span>
+<span class="w">    </span><span class="n">template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;engine/tasklog.index.html&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="n">permission</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{</span><span class="s1">&#39;get&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;engine.tasklog_select&#39;</span><span class="err">}</span><span class="w"></span>
+
+<span class="w">    </span><span class="nv">@staticmethod</span><span class="w"></span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">get_queryset</span><span class="p">(</span><span class="n">request</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">i.id for i in get_tasks_for_user(request)</span><span class="o">]</span><span class="w"></span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;self.model.objects.filter(task_id__in={})&#39;</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span><span class="w"></span>
+</code></pre></div>
+
+<p>当权限定义比较复杂，通过<code>permission</code>无法满足需求时，可以使用<code>valid_permission</code>自定义方法来定义更为复杂的权限验证。<code>valid_permission</code>返回一个布尔值，根据这个布尔值来确定是否有权限，如果为True则有权限，为False则无权限</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">TaskDetail</span>(<span class="n">RetrieveUpdateDestroyView</span>):
+    <span class="n">model</span> = <span class="n">Task</span>
+
+    <span class="n">def</span> <span class="n">valid_permission</span>(<span class="nb">self</span>, <span class="n">request</span>, <span class="n">pk</span>):
+        <span class="k">return</span> <span class="nb">True</span> <span class="k">if</span> <span class="nb">self</span>.<span class="n">model</span>.<span class="n">objects</span>.<span class="nb">get</span>(<span class="nb">id</span>=<span class="n">pk</span>) <span class="nb">in</span> <span class="n">get_tasks_for_user</span>(<span class="n">request</span>) <span class="k">else</span> <span class="nb">False</span>
+</code></pre></div>
+
+<h2 id="retrieveupdatedestroyview">RetrieveUpdateDestroyView</h2>
+<p>RetrieveUpdateDestroyView用来实现object（行）级别的操作，包括获取某条数据的详情、修改某条数据或时删除某条数据，分别对应了<code>get</code>、<code>put</code>和<code>delete</code>三个方法，用法如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="err">class TaskDetail(RetrieveUpdateDestroyView):</span>
+<span class="err">    model = Task</span>
+<span class="err">    template = &#39;engine/task.detail.html&#39;</span>
+<span class="err">    permission = {&#39;get&#39;: &#39;engine.task_select&#39;, &#39;put&#39;: &#39;engine.task_change&#39;, &#39;delete&#39;: &#39;engine.task_change&#39;}</span>
+</code></pre></div>
+
+<h5 id="_7">方法定义</h5>
+<p>接收三个方法，分别是<code>get</code>、<code>put</code>和<code>delete</code></p>
+<p><strong>get：</strong> 获取单条数据</p>
+<p><strong>put：</strong> 更新单条数据</p>
+<p><strong>delete：</strong> 删除单条数据，当model中存在<code>is_deleted</code>字段时，则会进行逻辑删除，也就是仅修改<code>is_deleted</code>字段为True，并不会实际从数据库中删除数据</p>
+<h5 id="_8">变量定义</h5>
+<p>接收几个变量，分别是：<code>model</code>、<code>template</code>、<code>permission</code>、<code>project_filter</code></p>
+<p><strong>model：</strong> 要操作的model</p>
+<p><strong>template：</strong> 字符串，定义detail模板，如果模板为空则返回JsonResponse，如果模板不为空则返回render并附带<code>data</code>变量，可直接在模板中使用，通过<code>{{ data.field_name }}</code>来获取数据</p>
+<p><strong>permission：</strong> 字典，定义权限，定义<code>get</code>、<code>put</code>和<code>delete</code>的权限，permission的value除了List中定义的<code>superuser</code>、<code>login_user</code>、<code>anonymous_user</code>三个保留字段外，还多了个保留字段<code>owner</code>，当权限值为<code>owner</code>时仅数据创建者有操作权限，前提是model中要有<code>create_user</code>字段，<code>create_user</code>字段记录的就是数据创建者</p>
+<p><strong>project_filter：</strong> 布尔值，定义是否根据project过滤，默认为True，当表字段中存在project字段时，则在操作数据前会先判断用户是否有当前项目的权限，用户当前project仅从要操作的数据字段里获取</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/sadmin/django-sadmin-view.html">📅 2023-03-20</a></li>
+            
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Harbor,None,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="清理Harbor服务器磁盘空间" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>清理Harbor服务器磁盘空间</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="清理Harbor服务器磁盘空间" />
+  <meta property="og:description" content="清理Harbor服务器磁盘空间" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">清理Harbor服务器磁盘空间</h1>
+
+        <p>执行<code>docker push</code>时报错<code>received unexpected HTTP status: 500 Internal Server Error</code></p>
+<p>原因是Harbor服务器磁盘空间满了，清理Harbor磁盘空间需要以下四个步骤</p>
+<h2 id="harbor">清理Harbor磁盘空间</h2>
+<ol>
+<li>删除镜像，可以通过web管理删除，也可以通过API删除，API删除脚本如下</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">ssl</span>
+
+<span class="n">ssl</span><span class="o">.</span><span class="n">_create_default_https_context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">_create_unverified_context</span>
+<span class="n">requests</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">RequestClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">login_url</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">login_url</span> <span class="o">=</span> <span class="n">login_url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">login_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;principal&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">},</span> <span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">ClearHarbor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api_url</span> <span class="o">=</span> <span class="n">domain</span> <span class="o">+</span> <span class="s2">&quot;/api&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">RequestClient</span><span class="p">(</span><span class="n">domain</span> <span class="o">+</span> <span class="s2">&quot;/login&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fetch_pros_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">pro_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api_url</span> <span class="o">+</span> <span class="s2">&quot;/projects&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">pros_id</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;project_id&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pro_res</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">pros_id</span>
+
+    <span class="k">def</span> <span class="nf">fetch_del_repos_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pro_id</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
+        <span class="n">repos_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">api_url</span> <span class="o">+</span> <span class="s2">&quot;/repositories&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;project_id&quot;</span><span class="p">:</span> <span class="n">pro_id</span><span class="p">},</span> <span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">del_repos_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">repo</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">repo</span> <span class="ow">in</span> <span class="n">repos_res</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="k">if</span> <span class="n">repo</span><span class="p">[</span><span class="s2">&quot;tags_count&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">num</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">del_repos_name</span>
+
+    <span class="k">def</span> <span class="nf">fetch_del_repos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repo_name</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
+        <span class="n">tag_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_url</span> <span class="o">+</span> <span class="s2">&quot;/repositories/&quot;</span> <span class="o">+</span> <span class="n">repo_name</span> <span class="o">+</span> <span class="s2">&quot;/tags&quot;</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tag_url</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">tags_sort</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span><span class="p">[</span><span class="s2">&quot;created&quot;</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags_sort</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">tags_sort</span><span class="p">)</span> <span class="o">-</span> <span class="n">num</span><span class="p">]:</span>
+            <span class="n">del_repo_tag_url</span> <span class="o">=</span> <span class="n">tag_url</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">del_repo_tag_url</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s1">&#39;已删除镜像：&#39;</span> <span class="o">+</span> <span class="n">del_repo_tag_url</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">True</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">domain</span> <span class="o">=</span> <span class="s2">&quot;https://harbor.ops-coffee.cn&quot;</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;ops-coffee.cn&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">ClearHarbor</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">fetch_pros_id</span><span class="p">():</span>
+        <span class="n">repos</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fetch_del_repos_name</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">repos</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">repo</span> <span class="ow">in</span> <span class="n">repos</span><span class="p">:</span>
+                <span class="n">del_repos</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fetch_del_repos</span><span class="p">(</span><span class="n">repo</span><span class="p">)</span>
+</code></pre></div>
+
+<p>虽然删除了镜像但并不能释放磁盘空间，还需要如果进行垃圾回收操作才能释放存储空间清理，垃圾回收操作过程如下</p>
+<ol>
+<li>关闭Harbor服务</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="n">cd</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">tools</span><span class="o">/</span><span class="n">harbor</span> <span class="o">&amp;&amp;</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">stop</span>
+</code></pre></div>
+
+<ol>
+<li>运行GC回收容器释放磁盘空间</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="err">docker run -it --name gc --rm --volumes-from registry vmware/registry:2.6.2-photon garbage-collect  /etc/registry/config.yml</span>
+</code></pre></div>
+
+<p>运行以上命令会直接清除已删除的镜像，若想要先查看要清理的镜像，可以加上<code>--dry-run</code>参数</p>
+<div class="codehilite"><pre><span></span><code><span class="err">docker run -it --name gc --rm --volumes-from registry vmware/registry-photon:v2.6.2-v1.5.0 garbage-collect --dry-run /etc/registry/config.yml</span>
+</code></pre></div>
+
+<ol>
+<li>启动Harbor服务</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="err">docker-compose up -d</span>
+</code></pre></div>
+
+<h2 id="harbor_1">找回Harbor管理员账号密码</h2>
+<p>忘记Harbor管理员密码，可以在<code>harbor.cfg</code>初始化文件中找回</p>
+<div class="codehilite"><pre><span></span><code><span class="err"># vi harbor.cfg</span>
+<span class="err">harbor_admin_password = ops-coffee.cn</span>
+</code></pre></div>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/t/harbor-clear-space-python-api.html">📅 2021-09-06</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/系统运维/">🏷️ 系统运维</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

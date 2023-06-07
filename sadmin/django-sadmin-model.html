@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="sadmin,model,sadmin,model,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="sadmin model" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>sadmin model</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="sadmin model" />
+  <meta property="og:description" content="sadmin model" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">sadmin model</h1>
+
+        <h2 id="_1">保留字段</h2>
+<p>model有几个保留字段，分别是：<code>create_time</code>、<code>update_time</code>、<code>create_user</code>、<code>update_user</code>、<code>project</code>、<code>is_deleted</code>为保留字段</p>
+<p><strong>create_time：</strong> 创建时间，会自动获取数据创建时的时间并填充</p>
+<p><strong>update_time：</strong> 更新时间，会自动获取数据更新时的时间并填充</p>
+<p><strong>create_user：</strong> 创建用户，新建数据时会自动获取提交数据的用户填充</p>
+<p><strong>update_user：</strong> 更新用户，更新数据时会自动获取更新数据的用户填充</p>
+<p><strong>project：</strong> 所属项目，当project存在时，默认会按照项目进行数据检索与处理</p>
+<p><strong>is_deleted：</strong> 逻辑删除，判断这条数据是否被删除，如果model中有<code>is_deleted</code>字段存在，则在QuerySet获取数据时会自动过滤掉已删除的数据，也就是<code>.filter(is_deleted=False)</code></p>
+<p>以<code>Template</code>为例</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Template</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">create_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;创建时间&#39;</span><span class="p">)</span>
+    <span class="n">update_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;更新时间&#39;</span><span class="p">)</span>
+    <span class="n">create_user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">DO_NOTHING</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;创建用户&#39;</span><span class="p">)</span>
+    <span class="n">project</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Project</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">PROTECT</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;所属项目&#39;</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;名称&#39;</span><span class="p">)</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="nb nb-Type">null</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;描述&#39;</span><span class="p">)</span>
+
+    <span class="n">is_deleted</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">False</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;已删除&#39;</span><span class="p">)</span>
+
+    <span class="n">def</span> <span class="n">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+</code></pre></div>
+
+<p>其中：<code>create_time</code>、<code>update_time</code>、<code>create_user</code>、<code>project</code>、<code>is_deleted</code>为保留字段，在数据的增删改查中无需过多关注，系统会自动处理</p>
+<h2 id="_2">保留函数</h2>
+<p>model中有一个保留函数：<code>to_dict</code>，将model转成字典，当model中有<code>to_dict</code>函数存在时，在QuerySet取数据时默认会按照<code>to_dict</code>定义好的格式生成最终的json数据，否则的话会按照model字段自动生成</p>
+<p>以<code>TempTask</code>为例</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">TempTask</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">create_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;创建时间&#39;</span><span class="p">)</span>
+    <span class="n">update_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;更新时间&#39;</span><span class="p">)</span>
+
+    <span class="n">template</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Template</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">PROTECT</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">)</span>
+    <span class="n">subtask</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">SubTask</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">PROTECT</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">)</span>
+
+    <span class="n">sortnum</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SmallIntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">37</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;排序ID&#39;</span><span class="p">)</span>
+    <span class="n">exechost</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;执行主机&#39;</span><span class="p">)</span>
+    <span class="n">execuser</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">ExecUser</span><span class="p">,</span> <span class="nb nb-Type">null</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">PROTECT</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">)</span>
+
+    <span class="n">def</span> <span class="n">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s1">&#39;template&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s1">&#39;template_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s1">&#39;subtask&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">subtask</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s1">&#39;subtask_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">subtask</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s1">&#39;subtask_rcmd&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">subtask</span><span class="o">.</span><span class="n">rcmd</span><span class="p">,</span>
+            <span class="s1">&#39;subtask_args&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">subtask</span><span class="o">.</span><span class="n">args</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subtask</span><span class="o">.</span><span class="n">args</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;sortnum&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sortnum</span><span class="p">,</span>
+            <span class="s1">&#39;exechost&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">exechost</span><span class="p">,</span>
+            <span class="s1">&#39;execuser&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">execuser</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">execuser</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="p">}</span>
+</code></pre></div>
+
+<p>最终返回的数据中将会额外包含template_id，subtask_id，subtask_rcmd，subtask_args四个TempTask原本并不包含的字段</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/sadmin/django-sadmin-model.html">📅 2023-03-20</a></li>
+            
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

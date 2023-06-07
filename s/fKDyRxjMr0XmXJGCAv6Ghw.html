@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,model,save,update,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Django model重写save方法及update踩坑记录" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Django model重写save方法及update踩坑记录</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="Django model重写save方法及update踩坑记录" />
+  <meta property="og:description" content="Django model重写save方法及update踩坑记录" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django model重写save方法及update踩坑记录</h1>
+
+        <blockquote>
+<p>一个非常实用的小方法</p>
+</blockquote>
+<p>试想一下，Django中如果我们想对保存进数据库的数据做校验，有哪些实现的方法？</p>
+<p>我们可以在view中去处理，每当view接收请求，就对提交的数据做校验，校验不通过直接返回错误，不写数据库，校验通过再调用<code>create</code>或<code>update</code>方法写入数据库</p>
+<p>以上方式比较简单，容易理解，但随之又带来了麻烦，我们需在所有接收数据的地方都要去校验，那么有没有更加优雅的方式呢？如果你看过我之前的文章<a href="/s/cMxdAfsTno56ixurmD4KXA">『Django使用Signals监测model字段变化发送通知』</a>]就能想到可以通过signals信号来处理，添加一个<code>pre_save</code>的信号，每当数据库数据变更前都会触发<code>pre_save</code>方法，可以在这里进行校验，免去了view中多个地方校验的麻烦</p>
+<p>而今天要说的并不是signals，而是另一种比较常用的做法：<strong>重写model的save方法</strong></p>
+<h2 id="save">重写save方法</h2>
+<p>save方法的主要作用就是将一个对象保存到数据库。如果我们想在数据入库之前做一些处理，除了上边提到的<code>signals</code>之外，还可以通过重写save方法来实现。具体实现方式看下面这个例子</p>
+<p>假如我们定义了model如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">TempTask</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="o">...</span>
+
+    <span class="n">exechost</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;执行主机&#39;</span><span class="p">)</span>
+    <span class="n">execuser</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">ExecUser</span><span class="p">,</span> <span class="nb nb-Type">null</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">PROTECT</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">)</span>
+</code></pre></div>
+
+<p>exechost默认为Localhost，execuser默认为空，现有需求：当exechost不为localhost时，他必须符合<code>ip:port</code>的格式，且execuser不能为空。这是一个比较复杂的校验方式，我们可以通过重写save方法来处理</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">TempTask</span>(<span class="n">models</span>.<span class="n">Model</span>):
+    ...
+
+    <span class="n">def</span> <span class="n">save</span>(<span class="nb">self</span>, *<span class="nb">args</span>, **<span class="n">kwargs</span>):
+        <span class="k">if</span> <span class="nb">self</span>.<span class="n">exechost</span> <span class="o">and</span> (<span class="nb">self</span>.<span class="n">exechost</span>.<span class="n">strip</span>() != <span class="s">&#39;localhost&#39;</span>):
+            <span class="k">if</span> <span class="n">len</span>(<span class="nb">self</span>.<span class="n">exechost</span>.<span class="nb">split</span>(<span class="s">&#39;:&#39;</span>)) != <span class="mi">2</span>:
+                <span class="n">raise</span> <span class="n">ValidationError</span>(<span class="s">&#39;执行主机格式错误，应为ip:port格式&#39;</span>)
+
+            <span class="k">if</span> <span class="nb">not</span> <span class="nb">self</span>.<span class="n">execuser:</span>
+                <span class="n">raise</span> <span class="n">ValidationError</span>(<span class="s">&#39;当执行主机存在时执行用户不能为空&#39;</span>)
+
+        <span class="n">super</span>().<span class="n">save</span>(*<span class="nb">args</span>, **<span class="n">kwargs</span>)
+</code></pre></div>
+
+<p>我们可以在save函数内执行各种自定义逻辑，但需要注意的是，最后必须要调用<code>super().save()</code>方法来保证执行了父类的<code>save()</code>，这样才能保证数据写入了数据库。</p>
+<p>这样在当我们执行create语句插入数据的时候就会先去执行save中的校验方法进行校验了</p>
+<div class="codehilite"><pre><span></span><code><span class="err">TempTask.objects.create(**postdata)</span>
+</code></pre></div>
+
+<h2 id="update">update踩坑</h2>
+<p>就当我以为一切都要结束准备起身冲杯咖啡的时候，我发现新加数据可以正常进行校验，但更新数据却不行，更新的代码如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="err">TempTask.objects.filter(id=pk).update(**postdata)</span>
+</code></pre></div>
+
+<p>经过一番查找发现了问题所在，官方文档中有这么一句话</p>
+<div class="codehilite"><pre><span></span><code><span class="err">Unfortunately, there isn’t a workaround when creating or updating objects in bulk, since none of save(), pre_save, and post_save are called.</span>
+</code></pre></div>
+
+<p>也就是说，<strong>当使用查询集批量更新对象时，将不会为每个对象调用save()方法</strong>，连<code>pre_save</code>和<code>post_save</code>也不会被调用。与<code>save()</code>类似的还有model的<code>delete()</code>方法，当批量删除的时候，同样不会调用model的<code>delete()</code>方法，但delete是可以使用<code>pre_delete</code>或<code>post_delete</code>信号的</p>
+<p>解决这个问题的方法很简单，那就是将更新的代码换成下边这种，保证调用到save方法</p>
+<div class="codehilite"><pre><span></span><code><span class="err">_t = TempTask.objects.get(id=pk)</span>
+<span class="err">_t.__dict__.update(**postdata)</span>
+<span class="err">_t.save()</span>
+</code></pre></div>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/fKDyRxjMr0XmXJGCAv6Ghw.html">📅 2020-04-23</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

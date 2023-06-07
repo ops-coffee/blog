@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content=",运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="任务系统之并行任务" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>任务系统之并行任务</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="任务系统之并行任务" />
+  <meta property="og:description" content="任务系统之并行任务" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">任务系统之并行任务</h1>
+
+        <p>上篇文章讲了<a href="/s/Q3BBxBAWBcpUhQhfwO7pgQ">手动审批任务</a>的实现，这篇文章来讲下并行任务，通常情况下一个任务流里的多个子任务都是采用串行执行的，所谓串行就是第一个子任务结束才开始第二个，第二个子任务结束才开始第三个，依次类推，直到所有的子任务执行完成，整个任务流也就算完成了</p>
+<p><img alt="" src="/static/images/20220227.01.png" /></p>
+<p>串行任务逻辑清晰，但执行完成整个任务流的时间会比较长，这在某些情况下是完全没有必要的，可以通过并行执行来节约时间，从而提高效率，所谓并行就是第一个子任务执行后可以同步执行第二个第三个子任务，第二第三个子任务都执行完才会进行下一个</p>
+<p><img alt="" src="/static/images/20220227.02.png" /></p>
+<p>如何实现并行任务呢？先来回顾下我们任务流是如何实现的，<strong>模板</strong>包含了若干个<strong>子任务</strong>，每个子任务会有一个排序</p>
+<p><img alt="" src="/static/images/20220227.03.png" /></p>
+<p>在执行任务时根据任务关联的模板拿到所有子任务，然后按照子任务的执行顺序循环依次执行，这就是串行任务的逻辑，简单的理解就是任务流的子任务存在一个有序的列表里，每次就按顺序去列表去取一个执行，代码实现就是<a href="/s/Q3BBxBAWBcpUhQhfwO7pgQ">上篇文章</a>里的<code>exec_subtask</code>函数</p>
+<div class="codehilite"><pre><span></span><code><span class="n">def</span> <span class="n">exec_subtask</span><span class="p">(</span><span class="n">tasklog</span><span class="p">,</span> <span class="n">subtasklog</span><span class="o">=</span><span class="k">None</span><span class="p">):</span>
+    <span class="o">#</span> <span class="err">获取所有子任务</span>
+    <span class="n">subtasklogs</span> <span class="o">=</span> <span class="n">tasklog</span><span class="p">.</span><span class="n">get_subtasklogs</span>
+
+    <span class="k">if</span> <span class="n">subtasklog</span><span class="p">:</span>
+        <span class="o">#</span> <span class="err">如果所传</span><span class="n">subtask为任务下的最后一个子任务</span><span class="err">，则结束整个任务</span>
+        <span class="k">if</span> <span class="n">subtasklog</span> <span class="o">==</span> <span class="n">subtasklogs</span><span class="p">.</span><span class="k">last</span><span class="p">():</span>
+            <span class="n">subtasklog</span><span class="p">.</span><span class="n">tasklog</span><span class="p">.</span><span class="k">state</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">subtasklog</span><span class="p">.</span><span class="n">tasklog</span><span class="p">.</span><span class="n">save</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="k">True</span><span class="p">,</span> <span class="s1">&#39;Finished&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="o">#</span> <span class="err">否则获取下一条要执行的</span><span class="n">subtask</span>
+            <span class="n">next_subtask</span> <span class="o">=</span> <span class="n">subtasklogs</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__gt</span><span class="o">=</span><span class="n">subtasklog</span><span class="p">.</span><span class="n">id</span><span class="p">).</span><span class="k">first</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="o">#</span> <span class="err">如果没有传</span><span class="n">subtask则默认取第一条</span>
+        <span class="n">next_subtask</span> <span class="o">=</span> <span class="n">subtasklogs</span><span class="p">.</span><span class="k">first</span><span class="p">()</span>
+
+    <span class="o">#</span> <span class="err">将要执行的子任务传给</span><span class="n">run_subtask异步执行</span>
+    <span class="n">celery_task</span> <span class="o">=</span> <span class="n">run_subtask</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="n">next_subtask</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>
+
+    <span class="o">#</span> <span class="err">记录</span><span class="n">celery任务的ID</span><span class="err">，终止任务执行时使用</span>
+    <span class="n">next_subtask</span><span class="p">.</span><span class="n">celery_task_id</span> <span class="o">=</span> <span class="n">celery_task</span>
+    <span class="n">next_subtask</span><span class="p">.</span><span class="n">save</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="k">True</span><span class="p">,</span> <span class="s1">&#39;Next&#39;</span>
+</code></pre></div>
+
+<p>而对于并行任务，只需要每次取多个同时执行就好了，想清楚了这个逻辑接下来就是定义每次取多个的规则了，继续从执行顺序下手，执行顺序不一样可以排序依次串行执行，而如果实行顺序一样了那不就自然可以理解为并行执行嘛，逻辑通了就改代码，代码上只需要多一层判断，判断下是否有与当前要执行的子任务相同执行顺序的子任务，如果有就一并执行，逻辑仍然在<code>exec_subtask</code>函数里</p>
+<div class="codehilite"><pre><span></span><code><span class="n">def</span> <span class="n">exec_subtask</span><span class="p">(</span><span class="n">tasklog</span><span class="p">,</span> <span class="n">subtasklog</span><span class="o">=</span><span class="k">None</span><span class="p">):</span>
+    <span class="o">#</span> <span class="err">获取所有子任务</span>
+    <span class="n">subtasklogs</span> <span class="o">=</span> <span class="n">tasklog</span><span class="p">.</span><span class="n">get_subtasklogs</span>
+
+    <span class="k">if</span> <span class="k">not</span> <span class="n">subtasklog</span><span class="p">:</span>
+        <span class="o">#</span> <span class="err">如果没有传</span><span class="n">subtask则默认取第一组</span>
+        <span class="n">next_subtasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">subtasklogs</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sortnum</span><span class="o">=</span><span class="n">subtasklogs</span><span class="p">.</span><span class="k">first</span><span class="p">().</span><span class="n">sortnum</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="o">#</span> <span class="err">判断当前任务组任务是否都已执行完成，若有未执行完成的任务则直接返回，等待所有任务执行完成</span>
+        <span class="k">if</span> <span class="n">subtasklogs</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sortnum</span><span class="o">=</span><span class="n">subtasklog</span><span class="p">.</span><span class="n">sortnum</span><span class="p">,</span> <span class="n">state__in</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="k">True</span><span class="p">,</span> <span class="s1">&#39;Pass&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="o">#</span> <span class="err">若当前任务组所有子任务都已执行完成，则判断当前任务组是否有任务执行失败或被中止或被拒绝，若有则直接修改任务状态未失败</span>
+            <span class="n">_finished_state</span> <span class="o">=</span> <span class="n">subtasklogs</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sortnum</span><span class="o">=</span><span class="n">subtasklog</span><span class="p">.</span><span class="n">sortnum</span><span class="p">).</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;state&#39;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+
+            <span class="o">#</span> <span class="err">若并行任务有执行失败或被拒绝的，则直接修改整个任务为失败并返回</span>
+            <span class="k">if</span> <span class="n">list</span><span class="p">(</span><span class="k">set</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">12</span><span class="p">]).</span><span class="n">intersection</span><span class="p">(</span><span class="k">set</span><span class="p">(</span><span class="n">_finished_state</span><span class="p">))):</span>
+                <span class="n">subtasklog</span><span class="p">.</span><span class="n">tasklog</span><span class="p">.</span><span class="k">state</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">subtasklog</span><span class="p">.</span><span class="n">tasklog</span><span class="p">.</span><span class="n">save</span><span class="p">()</span>
+
+                <span class="k">return</span> <span class="k">True</span><span class="p">,</span> <span class="s1">&#39;Finished&#39;</span>
+
+        <span class="o">#</span> <span class="err">当前任务组任务都执行成功，则获取当前任务还未执行子任务列表</span>
+        <span class="n">_not_run_subtasks</span> <span class="o">=</span> <span class="n">subtasklogs</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sortnum__gt</span><span class="o">=</span><span class="n">subtasklog</span><span class="p">.</span><span class="n">sortnum</span><span class="p">)</span>
+
+        <span class="o">#</span> <span class="err">如果不存在未执行的子任务则结束</span>
+        <span class="k">if</span> <span class="k">not</span> <span class="n">_not_run_subtasks</span><span class="p">:</span>
+            <span class="o">#</span> <span class="err">非周期任务修改任务状态为成功</span>
+            <span class="k">if</span> <span class="n">subtasklog</span><span class="p">.</span><span class="n">tasklog</span><span class="p">.</span><span class="k">type</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">subtasklog</span><span class="p">.</span><span class="n">tasklog</span><span class="p">.</span><span class="k">state</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">subtasklog</span><span class="p">.</span><span class="n">tasklog</span><span class="p">.</span><span class="n">save</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="k">True</span><span class="p">,</span> <span class="s1">&#39;Finished&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="o">#</span> <span class="err">否则获取下一组要执行的</span><span class="n">subtask</span><span class="err">，当</span><span class="n">sortnum一样时并行执行</span>
+            <span class="n">next_subtasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">subtasklogs</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sortnum</span><span class="o">=</span><span class="n">_not_run_subtasks</span><span class="p">.</span><span class="k">first</span><span class="p">().</span><span class="n">sortnum</span><span class="p">)]</span>
+
+    <span class="o">#</span> <span class="err">获取到下一组要执行的子任务后，循环异步执行子任务，当</span><span class="n">sortnum相同时并行执行</span>
+    <span class="k">for</span> <span class="n">next_subtask</span> <span class="k">in</span> <span class="n">next_subtasks</span><span class="p">:</span>
+        <span class="o">#</span> <span class="err">然后将要执行的子任务传给</span><span class="n">run_subtask异步执行</span>
+        <span class="n">celery_task</span> <span class="o">=</span> <span class="n">run_subtask</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="n">next_subtask</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="o">#</span> <span class="err">记录</span><span class="n">celery任务的ID</span><span class="err">，终止任务执行时使用</span>
+        <span class="n">next_subtask</span><span class="p">.</span><span class="n">celery_task_id</span> <span class="o">=</span> <span class="n">celery_task</span>
+        <span class="n">next_subtask</span><span class="p">.</span><span class="n">save</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="k">True</span><span class="p">,</span> <span class="s1">&#39;Next&#39;</span>
+</code></pre></div>
+
+<p>想清楚了执行逻辑，对于代码修改并不算复杂，当在模板里把IOS更新和安卓更新两个子任务执行顺序改成一样时再执行就看到他们两个同时开始执行了</p>
+<p><img alt="" src="/static/images/20220227.04.png" /></p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/0Q31jzeYBTeWdrLMufdig.html">📅 2022-02-27</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/任务系统/">🏷️ 任务系统</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

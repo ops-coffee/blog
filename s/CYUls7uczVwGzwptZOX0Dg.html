@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="ELK,Rsyslog,Nginx,ELK,Agent,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="ELK日志系统之使用Rsyslog快速方便的收集Nginx日志" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>ELK日志系统之使用Rsyslog快速方便的收集Nginx日志</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="ELK日志系统之使用Rsyslog快速方便的收集Nginx日志" />
+  <meta property="og:description" content="ELK日志系统之使用Rsyslog快速方便的收集Nginx日志" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">ELK日志系统之使用Rsyslog快速方便的收集Nginx日志</h1>
+
+        <blockquote>
+<p>常规的日志收集方案中Client端都需要额外安装一个Agent来收集日志，例如logstash、filebeat等，额外的程序也就意味着环境的复杂，资源的占用，有没有一种方式是不需要额外安装程序就能实现日志收集呢？Rsyslog就是你要找的答案！</p>
+</blockquote>
+<h1 id="rsyslog">Rsyslog</h1>
+<p>Rsyslog是高速的日志收集处理服务，它具有高性能、安全可靠和模块化设计的特点，能够接收来自各种来源的日志输入（例如：file，tcp，udp，uxsock等），并通过处理后将结果输出的不同的目的地（例如：mysql，mongodb，elasticsearch，kafka等），每秒处理日志量能够超过百万条。</p>
+<p>Rsyslog作为syslog的增强升级版本已经在各linux发行版<strong>默认安装</strong>了，无需额外安装。</p>
+<h1 id="nginx">收集Nginx日志</h1>
+<p>ELK通过Rsyslog收集日志流程图如下：</p>
+<p><img alt="" src="/static/images/20180828.00.jpg" /></p>
+<ol>
+<li>处理流程为：Nginx --syslog--&gt; Rsyslog --omkafka--&gt; Kafka --&gt; Logstash --&gt; Elasticsearch --&gt; Kibana</li>
+<li>Nginx产生日志通过syslog系统服务传给Rsyslog服务端，Rsyslog接收到日志后通过omkafka模块将日志写入Kafka，Logstash读取Kafka队列然后写入Elasticsearch，用户通过Kibana检索Elasticsearch里存储的日志</li>
+<li>Rsyslog服务系统自带无需安装，所以整个流程中客户端不需要额外安装应用</li>
+<li>服务端虽然Rsyslog也已安装，但默认没有omkafka模块，如果需要Rsyslog写入Kafka需要先安装这个模块</li>
+<li>omkafka模块在rsyslog v8.7.0之后的版本才支持，所以需要先通过<code>rsyslogd -v</code>命令查看rsyslog版本，如果版本较低则需要升级</li>
+</ol>
+<h2 id="rsyslog_1">Rsyslog升级</h2>
+<p>1.添加rsyslog源的key</p>
+<div class="codehilite"><pre><span></span><code><span class="err"># apt-key adv --recv-keys --keyserver keys.gnupg.net AEF0CF8E</span>
+</code></pre></div>
+
+<p>2.添加rsyslog源地址</p>
+<div class="codehilite"><pre><span></span><code><span class="err">echo &quot;deb http://debian.adiscon.com/v8-stable wheezy/&quot; &gt;&gt; /etc/apt/sources.list</span>
+<span class="err">echo &quot;deb-src http://debian.adiscon.com/v8-stable wheezy/&quot; &gt;&gt; /etc/apt/sources.list</span>
+</code></pre></div>
+
+<p>3.升级rsyslog服务</p>
+<div class="codehilite"><pre><span></span><code><span class="err"># apt-get update &amp;&amp; apt-get -y install rsyslog</span>
+</code></pre></div>
+
+<h2 id="omkafka">添加omkafka模块</h2>
+<p>1.安装编译工具，下边autoreconf需要用到，不然无法生成configure文件</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># apt-get -y install pkg-config autoconf automake libtool unzip</span>
+</code></pre></div>
+
+<p>2.omkafka需要安装一堆的依赖包</p>
+<div class="codehilite"><pre><span></span><code><span class="err"># apt-get -y install libdbi-dev libmysqlclient-dev postgresql-client libpq-dev  libnet-dev   librdkafka-dev   libgrok-dev libgrok1 libgrok-dev libpcre3-dev libtokyocabinet-dev libglib2.0-dev  libmongo-client-dev  libhiredis-dev</span>
+<span class="err"># apt-get -y install libestr-dev libfastjson-dev uuid-dev liblogging-stdlog-dev libgcrypt-dev</span>
+<span class="err"># apt-get -y install flex bison librdkafka1 librdkafka-dev librdkafka1-dbg</span>
+</code></pre></div>
+
+<p>3.编译安装omkafka模块</p>
+<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">mkdir</span><span class="w"> </span><span class="n">tmp</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">cd</span><span class="w"> </span><span class="n">tmp</span><span class="w"></span>
+
+<span class="err">#</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">init</span><span class="w"></span>
+<span class="err">#</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">pull</span><span class="w"> </span><span class="n">git</span><span class="nv">@github</span><span class="p">.</span><span class="nl">com</span><span class="p">:</span><span class="n">VertiPub</span><span class="o">/</span><span class="n">omkafka</span><span class="p">.</span><span class="n">git</span><span class="w"></span>
+
+<span class="err">#</span><span class="w"> </span><span class="n">autoreconf</span><span class="w"> </span><span class="o">-</span><span class="n">fvi</span><span class="w"></span>
+<span class="err">#</span><span class="w"> </span><span class="p">.</span><span class="o">/</span><span class="n">configure</span><span class="w"> </span><span class="c1">--sbindir=/usr/sbin --libdir=/usr/lib --enable-omkafka &amp;&amp; make &amp;&amp; make install &amp;&amp; cd ..</span>
+</code></pre></div>
+
+<h2 id="rsyslognginx">Rsyslog收集nginx日志</h2>
+<h5 id="clientnginx">Client端Nginx配置</h5>
+<div class="codehilite"><pre><span></span><code><span class="nt">log_format</span>  <span class="nt">jsonlog</span> <span class="s1">&#39;{&#39;</span>
+    <span class="s1">&#39;&quot;host&quot;: &quot;$host&quot;,&#39;</span>
+    <span class="s1">&#39;&quot;server_addr&quot;: &quot;$server_addr&quot;,&#39;</span>
+    <span class="s1">&#39;&quot;http_x_forwarded_for&quot;:&quot;$http_x_forwarded_for&quot;,&#39;</span>
+    <span class="s1">&#39;&quot;remote_addr&quot;:&quot;$remote_addr&quot;,&#39;</span>
+    <span class="s1">&#39;&quot;time_local&quot;:&quot;$time_local&quot;,&#39;</span>
+    <span class="s1">&#39;&quot;request_method&quot;:&quot;$request_method&quot;,&#39;</span>
+    <span class="s1">&#39;&quot;request_uri&quot;:&quot;$request_uri&quot;,&#39;</span>
+    <span class="s1">&#39;&quot;status&quot;:$status,&#39;</span>
+    <span class="s1">&#39;&quot;body_bytes_sent&quot;:$body_bytes_sent,&#39;</span>
+    <span class="s1">&#39;&quot;http_referer&quot;:&quot;$http_referer&quot;,&#39;</span>
+    <span class="s1">&#39;&quot;http_user_agent&quot;:&quot;$http_user_agent&quot;,&#39;</span>
+    <span class="s1">&#39;&quot;upstream_addr&quot;:&quot;$upstream_addr&quot;,&#39;</span>
+    <span class="s1">&#39;&quot;upstream_status&quot;:&quot;$upstream_status&quot;,&#39;</span>
+    <span class="s1">&#39;&quot;upstream_response_time&quot;:&quot;$upstream_response_time&quot;,&#39;</span>
+    <span class="s1">&#39;&quot;request_time&quot;:$request_time&#39;</span>
+<span class="s1">&#39;}&#39;</span><span class="o">;</span>
+
+
+<span class="nt">access_log</span> <span class="nt">syslog</span><span class="p">:</span><span class="nd">server</span><span class="o">=</span><span class="nt">rsyslog</span><span class="p">.</span><span class="nc">domain</span><span class="p">.</span><span class="nc">com</span><span class="o">,</span><span class="nt">facility</span><span class="o">=</span><span class="nt">local7</span><span class="o">,</span><span class="nt">tag</span><span class="o">=</span><span class="nt">nginx_access_log</span><span class="o">,</span><span class="nt">severity</span><span class="o">=</span><span class="nt">info</span> <span class="nt">jsonlog</span><span class="o">;</span>
+</code></pre></div>
+
+<p>1.Nginx在<strong>v1.10之后</strong>的版本才支持syslog的方式处理日志，请确保你的Nginx版本高于1.10</p>
+<p>2.为了降低logstash的处理压力，同时也为了降低整个配置的复杂度，我们nginx的日志直接采用json格式</p>
+<p>3.抛弃文本文件记录nginx日志，改用syslog直接将日志传输到远端的rsyslog服务器，以便我们后续的处理；这样做的另一个非常重要的好处是我们再也无需考虑nginx日志的分割和定期删除问题（一般我们为了方便管理通常会采用logrotate服务来对日志进行按天拆分和定期删除,以免磁盘被占满）</p>
+<p>4.access_log直接输出到syslog服务，各参数解释如下：</p>
+<ul>
+<li><strong>syslog</strong>：指明日志用syslog服务接收</li>
+<li><strong>server</strong>：接收syslog发送日志的Rsyslog服务端地址，默认使用udp协议，端口是514</li>
+<li><strong>facility</strong>：指定记录日志消息的类型，例如认证类型auth、计划任务cron、程序自定义的local0-7等，没有什么特别的含义，不必深究，默认的值是local7</li>
+<li><strong>tag</strong>：给日志添加一个tag，主要是为了方便我们在服务端区分是哪个服务或者client传来的日志，例如我们这里给了tag：<code>nginx_access_log</code>，如果有多个服务同时都写日志给rsyslog，且配置了不通的tag，在rsyslog服务端就可以根据这个tag找出哪些是nginx的日志</li>
+<li><strong>severity</strong>：定义日志的级别，例如debug，info，notice等，默认是error</li>
+</ul>
+<h5 id="serverrsyslog">Server端Rsyslog配置</h5>
+<div class="codehilite"><pre><span></span><code><span class="c1"># cat /etc/rsyslog.d/rsyslog_nginx_kafka_cluster.conf </span>
+<span class="n">module</span><span class="p">(</span><span class="nb">load</span><span class="o">=</span><span class="s2">&quot;imudp&quot;</span><span class="p">)</span>
+<span class="n">input</span><span class="p">(</span><span class="n">type</span><span class="o">=</span><span class="s2">&quot;imudp&quot;</span> <span class="n">port</span><span class="o">=</span><span class="s2">&quot;514&quot;</span><span class="p">)</span>
+
+<span class="c1"># nginx access log ==&gt; rsyslog server(local) ==&gt; kafka</span>
+<span class="n">module</span><span class="p">(</span><span class="nb">load</span><span class="o">=</span><span class="s2">&quot;omkafka&quot;</span><span class="p">)</span>
+
+<span class="n">template</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;nginxLog&quot;</span> <span class="n">type</span><span class="o">=</span><span class="s2">&quot;string&quot;</span> <span class="n">string</span><span class="o">=</span><span class="s2">&quot;%msg%&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="o">$</span><span class="n">inputname</span> <span class="o">==</span> <span class="s2">&quot;imudp&quot;</span> <span class="n">then</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">$</span><span class="n">programname</span> <span class="o">==</span> <span class="s2">&quot;nginx_access_log&quot;</span><span class="p">)</span> <span class="n">then</span>
+        <span class="n">action</span><span class="p">(</span><span class="n">type</span><span class="o">=</span><span class="s2">&quot;omkafka&quot;</span>
+            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;nginxLog&quot;</span>
+            <span class="n">broker</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;10.82.9.202:9092&quot;</span><span class="p">,</span><span class="s2">&quot;10.82.9.203:9092&quot;</span><span class="p">,</span><span class="s2">&quot;10.82.9.204:9092&quot;</span><span class="p">]</span>
+            <span class="n">topic</span><span class="o">=</span><span class="s2">&quot;rsyslog_nginx&quot;</span>
+            <span class="n">partitions</span><span class="o">.</span><span class="n">auto</span><span class="o">=</span><span class="s2">&quot;on&quot;</span>
+            <span class="n">confParam</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;socket.keepalive.enable=true&quot;</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+<span class="p">}</span>
+
+<span class="p">:</span><span class="n">rawmsg</span><span class="p">,</span> <span class="n">contains</span><span class="p">,</span> <span class="s2">&quot;nginx_access_log&quot;</span> <span class="o">~</span>
+</code></pre></div>
+
+<p>1.在rsyslog.d目录下添加一个专门处理nginx日志的配置文件</p>
+<p>2.rsyslog配置文件重要配置解释如下：</p>
+<ul>
+<li><strong>module</strong>：加载模块，这里我们需要加载imudp模块来接收nginx服务器syslog发过来的日志数据，也需要加载omkafka模块来将日志写入到kafka</li>
+<li><strong>input</strong>：开启udp协议，端口514，也可以同时开启tcp协议，两者可以共存</li>
+<li><strong>template</strong>：定义一个模板，名字叫nginxLog，模板里可以定义日志的格式，因为我们传的已经是json了，不需要再匹配格式，所以这里不额外定义，注意模板名字要唯一</li>
+<li><strong>action</strong>：在匹配到inputname为<code>imudp</code>且programname为<code>nginx_access_log</code>（就是我们上边nginx配置里边的tag）之后的处理方式，这里的配置为匹配到的日志通过omkafka模块写入kafka集群，还有一些关于omkafka更详细的配置参考上边给出的omkafka模块官方文档</li>
+<li><strong>:rawmsg, contains</strong>：最后这一行的意思是忽略包含<code>nginx_access_log</code>的日志，没有这一行的话rsyslog服务默认会把所有日志都记录到message里边一份，我们已经把日志输出到kafka了，本地就没必要再记录了</li>
+</ul>
+<p>3.omkafka模块检查kafka里边topic是否存在，如果不存在则创建，无需手动创建kafka的topic</p>
+<h5 id="serverlogstash">Server端logstash配置</h5>
+<div class="codehilite"><pre><span></span><code><span class="k">input</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">kafka</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">bootstrap_servers</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;10.82.9.202:9092,10.82.9.203:9092,10.82.9.204:9092&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="n">topics</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;rsyslog_nginx&quot;</span><span class="o">]</span><span class="w"></span>
+<span class="w">    </span><span class="err">}</span><span class="w"></span>
+<span class="err">}</span><span class="w"></span>
+
+<span class="k">filter</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">mutate</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">gsub</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;message&quot;, &quot;\\x&quot;, &quot;\\\x&quot;</span><span class="o">]</span><span class="w"></span>
+<span class="w">    </span><span class="err">}</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">json</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">source</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;message&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="err">}</span><span class="w"></span>
+
+<span class="w">    </span><span class="nc">date</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;time_local&quot;,&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;</span><span class="o">]</span><span class="w"></span>
+<span class="w">        </span><span class="n">target</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;@timestamp&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="err">}</span><span class="w"></span>
+
+<span class="err">}</span><span class="w"></span>
+
+<span class="k">output</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">elasticsearch</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">hosts</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;10.82.9.205&quot;, &quot;10.82.9.206&quot;, &quot;10.82.9.207&quot;</span><span class="o">]</span><span class="w"></span>
+<span class="w">        </span><span class="k">index</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;rsyslog-nginx-%{+YYYY.MM.dd}&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="err">}</span><span class="w"></span>
+<span class="err">}</span><span class="w"></span>
+</code></pre></div>
+
+<p>重要配置参数解释如下：</p>
+<ul>
+<li><strong>input</strong>：配置kafka的集群地址和topic名字</li>
+<li><strong>filter</strong>：一些过滤策略，因为传入kafka的时候是json格式，所以不需要额外处理，唯一需要注意的是如果日志中有中文，例如url中有中文内容时需要替换<code>\\x</code>，不然json格式会报错</li>
+<li><strong>output</strong>：配置ES服务器集群的地址和index，index自动按天分割</li>
+</ul>
+<h5 id="_1">联调测试</h5>
+<p>配置完成后分别重启rsyslog服务和nginx服务，访问nginx产生日志</p>
+<p>1.查看kafka是否有正常生成topic</p>
+<div class="codehilite"><pre><span></span><code><span class="err"># bin/kafka-topics.sh --list --zookeeper 127.0.0.1:2181</span>
+<span class="err">__consumer_offsets</span>
+<span class="err">rsyslog_nginx</span>
+</code></pre></div>
+
+<p>2.查看topic是否能正常接收日志</p>
+<div class="codehilite"><pre><span></span><code><span class="err"># bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic rsyslog_nginx</span>
+<span class="err">{&quot;host&quot;: &quot;domain.com&quot;,&quot;server_addr&quot;: &quot;172.17.0.2&quot;,&quot;http_x_forwarded_for&quot;:&quot;58.52.198.68&quot;,&quot;remote_addr&quot;:&quot;10.120.89.84&quot;,&quot;time_local&quot;:&quot;28/Aug/2018:14:26:00 +0800&quot;,&quot;request_method&quot;:&quot;GET&quot;,&quot;request_uri&quot;:&quot;/&quot;,&quot;status&quot;:200,&quot;body_bytes_sent&quot;:1461,&quot;http_referer&quot;:&quot;-&quot;,&quot;http_user_agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36&quot;,&quot;upstream_addr&quot;:&quot;-&quot;,&quot;upstream_status&quot;:&quot;-&quot;,&quot;upstream_response_time&quot;:&quot;-&quot;,&quot;request_time&quot;:0.000}</span>
+</code></pre></div>
+
+<p>3.kibana添加index，查看Elasticsearch中是否有数据，如果前两步都正常，kibana搜不到index或index没有数据，多半是index名字写错了之类的基础问题，仔细检查</p>
+<h2 id="kibana">kibana查询展示</h2>
+<ul>
+<li>打开Kibana添加<code>rsyslog-nginx-*</code>的Index，并选择timestamp，创建Index Pattern</li>
+</ul>
+<p><img alt="" src="/static/images/20180828.02.png" /></p>
+<ul>
+<li>进入Discover页面，可以很直观的看到各个时间点请求量的变化，根据左侧Field实现简单过滤，例如我们想查看所有访问状态为404的uri，可以点击request_uri和status后边的add，这两项的内容将出现在右侧，然后点击status下边404状态码后边的加号，则只查看状态为404的请求，点击上方auto-refresh可以设置页面自动刷新时间</li>
+</ul>
+<p><img alt="" src="/static/images/20180828.03.png" /></p>
+<ul>
+<li>通过各种条件的组合查询可以实现各种各样的需求，例如每秒请求、带宽占用、异常比例、慢响应、TOP IP、TOP URL等等各种情况，并且可以通过Visualize很方便的将这些信息绘制图标，生成Dashboard保存</li>
+</ul>
+<p><img alt="" src="/static/images/20180828.04.png" /></p>
+<h1 id="_2">写在最后</h1>
+<ol>
+<li>Nginx的access log绝对是网站的一个宝藏，通过日志量的变化可以知道网站的流量情况，通过对status状态的分析可以知道我们提供服务的可靠性，通过对特定活动url的追踪可以实时了解活动的火爆程度，通过对某些条件的组合查询也能为网站运营提供建议和帮助，从而使我们的网站更友好更易用</li>
+<li>Rsyslog服务的单点问题可以通过部署多个Rsyslog服务过三层负载来保证高可用，不过以我们的经验来说rsyslog服务还是很稳定的，跑了一年多，每分钟日志处理量在20w左右，没有出现过宕机情况，不想这么复杂的话可以写个check rsyslog服务状态的脚本跑后台，挂了自动拉起来</li>
+<li>整个过程中我们使用了UDP协议，第一是因为Nginx日志的syslog模式默认支持的就是UDP协议，翻了官网没找到支持TCP的方式，我想这也是考虑到UDP协议的性能要比TCP好的多，第二也考虑到如果使用TCP遇到网络不稳定的情况下可能会不停的重试或等待，影响到Nginx的稳定。对于因为内容过长超过以太网数据帧长度的问题暂时没有遇到</li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/CYUls7uczVwGzwptZOX0Dg.html">📅 2018-08-30</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Elk/">🏷️ Elk</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

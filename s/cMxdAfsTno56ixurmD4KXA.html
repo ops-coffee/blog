@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,Signals,model,get,if,signals,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Django使用Signals监测model字段变化发送通知" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Django使用Signals监测model字段变化发送通知</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="Django使用Signals监测model字段变化发送通知" />
+  <meta property="og:description" content="Django使用Signals监测model字段变化发送通知" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django使用Signals监测model字段变化发送通知</h1>
+
+        <blockquote>
+<p>上一篇文章<a href="/s/6ztLq8Q591KnlQY33-YFdQ">《运维效率之数据迁移自动化》</a>中讲到了工单通知，本文将介绍工单通知实现过程中的一些小技巧。所有演示均基于Django2.0</p>
+</blockquote>
+<p>阅读此篇文章你可以：</p>
+<ul>
+<li>解锁一个python if的使用新姿势</li>
+<li>获取一个利用signals做通知的真实案例</li>
+</ul>
+<h1 id="_1">背景说明</h1>
+<p>先看看工单表简化后的结构</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Ticket</span>(<span class="n">models</span>.<span class="n">Model</span>):
+    <span class="s">&#39;&#39;&#39;工单表&#39;&#39;&#39;</span>
+
+    <span class="n">STATE</span> = (
+        (<span class="mi">1</span>, <span class="s">&#39;待审批&#39;</span>),
+        (<span class="mi">2</span>, <span class="s">&#39;已撤销&#39;</span>),
+        (<span class="mi">3</span>, <span class="s">&#39;已通过&#39;</span>),
+        (<span class="mi">4</span>, <span class="s">&#39;被拒绝&#39;</span>),
+        (<span class="mi">5</span>, <span class="s">&#39;已挂起&#39;</span>),
+        (<span class="mi">6</span>, <span class="s">&#39;执行中&#39;</span>),
+        (<span class="mi">7</span>, <span class="s">&#39;已完成&#39;</span>),
+        (<span class="mi">8</span>, <span class="s">&#39;已失败&#39;</span>)
+    )
+
+    <span class="n">create_time</span> = <span class="n">models</span>.<span class="n">DateTimeField</span>(<span class="n">auto_now_add</span>=<span class="nb">True</span>, <span class="n">verbose_name</span>=<span class="s">&#39;创建时间&#39;</span>)
+    <span class="n">create_user</span> = <span class="n">models</span>.<span class="n">ForeignKey</span>(<span class="n">User</span>, <span class="n">on_delete</span>=<span class="n">models</span>.<span class="n">DO_NOTHING</span>, <span class="n">verbose_name</span>=<span class="s">&#39;创建用户&#39;</span>)
+
+    <span class="k">state</span> = <span class="n">models</span>.<span class="n">IntegerField</span>(<span class="n">choices</span>=<span class="n">STATE</span>, <span class="k">default</span>=<span class="mi">1</span>, <span class="n">verbose_name</span>=<span class="s">&#39;工单状态&#39;</span>)
+</code></pre></div>
+
+<p>Ticket工单表有一个state字段标识当前工单状态，这个状态会随着工单的进行而改变，每当工单状态改变时就需要发送通知给相应的用户，例如工单创建时，需要发送给创建者一个工单创建成功的通知，同时发送给审核者一个待审核的通知</p>
+<h1 id="_2">通知</h1>
+<p>每一个状态的变化都需要通知，为了代码易读及解耦，我们需要写一个单独的通知类，当需要通知的时候调用一下就好了。通知类中需要判断当前工单的状态，那么通常会写成下边这样</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Notify</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dba_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;dba1@ops-coffee.cn&quot;, &quot;dba2@ops-coffee.cn&quot;</span><span class="o">]</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">migration</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">pk</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
+<span class="w">        </span><span class="s1">&#39;&#39;&#39;迁移通知&#39;&#39;&#39;</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">_t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Ticket</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">id</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="n">_u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_t</span><span class="p">.</span><span class="n">create_user</span><span class="p">.</span><span class="n">username</span><span class="w"></span>
+<span class="w">        </span><span class="n">_s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_t</span><span class="p">.</span><span class="k">state</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">_d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;https://ops-coffee.cn/workflow/migration/%d/&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="p">(</span><span class="n">_t</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">_s</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="err">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">try</span><span class="err">:</span><span class="w"></span>
+<span class="w">                </span><span class="n">Email</span><span class="p">(</span><span class="w"></span>
+<span class="w">                    </span><span class="n">subject</span><span class="o">=</span><span class="ss">&quot;[已提交]-[overmind]数据迁移工单&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="n">content</span><span class="o">=</span><span class="ss">&quot;你的数据迁移工单已提交，正在等待DBA审批，后续有状态变更将会自动通知你。\r\n\r\n工单详情：%s&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">_d</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="n">reciever_list</span><span class="o">=[</span><span class="n">_u</span><span class="o">]</span><span class="w"></span>
+<span class="w">                </span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="ow">except</span><span class="w"> </span><span class="k">Exception</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nl">e</span><span class="p">:</span><span class="w"></span>
+<span class="w">                </span><span class="k">print</span><span class="p">(</span><span class="s1">&#39;Error:&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">            </span><span class="k">try</span><span class="err">:</span><span class="w"></span>
+<span class="w">                </span><span class="n">Email</span><span class="p">(</span><span class="w"></span>
+<span class="w">                    </span><span class="n">subject</span><span class="o">=</span><span class="ss">&quot;[待审批]-[overmind]数据迁移工单&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="n">content</span><span class="o">=</span><span class="ss">&quot;你有工单需要审批，点击下方工单详情链接及时审批。\r\n\r\n工单详情：%s&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">_d</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="n">reciever_list</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">dba_list</span><span class="w"></span>
+<span class="w">                </span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="ow">except</span><span class="w"> </span><span class="k">Exception</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nl">e</span><span class="p">:</span><span class="w"></span>
+<span class="w">                </span><span class="k">print</span><span class="p">(</span><span class="s1">&#39;Error:&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span><span class="w"></span>
+<span class="w">        </span><span class="n">elif</span><span class="w"> </span><span class="n">_s</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">6</span><span class="err">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">try</span><span class="err">:</span><span class="w"></span>
+<span class="w">                </span><span class="n">Email</span><span class="p">(</span><span class="w"></span>
+<span class="w">                    </span><span class="n">subject</span><span class="o">=</span><span class="ss">&quot;[执行中]-[overmind]数据迁移工单&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="n">content</span><span class="o">=</span><span class="ss">&quot;数据迁移工单已通过DBA审核，正在执行中，后续有状态变更将会自动通知你。\r\n\r\n工单详情：%s&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">_d</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="n">reciever_list</span><span class="o">=[</span><span class="n">_u</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">dba_list</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="ow">except</span><span class="w"> </span><span class="k">Exception</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nl">e</span><span class="p">:</span><span class="w"></span>
+<span class="w">                </span><span class="k">print</span><span class="p">(</span><span class="s1">&#39;Error:&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span><span class="w"></span>
+<span class="w">        </span><span class="n">elif</span><span class="w"> </span><span class="n">_s</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">7</span><span class="err">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">try</span><span class="err">:</span><span class="w"></span>
+<span class="w">                </span><span class="n">Email</span><span class="p">(</span><span class="w"></span>
+<span class="w">                    </span><span class="n">subject</span><span class="o">=</span><span class="ss">&quot;[已完成]-[overmind]数据迁移工单&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="n">content</span><span class="o">=</span><span class="ss">&quot;数据迁移工单已自动完成迁移，请检查最终状态，如有任何疑问随时联系DBA。\r\n\r\n工单详情：%s&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">_d</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="n">reciever_list</span><span class="o">=[</span><span class="n">_u</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">dba_list</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="ow">except</span><span class="w"> </span><span class="k">Exception</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nl">e</span><span class="p">:</span><span class="w"></span>
+<span class="w">                </span><span class="k">print</span><span class="p">(</span><span class="s1">&#39;Error:&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span><span class="w"></span>
+</code></pre></div>
+
+<p>以上的代码可以看出来写了很多重复的try代码，并且当状态越多，if判断越复杂时重复的代码也会越来越多，有没有更简洁的方式呢？</p>
+<p>看看下边的代码，维护一个状态字典，然后用一个if判断就可以实现上边一堆if的代码写法，是不是就简洁了很多</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Notify</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dba_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;dba1@ops-coffee.cn&quot;, &quot;dba2@ops-coffee.cn&quot;</span><span class="o">]</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">migration</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">pk</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
+<span class="w">        </span><span class="s1">&#39;&#39;&#39;迁移通知&#39;&#39;&#39;</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">_t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Ticket</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">id</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="n">_u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_t</span><span class="p">.</span><span class="n">create_user</span><span class="p">.</span><span class="n">username</span><span class="w"></span>
+<span class="w">        </span><span class="n">_s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_t</span><span class="p">.</span><span class="k">state</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">_d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;https://ops-coffee.cn/workflow/migration/%d/&quot;</span><span class="w"> </span><span class="o">%</span><span class="p">(</span><span class="n">_t</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="n">smap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
+<span class="w">            </span><span class="mi">1</span><span class="err">:</span><span class="w"> </span><span class="o">[</span><span class="n">{</span>
+<span class="n">                &quot;subject&quot;: &quot;[已提交</span><span class="o">]-[</span><span class="n">overmind</span><span class="o">]</span><span class="n">数据迁移工单</span><span class="ss">&quot;,</span>
+<span class="ss">                &quot;</span><span class="n">content</span><span class="ss">&quot;: &quot;</span><span class="n">你的数据迁移工单已提交</span><span class="err">，</span><span class="n">正在等待DBA审批</span><span class="err">，</span><span class="n">后续有状态变更将会自动通知你</span><span class="err">。\</span><span class="n">r</span><span class="err">\</span><span class="n">n</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">n工单详情</span><span class="err">：</span><span class="o">%</span><span class="n">s</span><span class="ss">&quot; %_d,</span>
+<span class="ss">                &quot;</span><span class="n">reciever_list</span><span class="ss">&quot;: [_u],</span>
+<span class="ss">            }, {</span>
+<span class="ss">                &quot;</span><span class="n">subject</span><span class="ss">&quot;: &quot;</span><span class="o">[</span><span class="n">待审批</span><span class="o">]-[</span><span class="n">overmind</span><span class="o">]</span><span class="n">数据迁移工单</span><span class="ss">&quot;,</span>
+<span class="ss">                &quot;</span><span class="n">content</span><span class="ss">&quot;: &quot;</span><span class="n">你有工单需要审批</span><span class="err">，</span><span class="n">点击下方工单详情链接及时审批</span><span class="err">。\</span><span class="n">r</span><span class="err">\</span><span class="n">n</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">n工单详情</span><span class="err">：</span><span class="o">%</span><span class="n">s</span><span class="ss">&quot; %_d,</span>
+<span class="ss">                &quot;</span><span class="n">reciever_list</span><span class="ss">&quot;: self.dba_list,</span>
+<span class="ss">            }],</span>
+<span class="ss">            6: [{</span>
+<span class="ss">                &quot;</span><span class="n">subject</span><span class="ss">&quot;: &quot;</span><span class="o">[</span><span class="n">执行中</span><span class="o">]-[</span><span class="n">overmind</span><span class="o">]</span><span class="n">数据迁移工单</span><span class="ss">&quot;,</span>
+<span class="ss">                &quot;</span><span class="n">content</span><span class="ss">&quot;: &quot;</span><span class="n">数据迁移工单已通过DBA审核</span><span class="err">，</span><span class="n">正在执行中</span><span class="err">，</span><span class="n">后续有状态变更将会自动通知你</span><span class="err">。\</span><span class="n">r</span><span class="err">\</span><span class="n">n</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">n工单详情</span><span class="err">：</span><span class="o">%</span><span class="n">s</span><span class="ss">&quot; %_d,</span>
+<span class="ss">                &quot;</span><span class="n">reciever_list</span><span class="ss">&quot;: [_u] + self.dba_list,</span>
+<span class="ss">            }],</span>
+<span class="ss">            7: [{</span>
+<span class="ss">                &quot;</span><span class="n">subject</span><span class="ss">&quot;: &quot;</span><span class="o">[</span><span class="n">已完成</span><span class="o">]-[</span><span class="n">overmind</span><span class="o">]</span><span class="n">数据迁移工单</span><span class="ss">&quot;,</span>
+<span class="ss">                &quot;</span><span class="n">content</span><span class="ss">&quot;: &quot;</span><span class="n">数据迁移工单已自动完成迁移</span><span class="err">，</span><span class="n">请检查最终状态</span><span class="err">，</span><span class="n">如有任何疑问随时联系DBA</span><span class="err">。\</span><span class="n">r</span><span class="err">\</span><span class="n">n</span><span class="err">\</span><span class="n">r</span><span class="err">\</span><span class="n">n工单详情</span><span class="err">：</span><span class="o">%</span><span class="n">s</span><span class="ss">&quot; %_d,</span>
+<span class="ss">                &quot;</span><span class="n">reciever_list</span><span class="err">&quot;:</span><span class="w"> </span><span class="o">[</span><span class="n">_u</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">dba_list</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="err">}]</span><span class="w"></span>
+<span class="w">        </span><span class="err">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">smap</span><span class="o">[</span><span class="n">_s</span><span class="o">]</span><span class="w"></span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">_list</span><span class="p">))</span><span class="err">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">try</span><span class="err">:</span><span class="w"></span>
+<span class="w">                </span><span class="n">Email</span><span class="p">(</span><span class="w"></span>
+<span class="w">                    </span><span class="n">subject</span><span class="o">=</span><span class="n">_list</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">&#39;subject&#39;</span><span class="o">]</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">content</span><span class="o">=</span><span class="n">_list</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">&#39;content&#39;</span><span class="o">]</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">reciever_list</span><span class="o">=</span><span class="n">_list</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">&#39;reciever_list&#39;</span><span class="o">]</span><span class="w"></span>
+<span class="w">                </span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="ow">except</span><span class="w"> </span><span class="k">Exception</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nl">e</span><span class="p">:</span><span class="w"></span>
+<span class="w">                </span><span class="k">print</span><span class="p">(</span><span class="s1">&#39;Error:&#39;</span><span class="w"> </span><span class="o">+</span><span class="nf">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span><span class="w"></span>
+</code></pre></div>
+
+<p>在构造字典的时候采用了状态做key，通知变量做value，同时一个状态可能会产生多个不同的通知，所以value采用列表的方式，这样即可轻松实现一个状态多条通知，每条通知都可以发给不同的人，有不同的主题，不同的内容。</p>
+<h1 id="signals">Signals</h1>
+<p>上边我们已经写好了发送通知的类，在view里每次修改工单状态之后调用下通知类即可实现通知发送，但这样通知跟view强耦合，且通知会分散在view中的多个地方，造成代码冗余且不够优雅。我们需要一个简单优雅的方式来实现，signals可以说是非常有用了</p>
+<p>Signals是Django自带的一个信号调度程序。如果你对svn或者git之类的hooks有了解，这个理解起来就简单多了，通俗来说就是当你的程序产生一个事件时，会通过signals自动触发其他的事件。就比如我们这个工单系统通知，当工单状态产生变化时自动发送邮件给相关人。</p>
+<p>Django内部已经定义好了一些signal供我们使用，如果不能满足我们也可以自定义signal，其中Django内部定义的signal主要分为几类</p>
+<ol>
+<li>
+<p>model signals</p>
+<ul>
+<li><code>pre_init</code>：model初始化前触发</li>
+<li><code>post_init</code>：model初始化后触发</li>
+<li><code>pre_save</code>：save()方法前触发</li>
+<li><code>post_save</code>：save()方法后触发</li>
+<li><code>pre_delete</code>：delete()方法前触发</li>
+<li><code>post_delete</code>：delete()方法后触发</li>
+<li><code>m2m_changed</code>：ManyToManyField字段改变时触发</li>
+<li><code>class_prepared</code>：没用过字面意思理解吧</li>
+</ul>
+</li>
+<li>
+<p>management signals</p>
+<ul>
+<li><code>pre_migrate</code>：migrate之前触发</li>
+<li><code>post_migrate</code>：migrate之后触发</li>
+</ul>
+</li>
+<li>
+<p>request/response signals</p>
+<ul>
+<li><code>request_started</code>：请求开始时触发</li>
+<li><code>request_finished</code>：请求完成后触发</li>
+<li><code>got_request_exception</code>：请求异常时触发</li>
+</ul>
+</li>
+<li>
+<p>test signals</p>
+<ul>
+<li><code>setting_changed</code>：配置改变时触发</li>
+<li><code>template_rendered</code>：模板渲染时触发</li>
+</ul>
+</li>
+<li>
+<p>Database Wrappers</p>
+<ul>
+<li><code>connection_created</code>：连接建立时触发</li>
+</ul>
+</li>
+</ol>
+<p>那么信号究竟该如何使用呢？下边一个实际的例子来说明下信号的使用</p>
+<p>就以我们发送通知的需求为例，workflow是一个普通的app，第一步需要新建<code>workflow/signals.py</code>文件绑定signal</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">signals</span>
+<span class="kn">from</span> <span class="nn">django.dispatch</span> <span class="kn">import</span> <span class="n">receiver</span>
+
+<span class="kn">from</span> <span class="nn">workflow.models</span> <span class="kn">import</span> <span class="n">Ticket</span>
+<span class="kn">from</span> <span class="nn">workflow.backends.notify</span> <span class="kn">import</span> <span class="n">Notify</span>
+
+
+<span class="nd">@receiver</span><span class="p">(</span><span class="n">signals</span><span class="o">.</span><span class="n">post_init</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">Ticket</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">migrate_notify_init</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">instance</span><span class="o">.</span><span class="n">old_state</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">state</span>
+
+
+<span class="nd">@receiver</span><span class="p">(</span><span class="n">signals</span><span class="o">.</span><span class="n">post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">Ticket</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">migrate_notify_post</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">created</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">created</span> <span class="ow">or</span> <span class="n">instance</span><span class="o">.</span><span class="n">old_state</span> <span class="o">!=</span> <span class="n">instance</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+        <span class="n">Notify</span><span class="p">()</span><span class="o">.</span><span class="n">migration</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</code></pre></div>
+
+<p>这里用到了两个signal，<code>post_init</code>和<code>post_save</code></p>
+<p>在model初始化之后通过<code>post_init</code>信号获取到state的值作为初始状态值，在每次model执行save方法后调用<code>post_save</code>信号获取到新的状态值，对两次状态值做比较如果不一致则表示状态有更新发送通知</p>
+<p>是上边的判断只能判断到状态变更了发通知，但工单在第一次创建时old_state和state是一样的，所以也需要在save之后判断下这次操作是不是新建，如果是新建同样需要发送通知</p>
+<p>第二步加载signal，需要修改两个配置文件</p>
+<p>config1：<code>workflow/apps.py</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.apps</span> <span class="kn">import</span> <span class="n">AppConfig</span>
+
+
+<span class="k">class</span> <span class="nc">WorkflowConfig</span><span class="p">(</span><span class="n">AppConfig</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;workflow&#39;</span>
+
+    <span class="k">def</span> <span class="nf">ready</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">workflow.signals</span>
+</code></pre></div>
+
+<p>config2：<code>workflow/__init__.py</code></p>
+<div class="codehilite"><pre><span></span><code><span class="err">default_app_config = &#39;workflow.apps.WorkflowConfig&#39;</span>
+</code></pre></div>
+
+<p>绑定成功后就可以在每次工单状态发生变化时发送邮件了</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/cMxdAfsTno56ixurmD4KXA.html">📅 2018-11-19</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

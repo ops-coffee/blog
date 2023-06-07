@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="python,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="python如何帮我在投资中获取更高收益" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>python如何帮我在投资中获取更高收益</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="python如何帮我在投资中获取更高收益" />
+  <meta property="og:description" content="python如何帮我在投资中获取更高收益" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">python如何帮我在投资中获取更高收益</h1>
+
+        <blockquote>
+<p>搞技术的大都比较纯粹，比较实在，除了工资之外基本就没有别的收入了（少部分人能接外包赚外块）。或许是迫于生活的压力，或许是不甘于固定的工资，或许是出于技术人骨子里的好奇，亦或是这几年关于理财投资的大力宣传、门槛降低，理财越来越被我们所接受，并开始尝试股票、基金、P2P、XX宝等各种理财产品，本文所讲与P2P有关，但不打广告，只讲技术，顺便说明：<strong>投资有风险，理财需谨慎</strong>，我们赚钱不容易，不能给打了水漂。</p>
+</blockquote>
+<h1 id="_1">背景介绍</h1>
+<p>某公司的理财产品有如下特点：</p>
+<ol>
+<li>公司分别有12,18,24,36个月的固定期限理财产品，期限越长利率越高</li>
+<li>投资用户可将债权申请转给其他投资人，转出时的利率你可以自行控制</li>
+<li>你也可以通过平台借钱，借钱金额不能超过在投金额的3倍，所谓加杠杆</li>
+</ol>
+<p>有一部分用户（行话叫牛）就靠平台活动或高息的时候借钱加杠杆投资，需要还钱的时候通过债权转让平台转让标还借款，通过买入和卖出时的利率差获得额外收益。这中间比较关键的一点就是转出时的利率，利率低收益就高（但太低就没有人接手了，转不出去还不了借款就要支付高额罚金），利率又跟当天待还的金额和已成交的金额有直接关系，那么如果能及时获取这两个数据就大概知道自己标多少利率能转手成功了。</p>
+<p>我们接下来的技术实现就主要跟获取这两个数据，以及如何及时的展示数据有关。</p>
+<h1 id="_2">服务和工具</h1>
+<ul>
+<li>python3.4</li>
+<li>mysql5.7</li>
+<li>redis2.8</li>
+<li>django2.0</li>
+</ul>
+<h1 id="_3">技术实现</h1>
+<p><strong>只是为了技术研究</strong>，没有商用，代码和架构以实现需求为目的，未做优化，且非专业开发，凑合看</p>
+<h2 id="_4">抓取数据</h2>
+<p>翻了一遍平台官网发现有个页面直接展示了转让标的详细信息，无需登录，且是通过ajax方式异步加载的json字符串（但是json字符串里套了一堆的html代码，不知道咋设计的）的方式渲染页面的，那抓取工作简单多了，写了个抓取脚本，流程为：访问页面接口 --&gt; 取到数据 --&gt; 简单处理 --&gt; 录入数据库，抓取脚本直接放在计划任务里每三分钟执行一次，脚本内容如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="kn">import</span> <span class="nn">pymysql</span>
+
+<span class="c1"># 连接mysql数据库</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span><span class="s2">&quot;root&quot;</span><span class="p">,</span><span class="s2">&quot;passwd&quot;</span><span class="p">,</span><span class="s2">&quot;pzp&quot;</span><span class="p">)</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9999</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;RepaymentTypeId&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;pagesize&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;pageindex&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;startDeadLine&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;endDeadLine&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;rate&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;beginRate&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;endRate&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;strkey&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="s2">&quot;orderby&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="s2">&quot;unitStart&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;unitEnd&quot;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">}</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;https://www.tuandai.com/pages/zSharePlan/getZXList&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;code&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">html</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;projectListHtml&#39;</span><span class="p">)</span>
+
+            <span class="n">dr</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;[^&gt;]+&gt;&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">S</span><span class="p">)</span>
+            <span class="n">dd</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+            <span class="c1"># 截取单号，只取字符串中的数字</span>
+            <span class="n">order_num</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;\d+&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">dd</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+            <span class="c1"># 查询mysql数据库</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select order_num from tdw_zx_done where order_num = </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="n">order_num</span><span class="p">)</span>
+            <span class="c1"># 获取到查询结果</span>
+            <span class="n">ex</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+
+            <span class="c1"># 判断单号是否已经记录过</span>
+            <span class="k">if</span> <span class="n">ex</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="c1"># 如果单号没有记录过，则计数器置为0</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="n">publish_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+                    <span class="s1">&#39;20</span><span class="si">%s</span><span class="s1">-</span><span class="si">%s</span><span class="s1">-</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">:</span><span class="si">%s</span><span class="s1">:</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">order_num</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span><span class="n">order_num</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span><span class="n">order_num</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">],</span><span class="n">order_num</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">8</span><span class="p">],</span><span class="n">order_num</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">10</span><span class="p">],</span><span class="n">order_num</span><span class="p">[</span><span class="mi">10</span><span class="p">:</span><span class="mi">12</span><span class="p">]),</span>
+                    <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span>
+                <span class="p">)</span>
+
+                <span class="c1"># ‘元’单位都替换成‘万元’，并去掉汉字</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">dd</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;元&#39;</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
+                    <span class="n">money</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;\d+&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">a</span><span class="p">)))</span> <span class="o">/</span> <span class="mi">10000</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">money</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;万&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+                <span class="c1"># 取利率</span>
+                <span class="n">rate</span> <span class="o">=</span> <span class="n">dd</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+                <span class="c1"># 计算还款日期，借款日期 + 借款时间</span>
+                <span class="n">days</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;\d+&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">dd</span><span class="p">[</span><span class="mi">6</span><span class="p">]))</span>
+                <span class="n">repay</span> <span class="o">=</span> <span class="p">(</span><span class="n">publish_time</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">days</span><span class="p">)))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="k">print</span><span class="p">(</span><span class="n">publish_time</span><span class="p">,</span> <span class="n">order_num</span><span class="p">,</span> <span class="n">money</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">days</span><span class="p">,</span> <span class="n">repay</span><span class="p">)</span>
+
+                <span class="c1"># 往数据库里插入数据并提交</span>
+                <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO tdw_zx_done VALUES(&#39;</span><span class="si">%s</span><span class="s2">&#39;, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, &#39;</span><span class="si">%s</span><span class="s2">&#39;)&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">publish_time</span><span class="p">,</span> <span class="n">order_num</span><span class="p">,</span> <span class="n">money</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">days</span><span class="p">,</span> <span class="n">repay</span><span class="p">)</span>
+                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+                <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># 如果单号已经记录过，则计数器加1</span>
+                <span class="n">x</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c1"># 如果单号已录入过数据库，则返回</span>
+                <span class="k">print</span><span class="p">(</span><span class="s1">&#39;单号已录入：</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="nb">str</span><span class="p">(</span><span class="n">order_num</span><span class="p">))</span>
+
+            <span class="c1"># 判断如果有连续200个单号都已经录入过数据库，则跳出循环</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.02</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+<span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div>
+
+<h2 id="_5">数据处理及缓存</h2>
+<p>上边已经获取到了原始数据，接下来需要对原始数据进行清洗，取自己需要的今日待还及实时成交，并写入缓存，写入缓存的目的是公众号并发查询的情况下，直接去缓存取数据，减小对数据库的压力，这个脚本程序也放在计划任务里每分钟执行</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">decimal</span> <span class="kn">import</span> <span class="n">Decimal</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="kn">from</span> <span class="nn">connection</span> <span class="kn">import</span> <span class="n">rediscon</span><span class="p">,</span> <span class="n">mysqlcon</span>
+<span class="n">mc</span><span class="p">,</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">mysqlcon</span><span class="p">()</span><span class="o">.</span><span class="n">cursor</span><span class="p">(),</span> <span class="n">rediscon</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">cache_now_data</span><span class="p">():</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">tj</span><span class="p">,</span> <span class="n">th</span><span class="p">,</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># 成交数据统计</span>
+        <span class="n">mc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select count(1),sum(money) from tdw_zx_done where DATE(publish_time)=&#39;</span><span class="si">%s</span><span class="s2">&#39;;&quot;</span> <span class="o">%</span><span class="n">today</span><span class="p">)</span>
+        <span class="n">tj</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+
+        <span class="n">tjie</span> <span class="o">=</span> <span class="s1">&#39;借款人数：</span><span class="si">%s</span><span class="s1"> 借款金额：</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">tj</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tj</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># 待还数据统计</span>
+        <span class="n">mc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select count(1),sum(money) from tdw_zx_done where repay=&#39;</span><span class="si">%s</span><span class="s2">&#39;;&quot;</span> <span class="o">%</span><span class="n">today</span><span class="p">)</span>
+        <span class="n">th</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+
+        <span class="n">thuan</span> <span class="o">=</span> <span class="s1">&#39;待还人数：</span><span class="si">%s</span><span class="s1"> 待还金额：</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">th</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">th</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># 完成还款预估时间</span>
+        <span class="k">if</span> <span class="n">th</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">tomorror_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">tomorror_time_str</span> <span class="o">=</span> <span class="n">tomorror_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> 00:00:00&#39;</span><span class="p">)</span>
+            <span class="n">tomorror_time_format</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">tomorror_time_str</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span> 
+
+            <span class="n">last_hour</span> <span class="o">=</span> <span class="p">(</span><span class="n">tomorror_time_format</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span><span class="o">.</span><span class="n">seconds</span> <span class="o">/</span> <span class="mi">60</span> <span class="o">/</span> <span class="mi">60</span>
+            <span class="n">avg_hour_money</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="n">th</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">tj</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">Decimal</span><span class="p">(</span><span class="n">last_hour</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="n">avg_hour_money</span> <span class="o">=</span> <span class="n">avg_hour_money</span> <span class="k">if</span> <span class="n">avg_hour_money</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">avg_hour_money</span> <span class="o">=</span> <span class="s1">&#39;无今日待还数据，无法计算&#39;</span>
+
+        <span class="c1"># 按小时统计详情</span>
+        <span class="n">mc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select Hour(publish_time) as Hour,count(1),sum(money) from tdw_zx_done where DATE(publish_time) =&#39;</span><span class="si">%s</span><span class="s2">&#39; group by Hour;&quot;</span> <span class="o">%</span><span class="n">today</span><span class="p">)</span>
+        <span class="n">tdetail</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+        <span class="n">dl</span> <span class="o">=</span> <span class="s1">&#39;小时  |  成交额（万元）</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tdetail</span><span class="p">:</span>
+            <span class="n">dl</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;  |  &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;数据库操作异常：</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H%M&#39;</span><span class="p">)</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;daihuan&quot;</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="n">th</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="s2">&quot;chengjiao&quot;</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="n">tj</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="s2">&quot;avg_hour_money&quot;</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="n">avg_hour_money</span><span class="p">)}</span>
+
+        <span class="k">print</span><span class="p">(</span><span class="n">rc</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;tdw_zx_now_&#39;</span><span class="o">+</span><span class="n">key</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">ex</span><span class="o">=</span><span class="mi">7200</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;缓存操作异常：</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="n">e</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">cache_now_data</span><span class="p">()</span>
+</code></pre></div>
+
+<h2 id="_6">微信好友、群自动回复</h2>
+<p>我想看数据的时候如何去看呢？去服务器上执行下脚本这方式太low了吧，借助微信机器人，就像你跟朋友聊天一样，发消息“最新数据”，那他就立即回复最新消息给你，这个方式看起来不错，实现完成后有几个朋友觉得不错，也想看数据，那我干脆将这些需要看数据的朋友都拉倒一个群里吧，回复消息群里所有用户都看得到很方便了，技术实现主要借助了<code>itchat</code>模块（itchat主要通过网页版微信接口处理数据，网页版微信很多用户无法登陆了，也就没有办法使用itchat），代码如下</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">itchat</span>
+
+<span class="kn">from</span> <span class="nn">tdw_data_statistics_now</span> <span class="kn">import</span> <span class="n">get_now_data</span>
+
+<span class="c1"># 处理好友消息</span>
+<span class="nd">@itchat.msg_register</span><span class="p">(</span><span class="n">itchat</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">TEXT</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">text_reply</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;Text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;命令：&#39;</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;Content&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;命令：&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s1">&#39;正在处理你的命令：</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">message</span><span class="p">))</span>
+    <span class="k">if</span> <span class="s1">&#39;最新数据&#39;</span> <span class="o">==</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;Text&#39;</span><span class="p">]:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">get_now_data</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+<span class="c1"># 处理群聊消息</span>
+<span class="nd">@itchat.msg_register</span><span class="p">(</span><span class="n">itchat</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">TEXT</span><span class="p">,</span> <span class="n">isGroupChat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">text_reply</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="c1">#itchat.send(u&#39;@%s\u2005I received: %s&#39; % (msg[&#39;ActualNickName&#39;], msg[&#39;Content&#39;]), msg[&#39;FromUserName&#39;])</span>
+    <span class="k">if</span> <span class="s1">&#39;最新数据&#39;</span> <span class="o">==</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;Text&#39;</span><span class="p">]:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">get_now_data</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+<span class="c1">#message = getMessage()</span>
+<span class="c1">#itchat.send(message, toUserName=&#39;filehelper&#39;)</span>
+
+<span class="n">itchat</span><span class="o">.</span><span class="n">auto_login</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">enableCmdQR</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">itchat</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div>
+
+<h2 id="_7">微信公众号自动回复</h2>
+<p>设想一个应用场景，如果有很多人需要这个数据怎么处理呢？让他们都加一下我的微信或把他们都给加到一个群里固然可以，只是不够优雅，这里想到了微信公众号，当用户关注公众号后，回复“最新数据”可把最新数据自动回复给用户是不是就优雅很多了。然后就写了个机器人自动处理，主要借助<code>werobot</code>模块实现。</p>
+<p>微信公众号可以配置为开发者模式，也就是开发者可以提供一个http接口，公众号会把收到的所有消息发送给开发者提供的接口，服务器接收到数据后判断数据类型，对数据做处理，这里需要用到web服务，所以引入Django</p>
+<ul>
+<li>url</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span>
+
+<span class="kn">from</span> <span class="nn">werobot.contrib.django</span> <span class="kn">import</span> <span class="n">make_view</span>
+<span class="kn">from</span> <span class="nn">official.robot</span> <span class="kn">import</span> <span class="n">robot</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;robot/&#39;</span><span class="p">,</span> <span class="n">make_view</span><span class="p">(</span><span class="n">robot</span><span class="p">)),</span>
+<span class="p">]</span>
+</code></pre></div>
+
+<ul>
+<li>机器人程序</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="c1"># cat official/robot.py</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">werobot</span> <span class="kn">import</span> <span class="n">WeRoBot</span>
+<span class="kn">from</span> <span class="nn">werobot.replies</span> <span class="kn">import</span> <span class="n">ImageReply</span>
+
+<span class="kn">from</span> <span class="nn">official.backends.get_tdw_data</span> <span class="kn">import</span> <span class="n">get_now_data</span>
+
+<span class="n">robot</span> <span class="o">=</span> <span class="n">WeRoBot</span><span class="p">(</span><span class="n">enable_session</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                <span class="n">token</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                <span class="n">APP_ID</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                <span class="n">APP_SECRET</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+<span class="c1"># 新用户关注自动回复</span>
+<span class="nd">@robot.subscribe</span>
+<span class="k">def</span> <span class="nf">subscribe</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;&#39;来了？坐，好戏马上开始</span>
+
+<span class="s1">回复[最新数据]获取最新数据更新&#39;&#39;&#39;</span>
+
+<span class="c1"># 联系二维码，用户输入&quot;联系&quot;关键字回复作者二维码</span>
+<span class="nd">@robot.filter</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;.*?联系.*?&quot;</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">contact</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ImageReply</span><span class="p">(</span>
+        <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
+        <span class="n">media_id</span><span class="o">=</span><span class="s2">&quot;DBO8qVu-8bwNF9O7o8wCyRs4awfVTjA_WuPoLkj33B1C8ZX9JVdmw30zZo9l8ovx&quot;</span>
+    <span class="p">)</span>
+
+<span class="c1"># 处理文本消息</span>
+<span class="nd">@robot.text</span>
+<span class="k">def</span> <span class="nf">hello</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;最新.*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+            <span class="n">tdw_zx_now_data</span> <span class="o">=</span> <span class="n">get_now_data</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">tdw_zx_now_data</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">tdw_zx_now_data</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s1">&#39;暂时无法获取数据，请稍后再试&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;请输入[ 最新数据 ]获取智享数据更新</span><span class="se">\n\n</span><span class="s1">如有疑问可以回复[ 联系作者 ]与我联系&#39;</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</code></pre></div>
+
+<ul>
+<li>后台处理程序</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="kn">from</span> <span class="nn">django_redis</span> <span class="kn">import</span> <span class="n">get_redis_connection</span>
+<span class="n">cache</span> <span class="o">=</span> <span class="n">get_redis_connection</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_now_data</span><span class="p">():</span>
+    <span class="n">now_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="n">prev_time</span> <span class="o">=</span> <span class="n">now_time</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># 直接去缓存取数据</span>
+    <span class="n">redis_value</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tdw_zx_now_&#39;</span><span class="o">+</span><span class="n">prev_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H%M&#39;</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">redis_value</span><span class="p">:</span>
+        <span class="n">jsondata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">redis_value</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="n">daihuan</span> <span class="o">=</span> <span class="s1">&#39;今日待还金额：</span><span class="si">%s</span><span class="s1">万元&#39;</span> <span class="o">%</span><span class="n">jsondata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;daihuan&#39;</span><span class="p">)</span>
+        <span class="n">chengjiao</span> <span class="o">=</span> <span class="s1">&#39;当前已成交金额：</span><span class="si">%s</span><span class="s1">万元&#39;</span> <span class="o">%</span><span class="n">jsondata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;chengjiao&#39;</span><span class="p">)</span>
+        <span class="n">avg_hour_money</span> <span class="o">=</span> <span class="s1">&#39;完成还款预估每小时需要成交：</span><span class="si">%s</span><span class="s1">万元&#39;</span> <span class="o">%</span><span class="n">jsondata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;avg_hour_money&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s1">&#39;&#39;&#39;</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;&#39;&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">prev_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M&#39;</span><span class="p">),</span> <span class="n">daihuan</span><span class="p">,</span> <span class="n">chengjiao</span><span class="p">,</span> <span class="n">avg_hour_money</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+</code></pre></div>
+
+<h1 id="_8">总结</h1>
+<ol>
+<li>学会投资理财</li>
+<li>别人赚钱的方式可能跟自己想象的不一样</li>
+<li>用技术解决生活中的实际问题，不仅能提高能力，还能获得更大的满足</li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/YhKyJ16yuI0bPpygKV_d1w.html">📅 2018-07-06</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Python/">🏷️ Python</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

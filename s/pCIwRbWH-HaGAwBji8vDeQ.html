@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,Model,view,model,signals,save,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Django Model字段加密的优雅实现" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Django Model字段加密的优雅实现</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="Django Model字段加密的优雅实现" />
+  <meta property="og:description" content="Django Model字段加密的优雅实现" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django Model字段加密的优雅实现</h1>
+
+        <p>早前的一篇文章<a href="/s/L6Jud6gp5c9bbaUljUkNFA">Django开发密码管理表实例</a>有写我们写了个密码管理工具来实现对密码的管理，当时加密解密的功能在view层实现，一直运行稳定所以也没有过多关注实现是否优雅的问题。最近要多加几个密码表再次回头看之前的代码发现加解密在view层实现较为繁琐，尤其是使用了<a href="/s/xehCT6PMS90dvrf96E-Fzw">Sadmin公共库</a>之后view的代码简洁了很多，若再在view层处理显然不够优雅，是时候用更优雅的方式来实现了</p>
+<h2 id="sadmin">Sadmin增删改查</h2>
+<p>对数据库表的增删改查是开发过程中最常用到的功能，之前的文章也介绍过我们通过封装<a href="/s/xehCT6PMS90dvrf96E-Fzw">Sadmin公共库</a>用最为简洁的代码实现了对表的增删改查操作，具体有多简洁，看下边的代码</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">TableList</span>(<span class="n">ListCreateView</span>):
+    <span class="n">model</span> = <span class="n">Table</span>
+    <span class="n">template</span> = <span class="s">&#39;password/table.html&#39;</span>
+    <span class="n">permission</span> = {<span class="s">&#39;get&#39;</span>: <span class="s">&#39;password.select_table&#39;</span>, <span class="s">&#39;post&#39;</span>: <span class="s">&#39;password.create_table&#39;</span>}
+
+
+<span class="k">class</span> <span class="n">TableDetail</span>(<span class="n">RetrieveUpdateDestroyView</span>):
+    <span class="n">model</span> = <span class="n">Table</span>
+    <span class="n">permission</span> = {<span class="s">&#39;get&#39;</span>: <span class="s">&#39;password.select_table&#39;</span>, <span class="s">&#39;put&#39;</span>: <span class="s">&#39;password.update_table&#39;</span>,
+                  <span class="s">&#39;delete&#39;</span>: <span class="s">&#39;password.delete_table&#39;</span>}
+</code></pre></div>
+
+<p><code>TableList</code>类可以实现对表的查询以及新建表数据，<code>TableDetail</code>可以实现对表内单条数据的查询、修改和删除，对应了两条URL</p>
+<div class="codehilite"><pre><span></span><code><span class="err">path(&#39;table/&#39;, views.TableList.as_view(), name=&#39;table-list-url&#39;),</span>
+<span class="err">path(&#39;table/&lt;int:pk&gt;/&#39;, views.TableDetail.as_view(), name=&#39;table-detail-url&#39;),</span>
+</code></pre></div>
+
+<p>如果在view层实现表字段的加密的话，那就要重写<code>TableList</code>的post方法，以及<code>TableDetail</code>类的put方法，非常麻烦，那有什么更为优雅的方法呢？对表字段的处理最好能在表发生变化的时候来处理，直接在model层来实现显然要比view更合适，model层来实现的话通过<a href="/s/cMxdAfsTno56ixurmD4KXA">Django的signals</a>或是<a href="/s/fKDyRxjMr0XmXJGCAv6Ghw">重写model的save方法</a>都是不错的选择</p>
+<p>至于究竟是用signals还是重写save方法，两者都可以实现，个人觉得对于简单的处理逻辑采用重写save的方式比较好，而对于复杂的处理逻辑采用signals更清晰，而对于我们这个对字段进行加密的需求，逻辑简单代码也不需要太多，直接采用重写save的方式就好了</p>
+<h2 id="modelsave">重写model的save方法</h2>
+<p>对于加密解密的核心代码可以参考文章<a href="/s/L6Jud6gp5c9bbaUljUkNFA">Django开发密码管理表实例</a>给出的源码，重写model的save方法代码如下</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Table</span>(<span class="n">models</span>.<span class="n">Model</span>):
+    <span class="n">username</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">64</span>, <span class="n">verbose_name</span>=<span class="s">&#39;用户名&#39;</span>)
+    <span class="n">password</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">512</span>, <span class="n">verbose_name</span>=<span class="s">&#39;密码&#39;</span>)
+
+    <span class="n">def</span> <span class="n">__str__</span>(<span class="nb">self</span>):
+        <span class="k">return</span> <span class="nb">self</span>.<span class="n">application_name</span>
+
+    <span class="n">def</span> <span class="n">save</span>(<span class="nb">self</span>, *<span class="nb">args</span>, **<span class="n">kwargs</span>):
+        <span class="n">_encrypt</span> = <span class="nb">True</span>
+
+        <span class="k">if</span> <span class="nb">self</span>.<span class="n">pk:</span>
+            <span class="n">old_password</span> = <span class="n">Table</span>.<span class="n">objects</span>.<span class="nb">get</span>(<span class="nb">id</span>=<span class="nb">self</span>.<span class="nb">id</span>)
+            <span class="n">_encrypt</span> = <span class="nb">False</span> <span class="k">if</span> <span class="n">old_password</span>.<span class="n">password</span> == <span class="nb">self</span>.<span class="n">password</span> <span class="k">else</span> <span class="nb">True</span>
+
+        <span class="k">if</span> <span class="n">_encrypt:</span>
+            <span class="n">_m</span> = <span class="n">RsaCrypto</span>().<span class="n">encrypt</span>(<span class="nb">self</span>.<span class="n">password</span>)
+            <span class="k">if</span> <span class="n">_m</span>.<span class="nb">get</span>(<span class="s">&#39;state&#39;</span>):
+                <span class="nb">self</span>.<span class="n">password</span> = <span class="n">_m</span>.<span class="nb">get</span>(<span class="s">&#39;message&#39;</span>)
+            <span class="n">else:</span>
+                <span class="n">raise</span> <span class="nb">Exception</span>(<span class="s">&#39;加密失败：&#39;</span> + <span class="n">_m</span>.<span class="nb">get</span>(<span class="s">&#39;message&#39;</span>))
+
+        <span class="n">super</span>(<span class="n">Table</span>, <span class="nb">self</span>).<span class="n">save</span>(*<span class="nb">args</span>, **<span class="n">kwargs</span>)
+</code></pre></div>
+
+<p>对于密码加密，通常会在首次新加记录，以及更新记录密码发生变化的情况下进行</p>
+<p>每当save时如何判断是insert还是update呢？可以通过是否存在<code>self.pk</code>来判断，Django的model必须有一个字段为主键，如果用户没有设置主键字段，那么Django会默认创建一个名为<code>id</code>的字段作主键，主键也用<code>pk</code>别名来表示，所以可以通过<code>self.pk</code>是否存在来判断本次save究竟是insert还是update</p>
+<p>当本次save为update时，我们也需要判断密码字段是否发生了变化，如果没有变化则不需要调用加密方法，判断字段是否变化就需要获取字段提交前的值，提交前的值可以通过<code>Table.objects.get(id=self.id)</code>来获取</p>
+<p>有了以上这些信息，那加密就水到渠成了。我们优雅的实现了字段的加密，那对于解密呢？个人觉得同样放在model里比写在veiw里更合适，可以在mdel里加个<code>decode_password</code>的方法</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Table</span>(<span class="n">models</span>.<span class="n">Model</span>):
+    ...
+
+    <span class="n">def</span> <span class="n">decode_password</span>(<span class="nb">self</span>):
+        <span class="n">_m</span> = <span class="n">RsaCrypto</span>().<span class="n">decrypt</span>(<span class="nb">self</span>.<span class="n">password</span>)
+        <span class="k">if</span> <span class="n">_m</span>.<span class="nb">get</span>(<span class="s">&#39;state&#39;</span>):
+            <span class="k">return</span> {
+                <span class="s">&#39;state&#39;</span>: <span class="mi">1</span>,
+                <span class="s">&#39;message&#39;</span>: <span class="n">_m</span>.<span class="nb">get</span>(<span class="s">&#39;message&#39;</span>),
+                <span class="s">&#39;username&#39;</span>: <span class="nb">self</span>.<span class="n">username</span>
+            }
+        <span class="n">else:</span>
+            <span class="k">return</span> {<span class="s">&#39;state&#39;</span>: <span class="mi">0</span>, <span class="s">&#39;message&#39;</span>: <span class="s">&#39;Error: &#39;</span> + <span class="n">_m</span>.<span class="nb">get</span>(<span class="s">&#39;message&#39;</span>)}
+</code></pre></div>
+
+<p>需要解密时调用Model的<code>decode_password</code>方法就可以了</p>
+<div class="codehilite"><pre><span></span><code><span class="err">def decode_password(request, pk):</span>
+<span class="err">    try:</span>
+<span class="err">        _t = Table.objects.get(id=pk)</span>
+<span class="err">        return JsonResponse(_t.decode_password())</span>
+<span class="err">    except Exception as e:</span>
+<span class="err">        return JsonResponse({&#39;state&#39;: 0, &#39;message&#39;: &#39;Error: &#39; + str(e)})</span>
+</code></pre></div>
+
+<h2 id="_1">写在最后</h2>
+<p>个人对代码有一点洁癖，实现功能也以简单实用为主，能2行搞定的绝对不会写3行，能有更优的解法就会毫不犹豫去重构，同时也坚决反对“又不是不能用”的说法。对于以上实现是否优雅，或是有更好的解决方法，欢迎讨论</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/pCIwRbWH-HaGAwBji8vDeQ.html">📅 2021-10-21</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

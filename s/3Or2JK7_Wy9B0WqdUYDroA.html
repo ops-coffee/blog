@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Bootstrap,Dual,Listbox,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="前端插件之Bootstrap Dual Listbox使用" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>前端插件之Bootstrap Dual Listbox使用</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="前端插件之Bootstrap Dual Listbox使用" />
+  <meta property="og:description" content="前端插件之Bootstrap Dual Listbox使用" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">前端插件之Bootstrap Dual Listbox使用</h1>
+
+        <blockquote>
+<p>工欲善其事，必先利其器</p>
+</blockquote>
+<p>对于很多非专业前端开发来说写页面是非常痛苦的，借助框架或插件往往能够达到事半功倍的效果，本系列文章会介绍我在运维系统开发过程中用到的那些顺手的前端插件，如果你是想写XX管理系统的学生、或是需要独自做Dashboard的后端工程师、亦或是像我这样半吊子的开发加运维，那么这个系列的文章你一定不要错过</p>
+<p>Bootstrap Dual Listbox是一款基于Bootstrap的双向select选择框控件，作为对multiple select的扩展，使用起来非常简单，功能也更强大</p>
+<p>项目Github地址：<a href="https://github.com/istvan-ujjmeszaros/bootstrap-duallistbox">https://github.com/istvan-ujjmeszaros/bootstrap-duallistbox</a></p>
+<h2 id="_1">基本使用</h2>
+<p>需要用到的JS和CSS文件位于项目代码下的dist目录中，需要将这个目录中的对应文件放入你的项目里，这一步不赘述</p>
+<ol>
+<li>引入CSS/JS文件，由于bootstrap-duallistbox是基于bootstrap的，所以要先引入bootstrap相关的css和js</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="c">&lt;!-- 加载bootstrap --&gt;</span>
+<span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;https://code.jquery.com/jquery-3.2.1.slim.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css&quot;</span><span class="nt">&gt;</span>
+
+<span class="c">&lt;!-- 加载bootstrap-dualllistbox --&gt;</span>
+<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;static/bootstrap-duallistbox/bootstrap-duallistbox.css&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;static/bootstrap-duallistbox/jquery.bootstrap-duallistbox.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre></div>
+
+<ol>
+<li>加载duallistbox插件</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;select</span> <span class="na">class=</span><span class="s">&quot;form-control&quot;</span> <span class="na">multiple=</span><span class="s">&quot;multiple&quot;</span> <span class="na">name=</span><span class="s">&quot;groups&quot;</span> <span class="na">size=</span><span class="s">&quot;10&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>GroupA<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="err">selected</span> <span class="na">value=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;</span>GroupB<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>GroupC<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;4&quot;</span><span class="nt">&gt;</span>GroupD<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="err">selected</span> <span class="na">value=</span><span class="s">&quot;5&quot;</span><span class="nt">&gt;</span>GroupE<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;6&quot;</span><span class="nt">&gt;</span>GroupF<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;7&quot;</span><span class="nt">&gt;</span>GroupG<span class="nt">&lt;/option&gt;</span>
+<span class="nt">&lt;/select&gt;</span>
+
+<span class="nt">&lt;script&gt;</span>
+    var selectorx = $(&#39;select[name=&quot;groups&quot;]&#39;).bootstrapDualListbox();
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
+
+<ol>
+<li>完成以上两步可以看到页面效果如下</li>
+</ol>
+<p><img alt="" src="/static/images/20190718.duallistbox0.png" /></p>
+<p>非常简单，到这里已经可以正常使用这个控件了，更多的花样接着往下看</p>
+<h2 id="_2">配置说明</h2>
+<p>整个界面为英文显示，有默认提示，如果你想将提示改为中文或添加自定义的提示内容，那么可以通过如下配置</p>
+<div class="codehilite"><pre><span></span><code><span class="k">var</span> <span class="n">selectorx</span> <span class="o">=</span> <span class="o">$</span><span class="p">(</span><span class="s1">&#39;select[name=&quot;groups&quot;]&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">bootstrapDualListbox</span><span class="p">({</span>
+    <span class="n">nonSelectedListLabel</span><span class="p">:</span> <span class="s1">&#39;未选择的组&#39;</span><span class="p">,</span>
+    <span class="n">selectedListLabel</span><span class="p">:</span> <span class="s1">&#39;已选择的组&#39;</span><span class="p">,</span>
+    <span class="n">filterTextClear</span><span class="p">:</span> <span class="s1">&#39;展示所有&#39;</span><span class="p">,</span>
+    <span class="n">filterPlaceHolder</span><span class="p">:</span> <span class="s1">&#39;过滤搜索&#39;</span><span class="p">,</span>
+    <span class="n">moveSelectedLabel</span><span class="p">:</span> <span class="s2">&quot;添加&quot;</span><span class="p">,</span>
+    <span class="n">moveAllLabel</span><span class="p">:</span> <span class="s1">&#39;添加所有&#39;</span><span class="p">,</span>
+    <span class="n">removeSelectedLabel</span><span class="p">:</span> <span class="s2">&quot;移除&quot;</span><span class="p">,</span>
+    <span class="n">removeAllLabel</span><span class="p">:</span> <span class="s1">&#39;移除所有&#39;</span><span class="p">,</span>
+    <span class="n">infoText</span><span class="p">:</span> <span class="s1">&#39;共{0}个组&#39;</span><span class="p">,</span>
+    <span class="n">infoTextFiltered</span><span class="p">:</span> <span class="s1">&#39;搜索到{0}个组 ,共{1}个组&#39;</span><span class="p">,</span>
+    <span class="n">infoTextEmpty</span><span class="p">:</span> <span class="s1">&#39;列表为空&#39;</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<p>以上配置都比较简单，对照中文就能知晓意思，不做过多解释，另外有几个支持的参数说明如下：</p>
+<p><strong>infoText：</strong> 除了设置字符串外还可设置为<code>false</code>，当设置为<code>false</code>时可隐藏这段信息</p>
+<p><strong>showFilterInputs：</strong> 默认为true，是否显示filter过滤框</p>
+<p><strong>moveOnSelect：</strong> 默认为true，点击便会变更选项到对应的选择框内，如果设置为false则会在出现<code>moveSelected</code>的箭头需要点击箭头或者双击选项后才能变更选项到对应的选择框</p>
+<p><strong>nonSelectedFilter：</strong> 未选中的默认过滤规则，可以配置为<code>OPS-COFFEE-A</code>则未选中的框内只会显示<code>OPS-COFFEE-A</code></p>
+<p><strong>selectedFilter：</strong> 已选中的默认规则，与<code>noSelectedFilter</code>类似</p>
+<h2 id="_3">使用进阶</h2>
+<p>获取已选择的值</p>
+<div class="codehilite"><pre><span></span><code><span class="err">selectorx.val()</span>
+</code></pre></div>
+
+<p>获取select插件对象</p>
+<div class="codehilite"><pre><span></span><code><span class="err">selectorx.bootstrapDualListbox(&#39;getContainer&#39;)</span>
+</code></pre></div>
+
+<p>刷新插件元素用户界面</p>
+<div class="codehilite"><pre><span></span><code><span class="err">selectorx.bootstrapDualListbox(&#39;refresh&#39;);</span>
+</code></pre></div>
+
+<p>删除bootstrap-duallistbox插件，恢复select原样</p>
+<div class="codehilite"><pre><span></span><code><span class="err">selectorx.bootstrapDualListbox(&#39;destroy&#39;);</span>
+</code></pre></div>
+
+<p>动态添加select的option</p>
+<div class="codehilite"><pre><span></span><code>selectorx.append(&#39;<span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;9&quot;</span> <span class="err">selected</span><span class="nt">&gt;</span>ops-coffee.cn<span class="nt">&lt;/option&gt;</span>&#39;);
+selectorx.bootstrapDualListbox(&#39;refresh&#39;);
+</code></pre></div>
+
+<p>注意：<strong>上文中的所有selectorx都为加载duallistbox时实例化的select对象</strong></p>
+<h2 id="demo">完整Demo</h2>
+<p>为了方便大家学习，我写了个完整的demo，你可以在线查看效果或下载代码应用到自己的项目中</p>
+<p>在线Demo地址：<a href="https://demo.ops-coffee.cn/duallistbox/">https://demo.ops-coffee.cn/duallistbox/</a></p>
+<p>Github源码地址：<a href="https://github.com/ops-coffee/demo/tree/master/duallistbox">https://github.com/ops-coffee/demo/tree/master/duallistbox</a></p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/3Or2JK7_Wy9B0WqdUYDroA.html">📅 2019-07-19</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/前端插件/">🏷️ 前端插件</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

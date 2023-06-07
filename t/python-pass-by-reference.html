@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="python,None,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="python中的引用传递" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>python中的引用传递</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="python中的引用传递" />
+  <meta property="og:description" content="python中的引用传递" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">python中的引用传递</h1>
+
+        <p>以下内容来源于QQ群，出于隐私考虑，提问者昵称用“网友9527”代替</p>
+<hr />
+<p><span style="color:green">网友9527 17:32:34</span></p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; a = [1, 2]</span>
+<span class="err">&gt;&gt;&gt;</span>
+<span class="err">&gt;&gt;&gt; a[1] = a</span>
+<span class="err">&gt;&gt;&gt;</span>
+<span class="err">&gt;&gt;&gt; print(a[1])</span>
+<span class="err">[1, [...]]  </span>
+</code></pre></div>
+
+<p>有没有大佬释义下这个结果为啥是[1, [...]]   </p>
+<p><span style="color:blue">ops-coffee.cn 17:59:05</span></p>
+<p>@网友9527  这个问题有意思，我怕给你解释不清楚，你自己查一下python的引导传递吧</p>
+<p><span style="color:green">网友9527 17:59:20</span></p>
+<p>多谢</p>
+<p><span style="color:blue">ops-coffee.cn 18:02:25</span></p>
+<p>简单来说这里实际上传递的不是值，而是内存地址，这样就导致了最终结果里边是一个无限循环</p>
+<p><span style="color:blue">ops-coffee.cn 18:09:54</span></p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; a = [1, 2]</span>
+<span class="err">&gt;&gt;&gt;</span>
+<span class="err">&gt;&gt;&gt; id(a)</span>
+<span class="err">1332642909640</span>
+<span class="err">&gt;&gt;&gt;</span>
+<span class="err">&gt;&gt;&gt; id(a[1])</span>
+<span class="err">1578131712</span>
+<span class="err">&gt;&gt;&gt;</span>
+<span class="err">&gt;&gt;&gt;a[1] = a</span>
+<span class="err">&gt;&gt;&gt;id(a[1])</span>
+<span class="err">1332642909640</span>
+</code></pre></div>
+
+<p><span style="color:blue">ops-coffee.cn 18:10:04</span></p>
+<p>这个应该看得更清晰一点</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/t/python-pass-by-reference.html">📅 2019-06-11</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/日常技术/">🏷️ 日常技术</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

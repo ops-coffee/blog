@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="WebSSH,Django,WebSSH,Jumpserver,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="堡垒机的核心武器：WebSSH录像实现" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>堡垒机的核心武器：WebSSH录像实现</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="堡垒机的核心武器：WebSSH录像实现" />
+  <meta property="og:description" content="堡垒机的核心武器：WebSSH录像实现" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">堡垒机的核心武器：WebSSH录像实现</h1>
+
+        <blockquote>
+<p>WebSSH终端录像的实现终于来了</p>
+</blockquote>
+<p>前边写了两篇文章<a href="/s/oqZqGiQ3uNrNuT-nGrh9lg">『Asciinema：你的所有操作都将被录制』</a>和<a href="/s/PcstaBodjDS8D15ARwAfzA">『Asciinema文章勘误及Web端使用介绍』</a>深入介绍了终端录制工具Asciinema，我们已经可以实现在终端下对操作过程的录制，那么在WebSSH中的操作该如何记录并提供后续的回放审计呢？</p>
+<p>一种方式是<a href="/s/oqZqGiQ3uNrNuT-nGrh9lg">『Asciinema：你的所有操作都将被录制』</a>文章最后介绍的自动录制审计日志的方法，在主机上添加个脚本，每次连接自动进行录制，但这样不仅要在每台远程主机添加脚本，会很繁琐，而且录制的脚本文件都是放在远程主机上的，后续播放也很麻烦</p>
+<p>那该如何更好处理呢？下文介绍一种优雅的方式来实现，核心思想是不通过录制命令进行录制，而在Webssh交互执行的过程中直接<strong>生成可播放的录像文件</strong></p>
+<h2 id="_1">设计思路</h2>
+<p>通过上边两篇文章的阅读，我们已经知道了Asciinema录像文件主要由两部分组成：header头和IO流数据</p>
+<p>header头位于文件的第一行，定义了这个录像的版本、宽高、开始时间、环境变量等参数，我们可以在websocket连接创建时将这些参数按照需要的格式写入到文件</p>
+<p>header头数据如下，只有开头一行，是一个字典形式</p>
+<div class="codehilite"><pre><span></span><code><span class="err">{&quot;version&quot;: 2, &quot;width&quot;: 213, &quot;height&quot;: 55, &quot;timestamp&quot;: 1574155029.1815443, &quot;env&quot;: {&quot;SHELL&quot;: &quot;/bin/bash&quot;, &quot;TERM&quot;: &quot;xterm-256color&quot;}, &quot;title&quot;: &quot;ops-coffee&quot;}</span>
+</code></pre></div>
+
+<p>整个录像文件除了第一行的header头部分，剩下的就都是输入输出的IO流数据，从websocket连接建立开始，随着操作的进行，IO流数据是不断增加的，直到整个websocket长连接的结束，那就需要在整个WebSSH交互的过程中不断的往录像文件追加输入输出的内容</p>
+<p>IO流数据如下，每一行一条，列表形式，分别表示操作时间，输入或输出（这里我们为了方便就写固定字符串输出），IO数据</p>
+<div class="codehilite"><pre><span></span><code><span class="err">[0.2341010570526123, &quot;o&quot;, &quot;Last login: Tue Nov 19 17:11:30 2019 from 192.168.105.91\r\r\n&quot;]</span>
+</code></pre></div>
+
+<p>似乎很完美，按照上边的思路录像文件就应该没有问题了，但还有一些细节需要处理</p>
+<p>首先是需要历史连接列表，在这个列表里可以看到什么时间，哪个用户连接了哪台主机，当然也需要提供回放功能，新建一张表来记录这些信息</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Record</span>(<span class="n">models</span>.<span class="n">Model</span>):
+    <span class="n">create_time</span> = <span class="n">models</span>.<span class="n">DateTimeField</span>(<span class="n">auto_now_add</span>=<span class="nb">True</span>, <span class="n">verbose_name</span>=<span class="s">&#39;创建时间&#39;</span>)
+
+    <span class="n">host</span> = <span class="n">models</span>.<span class="n">ForeignKey</span>(<span class="n">Host</span>, <span class="n">on_delete</span>=<span class="n">models</span>.<span class="n">CASCADE</span>, <span class="n">verbose_name</span>=<span class="s">&#39;主机&#39;</span>)
+    <span class="n">user</span> = <span class="n">models</span>.<span class="n">ForeignKey</span>(<span class="n">User</span>, <span class="n">on_delete</span>=<span class="n">models</span>.<span class="n">CASCADE</span>, <span class="n">verbose_name</span>=<span class="s">&#39;用户&#39;</span>)
+
+    <span class="nb">filename</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">128</span>, <span class="n">verbose_name</span>=<span class="s">&#39;录像文件名称&#39;</span>)
+
+    <span class="n">def</span> <span class="n">__str__</span>(<span class="nb">self</span>):
+        <span class="k">return</span> <span class="nb">self</span>.<span class="n">host</span>
+</code></pre></div>
+
+<p>其次还需要考虑的一个问题是header和后续IO数据流要写入同一个文件，这就需要在整个websocket的连接过程中有一个<strong>固定</strong>的文件名可被读取，这里我使用了主机+用户+当前时间作为文件名，同一用户在同一时间不能多次连接同一主机，这样可保证文件名不重复，同时避免操作写入错误的录像文件，文件名在websocket建立时初始化</p>
+<div class="codehilite"><pre><span></span><code><span class="n">def</span> <span class="n">__init__</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="k">host</span><span class="p">,</span> <span class="k">user</span><span class="p">,</span> <span class="n">websocket</span><span class="p">):</span>
+    <span class="k">self</span><span class="p">.</span><span class="k">host</span> <span class="o">=</span> <span class="k">host</span>
+    <span class="k">self</span><span class="p">.</span><span class="k">user</span> <span class="o">=</span> <span class="k">user</span>
+
+    <span class="k">self</span><span class="p">.</span><span class="k">time</span> <span class="o">=</span> <span class="k">time</span><span class="p">.</span><span class="k">time</span><span class="p">()</span>
+    <span class="k">self</span><span class="p">.</span><span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;%s.%s.%d.cast&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="k">host</span><span class="p">,</span> <span class="k">user</span><span class="p">,</span> <span class="k">self</span><span class="p">.</span><span class="k">time</span><span class="p">)</span>
+</code></pre></div>
+
+<p>IO流数据会持续不断的写入文件，这里以一个独立的方法来处理写入</p>
+<div class="codehilite"><pre><span></span><code><span class="n">def</span> <span class="n">record</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="k">type</span><span class="p">,</span> <span class="k">data</span><span class="p">):</span>
+    <span class="n">RECORD_DIR</span> <span class="o">=</span> <span class="n">settings</span><span class="p">.</span><span class="n">BASE_DIR</span> <span class="o">+</span> <span class="s1">&#39;/static/record/&#39;</span>
+    <span class="k">if</span> <span class="k">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">RECORD_DIR</span><span class="p">):</span>
+        <span class="n">os</span><span class="p">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">RECORD_DIR</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="k">type</span> <span class="o">==</span> <span class="s1">&#39;header&#39;</span><span class="p">:</span>
+        <span class="n">Record</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">create</span><span class="p">(</span>
+            <span class="k">host</span><span class="o">=</span><span class="k">Host</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">id</span><span class="o">=</span><span class="k">self</span><span class="p">.</span><span class="k">host</span><span class="p">),</span>
+            <span class="k">user</span><span class="o">=</span><span class="k">self</span><span class="p">.</span><span class="k">user</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="k">self</span><span class="p">.</span><span class="n">filename</span>
+        <span class="p">)</span>
+
+        <span class="k">with</span> <span class="k">open</span><span class="p">(</span><span class="n">RECORD_DIR</span> <span class="o">+</span> <span class="k">self</span><span class="p">.</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="p">.</span><span class="k">write</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="k">data</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;\n&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">iodata</span> <span class="o">=</span> <span class="p">[</span><span class="k">time</span><span class="p">.</span><span class="k">time</span><span class="p">()</span> <span class="o">-</span> <span class="k">self</span><span class="p">.</span><span class="k">time</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="k">data</span><span class="p">]</span>
+        <span class="k">with</span> <span class="k">open</span><span class="p">(</span><span class="n">RECORD_DIR</span> <span class="o">+</span> <span class="k">self</span><span class="p">.</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">buffering</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="p">.</span><span class="k">write</span><span class="p">((</span><span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">iodata</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;\n&#39;</span><span class="p">))</span>
+</code></pre></div>
+
+<p>record接收两个参数type和data，type标识本次写入的是header头还是IO流，data则是具体的数据</p>
+<p>header只需要执行一次写入，所以将其放在ssh的connect方法中，只在ssh连接建立时执行一次，在执行header写入时同时往数据库插入新的历史记录数据</p>
+<p>调用record方法写入header</p>
+<div class="codehilite"><pre><span></span><code><span class="n">def</span> <span class="k">connect</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="k">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">authtype</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="k">None</span><span class="p">,</span> <span class="n">pkey</span><span class="o">=</span><span class="k">None</span><span class="p">,</span>
+            <span class="n">term</span><span class="o">=</span><span class="s1">&#39;xterm-256color&#39;</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="k">rows</span><span class="o">=</span><span class="mi">24</span><span class="p">):</span>
+    <span class="p">...</span>
+
+    <span class="o">#</span> <span class="err">构建录像文件</span><span class="n">header</span>
+    <span class="k">self</span><span class="p">.</span><span class="n">record</span><span class="p">(</span><span class="s1">&#39;header&#39;</span><span class="p">,</span> <span class="err">{</span>
+        <span class="ss">&quot;version&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="ss">&quot;width&quot;</span><span class="p">:</span> <span class="n">cols</span><span class="p">,</span>
+        <span class="ss">&quot;height&quot;</span><span class="p">:</span> <span class="k">rows</span><span class="p">,</span>
+        <span class="ss">&quot;timestamp&quot;</span><span class="p">:</span> <span class="k">self</span><span class="p">.</span><span class="k">time</span><span class="p">,</span>
+        <span class="ss">&quot;env&quot;</span><span class="p">:</span> <span class="err">{</span>
+            <span class="ss">&quot;SHELL&quot;</span><span class="p">:</span> <span class="ss">&quot;/bin/bash&quot;</span><span class="p">,</span>
+            <span class="ss">&quot;TERM&quot;</span><span class="p">:</span> <span class="n">term</span>
+        <span class="err">}</span><span class="p">,</span>
+        <span class="ss">&quot;title&quot;</span><span class="p">:</span> <span class="ss">&quot;ops-coffee&quot;</span>
+    <span class="err">}</span><span class="p">)</span>
+</code></pre></div>
+
+<p>IO流数据则需要与返回给前端的数据保持一致，这样就能保证前端显示什么录像就播放什么了，所以所有需要返回前端数据的地方都同时写入录像文件即可</p>
+<p>调用record方法写入io流数据</p>
+<div class="codehilite"><pre><span></span><code><span class="n">def</span> <span class="k">connect</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="k">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">authtype</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="k">None</span><span class="p">,</span> <span class="n">pkey</span><span class="o">=</span><span class="k">None</span><span class="p">,</span>
+            <span class="n">term</span><span class="o">=</span><span class="s1">&#39;xterm-256color&#39;</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="k">rows</span><span class="o">=</span><span class="mi">24</span><span class="p">):</span>
+    <span class="p">...</span>
+
+    <span class="o">#</span> <span class="err">连接建立一次，之后交互数据不会再进入该方法</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">recv</span> <span class="o">=</span> <span class="k">self</span><span class="p">.</span><span class="n">ssh_channel</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">65535</span><span class="p">).</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="err">{</span><span class="s1">&#39;flag&#39;</span><span class="p">:</span> <span class="s1">&#39;success&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">recv</span><span class="err">}</span><span class="p">)</span>
+        <span class="k">self</span><span class="p">.</span><span class="n">websocket</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">self</span><span class="p">.</span><span class="n">record</span><span class="p">(</span><span class="s1">&#39;iodata&#39;</span><span class="p">,</span> <span class="n">recv</span><span class="p">)</span>
+
+<span class="p">...</span>
+
+<span class="n">def</span> <span class="n">_ssh_to_ws</span><span class="p">(</span><span class="k">self</span><span class="p">):</span>
+    <span class="n">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="k">self</span><span class="p">.</span><span class="k">lock</span><span class="p">:</span>
+            <span class="n">while</span> <span class="k">not</span> <span class="k">self</span><span class="p">.</span><span class="n">ssh_channel</span><span class="p">.</span><span class="n">exit_status_ready</span><span class="p">():</span>
+                <span class="k">data</span> <span class="o">=</span> <span class="k">self</span><span class="p">.</span><span class="n">ssh_channel</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">).</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">len</span><span class="p">(</span><span class="k">data</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="err">{</span><span class="s1">&#39;flag&#39;</span><span class="p">:</span> <span class="s1">&#39;success&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="k">data</span><span class="err">}</span>
+                    <span class="k">self</span><span class="p">.</span><span class="n">websocket</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">message</span><span class="p">))</span>
+
+                    <span class="k">self</span><span class="p">.</span><span class="n">record</span><span class="p">(</span><span class="s1">&#39;iodata&#39;</span><span class="p">,</span> <span class="k">data</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">break</span>
+    <span class="k">except</span> <span class="k">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="err">{</span><span class="s1">&#39;flag&#39;</span><span class="p">:</span> <span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="err">}</span>
+        <span class="k">self</span><span class="p">.</span><span class="n">websocket</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">message</span><span class="p">))</span>
+        <span class="k">self</span><span class="p">.</span><span class="n">record</span><span class="p">(</span><span class="s1">&#39;iodata&#39;</span><span class="p">,</span> <span class="n">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+        <span class="k">self</span><span class="p">.</span><span class="k">close</span><span class="p">()</span>
+</code></pre></div>
+
+<p>由于命令执行与返回都是多线程的操作，这就会导致在写入文件时出现文件乱序影响播放的问题，典型的操作有vim、top等，通过加锁<code>self.lock</code>可以顺利解决</p>
+<p>最后历史记录页面，当用户点击播放按钮时，调用js弹出播放窗口</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;modal fade&quot;</span> <span class="na">id=</span><span class="s">&quot;modalForm&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;modal-dialog modal-lg&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;modal-content&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;modal-body&quot;</span> <span class="na">id=</span><span class="s">&quot;play&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+
+// 播放录像
+function play(host,user,time,file) {
+  $(&#39;#play&#39;).html(
+    &#39;<span class="nt">&lt;asciinema-player</span> <span class="na">id=</span><span class="s">&quot;play&quot;</span> <span class="na">title=</span><span class="s">&quot;WebSSH Record&quot;</span> <span class="na">author=</span><span class="s">&quot;ops-coffee.cn&quot;</span> <span class="na">author-url=</span><span class="s">&quot;https://ops-coffee.cn&quot;</span> <span class="na">author-img-url=</span><span class="s">&quot;/static/img/logo.png&quot;</span> <span class="na">src=</span><span class="s">&quot;/static/record/&#39;+file+&#39;&quot;</span> <span class="na">speed=</span><span class="s">&quot;3&quot;</span> <span class="err">&#39;+</span>
+    <span class="err">&#39;</span><span class="na">idle-time-limit=</span><span class="s">&quot;2&quot;</span> <span class="na">poster=</span><span class="s">&quot;data:text/plain,\x1b[1;32m&#39;+time+</span>
+<span class="s">    &#39;\x1b[1;0m用户\x1b[1;32m&#39;+user+</span>
+<span class="s">    &#39;\x1b[1;0m连接主机\x1b[1;32m&#39;+host+</span>
+<span class="s">    &#39;\x1b[1;0m的录像记录&quot;</span><span class="nt">&gt;&lt;/asciinema-player&gt;</span>&#39;
+  )
+
+  $(&#39;#modalForm&#39;).modal(&#39;show&#39;);
+}
+</code></pre></div>
+
+<p>asciinema-player标签的详细参数介绍可以看这篇文章<a href="/s/PcstaBodjDS8D15ARwAfzA">『Asciinema文章勘误及Web端使用介绍』</a></p>
+<h2 id="_2">演示与总结</h2>
+<p><img alt="" src="/static/images/20191119.gif" /></p>
+<p>在写入文件的方案中，考虑了实时写入和一次性写入，实时写入就像上边这样，所有的操作都会实时写入录像文件，好处是录像不丢失，且能在操作的过程中进行实时的播放，缺点也很明显，就是会频繁的写文件，造成IO开销</p>
+<p>一次性写入可以在用户操作的过程中将录像数据写入内存，在websocket关闭时一次性异步写入到文件中，这种方案在最终写入文件时可能因为种种原因而失败，从而导致录像丢失，还有个缺点是当你WebSSH操作时间过长时，会导致内存的持续增加</p>
+<p>两种方案一种是对磁盘的消耗另一种是对内存的消耗，各有利弊，当然你也可以考虑批量写入，例如每分钟写一次文件，一分钟之内的保存在内存中，平衡内存和磁盘的消耗，期待你的实现</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/XBKEfJKaucTFFcj-cS95LQ.html">📅 2019-11-20</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/WebSSH/">🏷️ WebSSH</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

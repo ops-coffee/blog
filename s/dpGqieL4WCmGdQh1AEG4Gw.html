@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Github,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="代码中的敏感信息加密方案" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>代码中的敏感信息加密方案</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="代码中的敏感信息加密方案" />
+  <meta property="og:description" content="代码中的敏感信息加密方案" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">代码中的敏感信息加密方案</h1>
+
+        <blockquote>
+<p>曾有个同事不小心把项目代码给传到了Github上，导致代码里边的一个明文邮箱账号密码被利用，为此公司及个人都付出了沉重的代价。那么代码中的敏感信息该如何处理呢？本文将简单介绍一下我们的实践方法。</p>
+</blockquote>
+<h1 id="_1">实现目标</h1>
+<ol>
+<li>代码中的敏感信息加密，例如邮箱账号密码、连接数据库的账号密码、第三方校验的key</li>
+<li>对于生产使用的原始密码等信息应尽量少的人接触，例如数据库的密码应只有DBA知道</li>
+</ol>
+<h1 id="_2">信息加密</h1>
+<p>信息加密常见的有两类：</p>
+<p>第一类无需解密：例如系统登录密码加密，通过加密算法对用户输入密码进行加密后存放在数据库中，用户再次登录时依然拿相同的加密算法对用户输入密码进行加密，拿加密后的结果和数据库中存放的结果做对比，整个过程中都不需要知道用户输入的原始密码是什么，MD5是处理此类加密最常用的加密算法</p>
+<p>第二类需要解密：例如我们写在项目代码中连接数据库的账号密码，项目代码中以密文方式存储，当需要连接数据库的时候，要对密文进行解密，拿到原始未加密的账号密码去连接数据库，与MD5单向加密不同，这类加密需要能对加密后的密文进行解密，此类加密方法目前最常用的加密算法为RSA</p>
+<p>我们这里考虑的是给配置文件里的敏感信息加密，也就是上边说的第二类情况，采用的也是RSA加密算法，关于RSA加密算法的详细内容自行Google下吧，这里不赘述，需要知道以下两点就可以了：</p>
+<ol>
+<li>加密算法需要生成一对RSA秘钥，分别为公钥和私钥</li>
+<li>拿公钥对密码进行加密得到加密后的字符串配置在项目代码中，需要使用原始密码的时候拿私钥对加密后的字符串进行解密得到原始密码</li>
+</ol>
+<p>这里注意一个问题，拿到私钥就可以对加密字符串进行解密，那么这个秘钥肯定就不能放在项目代码中了，不然再遇到代码给传Github的情况就可以拿秘钥进行解密，失去了加密的意义了。这里我们的策略是秘钥统一由运维管理，直接放在生产服务器中，项目代理里配置路径可读取秘钥即可，避免秘钥因代码泄露而泄露。</p>
+<p>RSA加解密python脚本，可以直接使用此脚本生成RSA秘钥对，加密密码或者解密，当然也可以使用OpenSSL工具完成此操作</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">binascii</span>
+<span class="kn">from</span> <span class="nn">Cryptodome.PublicKey</span> <span class="kn">import</span> <span class="n">RSA</span>
+<span class="kn">from</span> <span class="nn">Cryptodome.Cipher</span> <span class="kn">import</span> <span class="n">PKCS1_v1_5</span>
+
+
+<span class="k">class</span> <span class="nc">RsaCrypto</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;RSA 加解密&#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">create_rsa_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;生成RSA秘钥对&#39;&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">RSA</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">2048</span><span class="p">)</span>
+            <span class="n">encrypted_key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">exportKey</span><span class="p">(</span><span class="n">pkcs</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+            <span class="n">public_key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">publickey</span><span class="p">()</span><span class="o">.</span><span class="n">exportKey</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+            <span class="n">private_key</span> <span class="o">=</span> <span class="n">encrypted_key</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;public_key&#39;</span><span class="p">:</span> <span class="n">public_key</span><span class="p">,</span> <span class="s1">&#39;private_key&#39;</span><span class="p">:</span> <span class="n">private_key</span><span class="p">}}</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)}</span>
+
+    <span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">public_key</span><span class="p">,</span> <span class="n">plaintext</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;加密方法&#39;&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">recipient_key</span> <span class="o">=</span> <span class="n">RSA</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">public_key</span><span class="p">)</span>
+            <span class="n">cipher_rsa</span> <span class="o">=</span> <span class="n">PKCS1_v1_5</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">recipient_key</span><span class="p">)</span>
+
+            <span class="n">en_data</span> <span class="o">=</span> <span class="n">cipher_rsa</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">plaintext</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+            <span class="n">hex_data</span> <span class="o">=</span> <span class="n">binascii</span><span class="o">.</span><span class="n">hexlify</span><span class="p">(</span><span class="n">en_data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">hex_data</span><span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)}</span>
+
+    <span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">private_key</span><span class="p">,</span> <span class="n">hex_data</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;解密方法&#39;&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">private_key</span> <span class="o">=</span> <span class="n">RSA</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span>
+            <span class="n">cipher_rsa</span> <span class="o">=</span> <span class="n">PKCS1_v1_5</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span>
+
+            <span class="n">en_data</span> <span class="o">=</span> <span class="n">binascii</span><span class="o">.</span><span class="n">unhexlify</span><span class="p">(</span><span class="n">hex_data</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">cipher_rsa</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">en_data</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)}</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">RsaCrypto</span><span class="p">()</span><span class="o">.</span><span class="n">create_rsa_key</span><span class="p">())</span>
+</code></pre></div>
+
+<h1 id="_3">流程管控</h1>
+<p>以数据库的密码管理为样例来介绍下我们的流程</p>
+<p><img alt="" src="/static/images/20181029.s01.png" /></p>
+<ol>
+<li>运维通过加密系统生成RSA秘钥对，并将秘钥对放在生产服务器上，通知开发秘钥在服务器上的存放路径，由开发写在项目代码配置文件中</li>
+<li>DBA创建数据库账号密码，通过上一步运维生成的秘钥对密码进行加密，并将加密后的字符串给到开发写在项目代码配置文件中</li>
+</ol>
+<p>秘钥跟代码分离，这样在整个过程中，开发、运维都无法接触到数据库密码，每个角色得到的信息都够用且最少，减少中间出错或泄露的可能</p>
+<p>以上流程中，生成秘钥对和通过秘钥对密码进行加密我们已经在web端实现了这个功能，可以方便运维及DBA进行操作，界面如下：</p>
+<p><img alt="" src="/static/images/20181029.s02.png" /></p>
+<p>以上界面为运维操作界面，可以生成秘钥、查看秘钥、下载秘钥</p>
+<p><img alt="" src="/static/images/20181029.s03.png" /></p>
+<p>以上界面为DBA操作界面，可以选择秘钥并对密码进行加密生成加密后密文</p>
+<p>两个界面按权限划分，运维只能看到第一个界面，DBA只能看到第二个</p>
+<h1 id="_4">写在最后</h1>
+<ol>
+<li>公司代码上传Github这种事千万千万千万不能干</li>
+<li>每个人都可能犯错，信任伙伴但也应优化流程，减少人为出错，把风险降到最低</li>
+<li>这些流程依然无法完全杜绝问题，每个人都应对自己的职业有敬畏，保持良好的职业道德，不做出格的事</li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/dpGqieL4WCmGdQh1AEG4Gw.html">📅 2018-10-30</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

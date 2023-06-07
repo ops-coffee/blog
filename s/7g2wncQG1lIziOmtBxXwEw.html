@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,Geek,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="利用Django徒手写个静态页面生成工具" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>利用Django徒手写个静态页面生成工具</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="利用Django徒手写个静态页面生成工具" />
+  <meta property="og:description" content="利用Django徒手写个静态页面生成工具" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">利用Django徒手写个静态页面生成工具</h1>
+
+        <blockquote>
+<p>每个Geek对折腾自己的博客都有着一份执念</p>
+</blockquote>
+<h2 id="_1">背景介绍</h2>
+<p>曾经多次在不同的平台写博客，但全部都以失败而告终。去年七月选择微信公众号做为平台开始了又一次的技术分享，庆幸一直坚持到现在，但随着文章发表的越来越多，发现公众号对于PC端很不友好，文章列表没有PC端入口，查看分享很不方便，所以就利用github pages搭建了一个<a href="https://ops-coffee.cn">【运维咖啡吧】</a>的网站，分类展示公众号内发表的所有文章以及一些未在公众号发表的琐碎内容</p>
+<p>为了追求极速的浏览体验，整个网站采用纯静态的方式构建，这里的静态并不是像Jekyll或者Hexo之类的静态博客框架，而是手写HTML，页面少的时候还能应对，但随着页面越来越多，维护这些内容就成了灾难，好在对Django比较熟悉，于是便动手写了这么一个静态博客页面生成工具</p>
+<h2 id="_2">主要功能</h2>
+<p>网站非常简单，只有三类页面，主页、文章列表页和文章详情页</p>
+<ul>
+<li>主页用来分类展示公众号内的文章列表</li>
+<li>文章列表页用来展示网站内文章（一些琐碎的未在公众号发表的文章）的列表</li>
+<li>文章详情页用来展示具体文章的内容</li>
+</ul>
+<p>基于以上的内容分析，其实只需要做两个后台页面，包含几个小功能，画个思维导图</p>
+<p><img alt="" src="/static/images/20190525.blog.png" /></p>
+<p>首页为什么要去读取JSON文件呢？主要是因为运维咖啡吧的小程序也同时依赖这个JSON文件，修改一个地方避免维护多份数据</p>
+<p>最终实现的效果如下图</p>
+<p><img alt="" src="/static/images/20190525.blog.gif" /></p>
+<p>接下来介绍下实现这些功能用到的技术或组件</p>
+<h2 id="_3">所用技术</h2>
+<h3 id="_4">读取及写入文件</h3>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+
+
+<span class="k">class</span> <span class="nc">FileRun</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">BASE_DIR</span> <span class="o">+</span> <span class="s1">&#39;/ops_coffee/backends/blog.json&#39;</span>
+
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</code></pre></div>
+
+<p>读取及写入文件的操作与Django的View没有太大的关系，所以这里我用了一个单独的类来处理，解释下其中的四个用法</p>
+<ol>
+<li>
+<p>本地文件路径不要硬编码到代码中，尽量采用<code>settings.BASE_DIR</code>相对路径，或者直接将路径以变量的形式写入到settings文件，例如我们后边要说的生成本地文件的目录就直接在settings中添加了一个变量<code>OPS_COFFEE_GIT_DIR</code></p>
+</li>
+<li>
+<p>每个方法返回两个参数状态和数据<code>return True,data</code>，这样在调用这个方法的时候就可以很方便的判断出来这个方法是执行成功还是失败，例如如下代码</p>
+</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="err">state, data = FileRun().read()</span>
+<span class="err">if state:</span>
+<span class="err">    return(data)</span>
+</code></pre></div>
+
+<ol>
+<li>
+<p>读取文件使用<code>with</code>方法可以在你读取结束后自动执行<code>f.close()</code>关闭文件，避免因打开文件过多造成的资源消耗</p>
+</li>
+<li>
+<p>使用try来避免程序直接抛错，有错误处理机制</p>
+</li>
+</ol>
+<h3 id="json">JSON格式化</h3>
+<p>为了展示好看且能实现语法错误提示，采用了<code>jsoneditor</code>插件，这是一个前端的插件，使用非常简单</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-sm-12&quot;</span> <span class="na">id=</span><span class="s">&quot;jsoneditor&quot;</span> <span class="na">style=</span><span class="s">&quot;height:620px&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;/static/js/jsoneditor.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+  // create the editor
+  var container = document.getElementById(&quot;jsoneditor&quot;);
+  var editor = new JSONEditor(container, {
+    mode: &#39;code&#39;
+  });
+
+  // set json
+  editor.set(<span class="cp">{{</span> <span class="nv">data</span><span class="o">|</span><span class="nf">safe</span> <span class="cp">}}</span>);
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
+
+<p><strong>JSON Editor</strong> 可以用来查看、编辑、格式化和验证JSON，支持多种模式，例如tree、code、text，当为tree模式时显示树状结构，当为text时显示纯文本，我们这里采用了code模式有行号和颜色，看起来更美观</p>
+<p><strong>safe</strong> django从view向template传递HTML数据的时候，为了防止html中包含恶意攻击的代码django默认不会渲染HTML，所以需要在template接收到html数据后添加<code>|safe</code>进行渲染</p>
+<h3 id="html">生成HTML</h3>
+<p>观察会发现整个网站里所有的页面除了中间的内容区域之外，其他的地方都一样，所以我们只需要考虑替换中间的内容就可以了，实际上为了SEO等我们还需要替换title等数据</p>
+<p>替换内容生成html文件这里使用了jinja2，我有尝试直接用django的template来渲染，但最终有一些编码问题没有解决，还是采用了jinja2，代码如下</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Template</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+
+<span class="n">tmpl</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;&lt;!DOCTYPE html&gt;</span>
+<span class="s2">&lt;html lang=&quot;zh-CN&quot;&gt;</span>
+
+<span class="s2">&lt;head&gt;</span>
+<span class="s2">  &lt;meta name=&quot;theme-color&quot; content=&quot;#2879d0&quot; /&gt;</span>
+<span class="s2">  &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;</span>
+<span class="s2">  &lt;link rel=&quot;stylesheet&quot; href=&quot;/css/style.min.css&quot; media=&quot;screen&quot; type=&quot;text/css&quot; /&gt;</span>
+
+<span class="s2">  &lt;title&gt;{{ title }}&lt;/title&gt;</span>
+<span class="s2">  &lt;meta property=&quot;og:title&quot; content=&quot;{{ title }}&quot; /&gt;</span>
+<span class="s2">  &lt;meta property=&quot;og:description&quot; content=&quot;{{ description }}&quot; /&gt;</span>
+<span class="s2">&lt;/head&gt;</span>
+
+<span class="s2">&lt;body&gt;</span>
+<span class="s2">  &lt;header&gt;</span>
+<span class="s2">    &lt;div class=&quot;inner&quot;&gt;</span>
+<span class="s2">      &lt;a href=&quot;https://ops-coffee.cn/&quot;&gt;</span>
+<span class="s2">        &lt;h1&gt;运维咖啡吧&lt;/h1&gt;</span>
+<span class="s2">      &lt;/a&gt;</span>
+<span class="s2">      &lt;h2&gt;追求技术的道路上，我从不曾停下脚步&lt;/h2&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">  &lt;/header&gt;</span>
+
+<span class="s2">  &lt;div id=&quot;content-wrapper&quot;&gt;</span>
+<span class="s2">    &lt;div class=&quot;inner clearfix&quot;&gt;</span>
+<span class="s2">      &lt;section id=&quot;main-content&quot;&gt;</span>
+<span class="s2">      {</span><span class="si">% i</span><span class="s2">f havet %}</span>
+<span class="s2">        &lt;h1 id=&quot;art-title&quot;&gt;{{ title }}&lt;/h1&gt;</span>
+<span class="s2">      {</span><span class="si">% e</span><span class="s2">ndif %}</span>
+
+<span class="s2">      {{ content }}</span>
+<span class="s2">      &lt;/section&gt;</span>
+
+<span class="s2">      &lt;aside id=&quot;sidebar&quot;&gt;</span>
+<span class="s2">        &lt;blockquote class=&quot;route&quot;&gt;微信公众号&lt;/blockquote&gt;</span>
+<span class="s2">        &lt;img border=&quot;0&quot; src=&quot;/images/z-qrcode.jpg&quot; width=&quot;100%&quot; height=&quot;100%&quot; alt=&quot;ops-coffee&quot; /&gt;</span>
+
+<span class="s2">        &lt;blockquote class=&quot;route&quot;&gt;归档列表&lt;/blockquote&gt;</span>
+<span class="s2">        &lt;div class=&quot;sidebar-list&quot;&gt;&lt;a href=&quot;/&quot;&gt; 精选文章列表&lt;/a&gt;&lt;/div&gt;</span>
+<span class="s2">        &lt;div class=&quot;sidebar-list&quot;&gt;&lt;a href=&quot;/s/&quot;&gt; 日常运维记录&lt;/a&gt;&lt;/div&gt;</span>
+<span class="s2">      &lt;/aside&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">  &lt;/div&gt;</span>
+
+<span class="s2">&lt;/body&gt;</span>
+
+<span class="s2">&lt;/html&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;havet&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;运维咖啡吧&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;追求技术的道路上，我从不曾停下脚步&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">content</span>
+<span class="p">}</span>
+
+<span class="n">_content</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">tmpl</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blogDir</span> <span class="o">+</span> <span class="s1">&#39;/index.html&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">_content</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>tmpl</strong> 定义了一个模版，模版内可以使用诸如<code>{{ title }}</code>这样的变量或是<code>{% if havet %}</code>这样的语法</p>
+<p><strong>kwargs</strong> 定义了一个字典，字典的内容用来替换模版中的变量，字典的key值与模版里边的变量做匹配，匹配到了就用字典的value填充模版</p>
+<p><strong>_content</strong> 就是最终html的内容，<code>Template(tmpl).render(kwargs)</code>会将kwargs的每个key值与模版中的变量做替换</p>
+<p>最后会将html内容写入到html文件</p>
+<h3 id="github">上传GitHub</h3>
+<p>网站使用github pages搭建，最后需要将生成的html文件上传到github，这里我们使用了<code>gitpython</code>库，gitpython库的用法跟原生git的命令非常像，只是命令中间以<code>.</code>连接</p>
+<p>最佳的自动上传步骤应该是：</p>
+<ol>
+<li>本地生成ssh密钥，并将公钥上传至github，实现本机与ssh之间的无密码上传下载</li>
+<li>本地创建网站目录，这个目录需要跟settings里边的<code>OPS_COFFEE_GIT_DIR</code>变量一致，方便直接将html文件生成在这个目录下</li>
+<li>进入网站目录并使用<code>git clone</code>拉取github上的代码，注意这里应选择ssh协议的url，例如：<code>git clone git@github.com:ops-coffee/demo.git .</code>，且确定无需输入账号密码即可拉取</li>
+<li>然后就可以使用以下程序实现自动上传更新到github了，也就是在跑本文所讲的这个生成工具之前需要先做好以上三步</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">git</span> <span class="kn">import</span> <span class="n">Repo</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+
+
+<span class="k">class</span> <span class="nc">GitRun</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repo</span> <span class="o">=</span> <span class="n">Repo</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">OPS_COFFEE_GIT_DIR</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">A</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">commit</span><span class="p">(</span><span class="s1">&#39;ops-coffee&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;origin&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">push</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>Repo()</strong> 选择已有的git仓库</p>
+<p><strong>git.add</strong> 添加本地修改到暂存区，<code>A=True</code>添加到暂存区时包含删除文件的修改</p>
+<p><strong>index.commit</strong> 提交修改到本地仓库，我这里比较粗糙，统一使用<code>ops-coffee</code>做为log</p>
+<p><strong>repo.remote().push()</strong> 选择远程分支并提交，name参数表示远程分支的名字</p>
+<h3 id="_5">登陆登出</h3>
+<p>虽然是个简单的个人系统，但最基本的用户认证还是要有的，没有用Django默认的admin页面，但还想使用django提供的auth系统实现登陆登出的话，可以采用下边这种方式</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.views</span> <span class="kn">import</span> <span class="n">LoginView</span><span class="p">,</span> <span class="n">LogoutView</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">,</span> <span class="n">LoginView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;login.html&#39;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;login-url&#39;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;logout&#39;</span><span class="p">,</span> <span class="n">LogoutView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;login.html&#39;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;logout-url&#39;</span><span class="p">),</span>
+<span class="p">]</span>
+</code></pre></div>
+
+<p>从<code>django.contrib.auth.views</code>下导入<code>LoginView</code>和<code>LogoutView</code>，然后写两条url并指定自己的模版位置就可以使用django的登陆登出功能了，这在一些需要简单认证的系统中非常方便</p>
+<h2 id="_6">写在最后</h2>
+<p>不断折腾的过程才是成长最快的过程，用技术来解决实际的问题是对技术最好的应用</p>
+<p>如果你对本篇文章的完整源码感兴趣，可以在微信公众号后台回复“05”获取，当然也非常欢迎加我个人微信一起学习交流</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/7g2wncQG1lIziOmtBxXwEw.html">📅 2019-05-27</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

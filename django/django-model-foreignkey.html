@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,Model,ForeignKey,Django,Model,ForeignKey,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Django Model关联关系之ForeignKey" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Django Model关联关系之ForeignKey</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="Django Model关联关系之ForeignKey" />
+  <meta property="og:description" content="Django Model关联关系之ForeignKey" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django Model关联关系之ForeignKey</h1>
+
+        <p><strong>ForeignKey</strong>定义了一个多对一的关系，需要两个位置参数：模型相关的类和<code>on_delete</code>选项</p>
+<p>例如：<code>models.Foreignkey(User,on_delete=models.CASCADE)</code>，其中<code>User</code>就是模型相关的类，表示与<code>User</code>表相关联，而<code>on_delete=models.CASCADE</code>则是<code>on_delete</code>选项，定义关联表数据删除时的动作</p>
+<h2 id="_1">参数</h2>
+<h3 id="_2">必选参数</h3>
+<p>两个必选参数，分别是模型类和<code>on_delete</code>选项</p>
+<h4 id="_3">模型类</h4>
+<p>关联的模型，默认情况下指向关联的模型对象，某些情况下需要模型对象关联自身，例如用户表里有个<code>leader</code>字段用来标识当前用户的直属领导，直属领导也是个用户，所以需要跟用户表自身相关联，那模型类就需要写成<code>self</code></p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">User</span>(<span class="n">models</span>.<span class="n">Model</span>):
+    <span class="n">username</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">16</span>, <span class="n">verbose_name</span>=<span class="s">&#39;用户名称&#39;</span>)
+    <span class="n">leader</span> = <span class="n">models</span>.<span class="n">ForeignKey</span>(<span class="s">&#39;self&#39;</span>, <span class="n">on_delete</span>=<span class="n">models</span>.<span class="n">PROTECT</span>, <span class="n">verbose_name</span>=<span class="s">&#39;直属领导&#39;</span>)
+
+    <span class="n">def</span> <span class="n">__str__</span>(<span class="nb">self</span>):
+        <span class="k">return</span> <span class="nb">self</span>.<span class="n">username</span>
+</code></pre></div>
+
+<h4 id="on_delete">on_delete</h4>
+<p>on_delete的值主要有以下几个</p>
+<ul>
+<li>CASCADE：级联删除</li>
+<li>PROTECT：不允许删除，删除时会报错，通过引发ProtectedError来防止删除被引用对象</li>
+<li>RESTRICT：与PROTECT类似，不允许删除，通过引发RestrictedError来防止删除被引用的对象，与PROTECT不同的是，如果被引用的对象也引用了一个统一操作中被删除的不同对象，但通过CASCADE关系，则允许删除备用用的对象</li>
+<li>SET_NULL：设置为空，前提是字段内有参数<code>null=True</code></li>
+<li>SET_DEFAULT：设置为默认值，前提是字段内有参数<code>default=n</code></li>
+<li>SET()：设置为传递给<code>SET()</code>的值，例如<code>SET(get_sentinel_user)</code>，则在删除时会调用<code>get_sentinel_user</code>方法来设置结果</li>
+<li>DO_NOTHING：什么也不干，但这容易引发IntegrityError错误</li>
+</ul>
+<h4 id="_4">其他参数</h4>
+<ul>
+<li>limit_choices_to</li>
+<li>related_name：反向关联查询名称</li>
+<li>related_query_name</li>
+<li>to_field：关联对象的字段，默认情况下，Django使用相关对象的主键，如果引用了不同的字段，这个字段必须有唯一性约束，也就是<code>unique=True</code></li>
+<li>db_constraint：控制是否在数据库中为这个外键创建约束，默认为True，当设置为False，则是逻辑外键，不会在数据库中创建外键约束，但仍然可以通过ForeignKey相关的语法方便的操作数据</li>
+<li>swappable</li>
+</ul>
+<h2 id="_5">表现</h2>
+<p>默认情况下，当migrate应用表修改后，查询数据库会发现，所有ForeignKey字段在数据库里的字段名称会加上<code>_id</code>，例如上边User表的leader字段，在数据库里讲会变成<code>leader_id</code></p>
+<p>当然你可以通过<code>db_column</code>来改变字段在数据库中的名字，不过一般没必要，通常保持默认就好了</p>
+<div class="codehilite"><pre><span></span><code> <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">`accounts_user`</span> <span class="p">(</span>
+  <span class="n">`id`</span> <span class="kt">bigint</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="k">AUTO_INCREMENT</span><span class="p">,</span>
+  <span class="n">`username`</span> <span class="kt">varchar</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="n">`leader_id`</span> <span class="kt">bigint</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">`id`</span><span class="p">),</span>
+  <span class="k">KEY</span> <span class="n">`accounts_user_leader_id_28d81690`</span> <span class="p">(</span><span class="n">`leader_id`</span><span class="p">)</span>
+<span class="p">)</span> <span class="k">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span> <span class="k">AUTO_INCREMENT</span><span class="o">=</span><span class="mi">49</span> <span class="k">DEFAULT</span> <span class="k">CHARSET</span><span class="o">=</span><span class="n">utf8</span>
+</code></pre></div>
+
+<h2 id="_6">管理</h2>
+<p>以下演示代码参考如下表设计</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Host</span>(<span class="n">TimeBaseModel</span>):
+    <span class="n">ip</span> = <span class="n">models</span>.<span class="n">GenericIPAddressField</span>(<span class="n">verbose_name</span>=<span class="s">&#39;IP地址&#39;</span>)
+    <span class="n">port</span> = <span class="n">models</span>.<span class="n">SmallIntegerField</span>(<span class="n">verbose_name</span>=<span class="s">&#39;主机端口&#39;</span>)
+
+
+<span class="k">class</span> <span class="n">Password</span>(<span class="n">TimeBaseModel</span>):
+    <span class="n">host</span> = <span class="n">models</span>.<span class="n">ForeignKey</span>(<span class="n">Host</span>, <span class="n">on_delete</span>=<span class="n">models</span>.<span class="n">CASCADE</span>, <span class="n">verbose_name</span>=<span class="s">&#39;主机&#39;</span>)
+    <span class="n">user</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">32</span>, <span class="n">verbose_name</span>=<span class="s">&#39;账号&#39;</span>)
+    <span class="n">password</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">32</span>, <span class="n">verbose_name</span>=<span class="s">&#39;密码&#39;</span>)
+    <span class="n">contact</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">64</span>, <span class="n">verbose_name</span>=<span class="s">&#39;联系人&#39;</span>)
+    <span class="nb">note</span> = <span class="n">models</span>.<span class="n">TextField</span>(<span class="n">max_length</span>=<span class="mi">64</span>, <span class="n">verbose_name</span>=<span class="s">&#39;备注&#39;</span>)
+</code></pre></div>
+
+<h3 id="_7">新增</h3>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; h1 = Host.objects.create(ip=&#39;192.168.3.1&#39;, port=22)</span>
+<span class="err">&gt;&gt;&gt;</span>
+<span class="err">&gt;&gt;&gt; h2 = Host.objects.create(ip=&#39;192.168.3.2&#39;, port=22)</span>
+<span class="err">&gt;&gt;&gt;</span>
+<span class="err">&gt;&gt;&gt;</span>
+<span class="err">&gt;&gt;&gt; h1.id</span>
+<span class="err">29</span>
+<span class="err">&gt;&gt;&gt; h2.id</span>
+<span class="err">30</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; p1 = Password.objects.create(host=h1, user=&#39;root&#39;, password=&#39;123&#39;, contact=&#39;fei.liu&#39;, note=&#39;&#39;)</span>
+<span class="err">&gt;&gt;&gt;</span>
+<span class="err">&gt;&gt;&gt; p2 = Password.objects.create(host_id=30, user=&#39;root&#39;, password=&#39;123&#39;, contact=&#39;fei.liu&#39;, note=&#39;&#39;)</span>
+<span class="err">&gt;&gt;&gt;</span>
+<span class="err">&gt;&gt;&gt;</span>
+<span class="err">&gt;&gt;&gt; p1.host.id</span>
+<span class="err">29</span>
+<span class="err">&gt;&gt;&gt; p2.host.id</span>
+<span class="err">30</span>
+</code></pre></div>
+
+<p>可以通过<strong>instance实例</strong>或<strong>instance_id</strong>两种方式来新增数据</p>
+<h3 id="_8">查询</h3>
+<p>正向查询</p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; p = Password.objects.get(id=3)</span>
+<span class="err">&gt;&gt;&gt; p.host.ip</span>
+<span class="err">&#39;192.168.3.1&#39;</span>
+</code></pre></div>
+
+<p>反向查询</p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; h = Host.objects.get(id=30)</span>
+<span class="err">&gt;&gt;&gt; h.password_set.all()</span>
+<span class="err">&lt;QuerySet [&lt;Password: Password object (5)&gt;]&gt;</span>
+</code></pre></div>
+
+<p>related_name</p>
+<div class="codehilite"><pre><span></span><code><span class="err">class Password(TimeBaseModel):</span>
+<span class="err">    host = models.ForeignKey(Host, on_delete=models.CASCADE, related_name=&#39;users&#39;, verbose_name=&#39;主机&#39;)</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">h</span> <span class="o">=</span> <span class="n">Host</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="kt">id</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">h</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">all</span><span class="p">()</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span><span class="o">&lt;</span><span class="nl">Password</span><span class="p">:</span> <span class="n">root</span><span class="mf">@192.168.3.2</span><span class="o">&gt;</span><span class="p">]</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<p>当<code>related_name</code>配置存在时，则可以通过<code>related_name</code>定义的值进行查询</p>
+<h3 id="_9">修改</h3>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; p = Password.objects.get(id=5)</span>
+<span class="err">&gt;&gt;&gt; p.host_id = 29</span>
+<span class="err">&gt;&gt;&gt; p.save()</span>
+<span class="err">&gt;&gt;&gt;</span>
+<span class="err">&gt;&gt;&gt; p.host</span>
+<span class="err">&lt;Host: 192.168.3.1&gt;</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; h = Host.objects.get(id=30)</span>
+<span class="err">&gt;&gt;&gt; h.ip</span>
+<span class="err">&#39;192.168.3.2&#39;</span>
+<span class="err">&gt;&gt;&gt;</span>
+<span class="err">&gt;&gt;&gt; p.host = h</span>
+<span class="err">&gt;&gt;&gt; p.save()</span>
+<span class="err">&gt;&gt;&gt;</span>
+<span class="err">&gt;&gt;&gt; p.host</span>
+<span class="err">&lt;Host: 192.168.3.2&gt;</span>
+</code></pre></div>
+
+<p>同样的也能通过<strong>instance实例</strong>或<strong>instance_id</strong>两种方式来修改数据</p>
+<h3 id="_10">删除</h3>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; p = Password.objects.get(id=5)</span>
+<span class="err">&gt;&gt;&gt; p.delete()</span>
+<span class="err">(1, {&#39;cmdb.Password&#39;: 1})</span>
+</code></pre></div>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/django/django-model-foreignkey.html">📅 2022-08-10</a></li>
+            
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

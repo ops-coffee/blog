@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,URL,Django,URL,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Django URL常见用法及配置介绍" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Django URL常见用法及配置介绍</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="Django URL常见用法及配置介绍" />
+  <meta property="og:description" content="Django URL常见用法及配置介绍" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django URL常见用法及配置介绍</h1>
+
+        <p>Django通过URLconf来实现请求的路由，URLConf定义了URL到视图函数的映射关系</p>
+<p>一个简单的URLconf如下</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">include</span>
+<span class="kn">from</span> <span class="nn">django.views.generic.base</span> <span class="kn">import</span> <span class="n">TemplateView</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+
+<span class="kn">from</span> <span class="nn">cmdb.views</span> <span class="kn">import</span> <span class="n">CmdbList</span><span class="p">,</span> <span class="n">CmdbDetail</span><span class="p">,</span> <span class="n">PasswordList</span><span class="p">,</span> <span class="n">PasswordDetail</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">login_required</span><span class="p">(</span><span class="n">TemplateView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;index.html&#39;</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;index-url&#39;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;commons/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;sadmin.commons.urls&#39;</span><span class="p">)),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;accounts/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;sadmin.accounts.urls&#39;</span><span class="p">)),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;project/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;sadmin.project.urls&#39;</span><span class="p">)),</span>
+
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;cmdb/&#39;</span><span class="p">,</span> <span class="n">CmdbList</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;cmdb/&lt;int:pk&gt;/&#39;</span><span class="p">,</span> <span class="n">CmdbDetail</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
+
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;password/&#39;</span><span class="p">,</span> <span class="n">PasswordList</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;password/&lt;int:pk&gt;/&#39;</span><span class="p">,</span> <span class="n">PasswordDetail</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
+<span class="p">]</span>
+</code></pre></div>
+
+<h2 id="path">path</h2>
+<p><code>path()</code>有四个参数，两个必须参数：route和view，两个可选参数kwargs和name</p>
+<h4 id="route">route</h4>
+<p>route是一个匹配URL的准则，当Django响应一个请求时，它会从urlpatterns的第一项开始，按顺序依次匹配列表中的项，直到找到匹配的项</p>
+<p>route匹配准则跟请求Method或是请求参数或是域名都没有关系，例如URLconf在处理请求<code>https://ops-coffee.cn/monitor/</code>时，它会尝试匹配<code>monitor/</code>，处理请求<code>https://ops-coffee.cn/monitor/?start=0&amp;length=10</code>时，也只会尝试匹配<code>monitor/</code></p>
+<h4 id="view">view</h4>
+<p>当Django找到了一个匹配的route，就会调用这个特定的视图函数，并传入一个<code>HttpRequest</code>对象作为第一个参数</p>
+<h4 id="kwargs">kwargs</h4>
+<p>任意个关键字参数可以作为一个字典传递给目标视图函数</p>
+<h4 id="name">name</h4>
+<p>为URL取名可以在任意地方唯一的引用它，尤其是在模板中</p>
+<h3 id="include">include</h3>
+<p>函数<code>include()</code>允许引用其它URLconfs。每当Django遇到<code>include()</code>时，它会截断与此项匹配的URL的部分，并将剩余的字符串发送到 URLconf 以供进一步处理</p>
+<p>Django设计<code>include()</code>的理念使其可以即插即用。通常情况下每个APP的URL都单独在应用内管理，可以通过<code>include()</code>方便的引用</p>
+<h3 id="url">URL取值</h3>
+<ul>
+<li>要从 URL 中取值，使用尖括号</li>
+<li>捕获的值可以选择性地包含转换器类型。比如，使用 <int:name> 来捕获整型参数</li>
+</ul>
+<p>转换器包含有以下几个：</p>
+<ul>
+<li>str：匹配除了'/'之外的非空字符串。如果表达式内不包含转换器，则会默认匹配字符串</li>
+<li>int：匹配0或任何正整数。返回一个int</li>
+<li>slug：匹配任意由ASCII字母或数字以及连字符和下划线组成的短标签</li>
+<li>uuid：匹配一个格式化的UUID。为了防止多个URL映射到同一个页面，必须包含破折号并且字符都为小写</li>
+<li>path：匹配非空字段，包括路径分隔符'/'。它允许你匹配完整的URL路径而不是像str那样匹配URL的一部分</li>
+</ul>
+<h2 id="re_path">re_path</h2>
+<p>使用<code>re_path</code>可以通过正则表达式去匹配复杂的URL，例如</p>
+<div class="codehilite"><pre><span></span><code><span class="err">re_path(&#39;static/(?P&lt;path&gt;.*)$&#39;, static.serve, {&#39;document_root&#39;: settings.STATIC_ROOT}, name=&#39;static&#39;),</span>
+</code></pre></div>
+
+<p>在 Python 正则表达式中，命名正则表达式组的语法是<code>(?P&lt;name&gt;pattern)</code>，其中name是组名，pattern是要匹配的模式。组名name可以省略，不过不推荐</p>
+<h2 id="_1">模板中使用</h2>
+<div class="codehilite"><pre><span></span><code><span class="err">{% url &#39;monitor-list&#39; %}</span>
+</code></pre></div>
+
+<p>传递参数</p>
+<div class="codehilite"><pre><span></span><code><span class="err">{% url &#39;monitor-detail&#39; data.id %}</span>
+</code></pre></div>
+
+<h2 id="view_1">View中使用</h2>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+
+<span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;index-url&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<h2 id="viewurl">View中的URL重定向</h2>
+<p>URL重定向有两种方式，分别是<code>HttpResponseRedirect</code>、<code>redirect</code></p>
+<h3 id="httpresponseredirect">HttpResponseRedirect</h3>
+<p>HttpResponseRedirect是Django中推荐的重定向方式，在view中使用方法如下</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponseRedirect</span>
+
+<span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">AuthenticationForm</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">auth</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">form</span><span class="o">.</span><span class="n">get_user</span><span class="p">())</span>
+
+            <span class="c1"># 登录成功重定向到next页面</span>
+            <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="n">_next</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;next&#39;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">AuthenticationForm</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/login.html&#39;</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+            <span class="s1">&#39;next&#39;</span><span class="p">:</span> <span class="n">_next</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;next&#39;</span><span class="p">)</span>
+        <span class="p">})</span>
+</code></pre></div>
+
+<p>HttpResponseRedirect接收一个参数就是要重定向到的URL地址</p>
+<h3 id="redirect">redirect</h3>
+<p>redirect是HttpResponseRedirect的便捷写法，HttpResponseRedirect能支持的URL重定向redirect都支持，例如以下三种常见写法</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+
+<span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;/index/&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">goto</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;https://blog.ops-coffee.cn&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">logout</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;accounts:logout-url&#39;</span><span class="p">))</span>
+</code></pre></div>
+
+<p>redirect不仅能根据URL重定向，还可以根据对象或试图重定向</p>
+<div class="codehilite"><pre><span></span><code><span class="err">def group(request):</span>
+<span class="err">    obj = Model.objects.get(id=1)</span>
+<span class="err">    return redirect(obj)</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="err">def login(request):</span>
+<span class="err">    return redirect(&#39;some-view-name&#39;, name=&#39;coffee&#39;)</span>
+</code></pre></div>
+
+<h2 id="urlurl">URL中的URL重定向</h2>
+<p>如果想在urls.py中直接配置URL重定向，可以通过如下方法</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">RedirectView</span>
+
+<span class="n">path</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">RedirectView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/dashboard/&#39;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;index-url&#39;</span><span class="p">),</span>
+</code></pre></div>
+
+<p>以上的意思是将<code>/</code>重定向到<code>/dashboard</code></p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/django/django-url-path-conf.html">📅 2022-08-10</a></li>
+            
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

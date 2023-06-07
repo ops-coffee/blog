@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="django,celery,beat,clocked,UTC,None,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="django-celery-beat clocked使用UTC时区问题" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>django-celery-beat clocked使用UTC时区问题</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="django-celery-beat clocked使用UTC时区问题" />
+  <meta property="og:description" content="django-celery-beat clocked使用UTC时区问题" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">django-celery-beat clocked使用UTC时区问题</h1>
+
+        <p>这个问题坑了我一晚上没睡好，翻了大量文档/Github/源码，终于解决了，记录以下</p>
+<h2 id="_1">问题描述</h2>
+<p>使用<code>django_celery_beat</code>做异步任务、定时任务和周期任务管理，异步任务、周期任务执行都正常，唯独定时任务会延迟8小时执行</p>
+<p>经验告诉我们遇到延迟8小时的大概率是因为时区的问题，但翻遍了文档，时区相关的配置都已添加仍然没用</p>
+<h2 id="_2">产生环境</h2>
+<div class="codehilite"><pre><span></span><code><span class="err"># pip3 list | grep celery</span>
+<span class="err">celery                      5.2.7</span>
+<span class="err">django-celery-beat          2.2.1</span>
+</code></pre></div>
+
+<p>实际上涉及到的版本较多，不止我这里这个版本会出现，我测试了其他一些版本也都有这个问题，官方没修复</p>
+<h2 id="_3">解决方案</h2>
+<p>修改源码文件<code>django_celery_beat/clockedschedule.py</code>，以下这段</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">clocked</span>(<span class="n">schedules</span>.<span class="n">BaseSchedule</span>):
+    <span class="s">&quot;&quot;&quot;clocked schedule.</span>
+
+<span class="s">    Depends on PeriodicTask one_off=True</span>
+<span class="s">    &quot;&quot;&quot;</span>
+
+    <span class="n">def</span> <span class="n">__init__</span>(<span class="nb">self</span>, <span class="n">clocked_time</span>, <span class="n">nowfun</span>=<span class="n">None</span>, <span class="n">app</span>=<span class="n">None</span>):
+        <span class="s">&quot;&quot;&quot;Initialize clocked.&quot;&quot;&quot;</span>
+        <span class="nb">self</span>.<span class="n">clocked_time</span> = <span class="n">maybe_make_aware</span>(<span class="n">clocked_time</span>)
+        <span class="n">super</span>().<span class="n">__init__</span>(<span class="n">nowfun</span>=<span class="n">nowfun</span>, <span class="n">app</span>=<span class="n">app</span>)
+</code></pre></div>
+
+<p>改为：</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">clocked</span><span class="p">(</span><span class="n">schedules</span><span class="o">.</span><span class="n">BaseSchedule</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;clocked schedule.</span>
+
+<span class="sd">    Depends on PeriodicTask one_off=True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clocked_time</span><span class="p">,</span> <span class="n">nowfun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize clocked.&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">make_aware</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clocked_time</span> <span class="o">=</span> <span class="n">make_aware</span><span class="p">(</span><span class="n">clocked_time</span><span class="p">)</span>
+
+        <span class="c1"># self.clocked_time = maybe_make_aware(clocked_time)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nowfun</span><span class="o">=</span><span class="n">nowfun</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="n">app</span><span class="p">)</span>
+</code></pre></div>
+
+<p>问题即可解决</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/t/django-celery-beat-clocked-utc-timezone.html">📅 2022-09-09</a></li>
+            
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

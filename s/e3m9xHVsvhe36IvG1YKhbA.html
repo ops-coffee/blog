@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,zTree,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Django+zTree构建组织架构树" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Django+zTree构建组织架构树</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="Django+zTree构建组织架构树" />
+  <meta property="og:description" content="Django+zTree构建组织架构树" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django+zTree构建组织架构树</h1>
+
+        <blockquote>
+<p>树，因其清晰明了的展现形式而被广泛的使用</p>
+</blockquote>
+<p>日常的开发过程中我们需要经常与“树”打交道，例如公司的组织架构树、服务器的项目归属树，管理后台侧边树等等，本篇文章介绍关于树的两个内容</p>
+<ol>
+<li>多功能的前端树插件zTree</li>
+<li>Django中关于树的model设计</li>
+</ol>
+<h2 id="ztree">zTree</h2>
+<p>zTree是一个开源的依靠JQuery实现的多功能树插件，具有性能优异、配置灵活、功能强大的特点</p>
+<p>之前的<a href="https://mp.weixin.qq.com/mp/homepage?__biz=MzU5MDY1MzcyOQ==&amp;hid=12&amp;sn=07358cd1f94e69d5cbc7e236a84aa50d">系列前端插件文章</a>已经多次介绍过将前端插件引入自己项目中的方法，这里就不赘述了，如有问题也可以参考文章末尾给出的Demo代码，在引入JS/CSS之后只需要如下代码即可构建一颗树</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;treeDemo&quot;</span> <span class="na">class=</span><span class="s">&quot;ztree&quot;</span><span class="nt">&gt;&lt;/ul&gt;</span>
+
+<span class="nt">&lt;script&gt;</span>
+    var setting = {
+      data: {
+        simpleData: {
+          enable: true
+        }
+      }
+    };
+
+    var zNodes = [
+      {id: 1, pId: 0, name: &quot;OPS-COFFEE &quot;, open: true},
+      {id: 2, pId: 1, name: &quot;运营部&quot;, open: true},
+      {id: 3, pId: 1, name: &quot;市场部&quot;, open: true},
+      {id: 4, pId: 1, name: &quot;综合部&quot;, open: true},
+      {id: 5, pId: 2, name: &quot;产品部&quot;, open: true},
+      {id: 6, pId: 2, name: &quot;技术部&quot;, open: true},
+      {id: 7, pId: 3, name: &quot;销售部&quot;, open: true},
+      {id: 8, pId: 4, name: &quot;人事部&quot;, open: true},
+      {id: 9, pId: 4, name: &quot;财务部&quot;, open: true},
+    ];
+
+    $.fn.zTree.init($(&quot;#treeDemo&quot;), setting, zNodes);
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
+
+<p><code>$.fn.zTree.init</code>初始化树，这里需要三个参数，第一个参数是加载树结构的Jquery对象，<code>setting</code>为ztree的各种配置参数，<code>zNodes</code>为ztree的具体数据</p>
+<p>zTree的配置采用json的格式，按照配置类型分为了界面配置<code>view</code>，数据配置<code>data</code>，编辑配置<code>edit</code>，复选框配置<code>check</code>，异步加载配置<code>async</code>以及各种回调函数配置<code>callback</code>，配置丰富且强大</p>
+<p>zTree支持两种数据模式，简单数据模式和标准数据模式，简单数据模式就像我们上边例子中这样的数据结构，而标准数据模式就需要将数据构造成复杂的JSON嵌套格式，像下边这样</p>
+<div class="codehilite"><pre><span></span><code><span class="k">var</span> <span class="n">zNodes</span> <span class="o">=</span> <span class="p">[{</span>
+  <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;OPS-COFFEE&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">,</span>
+  <span class="s2">&quot;children&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+          <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;运营部&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">,</span>
+          <span class="s2">&quot;children&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;产品部&quot;</span><span class="p">,</span><span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">},</span>
+              <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;技术部&quot;</span><span class="p">,</span><span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">}</span>
+          <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+          <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;市场部&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">,</span>
+          <span class="s2">&quot;children&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;销售部&quot;</span><span class="p">,</span><span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">}</span>
+          <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+          <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;综合部&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">,</span>
+          <span class="s2">&quot;children&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;人事部&quot;</span><span class="p">,</span><span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">},</span>
+              <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;财务部&quot;</span><span class="p">,</span><span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">}</span>
+          <span class="p">]</span>
+      <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}];</span>
+</code></pre></div>
+
+<p>标准模式数据结构复杂但父子关系清晰，简单模式数据则相反，示例中我们使用了简单数据模式，需要配置simpleData的<code>enable</code>属性为true</p>
+<p>完成以上配置后可以看到页面效果如下</p>
+<p><img alt="" src="/static/images/20190816.tree01.png" /></p>
+<h2 id="django">Django</h2>
+<p>既然前端页面已经能够正常展示树了，后端就只需要返回前端对应的数据格式即可，Django中最简单的方式就是使用Foreignkey的自关联，模型设计如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Department</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;名称&#39;</span><span class="p">)</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
+        <span class="s1">&#39;self&#39;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">PROTECT</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">,</span>
+        <span class="nb nb-Type">null</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;父部门&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>ForeignKey第一个参数用<code>self</code>就表示自关联，自己关联自己，还有两个Foreignkey的重要参数解释如下：</p>
+<p><strong>on_delete：</strong> 控制当外键引用的对象被删除时指定的SQL约束行为</p>
+<ul>
+<li>CASCADE：级联删除，当你删除数据时与之关联的也会删除</li>
+<li>PROTECT：保护模式，当你删除数据时会抛出<code>ProtectedError</code>的错误</li>
+<li>SET_NULL：设置为空，当你删除数据时外键字段被设置为空，前提是有设置<code>null=True, blank=True</code></li>
+<li>SET_DEFAULT：设置默认值，当你删除数据时外键字段设置为默认值，前提是有设置<code>default</code>值</li>
+<li>DO_NOTHING：什么也不做，但这可能会导致你在调用数据时报错</li>
+<li>SET：设置一个指定的自定义实例，官方案例如下</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">def</span> <span class="nf">get_sentinel_user</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;deleted&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span>
+        <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">SET</span><span class="p">(</span><span class="n">get_sentinel_user</span><span class="p">),</span>
+    <span class="p">)</span>
+</code></pre></div>
+
+<p>这个案例的意思是当删除外键字段user有关联时调用<code>get_sentinel_user</code>方法，这个方法会返回一个username为deleted的实例</p>
+<p><strong>db_constraint：</strong> 控制是否在数据库中为此外键创建约束，默认为True。在数据库中创建外键约束是<strong>数据库规范中明令禁止</strong>的行为，那么我们可以设置<code>db_constraint</code>为<code>False</code>从而不在数据库层面创建约束，但同样可以使用Django为Foreignkey提供的各种关联查询</p>
+<p>接下来可以通过如下代码将数据库中的数据转成ztree所能使用的简单模式数据并返回</p>
+<div class="codehilite"><pre><span></span><code><span class="n">def</span> <span class="n">tree</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">mList</span> <span class="o">=</span> <span class="n">Department</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">all</span><span class="p">()</span>
+
+    <span class="n">_data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="err">{</span>
+            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s1">&#39;pId&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">id</span> <span class="k">if</span> <span class="n">x</span><span class="p">.</span><span class="n">parent</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;open&#39;</span><span class="p">:</span> <span class="mi">1</span>
+        <span class="err">}</span> <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="n">mList</span>
+    <span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;tree.html&#39;</span><span class="p">,</span> <span class="err">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">_data</span><span class="err">}</span><span class="p">)</span>
+</code></pre></div>
+
+<p>注意在前端使用时需要用<code>{{data|safe}}</code>的方式，添加<code>|safe</code>主要是因为Django为了安全默认会对HTML、JS等语法标签进行转义，但我们所传给前端的数据不希望转义可以通过添加<code>|safe</code>来实现</p>
+<h2 id="demo">完整Demo</h2>
+<p>文章源码已上传至Github，除了以上基础代码外还包含下拉框加载树等功能，公众号后台回复<strong>06</strong>获取源码地址吧</p>
+<p><img alt="" src="/static/images/20190816.tree02.gif" /></p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/e3m9xHVsvhe36IvG1YKhbA.html">📅 2019-08-17</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content=",运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="运维自动化之多云系统分享" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>运维自动化之多云系统分享</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="运维自动化之多云系统分享" />
+  <meta property="og:description" content="运维自动化之多云系统分享" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">运维自动化之多云系统分享</h1>
+
+        <p>继<a href="/s/YjfTypcHD03fTGLV_JsqWw">任务系统</a>上线之后，我们又开发了多云系统，多云系统的主要工作是统一多云资源实现集中管理，同时基于关联关系来构建资源拓扑，为上层业务提供准确的基础数据。前边有三篇文章分别介绍了多云系统的三个核心功能：<a href="/s/PL31oUCLMEi3H1_1IMMDRA">多云配置</a>、<a href="/s/cKkFlBZnpLd_IRaC6i8i6A">资源管理</a>和<a href="/s/G4wSM_KxpgypNSpY4lYMhA">关系管理</a></p>
+<p>随着多云系统的上线，一场关于多云系统的分享也是必不可少的，帮助小伙伴们了解多云的设计思路，熟悉多云系统的操作使用，以便于多云系统更好的落地。这篇文章主要就是分享的内容</p>
+<p>目前多云已上线了几个月的时间，接入了多个云厂商的常用资源管理，随着使用的深入我们也根据小伙伴们反馈新增及优化了诸多内容。多云属于基础设施，除了自身的使用便捷外，也会为我们后续的系统及功能提供数据支持，目前正在朝着预期的方向发展，期待后续能有大作为</p>
+<p><img alt="" src="/static/images/20220729.01.png" /></p>
+<p><img alt="" src="/static/images/20220729.02.png" /></p>
+<p><img alt="" src="/static/images/20220729.03.png" /></p>
+<p><img alt="" src="/static/images/20220729.04.png" /></p>
+<p><img alt="" src="/static/images/20220729.05.png" /></p>
+<p><img alt="" src="/static/images/20220729.06.png" /></p>
+<p><img alt="" src="/static/images/20220729.07.png" /></p>
+<p><img alt="" src="/static/images/20220729.08.png" /></p>
+<p><img alt="" src="/static/images/20220729.09.png" /></p>
+<p><img alt="" src="/static/images/20220729.10.png" /></p>
+<p><img alt="" src="/static/images/20220729.11.png" /></p>
+<p><img alt="" src="/static/images/20220729.12.png" /></p>
+<p><img alt="" src="/static/images/20220729.13.png" /></p>
+<p><img alt="" src="/static/images/20220729.14.png" /></p>
+<p><img alt="" src="/static/images/20220729.15.png" /></p>
+<p><img alt="" src="/static/images/20220729.16.png" /></p>
+<p><img alt="" src="/static/images/20220729.17.png" /></p>
+<p><img alt="" src="/static/images/20220729.18.png" /></p>
+<p><img alt="" src="/static/images/20220729.19.png" /></p>
+<p><img alt="" src="/static/images/20220729.20.png" /></p>
+<p><img alt="" src="/static/images/20220729.21.png" /></p>
+<p><img alt="" src="/static/images/20220729.22.png" /></p>
+<p><img alt="" src="/static/images/20220729.23.png" /></p>
+<p><img alt="" src="/static/images/20220729.24.png" /></p>
+<p><img alt="" src="/static/images/20220729.25.png" /></p>
+<p><img alt="" src="/static/images/20220729.26.png" /></p>
+<p><img alt="" src="/static/images/20220729.27.png" /></p>
+<p><img alt="" src="/static/images/20220729.28.png" /></p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/Wtx2utkC4MErDLvC3cbSMg.html">📅 2022-07-30</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

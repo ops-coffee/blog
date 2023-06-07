@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,Template,Django,Template,context,processors,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Django Template 自定义全局变量" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Django Template 自定义全局变量</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="Django Template 自定义全局变量" />
+  <meta property="og:description" content="Django Template 自定义全局变量" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django Template 自定义全局变量</h1>
+
+        <p>当我在编写一个高度自定义的后台系统时，我希望将网站的一些信息存储在数据库中，用户可以通过页面修改就能生效，就像下图配置一样</p>
+<p><img alt="" src="/static/images/20201016.png" /></p>
+<p>通常页面中用到的变量需要在view中回传，但站点名称网站中所有页面都需要用到，难道每一个view都需要回传一遍吗？这让我想到了页面中经常用到的获取用户名方法<code>request.user.username</code>，<code>request</code>变量并没有在每个view中回传，但所有页面都可以调用，他是如何实现的？下文将为你详细介绍，了解之后可以通过编写自定义的全局变量，轻松解决以上问题</p>
+<h2 id="request">request哪里来的</h2>
+<p>在日常开发Django的过程中，如果你有用到默认的template，那么通常会通过<code>request.user.username</code>来获取登陆用户的用户名，你有没有想过这个<code>request</code>是哪来的？即便是后端<code>view</code>里不返回这边变量依然可以使用，怎么会如此神奇</p>
+<p>这要从Django默认配置文件<code>settings.py</code>里的<code>TEMPLATES</code>配置说起，默认的TEMPLATES配置如下</p>
+<div class="codehilite"><pre><span></span><code><span class="err">TEMPLATES = [</span>
+<span class="err">    {</span>
+<span class="err">        &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;,</span>
+<span class="err">        &#39;DIRS&#39;: [os.path.join(BASE_DIR, &#39;templates&#39;)],</span>
+<span class="err">        &#39;APP_DIRS&#39;: True,</span>
+<span class="err">        &#39;OPTIONS&#39;: {</span>
+<span class="err">            &#39;context_processors&#39;: [</span>
+<span class="err">                &#39;django.template.context_processors.debug&#39;,</span>
+<span class="err">                &#39;django.template.context_processors.request&#39;,</span>
+<span class="err">                &#39;django.contrib.auth.context_processors.auth&#39;,</span>
+<span class="err">                &#39;django.contrib.messages.context_processors.messages&#39;,</span>
+<span class="err">            ],</span>
+<span class="err">        },</span>
+<span class="err">    },</span>
+<span class="err">]</span>
+</code></pre></div>
+
+<p>其中<code>BACKENDS</code>指定了Djanog默认使用的模版引擎，默认的是Django自己开发的<code>DjangoTemplates</code>，当然你也可以替换成功能更为强大的<code>jinja2</code>，<code>DIRS</code>指定了项目中模板文件的位置，<code>APP_DIRS</code>配置是否开启在已安装的app下查找template，<code>OPTIONS</code>则指定template的后端设置</p>
+<p>之所以可以在模板中使用<code>request</code>的奥秘便隐藏在<code>context_processors</code>下，这个配置指定了Django渲染时执行的Python路径列表。<strong>当模板在渲染时，会执行<code>context_processors</code>列表中的所有函数，并将结果与上下文的context进行合并</strong>，也就是说模板接收到的参数除了<code>render</code>返回的<code>context</code>外，还有以上这个列表执行返回的结果</p>
+<p><code>django.template.context_processors.request</code>函数返回的字典中包含了<code>request</code></p>
+<div class="codehilite"><pre><span></span><code><span class="err">def request(request):</span>
+<span class="err">    return {&#39;request&#39;: request}</span>
+</code></pre></div>
+
+<p>所以如下这样一个view，即便是返回结果中没有返回<code>request</code>，我们依然可以在<code>setting.html</code>模版中使用<code>request.user</code></p>
+<div class="codehilite"><pre><span></span><code><span class="err">def setting(request):</span>
+<span class="err">    return render(request, &#39;setting.html&#39;, {})</span>
+</code></pre></div>
+
+<p>同样的我们可以直接在模板中使用<code>perms.opscoffee.select_user</code>来判断用户是否拥有相应的权限，而不需要在view中返回<code>perms</code>，这也是因为<code>django.contrib.auth.context_processors.auth</code>返回了<code>perms</code></p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">auth</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return context variables required by apps that use Django&#39;s authentication</span>
+<span class="sd">    system.</span>
+
+<span class="sd">    If there is no &#39;user&#39; attribute in the request, use AnonymousUser (from</span>
+<span class="sd">    django.contrib.auth).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">):</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">AnonymousUser</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">AnonymousUser</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
+        <span class="s1">&#39;perms&#39;</span><span class="p">:</span> <span class="n">PermWrapper</span><span class="p">(</span><span class="n">user</span><span class="p">),</span>
+    <span class="p">}</span>
+</code></pre></div>
+
+<p>类似<code>request</code>和<code>perms</code>这些在所有模板中都可以调用的变量，可以看作是django的全局变量了</p>
+<h2 id="_1">如何自定义全局变量</h2>
+<p>上边我们知道了Django是如何定义全局变量<code>requests</code>的，那么我们只需照虎画猫写个类似的函数并加入<code>context_processors</code>就可以了，实现步骤如下</p>
+<p>先在名为<code>commons</code>的APP下创建个文件<code>context_processors.py</code>，编写如下的函数，返回<code>site</code>作为全局变量</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">commons.models</span> <span class="kn">import</span> <span class="n">Setting</span>
+
+
+<span class="k">def</span> <span class="nf">site</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">site_name</span> <span class="o">=</span> <span class="n">Setting</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;site_name&#39;</span><span class="p">)</span>
+    <span class="n">site_title</span> <span class="o">=</span> <span class="n">Setting</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;site_title&#39;</span><span class="p">)</span>
+
+    <span class="n">site_name</span> <span class="o">=</span> <span class="n">site_name</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">site_name</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">site_title</span> <span class="o">=</span> <span class="n">site_title</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">site_title</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;site&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;site_name&#39;</span><span class="p">:</span> <span class="n">site_name</span><span class="p">,</span> <span class="s1">&#39;site_title&#39;</span><span class="p">:</span> <span class="n">site_title</span><span class="p">}}</span>
+</code></pre></div>
+
+<p>然后在<code>TEMPLATES</code>的<code>context_processors</code>写上对应的路径</p>
+<div class="codehilite"><pre><span></span><code><span class="err">TEMPLATES = [</span>
+<span class="err">    {</span>
+<span class="err">        ...</span>
+<span class="err">        &#39;OPTIONS&#39;: {</span>
+<span class="err">            &#39;context_processors&#39;: [</span>
+<span class="err">                ...</span>
+<span class="err">                &#39;commons.context_processors.site&#39;,  # 添加这一行信息</span>
+<span class="err">            ],</span>
+<span class="err">        },</span>
+<span class="err">    },</span>
+<span class="err">]</span>
+</code></pre></div>
+
+<p>最后就可以在模板中通过<code>site.site_title</code>来获取站点title，以及通过<code>site.site_name</code>获取站点名称</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;title&gt;</span><span class="cp">{{</span> <span class="nv">site.site_title</span> <span class="cp">}}</span><span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;wrapper&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;header</span> <span class="na">class=</span><span class="s">&quot;main-header&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">class=</span><span class="s">&quot;logo&quot;</span><span class="nt">&gt;</span>
+        <span class="cp">{{</span> <span class="nv">site.site_name</span> <span class="cp">}}</span>
+      <span class="nt">&lt;/a&gt;</span>
+    <span class="nt">&lt;/header&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+</code></pre></div>
+
+<p>至此，问题顺利解决</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/BEC-HtooUNFU9_JakRhjhw.html">📅 2020-10-16</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

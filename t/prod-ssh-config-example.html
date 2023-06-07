@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="SSH,None,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="生产环境下的SSH标准配置" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>生产环境下的SSH标准配置</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="生产环境下的SSH标准配置" />
+  <meta property="og:description" content="生产环境下的SSH标准配置" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">生产环境下的SSH标准配置</h1>
+
+        <p>SSH配置直接影响到服务器的安全性，这里列出生产使用的SSH配置以供参考，配置文件路径为<code>/etc/ssh/sshd_config</code></p>
+<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="mi">1</span><span class="p">.</span> <span class="n">Basic</span>
+<span class="n">Port</span> <span class="mi">9527</span>
+<span class="n">Protocol</span> <span class="mi">2</span>
+<span class="n">AddressFamily</span> <span class="n">inet</span>
+
+<span class="o">#</span> <span class="mi">2</span><span class="p">.</span> <span class="n">Authentication</span>
+<span class="n">HostKey</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssh</span><span class="o">/</span><span class="n">ssh_host_rsa_key</span>
+<span class="n">HostKey</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssh</span><span class="o">/</span><span class="n">ssh_host_dsa_key</span>
+<span class="n">AuthorizedKeysFile</span> <span class="p">.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+
+<span class="n">KeyRegenerationInterval</span> <span class="mi">3600</span>
+<span class="n">ServerKeyBits</span> <span class="mi">1024</span>
+<span class="n">UsePrivilegeSeparation</span> <span class="n">yes</span>
+<span class="n">LoginGraceTime</span> <span class="mi">120</span>
+
+<span class="n">PermitRootLogin</span> <span class="k">no</span>
+<span class="n">StrictModes</span> <span class="n">yes</span>
+
+<span class="n">RSAAuthentication</span> <span class="n">yes</span>
+<span class="n">PubkeyAuthentication</span> <span class="n">yes</span>
+<span class="n">PermitEmptyPasswords</span> <span class="k">no</span>
+<span class="n">ChallengeResponseAuthentication</span> <span class="k">no</span>
+<span class="n">PasswordAuthentication</span> <span class="k">no</span>
+
+<span class="n">IgnoreRhosts</span> <span class="n">yes</span>
+<span class="n">RhostsRSAAuthentication</span> <span class="k">no</span>
+<span class="n">HostbasedAuthentication</span> <span class="k">no</span>
+
+
+<span class="o">#</span> <span class="mi">3</span><span class="p">.</span> <span class="n">Features</span>
+<span class="n">UseDNS</span> <span class="k">no</span>
+<span class="n">UsePAM</span> <span class="k">no</span>
+<span class="n">X11Forwarding</span> <span class="n">yes</span>
+<span class="n">X11DisplayOffset</span> <span class="mi">10</span>
+<span class="n">PrintMotd</span> <span class="k">no</span>
+<span class="n">PrintLastLog</span> <span class="n">yes</span>
+<span class="n">TCPKeepAlive</span> <span class="n">yes</span>
+<span class="n">AcceptEnv</span> <span class="n">LANG</span> <span class="n">LC_</span><span class="o">*</span>
+
+
+<span class="o">#</span> <span class="mi">4</span><span class="p">.</span> <span class="n">Logging</span>
+<span class="n">SyslogFacility</span> <span class="n">AUTH</span>
+<span class="n">LogLevel</span> <span class="n">INFO</span>
+
+
+<span class="o">#</span> <span class="mi">5</span><span class="p">.</span> <span class="n">x509</span>
+<span class="n">Subsystem</span> <span class="n">sftp</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">sftp</span><span class="o">-</span><span class="n">server</span>
+</code></pre></div>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/t/prod-ssh-config-example.html">📅 2020-08-26</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/规范文档/">🏷️ 规范文档</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,JWT,Token,API,django,rest,framework,DRF,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Django+JWT实现Token认证" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Django+JWT实现Token认证</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="Django+JWT实现Token认证" />
+  <meta property="og:description" content="Django+JWT实现Token认证" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django+JWT实现Token认证</h1>
+
+        <blockquote>
+<p>对外提供API不用django rest framework（DRF）就是旁门左道吗？</p>
+</blockquote>
+<p>基于Token的鉴权机制越来越多的用在了项目中，尤其是对于纯后端只对外提供API没有web页面的项目，例如我们通常所讲的前后端分离架构中的纯后端服务，只提供API给前端，前端通过API提供的数据对页面进行渲染展示或增加修改等，我们知道HTTP是一种无状态的协议，也就是说后端服务并不知道是谁发来的请求，那么如何校验请求的合法性呢？这就需要通过一些方式对请求进行鉴权了</p>
+<p>先来看看传统的登录鉴权跟基于Token的鉴权有什么区别</p>
+<p>以Django的账号密码登录为例来说明传统的验证鉴权方式是怎么工作的，当我们登录页面输入账号密码提交表单后，会发送请求给服务器，服务器对发送过来的账号密码进行验证鉴权，验证鉴权通过后，把用户信息记录在服务器端（django_session表中），同时返回给浏览器一个sessionid用来唯一标识这个用户，浏览器将sessionid保存在cookie中，之后浏览器的每次请求都一并将sessionid发送给服务器，服务器根据sessionid与记录的信息做对比以验证身份</p>
+<p>Token的鉴权方式就清晰很多了，客户端用自己的账号密码进行登录，服务端验证鉴权，验证鉴权通过生成Token返回给客户端，之后客户端每次请求都将Token放在header里一并发送，服务端收到请求时校验Token以确定访问者身份</p>
+<p>session的主要目的是给无状态的HTTP协议添加状态保持，通常在浏览器作为客户端的情况下比较通用。而Token的主要目的是为了鉴权，同时又不需要考虑CSRF防护以及跨域的问题，所以更多的用在专门给第三方提供API的情况下，客户端请求无论是浏览器发起还是其他的程序发起都能很好的支持。所以目前基于Token的鉴权机制几乎已经成了前后端分离架构或者对外提供API访问的鉴权标准，得到广泛使用</p>
+<p>JSON Web Token（JWT)是目前Token鉴权机制下最流行的方案，网上关于JWT的介绍有很多，这里不细说，只讲下Django如何利用JWT实现对API的认证鉴权，搜了几乎所有的文章都是说JWT如何结合DRF使用的，如果你的项目没有用到DRF框架，也不想仅仅为了鉴权API就引入庞大复杂的DRF框架，那么可以接着往下看</p>
+<p>我的需求如下：</p>
+<ol>
+<li>同一个view函数既给前端页面提供数据，又对外提供API服务，要同时满足基于账号密码的验证和JWT验证</li>
+<li>项目用了Django默认的权限系统，既能对账号密码登录的进行权限校验，又能对基于JWT的请求进行权限校验</li>
+</ol>
+<h1 id="pyjwt">PyJWT介绍</h1>
+<p>要实现上边的需求1，我们首先得引入JWT模块，python下有现成的PyJWT模块可以直接用，先看下JWT的简单用法</p>
+<h5 id="pyjwt_1">安装PyJWT</h5>
+<div class="codehilite"><pre><span></span><code>$ pip install pyjwt
+</code></pre></div>
+
+<h5 id="pyjwttoken">利用PyJWT生成Token</h5>
+<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">jwt</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">encoded_jwt</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">encode</span><span class="p">({</span><span class="s1">&#39;username&#39;</span><span class="p">:</span><span class="s1">&#39;运维咖啡吧&#39;</span><span class="p">,</span><span class="s1">&#39;site&#39;</span><span class="p">:</span><span class="s1">&#39;https://ops-coffee.cn&#39;</span><span class="p">},</span><span class="s1">&#39;secret_key&#39;</span><span class="p">,</span><span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;HS256&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>这里传了三部分内容给JWT，</p>
+<p>第一部分是一个Json对象，称为Payload，主要用来存放有效的信息，例如用户名，过期时间等等所有你想要传递的信息</p>
+<p>第二部分是一个秘钥字串，这个秘钥主要用在下文Signature签名中，服务端用来校验Token合法性，这个秘钥只有服务端知道，不能泄露</p>
+<p>第三部分指定了Signature签名的算法</p>
+<h5 id="token">查看生成的Token</h5>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; print(encoded_jwt)</span>
+<span class="err">b&#39;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Ilx1OGZkMFx1N2VmNFx1NTQ5Nlx1NTU2MVx1NTQyNyIsInNpdGUiOiJodHRwczovL29wcy1jb2ZmZWUuY24ifQ.fIpSXy476r9F9i7GhdYFNkd-2Ndz8uKLgJPcd84BkJ4&#39;</span>
+</code></pre></div>
+
+<p>JWT生成的Token是一个用两个点（.）分割的长字符串</p>
+<p>点分割成的三部分分别是Header头部，Payload负载，Signature签名：<code>Header.Payload.Signature</code></p>
+<p>JWT是不加密的，任何人都可以读的到其中的信息，其中第一部分Header和第二部分Payload只是对原始输入的信息转成了base64编码，第三部分Signature是用header+payload+secret_key进行加密的结果</p>
+<p>可以直接用base64对Header和Payload进行解码得到相应的信息</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">base64</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="s1">&#39;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9&#39;</span><span class="p">)</span>
+<span class="sa">b</span><span class="s1">&#39;{&quot;typ&quot;:&quot;JWT&quot;,&quot;alg&quot;:&quot;HS256&quot;}&#39;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="s1">&#39;eyJ1c2VybmFtZSI6Ilx1OGZkMFx1N2VmNFx1NTQ5Nlx1NTU2MVx1NTQyNyIsInNpdGUiOiJodHRwczovL29wcy1jb2ZmZWUuY24ifQ==&#39;</span><span class="p">)</span>
+<span class="c1"># 这里最后加=的原因是base64解码对传入的参数长度不是2的对象，需要再参数最后加上一个或两个等号=</span>
+</code></pre></div>
+
+<p>因为JWT不会对结果进行加密，所以不要保存敏感信息在Header或者Payload中，服务端也主要依靠最后的Signature来验证Token是否有效以及有无被篡改</p>
+<h5 id="token_1">解密Token</h5>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; jwt.decode(encoded_jwt,&#39;secret_key&#39;,algorithms=[&#39;HS256&#39;])</span>
+<span class="err">{&#39;username&#39;: &#39;运维咖啡吧&#39;, &#39;site&#39;: &#39;https://ops-coffee.cn&#39;}</span>
+</code></pre></div>
+
+<p>服务端在有秘钥的情况下可以直接对JWT生成的Token进行解密，解密成功说明Token正确，且数据没有被篡改</p>
+<p>当然我们前文说了JWT并没有对数据进行加密，如果没有secret_key也可以直接获取到Payload里边的数据，只是缺少了签名算法无法验证数据是否准确，pyjwt也提供了直接获取Payload数据的方法，如下</p>
+<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; jwt.decode(encoded_jwt, verify=False)</span>
+<span class="err">{&#39;username&#39;: &#39;运维咖啡吧&#39;, &#39;site&#39;: &#39;https://ops-coffee.cn&#39;}</span>
+</code></pre></div>
+
+<h1 id="django">Django案例</h1>
+<p>Django要兼容session认证的方式，还需要同时支持JWT，并且两种验证需要共用同一套权限系统，该如何处理呢？我们可以参考Django的解决方案：装饰器，例如用来检查用户是否登录的<code>login_required</code>和用来检查用户是否有权限的<code>permission_required</code>两个装饰器，我们可以自己实现一个装饰器，检查用户的认证模式，同时认证完成后验证用户是否有权限操作</p>
+<p>于是一个<code>auth_permission_required</code>的装饰器产生了：</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">JsonResponse</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="kn">import</span> <span class="n">PermissionDenied</span>
+
+<span class="n">UserModel</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">auth_permission_required</span><span class="p">(</span><span class="n">perm</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">view_func</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_wrapped_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="c1"># 格式化权限</span>
+            <span class="n">perms</span> <span class="o">=</span> <span class="p">(</span><span class="n">perm</span><span class="p">,)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">perm</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">perm</span>
+
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
+                <span class="c1"># 正常登录用户判断是否有权限</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_perms</span><span class="p">(</span><span class="n">perms</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="n">PermissionDenied</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">auth</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;HTTP_AUTHORIZATION&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No authenticate header&quot;</span><span class="p">})</span>
+
+                <span class="c1"># 用户通过API获取数据验证流程</span>
+                <span class="k">if</span> <span class="n">auth</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;token&#39;</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="nb">dict</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">auth</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">settings</span><span class="o">.</span><span class="n">SECRET_KEY</span><span class="p">,</span> <span class="n">algorithms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;HS256&#39;</span><span class="p">])</span>
+                        <span class="n">username</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="n">jwt</span><span class="o">.</span><span class="n">ExpiredSignatureError</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Token expired&quot;</span><span class="p">})</span>
+                    <span class="k">except</span> <span class="n">jwt</span><span class="o">.</span><span class="n">InvalidTokenError</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid token&quot;</span><span class="p">})</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Can not get user object&quot;</span><span class="p">})</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">user</span> <span class="o">=</span> <span class="n">UserModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="n">UserModel</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;User Does not exist&quot;</span><span class="p">})</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;User inactive or deleted&quot;</span><span class="p">})</span>
+
+                    <span class="c1"># Token登录的用户判断是否有权限</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">has_perms</span><span class="p">(</span><span class="n">perms</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">403</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;PermissionDenied&quot;</span><span class="p">})</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Not support auth type&quot;</span><span class="p">})</span>
+
+            <span class="k">return</span> <span class="n">view_func</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">_wrapped_view</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+</code></pre></div>
+
+<p>在view使用时就可以用这个装饰器来代替原本的<code>login_required</code>和<code>permission_required</code>装饰器了</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@auth_permission_required</span><span class="p">(</span><span class="s1">&#39;account.select_user&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="n">def</span><span class="w"> </span><span class="k">user</span><span class="p">(</span><span class="n">request</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="k">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;GET&#39;</span><span class="err">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">_jsondata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
+<span class="w">            </span><span class="ss">&quot;user&quot;</span><span class="err">:</span><span class="w"> </span><span class="ss">&quot;ops-coffee&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="ss">&quot;site&quot;</span><span class="err">:</span><span class="w"> </span><span class="ss">&quot;https://ops-coffee.cn&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="err">}</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">JsonResponse</span><span class="p">(</span><span class="err">{</span><span class="ss">&quot;state&quot;</span><span class="err">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;message&quot;</span><span class="err">:</span><span class="w"> </span><span class="n">_jsondata</span><span class="err">}</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="k">else</span><span class="err">:</span><span class="w"></span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">JsonResponse</span><span class="p">(</span><span class="err">{</span><span class="ss">&quot;state&quot;</span><span class="err">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;message&quot;</span><span class="err">:</span><span class="w"> </span><span class="ss">&quot;Request method &#39;POST&#39; not supported&quot;</span><span class="err">}</span><span class="p">)</span><span class="w"></span>
+</code></pre></div>
+
+<p>我们还需要一个生成用户Token的方法，通过给User model添加一个token的静态方法来处理</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">User</span><span class="p">(</span><span class="n">AbstractBaseUser</span><span class="p">,</span> <span class="n">PermissionsMixin</span><span class="p">):</span>
+    <span class="n">create_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;创建时间&#39;</span><span class="p">)</span>
+    <span class="n">update_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;更新时间&#39;</span><span class="p">)</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;用户名&#39;</span><span class="p">)</span>
+    <span class="n">fullname</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="nb nb-Type">null</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;中文名&#39;</span><span class="p">)</span>
+    <span class="n">phonenumber</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="nb nb-Type">null</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;电话&#39;</span><span class="p">)</span>
+    <span class="n">is_active</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;激活状态&#39;</span><span class="p">)</span>
+
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">UserManager</span><span class="p">()</span>
+
+    <span class="n">USERNAME_FIELD</span> <span class="o">=</span> <span class="s1">&#39;username&#39;</span>
+    <span class="n">REQUIRED_FIELDS</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">def</span> <span class="n">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span>
+
+    <span class="err">@</span><span class="n">property</span>
+    <span class="n">def</span> <span class="n">token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_jwt_token</span><span class="p">()</span>
+
+    <span class="n">def</span> <span class="n">_generate_jwt_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">encode</span><span class="p">({</span>
+            <span class="s1">&#39;exp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="s1">&#39;iat&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span>
+            <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span>
+            <span class="p">}</span>
+        <span class="p">},</span> <span class="n">settings</span><span class="o">.</span><span class="n">SECRET_KEY</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;HS256&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">token</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="n">Meta</span><span class="p">:</span>
+        <span class="n">default_permissions</span> <span class="o">=</span> <span class="p">()</span>
+
+        <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="s2">&quot;select_user&quot;</span><span class="p">,</span> <span class="s2">&quot;查看用户&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;change_user&quot;</span><span class="p">,</span> <span class="s2">&quot;修改用户&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;delete_user&quot;</span><span class="p">,</span> <span class="s2">&quot;删除用户&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+</code></pre></div>
+
+<p>可以直接通过用户对象来生成Token：</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">accounts.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;admin@ops-coffee.cn&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">u</span><span class="o">.</span><span class="n">token</span>
+<span class="s1">&#39;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDgyMjg3NzksImlhdCI6MTU0ODE0MjM3OSwiZGF0YSI6eyJ1c2VybmFtZSI6ImFkbWluQDE2My5jb20ifX0.akZNU7t_z2kwPxDJjmc-QxtNdICK0yhnwWmKxqqXKLw&#39;</span>
+</code></pre></div>
+
+<p>生成的Token给到客户端，客户端就可以拿这个Token进行鉴权了</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">requests</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">token</span> <span class="o">=</span> <span class="s1">&#39;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDgyMjg4MzgsImlhdCI6MTU0ODE0MjQzOCwiZGF0YSI6eyJ1c2VybmFtZSI6ImFkbWluQDE2My5jb20ifX0.oKc0SafgksMT9ZIhTACupUlz49Q5kI4oJA-B8-GHqLA&#39;</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://localhost/api/user&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Token &#39;</span><span class="o">+</span><span class="n">token</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="p">{</span><span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;admin@ops-coffee.cn&#39;</span><span class="p">,</span> <span class="s1">&#39;fullname&#39;</span><span class="p">:</span> <span class="s1">&#39;运维咖啡吧&#39;</span><span class="p">,</span> <span class="s1">&#39;is_active&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+</code></pre></div>
+
+<p>这样一个<code>auth_permission_required</code>方法就可以搞定上边的全部需求了，简单好用。</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/Kgj_5ydnT2W4Gt0vrw7gtw.html">📅 2019-01-22</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

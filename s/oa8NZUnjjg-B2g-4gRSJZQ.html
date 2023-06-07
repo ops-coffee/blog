@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="bpmn,js,Palette,BPMN,bpmn,js,Palette,Shape,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="最好用的流程编辑器bpmn-js系列之Palette" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>最好用的流程编辑器bpmn-js系列之Palette</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="最好用的流程编辑器bpmn-js系列之Palette" />
+  <meta property="og:description" content="最好用的流程编辑器bpmn-js系列之Palette" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">最好用的流程编辑器bpmn-js系列之Palette</h1>
+
+        <blockquote>
+<p>最好用的流程编辑器bpmn-js系列文章</p>
+</blockquote>
+<p>前边写了四篇文章介绍了bpmn.js的基本使用，最近陆续有小伙伴加我催更，感谢对我这个半吊子前端的信任，接着更新bpmn.js的一些高级用法，本篇介绍对左侧工具栏Palette的隐藏和自定义修改</p>
+<h2 id="shape">隐藏shape</h2>
+<p>左侧工具栏Palette有些图标我用不到，那该如何隐藏呢？最简单的方法就是直接找到对应的class，通过css隐藏，例如我不需要创建数据存储，可以通过下边的代码隐藏</p>
+<div class="codehilite"><pre><span></span><code><span class="na">.bpmn-icon-data-store</span> <span class="err">{</span>
+  <span class="nl">display:</span> <span class="nf">none</span><span class="c1">;</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<h2 id="shape_1">自定义shape</h2>
+<p>为了编辑方便，我想在palette上添加一个shape该如何操作呢？这里我们需要自定义Palette，自定义Palette有两种方式可以选择，第一种就是基于默认的Palette来修改，第二种就是完全写个新的Palette来替代默认的Palette，第一种只能在默认的Palette上添加shape，而不能修改或删除，比较鸡肋我们就直接放弃了，来看下完全自定义Palette该如何实现</p>
+<p>以下代码基于我们之前搭建好的代码框架，具体可看文章<a href="/s/nIqZtauj16pbq3i05LSUCA">『最好用的流程编辑器bpmn-js系列之基本使用』</a>，</p>
+<p>1.在<code>components</code>目录下新建<code>customBpmn</code>目录，在<code>customBpmn</code>目录下新建<code>custom</code>目录，每层目录下都新建<code>index.js</code>文件，最终目录结构如下</p>
+<p><img alt="" src="/static/images/20201110.01.png" /></p>
+<p>2.在custom目录下新建<code>CustomPalette.js</code>文件，内容如下</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="p">{</span> <span class="n">assign</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;min-dash&quot;</span><span class="p">;</span>
+
+<span class="n">export</span> <span class="n">default</span> <span class="n">function</span> <span class="n">PaletteProvider</span><span class="p">(</span>
+  <span class="n">palette</span><span class="p">,</span>
+  <span class="n">create</span><span class="p">,</span>
+  <span class="n">elementFactory</span><span class="p">,</span>
+  <span class="n">handTool</span><span class="p">,</span>
+  <span class="n">lassoTool</span><span class="p">,</span>
+  <span class="n">spaceTool</span><span class="p">,</span>
+  <span class="n">globalConnect</span><span class="p">,</span>
+  <span class="n">translate</span>
+<span class="p">)</span> <span class="p">{</span>
+  <span class="n">this</span><span class="o">.</span><span class="n">create</span> <span class="o">=</span> <span class="n">create</span><span class="p">;</span>
+  <span class="n">this</span><span class="o">.</span><span class="n">elementFactory</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="p">;</span>
+  <span class="n">this</span><span class="o">.</span><span class="n">handTool</span> <span class="o">=</span> <span class="n">handTool</span><span class="p">;</span>
+  <span class="n">this</span><span class="o">.</span><span class="n">lassoTool</span> <span class="o">=</span> <span class="n">lassoTool</span><span class="p">;</span>
+  <span class="n">this</span><span class="o">.</span><span class="n">spaceTool</span> <span class="o">=</span> <span class="n">spaceTool</span><span class="p">;</span>
+  <span class="n">this</span><span class="o">.</span><span class="n">globalConnect</span> <span class="o">=</span> <span class="n">globalConnect</span><span class="p">;</span>
+  <span class="n">this</span><span class="o">.</span><span class="n">translate</span> <span class="o">=</span> <span class="n">translate</span><span class="p">;</span>
+
+  <span class="n">palette</span><span class="o">.</span><span class="n">registerProvider</span><span class="p">(</span><span class="n">this</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">PaletteProvider</span><span class="o">.</span><span class="err">$</span><span class="n">inject</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s2">&quot;palette&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;create&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;elementFactory&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;handTool&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;lassoTool&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;spaceTool&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;globalConnect&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;translate&quot;</span>
+<span class="p">];</span>
+
+<span class="n">PaletteProvider</span><span class="o">.</span><span class="n">prototype</span><span class="o">.</span><span class="n">getPaletteEntries</span> <span class="o">=</span> <span class="n">function</span> <span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">const</span> <span class="p">{</span>
+    <span class="n">create</span><span class="p">,</span>
+    <span class="n">elementFactory</span><span class="p">,</span>
+    <span class="n">handTool</span><span class="p">,</span>
+    <span class="n">lassoTool</span><span class="p">,</span>
+    <span class="n">spaceTool</span><span class="p">,</span>
+    <span class="n">globalConnect</span><span class="p">,</span>
+    <span class="n">translate</span>
+  <span class="p">}</span> <span class="o">=</span> <span class="n">this</span><span class="p">;</span>
+
+  <span class="n">function</span> <span class="n">createAction</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">className</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">function</span> <span class="n">createListener</span><span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">var</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="o">.</span><span class="n">createShape</span><span class="p">(</span><span class="n">assign</span><span class="p">({</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">type</span> <span class="p">},</span> <span class="n">options</span><span class="p">));</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">shape</span><span class="o">.</span><span class="n">businessObject</span><span class="o">.</span><span class="n">di</span><span class="o">.</span><span class="n">isExpanded</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">isExpanded</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="n">create</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">shape</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">var</span> <span class="n">shortType</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="o">/^</span><span class="n">bpmn</span><span class="p">:</span><span class="o">/</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="n">group</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
+      <span class="n">className</span><span class="p">:</span> <span class="n">className</span><span class="p">,</span>
+      <span class="n">title</span><span class="p">:</span> <span class="n">title</span> <span class="o">||</span> <span class="n">translate</span><span class="p">(</span><span class="s2">&quot;Create {type}&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="nb">type</span><span class="p">:</span> <span class="n">shortType</span> <span class="p">}),</span>
+      <span class="n">action</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">dragstart</span><span class="p">:</span> <span class="n">createListener</span><span class="p">,</span>
+        <span class="n">click</span><span class="p">:</span> <span class="n">createListener</span>
+      <span class="p">}</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="s2">&quot;lasso-tool&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="n">group</span><span class="p">:</span> <span class="s2">&quot;tools&quot;</span><span class="p">,</span>
+      <span class="n">className</span><span class="p">:</span> <span class="s2">&quot;bpmn-icon-lasso-tool&quot;</span><span class="p">,</span>
+      <span class="n">title</span><span class="p">:</span> <span class="s2">&quot;Activate the lasso tool&quot;</span><span class="p">,</span>
+      <span class="n">action</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">click</span><span class="p">:</span> <span class="n">function</span> <span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">lassoTool</span><span class="o">.</span><span class="n">activateSelection</span><span class="p">(</span><span class="n">event</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+
+    <span class="s2">&quot;tool-separator&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="n">group</span><span class="p">:</span> <span class="s2">&quot;tools&quot;</span><span class="p">,</span>
+      <span class="n">separator</span><span class="p">:</span> <span class="n">true</span>
+    <span class="p">},</span>
+
+    <span class="s2">&quot;create.start-event&quot;</span><span class="p">:</span> <span class="n">createAction</span><span class="p">(</span>
+      <span class="s2">&quot;bpmn:StartEvent&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;event&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;bpmn-icon-start-event-none&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;创建开始节点&quot;</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;create.end-event&quot;</span><span class="p">:</span> <span class="n">createAction</span><span class="p">(</span>
+      <span class="s2">&quot;bpmn:EndEvent&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;event&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;bpmn-icon-end-event-none&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;创建结束节点&quot;</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;create.user-task&quot;</span><span class="p">:</span> <span class="n">createAction</span><span class="p">(</span>
+      <span class="s2">&quot;bpmn:UserTask&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;activity&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;bpmn-icon-user-task&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;创建用户任务&quot;</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;create.exclusive-gateway&quot;</span><span class="p">:</span> <span class="n">createAction</span><span class="p">(</span>
+      <span class="s2">&quot;bpmn:ExclusiveGateway&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;gateway&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;bpmn-icon-gateway-xor&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;创建排他网关&quot;</span>
+    <span class="p">)</span>
+  <span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>这段代码的意思相信各位前端的大佬比我理解的要深刻，就不过多介绍了，Platte展示的shape就是最后return输出的那个字典数据定义的，一个shape对应的数据格式如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="s2">&quot;lasso-tool&quot;</span><span class="p">:</span> <span class="p">{</span>
+  <span class="n">group</span><span class="p">:</span> <span class="s2">&quot;tools&quot;</span><span class="p">,</span>
+  <span class="n">className</span><span class="p">:</span> <span class="s2">&quot;bpmn-icon-lasso-tool&quot;</span><span class="p">,</span>
+  <span class="n">title</span><span class="p">:</span> <span class="s2">&quot;Activate the lasso tool&quot;</span><span class="p">,</span>
+  <span class="n">action</span><span class="p">:</span> <span class="p">{</span>
+    <span class="n">click</span><span class="p">:</span> <span class="n">function</span> <span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">lassoTool</span><span class="o">.</span><span class="n">activateSelection</span><span class="p">(</span><span class="n">event</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>其中key为这个shape的名称，value为这个shape定义的一些属性，主要有四个：</p>
+<ul>
+<li><strong>group：</strong> 定义这个shape属于哪个组，主要有tools、event、gateway和activity可以选择</li>
+<li><strong>className：</strong> 定义这个shape的chass名称，可以通过这个class给shape指定具体的样式</li>
+<li><strong>title：</strong> 定义这个shape的title，也就是鼠标移动到shape上的提示</li>
+<li><strong>action：</strong> 用户操作时触发的事件</li>
+</ul>
+<p>通过这个数据我们就可以随意添加、删除或者修改Palette的shape了，改位置该样式轻松自如</p>
+<p>3.在<code>custom/index.js</code>文件中添加如下内容将自定义的Palette导出</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">CustomPalette</span> <span class="nn">from</span> <span class="s2">&quot;./CustomPalette&quot;</span><span class="p">;</span>
+
+<span class="n">export</span> <span class="n">default</span> <span class="p">{</span>
+  <span class="fm">__init__</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;paletteProvider&quot;</span><span class="p">],</span>
+  <span class="n">paletteProvider</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="n">CustomPalette</span><span class="p">],</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>4.在<code>customModeler/index.js</code>文件中编写自定义的<code>CustomModeler</code>类</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">inherits</span> <span class="nn">from</span> <span class="s2">&quot;inherits&quot;</span><span class="p">;</span>
+
+<span class="kn">import</span> <span class="nn">Modeler</span> <span class="nn">from</span> <span class="s2">&quot;bpmn-js/lib/Modeler&quot;</span><span class="p">;</span>
+
+<span class="kn">import</span> <span class="nn">CustomModule</span> <span class="nn">from</span> <span class="s2">&quot;./custom&quot;</span><span class="p">;</span>
+
+<span class="n">function</span> <span class="n">CustomModeler</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Modeler</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">options</span><span class="p">);</span>
+
+  <span class="n">this</span><span class="o">.</span><span class="n">_customElements</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="p">}</span>
+
+<span class="n">inherits</span><span class="p">(</span><span class="n">CustomModeler</span><span class="p">,</span> <span class="n">Modeler</span><span class="p">);</span>
+
+<span class="n">CustomModeler</span><span class="o">.</span><span class="n">prototype</span><span class="o">.</span><span class="n">_modules</span> <span class="o">=</span> <span class="p">[]</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">CustomModeler</span><span class="o">.</span><span class="n">prototype</span><span class="o">.</span><span class="n">_modules</span><span class="p">,</span> <span class="p">[</span>
+  <span class="n">CustomModule</span>
+<span class="p">]);</span>
+
+<span class="n">export</span> <span class="p">{</span> <span class="n">CustomModeler</span> <span class="p">};</span>
+</code></pre></div>
+
+<p>5.在页面上引用自定义的<code>CustomModeler</code>以替代原本引用的<code>BpmnModeler</code>类，这样就能用到我们自定义的Palette啦</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="p">{</span> <span class="n">xmlStr</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;../mock/xmlStrPreview&quot;</span><span class="p">;</span>
+<span class="kn">import</span> <span class="p">{</span> <span class="n">CustomModeler</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;../components/customBpmn&quot;</span><span class="p">;</span>
+
+<span class="n">export</span> <span class="n">default</span> <span class="p">{</span>
+  <span class="o">...</span>
+  <span class="n">methods</span><span class="p">:</span> <span class="p">{</span>
+    <span class="n">init</span><span class="p">()</span> <span class="p">{</span>
+      <span class="n">const</span> <span class="n">canvas</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="err">$</span><span class="n">refs</span><span class="o">.</span><span class="n">canvas</span><span class="p">;</span>
+      <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span> <span class="o">=</span> <span class="n">new</span> <span class="n">CustomModeler</span><span class="p">({</span>
+        <span class="n">container</span><span class="p">:</span> <span class="n">canvas</span>
+      <span class="p">});</span>
+      <span class="n">this</span><span class="o">.</span><span class="n">createNewDiagram</span><span class="p">();</span>
+    <span class="p">},</span>
+    <span class="n">async</span> <span class="n">createNewDiagram</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="n">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">importXML</span><span class="p">(</span><span class="n">xmlStr</span><span class="p">);</span>
+        <span class="n">const</span> <span class="p">{</span> <span class="n">warnings</span> <span class="p">}</span> <span class="o">=</span> <span class="n">result</span><span class="p">;</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">warnings</span><span class="p">);</span>
+      <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">warnings</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>最终效果如下：</p>
+<p><img alt="" src="/static/images/20201110.02.png" /></p>
+<h2 id="shape_2">Shape类型</h2>
+<p>关于Shape总共有哪些类型，以及各自对应的属性都是什么，这个官方没有具体的文档给列出，我在使用的时候通常直接查看源码<a href="https://github.com/bpmn-io/bpmn-js/blob/develop/lib/features/palette/PaletteProvider.js"><code>bpmn-js/lib/features/palette/PaletteProvider.js</code></a>和<a href="https://github.com/bpmn-io/bpmn-js/blob/develop/lib/features/context-pad/ContextPadProvider.js"><code>bpmn-js/lib/features/context-pad/ContextPadProvider.js</code></a>文件获取，对于部分类型，需要添加options选项</p>
+<p>例如中间时间事件<code>IntermediateThrowEvent</code>所对应的属性为：</p>
+<div class="codehilite"><pre><span></span><code><span class="err">return {</span>
+<span class="err">  &quot;create.timer-intermediate-event&quot;: createAction(</span>
+<span class="err">    &quot;bpmn:IntermediateThrowEvent&quot;,</span>
+<span class="err">    &quot;event&quot;,</span>
+<span class="err">    &quot;bpmn-icon-intermediate-event-catch-timer&quot;,</span>
+<span class="err">    &quot;Create IntermediateThrowEvent&quot;,</span>
+<span class="err">    { eventDefinitionType: &quot;bpmn:TimerEventDefinition&quot; }</span>
+<span class="err">  )</span>
+<span class="err">};</span>
+</code></pre></div>
+
+<h2 id="_1">写在最后</h2>
+<p>接触bpmn-js不久，且第一次用VUE，边学边写，文章难免出错，各位多多包含。想要打造一个好用的适合自己的流程编辑器，需要了解的内容比较多，bpmn-js会分多篇文章来介绍，欢迎关注</p>
+<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.cn">https://bpmn.ops-coffee.cn</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/oa8NZUnjjg-B2g-4gRSJZQ.html">📅 2020-11-10</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/BPMN/">🏷️ BPMN</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

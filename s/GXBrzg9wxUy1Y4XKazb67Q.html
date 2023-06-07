@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Python,Linux,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="用Python写个Linux系统命令" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>用Python写个Linux系统命令</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="用Python写个Linux系统命令" />
+  <meta property="og:description" content="用Python写个Linux系统命令" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>追求技术的道路上，我从不曾停下脚步</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">用Python写个Linux系统命令</h1>
+
+        <blockquote>
+<p>这篇文章介绍如何写个系统命令以及我为什么要写命令</p>
+</blockquote>
+<p>“一切皆文件”是linux的基本哲学之一，我们在linux下执行的诸如<code>ls</code>之类的命令实际上都是去执行了系统上的某个文件，<code>which</code>命令可以查看到我们执行的命令对应的是系统上的哪个文件，例如常用的<code>ls</code>命令实际上就是执行了<code>/bin/ls</code>这个文件</p>
+<div class="codehilite"><pre><span></span><code><span class="err">root@ops-coffee:~# which ls</span>
+<span class="err">/bin/ls</span>
+</code></pre></div>
+
+<p>基于此，我们就知道了定义一个命令很简单，只需要写个可执行的文件就行了，python的标准模块<code>argparse</code>就可以帮助我们快速方便的构建一个用户友好的命令</p>
+<h2 id="argparse">argparse</h2>
+<p>相比于自己实现个命令文件，<code>argparse</code>模块能够自动生成帮助和使用手册，并在用户传入无效参数时报错。一个简单的示例如下</p>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># coding:utf8</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;整数处理&#39;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;integers&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;要处理整数&#39;</span><span class="p">)</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">integers</span><span class="p">)</span>
+</code></pre></div>
+
+<p>这个示例的意思是接收一个数字，并将这个数字输出，接下来看一下详细的解释</p>
+<p>首先创建了一个<code>ArgumentParser</code>对象，<code>ArgumentParser</code>对象有很多参数可以选择，这里的<code>description</code>定义在参数帮助文档之前显示的文本，通常用来定义这个程序做什么以及怎么做</p>
+<div class="codehilite"><pre><span></span><code><span class="err">parser = argparse.ArgumentParser(description=&#39;整数处理&#39;)</span>
+</code></pre></div>
+
+<p>然后通过<code>add_argument</code>给<code>ArgumentParser</code>对象添加参数，第一个参数<code>integers</code>为参数名，<code>type</code>指定类型为<code>int</code>，<code>help</code>指定这个字段的帮助信息</p>
+<div class="codehilite"><pre><span></span><code><span class="err">parser.add_argument(&#39;integers&#39;, type=int, help=&#39;要处理的整数&#39;)</span>
+</code></pre></div>
+
+<p>通过调用<code>ArgumentParser</code>对象的<code>parse_args</code>方法返回一个具有所有参数属性的对象</p>
+<div class="codehilite"><pre><span></span><code><span class="err">args = parser.parse_args()</span>
+</code></pre></div>
+
+<p>最后通过<code>args.参数名</code>获取到传入的参数值</p>
+<div class="codehilite"><pre><span></span><code><span class="err">print(args.integers)</span>
+</code></pre></div>
+
+<h3 id="_1">执行</h3>
+<p>我们将以上文件命名为<code>opscoffee</code>，并赋予执行权限，放在系统环境变量<code>/bin</code>下，就可以当作命令直接执行了</p>
+<div class="codehilite"><pre><span></span><code><span class="err"># chmod +x opscoffee</span>
+<span class="err"># mv opscoffee /bin/</span>
+</code></pre></div>
+
+<p>如果直接执行<code>opscoffee</code>命令的话将会收到一个报错，提示你必须有一个参数<code>integers</code></p>
+<div class="codehilite"><pre><span></span><code><span class="err"># opscoffee</span>
+<span class="c">usage: opscoffee [-h] integers</span>
+<span class="c">opscoffee: error: the following arguments are required: integers</span>
+</code></pre></div>
+
+<p>同时也通过<code>usage</code>告诉了你这个命令的用法，默认有一个<code>-h</code>参数可以打印命令帮助</p>
+<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="n">opscoffee</span> <span class="o">-</span><span class="n">h</span>
+<span class="k">usage</span><span class="p">:</span> <span class="n">opscoffee</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="n">integers</span>
+
+<span class="err">整数处理</span>
+
+<span class="n">positional</span> <span class="n">arguments</span><span class="p">:</span>
+  <span class="n">integers</span>    <span class="err">要处理的整数</span>
+
+<span class="n">optional</span> <span class="n">arguments</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="c1">--help  show this help message and exit</span>
+</code></pre></div>
+
+<p>这就是使用<code>argparse</code>模块的好处，自动生成帮助，提供友好的使用体验</p>
+<h3 id="_2">参数</h3>
+<p><code>argparse</code>能实现的远不止于此，还有更加强大的功能，主要在于<code>add_argument</code>方法参数的运用，以下以一些例子来学习下一些常用的参数</p>
+<h4 id="_3">可选参数</h4>
+<p>当我们在参数名前添加<code>-</code>或者<code>--</code>时，<code>argparse</code>会默认认为这是一个可选参数，可以不传值，例如</p>
+<div class="codehilite"><pre><span></span><code><span class="err">parser.add_argument(&#39;--age&#39;, type=int, help=&#39;年龄&#39;)</span>
+</code></pre></div>
+
+<p>可选参数当没有传值时的默认值为<code>None</code>，可以通过<code>default</code>来设置默认值</p>
+<div class="codehilite"><pre><span></span><code><span class="err">parser.add_argument(&#39;--age&#39;, type=int, default=37, help=&#39;年龄&#39;)</span>
+</code></pre></div>
+
+<p>当没有参数<code>--age</code>时，显示<code>default</code>设置的值(没有设置<code>default</code>则显示None)，有<code>--age</code>则显示<code>--age</code>指定的值</p>
+<div class="codehilite"><pre><span></span><code><span class="err"># opscoffee</span>
+<span class="err">37</span>
+<span class="err"># opscoffee --age 38</span>
+<span class="err">38</span>
+</code></pre></div>
+
+<p>如果你想让可选参数也变成必选的，则只需要设置<code>required=True</code>即可</p>
+<div class="codehilite"><pre><span></span><code><span class="err">parser.add_argument(&#39;--age&#39;, type=int, default=37, required=True, help=&#39;年龄&#39;)</span>
+</code></pre></div>
+
+<h4 id="type">type</h4>
+<p><code>type</code>用来指定参数的类型，允许任何类型检查和类型转换，例如<code>str</code>、<code>int</code>、<code>float</code>、<code>open</code>甚至是你自定义的方法都可以。</p>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># coding:utf8</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="k">def</span> <span class="nf">even</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">value</span><span class="o">%</span><span class="mi">2</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%r</span><span class="s2"> 不是偶数&quot;</span> <span class="o">%</span> <span class="n">string</span>
+        <span class="k">raise</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentTypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;整数处理&#39;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;integers&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">even</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;要处理的整数&#39;</span><span class="p">)</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">integers</span><span class="p">)</span>
+</code></pre></div>
+
+<p>以上命令接收一个参数<code>integers</code>，并将其<code>type</code>设置为了自定义方法<code>even</code>，这个方法会判断用户输入的数字是否是偶数，如果不是则报错，执行结果如下</p>
+<div class="codehilite"><pre><span></span><code><span class="err"># opscoffee 1</span>
+<span class="c">usage: opscoffee [-h] integers</span>
+<span class="c">opscoffee: error: argument integers: &#39;1&#39; 不是偶数</span>
+<span class="err"># opscoffee 2</span>
+<span class="err">2</span>
+</code></pre></div>
+
+<h4 id="choices">choices</h4>
+<p><code>choices</code>参数可以限制参数的范围，例如我们只想让用户从<code>ops</code>或<code>coffee</code>两个参数中选择一个输入，则可以这样用</p>
+<div class="codehilite"><pre><span></span><code><span class="err">parser.add_argument(&#39;site&#39;, choices=[&#39;ops&#39;,&#39;coffee&#39;], help=&#39;Site&#39;)</span>
+</code></pre></div>
+
+<p>那么当我们输入的内容不是<code>ops</code>或<code>coffee</code>时，则报错</p>
+<div class="codehilite"><pre><span></span><code><span class="err"># opscoffee cn</span>
+<span class="c">usage: opscoffee [-h] {ops,coffee}</span>
+<span class="c">opscoffee: error: argument site: invalid choice: &#39;cn&#39; (choose from &#39;ops&#39;, &#39;coffee&#39;)</span>
+</code></pre></div>
+
+<h4 id="nargs">nargs</h4>
+<p>通常我们在<code>argparse</code>中定义的参数数量与传入的参数数量应当相等，但有些时候我们需要接收未知数量的参数，<code>nargs</code>就可以帮助我们</p>
+<p>nargs支持以下值：<code>N</code>（整数）、<code>'?'</code>、<code>'*'</code>、<code>'+'</code>、<code>argarse.REMAINDER</code></p>
+<p><strong><code>N：</code></strong> 表示N个参数会被聚集到一个列表中，例如</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;整数处理&#39;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;integers&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;要处理的整数&#39;</span><span class="p">)</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">integers</span><span class="p">)</span>
+</code></pre></div>
+
+<p>将输出</p>
+<div class="codehilite"><pre><span></span><code><span class="err"># opscoffee 9 10 </span>
+<span class="err">[9, 10]</span>
+</code></pre></div>
+
+<p><strong><code>'?'：</code></strong> 表示使用一个或不使用参数，当不传参数时，默认为None</p>
+<div class="codehilite"><pre><span></span><code><span class="err">parser.add_argument(&#39;integers&#39;, type=int, nargs=&#39;?&#39;, help=&#39;要处理的整数&#39;)</span>
+</code></pre></div>
+
+<p><strong><code>'*'：</code></strong> 表示使用所有参数，参数个数可以为0</p>
+<div class="codehilite"><pre><span></span><code><span class="err">parser.add_argument(&#39;integers&#39;, type=int, nargs=&#39;*&#39;, help=&#39;要处理的整数&#39;)</span>
+</code></pre></div>
+
+<p><strong><code>'+'：</code></strong> 与<code>'*'</code>类似，但至少要有一个参数，否则将会报错</p>
+<div class="codehilite"><pre><span></span><code><span class="err">parser.add_argument(&#39;integers&#39;, type=int, nargs=&#39;+&#39;, help=&#39;要处理的整数&#39;)</span>
+</code></pre></div>
+
+<h2 id="_4">自定义命令</h2>
+<p>先说我为什么要写个系统命令？</p>
+<p>文章<a href="/s/uXQbM4t11ICdzNofZyDeXA">『Probius：一个功能强大的自定义任务系统』</a>中介绍了我们的自定义任务系统，这个系统可以用来编排任务，而在编排CICD任务中会用到配置文件，我们的配置文件都是通过<a href="/s/QG42UqJ9rnswQDMd41CYUg">Kerrigan配置中心</a>来管理的,目前获取配置中心的配置主要有两种方法</p>
+<ol>
+<li>配合confd服务自动拉取更新，详细内容可以查看这篇文章：<a href="/s/uGUvV4jl4YIvNztuepdC8A">中小团队落地配置中心详解</a></li>
+<li>配置中心提供API，可以通过API获取配置内容</li>
+</ol>
+<p>脚本里如果想要使用配置中心的配置，则只能通过API的方式去获取，这样就要在每个需要用到配置的地方写一段代码来获取及处理，不仅会出现大量的重复代码，并且非常的不优雅，更为重要的是请求API的Token将会出现在脚本里，带来一定的安全风险</p>
+<p>基于以上考虑，写个自定义命令来做这件事情更为妥当，于是便写了下边这个命令</p>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># coding:utf8</span>
+
+<span class="c1"># 这是一个系统命令用来获取kerrigan配置中心的配置并写入本地文件，需要将此文件copy到目录/bin下</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;获取配置中心Kerrigan配置&#39;</span><span class="p">)</span>
+
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;configkey&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;配置中心中文件的Key&#39;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;localfile&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;保存到本地文件的路径&#39;</span><span class="p">)</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+<span class="c1"># 获得传入的参数</span>
+<span class="n">configkey</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">configkey</span>
+<span class="n">localfile</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">localfile</span>
+
+<span class="n">header</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.JTdCJTIyZXhwJTIyJTNBMTkwNjcwNzAyMCUyQyUyMmlhdCUyMiUzQTE1OTEzNDcwMjAlMkMlMjJkYXRhJTIyJTNBJTdCJTIydXNlcm5hbWUlMjIlM0ElMjJwcm9iaXVzQG9wcy1jb2ZmZWUuY24lMjIlN0QlN0Q.ops1ZNhq19XSEL2PUo-iQqzbhimDnpFiYc_7EUXftF4&#39;</span><span class="p">}</span>
+
+<span class="n">uri</span> <span class="o">=</span> <span class="s1">&#39;http://kerrigan.ops-coffee.cn/api/config/?key=&#39;</span> <span class="o">+</span> <span class="n">configkey</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">header</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;state&#39;</span><span class="p">]:</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">][</span><span class="s1">&#39;content&#39;</span><span class="p">]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">localfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;write local file failed: &#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;get config failed: &#39;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;message&#39;</span><span class="p">])</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+<p>以上代码的意思是根据传入的key和file路径，去配置中心获取对应配置文件的内容并写入到本地file中。需要注意的是<code>exit</code>，返回合适的退出状态是个很好的习惯，这样我们就可以通过<code>$?</code>来获取命令执行成功还是失败</p>
+<p>将此文件命名为getconfig并移动到/bin目录下添加执行权限，就可以在系统任何地方使用<code>getconfig</code>命令了</p>
+<div class="codehilite"><pre><span></span><code><span class="err">getconfig /conf/coffee/prod/docker/Dockerfile  /home/project/coffee/Dockerfile</span>
+</code></pre></div>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/GXBrzg9wxUy1Y4XKazb67Q.html">📅 2020-06-09</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Python/">🏷️ Python</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png">
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © 2020 ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
