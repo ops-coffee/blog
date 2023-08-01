@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="JS,None,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="使用JS自动生成文字头像" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="https://blog.ops-coffee.cn/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>使用JS自动生成文字头像</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="使用JS自动生成文字头像" />
+  <meta property="og:description" content="使用JS自动生成文字头像" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145167079-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145167079-1');
+  </script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn/">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">使用JS自动生成文字头像</h1>
+
+        <p>这是一篇简单的关于LetterAvatar的使用文章，如果你是专业的前端或者已经了解这个了，可以关闭退出了无需再看接下来的内容。本文仅是做个简单的记录当做给自己看的笔记</p>
+<p>平常遇到有意思的网站或者好用的在线工具我都会放进收藏夹收藏下来，为了方便管理这些收藏的网站，我写了个简单的<a href="https://nav.ops-coffee.cn/">导航站</a></p>
+<p><img alt="" loading="lazy" src="/static/images/20230801.01.png" /></p>
+<p>每个收藏的网站都是由一个图标、一个名字加上一段简单的介绍组成，名字和简介都是文字处理起来比较简单，图标就想对麻烦一点了，刚开始我都是找到网站的ICON地址直接使用这个链接，时间长了部分网站的ICON地址改变了，就导致页面加载不到了，这不仅拖累了页面的整体加载时间，并且图标不显示还比较丑</p>
+<p>一个简单的处理方式是每次都把图标给下载下来保存到本地或者云存储上，这样依然比较麻烦，并且还占用存储空间，由于这个导航站还是托管在Github上，大量的图标加载同样会拖慢页面的速度，于是我在想能不能自动生成每个站点的图标，就像钉钉会为每个用户自动生成一个文字头像一样。于是很容易的在Github上找到了<a href="https://github.com/daolavi/LetterAvatar">这个叫LetterAvatar的项目</a></p>
+<p>这个项目非常简单，核心就是下边的这段JS</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="n">script</span><span class="o">&gt;</span>
+    <span class="o">/*</span>
+     <span class="o">*</span> <span class="n">LetterAvatar</span>
+     <span class="o">*</span> 
+     <span class="o">*</span> <span class="n">Artur</span> <span class="n">Heinze</span>
+     <span class="o">*</span> <span class="n">Create</span> <span class="n">Letter</span> <span class="n">avatar</span> <span class="n">based</span> <span class="n">on</span> <span class="n">Initials</span>
+     <span class="o">*</span> <span class="n">based</span> <span class="n">on</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">gist</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">leecrossley</span><span class="o">/</span><span class="mi">6027780</span>
+     <span class="o">*/</span>
+    <span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">d</span><span class="p">){</span>
+        <span class="n">function</span> <span class="n">LetterAvatar</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span> <span class="p">{</span>
+
+            <span class="n">name</span>  <span class="o">=</span> <span class="n">name</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+            <span class="n">size</span>  <span class="o">=</span> <span class="n">size</span> <span class="o">||</span> <span class="mi">60</span><span class="p">;</span>
+
+            <span class="k">var</span> <span class="n">colours</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="s2">&quot;#1abc9c&quot;</span><span class="p">,</span> <span class="s2">&quot;#2ecc71&quot;</span><span class="p">,</span> <span class="s2">&quot;#3498db&quot;</span><span class="p">,</span> <span class="s2">&quot;#9b59b6&quot;</span><span class="p">,</span> <span class="s2">&quot;#34495e&quot;</span><span class="p">,</span> <span class="s2">&quot;#16a085&quot;</span><span class="p">,</span> <span class="s2">&quot;#27ae60&quot;</span><span class="p">,</span> <span class="s2">&quot;#2980b9&quot;</span><span class="p">,</span> <span class="s2">&quot;#8e44ad&quot;</span><span class="p">,</span> <span class="s2">&quot;#2c3e50&quot;</span><span class="p">,</span> 
+                    <span class="s2">&quot;#f1c40f&quot;</span><span class="p">,</span> <span class="s2">&quot;#e67e22&quot;</span><span class="p">,</span> <span class="s2">&quot;#e74c3c&quot;</span><span class="p">,</span> <span class="s2">&quot;#ecf0f1&quot;</span><span class="p">,</span> <span class="s2">&quot;#95a5a6&quot;</span><span class="p">,</span> <span class="s2">&quot;#f39c12&quot;</span><span class="p">,</span> <span class="s2">&quot;#d35400&quot;</span><span class="p">,</span> <span class="s2">&quot;#c0392b&quot;</span><span class="p">,</span> <span class="s2">&quot;#bdc3c7&quot;</span><span class="p">,</span> <span class="s2">&quot;#7f8c8d&quot;</span>
+                <span class="p">],</span>
+
+                <span class="n">nameSplit</span> <span class="o">=</span> <span class="nb nb-Type">String</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span>
+                <span class="n">initials</span><span class="p">,</span> <span class="n">charIndex</span><span class="p">,</span> <span class="n">colourIndex</span><span class="p">,</span> <span class="n">canvas</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">dataURI</span><span class="p">;</span>
+
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">nameSplit</span><span class="o">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">initials</span> <span class="o">=</span> <span class="n">nameSplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="err">?</span> <span class="n">nameSplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">charAt</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span><span class="s1">&#39;?&#39;</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">initials</span> <span class="o">=</span> <span class="n">nameSplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">charAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">nameSplit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">charAt</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">devicePixelRatio</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="n">size</span> <span class="o">*</span> <span class="n">w</span><span class="o">.</span><span class="n">devicePixelRatio</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="n">charIndex</span>     <span class="o">=</span> <span class="p">(</span><span class="n">initials</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span> <span class="err">?</span> <span class="mi">72</span> <span class="p">:</span> <span class="n">initials</span><span class="o">.</span><span class="n">charCodeAt</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">-</span> <span class="mi">64</span><span class="p">;</span>
+            <span class="n">colourIndex</span>   <span class="o">=</span> <span class="n">charIndex</span> <span class="o">%</span> <span class="mi">20</span><span class="p">;</span>
+            <span class="n">canvas</span>        <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s1">&#39;canvas&#39;</span><span class="p">);</span>
+            <span class="n">canvas</span><span class="o">.</span><span class="n">width</span>  <span class="o">=</span> <span class="n">size</span><span class="p">;</span>
+            <span class="n">canvas</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">size</span><span class="p">;</span>
+            <span class="n">context</span>       <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">getContext</span><span class="p">(</span><span class="s2">&quot;2d&quot;</span><span class="p">);</span>
+
+            <span class="n">context</span><span class="o">.</span><span class="n">fillStyle</span> <span class="o">=</span> <span class="n">color</span> <span class="err">?</span> <span class="n">color</span> <span class="p">:</span> <span class="n">colours</span><span class="p">[</span><span class="n">colourIndex</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">fillRect</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">canvas</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">canvas</span><span class="o">.</span><span class="n">height</span><span class="p">);</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">canvas</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;px Arial&quot;</span><span class="p">;</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">textAlign</span> <span class="o">=</span> <span class="s2">&quot;center&quot;</span><span class="p">;</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">fillStyle</span> <span class="o">=</span> <span class="s2">&quot;#FFF&quot;</span><span class="p">;</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">fillText</span><span class="p">(</span><span class="n">initials</span><span class="p">,</span> <span class="n">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span> <span class="o">/</span> <span class="mf">1.5</span><span class="p">);</span>
+
+            <span class="n">dataURI</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">toDataURL</span><span class="p">();</span>
+            <span class="n">canvas</span>  <span class="o">=</span> <span class="nb nb-Type">null</span><span class="p">;</span>
+
+            <span class="k">return</span> <span class="n">dataURI</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">LetterAvatar</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+
+            <span class="nb nb-Type">Array</span><span class="o">.</span><span class="n">prototype</span><span class="o">.</span><span class="n">forEach</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">querySelectorAll</span><span class="p">(</span><span class="s1">&#39;img[avatar]&#39;</span><span class="p">),</span> <span class="n">function</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;avatar&#39;</span><span class="p">);</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">);</span>
+                <span class="n">img</span><span class="o">.</span><span class="n">src</span> <span class="o">=</span> <span class="n">LetterAvatar</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s1">&#39;width&#39;</span><span class="p">),</span> <span class="n">color</span><span class="p">);</span>
+                <span class="n">img</span><span class="o">.</span><span class="n">removeAttribute</span><span class="p">(</span><span class="s1">&#39;avatar&#39;</span><span class="p">);</span>
+                <span class="n">img</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s1">&#39;alt&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">};</span>
+
+
+        <span class="o">//</span> <span class="n">AMD</span> <span class="n">support</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">typeof</span> <span class="n">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">define</span><span class="o">.</span><span class="n">amd</span><span class="p">)</span> <span class="p">{</span>
+
+            <span class="n">define</span><span class="p">(</span><span class="n">function</span> <span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">LetterAvatar</span><span class="p">;</span> <span class="p">});</span>
+
+        <span class="o">//</span> <span class="n">CommonJS</span> <span class="ow">and</span> <span class="n">Node</span><span class="o">.</span><span class="n">js</span> <span class="n">module</span> <span class="n">support</span><span class="o">.</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nb">typeof</span> <span class="n">exports</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
+
+            <span class="o">//</span> <span class="n">Support</span> <span class="n">Node</span><span class="o">.</span><span class="n">js</span> <span class="n">specific</span> <span class="err">`</span><span class="n">module</span><span class="o">.</span><span class="n">exports</span><span class="err">`</span> <span class="p">(</span><span class="n">which</span> <span class="n">can</span> <span class="n">be</span> <span class="n">a</span> <span class="n">function</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">typeof</span> <span class="n">module</span> <span class="o">!=</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">module</span><span class="o">.</span><span class="n">exports</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">exports</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">exports</span> <span class="o">=</span> <span class="n">LetterAvatar</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="o">//</span> <span class="n">But</span> <span class="n">always</span> <span class="n">support</span> <span class="n">CommonJS</span> <span class="n">module</span> <span class="mf">1.1</span><span class="o">.</span><span class="mi">1</span> <span class="n">spec</span> <span class="p">(</span><span class="err">`</span><span class="n">exports</span><span class="err">`</span> <span class="n">cannot</span> <span class="n">be</span> <span class="n">a</span> <span class="n">function</span><span class="p">)</span>
+            <span class="n">exports</span><span class="o">.</span><span class="n">LetterAvatar</span> <span class="o">=</span> <span class="n">LetterAvatar</span><span class="p">;</span>
+
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+
+            <span class="n">window</span><span class="o">.</span><span class="n">LetterAvatar</span> <span class="o">=</span> <span class="n">LetterAvatar</span><span class="p">;</span>
+
+            <span class="n">d</span><span class="o">.</span><span class="n">addEventListener</span><span class="p">(</span><span class="s1">&#39;DOMContentLoaded&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">LetterAvatar</span><span class="o">.</span><span class="n">transform</span><span class="p">();</span>
+            <span class="p">});</span>
+        <span class="p">}</span>
+    <span class="p">})(</span><span class="n">window</span><span class="p">,</span> <span class="n">document</span><span class="p">);</span>
+<span class="o">&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<p>LetterAvatar的使用也是非常的简单，主要就是替换img标签，具体可参考下边的用法</p>
+<div class="codehilite"><pre><span></span><code><span class="err">&lt;img width=&quot;256&quot; height=&quot;256&quot; avatar=&quot;decentralized Market&quot; color=&quot;#0D8ABC&quot;&gt;</span>
+<span class="err">&lt;img class=&quot;round&quot; width=&quot;256&quot; height=&quot;256&quot; avatar=&quot;decentralized Market&quot; color=&quot;#0D8ABC&quot;&gt;</span>
+</code></pre></div>
+
+<p>其中<code>width</code>和<code>height</code>都是img标签原本就有的属性，代表图片的宽度和高度，而<code>avatar</code>和<code>color</code>为LetterAvatar特有的属性，<code>avatar</code>用来配置显示的文字，支持字母和汉字，显示每个单词的首字母，若有多个单词则会显示每个单词首字母，<code>color</code>用来配置文字的底色。如果想要圆角图标设置<code>class</code>为<code>round</code>即可</p>
+<p>有了这个插件，那自动生成网站的图标就容易多了，直接把原本图标的img用以上特殊的img标签替换即可，替换后的效果是这样的</p>
+<p><img alt="" loading="lazy" src="/static/images/20230801.02.png" /></p>
+<p>代码不算难，使用更是简单，但就是这么几行代码帮我解决了大问题</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="https://blog.ops-coffee.cn/s/jS-automatically-generates-letter-avatar.html">📅 2023-08-02</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/前端插件/">🏷️ 前端插件</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Just-For-Fun/">🏷️ Just-For-Fun</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="https://blog.ops-coffee.cn/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
