@@ -41,6 +41,7 @@ https://blog.ops-coffee.cn/tag/Elk
 https://blog.ops-coffee.cn/tag/Python
 https://blog.ops-coffee.cn/tag/Django
 https://blog.ops-coffee.cn/tag/Devops
+https://blog.ops-coffee.cn/r/city-china-zhejiang-zhoushan-daishan
 https://blog.ops-coffee.cn/s/jS-automatically-generates-letter-avatar
 https://blog.ops-coffee.cn/s/i-has-settled-down-in-shanghai
 https://blog.ops-coffee.cn/r/city-china-zhejiang-shaoxing-xuehuatan
