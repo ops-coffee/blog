@@ -39,7 +39,7 @@ https://blog.ops-coffee.cn/tag/Elk
 https://blog.ops-coffee.cn/tag/Python
 https://blog.ops-coffee.cn/tag/Django
 https://blog.ops-coffee.cn/tag/Devops
-https://blog.ops-coffee.cn/s/devops-kubernetes-docker-ci-cd
+https://blog.ops-coffee.cn/s/devops-kubernetes-docker-jenkins
 https://blog.ops-coffee.cn/r/city-china-zhejiang-jiaxing-xitang
 https://blog.ops-coffee.cn/r/city-china-zhejiang-zhoushan-daishan
 https://blog.ops-coffee.cn/s/jS-automatically-generates-letter-avatar
