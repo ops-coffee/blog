@@ -39,6 +39,7 @@ https://blog.ops-coffee.cn/tag/Elk
 https://blog.ops-coffee.cn/tag/Python
 https://blog.ops-coffee.cn/tag/Django
 https://blog.ops-coffee.cn/tag/Devops
+https://blog.ops-coffee.cn/s/domain-entry-full-network-trace-link
 https://blog.ops-coffee.cn/s/programmer-search-engine-devv-ai
 https://blog.ops-coffee.cn/s/the-slogan-for-current-life
 https://blog.ops-coffee.cn/s/veops-open-source-cmdb-devops
