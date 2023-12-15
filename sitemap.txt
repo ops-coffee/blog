@@ -39,7 +39,7 @@ https://blog.ops-coffee.cn/tag/Elk
 https://blog.ops-coffee.cn/tag/Python
 https://blog.ops-coffee.cn/tag/Django
 https://blog.ops-coffee.cn/tag/Devops
-https://blog.ops-coffee.cn/s/five-years-later-over-1000-followers
+https://blog.ops-coffee.cn/s/five-years-later-over-10000-followers
 https://blog.ops-coffee.cn/r/city-china-zhejiang-shaoxing-pingwangxian
 https://blog.ops-coffee.cn/s/ansi-up-js-to-xterm-js-performance
 https://blog.ops-coffee.cn/s/django-tenant-rbac-auth-permission
