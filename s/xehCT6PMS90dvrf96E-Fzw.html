@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -62,17 +62,17 @@
 <p>7.封装了对于数据库的增删改查</p>
 <p>系统开发中会有大量关于数据库的增删改查操作，Django自带的Admin系统很好的实现了这块的功能，但admin后台不仅丑，对于很多稍微复杂点的需求都不好实现，所以我们直接放弃了自带的admin系统，为了方便的进行CRUD，我参考Django的ViewSet封装了两个方法<code>ListCreateView</code>和<code>RetrieveUpdateDestroyView</code>来处理</p>
 <p>以对<code>Product</code>表的增删改查为例，后端只需要短短的几行代码就行了</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">ProductList</span>(<span class="n">ListCreateView</span>):
-    <span class="n">model</span> = <span class="n">Product</span>
-    <span class="n">template</span> = <span class="s">&#39;workflow/product.index.html&#39;</span>
-    <span class="n">permission</span> = {<span class="s">&#39;get&#39;</span>: <span class="s">&#39;loginuser&#39;</span>, <span class="s">&#39;post&#39;</span>: <span class="s">&#39;workflow.product_change&#39;</span>}
+<pre class="codehilite"><code>class ProductList(ListCreateView):
+    model = Product
+    template = 'workflow/product.index.html'
+    permission = {'get': 'loginuser', 'post': 'workflow.product_change'}
 
 
-<span class="k">class</span> <span class="n">ProductDetail</span>(<span class="n">RetrieveUpdateDestroyView</span>):
-    <span class="n">model</span> = <span class="n">Product</span>
-    <span class="n">permission</span> = {<span class="s">&#39;get&#39;</span>: <span class="s">&#39;workflow.product_select&#39;</span>, <span class="s">&#39;put&#39;</span>: <span class="s">&#39;workflow.product_change&#39;</span>,
-                  <span class="s">&#39;delete&#39;</span>: <span class="s">&#39;workflow.product_delete&#39;</span>}
-</code></pre></div>
+class ProductDetail(RetrieveUpdateDestroyView):
+    model = Product
+    permission = {'get': 'workflow.product_select', 'put': 'workflow.product_change',
+                  'delete': 'workflow.product_delete'}</code></pre>
+
 
 <p>几行代码便可以让后端处理对数据库的增删改查，同时返回固定格式的json数据，而对于前端页面就没有太多的规范了，按照喜好怎么设计都可以</p>
 <p><img alt="" loading="lazy" src="/static/images/20210813.06.png" /></p>

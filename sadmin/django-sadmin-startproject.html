@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -43,38 +43,38 @@
         <h1 id="art-title">在项目中使用sadmin</h1>
 
         <p>1.Add "sadmin" to your INSTALLED_APPS setting like this:</p>
-<div class="codehilite"><pre><span></span><code><span class="err">INSTALLED_APPS = [</span>
-<span class="err">    ...</span>
-<span class="err">    &#39;sadmin.commons&#39;,</span>
-<span class="err">    &#39;sadmin.accounts&#39;,</span>
-<span class="err">    &#39;sadmin.project&#39;,</span>
-<span class="err">]</span>
-</code></pre></div>
+<pre class="codehilite"><code>INSTALLED_APPS = [
+    ...
+    'sadmin.commons',
+    'sadmin.accounts',
+    'sadmin.project',
+]</code></pre>
+
 
 <p>2.Add custom MIDDLEWARE for operatrion log</p>
-<div class="codehilite"><pre><span></span><code><span class="err">MIDDLEWARE = [</span>
-<span class="err">    ...</span>
-<span class="err">    &#39;sadmin.commons.middleware.log.OperationLogMiddleware&#39;,</span>
-<span class="err">    &#39;sadmin.commons.middleware.token.AuthTokenMiddleware&#39;,</span>
-<span class="err">]</span>
-</code></pre></div>
+<pre class="codehilite"><code>MIDDLEWARE = [
+    ...
+    'sadmin.commons.middleware.log.OperationLogMiddleware',
+    'sadmin.commons.middleware.token.AuthTokenMiddleware',
+]</code></pre>
+
 
 <p>3.Add "AUTH_USER_MODEL" to your setting.py</p>
-<div class="codehilite"><pre><span></span><code><span class="err">AUTH_USER_MODEL = &#39;accounts.User&#39;</span>
-</code></pre></div>
+<pre class="codehilite"><code>AUTH_USER_MODEL = 'accounts.User'</code></pre>
+
 
 <p>4.Include the accounts URLconf in your project urls.py like this::</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">include</span>
-<span class="kn">from</span> <span class="nn">django.views.generic.base</span> <span class="kn">import</span> <span class="n">TemplateView</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+<pre class="codehilite"><code>from django.urls import path, include
+from django.views.generic.base import TemplateView
+from django.contrib.auth.decorators import login_required
 
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">login_required</span><span class="p">(</span><span class="n">TemplateView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;index.html&#39;</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;index-url&#39;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;commons/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;sadmin.commons.urls&#39;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;accounts/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;sadmin.accounts.urls&#39;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;project/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;sadmin.project.urls&#39;</span><span class="p">)),</span>
-<span class="p">]</span>
-</code></pre></div>
+urlpatterns = [
+    path('', login_required(TemplateView.as_view(template_name='index.html')), name='index-url'),
+    path('commons/', include('sadmin.commons.urls')),
+    path('accounts/', include('sadmin.accounts.urls')),
+    path('project/', include('sadmin.project.urls')),
+]</code></pre>
+
 
 <p>5.Run <code>python manage.py migrate</code> to create the models.</p>
 <p>6.Run <code>python manage.py createsuperuser</code> to create superusers</p>

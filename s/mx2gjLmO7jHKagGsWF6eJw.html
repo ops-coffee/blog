@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -53,63 +53,63 @@
 <ol>
 <li>引入CSS/JS文件，由于Datatables是基于Jquery的，所以要先引入Jquery，这里我们都直接引入CDN的地址</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="c">&lt;!-- 加载 Jquery --&gt;</span>
-<span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;https://code.jquery.com/jquery-3.2.1.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<pre class="codehilite"><code>&lt;!-- 加载 Jquery --&gt;
+&lt;script src=&quot;https://code.jquery.com/jquery-3.2.1.min.js&quot;&gt;&lt;/script&gt;
 
-<span class="c">&lt;!-- 加载 Datatables --&gt;</span>
-<span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css&quot;</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="nt">/&gt;</span>
-<span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-</code></pre></div>
+&lt;!-- 加载 Datatables --&gt;
+&lt;link href=&quot;https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css&quot; rel=&quot;stylesheet&quot; /&gt;
+&lt;script src=&quot;https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js&quot;&gt;&lt;/script&gt;</code></pre>
+
 
 <ol>
 <li>初始化Datatables</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;table</span> <span class="na">id=</span><span class="s">&quot;myTable&quot;</span> <span class="na">class=</span><span class="s">&quot;display&quot;</span> <span class="na">style=</span><span class="s">&quot;width:100%&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;thead&gt;</span>
-        <span class="nt">&lt;tr&gt;</span>
-            <span class="nt">&lt;th&gt;</span>Name<span class="nt">&lt;/th&gt;</span>
-            <span class="nt">&lt;th&gt;</span>Position<span class="nt">&lt;/th&gt;</span>
-            <span class="nt">&lt;th&gt;</span>Office<span class="nt">&lt;/th&gt;</span>
-            <span class="nt">&lt;th&gt;</span>Age<span class="nt">&lt;/th&gt;</span>
-            <span class="nt">&lt;th&gt;</span>Start date<span class="nt">&lt;/th&gt;</span>
-            <span class="nt">&lt;th&gt;</span>Salary<span class="nt">&lt;/th&gt;</span>
-        <span class="nt">&lt;/tr&gt;</span>
-    <span class="nt">&lt;/thead&gt;</span>
-    <span class="nt">&lt;tbody&gt;</span>
-        <span class="nt">&lt;tr&gt;</span>
-            <span class="nt">&lt;td&gt;</span>Ops Coffee<span class="nt">&lt;/td&gt;</span>
-            <span class="nt">&lt;td&gt;</span>System Architect<span class="nt">&lt;/td&gt;</span>
-            <span class="nt">&lt;td&gt;</span>Edinburgh<span class="nt">&lt;/td&gt;</span>
-            <span class="nt">&lt;td&gt;</span>18<span class="nt">&lt;/td&gt;</span>
-            <span class="nt">&lt;td&gt;</span>2011/04/25<span class="nt">&lt;/td&gt;</span>
-            <span class="nt">&lt;td&gt;</span>$320,800<span class="nt">&lt;/td&gt;</span>
-        <span class="nt">&lt;/tr&gt;</span>
-        <span class="c">&lt;!-- 中间省略一些tr数据 --&gt;</span>
-        <span class="nt">&lt;tr&gt;</span>
-            <span class="nt">&lt;td&gt;</span>Donna Snider<span class="nt">&lt;/td&gt;</span>
-            <span class="nt">&lt;td&gt;</span>Customer Support<span class="nt">&lt;/td&gt;</span>
-            <span class="nt">&lt;td&gt;</span>New York<span class="nt">&lt;/td&gt;</span>
-            <span class="nt">&lt;td&gt;</span>27<span class="nt">&lt;/td&gt;</span>
-            <span class="nt">&lt;td&gt;</span>2011/01/25<span class="nt">&lt;/td&gt;</span>
-            <span class="nt">&lt;td&gt;</span>$112,000<span class="nt">&lt;/td&gt;</span>
-        <span class="nt">&lt;/tr&gt;</span>
-    <span class="nt">&lt;/tbody&gt;</span>
-    <span class="nt">&lt;tfoot&gt;</span>
-        <span class="nt">&lt;tr&gt;</span>
-            <span class="nt">&lt;th&gt;</span>Name<span class="nt">&lt;/th&gt;</span>
-            <span class="nt">&lt;th&gt;</span>Position<span class="nt">&lt;/th&gt;</span>
-            <span class="nt">&lt;th&gt;</span>Office<span class="nt">&lt;/th&gt;</span>
-            <span class="nt">&lt;th&gt;</span>Age<span class="nt">&lt;/th&gt;</span>
-            <span class="nt">&lt;th&gt;</span>Start date<span class="nt">&lt;/th&gt;</span>
-            <span class="nt">&lt;th&gt;</span>Salary<span class="nt">&lt;/th&gt;</span>
-        <span class="nt">&lt;/tr&gt;</span>
-    <span class="nt">&lt;/tfoot&gt;</span>
-<span class="nt">&lt;/table&gt;</span>
+<pre class="codehilite"><code>&lt;table id=&quot;myTable&quot; class=&quot;display&quot; style=&quot;width:100%&quot;&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Name&lt;/th&gt;
+            &lt;th&gt;Position&lt;/th&gt;
+            &lt;th&gt;Office&lt;/th&gt;
+            &lt;th&gt;Age&lt;/th&gt;
+            &lt;th&gt;Start date&lt;/th&gt;
+            &lt;th&gt;Salary&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;Ops Coffee&lt;/td&gt;
+            &lt;td&gt;System Architect&lt;/td&gt;
+            &lt;td&gt;Edinburgh&lt;/td&gt;
+            &lt;td&gt;18&lt;/td&gt;
+            &lt;td&gt;2011/04/25&lt;/td&gt;
+            &lt;td&gt;$320,800&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;!-- 中间省略一些tr数据 --&gt;
+        &lt;tr&gt;
+            &lt;td&gt;Donna Snider&lt;/td&gt;
+            &lt;td&gt;Customer Support&lt;/td&gt;
+            &lt;td&gt;New York&lt;/td&gt;
+            &lt;td&gt;27&lt;/td&gt;
+            &lt;td&gt;2011/01/25&lt;/td&gt;
+            &lt;td&gt;$112,000&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+    &lt;tfoot&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Name&lt;/th&gt;
+            &lt;th&gt;Position&lt;/th&gt;
+            &lt;th&gt;Office&lt;/th&gt;
+            &lt;th&gt;Age&lt;/th&gt;
+            &lt;th&gt;Start date&lt;/th&gt;
+            &lt;th&gt;Salary&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/tfoot&gt;
+&lt;/table&gt;
 
 $(document).ready( function () {
-    $(&#39;#myTable&#39;).DataTable();
-});
-</code></pre></div>
+    $('#myTable').DataTable();
+});</code></pre>
+
 
 <ol>
 <li>完成以上两步可以看到页面效果如下</li>
@@ -117,13 +117,13 @@ $(document).ready( function () {
 <p><img alt="" loading="lazy" src="/static/images/20190805.datatables01.png" /></p>
 <h2 id="_2">功能开启/关闭</h2>
 <p>默认界面下除了原始的table外，还为table额外增加了搜索、列排序、分页及信息显示这些内容，如果不需要其中一个或多个可以通过以下设置隐藏</p>
-<div class="codehilite"><pre><span></span><code><span class="err">$(&#39;#myTable&#39;).DataTable({</span>
-<span class="err">    &quot;paging&quot;: false,</span>
-<span class="err">    &quot;ordering&quot;: false,</span>
-<span class="err">    &quot;info&quot;: false,</span>
-<span class="err">    &quot;searching&quot;: false,</span>
-<span class="err">});</span>
-</code></pre></div>
+<pre class="codehilite"><code>$('#myTable').DataTable({
+    &quot;paging&quot;: false,
+    &quot;ordering&quot;: false,
+    &quot;info&quot;: false,
+    &quot;searching&quot;: false,
+});</code></pre>
+
 
 <p><strong>paging：</strong> 控制分页是否开启，默认开启，开启后会显示表格左上角的每页行数选择和右下角的页码跳转</p>
 <p><strong>ordering：</strong> 控制是否进行排序，默认开启，且默认会对第一列数据进行排序</p>
@@ -132,31 +132,31 @@ $(document).ready( function () {
 <h2 id="_3">排序配置</h2>
 <h4 id="_4">单列排序</h4>
 <p>可以通过<code>order</code>来设置初始排序的列以及排序方向</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&quot;order&quot;: [[ 3, &quot;desc&quot; ]],</span>
-</code></pre></div>
+<pre class="codehilite"><code>&quot;order&quot;: [[ 3, &quot;desc&quot; ]],</code></pre>
+
 
 <p>列号默认<strong>从0开始</strong>算起，这里的3实际上对应的是第4列，这点要注意，以下所有用到列号的地方都是从0开始</p>
 <p>注意：开启<code>stateSave</code>之后会导致<code>columnDefs</code>失效，两个参数尽量不要同时设置</p>
 <h4 id="_5">多列排序</h4>
 <p>当然也可以在order里边配置同时按多列排序</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&quot;order&quot;: [[ 3, &quot;desc&quot; ], [ 0, &quot;desc&quot; ]],</span>
-</code></pre></div>
+<pre class="codehilite"><code>&quot;order&quot;: [[ 3, &quot;desc&quot; ], [ 0, &quot;desc&quot; ]],</code></pre>
+
 
 <p>如上配置的意思是先按照3列进行排序，如果3列相同，则再按照0列进行排序</p>
 <h2 id="_6">隐藏列</h2>
 <p>可以通过<code>columnDefs</code>来设置列属性</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&quot;columnDefs&quot;: [</span>
-<span class="err">    {</span>
-<span class="err">        &quot;targets&quot;: [ 2 ],</span>
-<span class="err">        &quot;visible&quot;: false,</span>
-<span class="err">        &quot;searchable&quot;: false</span>
-<span class="err">    },</span>
-<span class="err">    {</span>
-<span class="err">        &quot;targets&quot;: [ 3 ],</span>
-<span class="err">        &quot;visible&quot;: false,</span>
-<span class="err">    }</span>
-<span class="err">]</span>
-</code></pre></div>
+<pre class="codehilite"><code>&quot;columnDefs&quot;: [
+    {
+        &quot;targets&quot;: [ 2 ],
+        &quot;visible&quot;: false,
+        &quot;searchable&quot;: false
+    },
+    {
+        &quot;targets&quot;: [ 3 ],
+        &quot;visible&quot;: false,
+    }
+]</code></pre>
+
 
 <p><strong>targets：</strong> 指定列</p>
 <p><strong>visible：</strong> 是否可显示</p>
@@ -164,41 +164,41 @@ $(document).ready( function () {
 <p>注意：开启<code>stateSave</code>之后会导致<code>columnDefs</code>失效，两个参数尽量不要同时设置</p>
 <h2 id="_7">语言配置</h2>
 <p>默认提示语都是英文，可以通过<code>language</code>来设置为中文</p>
-<div class="codehilite"><pre><span></span><code><span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;decimal&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;emptyTable&quot;</span><span class="p">:</span> <span class="s2">&quot;表中数据为空&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;info&quot;</span><span class="p">:</span> <span class="s2">&quot;显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;infoEmpty&quot;</span><span class="p">:</span> <span class="s2">&quot;显示第 0 至 0 项结果，共 0 项&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;infoFiltered&quot;</span><span class="p">:</span> <span class="s2">&quot;(由 _MAX_ 项结果过滤)&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;InfoPostFix&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;thousands&quot;</span><span class="p">:</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lengthMenu&quot;</span><span class="p">:</span> <span class="s2">&quot;显示 _MENU_ 项结果&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;loadingRecords&quot;</span><span class="p">:</span> <span class="s2">&quot;载入中...&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;processing&quot;</span><span class="p">:</span> <span class="s2">&quot;处理中...&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;search&quot;</span><span class="p">:</span> <span class="s2">&quot;搜索:&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;zeroRecords&quot;</span><span class="p">:</span> <span class="s2">&quot;没有匹配结果&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Paginate&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;sFirst&quot;</span><span class="p">:</span> <span class="s2">&quot;首页&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;sPrevious&quot;</span><span class="p">:</span> <span class="s2">&quot;上一页&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;sNext&quot;</span><span class="p">:</span> <span class="s2">&quot;下一页&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;sLast&quot;</span><span class="p">:</span> <span class="s2">&quot;尾页&quot;</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;Aria&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;sSortAscending&quot;</span><span class="p">:</span> <span class="s2">&quot;: 以升序排列此列&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;sSortDescending&quot;</span><span class="p">:</span> <span class="s2">&quot;: 以降序排列此列&quot;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>&quot;language&quot;: {
+    &quot;decimal&quot;: &quot;&quot;,
+    &quot;emptyTable&quot;: &quot;表中数据为空&quot;,
+    &quot;info&quot;: &quot;显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项&quot;,
+    &quot;infoEmpty&quot;: &quot;显示第 0 至 0 项结果，共 0 项&quot;,
+    &quot;infoFiltered&quot;: &quot;(由 _MAX_ 项结果过滤)&quot;,
+    &quot;InfoPostFix&quot;: &quot;&quot;,
+    &quot;thousands&quot;: &quot;,&quot;,
+    &quot;lengthMenu&quot;: &quot;显示 _MENU_ 项结果&quot;,
+    &quot;loadingRecords&quot;: &quot;载入中...&quot;,
+    &quot;processing&quot;: &quot;处理中...&quot;,
+    &quot;search&quot;: &quot;搜索:&quot;,
+    &quot;zeroRecords&quot;: &quot;没有匹配结果&quot;,
+    &quot;Paginate&quot;: {
+        &quot;sFirst&quot;: &quot;首页&quot;,
+        &quot;sPrevious&quot;: &quot;上一页&quot;,
+        &quot;sNext&quot;: &quot;下一页&quot;,
+        &quot;sLast&quot;: &quot;尾页&quot;
+    },
+    &quot;Aria&quot;: {
+        &quot;sSortAscending&quot;: &quot;: 以升序排列此列&quot;,
+        &quot;sSortDescending&quot;: &quot;: 以降序排列此列&quot;
+    }
+}</code></pre>
+
 
 <h2 id="_8">状态保持</h2>
 <p>可以通过<code>stateSave</code>来设置是否保持状态，<code>stateSave</code>会调用HTML5的<code>localStorage</code>和<code>sessionStorage</code>APIs将页面状态数据保存在浏览器本地，当你刷新页面时会自动加载这些状态信息，这些状态可以是你的排序信息、当前页码以及已输入的搜索数据等</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&quot;stateSave&quot;: true,</span>
-</code></pre></div>
+<pre class="codehilite"><code>&quot;stateSave&quot;: true,</code></pre>
+
 
 <h2 id="_9">分页类型</h2>
 <p>可以通过<code>pagingType</code>来设置分页类型</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&quot;pagingType&quot;: &quot;simple_numbers&quot;,</span>
-</code></pre></div>
+<pre class="codehilite"><code>&quot;pagingType&quot;: &quot;simple_numbers&quot;,</code></pre>
+
 
 <p><strong>simple_numbers：</strong> 类型会显示上一页、下一页按钮和页码，这也是默认的分页类型</p>
 <p>其他几种分页类型如下：</p>
@@ -209,10 +209,10 @@ $(document).ready( function () {
 <p><strong>first_last_numbers：</strong> 显示首页、尾页按钮和页码</p>
 <h2 id="_10">滚动配置</h2>
 <p>当table的宽、高超过页面设置大小时，可以通过以下配置来添加滚动条</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&quot;scrollX&quot;: &quot;true&quot;,</span>
-<span class="err">&quot;scrollY&quot;: &quot;200px&quot;,</span>
-<span class="err">&quot;scrollCollapse&quot;: true,</span>
-</code></pre></div>
+<pre class="codehilite"><code>&quot;scrollX&quot;: &quot;true&quot;,
+&quot;scrollY&quot;: &quot;200px&quot;,
+&quot;scrollCollapse&quot;: true,</code></pre>
+
 
 <p><strong>scrollX：</strong> 允许水平滚动条</p>
 <p><strong>scrollY：</strong> 设置垂直body的高度，当超过这个这个高度时出现垂直滚动条</p>

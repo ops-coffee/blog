@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -44,23 +44,22 @@
 
         <p>1.下载java8</p>
 <p>可以在如下页面找到对应的软件包<a href="https://docs.aws.amazon.com/zh_cn/corretto/latest/corretto-8-ug/downloads-list.html">https://docs.aws.amazon.com/zh_cn/corretto/latest/corretto-8-ug/downloads-list.html</a></p>
-<div class="codehilite"><pre><span></span><code><span class="err">wget https://d3pxv6yz143wms.cloudfront.net/8.222.10.1/java-1.8.0-amazon-corretto-jdk_8.222.10-1_amd64.deb</span>
-</code></pre></div>
+<pre class="codehilite"><code>wget https://d3pxv6yz143wms.cloudfront.net/8.222.10.1/java-1.8.0-amazon-corretto-jdk_8.222.10-1_amd64.deb</code></pre>
+
 
 <p>2.安装java-common软件包</p>
-<div class="codehilite"><pre><span></span><code><span class="err">apt-get update &amp;&amp; apt-get install java-common</span>
-</code></pre></div>
+<pre class="codehilite"><code>apt-get update &amp;&amp; apt-get install java-common</code></pre>
+
 
 <p>3.使用dpkg命令直接安装.deb文件</p>
-<div class="codehilite"><pre><span></span><code><span class="err">dpkg --install java-1.8.0-amazon-corretto-jdk_8.222.10-1_amd64.deb </span>
-</code></pre></div>
+<pre class="codehilite"><code>dpkg --install java-1.8.0-amazon-corretto-jdk_8.222.10-1_amd64.deb </code></pre>
+
 
 <p>4.查看版本</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># java -version</span>
-<span class="err">openjdk version &quot;1.8.0_222&quot;</span>
-<span class="err">OpenJDK Runtime Environment Corretto-8.222.10.1 (build 1.8.0_222-b10)</span>
-<span class="err">OpenJDK 64-Bit Server VM Corretto-8.222.10.1 (build 25.222-b10, mixed mode)</span>
-</code></pre></div>
+<pre class="codehilite"><code># java -version
+openjdk version &quot;1.8.0_222&quot;
+OpenJDK Runtime Environment Corretto-8.222.10.1 (build 1.8.0_222-b10)
+OpenJDK 64-Bit Server VM Corretto-8.222.10.1 (build 25.222-b10, mixed mode)</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

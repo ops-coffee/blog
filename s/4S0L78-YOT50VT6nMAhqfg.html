@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -46,69 +46,69 @@
 <p>一分钟学个小知识</p>
 </blockquote>
 <p><code>eval</code>与<code>ast.literal_eval</code>都可以将字符串还原成它能够转化成的数据类型，例如</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">literal_eval</span>
-<span class="o">&gt;&gt;&gt;</span> 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">data1</span> <span class="o">=</span> <span class="s2">&quot;[&#39;ops-coffee&#39;,&#39;cn&#39;]&quot;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">data2</span> <span class="o">=</span> <span class="s2">&quot;{&#39;title&#39;:&#39;运维咖啡吧&#39;,&#39;url&#39;:&#39;https://ops-coffee.cn&#39;}&quot;</span>
-<span class="o">&gt;&gt;&gt;</span> 
-<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">data1</span><span class="p">),</span><span class="nb">type</span><span class="p">(</span><span class="n">data2</span><span class="p">))</span>
-<span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">str</span><span class="s1">&#39;&gt; &lt;class &#39;</span><span class="nb">str</span><span class="s1">&#39;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> 
-<span class="o">&gt;&gt;&gt;</span> 
-<span class="o">&gt;&gt;&gt;</span> 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">a1</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">data1</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">a1</span><span class="p">))</span>
-<span class="p">[</span><span class="s1">&#39;ops-coffee&#39;</span><span class="p">,</span> <span class="s1">&#39;cn&#39;</span><span class="p">]</span> <span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">list</span><span class="s1">&#39;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">a2</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">data2</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">a2</span><span class="p">))</span>
-<span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;运维咖啡吧&#39;</span><span class="p">,</span> <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://ops-coffee.cn&#39;</span><span class="p">}</span> <span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">dict</span><span class="s1">&#39;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> 
-<span class="o">&gt;&gt;&gt;</span> 
-<span class="o">&gt;&gt;&gt;</span> 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">b1</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">data1</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">b1</span><span class="p">))</span>
-<span class="p">[</span><span class="s1">&#39;ops-coffee&#39;</span><span class="p">,</span> <span class="s1">&#39;cn&#39;</span><span class="p">]</span> <span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">list</span><span class="s1">&#39;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">b2</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">data2</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">b2</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">b2</span><span class="p">))</span>
-<span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;运维咖啡吧&#39;</span><span class="p">,</span> <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://ops-coffee.cn&#39;</span><span class="p">}</span> <span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">dict</span><span class="s1">&#39;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> 
-<span class="o">&gt;&gt;&gt;</span> 
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; from ast import literal_eval
+&gt;&gt;&gt; 
+&gt;&gt;&gt; data1 = &quot;['ops-coffee','cn']&quot;
+&gt;&gt;&gt; data2 = &quot;{'title':'运维咖啡吧','url':'https://ops-coffee.cn'}&quot;
+&gt;&gt;&gt; 
+&gt;&gt;&gt; print(type(data1),type(data2))
+&lt;class 'str'&gt; &lt;class 'str'&gt;
+&gt;&gt;&gt; 
+&gt;&gt;&gt; 
+&gt;&gt;&gt; 
+&gt;&gt;&gt; a1 = eval(data1)
+&gt;&gt;&gt; print(a1, type(a1))
+['ops-coffee', 'cn'] &lt;class 'list'&gt;
+&gt;&gt;&gt; 
+&gt;&gt;&gt; a2 = eval(data2)
+&gt;&gt;&gt; print(a2, type(a2))
+{'title': '运维咖啡吧', 'url': 'https://ops-coffee.cn'} &lt;class 'dict'&gt;
+&gt;&gt;&gt; 
+&gt;&gt;&gt; 
+&gt;&gt;&gt; 
+&gt;&gt;&gt; b1 = literal_eval(data1)
+&gt;&gt;&gt; print(b1, type(b1))
+['ops-coffee', 'cn'] &lt;class 'list'&gt;
+&gt;&gt;&gt; 
+&gt;&gt;&gt; b2 = literal_eval(data2)
+&gt;&gt;&gt; print(b2, type(b2))
+{'title': '运维咖啡吧', 'url': 'https://ops-coffee.cn'} &lt;class 'dict'&gt;
+&gt;&gt;&gt; 
+&gt;&gt;&gt; </code></pre>
+
 
 <p>除了可以对数据类型进行转换外，他们还可以对字符串的输入做处理，例如</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; eval(&#39;1+1&#39;)</span>
-<span class="err">2</span>
-<span class="err">&gt;&gt;&gt; </span>
-<span class="err">&gt;&gt;&gt; </span>
-<span class="err">&gt;&gt;&gt; literal_eval(&#39;1+1&#39;)</span>
-<span class="err">2</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; eval('1+1')
+2
+&gt;&gt;&gt; 
+&gt;&gt;&gt; 
+&gt;&gt;&gt; literal_eval('1+1')
+2</code></pre>
+
 
 <p>那么他们有何区别呢？</p>
 <p><code>eval</code>会对所有他能解析的字符串都做处理，而<code>literal_eval</code>则会判断需要处理的内容处理后是不是合法的python类型，如果是则处理，否则不处理</p>
 <p>例如在以下例子中</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">std</span> <span class="o">=</span> <span class="n">input</span><span class="p">(</span><span class="s1">&#39;please input: &#39;</span><span class="p">)</span>
-<span class="n">please</span> <span class="n">input</span><span class="p">:</span> <span class="n">__import__</span><span class="p">(</span><span class="s1">&#39;os&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;ls /&#39;</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;out: &#39;</span><span class="p">,</span><span class="n">eval</span><span class="p">(</span><span class="n">std</span><span class="p">))</span>
-<span class="n">bin</span>  <span class="n">boot</span>  <span class="n">dev</span>  <span class="n">etc</span> <span class="n">lib</span> <span class="n">lost</span><span class="o">+</span><span class="n">found</span>  <span class="n">opt</span>  <span class="n">proc</span>  <span class="n">root</span>  <span class="n">run</span>  <span class="n">sbin</span>  <span class="n">selinux</span>  <span class="n">srv</span>    <span class="k">static</span>  <span class="n">sys</span>  <span class="n">tmp</span>  <span class="n">usr</span>  <span class="k">var</span>
-<span class="n">out</span><span class="p">:</span>  <span class="mi">0</span>
-<span class="o">&gt;&gt;&gt;</span> 
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; std = input('please input: ')
+please input: __import__('os').system('ls /')
+&gt;&gt;&gt; print('out: ',eval(std))
+bin  boot  dev  etc lib lost+found  opt  proc  root  run  sbin  selinux  srv    static  sys  tmp  usr  var
+out:  0
+&gt;&gt;&gt; </code></pre>
+
 
 <p><code>eval</code>处理了输入的指令，这是非常危险的，在这里仅仅是用了<code>ls</code>查看做测试，如果是<code>rm</code>之类的指令后果就会很严重，而对于<code>literal_eval</code>则会去判断要解析的内容是否安全，不安全就报错</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; </span>
-<span class="err">&gt;&gt;&gt; print(&#39;out: &#39;,literal_eval(std))</span>
-<span class="err">Traceback (most recent call last):</span>
-<span class="err">  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;</span>
-<span class="err">  File &quot;/usr/local/lib/python3.6/ast.py&quot;, line 85, in literal_eval</span>
-<span class="err">    return _convert(node_or_string)</span>
-<span class="err">  File &quot;/usr/local/lib/python3.6/ast.py&quot;, line 84, in _convert</span>
-<span class="err">    raise ValueError(&#39;malformed node or string: &#39; + repr(node))</span>
-<span class="c">ValueError: malformed node or string: &lt;_ast.Call object at 0x7f3b192a24a8&gt;</span>
-<span class="err">&gt;&gt;&gt; </span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; 
+&gt;&gt;&gt; print('out: ',literal_eval(std))
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  File &quot;/usr/local/lib/python3.6/ast.py&quot;, line 85, in literal_eval
+    return _convert(node_or_string)
+  File &quot;/usr/local/lib/python3.6/ast.py&quot;, line 84, in _convert
+    raise ValueError('malformed node or string: ' + repr(node))
+ValueError: malformed node or string: &lt;_ast.Call object at 0x7f3b192a24a8&gt;
+&gt;&gt;&gt; </code></pre>
+
 
 <p>所以使用<code>literal_eval</code>可大大降低系统风险，有着更为安全的表现</p>
 

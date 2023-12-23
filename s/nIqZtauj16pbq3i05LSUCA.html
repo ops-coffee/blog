@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -57,184 +57,184 @@
 <p>bpmn-js就是基于BPMN标准实现的一套渲染工具包和web建模器，以下系列文章将会介绍我的使用过程</p>
 <h2 id="_1">基本使用</h2>
 <p>bpmn-js的使用非常简单，我们可以在VUE项目中使用，或者是直接在HTML文件中引入JS/CSS资源文件，就像下边这样</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&lt;!</span><span class="n">DOCTYPE</span> <span class="n">html</span><span class="o">&gt;</span>
-<span class="o">&lt;</span><span class="n">html</span> <span class="n">lang</span><span class="o">=</span><span class="s">&quot;zh-CN&quot;</span><span class="o">&gt;</span>
+<pre class="codehilite"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
 
-<span class="o">&lt;</span><span class="n">head</span><span class="o">&gt;</span>
-  <span class="o">&lt;</span><span class="n">meta</span> <span class="n">charset</span><span class="o">=</span><span class="s">&quot;UTF-8&quot;</span><span class="o">&gt;</span>
-  <span class="o">&lt;</span><span class="n">meta</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;viewport&quot;</span> <span class="n">content</span><span class="o">=</span><span class="s">&quot;width=device-width, initial-scale=1, user-scalable=no&quot;</span><span class="o">/&gt;</span>
-  <span class="o">&lt;</span><span class="n">meta</span> <span class="n">http</span><span class="o">-</span><span class="n">equiv</span><span class="o">=</span><span class="s">&quot;X-UA-Compatible&quot;</span> <span class="n">content</span><span class="o">=</span><span class="s">&quot;IE=edge,chrome=1&quot;</span> <span class="o">/&gt;</span>
-  <span class="o">&lt;</span><span class="n">title</span><span class="o">&gt;</span><span class="err">运维咖啡吧</span> <span class="o">-</span> <span class="n">BPMNJS</span><span class="o">&lt;/</span><span class="n">title</span><span class="o">&gt;</span>
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, user-scalable=no&quot;/&gt;
+  &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge,chrome=1&quot; /&gt;
+  &lt;title&gt;运维咖啡吧 - BPMNJS&lt;/title&gt;
 
-  <span class="o">&lt;!--</span> <span class="err">引入</span><span class="n">BPMN</span><span class="o">-</span><span class="n">JS的CSS文件</span> <span class="o">--&gt;</span>
-  <span class="o">&lt;</span><span class="n">link</span> <span class="n">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://unpkg.com/bpmn-js@7.3.0/dist/assets/diagram-js.css&quot;</span> <span class="o">/&gt;</span>
-  <span class="o">&lt;</span><span class="n">link</span> <span class="n">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://unpkg.com/bpmn-js@7.3.0/dist/assets/bpmn-font/css/bpmn.css&quot;</span> <span class="o">/&gt;</span>
-<span class="o">&lt;/</span><span class="n">head</span><span class="o">&gt;</span>
+  &lt;!-- 引入BPMN-JS的CSS文件 --&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;https://unpkg.com/bpmn-js@7.3.0/dist/assets/diagram-js.css&quot; /&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;https://unpkg.com/bpmn-js@7.3.0/dist/assets/bpmn-font/css/bpmn.css&quot; /&gt;
+&lt;/head&gt;
 
-<span class="o">&lt;</span><span class="n">body</span><span class="o">&gt;</span>
-  <span class="o">&lt;</span><span class="n">div</span> <span class="kt">id</span><span class="o">=</span><span class="s">&quot;canvas&quot;</span> <span class="n">style</span><span class="o">=</span><span class="s">&quot;height:80vh;&quot;</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+&lt;body&gt;
+  &lt;div id=&quot;canvas&quot; style=&quot;height:80vh;&quot;&gt;&lt;/div&gt;
 
-  <span class="o">&lt;!--</span> <span class="err">引入</span><span class="n">BPMN</span><span class="o">-</span><span class="n">JS的JS文件</span> <span class="o">--&gt;</span>
-  <span class="o">&lt;</span><span class="n">script</span> <span class="n">src</span><span class="o">=</span><span class="s">&quot;https://unpkg.com/bpmn-js@7.3.0/dist/bpmn-modeler.development.js&quot;</span><span class="o">&gt;&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
-  <span class="o">&lt;</span><span class="n">script</span><span class="o">&gt;</span>
-    <span class="n">var</span> <span class="n">diagramXML</span> <span class="o">=</span> <span class="err">`</span><span class="o">&lt;?</span><span class="n">xml</span> <span class="n">version</span><span class="o">=</span><span class="s">&quot;1.0&quot;</span> <span class="n">encoding</span><span class="o">=</span><span class="s">&quot;UTF-8&quot;</span><span class="o">?&gt;</span>
-<span class="o">&lt;</span><span class="nl">bpmn2</span><span class="p">:</span><span class="n">definitions</span> <span class="nl">xmlns</span><span class="p">:</span><span class="n">xsi</span><span class="o">=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="nl">xmlns</span><span class="p">:</span><span class="n">bpmn2</span><span class="o">=</span><span class="s">&quot;http://www.omg.org/spec/BPMN/20100524/MODEL&quot;</span> <span class="nl">xmlns</span><span class="p">:</span><span class="n">bpmndi</span><span class="o">=</span><span class="s">&quot;http://www.omg.org/spec/BPMN/20100524/DI&quot;</span> <span class="nl">xmlns</span><span class="p">:</span><span class="n">dc</span><span class="o">=</span><span class="s">&quot;http://www.omg.org/spec/DD/20100524/DC&quot;</span> <span class="kt">id</span><span class="o">=</span><span class="s">&quot;sample-diagram&quot;</span> <span class="n">targetNamespace</span><span class="o">=</span><span class="s">&quot;http://bpmn.io/schema/bpmn&quot;</span> <span class="nl">xsi</span><span class="p">:</span><span class="n">schemaLocation</span><span class="o">=</span><span class="s">&quot;http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd&quot;</span><span class="o">&gt;</span>
-<span class="o">&lt;</span><span class="nl">bpmn2</span><span class="p">:</span><span class="n">process</span> <span class="kt">id</span><span class="o">=</span><span class="s">&quot;Process_1&quot;</span> <span class="n">isExecutable</span><span class="o">=</span><span class="s">&quot;false&quot;</span><span class="o">&gt;</span>
-  <span class="o">&lt;</span><span class="nl">bpmn2</span><span class="p">:</span><span class="n">startEvent</span> <span class="kt">id</span><span class="o">=</span><span class="s">&quot;StartEvent_1&quot;</span> <span class="o">/&gt;</span>
-<span class="o">&lt;/</span><span class="nl">bpmn2</span><span class="p">:</span><span class="n">process</span><span class="o">&gt;</span>
-<span class="o">&lt;</span><span class="nl">bpmndi</span><span class="p">:</span><span class="n">BPMNDiagram</span> <span class="kt">id</span><span class="o">=</span><span class="s">&quot;BPMNDiagram_1&quot;</span><span class="o">&gt;</span>
-  <span class="o">&lt;</span><span class="nl">bpmndi</span><span class="p">:</span><span class="n">BPMNPlane</span> <span class="kt">id</span><span class="o">=</span><span class="s">&quot;BPMNPlane_1&quot;</span> <span class="n">bpmnElement</span><span class="o">=</span><span class="s">&quot;Process_1&quot;</span><span class="o">&gt;</span>
-    <span class="o">&lt;</span><span class="nl">bpmndi</span><span class="p">:</span><span class="n">BPMNShape</span> <span class="kt">id</span><span class="o">=</span><span class="s">&quot;_BPMNShape_StartEvent_2&quot;</span> <span class="n">bpmnElement</span><span class="o">=</span><span class="s">&quot;StartEvent_1&quot;</span><span class="o">&gt;</span>
-      <span class="o">&lt;</span><span class="nl">dc</span><span class="p">:</span><span class="n">Bounds</span> <span class="n">x</span><span class="o">=</span><span class="s">&quot;192&quot;</span> <span class="n">y</span><span class="o">=</span><span class="s">&quot;82&quot;</span> <span class="n">width</span><span class="o">=</span><span class="s">&quot;36&quot;</span> <span class="n">height</span><span class="o">=</span><span class="s">&quot;36&quot;</span> <span class="o">/&gt;</span>
-    <span class="o">&lt;/</span><span class="nl">bpmndi</span><span class="p">:</span><span class="n">BPMNShape</span><span class="o">&gt;</span>
-  <span class="o">&lt;/</span><span class="nl">bpmndi</span><span class="p">:</span><span class="n">BPMNPlane</span><span class="o">&gt;</span>
-<span class="o">&lt;/</span><span class="nl">bpmndi</span><span class="p">:</span><span class="n">BPMNDiagram</span><span class="o">&gt;</span>
-<span class="o">&lt;/</span><span class="nl">bpmn2</span><span class="p">:</span><span class="n">definitions</span><span class="o">&gt;</span><span class="err">`</span>
+  &lt;!-- 引入BPMN-JS的JS文件 --&gt;
+  &lt;script src=&quot;https://unpkg.com/bpmn-js@7.3.0/dist/bpmn-modeler.development.js&quot;&gt;&lt;/script&gt;
+  &lt;script&gt;
+    var diagramXML = `&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;bpmn2:definitions xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:bpmn2=&quot;http://www.omg.org/spec/BPMN/20100524/MODEL&quot; xmlns:bpmndi=&quot;http://www.omg.org/spec/BPMN/20100524/DI&quot; xmlns:dc=&quot;http://www.omg.org/spec/DD/20100524/DC&quot; id=&quot;sample-diagram&quot; targetNamespace=&quot;http://bpmn.io/schema/bpmn&quot; xsi:schemaLocation=&quot;http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd&quot;&gt;
+&lt;bpmn2:process id=&quot;Process_1&quot; isExecutable=&quot;false&quot;&gt;
+  &lt;bpmn2:startEvent id=&quot;StartEvent_1&quot; /&gt;
+&lt;/bpmn2:process&gt;
+&lt;bpmndi:BPMNDiagram id=&quot;BPMNDiagram_1&quot;&gt;
+  &lt;bpmndi:BPMNPlane id=&quot;BPMNPlane_1&quot; bpmnElement=&quot;Process_1&quot;&gt;
+    &lt;bpmndi:BPMNShape id=&quot;_BPMNShape_StartEvent_2&quot; bpmnElement=&quot;StartEvent_1&quot;&gt;
+      &lt;dc:Bounds x=&quot;192&quot; y=&quot;82&quot; width=&quot;36&quot; height=&quot;36&quot; /&gt;
+    &lt;/bpmndi:BPMNShape&gt;
+  &lt;/bpmndi:BPMNPlane&gt;
+&lt;/bpmndi:BPMNDiagram&gt;
+&lt;/bpmn2:definitions&gt;`
 
-    <span class="n">var</span> <span class="n">bpmnModeler</span> <span class="o">=</span> <span class="n">new</span> <span class="n">BpmnJS</span><span class="p">({</span>
-      <span class="nl">container</span><span class="p">:</span> <span class="err">&#39;#</span><span class="n">canvas</span><span class="err">&#39;</span>
-    <span class="p">});</span>
+    var bpmnModeler = new BpmnJS({
+      container: '#canvas'
+    });
 
-    <span class="n">bpmnModeler</span><span class="p">.</span><span class="n">importXML</span><span class="p">(</span><span class="n">diagramXML</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">console</span><span class="p">.</span><span class="n">error</span><span class="p">(</span><span class="err">&#39;</span><span class="n">failed</span> <span class="n">to</span> <span class="n">load</span> <span class="n">diagram</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">err</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-  <span class="o">&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
-<span class="o">&lt;/</span><span class="n">body</span><span class="o">&gt;</span>
+    bpmnModeler.importXML(diagramXML, function(err) {
+      if (err) {
+        return console.error('failed to load diagram', err);
+      }
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
 
-<span class="o">&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
-</code></pre></div>
+&lt;/html&gt;</code></pre>
+
 
 <p>浏览器访问会出现如下一个流程编辑器，可以在这里进行流程的编辑</p>
 <p><img alt="" loading="lazy" src="/static/images/20200908.01.png" /></p>
 <p>bpmn-js有两种模式：Modeler模式和Viewer模式，在Modeler模式下可以对流程图进行编辑，而Viewer模式则不能，仅作为展示用</p>
 <p>viewer模式相对简单，无需引入CSS文件，只需引入一个JS即可</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="n">script</span> <span class="n">src</span><span class="o">=</span><span class="s">&quot;https://unpkg.com/bpmn-js@7.3.0/dist/bpmn-viewer.development.js&quot;</span><span class="o">&gt;&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&lt;script src=&quot;https://unpkg.com/bpmn-js@7.3.0/dist/bpmn-viewer.development.js&quot;&gt;&lt;/script&gt;</code></pre>
+
 
 <p>通常在流程执行阶段的展示用Viewer模式，配合节点颜色设置让用户清晰的看到当前流程的执行过程和状态</p>
 <p><img alt="" loading="lazy" src="/static/images/20200908.02.png" /></p>
 <h2 id="vue">VUE中使用</h2>
 <p>更多的时候我们可能会在VUE项目中使用，为了展示清晰，这里先通过vue-cli脚手架创建一个vue项目</p>
-<div class="codehilite"><pre><span></span><code><span class="err">vue create ops-coffee-bpmn</span>
-<span class="err">cd ops-coffee-bpmn</span>
-</code></pre></div>
+<pre class="codehilite"><code>vue create ops-coffee-bpmn
+cd ops-coffee-bpmn</code></pre>
+
 
 <p>原始的目录结构大概是这个样子的</p>
 <p><img alt="" loading="lazy" src="/static/images/20200908.03.png" /></p>
 <p>安装bpmn-js</p>
-<div class="codehilite"><pre><span></span><code><span class="err">npm install bpmn-js --save</span>
-</code></pre></div>
+<pre class="codehilite"><code>npm install bpmn-js --save</code></pre>
+
 
 <p>安装完成后就可以开始使用bpmn-js了，首先要引入bpmn-js的CSS，修改<code>src/main.js</code>文件</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">Vue</span> <span class="nn">from</span> <span class="s2">&quot;vue&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">App</span> <span class="nn">from</span> <span class="s2">&quot;./App.vue&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">router</span> <span class="nn">from</span> <span class="s2">&quot;./router&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">store</span> <span class="nn">from</span> <span class="s2">&quot;./store&quot;</span><span class="p">;</span>
+<pre class="codehilite"><code>import Vue from &quot;vue&quot;;
+import App from &quot;./App.vue&quot;;
+import router from &quot;./router&quot;;
+import store from &quot;./store&quot;;
 
-<span class="n">Vue</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">productionTip</span> <span class="o">=</span> <span class="n">false</span><span class="p">;</span>
+Vue.config.productionTip = false;
 
-<span class="kn">import</span> <span class="s2">&quot;bpmn-js/dist/assets/diagram-js.css&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="s2">&quot;bpmn-js/dist/assets/bpmn-font/css/bpmn.css&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="s2">&quot;bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="s2">&quot;bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css&quot;</span><span class="p">;</span>
+import &quot;bpmn-js/dist/assets/diagram-js.css&quot;;
+import &quot;bpmn-js/dist/assets/bpmn-font/css/bpmn.css&quot;;
+import &quot;bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css&quot;;
+import &quot;bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css&quot;;
 
-<span class="n">new</span> <span class="n">Vue</span><span class="p">({</span>
-  <span class="n">router</span><span class="p">,</span>
-  <span class="n">store</span><span class="p">,</span>
-  <span class="n">render</span><span class="p">:</span> <span class="n">h</span> <span class="o">=&gt;</span> <span class="n">h</span><span class="p">(</span><span class="n">App</span><span class="p">)</span>
-<span class="p">})</span><span class="o">.</span><span class="err">$</span><span class="n">mount</span><span class="p">(</span><span class="s2">&quot;#app&quot;</span><span class="p">);</span>
-</code></pre></div>
+new Vue({
+  router,
+  store,
+  render: h =&gt; h(App)
+}).$mount(&quot;#app&quot;);</code></pre>
+
 
 <p>然后编写<code>bpmn-modeler.vue</code>文件，文件位于<code>src/views/bpmn-modeler.vue</code></p>
-<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="n">template</span><span class="o">&gt;</span>
-  <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;containers&quot;</span><span class="o">&gt;</span>
-    <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;canvas&quot;</span> <span class="n">ref</span><span class="o">=</span><span class="s2">&quot;canvas&quot;</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-  <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-<span class="o">&lt;/</span><span class="n">template</span><span class="o">&gt;</span>
+<pre class="codehilite"><code>&lt;template&gt;
+  &lt;div class=&quot;containers&quot;&gt;
+    &lt;div class=&quot;canvas&quot; ref=&quot;canvas&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
 
-<span class="o">&lt;</span><span class="n">script</span><span class="o">&gt;</span>
-<span class="kn">import</span> <span class="nn">BpmnModeler</span> <span class="nn">from</span> <span class="s2">&quot;bpmn-js/lib/Modeler&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="p">{</span> <span class="n">xmlStr</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;../mock/xmlStr&quot;</span><span class="p">;</span>
+&lt;script&gt;
+import BpmnModeler from &quot;bpmn-js/lib/Modeler&quot;;
+import { xmlStr } from &quot;../mock/xmlStr&quot;;
 
-<span class="n">export</span> <span class="n">default</span> <span class="p">{</span>
-  <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;ops-coffee&quot;</span><span class="p">,</span>
-  <span class="n">mounted</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">this</span><span class="o">.</span><span class="n">init</span><span class="p">();</span>
-  <span class="p">},</span>
-  <span class="n">data</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="p">{</span>
-      <span class="n">bpmnModeler</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
-      <span class="n">container</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
-      <span class="n">canvas</span><span class="p">:</span> <span class="n">null</span>
-    <span class="p">};</span>
-  <span class="p">},</span>
-  <span class="n">methods</span><span class="p">:</span> <span class="p">{</span>
-    <span class="n">init</span><span class="p">()</span> <span class="p">{</span>
-      <span class="n">const</span> <span class="n">canvas</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="err">$</span><span class="n">refs</span><span class="o">.</span><span class="n">canvas</span><span class="p">;</span>
-      <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span> <span class="o">=</span> <span class="n">new</span> <span class="n">BpmnModeler</span><span class="p">({</span>
-        <span class="n">container</span><span class="p">:</span> <span class="n">canvas</span>
-      <span class="p">});</span>
+export default {
+  name: &quot;ops-coffee&quot;,
+  mounted() {
+    this.init();
+  },
+  data() {
+    return {
+      bpmnModeler: null,
+      container: null,
+      canvas: null
+    };
+  },
+  methods: {
+    init() {
+      const canvas = this.$refs.canvas;
+      this.bpmnModeler = new BpmnModeler({
+        container: canvas
+      });
 
-      <span class="n">this</span><span class="o">.</span><span class="n">createNewDiagram</span><span class="p">();</span>
-    <span class="p">},</span>
-    <span class="n">createNewDiagram</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">try</span> <span class="p">{</span>
-        <span class="n">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">importXML</span><span class="p">(</span><span class="n">xmlStr</span><span class="p">);</span>
-        <span class="n">const</span> <span class="p">{</span> <span class="n">warnings</span> <span class="p">}</span> <span class="o">=</span> <span class="n">result</span><span class="p">;</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">warnings</span><span class="p">);</span>
-      <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">warnings</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-<span class="o">&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
+      this.createNewDiagram();
+    },
+    createNewDiagram() {
+      try {
+        const result = this.bpmnModeler.importXML(xmlStr);
+        const { warnings } = result;
+        console.log(warnings);
+      } catch (err) {
+        console.log(err.message, err.warnings);
+      }
+    }
+  }
+};
+&lt;/script&gt;
 
-<span class="o">&lt;</span><span class="n">style</span> <span class="n">scoped</span><span class="o">&gt;</span>
-<span class="o">.</span><span class="n">containers</span> <span class="p">{</span>
-  <span class="n">width</span><span class="p">:</span> <span class="mi">100</span><span class="o">%</span><span class="p">;</span>
-  <span class="n">height</span><span class="p">:</span> <span class="n">calc</span><span class="p">(</span><span class="mi">100</span><span class="n">vh</span> <span class="o">-</span> <span class="mi">82</span><span class="n">px</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="o">.</span><span class="n">canvas</span> <span class="p">{</span>
-  <span class="n">width</span><span class="p">:</span> <span class="mi">100</span><span class="o">%</span><span class="p">;</span>
-  <span class="n">height</span><span class="p">:</span> <span class="mi">100</span><span class="o">%</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="o">&lt;/</span><span class="n">style</span><span class="o">&gt;</span>
-</code></pre></div>
+&lt;style scoped&gt;
+.containers {
+  width: 100%;
+  height: calc(100vh - 82px);
+}
+.canvas {
+  width: 100%;
+  height: 100%;
+}
+&lt;/style&gt;</code></pre>
+
 
 <p>这里引入了一个外部变量<code>xmlStr</code>，这个变量主要用来存放BPMN的XML数据，这里创建对应的<code>src/mock/xmlStr.js</code>文件</p>
-<div class="codehilite"><pre><span></span><code>export var xmlStr = `<span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-<span class="nt">&lt;bpmn2:definitions</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:bpmn2=</span><span class="s">&quot;http://www.omg.org/spec/BPMN/20100524/MODEL&quot;</span> <span class="na">xmlns:bpmndi=</span><span class="s">&quot;http://www.omg.org/spec/BPMN/20100524/DI&quot;</span> <span class="na">xmlns:dc=</span><span class="s">&quot;http://www.omg.org/spec/DD/20100524/DC&quot;</span> <span class="na">id=</span><span class="s">&quot;sample-diagram&quot;</span> <span class="na">targetNamespace=</span><span class="s">&quot;http://bpmn.io/schema/bpmn&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;bpmn2:process</span> <span class="na">id=</span><span class="s">&quot;Process_1&quot;</span> <span class="na">isExecutable=</span><span class="s">&quot;false&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;bpmn2:startEvent</span> <span class="na">id=</span><span class="s">&quot;StartEvent_1&quot;</span> <span class="nt">/&gt;</span>
-<span class="nt">&lt;/bpmn2:process&gt;</span>
-<span class="nt">&lt;bpmndi:BPMNDiagram</span> <span class="na">id=</span><span class="s">&quot;BPMNDiagram_1&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;bpmndi:BPMNPlane</span> <span class="na">id=</span><span class="s">&quot;BPMNPlane_1&quot;</span> <span class="na">bpmnElement=</span><span class="s">&quot;Process_1&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;bpmndi:BPMNShape</span> <span class="na">id=</span><span class="s">&quot;_BPMNShape_StartEvent_2&quot;</span> <span class="na">bpmnElement=</span><span class="s">&quot;StartEvent_1&quot;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;dc:Bounds</span> <span class="na">x=</span><span class="s">&quot;192&quot;</span> <span class="na">y=</span><span class="s">&quot;82&quot;</span> <span class="na">width=</span><span class="s">&quot;36&quot;</span> <span class="na">height=</span><span class="s">&quot;36&quot;</span> <span class="nt">/&gt;</span>
-    <span class="nt">&lt;/bpmndi:BPMNShape&gt;</span>
-  <span class="nt">&lt;/bpmndi:BPMNPlane&gt;</span>
-<span class="nt">&lt;/bpmndi:BPMNDiagram&gt;</span>
-<span class="nt">&lt;/bpmn2:definitions&gt;</span>`;
-</code></pre></div>
+<pre class="codehilite"><code>export var xmlStr = `&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;bpmn2:definitions xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:bpmn2=&quot;http://www.omg.org/spec/BPMN/20100524/MODEL&quot; xmlns:bpmndi=&quot;http://www.omg.org/spec/BPMN/20100524/DI&quot; xmlns:dc=&quot;http://www.omg.org/spec/DD/20100524/DC&quot; id=&quot;sample-diagram&quot; targetNamespace=&quot;http://bpmn.io/schema/bpmn&quot; xsi:schemaLocation=&quot;http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd&quot;&gt;
+&lt;bpmn2:process id=&quot;Process_1&quot; isExecutable=&quot;false&quot;&gt;
+  &lt;bpmn2:startEvent id=&quot;StartEvent_1&quot; /&gt;
+&lt;/bpmn2:process&gt;
+&lt;bpmndi:BPMNDiagram id=&quot;BPMNDiagram_1&quot;&gt;
+  &lt;bpmndi:BPMNPlane id=&quot;BPMNPlane_1&quot; bpmnElement=&quot;Process_1&quot;&gt;
+    &lt;bpmndi:BPMNShape id=&quot;_BPMNShape_StartEvent_2&quot; bpmnElement=&quot;StartEvent_1&quot;&gt;
+      &lt;dc:Bounds x=&quot;192&quot; y=&quot;82&quot; width=&quot;36&quot; height=&quot;36&quot; /&gt;
+    &lt;/bpmndi:BPMNShape&gt;
+  &lt;/bpmndi:BPMNPlane&gt;
+&lt;/bpmndi:BPMNDiagram&gt;
+&lt;/bpmn2:definitions&gt;`;</code></pre>
+
 
 <p>最后修改<code>src/router/index.js</code>文件添加路由</p>
-<div class="codehilite"><pre><span></span><code><span class="k">const</span> <span class="n">routes</span> <span class="o">=</span> <span class="p">[</span>
-  <span class="p">{</span>
-    <span class="n">path</span><span class="p">:</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span>
-    <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;编辑模式&quot;</span><span class="p">,</span>
-    <span class="n">component</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="n">import</span><span class="p">(</span><span class="s2">&quot;../views/bpmn-modeler.vue&quot;</span><span class="p">)</span>
-  <span class="p">},</span>
-<span class="p">];</span>
-</code></pre></div>
+<pre class="codehilite"><code>const routes = [
+  {
+    path: &quot;/&quot;,
+    name: &quot;编辑模式&quot;,
+    component: () =&gt; import(&quot;../views/bpmn-modeler.vue&quot;)
+  },
+];</code></pre>
+
 
 <p>然后访问页面，就可看到流程编辑器，进行流程编辑等操作</p>
 <p><img alt="" loading="lazy" src="/static/images/20200908.04.png" /></p>
 <p>以上为Modeler模式，如果想用Viewer模式的话，也非常简单，仅需将引入的<code>Modeler</code>改为<code>Viewer</code>即可</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">BpmnViewer</span> <span class="nn">from</span> <span class="s2">&quot;bpmn-js/lib/Viewer&quot;</span><span class="p">;</span>
-</code></pre></div>
+<pre class="codehilite"><code>import BpmnViewer from &quot;bpmn-js/lib/Viewer&quot;;</code></pre>
+
 
 <h2 id="_2">概念名词</h2>
 <p>在使用bpmn-js的过程中，经常会出现一些名词，了解他们有利于我们后续的使用和开发</p>

@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -45,74 +45,74 @@
         <p>Model内部Class Meta选项汇总</p>
 <h3 id="abstract">abstract</h3>
 <p>当abstract = true时，表示这个模型是一个抽象基类，抽象基类只能供其他model类引用，并不会实际创建表，例如</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">TimeBaseModel</span>(<span class="n">models</span>.<span class="n">Model</span>):
-    <span class="n">create_time</span> = <span class="n">models</span>.<span class="n">DateTimeField</span>(<span class="n">auto_now_add</span>=<span class="nb">True</span>, <span class="n">verbose_name</span>=<span class="s">&#39;创建时间&#39;</span>)
-    <span class="n">update_time</span> = <span class="n">models</span>.<span class="n">DateTimeField</span>(<span class="n">auto_now</span>=<span class="nb">True</span>, <span class="n">verbose_name</span>=<span class="s">&#39;更新时间&#39;</span>)
+<pre class="codehilite"><code>class TimeBaseModel(models.Model):
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
-    <span class="k">class</span> <span class="n">Meta:</span>
-        <span class="n">abstract</span> = <span class="nb">True</span>
+    class Meta:
+        abstract = True
 
 
-<span class="k">class</span> <span class="n">Project</span>(<span class="n">TimeBaseModel</span>):
-    <span class="n">english_name</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">16</span>, <span class="nb">unique</span>=<span class="nb">True</span>, <span class="n">verbose_name</span>=<span class="s">&#39;英文名称&#39;</span>)
-    <span class="n">chinese_name</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">32</span>, <span class="nb">unique</span>=<span class="nb">True</span>, <span class="n">verbose_name</span>=<span class="s">&#39;中文名称&#39;</span>)
+class Project(TimeBaseModel):
+    english_name = models.CharField(max_length=16, unique=True, verbose_name='英文名称')
+    chinese_name = models.CharField(max_length=32, unique=True, verbose_name='中文名称')
 
-    <span class="n">def</span> <span class="n">__str__</span>(<span class="nb">self</span>):
-        <span class="k">return</span> <span class="nb">self</span>.<span class="n">english_name</span>
-</code></pre></div>
+    def __str__(self):
+        return self.english_name</code></pre>
+
 
 <h3 id="db_table">db_table</h3>
 <p>定义数据库中表的名字，默认为app lale</p>
 <h3 id="indexes">indexes</h3>
 <p>主键</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<pre class="codehilite"><code>from django.db import models
 
-<span class="k">class</span> <span class="nc">Customer</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">first_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-    <span class="n">last_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+class Customer(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
 
-    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">indexes</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">models</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;last_name&#39;</span><span class="p">,</span> <span class="s1">&#39;first_name&#39;</span><span class="p">]),</span>
-            <span class="n">models</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;first_name&#39;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;first_name_idx&#39;</span><span class="p">),</span>
-        <span class="p">]</span>
-</code></pre></div>
+    class Meta:
+        indexes = [
+            models.Index(fields=['last_name', 'first_name']),
+            models.Index(fields=['first_name'], name='first_name_idx'),
+        ]</code></pre>
+
 
 <h3 id="index_together">index_together</h3>
 <p>联合索引</p>
-<div class="codehilite"><pre><span></span><code><span class="err">index_together = [&quot;pub_date&quot;, &quot;deadline&quot;]</span>
-</code></pre></div>
+<pre class="codehilite"><code>index_together = [&quot;pub_date&quot;, &quot;deadline&quot;]</code></pre>
+
 
 <p>以上表示pub_date和deadline会创建联合索引</p>
 <h3 id="unique_together">unique_together</h3>
 <p>联合唯一</p>
-<div class="codehilite"><pre><span></span><code><span class="err">unique_together = (&#39;parent&#39;, &#39;name&#39;,)</span>
-</code></pre></div>
+<pre class="codehilite"><code>unique_together = ('parent', 'name',)</code></pre>
+
 
 <p>以上表示parent和name两个字段联合唯一，也就是说数据库表里不会出现两条parent和name都相同的数据</p>
 <h3 id="ordering">ordering</h3>
 <p>对象的默认排序，用于获取对象列表时</p>
-<div class="codehilite"><pre><span></span><code><span class="err">ordering = [&#39;-pub_date&#39;, &#39;author&#39;]</span>
-</code></pre></div>
+<pre class="codehilite"><code>ordering = ['-pub_date', 'author']</code></pre>
+
 
 <p>以上表示先按照<code>pub_date</code>降序，然后按照<code>author</code>升序</p>
 <h3 id="permissions">permissions</h3>
 <p>创建此对象时要输入权限表的额外权限</p>
-<div class="codehilite"><pre><span></span><code><span class="err">permissions = (</span>
-<span class="err">    (&quot;relation_select&quot;, &quot;业务关系查看权限&quot;),</span>
-<span class="err">    (&quot;relation_change&quot;, &quot;业务关系修改权限&quot;),</span>
-<span class="err">)</span>
-</code></pre></div>
+<pre class="codehilite"><code>permissions = (
+    (&quot;relation_select&quot;, &quot;业务关系查看权限&quot;),
+    (&quot;relation_change&quot;, &quot;业务关系修改权限&quot;),
+)</code></pre>
+
 
 <h3 id="default_permissions">default_permissions</h3>
 <p>默认值为('add', 'change', 'delete', 'view') 。如果我们不需要任何默认的权限，可以将其设置为空列表</p>
-<div class="codehilite"><pre><span></span><code><span class="err">default_permissions = ()</span>
-</code></pre></div>
+<pre class="codehilite"><code>default_permissions = ()</code></pre>
+
 
 <h3 id="app_label">app_label</h3>
 <p>如果在<code>INSTALLED_APPS</code>中定义了一个应用程序之外的模型，它必须声明属于哪个应用程序</p>
-<div class="codehilite"><pre><span></span><code><span class="err">app_label = &#39;myapp&#39;</span>
-</code></pre></div>
+<pre class="codehilite"><code>app_label = 'myapp'</code></pre>
+
 
 <h3 id="verbose_name">verbose_name</h3>
 <p>对象的可读名称，单数</p>
@@ -141,16 +141,16 @@
 <p>本模型所特有的支持的数据库厂商名称。目前的内置厂商名称是： <code>sqlite</code>、<code>postgresql</code>、<code>mysql</code>和<code>oracle</code>。如果该属性不为空，且当前连接厂商与之不匹配，则该模型将不会同步</p>
 <h3 id="constraints">constraints</h3>
 <p>定义约束列表</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<pre class="codehilite"><code>from django.db import models
 
-<span class="k">class</span> <span class="nc">Customer</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">age</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+class Customer(models.Model):
+    age = models.IntegerField()
 
-    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">models</span><span class="o">.</span><span class="n">CheckConstraint</span><span class="p">(</span><span class="n">check</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">Q</span><span class="p">(</span><span class="n">age__gte</span><span class="o">=</span><span class="mi">18</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;age_gte_18&#39;</span><span class="p">),</span>
-        <span class="p">]</span>
-</code></pre></div>
+    class Meta:
+        constraints = [
+            models.CheckConstraint(check=models.Q(age__gte=18), name='age_gte_18'),
+        ]</code></pre>
+
 
 <h3 id="label">label</h3>
 <p>只读，返回<code>app_label.object_name</code></p>

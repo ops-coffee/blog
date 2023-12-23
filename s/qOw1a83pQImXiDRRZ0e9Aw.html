@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -51,61 +51,61 @@
 <p>logstash默认不支持数据直接写入HDFS，官方推荐的output插件是<code>webhdfs</code>，webhdfs使用HDFS提供的API将数据写入HDFS集群</p>
 <h2 id="_2">插件安装</h2>
 <p>插件安装比较简单，直接使用内置命令即可</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># cd /home/opt/tools/logstash-6.6.2</span>
-<span class="c1"># ./bin/logstash-plugin install logstash-output-webhdfs</span>
-</code></pre></div>
+<pre class="codehilite"><code># cd /home/opt/tools/logstash-6.6.2
+# ./bin/logstash-plugin install logstash-output-webhdfs</code></pre>
+
 
 <h2 id="hosts">配置hosts</h2>
 <p>HDFS集群内通过主机名进行通信所以logstash所在的主机需要配置hadoop集群的hosts信息</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># cat /etc/hosts</span>
-<span class="err">192.168.107.154 master01</span>
-<span class="err">192.168.107.155 slave01</span>
-<span class="err">192.168.107.156 slave02</span>
-<span class="err">192.168.107.157 slave03</span>
-</code></pre></div>
+<pre class="codehilite"><code># cat /etc/hosts
+192.168.107.154 master01
+192.168.107.155 slave01
+192.168.107.156 slave02
+192.168.107.157 slave03</code></pre>
+
 
 <p>如果不配置host信息，可能会报下边的错</p>
-<div class="codehilite"><pre><span></span><code><span class="err">[WARN ][logstash.outputs.webhdfs ] Failed to flush outgoing items</span>
-</code></pre></div>
+<pre class="codehilite"><code>[WARN ][logstash.outputs.webhdfs ] Failed to flush outgoing items</code></pre>
+
 
 <h2 id="logstash">logstash配置</h2>
 <p>kafka里边的源日志格式可以参考这片文章：<a href="/s/CYUls7uczVwGzwptZOX0Dg">ELK日志系统之使用Rsyslog快速方便的收集Nginx日志</a></p>
 <p>logstash的配置如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="n">cat</span> <span class="n">config</span><span class="o">/</span><span class="n">indexer_rsyslog_nginx</span><span class="p">.</span><span class="n">conf</span>
-<span class="k">input</span> <span class="err">{</span>
-    <span class="n">kafka</span> <span class="err">{</span>
-        <span class="n">bootstrap_servers</span> <span class="o">=&gt;</span> <span class="ss">&quot;10.82.9.202:9092,10.82.9.203:9092,10.82.9.204:9092&quot;</span>
-        <span class="n">topics</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="ss">&quot;rsyslog_nginx&quot;</span><span class="p">]</span>
-        <span class="n">codec</span> <span class="o">=&gt;</span> <span class="ss">&quot;json&quot;</span>
-    <span class="err">}</span>
-<span class="err">}</span>
+<pre class="codehilite"><code># cat config/indexer_rsyslog_nginx.conf
+input {
+    kafka {
+        bootstrap_servers =&gt; &quot;10.82.9.202:9092,10.82.9.203:9092,10.82.9.204:9092&quot;
+        topics =&gt; [&quot;rsyslog_nginx&quot;]
+        codec =&gt; &quot;json&quot;
+    }
+}
 
-<span class="n">filter</span> <span class="err">{</span>
-    <span class="nb">date</span> <span class="err">{</span>
-        <span class="k">match</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="ss">&quot;time_local&quot;</span><span class="p">,</span><span class="ss">&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;</span><span class="p">]</span>
-        <span class="n">target</span> <span class="o">=&gt;</span> <span class="ss">&quot;time_local&quot;</span>
-    <span class="err">}</span>
+filter {
+    date {
+        match =&gt; [&quot;time_local&quot;,&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;]
+        target =&gt; &quot;time_local&quot;
+    }
 
-    <span class="n">ruby</span> <span class="err">{</span>
-        <span class="n">code</span> <span class="o">=&gt;</span> <span class="ss">&quot;event.set(&#39;index.date&#39;, event.get(&#39;time_local&#39;).time.localtime.strftime(&#39;%Y%m%d&#39;))&quot;</span>
-    <span class="err">}</span>
+    ruby {
+        code =&gt; &quot;event.set('index.date', event.get('time_local').time.localtime.strftime('%Y%m%d'))&quot;
+    }
 
-    <span class="n">ruby</span> <span class="err">{</span>
-        <span class="n">code</span> <span class="o">=&gt;</span> <span class="ss">&quot;event.set(&#39;index.hour&#39;, event.get(&#39;time_local&#39;).time.localtime.strftime(&#39;%H&#39;))&quot;</span>
-    <span class="err">}</span>
-<span class="err">}</span>
+    ruby {
+        code =&gt; &quot;event.set('index.hour', event.get('time_local').time.localtime.strftime('%H'))&quot;
+    }
+}
 
-<span class="k">output</span> <span class="err">{</span>
-    <span class="n">webhdfs</span> <span class="err">{</span>
-        <span class="k">host</span> <span class="o">=&gt;</span> <span class="ss">&quot;master01&quot;</span>
-        <span class="n">port</span> <span class="o">=&gt;</span> <span class="mi">50070</span>
-        <span class="k">user</span> <span class="o">=&gt;</span> <span class="ss">&quot;hadmin&quot;</span>
-        <span class="n">path</span> <span class="o">=&gt;</span> <span class="ss">&quot;/logs/nginx/%{index.date}/%{index.hour}.log&quot;</span>
-        <span class="n">codec</span> <span class="o">=&gt;</span> <span class="ss">&quot;json&quot;</span>
-    <span class="err">}</span>
-    <span class="k">stdout</span> <span class="err">{</span> <span class="n">codec</span> <span class="o">=&gt;</span> <span class="n">rubydebug</span> <span class="err">}</span>
-<span class="err">}</span>
-</code></pre></div>
+output {
+    webhdfs {
+        host =&gt; &quot;master01&quot;
+        port =&gt; 50070
+        user =&gt; &quot;hadmin&quot;
+        path =&gt; &quot;/logs/nginx/%{index.date}/%{index.hour}.log&quot;
+        codec =&gt; &quot;json&quot;
+    }
+    stdout { codec =&gt; rubydebug }
+}</code></pre>
+
 
 <p>logstash配置文件分为三部分：input、filter、output</p>
 <p><strong>input</strong>指定源在哪里，我们是从kafka取数据，这里就写kafka集群的配置信息，配置解释：
@@ -125,37 +125,37 @@
 </ul>
 <p>webhdfs还有一些其他的参数例如<code>compression</code>,<code>flush_size</code>,<code>standby_host</code>,<code>standby_port</code>等可查看<a href="https://www.elastic.co/guide/en/logstash/current/plugins-outputs-webhdfs.html">官方文档</a>了解详细用法</p>
 <h2 id="logstash_1">启动logstash</h2>
-<div class="codehilite"><pre><span></span><code><span class="err"># bin/logstash -f config/indexer_rsyslog_nginx.conf</span>
-</code></pre></div>
+<pre class="codehilite"><code># bin/logstash -f config/indexer_rsyslog_nginx.conf</code></pre>
+
 
 <p>因为logstash配置中开了<code>stdout</code>输出，所以能在控制台看到格式化的数据，如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
-               <span class="s2">&quot;server_addr&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;172.18.90.17&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;http_user_agent&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Mozilla/5.0 (iPhone; CPU iPhone OS 10_2 like Mac OS X) AppleWebKit/602.3.12 (KHTML, like Gecko) Mobile/14C92 Safari/601.1 wechatdevtools/1.02.1902010 MicroMessenger/6.7.3 Language/zh_CN webview/ token/e7b92168159736c30401a55589317d8c&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;remote_addr&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;172.18.101.0&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;status&quot;</span> <span class="o">=&gt;</span> <span class="mi">200</span><span class="p">,</span>
-              <span class="s2">&quot;http_referer&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;https://ops-coffee.cn/wx02935bb29080a7b4/devtools/page-frame.html&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;upstream_response_time&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;0.056&quot;</span><span class="p">,</span>
-                      <span class="s2">&quot;host&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;ops-coffee.cn&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;request_uri&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;/api/community/v2/news/list&quot;</span><span class="p">,</span>
-              <span class="s2">&quot;request_time&quot;</span> <span class="o">=&gt;</span> <span class="mf">0.059</span><span class="p">,</span>
-           <span class="s2">&quot;upstream_status&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;200&quot;</span><span class="p">,</span>
-                  <span class="s2">&quot;@version&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;http_x_forwarded_for&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;192.168.106.100&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;time_local&quot;</span> <span class="o">=&gt;</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">18</span><span class="n">T11</span><span class="p">:</span><span class="mi">03</span><span class="p">:</span><span class="mf">45.000</span><span class="n">Z</span><span class="p">,</span>
-           <span class="s2">&quot;body_bytes_sent&quot;</span> <span class="o">=&gt;</span> <span class="mi">12431</span><span class="p">,</span>
-                <span class="s2">&quot;@timestamp&quot;</span> <span class="o">=&gt;</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">18</span><span class="n">T11</span><span class="p">:</span><span class="mi">03</span><span class="p">:</span><span class="mf">45.984</span><span class="n">Z</span><span class="p">,</span>
-                <span class="s2">&quot;index.date&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;20190318&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;index.hour&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;19&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;request_method&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
-             <span class="s2">&quot;upstream_addr&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;127.0.0.1:8181&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>{
+               &quot;server_addr&quot; =&gt; &quot;172.18.90.17&quot;,
+           &quot;http_user_agent&quot; =&gt; &quot;Mozilla/5.0 (iPhone; CPU iPhone OS 10_2 like Mac OS X) AppleWebKit/602.3.12 (KHTML, like Gecko) Mobile/14C92 Safari/601.1 wechatdevtools/1.02.1902010 MicroMessenger/6.7.3 Language/zh_CN webview/ token/e7b92168159736c30401a55589317d8c&quot;,
+               &quot;remote_addr&quot; =&gt; &quot;172.18.101.0&quot;,
+                    &quot;status&quot; =&gt; 200,
+              &quot;http_referer&quot; =&gt; &quot;https://ops-coffee.cn/wx02935bb29080a7b4/devtools/page-frame.html&quot;,
+    &quot;upstream_response_time&quot; =&gt; &quot;0.056&quot;,
+                      &quot;host&quot; =&gt; &quot;ops-coffee.cn&quot;,
+               &quot;request_uri&quot; =&gt; &quot;/api/community/v2/news/list&quot;,
+              &quot;request_time&quot; =&gt; 0.059,
+           &quot;upstream_status&quot; =&gt; &quot;200&quot;,
+                  &quot;@version&quot; =&gt; &quot;1&quot;,
+      &quot;http_x_forwarded_for&quot; =&gt; &quot;192.168.106.100&quot;,
+                &quot;time_local&quot; =&gt; 2019-03-18T11:03:45.000Z,
+           &quot;body_bytes_sent&quot; =&gt; 12431,
+                &quot;@timestamp&quot; =&gt; 2019-03-18T11:03:45.984Z,
+                &quot;index.date&quot; =&gt; &quot;20190318&quot;,
+                &quot;index.hour&quot; =&gt; &quot;19&quot;,
+            &quot;request_method&quot; =&gt; &quot;POST&quot;,
+             &quot;upstream_addr&quot; =&gt; &quot;127.0.0.1:8181&quot;
+}</code></pre>
+
 
 <p>查看hdfs发现数据已经按照定义好的路径正常写入</p>
-<div class="codehilite"><pre><span></span><code>$ hadoop fs -ls /logs/nginx/20190318/19.log
--rw-r--r--   <span class="m">3</span> hadmin supergroup       <span class="m">7776</span> <span class="m">2019</span>-03-18 <span class="m">19</span>:07 /logs/nginx/20190318/19.log
-</code></pre></div>
+<pre class="codehilite"><code>$ hadoop fs -ls /logs/nginx/20190318/19.log
+-rw-r--r--   3 hadmin supergroup       7776 2019-03-18 19:07 /logs/nginx/20190318/19.log</code></pre>
+
 
 <p>至此kafka到hdfs数据转储完成</p>
 <h1 id="_3">遇到的坑</h1>
@@ -164,97 +164,97 @@
 <p>我们output到ES或者HDFS时通常会使用类似于<code>rsyslog-nginx-%{+YYYY.MM.dd}</code>这样的变量来动态的设置index或者文件名，方便后续的检索，这里的变量<code>YYYY</code>使用的就是<code>@timestamp</code>中的时间，因为时区的问题生成的index或者文件名就差8小时不是很准确，这个问题在ELK架构中因为全部都是用的UTC时间且最终kibana展示时会自动转换我们无需关心，但这里要生成文件就需要认真对待下了</p>
 <p>这里采用的方案是解析日志中的时间字段<code>time_local</code>，然后根据日志中的时间字段添加两个新字段<code>index.date</code>和<code>index.hour</code>来分别标识日期和小时，在output的时候使用这两个新加的字段做变量来生成文件</p>
 <p>logstash filter配置如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="n">filter</span> <span class="err">{</span>
-    <span class="o">#</span> <span class="err">匹配原始日志中的</span><span class="n">time_local字段并设置为时间字段</span>
-    <span class="o">#</span> <span class="n">time_local字段为本地时间字段</span><span class="err">，没有</span><span class="mi">8</span><span class="err">小时的时间差</span>
-    <span class="nb">date</span> <span class="err">{</span>
-        <span class="k">match</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="ss">&quot;time_local&quot;</span><span class="p">,</span><span class="ss">&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;</span><span class="p">]</span>
-        <span class="n">target</span> <span class="o">=&gt;</span> <span class="ss">&quot;time_local&quot;</span>
-    <span class="err">}</span>
+<pre class="codehilite"><code>filter {
+    # 匹配原始日志中的time_local字段并设置为时间字段
+    # time_local字段为本地时间字段，没有8小时的时间差
+    date {
+        match =&gt; [&quot;time_local&quot;,&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;]
+        target =&gt; &quot;time_local&quot;
+    }
 
-    <span class="o">#</span> <span class="err">添加一个</span><span class="k">index</span><span class="p">.</span><span class="n">date字段</span><span class="err">，值设置为</span><span class="n">time_local的日期</span>
-    <span class="n">ruby</span> <span class="err">{</span>
-        <span class="n">code</span> <span class="o">=&gt;</span> <span class="ss">&quot;event.set(&#39;index.date&#39;, event.get(&#39;time_local&#39;).time.localtime.strftime(&#39;%Y%m%d&#39;))&quot;</span>
-    <span class="err">}</span>
+    # 添加一个index.date字段，值设置为time_local的日期
+    ruby {
+        code =&gt; &quot;event.set('index.date', event.get('time_local').time.localtime.strftime('%Y%m%d'))&quot;
+    }
 
-    <span class="o">#</span> <span class="err">添加一个</span><span class="k">index</span><span class="p">.</span><span class="n">hour字段</span><span class="err">，值设置为</span><span class="n">time_local的小时</span>
-    <span class="n">ruby</span> <span class="err">{</span>
-        <span class="n">code</span> <span class="o">=&gt;</span> <span class="ss">&quot;event.set(&#39;index.hour&#39;, event.get(&#39;time_local&#39;).time.localtime.strftime(&#39;%H&#39;))&quot;</span>
-    <span class="err">}</span>
-<span class="err">}</span>
-</code></pre></div>
+    # 添加一个index.hour字段，值设置为time_local的小时
+    ruby {
+        code =&gt; &quot;event.set('index.hour', event.get('time_local').time.localtime.strftime('%H'))&quot;
+    }
+}</code></pre>
+
 
 <p>output的path中配置如下</p>
-<div class="codehilite"><pre><span></span><code><span class="err">path =&gt; &quot;/logs/nginx/%{index.date}/%{index.hour}.log&quot;</span>
-</code></pre></div>
+<pre class="codehilite"><code>path =&gt; &quot;/logs/nginx/%{index.date}/%{index.hour}.log&quot;</code></pre>
+
 
 <h2 id="hdfshost">HDFS记录多了时间和host字段</h2>
 <p>在没有指定codec的情况下，logstash会给每一条日志添加时间和host字段，例如：</p>
 <p>源日志格式为</p>
-<div class="codehilite"><pre><span></span><code><span class="err">ops-coffee.cn | 192.168.105.91 | 19/Mar/2019:14:28:07 +0800 | GET / HTTP/1.1 | 304 | 0 | - | 0.000</span>
-</code></pre></div>
+<pre class="codehilite"><code>ops-coffee.cn | 192.168.105.91 | 19/Mar/2019:14:28:07 +0800 | GET / HTTP/1.1 | 304 | 0 | - | 0.000</code></pre>
+
 
 <p>经过logstash处理后多了时间和host字段</p>
-<div class="codehilite"><pre><span></span><code><span class="c">2019-03-19T06:28:07.510Z %{host}  ops-coffee.cn | 192.168.105.91 | 19/Mar/2019:14:28:07 +0800 | GET / HTTP/1.1 | 304 | 0 | - | 0.000</span>
-</code></pre></div>
+<pre class="codehilite"><code>2019-03-19T06:28:07.510Z %{host}  ops-coffee.cn | 192.168.105.91 | 19/Mar/2019:14:28:07 +0800 | GET / HTTP/1.1 | 304 | 0 | - | 0.000</code></pre>
+
 
 <p>如果不需要我们可以指定最终的format只取message，解决方法为在output中添加如下配置：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">codec =&gt; line {</span>
-<span class="err">    format =&gt; &quot;%{message}&quot;</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>codec =&gt; line {
+    format =&gt; &quot;%{message}&quot;
+}</code></pre>
+
 
 <h1 id="outputeshdfs">同时output到ES和HDFS</h1>
 <p>在实际应用中我们需要同时将日志数据写入ES和HDFS，那么可以直接用下边的配置来处理</p>
-<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">cat</span><span class="w"> </span><span class="n">config</span><span class="o">/</span><span class="n">indexer_rsyslog_nginx</span><span class="p">.</span><span class="n">conf</span><span class="w"></span>
-<span class="k">input</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">kafka</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">bootstrap_servers</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;localhost:9092&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="n">topics</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;rsyslog_nginx&quot;</span><span class="o">]</span><span class="w"></span>
-<span class="w">        </span><span class="n">codec</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;json&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
-<span class="err">}</span><span class="w"></span>
+<pre class="codehilite"><code># cat config/indexer_rsyslog_nginx.conf
+input {
+    kafka {
+        bootstrap_servers =&gt; &quot;localhost:9092&quot;
+        topics =&gt; [&quot;rsyslog_nginx&quot;]
+        codec =&gt; &quot;json&quot;
+    }
+}
 
-<span class="k">filter</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">    </span><span class="nc">date</span><span class="w"> </span><span class="err">{</span><span class="w">  </span>
-<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;time_local&quot;,&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;</span><span class="o">]</span><span class="w"></span>
-<span class="w">        </span><span class="n">target</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;@timestamp&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
+filter {
+    date {  
+        match =&gt; [&quot;time_local&quot;,&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;]
+        target =&gt; &quot;@timestamp&quot;
+    }
 
-<span class="w">    </span><span class="n">ruby</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">code</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;event.set(&#39;index.date&#39;, event.get(&#39;@timestamp&#39;).time.localtime.strftime(&#39;%Y%m%d&#39;))&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
+    ruby {
+        code =&gt; &quot;event.set('index.date', event.get('@timestamp').time.localtime.strftime('%Y%m%d'))&quot;
+    }
 
-<span class="w">    </span><span class="n">ruby</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">code</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;event.set(&#39;index.hour&#39;, event.get(&#39;@timestamp&#39;).time.localtime.strftime(&#39;%H&#39;))&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
+    ruby {
+        code =&gt; &quot;event.set('index.hour', event.get('@timestamp').time.localtime.strftime('%H'))&quot;
+    }
 
 
-<span class="err">}</span><span class="w"></span>
+}
 
-<span class="k">output</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">elasticsearch</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">hosts</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;192.168.106.203:9200&quot;</span><span class="o">]</span><span class="w"></span>
-<span class="w">        </span><span class="k">index</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;rsyslog-nginx-%{+YYYY.MM.dd}&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
+output {
+    elasticsearch {
+        hosts =&gt; [&quot;192.168.106.203:9200&quot;]
+        index =&gt; &quot;rsyslog-nginx-%{+YYYY.MM.dd}&quot;
+    }
 
-<span class="w">    </span><span class="n">webhdfs</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">host</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;master01&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="n">port</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">50070</span><span class="w"></span>
-<span class="w">        </span><span class="k">user</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;hadmin&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="k">path</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;/logs/nginx/%{index.date}/%{index.hour}.log&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="n">codec</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;json&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
-<span class="err">}</span><span class="w"></span>
-</code></pre></div>
+    webhdfs {
+        host =&gt; &quot;master01&quot;
+        port =&gt; 50070
+        user =&gt; &quot;hadmin&quot;
+        path =&gt; &quot;/logs/nginx/%{index.date}/%{index.hour}.log&quot;
+        codec =&gt; &quot;json&quot;
+    }
+}</code></pre>
+
 
 <p>这里我使用logstash的date插件将日志中的"time_local"字段直接替换为了@timestamp，这样做有什么好处呢？</p>
 <p>logstash默认生成的@timestamp字段记录的时间是logstash接收到消息的时间，这个时间可能与日志产生的时间不同，而我们往往需要关注的时间是日志产生的时间，且在ELK架构中Kibana日志输出的默认顺序就是按照@timestamp来排序的，所以往往我们需要将默认的@timestamp替换成日志产生的时间，替换方法就用到了date插件，date插件的用法如下</p>
-<div class="codehilite"><pre><span></span><code><span class="err">date {  </span>
-<span class="err">    match =&gt; [&quot;time_local&quot;,&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;]</span>
-<span class="err">    target =&gt; &quot;@timestamp&quot;</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>date {  
+    match =&gt; [&quot;time_local&quot;,&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;]
+    target =&gt; &quot;@timestamp&quot;
+}</code></pre>
+
 
 <p>match：匹配日志中的时间字段，这里为time_local</p>
 <p>target：将match匹配到的时间戳存储到给定的字段中，默认不指定的话就存到@timestamp字段</p>

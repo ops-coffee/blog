@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -45,13 +45,13 @@
         <p>Sadmin封装了两个基础类，分别是<code>ListCreateView</code>和<code>RetrieveUpdateDestroyView</code>，用来快捷的实现model的增删改查功能</p>
 <h2 id="listcreateview">ListCreateView</h2>
 <p>ListCreateView用来实现model（表）级别的操作，包括列出表里的数据，以及往表里插入数据，分别对应了<code>get</code>和<code>post</code>两个方法，用法如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">sadmin.commons.options</span> <span class="kn">import</span> <span class="n">ListCreateView</span><span class="p">,</span> <span class="n">RetrieveUpdateDestroyView</span>
+<pre class="codehilite"><code class="language-python">from sadmin.commons.options import ListCreateView, RetrieveUpdateDestroyView
 
-<span class="k">class</span> <span class="nc">TaskList</span><span class="p">(</span><span class="n">ListCreateView</span><span class="p">):</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">Task</span>
-    <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;engine/task.index.html&#39;</span>
-    <span class="n">permission</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;get&#39;</span><span class="p">:</span> <span class="s1">&#39;engine.task_select&#39;</span><span class="p">,</span> <span class="s1">&#39;post&#39;</span><span class="p">:</span> <span class="s1">&#39;engine.task_change&#39;</span><span class="p">}</span>
-</code></pre></div>
+class TaskList(ListCreateView):
+    model = Task
+    template = 'engine/task.index.html'
+    permission = {'get': 'engine.task_select', 'post': 'engine.task_change'}</code></pre>
+
 
 <h5 id="_1">方法定义</h5>
 <p>接收两个方法，分别是<code>get</code>和<code>post</code></p>
@@ -81,43 +81,43 @@
 <p>当强求包含start和length参数时，可以根据start和length参数的值进行数据切片，例如请求：<code>?start=1&amp;length=10</code>，则最终的QuerySet是<code>self.model.objects.all()[1:11]</code></p>
 <h5 id="datatables">datatables兼容</h5>
 <p>当前端是datatables异步发来的请求时则会返回datatables所需要的最终格式，包含<code>draw</code>、<code>recordsTotal</code>、<code>recordsFiltered</code>、<code>data</code></p>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
-    <span class="s2">&quot;draw&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;draw&#39;</span><span class="p">)),</span>
-    <span class="s2">&quot;recordsTotal&quot;</span><span class="p">:</span> <span class="n">_recordsTotalCount</span><span class="p">,</span>
-    <span class="s2">&quot;recordsFiltered&quot;</span><span class="p">:</span> <span class="nb">eval</span><span class="p">(</span><span class="n">_queryset</span> <span class="o">+</span> <span class="s1">&#39;.count()&#39;</span><span class="p">),</span>
-    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">_table_data</span>
-<span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-python">{
+    &quot;draw&quot;: int(request.GET.get('draw')),
+    &quot;recordsTotal&quot;: _recordsTotalCount,
+    &quot;recordsFiltered&quot;: eval(_queryset + '.count()'),
+    &quot;data&quot;: _table_data
+}</code></pre>
+
 
 <h5 id="_6">自定义函数</h5>
 <p>当查询条件比较复杂，通过<code>filter</code>无法满足需求时，可以使用<code>get_queryset</code>自定义方法来定义更为复杂的查询条件。<code>get_queryset</code>返回一个queryset的字符串，这个字符串会跟后续的查询条件等拼接</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">TasklogList</span><span class="p">(</span><span class="n">ListCreateView</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
-<span class="w">    </span><span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TaskLog</span><span class="w"></span>
-<span class="w">    </span><span class="n">orderby</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">&#39;-id&#39;</span><span class="o">]</span><span class="w"></span>
-<span class="w">    </span><span class="n">template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;engine/tasklog.index.html&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="n">permission</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{</span><span class="s1">&#39;get&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;engine.tasklog_select&#39;</span><span class="err">}</span><span class="w"></span>
+<pre class="codehilite"><code>class TasklogList(ListCreateView):
+    model = TaskLog
+    orderby = ['-id']
+    template = 'engine/tasklog.index.html'
+    permission = {'get': 'engine.tasklog_select'}
 
-<span class="w">    </span><span class="nv">@staticmethod</span><span class="w"></span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">get_queryset</span><span class="p">(</span><span class="n">request</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
-<span class="w">        </span><span class="n">tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">i.id for i in get_tasks_for_user(request)</span><span class="o">]</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;self.model.objects.filter(task_id__in={})&#39;</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span><span class="w"></span>
-</code></pre></div>
+    @staticmethod
+    def get_queryset(request):
+        tasks = [i.id for i in get_tasks_for_user(request)]
+        return 'self.model.objects.filter(task_id__in={})'.format(tasks)</code></pre>
+
 
 <p>当权限定义比较复杂，通过<code>permission</code>无法满足需求时，可以使用<code>valid_permission</code>自定义方法来定义更为复杂的权限验证。<code>valid_permission</code>返回一个布尔值，根据这个布尔值来确定是否有权限，如果为True则有权限，为False则无权限</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">TaskDetail</span>(<span class="n">RetrieveUpdateDestroyView</span>):
-    <span class="n">model</span> = <span class="n">Task</span>
+<pre class="codehilite"><code>class TaskDetail(RetrieveUpdateDestroyView):
+    model = Task
 
-    <span class="n">def</span> <span class="n">valid_permission</span>(<span class="nb">self</span>, <span class="n">request</span>, <span class="n">pk</span>):
-        <span class="k">return</span> <span class="nb">True</span> <span class="k">if</span> <span class="nb">self</span>.<span class="n">model</span>.<span class="n">objects</span>.<span class="nb">get</span>(<span class="nb">id</span>=<span class="n">pk</span>) <span class="nb">in</span> <span class="n">get_tasks_for_user</span>(<span class="n">request</span>) <span class="k">else</span> <span class="nb">False</span>
-</code></pre></div>
+    def valid_permission(self, request, pk):
+        return True if self.model.objects.get(id=pk) in get_tasks_for_user(request) else False</code></pre>
+
 
 <h2 id="retrieveupdatedestroyview">RetrieveUpdateDestroyView</h2>
 <p>RetrieveUpdateDestroyView用来实现object（行）级别的操作，包括获取某条数据的详情、修改某条数据或时删除某条数据，分别对应了<code>get</code>、<code>put</code>和<code>delete</code>三个方法，用法如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">class TaskDetail(RetrieveUpdateDestroyView):</span>
-<span class="err">    model = Task</span>
-<span class="err">    template = &#39;engine/task.detail.html&#39;</span>
-<span class="err">    permission = {&#39;get&#39;: &#39;engine.task_select&#39;, &#39;put&#39;: &#39;engine.task_change&#39;, &#39;delete&#39;: &#39;engine.task_change&#39;}</span>
-</code></pre></div>
+<pre class="codehilite"><code>class TaskDetail(RetrieveUpdateDestroyView):
+    model = Task
+    template = 'engine/task.detail.html'
+    permission = {'get': 'engine.task_select', 'put': 'engine.task_change', 'delete': 'engine.task_change'}</code></pre>
+
 
 <h5 id="_7">方法定义</h5>
 <p>接收三个方法，分别是<code>get</code>、<code>put</code>和<code>delete</code></p>

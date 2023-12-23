@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -79,51 +79,51 @@
 <li>添加脚本使用方法</li>
 </ol>
 <p>脚本开头需要添加脚本的使用方法，使用方法需明确脚本是否接收参数，对于一些有参数的脚本，需在使用方法中描述参数的含义，同时需要判断传入的参数数量是否一致，一个好的使用方法编写如下</p>
-<div class="codehilite"><pre><span></span><code><span class="err">if [ $# != 3 ];then</span>
-<span class="err">    echo &quot;USAGE: $0 PROJ ENVT TAG&quot;</span>
-<span class="err">    exit 1</span>
-<span class="err">fi</span>
-</code></pre></div>
+<pre class="codehilite"><code>if [ $# != 3 ];then
+    echo &quot;USAGE: $0 PROJ ENVT TAG&quot;
+    exit 1
+fi</code></pre>
+
 
 <p>使用方法应位于脚本开头位置</p>
 <ol>
 <li>提前创建文件夹</li>
 </ol>
 <p>当需要在特定文件夹下进行操作时，需要先检查文件夹是否存在，若不存在请提前创建，例如</p>
-<div class="codehilite"><pre><span></span><code><span class="k">if</span> <span class="p">[</span> <span class="o">!</span> <span class="o">-</span><span class="n">d</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="o">/</span> <span class="p">];</span><span class="k">then</span>
-    <span class="n">mkdir</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="o">/</span>
-<span class="n">fi</span>
+<pre class="codehilite"><code>if [ ! -d /tmp/ops-coffee/ ];then
+    mkdir /tmp/ops-coffee/
+fi
 
-<span class="n">cd</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="o">/</span> <span class="o">&amp;&amp;</span><span class="err">\</span>
-<span class="n">echo</span> <span class="ss">&quot;tmp file.&quot;</span> <span class="o">&gt;</span> <span class="n">dena</span><span class="p">.</span><span class="n">txt</span>
-</code></pre></div>
+cd /tmp/ops-coffee/ &amp;&amp;\
+echo &quot;tmp file.&quot; &gt; dena.txt</code></pre>
+
 
 <ol>
 <li>校验命令执行结果</li>
 </ol>
 <p>脚本是由若干命令组成的，脚本编写时应确保每一条命令都符合预期，在脚本中推荐使用<code>&amp;&amp;</code>和<code>||</code>运算符</p>
-<div class="codehilite"><pre><span></span><code><span class="err">ps -ef | grep java | grep -v grep | wc -l &amp;&amp;\</span>
-<span class="err">echo 0 ||\</span>
-<span class="err">echo 1</span>
-</code></pre></div>
+<pre class="codehilite"><code>ps -ef | grep java | grep -v grep | wc -l &amp;&amp;\
+echo 0 ||\
+echo 1</code></pre>
+
 
 <ol>
 <li>返回正确的状态</li>
 </ol>
 <p>在命令执行完成后，会根据命令的返回状态也就是<code>$?</code>的值来判断命令是否执行成功，当<code>$?</code>为<code>0</code>时表示执行成功，否则表示执行失败，如果是执行的脚本时，需要在脚本最后明确脚本返回状态，shell脚本可以在脚本执行成功时通过exit指定退出状态，例如</p>
-<div class="codehilite"><pre><span></span><code><span class="err">ls /ops-coffee.cn &amp;&amp;\</span>
-<span class="err">exit 0 ||\</span>
-<span class="err">exit 1</span>
-</code></pre></div>
+<pre class="codehilite"><code>ls /ops-coffee.cn &amp;&amp;\
+exit 0 ||\
+exit 1</code></pre>
+
 
 <p>而对于python脚本则可以借助<code>sys.exit</code>这样写</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span>
+<pre class="codehilite"><code>import sys
 
-<span class="k">if</span> <span class="s1">&#39;www&#39;</span> <span class="ow">in</span> <span class="s1">&#39;ops-coffee.cn&#39;</span><span class="p">:</span>
-  <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-  <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</code></pre></div>
+if 'www' in 'ops-coffee.cn':
+  sys.exit(0)
+else:
+  sys.exit(1)</code></pre>
+
 
 <p>其他语言类似</p>
 

@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -44,51 +44,50 @@
 
         <p>小地图minimap依赖<code>diagram-js-minimap</code>包</p>
 <p>1.安装<code>diagram-js-minimap</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err">npm install --save diagram-js-minimap</span>
-</code></pre></div>
+<pre class="codehilite"><code>npm install --save diagram-js-minimap</code></pre>
+
 
 <p>2.引入样式</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="s2">&quot;diagram-js-minimap/assets/diagram-js-minimap.css&quot;</span><span class="p">;</span>
-</code></pre></div>
+<pre class="codehilite"><code>import &quot;diagram-js-minimap/assets/diagram-js-minimap.css&quot;;</code></pre>
+
 
 <p>3.添加minimap并开启</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="n">script</span><span class="o">&gt;</span>
-<span class="kn">import</span> <span class="nn">BpmnViewer</span> <span class="nn">from</span> <span class="s2">&quot;bpmn-js/lib/Viewer&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="p">{</span> <span class="n">xmlStr</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;../mock/xmlStrViewer&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">minimapModule</span> <span class="nn">from</span> <span class="s2">&quot;diagram-js-minimap&quot;</span><span class="p">;</span>
+<pre class="codehilite"><code>&lt;script&gt;
+import BpmnViewer from &quot;bpmn-js/lib/Viewer&quot;;
+import { xmlStr } from &quot;../mock/xmlStrViewer&quot;;
+import minimapModule from &quot;diagram-js-minimap&quot;;
 
-<span class="n">export</span> <span class="n">default</span> <span class="p">{</span>
-  <span class="o">...</span>
-  <span class="n">methods</span><span class="p">:</span> <span class="p">{</span>
-    <span class="n">init</span><span class="p">()</span> <span class="p">{</span>
-      <span class="n">const</span> <span class="n">canvas</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="err">$</span><span class="n">refs</span><span class="o">.</span><span class="n">canvas</span><span class="p">;</span>
-      <span class="n">this</span><span class="o">.</span><span class="n">bpmnViewer</span> <span class="o">=</span> <span class="n">new</span> <span class="n">BpmnViewer</span><span class="p">({</span>
-        <span class="n">container</span><span class="p">:</span> <span class="n">canvas</span><span class="p">,</span>
-        <span class="n">additionalModules</span><span class="p">:</span> <span class="p">[</span><span class="n">minimapModule</span><span class="p">]</span>
-      <span class="p">});</span>
+export default {
+  ...
+  methods: {
+    init() {
+      const canvas = this.$refs.canvas;
+      this.bpmnViewer = new BpmnViewer({
+        container: canvas,
+        additionalModules: [minimapModule]
+      });
 
-      <span class="n">this</span><span class="o">.</span><span class="n">createNewDiagram</span><span class="p">();</span>
-    <span class="p">},</span>
-    <span class="n">async</span> <span class="n">createNewDiagram</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">try</span> <span class="p">{</span>
-        <span class="n">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnViewer</span><span class="o">.</span><span class="n">importXML</span><span class="p">(</span><span class="n">xmlStr</span><span class="p">);</span>
-        <span class="n">const</span> <span class="p">{</span> <span class="n">warnings</span> <span class="p">}</span> <span class="o">=</span> <span class="n">result</span><span class="p">;</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">warnings</span><span class="p">);</span>
+      this.createNewDiagram();
+    },
+    async createNewDiagram() {
+      try {
+        const result = await this.bpmnViewer.importXML(xmlStr);
+        const { warnings } = result;
+        console.log(warnings);
 
-        <span class="o">//</span> <span class="err">打开小地图</span>
-        <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;minimap&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">();</span>
+        // 打开小地图
+        this.bpmnModeler.get(&quot;minimap&quot;).open();
 
-        <span class="o">//</span> <span class="err">屏幕自适应</span>
-        <span class="n">const</span> <span class="n">canvas</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnViewer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;canvas&quot;</span><span class="p">);</span>
-        <span class="n">canvas</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="s2">&quot;fit-viewport&quot;</span><span class="p">,</span> <span class="n">true</span><span class="p">);</span>
-      <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">warnings</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-<span class="o">&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
-</code></pre></div>
+        // 屏幕自适应
+        const canvas = this.bpmnViewer.get(&quot;canvas&quot;);
+        canvas.zoom(&quot;fit-viewport&quot;, true);
+      } catch (err) {
+        console.log(err.message, err.warnings);
+      }
+    }
+  }
+};
+&lt;/script&gt;</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

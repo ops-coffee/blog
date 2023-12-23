@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -46,19 +46,19 @@
 <p>反向代理通过Nginx的upstream实现，配置非常简单，仅需以下三步</p>
 <p>1.申请https证书，这个不赘述，网上很多教程</p>
 <p>2.Nginx添加个server，把所有请求都代理到Netlify，配置如下</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">server</span> <span class="p">{</span>
-    <span class="err">listen</span>              <span class="err">443</span> <span class="err">ssl</span> <span class="err">http2</span><span class="p">;</span>
-    <span class="err">server_name</span>         <span class="err">blog.ops-coffee.cn</span><span class="p">;</span>
+<pre class="codehilite"><code>server {
+    listen              443 ssl http2;
+    server_name         blog.ops-coffee.cn;
 
-    <span class="err">ssl_certificate</span>     <span class="err">/etc/nginx/certificates/mlyxprovyp0ez6jw.cer</span><span class="p">;</span>
-    <span class="err">ssl_certificate_key</span> <span class="err">/etc/nginx/certificates/mlyxprovyp0ez6jw.key</span><span class="p">;</span>
+    ssl_certificate     /etc/nginx/certificates/mlyxprovyp0ez6jw.cer;
+    ssl_certificate_key /etc/nginx/certificates/mlyxprovyp0ez6jw.key;
 
-    <span class="err">location</span> <span class="err">/</span> <span class="err">{</span>
-        <span class="err">proxy_set_header</span> <span class="err">X-Forwarded-For</span> <span class="err">$proxy_add_x_forwarded_for</span><span class="p">;</span>
-        <span class="err">proxy_pass</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">blog-ops-coffee</span><span class="o">.</span><span class="n">netlify</span><span class="o">.</span><span class="n">app</span><span class="o">/</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="err">}</span>
-</code></pre></div>
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass https://blog-ops-coffee.netlify.app/;
+    }
+}</code></pre>
+
 
 <p>3.修改DNS将原本指向<code>blog-ops-coffee.netlify.app</code>的CNAME记录该为指向这台主机的A记录即可</p>
 <p>大功告成~</p>

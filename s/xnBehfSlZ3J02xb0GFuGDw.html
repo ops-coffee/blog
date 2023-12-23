@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -57,175 +57,175 @@
 <h1 id="python">python多线程使用</h1>
 <p>分析了部署日志，发现在整个部署过程中造成时间增长的主要原因是下载镜像、重启容器时间较长</p>
 <p>整个部署程序由python开发，核心思想是用paramiko模块来远程执行ssh命令，在还没有引入Docker的时候，发布是rsyslog同步代码，单线程滚动重启服务，上线Docker后整个部署程序逻辑没有大改，只是把同步代码重启服务给换成了下载镜像重启容器，代码大致如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">paramiko</span>
+<pre class="codehilite"><code>import os
+import paramiko
 
-<span class="c1"># paramiko.util.log_to_file(&quot;/tmp/paramiko.log&quot;)</span>
-<span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-
-
-<span class="k">class</span> <span class="nc">Conn</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="s1">&#39;ops&#39;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">pkey</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">RSAKey</span><span class="o">.</span><span class="n">from_private_key_file</span><span class="p">(</span>
-            <span class="n">filepath</span> <span class="o">+</span> <span class="s1">&#39;/ssh_private.key&#39;</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
-        <span class="n">ssh</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">()</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">ssh</span><span class="o">.</span><span class="n">set_missing_host_key_policy</span><span class="p">(</span><span class="n">paramiko</span><span class="o">.</span><span class="n">AutoAddPolicy</span><span class="p">())</span>
-            <span class="n">ssh</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">pkey</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pkey</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)}</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">exec_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">180</span><span class="p">)</span>
-                <span class="n">_err_list</span> <span class="o">=</span> <span class="n">stderr</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">_err_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">_err_list</span><span class="p">}</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readlines</span><span class="p">()}</span>
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">))}</span>
-        <span class="k">finally</span><span class="p">:</span>
-            <span class="n">ssh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-        <span class="k">return</span> <span class="n">data</span>
+# paramiko.util.log_to_file(&quot;/tmp/paramiko.log&quot;)
+filepath = os.path.split(os.path.realpath(__file__))[0]
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="c1"># 演示代码简化了很多，整体逻辑不变</span>
+class Conn:
+    def __init__(self, ip, port=22, username='ops'):
+        self.ip = ip
+        self.port = int(port)
+        self.username = username
 
-    <span class="n">hostlist</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;10.82.9.47&#39;</span><span class="p">,</span> <span class="s1">&#39;10.82.9.48&#39;</span><span class="p">]</span>
-    <span class="n">image_url</span> <span class="o">=</span> <span class="s1">&#39;ops-coffee:latest&#39;</span>
+        self.pkey = paramiko.RSAKey.from_private_key_file(
+            filepath + '/ssh_private.key'
+        )
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">hostlist</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">Conn</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">&#39;docker pull </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">image_url</span><span class="p">))</span>
-        <span class="c1"># 在镜像下载完成后进行更新容器的操作，代码类似省略了</span>
-</code></pre></div>
+    def cmd(self, cmd):
+        ssh = paramiko.SSHClient()
+
+        try:
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh.connect(self.ip, self.port, self.username, pkey=self.pkey, timeout=5)
+        except Exception as err:
+            data = {&quot;state&quot;: 0, &quot;message&quot;: str(err)}
+        else:
+            try:
+                stdin, stdout, stderr = ssh.exec_command(cmd, timeout=180)
+                _err_list = stderr.readlines()
+
+                if len(_err_list) &gt; 0:
+                    data = {&quot;state&quot;: 0, &quot;message&quot;: _err_list}
+                else:
+                    data = {&quot;state&quot;: 1, &quot;message&quot;: stdout.readlines()}
+            except Exception as err:
+                data = {&quot;state&quot;: 0, &quot;message&quot;: '%s: %s' % (self.ip, str(err))}
+        finally:
+            ssh.close()
+
+        return data
+
+
+if __name__ == '__main__':
+    # 演示代码简化了很多，整体逻辑不变
+
+    hostlist = ['10.82.9.47', '10.82.9.48']
+    image_url = 'ops-coffee:latest'
+
+    for i in hostlist:
+        print(Conn(i).cmd('docker pull %s' % image_url))
+        # 在镜像下载完成后进行更新容器的操作，代码类似省略了</code></pre>
+
 
 <p>全部都是单线程操作，可想效率就不会很高，为什么不用多线程？主要还是考虑到服务的可用性，一台服务器更新完成再更新下一台服务器直到所有服务器更新完成，单线程滚动更新最大程度保证服务可用，如果同时所有服务器进行更新，那么服务重启过程中无法对外提供服务，系统会有宕机的风险，且当时项目规模都很小，忽略掉了这个时间的增加，随着项目越来越多，规模越来越大，不得不重新思考这块的优化</p>
 <p>引入多线程势在必行，那么多线程该如何应用呢？从服务整体可用性考虑，把下载镜像跟重启容器两个操作拆分，下载镜像不影响服务正常提供，完全可以采用多线程，这样整个下载镜像的时间将大大缩短，优化后代码如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">threading</span>
-<span class="c1"># 再导入上一个示例里边的Conn类</span>
+<pre class="codehilite"><code>import threading
+# 再导入上一个示例里边的Conn类
 
-<span class="k">class</span> <span class="nc">DownloadThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+class DownloadThread(threading.Thread):
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">image_url</span><span class="p">):</span>
-        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">image_url</span> <span class="o">=</span> <span class="n">image_url</span>
+    def __init__(self, host, image_url):
+        threading.Thread.__init__(self)
+        self.host = host
+        self.image_url = image_url
 
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">Conn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">&#39;docker login -u ops -p coffee hub.ops-coffee.cn&#39;</span><span class="p">)</span>
-        <span class="n">r2</span> <span class="o">=</span> <span class="n">Conn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">&#39;docker pull </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_url</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">r2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;state&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">alive_host</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span>
-            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;----&gt;</span><span class="si">%s</span><span class="s1">镜像下载完成&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">alive_host</span> <span class="o">=</span> <span class="bp">None</span>
-            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;----&gt;</span><span class="si">%s</span><span class="s1">镜像下载失败，details：</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">r2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">)))</span>
+    def run(self):
+        Conn(self.host).cmd('docker login -u ops -p coffee hub.ops-coffee.cn')
+        r2 = Conn(self.host).cmd('docker pull %s' % self.image_url)
+        if r2.get('state'):
+            self.alive_host = self.host
+            print('----&gt;%s镜像下载完成' % self.host)
+        else:
+            self.alive_host = None
+            print('----&gt;%s镜像下载失败，details：%s' % (self.host, r2.get('message')))
 
-    <span class="k">def</span> <span class="nf">get_result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">alive_host</span>
+    def get_result(self):
+        return self.alive_host
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="c1"># 演示代码简化了很多，整体逻辑不变</span>
+if __name__ == '__main__':
+    # 演示代码简化了很多，整体逻辑不变
 
-    <span class="n">hostlist</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;10.82.9.47&#39;</span><span class="p">,</span> <span class="s1">&#39;10.82.9.48&#39;</span><span class="p">]</span>
-    <span class="n">image_url</span> <span class="o">=</span> <span class="s1">&#39;ops-coffee:latest&#39;</span>
+    hostlist = ['10.82.9.47', '10.82.9.48']
+    image_url = 'ops-coffee:latest'
 
-    <span class="n">threads</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">hostlist</span><span class="p">:</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">DownloadThread</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">image_url</span><span class="p">)</span>
-        <span class="n">threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    threads = []
+    for host in hostlist:
+        t = DownloadThread(host, image_url)
+        threads.append(t)
 
-    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
-        <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    for t in threads:
+        t.start()
 
-    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
-        <span class="n">t</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    for t in threads:
+        t.join()
 
-    <span class="n">alive_host</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
-        <span class="n">alive_host</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">get_result</span><span class="p">())</span>
-    <span class="c1">## 多线程下载镜像结束</span>
+    alive_host = []
+    for t in threads:
+        alive_host.append(t.get_result())
+    ## 多线程下载镜像结束
 
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;----&gt;本项目共有主机</span><span class="si">%d</span><span class="s1">台，</span><span class="si">%d</span><span class="s1">台主机下载镜像成功&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hostlist</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">alive_host</span><span class="p">)))</span>
-</code></pre></div>
+    print('----&gt;本项目共有主机%d台，%d台主机下载镜像成功' % (len(hostlist), len(alive_host)))</code></pre>
+
 
 <p>重启容器就不能这么简单粗暴的多线程同时重启了，上边也说了，同时重启就会有服务宕机的风险。线上服务器都有一定的冗余，不能同时重启那么可以分批重启嘛，每次重启多少？分析了流量情况，我们想到了一个算法，如果项目主机少于8台，那么就单线程滚动重启，也用不了太长时间，如果项目主机大于8台，那么用项目主机数/8向上取整，作为多线程重启的线程数多线程重启，这样差不多能保证项目里边有80%左右的主机一直对外提供服务，降低服务不可用的风险，优化后的代码如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">threading</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
-<span class="c1"># 再导入上一个示例里边的Conn类</span>
+<pre class="codehilite"><code>import threading
+from math import ceil
+# 再导入上一个示例里边的Conn类
 
-<span class="k">class</span> <span class="nc">DeployThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_max_num</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="n">environment_name</span><span class="p">,</span> <span class="n">image_url</span><span class="p">):</span>
-        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">thread_max_num</span> <span class="o">=</span> <span class="n">thread_max_num</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span> <span class="o">=</span> <span class="n">project_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">environment_name</span> <span class="o">=</span> <span class="n">environment_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">image_url</span> <span class="o">=</span> <span class="n">image_url</span>
+class DeployThread(threading.Thread):
+    def __init__(self, thread_max_num, host, project_name, environment_name, image_url):
+        threading.Thread.__init__(self)
+        self.thread_max_num = thread_max_num
+        self.host = host
+        self.project_name = project_name
+        self.environment_name = environment_name
+        self.image_url = image_url
 
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">smile_host</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_max_num</span><span class="p">:</span>
-            <span class="n">Conn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">&#39;docker stop </span><span class="si">%s</span><span class="s1"> &amp;&amp; docker rm </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">))</span>
+    def run(self):
+        self.smile_host = []
+        with self.thread_max_num:
+            Conn(self.host).cmd('docker stop %s &amp;&amp; docker rm %s' % (self.project_name, self.project_name))
 
-            <span class="n">r5</span> <span class="o">=</span> <span class="n">Conn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span>
-                <span class="s1">&#39;docker run -d --env ENVT=</span><span class="si">%s</span><span class="s1"> --env PROJ=</span><span class="si">%s</span><span class="s1"> --restart=always --name=</span><span class="si">%s</span><span class="s1"> -p 80:80 </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">environment_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_url</span><span class="p">)</span>
-            <span class="p">)</span>
+            r5 = Conn(self.host).cmd(
+                'docker run -d --env ENVT=%s --env PROJ=%s --restart=always --name=%s -p 80:80 %s' % (
+                    self.environment_name, self.project_name, self.project_name, self.image_url)
+            )
 
-            <span class="k">if</span> <span class="n">r5</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;state&#39;</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">smile_host</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
-                <span class="k">print</span><span class="p">(</span><span class="s1">&#39;----&gt;</span><span class="si">%s</span><span class="s1">镜像更新完成&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">print</span><span class="p">(</span><span class="s1">&#39;----&gt;</span><span class="si">%s</span><span class="s1">服务器执行docker run命令失败,details:</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">r5</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">)))</span>
+            if r5.get('state'):
+                self.smile_host.append(self.host)
+                print('----&gt;%s镜像更新完成' % (self.host))
+            else:
+                print('----&gt;%s服务器执行docker run命令失败,details:%s' % (self.host, r5.get('message')))
 
-            <span class="c1"># check镜像重启状态 and 重启失败需要回滚代码省略</span>
+            # check镜像重启状态 and 重启失败需要回滚代码省略
 
-    <span class="k">def</span> <span class="nf">get_result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">smile_host</span>
+    def get_result(self):
+        return self.smile_host
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="c1"># 演示代码简化了很多，整体逻辑不变</span>
+if __name__ == '__main__':
+    # 演示代码简化了很多，整体逻辑不变
 
-    <span class="n">alive_host</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;10.82.9.47&#39;</span><span class="p">,</span> <span class="s1">&#39;10.82.9.48&#39;</span><span class="p">]</span>
-    <span class="n">image_url</span> <span class="o">=</span> <span class="s1">&#39;ops-coffee:latest&#39;</span>
+    alive_host = ['10.82.9.47', '10.82.9.48']
+    image_url = 'ops-coffee:latest'
 
-    <span class="n">project_name</span> <span class="o">=</span> <span class="s1">&#39;coffee&#39;</span>
-    <span class="n">environment_name</span> <span class="o">=</span> <span class="s1">&#39;prod&#39;</span>
+    project_name = 'coffee'
+    environment_name = 'prod'
 
-    <span class="c1"># alive_host / 8 向上取整作为最大线程数</span>
-    <span class="n">thread_max_num</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">alive_host</span><span class="p">)</span> <span class="o">/</span> <span class="mi">8</span><span class="p">))</span>
+    # alive_host / 8 向上取整作为最大线程数
+    thread_max_num = threading.Semaphore(ceil(len(alive_host) / 8))
 
-    <span class="n">threads</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">alive_host</span><span class="p">:</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">DeployThread</span><span class="p">(</span><span class="n">thread_max_num</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="n">environment_name</span><span class="p">,</span> <span class="n">image_url</span><span class="p">)</span>
-        <span class="n">threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    threads = []
+    for host in alive_host:
+        t = DeployThread(thread_max_num, host, project_name, environment_name, image_url)
+        threads.append(t)
 
-    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
-        <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    for t in threads:
+        t.start()
 
-    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
-        <span class="n">t</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    for t in threads:
+        t.join()
 
-    <span class="n">smile_host</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
-        <span class="n">smile_host</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">get_result</span><span class="p">())</span>
+    smile_host = []
+    for t in threads:
+        smile_host.append(t.get_result())
 
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;----&gt;</span><span class="si">%d</span><span class="s1">台主机更新成功&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">smile_host</span><span class="p">)))</span>
-</code></pre></div>
+    print('----&gt;%d台主机更新成功' % (len(smile_host)))</code></pre>
+
 
 <p>经过以上优化我们实测后发现，一个28台主机的项目在优化前上线要花10分钟左右的时间，优化后只要2分钟左右，效率提高80%</p>
 <h1 id="_2">多环境下配置文件的处理</h1>
@@ -234,27 +234,27 @@
 <p>我们处理不同配置的整体思路是，在Docker启动时传入两个环境变量ENVT和PROJ，这两个环境变量用来定义这个容器是属于哪个项目的哪个环境，Docker的启动脚本拿到这两个环境变量后利用confd服务自动去配置中心获取对应的配置，然后更新到本地对应的位置，这样就不需要把配置文件打包进镜像了</p>
 <p>以一个纯静态只需要nginx服务的项目为例</p>
 <p>Dockerfile如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="k">FROM</span> <span class="n">nginx</span><span class="p">:</span><span class="n">base</span>
+<pre class="codehilite"><code>FROM nginx:base
 
-<span class="k">COPY</span> <span class="n">conf</span><span class="o">/</span><span class="n">run</span><span class="p">.</span><span class="n">sh</span>     <span class="o">/</span><span class="n">run</span><span class="p">.</span><span class="n">sh</span>
-<span class="k">COPY</span> <span class="n">webapp</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">webapp</span>
+COPY conf/run.sh     /run.sh
+COPY webapp /home/project/webapp
 
-<span class="n">CMD</span> <span class="p">[</span><span class="ss">&quot;/run.sh&quot;</span><span class="p">]</span>
-</code></pre></div>
+CMD [&quot;/run.sh&quot;]</code></pre>
+
 
 <p>run.sh脚本如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
-/etc/init.d/nginx start <span class="o">&amp;&amp;</span> <span class="se">\</span>
-sed -i <span class="s2">&quot;s|/project/env/|/</span><span class="si">${</span><span class="nv">PROJ</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">ENVT</span><span class="si">}</span><span class="s2">/|g&quot;</span> /etc/confd/conf.d/conf.toml <span class="o">&amp;&amp;</span> <span class="se">\</span>
-sed -i <span class="s2">&quot;s|/project/env/|/</span><span class="si">${</span><span class="nv">PROJ</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">ENVT</span><span class="si">}</span><span class="s2">/|g&quot;</span> /etc/confd/templates/conf.tmpl <span class="o">&amp;&amp;</span> <span class="se">\</span>
-confd -watch -backend etcd -node<span class="o">=</span>http://192.168.107.101:2379 -node<span class="o">=</span>http://192.168.107.102:2379 <span class="o">||</span> <span class="se">\</span>
-<span class="nb">exit</span> <span class="m">1</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-bash linenums">#!/bin/bash
+/etc/init.d/nginx start &amp;&amp; \
+sed -i &quot;s|/project/env/|/${PROJ}/${ENVT}/|g&quot; /etc/confd/conf.d/conf.toml &amp;&amp; \
+sed -i &quot;s|/project/env/|/${PROJ}/${ENVT}/|g&quot; /etc/confd/templates/conf.tmpl &amp;&amp; \
+confd -watch -backend etcd -node=http://192.168.107.101:2379 -node=http://192.168.107.102:2379 || \
+exit 1</code></pre>
+
 
 <p>Docker启动命令：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&#39;docker run -d --env ENVT=%s --env PROJ=%s --restart=always --name=%s -p 80:80 %s&#39; % (</span>
-<span class="err">    self.environment_name, self.project_name, self.project_name, self.image_url)</span>
-</code></pre></div>
+<pre class="codehilite"><code>'docker run -d --env ENVT=%s --env PROJ=%s --restart=always --name=%s -p 80:80 %s' % (
+    self.environment_name, self.project_name, self.project_name, self.image_url)</code></pre>
+
 
 <p>做到了一次镜像打包多环境共用，上线时也无需再走一次编译打包的流程，只需更新镜像重启容器即可，效率明显提高</p>
 <h1 id="_3">写在最后</h1>

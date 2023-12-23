@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -46,49 +46,48 @@
 <p>django template默认支持几个模板标签，通过模板标签可以实现一些高级的功能，常用的模板标签有以下几个</p>
 <h3 id="extends">extends</h3>
 <p>extends为模板继承的标签，表示此模板扩展了父模板，通常在继承页面时使用，例如页面继承base模板</p>
-<div class="codehilite"><pre><span></span><code><span class="cp">{%</span> <span class="k">extends</span> <span class="s2">&quot;base.html&quot;</span> <span class="cp">%}</span><span class="x"></span>
-</code></pre></div>
+<pre class="codehilite"><code>{% extends &quot;base.html&quot; %}</code></pre>
+
 
 <h3 id="include">include</h3>
 <p>include为模板包含的标签，表示此模板会包含以下模板的内容，通常对于一些有公共模板元素的模板，将公共模板元素独立为一个模板，然后在其他模板中引用</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&lt;!-- 资源详情 --&gt;</span>
-<span class="err">{% include &quot;carrier/instance.detail.html&quot; %}</span>
-</code></pre></div>
+<pre class="codehilite"><code>&lt;!-- 资源详情 --&gt;
+{% include &quot;carrier/instance.detail.html&quot; %}</code></pre>
+
 
 <p>include的子模板需要注意<strong>元素ID不要与当前模板重复</strong></p>
 <h3 id="block">block</h3>
 <p>block标记模板中哪些部分可以被子模板替换，通常基础模板中会构建一个基本框架，对于一些需要变动的地方会用block代替，继承基础模板后就可以通过block模板标签替换响应的内容</p>
-<div class="codehilite"><pre><span></span><code><span class="cp">{%</span> <span class="k">block</span> <span class="nv">breadcrumb</span> <span class="cp">%}</span>
-  <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">&quot;btn btn-secondary&quot;</span> <span class="na">onclick=</span><span class="s">&quot;exportUrl()&quot;</span> <span class="na">id=</span><span class="s">&quot;id-export&quot;</span><span class="nt">&gt;&lt;i</span> <span class="na">class=</span><span class="s">&quot;fa fa-download&quot;</span><span class="nt">&gt;&lt;/i&gt;</span> 导出<span class="nt">&lt;/button&gt;</span>
-  <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">&quot;btn btn-info&quot;</span> <span class="na">onclick=</span><span class="s">&quot;openUrl()&quot;</span> <span class="na">id=</span><span class="s">&quot;id-api&quot;</span><span class="nt">&gt;&lt;i</span> <span class="na">class=</span><span class="s">&quot;fa fa-link&quot;</span><span class="nt">&gt;&lt;/i&gt;</span> API<span class="nt">&lt;/button&gt;</span>
-<span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
-</code></pre></div>
+<pre class="codehilite"><code>{% block breadcrumb %}
+  &lt;button class=&quot;btn btn-secondary&quot; onclick=&quot;exportUrl()&quot; id=&quot;id-export&quot;&gt;&lt;i class=&quot;fa fa-download&quot;&gt;&lt;/i&gt; 导出&lt;/button&gt;
+  &lt;button class=&quot;btn btn-info&quot; onclick=&quot;openUrl()&quot; id=&quot;id-api&quot;&gt;&lt;i class=&quot;fa fa-link&quot;&gt;&lt;/i&gt; API&lt;/button&gt;
+{% endblock %}</code></pre>
+
 
 <h3 id="for">for</h3>
 <p>模板中循环标签</p>
-<div class="codehilite"><pre><span></span><code><span class="cp">{%</span> <span class="k">for</span> <span class="nv">item</span> <span class="k">in</span> <span class="nv">lPage</span> <span class="cp">%}</span>
-  <span class="nt">&lt;tr&gt;</span>
-    <span class="nt">&lt;td&gt;</span><span class="cp">{{</span> <span class="nv">item.user.username</span> <span class="cp">}}</span><span class="nt">&lt;/td&gt;</span>
-    <span class="nt">&lt;td&gt;</span><span class="cp">{{</span> <span class="nv">item.software.software_name</span> <span class="cp">}}</span><span class="nt">&lt;/td&gt;</span>
-    <span class="nt">&lt;td&gt;</span><span class="cp">{{</span> <span class="nv">item.grant_date</span> <span class="o">|</span> <span class="nf">date</span><span class="s2">:&quot;Y-m-d&quot;</span> <span class="cp">}}</span><span class="nt">&lt;/td&gt;</span>
-    <span class="nt">&lt;td&gt;</span><span class="cp">{{</span> <span class="nv">item.revoke_date</span> <span class="cp">}}</span><span class="nt">&lt;/td&gt;</span>
-  <span class="nt">&lt;/tr&gt;</span>
-<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
-</code></pre></div>
+<pre class="codehilite"><code>{% for item in lPage %}
+  &lt;tr&gt;
+    &lt;td&gt;{{ item.user.username }}&lt;/td&gt;
+    &lt;td&gt;{{ item.software.software_name }}&lt;/td&gt;
+    &lt;td&gt;{{ item.grant_date | date:&quot;Y-m-d&quot; }}&lt;/td&gt;
+    &lt;td&gt;{{ item.revoke_date }}&lt;/td&gt;
+  &lt;/tr&gt;
+{% endfor %}</code></pre>
+
 
 <p>模板中循环字典</p>
-<div class="codehilite"><pre><span></span><code><span class="cp">{%</span> <span class="k">for</span> <span class="nv">k</span><span class="o">,</span><span class="nv">v</span> <span class="k">in</span> <span class="nv">dict.items</span> <span class="cp">%}</span><span class="x"></span>
-<span class="x">    </span><span class="cp">{{</span> <span class="nv">k</span> <span class="cp">}}</span><span class="x"></span>
-<span class="x">    </span><span class="cp">{{</span> <span class="nv">v</span> <span class="cp">}}</span><span class="x"></span>
-<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span><span class="x"></span>
-</code></pre></div>
+<pre class="codehilite"><code>{% for k,v in dict.items %}
+    {{ k }}
+    {{ v }}
+{% endfor %}</code></pre>
+
 
 <h3 id="if">if</h3>
 <p>模板中判断标签</p>
-<div class="codehilite"><pre><span></span><code><span class="cp">{%</span> <span class="k">if</span> <span class="nv">perms.carrier.bucket_instance_change</span> <span class="cp">%}</span>
-  <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">&quot;btn btn-success&quot;</span> <span class="na">type=</span><span class="s">&quot;button&quot;</span> <span class="na">onclick=</span><span class="s">&quot;createForm()&quot;</span><span class="nt">&gt;&lt;i</span> <span class="na">class=</span><span class="s">&quot;fa fa-plus&quot;</span><span class="nt">&gt;&lt;/i&gt;</span> 添加<span class="nt">&lt;/button&gt;</span>
-<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
-</code></pre></div>
+<pre class="codehilite"><code>{% if perms.carrier.bucket_instance_change %}
+  &lt;button class=&quot;btn btn-success&quot; type=&quot;button&quot; onclick=&quot;createForm()&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; 添加&lt;/button&gt;
+{% endif %}</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

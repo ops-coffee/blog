@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -61,57 +61,57 @@
 </ol>
 <p>这里注意一个问题，拿到私钥就可以对加密字符串进行解密，那么这个秘钥肯定就不能放在项目代码中了，不然再遇到代码给传Github的情况就可以拿秘钥进行解密，失去了加密的意义了。这里我们的策略是秘钥统一由运维管理，直接放在生产服务器中，项目代理里配置路径可读取秘钥即可，避免秘钥因代码泄露而泄露。</p>
 <p>RSA加解密python脚本，可以直接使用此脚本生成RSA秘钥对，加密密码或者解密，当然也可以使用OpenSSL工具完成此操作</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">binascii</span>
-<span class="kn">from</span> <span class="nn">Cryptodome.PublicKey</span> <span class="kn">import</span> <span class="n">RSA</span>
-<span class="kn">from</span> <span class="nn">Cryptodome.Cipher</span> <span class="kn">import</span> <span class="n">PKCS1_v1_5</span>
+<pre class="codehilite"><code>import binascii
+from Cryptodome.PublicKey import RSA
+from Cryptodome.Cipher import PKCS1_v1_5
 
 
-<span class="k">class</span> <span class="nc">RsaCrypto</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;RSA 加解密&#39;&#39;&#39;</span>
+class RsaCrypto():
+    '''RSA 加解密'''
 
-    <span class="k">def</span> <span class="nf">create_rsa_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;生成RSA秘钥对&#39;&#39;&#39;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">key</span> <span class="o">=</span> <span class="n">RSA</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">2048</span><span class="p">)</span>
-            <span class="n">encrypted_key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">exportKey</span><span class="p">(</span><span class="n">pkcs</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+    def create_rsa_key(self):
+        '''生成RSA秘钥对'''
+        try:
+            key = RSA.generate(2048)
+            encrypted_key = key.exportKey(pkcs=8)
 
-            <span class="n">public_key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">publickey</span><span class="p">()</span><span class="o">.</span><span class="n">exportKey</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-            <span class="n">private_key</span> <span class="o">=</span> <span class="n">encrypted_key</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+            public_key = key.publickey().exportKey().decode('utf-8')
+            private_key = encrypted_key.decode('utf-8')
 
-            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;public_key&#39;</span><span class="p">:</span> <span class="n">public_key</span><span class="p">,</span> <span class="s1">&#39;private_key&#39;</span><span class="p">:</span> <span class="n">private_key</span><span class="p">}}</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)}</span>
+            return {'state': 1, 'message': {'public_key': public_key, 'private_key': private_key}}
+        except Exception as err:
+            return {'state': 0, 'message': str(err)}
 
-    <span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">public_key</span><span class="p">,</span> <span class="n">plaintext</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;加密方法&#39;&#39;&#39;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">recipient_key</span> <span class="o">=</span> <span class="n">RSA</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">public_key</span><span class="p">)</span>
-            <span class="n">cipher_rsa</span> <span class="o">=</span> <span class="n">PKCS1_v1_5</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">recipient_key</span><span class="p">)</span>
+    def encrypt(self, public_key, plaintext):
+        '''加密方法'''
+        try:
+            recipient_key = RSA.import_key(public_key)
+            cipher_rsa = PKCS1_v1_5.new(recipient_key)
 
-            <span class="n">en_data</span> <span class="o">=</span> <span class="n">cipher_rsa</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">plaintext</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
-            <span class="n">hex_data</span> <span class="o">=</span> <span class="n">binascii</span><span class="o">.</span><span class="n">hexlify</span><span class="p">(</span><span class="n">en_data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+            en_data = cipher_rsa.encrypt(plaintext.encode('utf-8'))
+            hex_data = binascii.hexlify(en_data).decode('utf-8')
 
-            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">hex_data</span><span class="p">}</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)}</span>
+            return {'state': 1, 'message': hex_data}
+        except Exception as err:
+            return {'state': 0, 'message': str(err)}
 
-    <span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">private_key</span><span class="p">,</span> <span class="n">hex_data</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;解密方法&#39;&#39;&#39;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">private_key</span> <span class="o">=</span> <span class="n">RSA</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span>
-            <span class="n">cipher_rsa</span> <span class="o">=</span> <span class="n">PKCS1_v1_5</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span>
+    def decrypt(self, private_key, hex_data):
+        '''解密方法'''
+        try:
+            private_key = RSA.import_key(private_key)
+            cipher_rsa = PKCS1_v1_5.new(private_key)
 
-            <span class="n">en_data</span> <span class="o">=</span> <span class="n">binascii</span><span class="o">.</span><span class="n">unhexlify</span><span class="p">(</span><span class="n">hex_data</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">cipher_rsa</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">en_data</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+            en_data = binascii.unhexlify(hex_data.encode('utf-8'))
+            data = cipher_rsa.decrypt(en_data, None).decode('utf-8')
 
-            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">}</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)}</span>
+            return {'state': 1, 'message': data}
+        except Exception as err:
+            return {'state': 0, 'message': str(err)}
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">RsaCrypto</span><span class="p">()</span><span class="o">.</span><span class="n">create_rsa_key</span><span class="p">())</span>
-</code></pre></div>
+if __name__ == '__main__':
+    print(RsaCrypto().create_rsa_key())</code></pre>
+
 
 <h1 id="_3">流程管控</h1>
 <p>以数据库的密码管理为样例来介绍下我们的流程</p>

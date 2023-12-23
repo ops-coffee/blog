@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -46,275 +46,275 @@
 <p><a href="/s/B_aNB8Y8snbSVLURONZ4Qg">《Django model update的各种用法介绍》</a>文章介绍了Django model的各种update操作，这篇文章就是她的姊妹篇，详细介绍Django model select的用法，配以对应MySQL的查询语句，理解起来更轻松。</p>
 </blockquote>
 <h1 id="_1">基本操作</h1>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="err">获取所有数据，对应</span><span class="k">SQL</span><span class="err">：</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">User</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">all</span><span class="p">()</span>
+<pre class="codehilite"><code># 获取所有数据，对应SQL：select * from User
+User.objects.all()
 
-<span class="o">#</span> <span class="err">匹配，对应</span><span class="k">SQL</span><span class="err">：</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">User</span> <span class="k">where</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;运维咖啡吧&#39;</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;运维咖啡吧&#39;</span><span class="p">)</span>
+# 匹配，对应SQL：select * from User where name = '运维咖啡吧'
+User.objects.filter(name='运维咖啡吧')
 
-<span class="o">#</span> <span class="err">不匹配，对应</span><span class="k">SQL</span><span class="err">：</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">User</span> <span class="k">where</span> <span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;运维咖啡吧&#39;</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;运维咖啡吧&#39;</span><span class="p">)</span>
+# 不匹配，对应SQL：select * from User where name != '运维咖啡吧'
+User.objects.exclude(name='运维咖啡吧')
 
-<span class="o">#</span> <span class="err">获取单条数据（有且仅有一条，</span><span class="n">id唯一</span><span class="err">），对应</span><span class="k">SQL</span><span class="err">：</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">User</span> <span class="k">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">724</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
-</code></pre></div>
+# 获取单条数据（有且仅有一条，id唯一），对应SQL：select * from User where id = 724
+User.objects.get(id=123)</code></pre>
+
 
 <h1 id="_2">常用操作</h1>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="err">获取总数，对应</span><span class="k">SQL</span><span class="err">：</span><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">from</span> <span class="k">User</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">count</span><span class="p">()</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;运维咖啡吧&#39;</span><span class="p">).</span><span class="k">count</span><span class="p">()</span>
+<pre class="codehilite"><code># 获取总数，对应SQL：select count(1) from User
+User.objects.count()
+User.objects.filter(name='运维咖啡吧').count()
 
-<span class="o">#</span> <span class="err">比较，</span><span class="n">gt</span><span class="p">:</span><span class="o">&gt;</span><span class="err">，</span><span class="n">gte</span><span class="p">:</span><span class="o">&gt;=</span><span class="err">，</span><span class="n">lt</span><span class="p">:</span><span class="o">&lt;</span><span class="err">，</span><span class="n">lte</span><span class="p">:</span><span class="o">&lt;=</span><span class="p">,</span><span class="err">对应</span><span class="k">SQL</span><span class="err">：</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">User</span> <span class="k">where</span> <span class="n">id</span> <span class="o">&gt;</span> <span class="mi">724</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__gt</span><span class="o">=</span><span class="mi">724</span><span class="p">)</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__gt</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">id__lt</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+# 比较，gt:&gt;，gte:&gt;=，lt:&lt;，lte:&lt;=,对应SQL：select * from User where id &gt; 724
+User.objects.filter(id__gt=724)
+User.objects.filter(id__gt=1, id__lt=10)
 
-<span class="o">#</span> <span class="err">包含，</span><span class="k">in</span><span class="err">，对应</span><span class="k">SQL</span><span class="err">：</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">User</span> <span class="k">where</span> <span class="n">id</span> <span class="k">in</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="mi">33</span><span class="p">)</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">33</span><span class="p">])</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">33</span><span class="p">])</span>
+# 包含，in，对应SQL：select * from User where id in (11,22,33)
+User.objects.filter(id__in=[11, 22, 33])
+User.objects.exclude(id__in=[11, 22, 33])
 
-<span class="o">#</span> <span class="k">isnull</span><span class="err">：</span><span class="k">isnull</span><span class="o">=</span><span class="n">True为空</span><span class="err">，</span><span class="k">isnull</span><span class="o">=</span><span class="n">False不为空</span><span class="err">，对应</span><span class="k">SQL</span><span class="err">：</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">User</span> <span class="k">where</span> <span class="n">pub_date</span> <span class="k">is</span> <span class="k">null</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pub_date__isnull</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+# isnull：isnull=True为空，isnull=False不为空，对应SQL：select * from User where pub_date is null
+User.objects.filter(pub_date__isnull=True)
 
-<span class="o">#</span> <span class="k">like</span><span class="err">，</span><span class="n">contains大小写敏感</span><span class="err">，</span><span class="n">icontains大小写不敏感</span><span class="err">，相同用法的还有</span><span class="n">startswith</span><span class="err">、</span><span class="n">endswith</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name__contains</span><span class="o">=</span><span class="ss">&quot;sre&quot;</span><span class="p">)</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">name__contains</span><span class="o">=</span><span class="ss">&quot;sre&quot;</span><span class="p">)</span>
+# like，contains大小写敏感，icontains大小写不敏感，相同用法的还有startswith、endswith
+User.objects.filter(name__contains=&quot;sre&quot;)
+User.objects.exclude(name__contains=&quot;sre&quot;)
 
-<span class="o">#</span> <span class="err">范围，</span><span class="k">between</span> <span class="k">and</span><span class="err">，对应</span><span class="k">SQL</span><span class="err">：</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">User</span> <span class="k">where</span> <span class="n">id</span> <span class="k">between</span> <span class="mi">3</span> <span class="k">and</span> <span class="mi">8</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__range</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+# 范围，between and，对应SQL：select * from User where id between 3 and 8
+User.objects.filter(id__range=[3, 8])
 
-<span class="o">#</span> <span class="err">排序，</span><span class="k">order</span> <span class="k">by</span><span class="err">，</span><span class="s1">&#39;id&#39;</span><span class="err">按</span><span class="n">id正序</span><span class="err">，</span><span class="s1">&#39;-id&#39;</span><span class="err">按</span><span class="n">id倒叙</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;运维咖啡吧&#39;</span><span class="p">).</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;运维咖啡吧&#39;</span><span class="p">).</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-id&#39;</span><span class="p">)</span>
+# 排序，order by，'id'按id正序，'-id'按id倒叙
+User.objects.filter(name='运维咖啡吧').order_by('id')
+User.objects.filter(name='运维咖啡吧').order_by('-id')
 
-<span class="o">#</span> <span class="err">多级排序，</span><span class="k">order</span> <span class="k">by</span><span class="err">，先按</span><span class="n">name进行正序排列</span><span class="err">，如果</span><span class="n">name一致则再按照id倒叙排列</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;运维咖啡吧&#39;</span><span class="p">).</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;-id&#39;</span><span class="p">)</span>
-</code></pre></div>
+# 多级排序，order by，先按name进行正序排列，如果name一致则再按照id倒叙排列
+User.objects.filter(name='运维咖啡吧').order_by('name','-id')</code></pre>
+
 
 <h1 id="_3">进阶操作</h1>
-<div class="codehilite"><pre><span></span><code><span class="c1"># limit，对应SQL：select * from User limit 3;</span>
-<span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]</span>
+<pre class="codehilite"><code># limit，对应SQL：select * from User limit 3;
+User.objects.all()[:3]
 
-<span class="c1"># limit，取第三条以后的数据，没有对应的SQL，类似的如：select * from User limit 3,10000000，从第3条开始取数据，取10000000条（10000000大于表中数据条数）</span>
-<span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="mi">3</span><span class="p">:]</span>
+# limit，取第三条以后的数据，没有对应的SQL，类似的如：select * from User limit 3,10000000，从第3条开始取数据，取10000000条（10000000大于表中数据条数）
+User.objects.all()[3:]
 
-<span class="c1"># offset，取出结果的第10-20条数据（不包含10，包含20）,也没有对应SQL，参考上边的SQL写法</span>
-<span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="mi">10</span><span class="p">:</span><span class="mi">20</span><span class="p">]</span>
+# offset，取出结果的第10-20条数据（不包含10，包含20）,也没有对应SQL，参考上边的SQL写法
+User.objects.all()[10:20]
 
-<span class="c1"># 分组，group by，对应SQL：select username,count(1) from User group by username;</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
-<span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">Count</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">))</span>
+# 分组，group by，对应SQL：select username,count(1) from User group by username;
+from django.db.models import Count
+User.objects.values_list('username').annotate(Count('id'))
 
-<span class="c1"># 去重distinct，对应SQL：select distinct(username) from User</span>
-<span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+# 去重distinct，对应SQL：select distinct(username) from User
+User.objects.values('username').distinct().count()
 
-<span class="c1"># filter多列、查询多列，对应SQL：select username,fullname from accounts_user</span>
-<span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="s1">&#39;fullname&#39;</span><span class="p">)</span>
+# filter多列、查询多列，对应SQL：select username,fullname from accounts_user
+User.objects.values_list('username', 'fullname')
 
-<span class="c1"># filter单列、查询单列，正常values_list给出的结果是个列表，里边里边的每条数据对应一个元组，当只查询一列时，可以使用flat标签去掉元组，将每条数据的结果以字符串的形式存储在列表中，从而避免解析元组的麻烦</span>
-<span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+# filter单列、查询单列，正常values_list给出的结果是个列表，里边里边的每条数据对应一个元组，当只查询一列时，可以使用flat标签去掉元组，将每条数据的结果以字符串的形式存储在列表中，从而避免解析元组的麻烦
+User.objects.values_list('username', flat=True)
 
-<span class="c1"># int字段取最大值、最小值、综合、平均数</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Sum</span><span class="p">,</span><span class="n">Count</span><span class="p">,</span><span class="n">Max</span><span class="p">,</span><span class="n">Min</span><span class="p">,</span><span class="n">Avg</span>
+# int字段取最大值、最小值、综合、平均数
+from django.db.models import Sum,Count,Max,Min,Avg
 
-<span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">Count</span><span class="p">(</span><span class="err">‘</span><span class="nb">id</span><span class="err">’</span><span class="p">))</span>
-<span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">Sum</span><span class="p">(</span><span class="err">‘</span><span class="n">age</span><span class="err">’</span><span class="p">))</span>
-</code></pre></div>
+User.objects.aggregate(Count(‘id’))
+User.objects.aggregate(Sum(‘age’))</code></pre>
+
 
 <h1 id="_4">时间字段</h1>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="err">匹配日期，</span><span class="nb">date</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">create_time__date</span><span class="o">=</span><span class="n">datetime</span><span class="p">.</span><span class="nb">date</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">create_time__date__gt</span><span class="o">=</span><span class="n">datetime</span><span class="p">.</span><span class="nb">date</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<pre class="codehilite"><code># 匹配日期，date
+User.objects.filter(create_time__date=datetime.date(2018, 8, 1))
+User.objects.filter(create_time__date__gt=datetime.date(2018, 8, 2))
 
-<span class="o">#</span> <span class="err">匹配年，</span><span class="k">year</span><span class="err">，相同用法的还有匹配月</span><span class="k">month</span><span class="err">，匹配日</span><span class="k">day</span><span class="err">，匹配周</span><span class="n">week_day</span><span class="err">，匹配时</span><span class="n">hour</span><span class="err">，匹配分</span><span class="k">minute</span><span class="err">，匹配秒</span><span class="k">second</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">create_time__year</span><span class="o">=</span><span class="mi">2018</span><span class="p">)</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">create_time__year__gte</span><span class="o">=</span><span class="mi">2018</span><span class="p">)</span>
+# 匹配年，year，相同用法的还有匹配月month，匹配日day，匹配周week_day，匹配时hour，匹配分minute，匹配秒second
+User.objects.filter(create_time__year=2018)
+User.objects.filter(create_time__year__gte=2018)
 
-<span class="o">#</span> <span class="err">按天统计归档</span>
-<span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nb">date</span><span class="p">.</span><span class="n">today</span><span class="p">()</span>
-<span class="k">select</span> <span class="o">=</span> <span class="err">{</span><span class="s1">&#39;day&#39;</span><span class="p">:</span> <span class="k">connection</span><span class="p">.</span><span class="n">ops</span><span class="p">.</span><span class="n">date_trunc_sql</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">,</span> <span class="s1">&#39;create_time&#39;</span><span class="p">)</span><span class="err">}</span>
-<span class="n">deploy_date_count</span> <span class="o">=</span> <span class="n">Task</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span>
-    <span class="n">create_time__range</span><span class="o">=</span><span class="p">(</span><span class="n">today</span> <span class="o">-</span> <span class="n">datetime</span><span class="p">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">),</span> <span class="n">today</span><span class="p">)</span>
-<span class="p">).</span><span class="n">extra</span><span class="p">(</span><span class="k">select</span><span class="o">=</span><span class="k">select</span><span class="p">).</span><span class="k">values</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">).</span><span class="n">annotate</span><span class="p">(</span><span class="nb">number</span><span class="o">=</span><span class="k">Count</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">))</span>
-</code></pre></div>
+# 按天统计归档
+today = datetime.date.today()
+select = {'day': connection.ops.date_trunc_sql('day', 'create_time')}
+deploy_date_count = Task.objects.filter(
+    create_time__range=(today - datetime.timedelta(days=7), today)
+).extra(select=select).values('day').annotate(number=Count('id'))</code></pre>
+
 
 <h1 id="q">Q 的使用</h1>
 <p>Q对象可以对关键字参数进行封装，从而更好的应用多个查询，可以组合&amp;(and)、|(or)、~(not)操作符。</p>
 <p>例如下边的语句</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span>
+<pre class="codehilite"><code>from django.db.models import Q
 
-<span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-    <span class="n">Q</span><span class="p">(</span><span class="n">role__startswith</span><span class="o">=</span><span class="s1">&#39;sre_&#39;</span><span class="p">),</span>
-    <span class="n">Q</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;公众号&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;运维咖啡吧&#39;</span><span class="p">)</span>
-<span class="p">)</span>
-</code></pre></div>
+User.objects.filter(
+    Q(role__startswith='sre_'),
+    Q(name='公众号') | Q(name='运维咖啡吧')
+)</code></pre>
+
 
 <p>转换成SQL语句如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">select * from User where role like &#39;sre_%&#39; and (name=&#39;公众号&#39; or name=&#39;运维咖啡吧&#39;)</span>
-</code></pre></div>
+<pre class="codehilite"><code>select * from User where role like 'sre_%' and (name='公众号' or name='运维咖啡吧')</code></pre>
+
 
 <p>通常更多的时候我们用Q来做搜索逻辑，比如前台搜索框输入一个字符，后台去数据库中检索标题或内容中是否包含</p>
-<div class="codehilite"><pre><span></span><code><span class="n">_s</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="k">GET</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="s1">&#39;search&#39;</span><span class="p">)</span>
+<pre class="codehilite"><code>_s = request.GET.get('search')
 
-<span class="n">_t</span> <span class="o">=</span> <span class="n">Blog</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">all</span><span class="p">()</span>
-<span class="k">if</span> <span class="n">_s</span><span class="p">:</span>
-    <span class="n">_t</span> <span class="o">=</span> <span class="n">_t</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span>
-        <span class="n">Q</span><span class="p">(</span><span class="n">title__icontains</span><span class="o">=</span><span class="n">_s</span><span class="p">)</span> <span class="o">|</span>
-        <span class="n">Q</span><span class="p">(</span><span class="n">content__icontains</span><span class="o">=</span><span class="n">_s</span><span class="p">)</span>
-    <span class="p">)</span>
+_t = Blog.objects.all()
+if _s:
+    _t = _t.filter(
+        Q(title__icontains=_s) |
+        Q(content__icontains=_s)
+    )
 
-<span class="k">return</span> <span class="n">_t</span>
-</code></pre></div>
+return _t</code></pre>
+
 
 <h1 id="foreignkey">外键：ForeignKey</h1>
 <ul>
 <li>表结构：</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Role</span>(<span class="n">models</span>.<span class="n">Model</span>):
-    <span class="nb">name</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">16</span>, <span class="nb">unique</span>=<span class="nb">True</span>)
+<pre class="codehilite"><code>class Role(models.Model):
+    name = models.CharField(max_length=16, unique=True)
 
 
-<span class="k">class</span> <span class="n">User</span>(<span class="n">models</span>.<span class="n">Model</span>):
-    <span class="n">username</span> = <span class="n">models</span>.<span class="n">EmailField</span>(<span class="n">max_length</span>=<span class="mi">255</span>, <span class="nb">unique</span>=<span class="nb">True</span>)
-    <span class="k">role</span> = <span class="n">models</span>.<span class="n">ForeignKey</span>(<span class="n">Role</span>, <span class="n">on_delete</span>=<span class="n">models</span>.<span class="n">CASCADE</span>)
-</code></pre></div>
+class User(models.Model):
+    username = models.EmailField(max_length=255, unique=True)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)</code></pre>
+
 
 <ul>
 <li>正向查询:</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 查询用户的角色名</span>
-<span class="err">_t = User.objects.get(username=&#39;运维咖啡吧&#39;)</span>
-<span class="err">_t.role.name</span>
-</code></pre></div>
+<pre class="codehilite"><code># 查询用户的角色名
+_t = User.objects.get(username='运维咖啡吧')
+_t.role.name</code></pre>
+
 
 <ul>
 <li>反向查询：</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 查询角色下包含的所有用户</span>
-<span class="err">_t = Role.objects.get(name=&#39;Role03&#39;)</span>
-<span class="err">_t.user_set.all()</span>
-</code></pre></div>
+<pre class="codehilite"><code># 查询角色下包含的所有用户
+_t = Role.objects.get(name='Role03')
+_t.user_set.all()</code></pre>
+
 
 <ul>
 <li>另一种反向查询的方法：</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="n">_t</span> <span class="o">=</span> <span class="k">Role</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Role03&#39;</span><span class="p">)</span>
+<pre class="codehilite"><code>_t = Role.objects.get(name='Role03')
 
-<span class="o">#</span> <span class="err">这种方法比上一种</span><span class="n">_set的方法查询速度要快</span>
-<span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="k">role</span><span class="o">=</span><span class="n">_t</span><span class="p">)</span>
-</code></pre></div>
+# 这种方法比上一种_set的方法查询速度要快
+User.objects.filter(role=_t)</code></pre>
+
 
 <ul>
 <li>第三种反向查询的方法：</li>
 </ul>
 <p>如果外键字段有<code>related_name</code>属性，例如models如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">class User(models.Model):</span>
-<span class="err">    username = models.EmailField(max_length=255, unique=True)</span>
-<span class="err">    role = models.ForeignKey(Role, on_delete=models.CASCADE,related_name=&#39;roleUsers&#39;)</span>
-</code></pre></div>
+<pre class="codehilite"><code>class User(models.Model):
+    username = models.EmailField(max_length=255, unique=True)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE,related_name='roleUsers')</code></pre>
+
 
 <p>那么可以直接用<code>related_name</code>属性取到某角色的所有用户</p>
-<div class="codehilite"><pre><span></span><code><span class="err">_t = Role.objects.get(name = &#39;Role03&#39;)</span>
-<span class="err">_t.roleUsers.all()</span>
-</code></pre></div>
+<pre class="codehilite"><code>_t = Role.objects.get(name = 'Role03')
+_t.roleUsers.all()</code></pre>
+
 
 <h1 id="m2mmanytomanyfield">M2M：ManyToManyField</h1>
 <ul>
 <li>表结构：</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Group</span>(<span class="n">models</span>.<span class="n">Model</span>):
-    <span class="nb">name</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">16</span>, <span class="nb">unique</span>=<span class="nb">True</span>)
+<pre class="codehilite"><code>class Group(models.Model):
+    name = models.CharField(max_length=16, unique=True)
 
-<span class="k">class</span> <span class="n">User</span>(<span class="n">models</span>.<span class="n">Model</span>):
-    <span class="n">username</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">255</span>, <span class="nb">unique</span>=<span class="nb">True</span>)
-    <span class="n">groups</span> = <span class="n">models</span>.<span class="n">ManyToManyField</span>(<span class="n">Group</span>, <span class="n">related_name</span>=<span class="s">&#39;groupUsers&#39;</span>)
-</code></pre></div>
+class User(models.Model):
+    username = models.CharField(max_length=255, unique=True)
+    groups = models.ManyToManyField(Group, related_name='groupUsers')</code></pre>
+
 
 <ul>
 <li>正向查询:</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 查询用户隶属组</span>
-<span class="err">_t = User.objects.get(username = &#39;运维咖啡吧&#39;)</span>
-<span class="err">_t.groups.all()</span>
-</code></pre></div>
+<pre class="codehilite"><code># 查询用户隶属组
+_t = User.objects.get(username = '运维咖啡吧')
+_t.groups.all()</code></pre>
+
 
 <ul>
 <li>反向查询：</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 查询组包含用户</span>
-<span class="err">_t = Group.objects.get(name = &#39;groupC&#39;)</span>
-<span class="err">_t.user_set.all()</span>
-</code></pre></div>
+<pre class="codehilite"><code># 查询组包含用户
+_t = Group.objects.get(name = 'groupC')
+_t.user_set.all()</code></pre>
+
 
 <p>同样M2M字段如果有<code>related_name</code>属性，那么可以直接用下边的方式反查</p>
-<div class="codehilite"><pre><span></span><code><span class="err">_t = Group.objects.get(name = &#39;groupC&#39;)</span>
-<span class="err">_t.groupUsers.all()</span>
-</code></pre></div>
+<pre class="codehilite"><code>_t = Group.objects.get(name = 'groupC')
+_t.groupUsers.all()</code></pre>
+
 
 <h1 id="get_object_or_404">get_object_or_404</h1>
 <p>正常如果我们要去数据库里搜索某一条数据时，通常使用下边的方法：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">_t = User.objects.get(id=734)</span>
-</code></pre></div>
+<pre class="codehilite"><code>_t = User.objects.get(id=734)</code></pre>
+
 
 <p>但当<code>id=724</code>的数据不存在时，程序将会抛出一个错误</p>
-<div class="codehilite"><pre><span></span><code><span class="err">abcer.models.DoesNotExist: User matching query does not exist.</span>
-</code></pre></div>
+<pre class="codehilite"><code>abcer.models.DoesNotExist: User matching query does not exist.</code></pre>
+
 
 <p>为了程序兼容和异常判断，我们可以使用下边两种方式:</p>
 <ul>
 <li>方式一：<code>get</code>改为<code>filter</code></li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err">_t = User.objects.filter(id=724)</span>
-<span class="err"># 取出_t之后再去判断_t是否存在</span>
-</code></pre></div>
+<pre class="codehilite"><code>_t = User.objects.filter(id=724)
+# 取出_t之后再去判断_t是否存在</code></pre>
+
 
 <ul>
 <li>方式二：使用<code>get_object_or_404</code></li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span>
+<pre class="codehilite"><code>from django.shortcuts import get_object_or_404
 
-<span class="n">_t</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">724</span><span class="p">)</span>
-<span class="c1"># get_object_or_404方法，它会先调用django的get方法，如果查询的对象不存在的话，则抛出一个Http404的异常</span>
-</code></pre></div>
+_t = get_object_or_404(User, id=724)
+# get_object_or_404方法，它会先调用django的get方法，如果查询的对象不存在的话，则抛出一个Http404的异常</code></pre>
+
 
 <p>实现方法类似于下边这样：</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">Http404</span>
+<pre class="codehilite"><code>from django.http import Http404
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">_t</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">724</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="n">Http404</span>
-</code></pre></div>
+try:
+    _t = User.objects.get(id=724)
+except User.DoesNotExist:
+    raise Http404</code></pre>
+
 
 <h1 id="get_or_create">get_or_create</h1>
 <p>顾名思义，查找一个对象如果不存在则创建，如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">object, created = User.objects.get_or_create(username=&#39;运维咖啡吧&#39;)</span>
-</code></pre></div>
+<pre class="codehilite"><code>object, created = User.objects.get_or_create(username='运维咖啡吧')</code></pre>
+
 
 <p>返回一个由object和created组成的元组，其中object就是一个查询到的或者是被创建的对象，created是一个表示是否创建了新对象的布尔值</p>
 <p>实现方式类似于下边这样：</p>
-<div class="codehilite"><pre><span></span><code><span class="k">try</span><span class="o">:</span>
-    <span class="n">object</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="na">objects</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;运维咖啡吧&#39;</span><span class="o">)</span>
+<pre class="codehilite"><code>try:
+    object = User.objects.get(username='运维咖啡吧')
 
-    <span class="n">created</span> <span class="o">=</span> <span class="n">False</span>
-<span class="n">exception</span> <span class="n">User</span><span class="o">.</span><span class="na">DoesNoExist</span><span class="o">:</span>
-    <span class="n">object</span> <span class="o">=</span> <span class="n">User</span><span class="o">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;运维咖啡吧&#39;</span><span class="o">)</span>
-    <span class="n">object</span><span class="o">.</span><span class="na">save</span><span class="o">()</span>
+    created = False
+exception User.DoesNoExist:
+    object = User(username='运维咖啡吧')
+    object.save()
 
-    <span class="n">created</span> <span class="o">=</span> <span class="n">True</span>
+    created = True
 
-<span class="n">returen</span> <span class="n">object</span><span class="o">,</span> <span class="n">created</span>
-</code></pre></div>
+returen object, created</code></pre>
+
 
 <h1 id="sql">执行原生SQL</h1>
 <p>Django中能用ORM的就用它ORM吧，不建议执行原生SQL，可能会有一些安全问题，如果实在是SQL太复杂ORM实现不了，那就看看下边执行原生SQL的方法，跟直接使用pymysql基本一致了</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">connection</span>
+<pre class="codehilite"><code>from django.db import connection
 
-<span class="k">with</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>
-    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;select * from accounts_User&#39;</span><span class="p">)</span>
-    <span class="n">row</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+with connection.cursor() as cursor:
+    cursor.execute('select * from accounts_User')
+    row = cursor.fetchall()
 
-<span class="k">return</span> <span class="n">row</span>
-</code></pre></div>
+return row</code></pre>
+
 
 <p>注意这里表名字要用<strong>app名+下划线+model名</strong>的方式</p>
 

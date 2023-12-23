@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -75,96 +75,96 @@
 </ul>
 <h1 id="_3">详细步骤</h1>
 <p>1.添加root用户</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># etcdctl user add root</span>
-<span class="err">New password: 12345</span>
-<span class="err">User root created</span>
-</code></pre></div>
+<pre class="codehilite"><code># etcdctl user add root
+New password: 12345
+User root created</code></pre>
+
 
 <p>2.创建root账号后，root默认有root角色，对所有KV有读写权限</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="n">etcdctl</span> <span class="k">user</span> <span class="k">get</span> <span class="n">root</span>
-<span class="k">User</span><span class="p">:</span> <span class="n">root</span>
-<span class="n">Roles</span><span class="p">:</span>  <span class="n">root</span>
+<pre class="codehilite"><code># etcdctl user get root
+User: root
+Roles:  root
 
-<span class="o">#</span> <span class="n">etcdctl</span> <span class="k">role</span> <span class="k">get</span> <span class="n">root</span>
-<span class="k">Role</span><span class="p">:</span> <span class="n">root</span>
-<span class="n">KV</span> <span class="k">Read</span><span class="p">:</span>
-    <span class="cm">/*</span>
-<span class="cm">KV Write:</span>
-<span class="cm">    /*</span>
-</code></pre></div>
+# etcdctl role get root
+Role: root
+KV Read:
+    /*
+KV Write:
+    /*</code></pre>
+
 
 <p>3.开启auth认证</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="n">etcdctl</span> <span class="n">auth</span> <span class="n">enable</span>
-<span class="n">Authentication</span> <span class="n">Enabled</span>
+<pre class="codehilite"><code># etcdctl auth enable
+Authentication Enabled
 
-<span class="err">开启权限认证后默认会多一个</span><span class="n">guest的角色</span>
-<span class="o">#</span> <span class="n">etcdctl</span> <span class="c1">--username root:12345 role list</span>
-<span class="n">guest</span>
-<span class="n">root</span>
-</code></pre></div>
+开启权限认证后默认会多一个guest的角色
+# etcdctl --username root:12345 role list
+guest
+root</code></pre>
+
 
 <p>4.添加非root账号，一个authz的账号，一个readx的账号</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="n">etcdctl</span> <span class="c1">--username root:12345 user add authz</span>
-<span class="k">New</span> <span class="n">password</span><span class="p">:</span> 
-<span class="k">User</span> <span class="n">authz</span> <span class="n">created</span>
+<pre class="codehilite"><code># etcdctl --username root:12345 user add authz
+New password: 
+User authz created
 
-<span class="o">#</span> <span class="n">etcdctl</span> <span class="c1">--username root:12345 user add readx</span>
-<span class="k">New</span> <span class="n">password</span><span class="p">:</span> 
-<span class="k">User</span> <span class="n">readx</span> <span class="n">created</span>
-</code></pre></div>
+# etcdctl --username root:12345 user add readx
+New password: 
+User readx created</code></pre>
+
 
 <p>5.添加角色，一个rootConf的角色，一个readConf的角色</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="n">etcdctl</span> <span class="c1">--username root:12345 role add rootConf</span>
-<span class="k">Role</span> <span class="n">rootConf</span> <span class="n">created</span>
+<pre class="codehilite"><code># etcdctl --username root:12345 role add rootConf
+Role rootConf created
 
-<span class="o">#</span> <span class="n">etcdctl</span> <span class="c1">--username root:12345 role add readConf</span>
-<span class="k">Role</span> <span class="n">readConf</span> <span class="n">created</span>
-</code></pre></div>
+# etcdctl --username root:12345 role add readConf
+Role readConf created</code></pre>
+
 
 <p>6.为角色授权，readConf角色对/conf有只读权限，rootConf角色对/conf有读写权限</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="n">etcdctl</span> <span class="c1">--username root:12345 role grant --read --path /conf/* readConf</span>
-<span class="k">Role</span> <span class="n">readConf</span> <span class="n">updated</span>
+<pre class="codehilite"><code># etcdctl --username root:12345 role grant --read --path /conf/* readConf
+Role readConf updated
 
-<span class="o">#</span> <span class="n">etcdctl</span> <span class="c1">--username root:12345 role grant --readwrite --path /conf/* rootConf</span>
-<span class="k">Role</span> <span class="n">rootConf</span> <span class="n">updated</span>
-</code></pre></div>
+# etcdctl --username root:12345 role grant --readwrite --path /conf/* rootConf
+Role rootConf updated</code></pre>
+
 
 <p>7.给用户分配角色，authz账号分配rootConf角色，readx账号分配readConf角色</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="n">etcdctl</span> <span class="c1">--username root:12345 user grant --roles rootConf authz</span>
-<span class="k">User</span> <span class="n">authz</span> <span class="n">updated</span>
+<pre class="codehilite"><code># etcdctl --username root:12345 user grant --roles rootConf authz
+User authz updated
 
-<span class="o">#</span> <span class="n">etcdctl</span> <span class="c1">--username root:12345 user grant --roles readConf readx</span>
-<span class="k">User</span> <span class="n">readx</span> <span class="n">updated</span>
-</code></pre></div>
+# etcdctl --username root:12345 user grant --roles readConf readx
+User readx updated</code></pre>
+
 
 <p>8.查看用户所拥有的角色</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="n">etcdctl</span> <span class="c1">--username root:12345 user get authz</span>
-<span class="k">User</span><span class="p">:</span> <span class="n">authz</span>
-<span class="n">Roles</span><span class="p">:</span>  <span class="n">rootConf</span>
+<pre class="codehilite"><code># etcdctl --username root:12345 user get authz
+User: authz
+Roles:  rootConf
 
-<span class="o">#</span> <span class="n">etcdctl</span> <span class="c1">--username root:12345 user get readx</span>
-<span class="k">User</span><span class="p">:</span> <span class="n">readx</span>
-<span class="n">Roles</span><span class="p">:</span>  <span class="n">readConf</span>
-</code></pre></div>
+# etcdctl --username root:12345 user get readx
+User: readx
+Roles:  readConf</code></pre>
+
 
 <p>这样readx账号就对/conf下的所有文件有了只读权限，authz对/conf下的所有文件有了读写权限</p>
 <h1 id="_4">常用命令</h1>
 <p>有一些命令上边没有介绍到，会用得到的如下：</p>
 <p>1.关闭认证</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># etcdctl --username root:12345 auth disable</span>
-</code></pre></div>
+<pre class="codehilite"><code># etcdctl --username root:12345 auth disable</code></pre>
+
 
 <p>2.删除用户</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># etcdctl --username root:12345 user remove userx</span>
-</code></pre></div>
+<pre class="codehilite"><code># etcdctl --username root:12345 user remove userx</code></pre>
+
 
 <p>3.用户撤销角色</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># etcdctl --username root:12345 user revoke rolex</span>
-</code></pre></div>
+<pre class="codehilite"><code># etcdctl --username root:12345 user revoke rolex</code></pre>
+
 
 <p>4.修改用户密码</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># etcdctl --username root:12345 user passwd</span>
-</code></pre></div>
+<pre class="codehilite"><code># etcdctl --username root:12345 user passwd</code></pre>
+
 
 <p>同时还有删除角色、撤销角色权限可参看上边用户相关操作</p>
 <h1 id="_5">踩坑记录</h1>

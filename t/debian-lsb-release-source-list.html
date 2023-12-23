@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -44,30 +44,29 @@
 
         <p>在修改源之前需要先知道当前系统的版本，查看系统版本执行命令<code>lsb_release -a</code></p>
 <h2 id="_1">查看系统版本</h2>
-<div class="codehilite"><pre><span></span><code><span class="err"># lsb_release -a</span>
-<span class="err">No LSB modules are available.</span>
-<span class="err">Distributor ID: Debian</span>
-<span class="c">Description:    Debian GNU/Linux 11 (bullseye)</span>
-<span class="c">Release:        11</span>
-<span class="c">Codename:       bullseye</span>
-</code></pre></div>
+<pre class="codehilite"><code># lsb_release -a
+No LSB modules are available.
+Distributor ID: Debian
+Description:    Debian GNU/Linux 11 (bullseye)
+Release:        11
+Codename:       bullseye</code></pre>
+
 
 <p>若提示<code>bash: lsb_release: command not found</code>则需要先安装<code>lsb-release</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err"># apt-get install lsb-release</span>
-</code></pre></div>
+<pre class="codehilite"><code># apt-get install lsb-release</code></pre>
+
 
 <p>在确定系统版本后，找到对应的源地址，一般我们就使用163的源就可以了，直接修改<code>/etc/apt/sources.list</code>文件</p>
 <h2 id="_2">修改源地址</h2>
-<div class="codehilite"><pre><span></span><code><span class="c"># vi /etc/apt/sources.list</span>
-<span class="k">deb</span> <span class="s">http://mirrors.163.com/debian/</span> <span class="kp">bullseye</span> <span class="kp">main</span> <span class="kp">non-free</span> <span class="kp">contrib</span>
-<span class="k">deb</span> <span class="s">http://mirrors.163.com/debian/</span> <span class="kp">bullseye-updates</span> <span class="kp">main</span> <span class="kp">non-free</span> <span class="kp">contrib</span>
-<span class="k">deb</span> <span class="s">http://mirrors.163.com/debian/</span> <span class="kp">bullseye-backports</span> <span class="kp">main</span> <span class="kp">non-free</span> <span class="kp">contrib</span>
-<span class="k">deb-src</span> <span class="s">http://mirrors.163.com/debian/</span> <span class="kp">bullseye</span> <span class="kp">main</span> <span class="kp">non-free</span> <span class="kp">contrib</span>
-<span class="k">deb-src</span> <span class="s">http://mirrors.163.com/debian/</span> <span class="kp">bullseye-updates</span> <span class="kp">main</span> <span class="kp">non-free</span> <span class="kp">contrib</span>
-<span class="k">deb-src</span> <span class="s">http://mirrors.163.com/debian/</span> <span class="kp">bullseye-backports</span> <span class="kp">main</span> <span class="kp">non-free</span> <span class="kp">contrib</span>
-<span class="k">deb</span> <span class="s">http://mirrors.ustc.edu.cn/debian-security/</span> <span class="kp">stable-security</span> <span class="kp">main</span> <span class="kp">non-free</span> <span class="kp">contrib</span>
-<span class="k">deb-src</span> <span class="s">http://mirrors.ustc.edu.cn/debian-security/</span> <span class="kp">stable-security</span> <span class="kp">main</span> <span class="kp">non-free</span> <span class="kp">contrib</span>
-</code></pre></div>
+<pre class="codehilite"><code># vi /etc/apt/sources.list
+deb http://mirrors.163.com/debian/ bullseye main non-free contrib
+deb http://mirrors.163.com/debian/ bullseye-updates main non-free contrib
+deb http://mirrors.163.com/debian/ bullseye-backports main non-free contrib
+deb-src http://mirrors.163.com/debian/ bullseye main non-free contrib
+deb-src http://mirrors.163.com/debian/ bullseye-updates main non-free contrib
+deb-src http://mirrors.163.com/debian/ bullseye-backports main non-free contrib
+deb http://mirrors.ustc.edu.cn/debian-security/ stable-security main non-free contrib
+deb-src http://mirrors.ustc.edu.cn/debian-security/ stable-security main non-free contrib</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

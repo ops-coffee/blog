@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -43,13 +43,13 @@
         <h1 id="art-title">django model字段添加备注Comment</h1>
 
         <p>mysql中create创建表时可以通过COMMENT给字段添加备注，例如下边这样：</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;</span> <span class="k">show</span> <span class="k">create</span> <span class="k">table</span> <span class="n">ops_coffee</span><span class="p">;</span>
-<span class="o">|</span> <span class="n">ops_coffee</span> <span class="o">|</span> <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">`ops_coffee`</span> <span class="p">(</span>
-  <span class="n">`id`</span> <span class="kt">varchar</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="k">COMMENT</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span>
-  <span class="n">`name`</span> <span class="kt">varchar</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="k">COMMENT</span> <span class="s1">&#39;名字&#39;</span><span class="p">,</span>
-  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">`id`</span><span class="p">)</span>
-<span class="p">)</span> <span class="k">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span> <span class="k">DEFAULT</span> <span class="k">CHARSET</span><span class="o">=</span><span class="n">utf8mb4</span> 
-</code></pre></div>
+<pre class="codehilite"><code>&gt; show create table ops_coffee;
+| ops_coffee | CREATE TABLE `ops_coffee` (
+  `id` varchar(20) NOT NULL COMMENT 'id',
+  `name` varchar(255) NOT NULL COMMENT '名字',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 </code></pre>
+
 
 <p>django model本身没有这个功能，如果你非要这么做的话可以这样:</p>
 <ol>

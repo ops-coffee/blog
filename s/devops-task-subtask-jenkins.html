@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -62,67 +62,67 @@
 <li>获取Job列表</li>
 </ol>
 <p>获取Job列表使用GET方法</p>
-<div class="codehilite"><pre><span></span><code><span class="c">https://jenkins.ops-coffee.cn/api/json</span>
-</code></pre></div>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/api/json</code></pre>
+
 
 <ol>
 <li>获取Job详情</li>
 </ol>
 <p>获取Job详情使用Get方法</p>
-<div class="codehilite"><pre><span></span><code><span class="c">https://jenkins.ops-coffee.cn/job/{job-name}/api/json</span>
-</code></pre></div>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/api/json</code></pre>
+
 
 <p>同时Job详情页面同时也能获取到Job所需要的参数</p>
 <ol>
 <li>执行Job</li>
 </ol>
 <p>执行Job通过POST方法，分为带参数和不带参数两个API，其中不带参数使用</p>
-<div class="codehilite"><pre><span></span><code><span class="c">https://jenkins.ops-coffee.cn/job/{job-name}/build</span>
-</code></pre></div>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/build</code></pre>
+
 
 <p>带参数使用</p>
-<div class="codehilite"><pre><span></span><code><span class="c">https://jenkins.ops-coffee.cn/job/{job-name}/buildWithParameters?namespace=dev&amp;branch=master</span>
-</code></pre></div>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/buildWithParameters?namespace=dev&amp;branch=master</code></pre>
+
 
 <p>执行完Job后，需要获取到Job的BuildID，<strong>BuildID可以通过从返回结果header</strong>的<code>Location</code>里获取</p>
 <ol>
 <li>获取Build输出</li>
 </ol>
 <p>获取Build的Console输出使用GET方法，通过Build的Console输出我们可以实时获取Job的执行情况</p>
-<div class="codehilite"><pre><span></span><code><span class="c">https://jenkins.ops-coffee.cn/job/{job-name}/{build-id}/logText/progressiveText</span>
-</code></pre></div>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/{build-id}/logText/progressiveText</code></pre>
+
 
 <ol>
 <li>获取Build详情</li>
 </ol>
 <p>获取Build的详情使用GET方法，通过Build详情里的<code>result</code>能知道Job的执行状态及结果</p>
-<div class="codehilite"><pre><span></span><code><span class="c">https://jenkins.ops-coffee.cn/job/{job-name}/{build-id}/api/json</span>
-</code></pre></div>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/{build-id}/api/json</code></pre>
+
 
 <ol>
 <li>停止Job执行</li>
 </ol>
 <p>停止Job执行使用POST方法，当Job执行的过程中不及我们预期需要紧急停止Job执行时需要借助此API来完成</p>
-<div class="codehilite"><pre><span></span><code><span class="c">https://jenkins.ops-coffee.cn/job/{job-name}/{build-id}/stop</span>
-</code></pre></div>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/{build-id}/stop</code></pre>
+
 
 <p>整个Jenkins子任务的集成我们主要用到了这几个API，关于Jenkins的API认证用到了最基本的AuthBase方式，一个完整的获取JobList的例子如下</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">JenkinsAPI:</span>
-    <span class="n">def</span> <span class="n">__init__</span>(<span class="nb">self</span>, <span class="n">domain</span>, <span class="n">username</span>, <span class="n">password</span>, <span class="n">verify</span>=<span class="nb">True</span>):
-        <span class="nb">self</span>.<span class="n">domain</span> = <span class="n">domain</span>
+<pre class="codehilite"><code>class JenkinsAPI:
+    def __init__(self, domain, username, password, verify=True):
+        self.domain = domain
 
-        <span class="nb">self</span>.<span class="n">session</span> = <span class="n">requests</span>.<span class="n">Session</span>()
-        <span class="nb">self</span>.<span class="n">session</span>.<span class="nb">auth</span> = (<span class="n">username</span>, <span class="n">password</span>)
-        <span class="nb">self</span>.<span class="n">session</span>.<span class="n">verify</span> = <span class="n">verify</span>
+        self.session = requests.Session()
+        self.session.auth = (username, password)
+        self.session.verify = verify
 
-    <span class="n">def</span> <span class="n">job_list</span>(<span class="nb">self</span>):
-        <span class="n">try:</span>
-            <span class="nb">r</span> = <span class="nb">self</span>.<span class="n">session</span>.<span class="nb">get</span>(<span class="nb">self</span>.<span class="n">domain</span> + <span class="s">&#39;/api/json&#39;</span>)
+    def job_list(self):
+        try:
+            r = self.session.get(self.domain + '/api/json')
 
-            <span class="k">return</span> <span class="nb">True</span>, <span class="nb">r</span>.<span class="n">status_code</span>, <span class="nb">r</span>.<span class="n">json</span>()
-        <span class="n">except</span> <span class="nb">Exception</span> <span class="n">as</span> <span class="n">e:</span>
-            <span class="k">return</span> <span class="nb">False</span>, <span class="mi">500</span>, <span class="s">&#39;获取Job List失败：&#39;</span> + <span class="n">str</span>(<span class="nb">e</span>)
-</code></pre></div>
+            return True, r.status_code, r.json()
+        except Exception as e:
+            return False, 500, '获取Job List失败：' + str(e)</code></pre>
+
 
 <p>有了这些API我们就能轻松的将Jenkins集成进任务系统了，在任务系统中执行Jenkins的Job也是非常的简单和方便，实时日志输出，以及随时可以终止执行，体验与Jenkins无异了</p>
 <p><img alt="" loading="lazy" src="/static/images/20230428.03.png" /></p>

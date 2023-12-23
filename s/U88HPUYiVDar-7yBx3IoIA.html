@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -43,24 +43,24 @@
         <h1 id="art-title">Probius+Kubernetes任务系统如虎添翼</h1>
 
         <p>Probius是一款自定义任务引擎，可以灵活方便的处理日常运维中的各种任务，我们所有的CI/CD任务都通过Probius来完成的，这篇文章<a href="/s/uXQbM4t11ICdzNofZyDeXA">Probius：一个功能强大的自定义任务系统</a>对其有详细的介绍，之前通过Probius更新Kubernetes的Deployment是通过脚本的方式来完成的，脚本大概像这样</p>
-<div class="codehilite"><pre><span></span><code><span class="k">if</span> <span class="p">[</span> <span class="o">$</span><span class="c1"># != 2 ];then</span>
-    <span class="n">echo</span> <span class="s2">&quot;USAGE: $0 PROJ ENVT&quot;</span>
-    <span class="n">exit</span> <span class="mi">1</span>
-<span class="n">fi</span>
+<pre class="codehilite"><code>if [ $# != 2 ];then
+    echo &quot;USAGE: $0 PROJ ENVT&quot;
+    exit 1
+fi
 
-<span class="n">PROJ</span><span class="o">=$</span><span class="mi">1</span>
-<span class="n">ENVT</span><span class="o">=$</span><span class="mi">2</span>
+PROJ=$1
+ENVT=$2
 
-<span class="n">BASE_DIR</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">probius</span><span class="o">/$</span><span class="p">{</span><span class="n">PROJ</span><span class="p">}</span><span class="o">/$</span><span class="p">{</span><span class="n">ENVT</span><span class="p">}</span>
-<span class="n">DOCKER_DIR</span><span class="o">=$</span><span class="p">{</span><span class="n">BASE_DIR</span><span class="p">}</span><span class="o">/</span><span class="n">docker</span>
-<span class="n">IMAGE_NAME</span><span class="o">=</span><span class="err">`</span><span class="n">cat</span> <span class="o">$</span><span class="p">{</span><span class="n">BASE_DIR</span><span class="p">}</span><span class="o">/</span><span class="n">cache</span><span class="o">/</span><span class="n">image</span><span class="o">.</span><span class="n">txt</span><span class="err">`</span>
+BASE_DIR=/home/data/probius/${PROJ}/${ENVT}
+DOCKER_DIR=${BASE_DIR}/docker
+IMAGE_NAME=`cat ${BASE_DIR}/cache/image.txt`
 
-<span class="n">cd</span> <span class="o">$</span><span class="p">{</span><span class="n">DOCKER_DIR</span><span class="p">}</span> <span class="o">&amp;&amp;</span>\
-<span class="k">export</span> <span class="n">KUBECONFIG</span><span class="o">=/</span><span class="n">root</span><span class="o">/.</span><span class="n">kube</span><span class="o">/</span><span class="n">config</span> <span class="o">&amp;&amp;</span>\
-<span class="n">kubectl</span> <span class="n">set</span> <span class="n">image</span> <span class="n">deployment</span><span class="o">/$</span><span class="p">{</span><span class="n">ENVT</span><span class="p">}</span><span class="o">-$</span><span class="p">{</span><span class="n">PROJ</span><span class="p">}</span> <span class="o">$</span><span class="p">{</span><span class="n">ENVT</span><span class="p">}</span><span class="o">-$</span><span class="p">{</span><span class="n">PROJ</span><span class="p">}</span><span class="o">=$</span><span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span> <span class="o">-</span><span class="n">n</span> <span class="o">$</span><span class="p">{</span><span class="n">ENVT</span><span class="p">}</span> <span class="o">&amp;&amp;</span>\
-<span class="n">exit</span> <span class="mi">0</span> <span class="o">||</span>\
-<span class="n">exit</span> <span class="mi">1</span>
-</code></pre></div>
+cd ${DOCKER_DIR} &amp;&amp;\
+export KUBECONFIG=/root/.kube/config &amp;&amp;\
+kubectl set image deployment/${ENVT}-${PROJ} ${ENVT}-${PROJ}=${IMAGE_NAME} -n ${ENVT} &amp;&amp;\
+exit 0 ||\
+exit 1</code></pre>
+
 
 <p>直接通过<code>kubectl</code>命令来更新，这就需要在Probius服务器上安装kubectl并打通整个集群，这种方式仅是能用但不够优雅，并且对于开发测试环境，在部署完成后有查看日志及登录系统排错的需求，这就需要借助<code>Kubernetes-Dashboard</code>来完成，多个系统相互关联跳转增加了使用成本，同时Dashboard的权限也不好控制，所以我就考虑是否可以让Kubernetes以插件的形式集成进Probius系统，用户在Probius系统内完成部署，同时也可以在Probius系统查看Kubernetes的相关信息甚至通过WebSSH登陆，彻底抛弃掉Kubernetes的Dashboard，看上去很完美，正好最近打算升级下Kubernetes集群版本，于是就趁此机会花了几天时间来实现了</p>
 <h2 id="kubernetes">Kubernetes子任务</h2>

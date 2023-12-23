@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -59,178 +59,178 @@
 <h1 id="pyjwt">PyJWT介绍</h1>
 <p>要实现上边的需求1，我们首先得引入JWT模块，python下有现成的PyJWT模块可以直接用，先看下JWT的简单用法</p>
 <h5 id="pyjwt_1">安装PyJWT</h5>
-<div class="codehilite"><pre><span></span><code>$ pip install pyjwt
-</code></pre></div>
+<pre class="codehilite"><code>$ pip install pyjwt</code></pre>
+
 
 <h5 id="pyjwttoken">利用PyJWT生成Token</h5>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">jwt</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">encoded_jwt</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">encode</span><span class="p">({</span><span class="s1">&#39;username&#39;</span><span class="p">:</span><span class="s1">&#39;运维咖啡吧&#39;</span><span class="p">,</span><span class="s1">&#39;site&#39;</span><span class="p">:</span><span class="s1">&#39;https://ops-coffee.cn&#39;</span><span class="p">},</span><span class="s1">&#39;secret_key&#39;</span><span class="p">,</span><span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;HS256&#39;</span><span class="p">)</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; import jwt
+&gt;&gt;&gt; encoded_jwt = jwt.encode({'username':'运维咖啡吧','site':'https://ops-coffee.cn'},'secret_key',algorithm='HS256')</code></pre>
+
 
 <p>这里传了三部分内容给JWT，</p>
 <p>第一部分是一个Json对象，称为Payload，主要用来存放有效的信息，例如用户名，过期时间等等所有你想要传递的信息</p>
 <p>第二部分是一个秘钥字串，这个秘钥主要用在下文Signature签名中，服务端用来校验Token合法性，这个秘钥只有服务端知道，不能泄露</p>
 <p>第三部分指定了Signature签名的算法</p>
 <h5 id="token">查看生成的Token</h5>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; print(encoded_jwt)</span>
-<span class="err">b&#39;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Ilx1OGZkMFx1N2VmNFx1NTQ5Nlx1NTU2MVx1NTQyNyIsInNpdGUiOiJodHRwczovL29wcy1jb2ZmZWUuY24ifQ.fIpSXy476r9F9i7GhdYFNkd-2Ndz8uKLgJPcd84BkJ4&#39;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; print(encoded_jwt)
+b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Ilx1OGZkMFx1N2VmNFx1NTQ5Nlx1NTU2MVx1NTQyNyIsInNpdGUiOiJodHRwczovL29wcy1jb2ZmZWUuY24ifQ.fIpSXy476r9F9i7GhdYFNkd-2Ndz8uKLgJPcd84BkJ4'</code></pre>
+
 
 <p>JWT生成的Token是一个用两个点（.）分割的长字符串</p>
 <p>点分割成的三部分分别是Header头部，Payload负载，Signature签名：<code>Header.Payload.Signature</code></p>
 <p>JWT是不加密的，任何人都可以读的到其中的信息，其中第一部分Header和第二部分Payload只是对原始输入的信息转成了base64编码，第三部分Signature是用header+payload+secret_key进行加密的结果</p>
 <p>可以直接用base64对Header和Payload进行解码得到相应的信息</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">base64</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="s1">&#39;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9&#39;</span><span class="p">)</span>
-<span class="sa">b</span><span class="s1">&#39;{&quot;typ&quot;:&quot;JWT&quot;,&quot;alg&quot;:&quot;HS256&quot;}&#39;</span>
+<pre class="codehilite"><code>&gt;&gt;&gt; import base64
+&gt;&gt;&gt; base64.b64decode('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9')
+b'{&quot;typ&quot;:&quot;JWT&quot;,&quot;alg&quot;:&quot;HS256&quot;}'
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="s1">&#39;eyJ1c2VybmFtZSI6Ilx1OGZkMFx1N2VmNFx1NTQ5Nlx1NTU2MVx1NTQyNyIsInNpdGUiOiJodHRwczovL29wcy1jb2ZmZWUuY24ifQ==&#39;</span><span class="p">)</span>
-<span class="c1"># 这里最后加=的原因是base64解码对传入的参数长度不是2的对象，需要再参数最后加上一个或两个等号=</span>
-</code></pre></div>
+&gt;&gt;&gt; base64.b64decode('eyJ1c2VybmFtZSI6Ilx1OGZkMFx1N2VmNFx1NTQ5Nlx1NTU2MVx1NTQyNyIsInNpdGUiOiJodHRwczovL29wcy1jb2ZmZWUuY24ifQ==')
+# 这里最后加=的原因是base64解码对传入的参数长度不是2的对象，需要再参数最后加上一个或两个等号=</code></pre>
+
 
 <p>因为JWT不会对结果进行加密，所以不要保存敏感信息在Header或者Payload中，服务端也主要依靠最后的Signature来验证Token是否有效以及有无被篡改</p>
 <h5 id="token_1">解密Token</h5>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; jwt.decode(encoded_jwt,&#39;secret_key&#39;,algorithms=[&#39;HS256&#39;])</span>
-<span class="err">{&#39;username&#39;: &#39;运维咖啡吧&#39;, &#39;site&#39;: &#39;https://ops-coffee.cn&#39;}</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; jwt.decode(encoded_jwt,'secret_key',algorithms=['HS256'])
+{'username': '运维咖啡吧', 'site': 'https://ops-coffee.cn'}</code></pre>
+
 
 <p>服务端在有秘钥的情况下可以直接对JWT生成的Token进行解密，解密成功说明Token正确，且数据没有被篡改</p>
 <p>当然我们前文说了JWT并没有对数据进行加密，如果没有secret_key也可以直接获取到Payload里边的数据，只是缺少了签名算法无法验证数据是否准确，pyjwt也提供了直接获取Payload数据的方法，如下</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; jwt.decode(encoded_jwt, verify=False)</span>
-<span class="err">{&#39;username&#39;: &#39;运维咖啡吧&#39;, &#39;site&#39;: &#39;https://ops-coffee.cn&#39;}</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; jwt.decode(encoded_jwt, verify=False)
+{'username': '运维咖啡吧', 'site': 'https://ops-coffee.cn'}</code></pre>
+
 
 <h1 id="django">Django案例</h1>
 <p>Django要兼容session认证的方式，还需要同时支持JWT，并且两种验证需要共用同一套权限系统，该如何处理呢？我们可以参考Django的解决方案：装饰器，例如用来检查用户是否登录的<code>login_required</code>和用来检查用户是否有权限的<code>permission_required</code>两个装饰器，我们可以自己实现一个装饰器，检查用户的认证模式，同时认证完成后验证用户是否有权限操作</p>
 <p>于是一个<code>auth_permission_required</code>的装饰器产生了：</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">JsonResponse</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
-<span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="kn">import</span> <span class="n">PermissionDenied</span>
+<pre class="codehilite"><code>from django.conf import settings
+from django.http import JsonResponse
+from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
 
-<span class="n">UserModel</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span>
+UserModel = get_user_model()
 
 
-<span class="k">def</span> <span class="nf">auth_permission_required</span><span class="p">(</span><span class="n">perm</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">view_func</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">_wrapped_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="c1"># 格式化权限</span>
-            <span class="n">perms</span> <span class="o">=</span> <span class="p">(</span><span class="n">perm</span><span class="p">,)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">perm</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">perm</span>
+def auth_permission_required(perm):
+    def decorator(view_func):
+        def _wrapped_view(request, *args, **kwargs):
+            # 格式化权限
+            perms = (perm,) if isinstance(perm, str) else perm
 
-            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
-                <span class="c1"># 正常登录用户判断是否有权限</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_perms</span><span class="p">(</span><span class="n">perms</span><span class="p">):</span>
-                    <span class="k">raise</span> <span class="n">PermissionDenied</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">auth</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;HTTP_AUTHORIZATION&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-                <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No authenticate header&quot;</span><span class="p">})</span>
+            if request.user.is_authenticated:
+                # 正常登录用户判断是否有权限
+                if not request.user.has_perms(perms):
+                    raise PermissionDenied
+            else:
+                try:
+                    auth = request.META.get('HTTP_AUTHORIZATION').split()
+                except AttributeError:
+                    return JsonResponse({&quot;code&quot;: 401, &quot;message&quot;: &quot;No authenticate header&quot;})
 
-                <span class="c1"># 用户通过API获取数据验证流程</span>
-                <span class="k">if</span> <span class="n">auth</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;token&#39;</span><span class="p">:</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="nb">dict</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">auth</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">settings</span><span class="o">.</span><span class="n">SECRET_KEY</span><span class="p">,</span> <span class="n">algorithms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;HS256&#39;</span><span class="p">])</span>
-                        <span class="n">username</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
-                    <span class="k">except</span> <span class="n">jwt</span><span class="o">.</span><span class="n">ExpiredSignatureError</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Token expired&quot;</span><span class="p">})</span>
-                    <span class="k">except</span> <span class="n">jwt</span><span class="o">.</span><span class="n">InvalidTokenError</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid token&quot;</span><span class="p">})</span>
-                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Can not get user object&quot;</span><span class="p">})</span>
+                # 用户通过API获取数据验证流程
+                if auth[0].lower() == 'token':
+                    try:
+                        dict = jwt.decode(auth[1], settings.SECRET_KEY, algorithms=['HS256'])
+                        username = dict.get('data').get('username')
+                    except jwt.ExpiredSignatureError:
+                        return JsonResponse({&quot;status_code&quot;: 401, &quot;message&quot;: &quot;Token expired&quot;})
+                    except jwt.InvalidTokenError:
+                        return JsonResponse({&quot;status_code&quot;: 401, &quot;message&quot;: &quot;Invalid token&quot;})
+                    except Exception as e:
+                        return JsonResponse({&quot;status_code&quot;: 401, &quot;message&quot;: &quot;Can not get user object&quot;})
 
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">user</span> <span class="o">=</span> <span class="n">UserModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
-                    <span class="k">except</span> <span class="n">UserModel</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;User Does not exist&quot;</span><span class="p">})</span>
+                    try:
+                        user = UserModel.objects.get(username=username)
+                    except UserModel.DoesNotExist:
+                        return JsonResponse({&quot;status_code&quot;: 401, &quot;message&quot;: &quot;User Does not exist&quot;})
 
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;User inactive or deleted&quot;</span><span class="p">})</span>
+                    if not user.is_active:
+                        return JsonResponse({&quot;status_code&quot;: 401, &quot;message&quot;: &quot;User inactive or deleted&quot;})
 
-                    <span class="c1"># Token登录的用户判断是否有权限</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">has_perms</span><span class="p">(</span><span class="n">perms</span><span class="p">):</span>
-                        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">403</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;PermissionDenied&quot;</span><span class="p">})</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Not support auth type&quot;</span><span class="p">})</span>
+                    # Token登录的用户判断是否有权限
+                    if not user.has_perms(perms):
+                        return JsonResponse({&quot;status_code&quot;: 403, &quot;message&quot;: &quot;PermissionDenied&quot;})
+                else:
+                    return JsonResponse({&quot;status_code&quot;: 401, &quot;message&quot;: &quot;Not support auth type&quot;})
 
-            <span class="k">return</span> <span class="n">view_func</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            return view_func(request, *args, **kwargs)
 
-        <span class="k">return</span> <span class="n">_wrapped_view</span>
+        return _wrapped_view
 
-    <span class="k">return</span> <span class="n">decorator</span>
-</code></pre></div>
+    return decorator</code></pre>
+
 
 <p>在view使用时就可以用这个装饰器来代替原本的<code>login_required</code>和<code>permission_required</code>装饰器了</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">@auth_permission_required</span><span class="p">(</span><span class="s1">&#39;account.select_user&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="n">def</span><span class="w"> </span><span class="k">user</span><span class="p">(</span><span class="n">request</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="k">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;GET&#39;</span><span class="err">:</span><span class="w"></span>
-<span class="w">        </span><span class="n">_jsondata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">            </span><span class="ss">&quot;user&quot;</span><span class="err">:</span><span class="w"> </span><span class="ss">&quot;ops-coffee&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="ss">&quot;site&quot;</span><span class="err">:</span><span class="w"> </span><span class="ss">&quot;https://ops-coffee.cn&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="err">}</span><span class="w"></span>
+<pre class="codehilite"><code>@auth_permission_required('account.select_user')
+def user(request):
+    if request.method == 'GET':
+        _jsondata = {
+            &quot;user&quot;: &quot;ops-coffee&quot;,
+            &quot;site&quot;: &quot;https://ops-coffee.cn&quot;
+        }
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">JsonResponse</span><span class="p">(</span><span class="err">{</span><span class="ss">&quot;state&quot;</span><span class="err">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;message&quot;</span><span class="err">:</span><span class="w"> </span><span class="n">_jsondata</span><span class="err">}</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="k">else</span><span class="err">:</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">JsonResponse</span><span class="p">(</span><span class="err">{</span><span class="ss">&quot;state&quot;</span><span class="err">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;message&quot;</span><span class="err">:</span><span class="w"> </span><span class="ss">&quot;Request method &#39;POST&#39; not supported&quot;</span><span class="err">}</span><span class="p">)</span><span class="w"></span>
-</code></pre></div>
+        return JsonResponse({&quot;state&quot;: 1, &quot;message&quot;: _jsondata})
+    else:
+        return JsonResponse({&quot;state&quot;: 0, &quot;message&quot;: &quot;Request method 'POST' not supported&quot;})</code></pre>
+
 
 <p>我们还需要一个生成用户Token的方法，通过给User model添加一个token的静态方法来处理</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">User</span><span class="p">(</span><span class="n">AbstractBaseUser</span><span class="p">,</span> <span class="n">PermissionsMixin</span><span class="p">):</span>
-    <span class="n">create_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;创建时间&#39;</span><span class="p">)</span>
-    <span class="n">update_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;更新时间&#39;</span><span class="p">)</span>
-    <span class="n">username</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;用户名&#39;</span><span class="p">)</span>
-    <span class="n">fullname</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="nb nb-Type">null</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;中文名&#39;</span><span class="p">)</span>
-    <span class="n">phonenumber</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="nb nb-Type">null</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;电话&#39;</span><span class="p">)</span>
-    <span class="n">is_active</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;激活状态&#39;</span><span class="p">)</span>
+<pre class="codehilite"><code>class User(AbstractBaseUser, PermissionsMixin):
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+    username = models.EmailField(max_length=255, unique=True, verbose_name='用户名')
+    fullname = models.CharField(max_length=64, null=True, verbose_name='中文名')
+    phonenumber = models.CharField(max_length=16, null=True, unique=True, verbose_name='电话')
+    is_active = models.BooleanField(default=True, verbose_name='激活状态')
 
-    <span class="n">objects</span> <span class="o">=</span> <span class="n">UserManager</span><span class="p">()</span>
+    objects = UserManager()
 
-    <span class="n">USERNAME_FIELD</span> <span class="o">=</span> <span class="s1">&#39;username&#39;</span>
-    <span class="n">REQUIRED_FIELDS</span> <span class="o">=</span> <span class="p">[]</span>
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = []
 
-    <span class="n">def</span> <span class="n">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span>
+    def __str__(self):
+        return self.username
 
-    <span class="err">@</span><span class="n">property</span>
-    <span class="n">def</span> <span class="n">token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_jwt_token</span><span class="p">()</span>
+    @property
+    def token(self):
+        return self._generate_jwt_token()
 
-    <span class="n">def</span> <span class="n">_generate_jwt_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">encode</span><span class="p">({</span>
-            <span class="s1">&#39;exp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
-            <span class="s1">&#39;iat&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span>
-            <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span>
-            <span class="p">}</span>
-        <span class="p">},</span> <span class="n">settings</span><span class="o">.</span><span class="n">SECRET_KEY</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;HS256&#39;</span><span class="p">)</span>
+    def _generate_jwt_token(self):
+        token = jwt.encode({
+            'exp': datetime.utcnow() + timedelta(days=1),
+            'iat': datetime.utcnow(),
+            'data': {
+                'username': self.username
+            }
+        }, settings.SECRET_KEY, algorithm='HS256')
 
-        <span class="k">return</span> <span class="n">token</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        return token.decode('utf-8')
 
-    <span class="k">class</span> <span class="n">Meta</span><span class="p">:</span>
-        <span class="n">default_permissions</span> <span class="o">=</span> <span class="p">()</span>
+    class Meta:
+        default_permissions = ()
 
-        <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="p">(</span><span class="s2">&quot;select_user&quot;</span><span class="p">,</span> <span class="s2">&quot;查看用户&quot;</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;change_user&quot;</span><span class="p">,</span> <span class="s2">&quot;修改用户&quot;</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;delete_user&quot;</span><span class="p">,</span> <span class="s2">&quot;删除用户&quot;</span><span class="p">),</span>
-        <span class="p">)</span>
-</code></pre></div>
+        permissions = (
+            (&quot;select_user&quot;, &quot;查看用户&quot;),
+            (&quot;change_user&quot;, &quot;修改用户&quot;),
+            (&quot;delete_user&quot;, &quot;删除用户&quot;),
+        )</code></pre>
+
 
 <p>可以直接通过用户对象来生成Token：</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">accounts.models</span> <span class="kn">import</span> <span class="n">User</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;admin@ops-coffee.cn&#39;</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">u</span><span class="o">.</span><span class="n">token</span>
-<span class="s1">&#39;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDgyMjg3NzksImlhdCI6MTU0ODE0MjM3OSwiZGF0YSI6eyJ1c2VybmFtZSI6ImFkbWluQDE2My5jb20ifX0.akZNU7t_z2kwPxDJjmc-QxtNdICK0yhnwWmKxqqXKLw&#39;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; from accounts.models import User
+&gt;&gt;&gt; u = User.objects.get(username='admin@ops-coffee.cn')
+&gt;&gt;&gt; u.token
+'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDgyMjg3NzksImlhdCI6MTU0ODE0MjM3OSwiZGF0YSI6eyJ1c2VybmFtZSI6ImFkbWluQDE2My5jb20ifX0.akZNU7t_z2kwPxDJjmc-QxtNdICK0yhnwWmKxqqXKLw'</code></pre>
+
 
 <p>生成的Token给到客户端，客户端就可以拿这个Token进行鉴权了</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">requests</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">token</span> <span class="o">=</span> <span class="s1">&#39;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDgyMjg4MzgsImlhdCI6MTU0ODE0MjQzOCwiZGF0YSI6eyJ1c2VybmFtZSI6ImFkbWluQDE2My5jb20ifX0.oKc0SafgksMT9ZIhTACupUlz49Q5kI4oJA-B8-GHqLA&#39;</span>
-<span class="o">&gt;&gt;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://localhost/api/user&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Token &#39;</span><span class="o">+</span><span class="n">token</span><span class="p">})</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-<span class="p">{</span><span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;admin@ops-coffee.cn&#39;</span><span class="p">,</span> <span class="s1">&#39;fullname&#39;</span><span class="p">:</span> <span class="s1">&#39;运维咖啡吧&#39;</span><span class="p">,</span> <span class="s1">&#39;is_active&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; import requests
+&gt;&gt;&gt; token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDgyMjg4MzgsImlhdCI6MTU0ODE0MjQzOCwiZGF0YSI6eyJ1c2VybmFtZSI6ImFkbWluQDE2My5jb20ifX0.oKc0SafgksMT9ZIhTACupUlz49Q5kI4oJA-B8-GHqLA'
+&gt;&gt;&gt;
+&gt;&gt;&gt; r = requests.get('http://localhost/api/user', headers={'Authorization': 'Token '+token})
+&gt;&gt;&gt; r.json()
+{'username': 'admin@ops-coffee.cn', 'fullname': '运维咖啡吧', 'is_active': True}</code></pre>
+
 
 <p>这样一个<code>auth_permission_required</code>方法就可以搞定上边的全部需求了，简单好用。</p>
 

@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -50,177 +50,177 @@
 <h2 id="contextpad">自定义ContextPad</h2>
 <p>自定义ContextPad与自定义Palette一样，有两种方式可以选择，第一种就是基于默认的ContextPad来修改，第二种就是完全写个新的ContextPad来替代默认的ContextPad，同样的这里就下完全自定义ContextPad，因为与自定义Palette高度相似，这里以具体代码为主</p>
 <p>1.在custom目录下新建<code>CustomContextPadProvider.js</code>文件，内容如下</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="p">{</span> <span class="n">assign</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;min-dash&quot;</span><span class="p">;</span>
+<pre class="codehilite"><code>import { assign } from &quot;min-dash&quot;;
 
-<span class="n">export</span> <span class="n">default</span> <span class="n">function</span> <span class="n">ContextPadProvider</span><span class="p">(</span>
-  <span class="n">config</span><span class="p">,</span>
-  <span class="n">injector</span><span class="p">,</span>
-  <span class="n">contextPad</span><span class="p">,</span>
-  <span class="n">modeling</span><span class="p">,</span>
-  <span class="n">elementFactory</span><span class="p">,</span>
-  <span class="n">connect</span><span class="p">,</span>
-  <span class="n">create</span><span class="p">,</span>
-  <span class="n">translate</span>
-<span class="p">)</span> <span class="p">{</span>
-  <span class="n">this</span><span class="o">.</span><span class="n">modeling</span> <span class="o">=</span> <span class="n">modeling</span><span class="p">;</span>
-  <span class="n">this</span><span class="o">.</span><span class="n">elementFactory</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="p">;</span>
-  <span class="n">this</span><span class="o">.</span><span class="n">connect</span> <span class="o">=</span> <span class="n">connect</span><span class="p">;</span>
-  <span class="n">this</span><span class="o">.</span><span class="n">create</span> <span class="o">=</span> <span class="n">create</span><span class="p">;</span>
-  <span class="n">this</span><span class="o">.</span><span class="n">translate</span> <span class="o">=</span> <span class="n">translate</span><span class="p">;</span>
-  <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="o">||</span> <span class="p">{};</span>
+export default function ContextPadProvider(
+  config,
+  injector,
+  contextPad,
+  modeling,
+  elementFactory,
+  connect,
+  create,
+  translate
+) {
+  this.modeling = modeling;
+  this.elementFactory = elementFactory;
+  this.connect = connect;
+  this.create = create;
+  this.translate = translate;
+  config = config || {};
 
-  <span class="k">if</span> <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">autoPlace</span> <span class="o">!==</span> <span class="n">false</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">this</span><span class="o">.</span><span class="n">autoPlace</span> <span class="o">=</span> <span class="n">injector</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;autoPlace&quot;</span><span class="p">,</span> <span class="n">false</span><span class="p">);</span>
-  <span class="p">}</span>
+  if (config.autoPlace !== false) {
+    this.autoPlace = injector.get(&quot;autoPlace&quot;, false);
+  }
 
-  <span class="n">contextPad</span><span class="o">.</span><span class="n">registerProvider</span><span class="p">(</span><span class="n">this</span><span class="p">);</span>
-<span class="p">}</span>
+  contextPad.registerProvider(this);
+}
 
-<span class="n">ContextPadProvider</span><span class="o">.</span><span class="err">$</span><span class="n">inject</span> <span class="o">=</span> <span class="p">[</span>
-  <span class="s2">&quot;config.contextPad&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;injector&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;contextPad&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;modeling&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;elementFactory&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;connect&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;create&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;translate&quot;</span>
-<span class="p">];</span>
+ContextPadProvider.$inject = [
+  &quot;config.contextPad&quot;,
+  &quot;injector&quot;,
+  &quot;contextPad&quot;,
+  &quot;modeling&quot;,
+  &quot;elementFactory&quot;,
+  &quot;connect&quot;,
+  &quot;create&quot;,
+  &quot;translate&quot;
+];
 
-<span class="n">ContextPadProvider</span><span class="o">.</span><span class="n">prototype</span><span class="o">.</span><span class="n">getContextPadEntries</span> <span class="o">=</span> <span class="n">function</span> <span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">const</span> <span class="p">{</span>
-    <span class="n">autoPlace</span><span class="p">,</span>
-    <span class="n">create</span><span class="p">,</span>
-    <span class="n">elementFactory</span><span class="p">,</span>
-    <span class="n">translate</span><span class="p">,</span>
-    <span class="n">modeling</span><span class="p">,</span>
-    <span class="n">connect</span>
-  <span class="p">}</span> <span class="o">=</span> <span class="n">this</span><span class="p">;</span>
+ContextPadProvider.prototype.getContextPadEntries = function (element) {
+  const {
+    autoPlace,
+    create,
+    elementFactory,
+    translate,
+    modeling,
+    connect
+  } = this;
 
-  <span class="n">function</span> <span class="n">appendAction</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">className</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">function</span> <span class="n">appendStart</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">var</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="o">.</span><span class="n">createShape</span><span class="p">(</span><span class="n">assign</span><span class="p">({</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">type</span> <span class="p">},</span> <span class="n">options</span><span class="p">));</span>
-      <span class="n">create</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="p">{</span>
-        <span class="n">source</span><span class="p">:</span> <span class="n">element</span>
-      <span class="p">});</span>
-    <span class="p">}</span>
+  function appendAction(type, className, title, options) {
+    function appendStart(event, element) {
+      var shape = elementFactory.createShape(assign({ type: type }, options));
+      create.start(event, shape, {
+        source: element
+      });
+    }
 
-    <span class="n">var</span> <span class="n">append</span> <span class="o">=</span> <span class="n">autoPlace</span>
-      <span class="err">?</span> <span class="n">function</span> <span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">var</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">elementFactory</span><span class="o">.</span><span class="n">createShape</span><span class="p">(</span>
-          <span class="n">assign</span><span class="p">({</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">type</span> <span class="p">},</span> <span class="n">options</span><span class="p">)</span>
-        <span class="p">);</span>
-        <span class="n">autoPlace</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">shape</span><span class="p">);</span>
-      <span class="p">}</span>
-      <span class="p">:</span> <span class="n">appendStart</span><span class="p">;</span>
+    var append = autoPlace
+      ? function (event, element) {
+        var shape = elementFactory.createShape(
+          assign({ type: type }, options)
+        );
+        autoPlace.append(element, shape);
+      }
+      : appendStart;
 
-    <span class="k">return</span> <span class="p">{</span>
-      <span class="n">group</span><span class="p">:</span> <span class="s2">&quot;model&quot;</span><span class="p">,</span>
-      <span class="n">className</span><span class="p">:</span> <span class="n">className</span><span class="p">,</span>
-      <span class="n">title</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span>
-      <span class="n">action</span><span class="p">:</span> <span class="p">{</span>
-        <span class="n">dragstart</span><span class="p">:</span> <span class="n">appendStart</span><span class="p">,</span>
-        <span class="n">click</span><span class="p">:</span> <span class="n">append</span>
-      <span class="p">}</span>
-    <span class="p">};</span>
-  <span class="p">}</span>
+    return {
+      group: &quot;model&quot;,
+      className: className,
+      title: title,
+      action: {
+        dragstart: appendStart,
+        click: append
+      }
+    };
+  }
 
-  <span class="n">function</span> <span class="n">removeElement</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">modeling</span><span class="o">.</span><span class="n">removeElements</span><span class="p">([</span><span class="n">element</span><span class="p">]);</span>
-  <span class="p">}</span>
+  function removeElement(e) {
+    modeling.removeElements([element]);
+  }
 
-  <span class="n">var</span> <span class="n">actions</span> <span class="o">=</span> <span class="p">{};</span>
+  var actions = {};
 
-  <span class="k">if</span> <span class="p">(</span>
-    <span class="n">element</span><span class="o">.</span><span class="n">type</span> <span class="o">===</span> <span class="s2">&quot;bpmn:UserTask&quot;</span> <span class="o">||</span>
-    <span class="n">element</span><span class="o">.</span><span class="n">type</span> <span class="o">===</span> <span class="s2">&quot;bpmn:SequenceFlow&quot;</span>
-  <span class="p">)</span> <span class="p">{</span>
-    <span class="n">assign</span><span class="p">(</span><span class="n">actions</span><span class="p">,</span> <span class="p">{</span>
-      <span class="n">edit</span><span class="p">:</span> <span class="p">{</span>
-        <span class="n">group</span><span class="p">:</span> <span class="s2">&quot;edit&quot;</span><span class="p">,</span>
-        <span class="n">className</span><span class="p">:</span> <span class="s2">&quot;bpmn-icon-business-rule&quot;</span><span class="p">,</span>
-        <span class="n">title</span><span class="p">:</span> <span class="n">translate</span><span class="p">(</span><span class="s2">&quot;属性&quot;</span><span class="p">),</span>
-        <span class="n">action</span><span class="p">:</span> <span class="p">{}</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-  <span class="p">}</span>
+  if (
+    element.type === &quot;bpmn:UserTask&quot; ||
+    element.type === &quot;bpmn:SequenceFlow&quot;
+  ) {
+    assign(actions, {
+      edit: {
+        group: &quot;edit&quot;,
+        className: &quot;bpmn-icon-business-rule&quot;,
+        title: translate(&quot;属性&quot;),
+        action: {}
+      }
+    });
+  }
 
-  <span class="n">assign</span><span class="p">(</span><span class="n">actions</span><span class="p">,</span> <span class="p">{</span>
-    <span class="n">delete</span><span class="p">:</span> <span class="p">{</span>
-      <span class="n">group</span><span class="p">:</span> <span class="s2">&quot;edit&quot;</span><span class="p">,</span>
-      <span class="n">className</span><span class="p">:</span> <span class="s2">&quot;bpmn-icon-trash&quot;</span><span class="p">,</span>
-      <span class="n">title</span><span class="p">:</span> <span class="n">translate</span><span class="p">(</span><span class="s2">&quot;Remove&quot;</span><span class="p">),</span>
-      <span class="n">action</span><span class="p">:</span> <span class="p">{</span>
-        <span class="n">click</span><span class="p">:</span> <span class="n">removeElement</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">});</span>
+  assign(actions, {
+    delete: {
+      group: &quot;edit&quot;,
+      className: &quot;bpmn-icon-trash&quot;,
+      title: translate(&quot;Remove&quot;),
+      action: {
+        click: removeElement
+      }
+    }
+  });
 
-  <span class="k">return</span> <span class="n">actions</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div>
+  return actions;
+};</code></pre>
+
 
 <p>主要思路依然是构建最终输出的字段数据，可以根据不同类型的shape添加不同的ContextPad，以上代码就是默认所有shape都有删除按钮，然后给<code>UserTask</code>类型的shape和连线都添加了一个名为“属性”的按钮</p>
 <p>同样的这里所需要的shape数据也可以参考上篇文章最后给出的那两个Github源码链接</p>
 <p>2.在<code>custom/index.js</code>文件中添加如下内容将自定义的ContextPad导出</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">CustomContextPadProvider</span> <span class="nn">from</span> <span class="s2">&quot;./CustomContextPadProvider&quot;</span><span class="p">;</span>
+<pre class="codehilite"><code>import CustomContextPadProvider from &quot;./CustomContextPadProvider&quot;;
 
-<span class="n">export</span> <span class="n">default</span> <span class="p">{</span>
-  <span class="fm">__init__</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;contextPadProvider&quot;</span><span class="p">],</span>
-  <span class="n">contextPadProvider</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="n">CustomContextPadProvider</span><span class="p">]</span>
-<span class="p">};</span>
-</code></pre></div>
+export default {
+  __init__: [&quot;contextPadProvider&quot;],
+  contextPadProvider: [&quot;type&quot;, CustomContextPadProvider]
+};</code></pre>
+
 
 <p>这里只有自定义<code>ContextPad</code>的配置，如果你是想在自定义<code>Palette</code>的基础上再自定义<code>ContextPad</code>的话，将以上代码与原本的内容整合即可</p>
 <p>3.在<code>customModeler/index.js</code>文件中编写自定义的<code>CustomModeler</code>类</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">inherits</span> <span class="nn">from</span> <span class="s2">&quot;inherits&quot;</span><span class="p">;</span>
+<pre class="codehilite"><code>import inherits from &quot;inherits&quot;;
 
-<span class="kn">import</span> <span class="nn">Viewer</span> <span class="nn">from</span> <span class="s2">&quot;bpmn-js/lib/Viewer&quot;</span><span class="p">;</span>
+import Viewer from &quot;bpmn-js/lib/Viewer&quot;;
 
-<span class="kn">import</span> <span class="nn">ZoomScrollModule</span> <span class="nn">from</span> <span class="s2">&quot;diagram-js/lib/navigation/zoomscroll&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">MoveCanvasModule</span> <span class="nn">from</span> <span class="s2">&quot;diagram-js/lib/navigation/movecanvas&quot;</span><span class="p">;</span>
+import ZoomScrollModule from &quot;diagram-js/lib/navigation/zoomscroll&quot;;
+import MoveCanvasModule from &quot;diagram-js/lib/navigation/movecanvas&quot;;
 
-<span class="n">function</span> <span class="n">CustomViewer</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">Viewer</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">options</span><span class="p">);</span>
-<span class="p">}</span>
+function CustomViewer(options) {
+  Viewer.call(this, options);
+}
 
-<span class="n">inherits</span><span class="p">(</span><span class="n">CustomViewer</span><span class="p">,</span> <span class="n">Viewer</span><span class="p">);</span>
+inherits(CustomViewer, Viewer);
 
-<span class="n">CustomViewer</span><span class="o">.</span><span class="n">prototype</span><span class="o">.</span><span class="n">_modules</span> <span class="o">=</span> <span class="p">[]</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">Viewer</span><span class="o">.</span><span class="n">prototype</span><span class="o">.</span><span class="n">_modules</span><span class="p">,</span> <span class="p">[</span>
-  <span class="n">ZoomScrollModule</span><span class="p">,</span>
-  <span class="n">MoveCanvasModule</span>
-<span class="p">]);</span>
+CustomViewer.prototype._modules = [].concat(Viewer.prototype._modules, [
+  ZoomScrollModule,
+  MoveCanvasModule
+]);
 
-<span class="n">export</span> <span class="p">{</span> <span class="n">CustomViewer</span> <span class="p">};</span>
-</code></pre></div>
+export { CustomViewer };</code></pre>
+
 
 <p>同样的如果你想在自定义<code>Palette</code>的基础上再自定义<code>ContextPad</code>，则在之前的代码基础上与以上代码整合</p>
 <p>4.在页面上引用自定义的<code>CustomModeler</code>以替代原本引用的<code>BpmnModeler</code>类，这样就能用到我们自定义的Palette啦</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="p">{</span> <span class="n">xmlStr</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;../mock/xmlStrPreview&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="p">{</span> <span class="n">CustomModeler</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;../components/customBpmn&quot;</span><span class="p">;</span>
+<pre class="codehilite"><code>import { xmlStr } from &quot;../mock/xmlStrPreview&quot;;
+import { CustomModeler } from &quot;../components/customBpmn&quot;;
 
-<span class="n">export</span> <span class="n">default</span> <span class="p">{</span>
-  <span class="o">...</span>
-  <span class="n">methods</span><span class="p">:</span> <span class="p">{</span>
-    <span class="n">init</span><span class="p">()</span> <span class="p">{</span>
-      <span class="n">const</span> <span class="n">canvas</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="err">$</span><span class="n">refs</span><span class="o">.</span><span class="n">canvas</span><span class="p">;</span>
-      <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span> <span class="o">=</span> <span class="n">new</span> <span class="n">CustomModeler</span><span class="p">({</span>
-        <span class="n">container</span><span class="p">:</span> <span class="n">canvas</span>
-      <span class="p">});</span>
-      <span class="n">this</span><span class="o">.</span><span class="n">createNewDiagram</span><span class="p">();</span>
-    <span class="p">},</span>
-    <span class="n">async</span> <span class="n">createNewDiagram</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">try</span> <span class="p">{</span>
-        <span class="n">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">importXML</span><span class="p">(</span><span class="n">xmlStr</span><span class="p">);</span>
-        <span class="n">const</span> <span class="p">{</span> <span class="n">warnings</span> <span class="p">}</span> <span class="o">=</span> <span class="n">result</span><span class="p">;</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">warnings</span><span class="p">);</span>
-      <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">warnings</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+export default {
+  ...
+  methods: {
+    init() {
+      const canvas = this.$refs.canvas;
+      this.bpmnModeler = new CustomModeler({
+        container: canvas
+      });
+      this.createNewDiagram();
+    },
+    async createNewDiagram() {
+      try {
+        const result = await this.bpmnModeler.importXML(xmlStr);
+        const { warnings } = result;
+        console.log(warnings);
+      } catch (err) {
+        console.log(err.message, err.warnings);
+      }
+    }
+  }
+};</code></pre>
+
 
 <p>最终效果如下：</p>
 <p><img alt="" loading="lazy" src="/static/images/20201111.01.png" /></p>
@@ -230,147 +230,147 @@
 <p>1.在store目录下新建modules目录，modules目录下创建模块化文件<code>bpmn.js</code>，目录结构如下</p>
 <p><img alt="" loading="lazy" src="/static/images/20201111.02.png" /></p>
 <p>2.在<code>bpmn.js</code>中编写如下代码</p>
-<div class="codehilite"><pre><span></span><code><span class="k">const</span> <span class="n">bpmn</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="n">state</span><span class="p">:</span> <span class="p">{</span>
-    <span class="n">nodeVisible</span><span class="p">:</span> <span class="bp">false</span><span class="p">,</span>
-    <span class="n">nodeInfo</span><span class="p">:</span> <span class="p">{}</span>
-  <span class="p">},</span>
-  <span class="n">mutations</span><span class="p">:</span> <span class="p">{</span>
-    <span class="n">TOGGLENODEVISIBLE</span><span class="p">:</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">visible</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="n">state</span><span class="o">.</span><span class="n">nodeVisible</span> <span class="o">=</span> <span class="n">visible</span><span class="p">;</span>
-    <span class="p">},</span>
-    <span class="n">SETNODEINFO</span><span class="p">:</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="n">state</span><span class="o">.</span><span class="n">nodeInfo</span> <span class="o">=</span> <span class="n">info</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">},</span>
-  <span class="n">actions</span><span class="p">:</span> <span class="p">{}</span>
-<span class="p">};</span>
+<pre class="codehilite"><code>const bpmn = {
+  state: {
+    nodeVisible: false,
+    nodeInfo: {}
+  },
+  mutations: {
+    TOGGLENODEVISIBLE: (state, visible) =&gt; {
+      state.nodeVisible = visible;
+    },
+    SETNODEINFO: (state, info) =&gt; {
+      state.nodeInfo = info;
+    }
+  },
+  actions: {}
+};
 
-<span class="k">export</span> <span class="n">default</span> <span class="n">bpmn</span><span class="p">;</span>
-</code></pre></div>
+export default bpmn;</code></pre>
+
 
 <p>想要了解以上代码的意思，我们需要先了解下Vuex的基本思想：当我们在页面上点击了一个按钮，它会触发一个<code>action</code>，<code>action</code>随后会执行一个<code>mutation</code>，<code>mutation</code>会去改变<code>state</code>，当<code>state</code>改变后页面就能根据<code>state</code>来进行相应的处理了</p>
 <p>然后再来看上边的代码，用到了Vuex基本思想里边的<code>state</code>和<code>mutations</code>，其中<code>state</code>为单一状态树，简单理解为我们定义的变量，全局变量，其他组件可以获取的到的变量，而想要修改<code>state</code>里定义的变量就必须通过<code>mutations</code>来实现，<code>mutations</code>就定义了两个事件来对应修改state里的两个变量</p>
 <p><code>state</code>里定义的两个变量分别为用来记录表单展示状态的<code>nodeVisible</code>以及点击节点信息的<code>nodeInfo</code>，默认情况下<code>nodeVisible</code>为false，表示表单为隐藏状态，当点击ContextPad的的“属性”按钮时修改为true，展示表单，同时会把点击的节点信息赋予<code>nodeInfo</code>，这个后边代码会有实现</p>
 <p>想要定义的store生效还需要以下两步进行store挂载及引用</p>
 <p>3.<code>store/index.js</code>中编写如下代码挂载store</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">Vue</span> <span class="nn">from</span> <span class="s2">&quot;vue&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">Vuex</span> <span class="nn">from</span> <span class="s2">&quot;vuex&quot;</span><span class="p">;</span>
+<pre class="codehilite"><code>import Vue from &quot;vue&quot;;
+import Vuex from &quot;vuex&quot;;
 
-<span class="kn">import</span> <span class="nn">bpmn</span> <span class="nn">from</span> <span class="s2">&quot;./modules/bpmn&quot;</span><span class="p">;</span>
+import bpmn from &quot;./modules/bpmn&quot;;
 
-<span class="n">Vue</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="n">Vuex</span><span class="p">);</span>
+Vue.use(Vuex);
 
-<span class="n">export</span> <span class="n">default</span> <span class="n">new</span> <span class="n">Vuex</span><span class="o">.</span><span class="n">Store</span><span class="p">({</span>
-  <span class="n">state</span><span class="p">:</span> <span class="p">{},</span>
-  <span class="n">mutations</span><span class="p">:</span> <span class="p">{},</span>
-  <span class="n">actions</span><span class="p">:</span> <span class="p">{},</span>
-  <span class="n">modules</span><span class="p">:</span> <span class="p">{</span> <span class="n">bpmn</span> <span class="p">}</span>
-<span class="p">});</span>
-</code></pre></div>
+export default new Vuex.Store({
+  state: {},
+  mutations: {},
+  actions: {},
+  modules: { bpmn }
+});</code></pre>
+
 
 <p>4.在<code>main.js</code>中引入store</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">store</span> <span class="nn">from</span> <span class="s2">&quot;./store&quot;</span><span class="p">;</span>
+<pre class="codehilite"><code>import store from &quot;./store&quot;;
 
-<span class="n">new</span> <span class="n">Vue</span><span class="p">({</span>
-  <span class="n">store</span>
-<span class="p">})</span><span class="o">.</span><span class="err">$</span><span class="n">mount</span><span class="p">(</span><span class="s2">&quot;#app&quot;</span><span class="p">);</span>
-</code></pre></div>
+new Vue({
+  store
+}).$mount(&quot;#app&quot;);</code></pre>
+
 
 <p>以上就定义好了store，接下来就是使用store了，首先需要处理的是，当点击ContextPad里的“属性”按钮时，修改store里<code>nodeVisible</code>和<code>nodeInfo</code>值</p>
 <p>5.修改<code>CustomContextPadProvider.js</code>文件，给action添加<code>click</code>方法，<code>click</code>方法修改store里定义的state</p>
-<div class="codehilite"><pre><span></span><code><span class="k">function</span> <span class="n">clickElement</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="err">{</span>
-  <span class="n">store</span><span class="p">.</span><span class="k">commit</span><span class="p">(</span><span class="ss">&quot;SETNODEINFO&quot;</span><span class="p">,</span> <span class="n">element</span><span class="p">);</span>
-  <span class="n">store</span><span class="p">.</span><span class="k">commit</span><span class="p">(</span><span class="ss">&quot;TOGGLENODEVISIBLE&quot;</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
-<span class="err">}</span>
+<pre class="codehilite"><code>function clickElement(e) {
+  store.commit(&quot;SETNODEINFO&quot;, element);
+  store.commit(&quot;TOGGLENODEVISIBLE&quot;, true);
+}
 
-<span class="k">if</span> <span class="p">(</span>
-  <span class="n">element</span><span class="p">.</span><span class="k">type</span> <span class="o">===</span> <span class="ss">&quot;bpmn:UserTask&quot;</span> <span class="o">||</span>
-  <span class="n">element</span><span class="p">.</span><span class="k">type</span> <span class="o">===</span> <span class="ss">&quot;bpmn:SequenceFlow&quot;</span>
-<span class="p">)</span> <span class="err">{</span>
-  <span class="n">assign</span><span class="p">(</span><span class="n">actions</span><span class="p">,</span> <span class="err">{</span>
-    <span class="n">edit</span><span class="p">:</span> <span class="err">{</span>
-      <span class="k">group</span><span class="p">:</span> <span class="ss">&quot;edit&quot;</span><span class="p">,</span>
-      <span class="n">className</span><span class="p">:</span> <span class="ss">&quot;bpmn-icon-business-rule&quot;</span><span class="p">,</span>
-      <span class="n">title</span><span class="p">:</span> <span class="k">translate</span><span class="p">(</span><span class="ss">&quot;属性&quot;</span><span class="p">),</span>
-      <span class="n">action</span><span class="p">:</span> <span class="err">{</span>
-        <span class="n">click</span><span class="p">:</span> <span class="n">clickElement</span>
-      <span class="err">}</span>
-    <span class="err">}</span>
-  <span class="err">}</span><span class="p">);</span>
-<span class="err">}</span>
-</code></pre></div>
+if (
+  element.type === &quot;bpmn:UserTask&quot; ||
+  element.type === &quot;bpmn:SequenceFlow&quot;
+) {
+  assign(actions, {
+    edit: {
+      group: &quot;edit&quot;,
+      className: &quot;bpmn-icon-business-rule&quot;,
+      title: translate(&quot;属性&quot;),
+      action: {
+        click: clickElement
+      }
+    }
+  });
+}</code></pre>
+
 
 <p>对store的修改只能通过<code>store.commit</code>来实现</p>
 <p>6.最后在页面中就可以借助<code>computed</code>和<code>watch</code>来实现对store里数据的获取以及对页面的处理</p>
-<div class="codehilite"><pre><span></span><code><span class="k">export</span> <span class="n">default</span> <span class="p">{</span>
-  <span class="o">...</span>
-  <span class="n">data</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="p">{</span>
-      <span class="n">userTask</span><span class="p">:</span> <span class="bp">false</span><span class="p">,</span>
-      <span class="n">scriptTask</span><span class="p">:</span> <span class="bp">false</span><span class="p">,</span>
-      <span class="n">sequenceFlow</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-      <span class="n">formData</span><span class="p">:</span> <span class="p">{</span>
-        <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">type</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
-      <span class="p">}</span>
-    <span class="p">};</span>
-  <span class="p">},</span>
-  <span class="n">computed</span><span class="p">:</span> <span class="p">{</span>
-    <span class="n">task</span><span class="p">:</span> <span class="p">{</span>
-      <span class="n">get</span><span class="p">:</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">const</span> <span class="n">that</span> <span class="o">=</span> <span class="n">this</span><span class="p">;</span>
-        <span class="k">const</span> <span class="n">element</span> <span class="o">=</span> <span class="n">this</span><span class="o">.$</span><span class="n">store</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">bpmn</span><span class="o">.</span><span class="n">nodeInfo</span><span class="p">;</span>
+<pre class="codehilite"><code>export default {
+  ...
+  data() {
+    return {
+      userTask: false,
+      scriptTask: false,
+      sequenceFlow: &quot;&quot;,
+      formData: {
+        name: &quot;&quot;,
+        type: &quot;&quot;
+      }
+    };
+  },
+  computed: {
+    task: {
+      get: function() {
+        const that = this;
+        const element = this.$store.state.bpmn.nodeInfo;
 
-        <span class="k">if</span> <span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">businessObject</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">if</span> <span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">businessObject</span><span class="o">.$</span><span class="n">type</span> <span class="o">===</span> <span class="s2">&quot;bpmn:UserTask&quot;</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">that</span><span class="o">.</span><span class="n">formData</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s2">&quot;用户任务&quot;</span><span class="p">;</span>
-            <span class="n">that</span><span class="o">.</span><span class="n">formData</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">businessObject</span><span class="o">.</span><span class="n">name</span><span class="p">;</span>
-            <span class="n">that</span><span class="o">.</span><span class="n">userTask</span> <span class="o">=</span> <span class="n">this</span><span class="o">.$</span><span class="n">store</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">bpmn</span><span class="o">.</span><span class="n">nodeVisible</span><span class="p">;</span>
-          <span class="p">}</span>
+        if (element.businessObject) {
+          if (element.businessObject.$type === &quot;bpmn:UserTask&quot;) {
+            that.formData.type = &quot;用户任务&quot;;
+            that.formData.name = element.businessObject.name;
+            that.userTask = this.$store.state.bpmn.nodeVisible;
+          }
 
-          <span class="k">if</span> <span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">businessObject</span><span class="o">.$</span><span class="n">type</span> <span class="o">===</span> <span class="s2">&quot;bpmn:SequenceFlow&quot;</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">that</span><span class="o">.</span><span class="n">sequenceFlow</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">businessObject</span><span class="o">.</span><span class="n">name</span><span class="p">;</span>
-            <span class="n">that</span><span class="o">.</span><span class="n">scriptTask</span> <span class="o">=</span> <span class="n">this</span><span class="o">.$</span><span class="n">store</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">bpmn</span><span class="o">.</span><span class="n">nodeVisible</span><span class="p">;</span>
-          <span class="p">}</span>
-        <span class="p">}</span>
+          if (element.businessObject.$type === &quot;bpmn:SequenceFlow&quot;) {
+            that.sequenceFlow = element.businessObject.name;
+            that.scriptTask = this.$store.state.bpmn.nodeVisible;
+          }
+        }
 
-        <span class="k">return</span> <span class="bp">false</span><span class="p">;</span>
-      <span class="p">},</span>
-      <span class="n">set</span><span class="p">:</span> <span class="n">function</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">this</span><span class="o">.$</span><span class="n">store</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">bpmn</span><span class="o">.</span><span class="n">nodeVisible</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">},</span>
-  <span class="n">watch</span><span class="p">:</span> <span class="p">{</span>
-    <span class="n">task</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">{}</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+        return false;
+      },
+      set: function(val) {
+        this.$store.state.bpmn.nodeVisible = val;
+      }
+    }
+  },
+  watch: {
+    task(val) {}
+  }
+};</code></pre>
+
 
 <p>最终实现的效果如下</p>
 <p><img alt="" loading="lazy" src="/static/images/20201111.03.png" /></p>
 <p>但这里有一个问题，就是当我在表单里修改了节点名称，也就是节点的name属性时不会同步到左侧的流程图节点上，那该如何实现同步呢？也很简单，修改下watch即可</p>
-<div class="codehilite"><pre><span></span><code><span class="n">watch</span><span class="p">:</span> <span class="p">{</span>
-  <span class="n">task</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">{},</span>
-  <span class="n">userTask</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">this</span><span class="o">.$</span><span class="n">store</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">bpmn</span><span class="o">.</span><span class="n">nodeVisible</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span>
-  <span class="p">},</span>
-  <span class="n">sequenceFlow</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="n">element</span> <span class="o">=</span> <span class="n">this</span><span class="o">.$</span><span class="n">store</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">bpmn</span><span class="o">.</span><span class="n">nodeInfo</span><span class="p">;</span>
-    <span class="k">const</span> <span class="n">modeling</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;modeling&quot;</span><span class="p">);</span>
-    <span class="n">modeling</span><span class="o">.</span><span class="n">updateLabel</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
-  <span class="p">},</span>
-  <span class="s2">&quot;formData.name&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="n">handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">old</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">const</span> <span class="n">element</span> <span class="o">=</span> <span class="n">this</span><span class="o">.$</span><span class="n">store</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">bpmn</span><span class="o">.</span><span class="n">nodeInfo</span><span class="p">;</span>
-      <span class="k">const</span> <span class="n">modeling</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;modeling&quot;</span><span class="p">);</span>
-      <span class="n">modeling</span><span class="o">.</span><span class="n">updateLabel</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
-    <span class="p">},</span>
-    <span class="n">deep</span><span class="p">:</span> <span class="bp">true</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>watch: {
+  task(val) {},
+  userTask(val) {
+    this.$store.state.bpmn.nodeVisible = val;
+  },
+  sequenceFlow(val) {
+    const element = this.$store.state.bpmn.nodeInfo;
+    const modeling = this.bpmnModeler.get(&quot;modeling&quot;);
+    modeling.updateLabel(element, val);
+  },
+  &quot;formData.name&quot;: {
+    handler(val, old) {
+      const element = this.$store.state.bpmn.nodeInfo;
+      const modeling = this.bpmnModeler.get(&quot;modeling&quot;);
+      modeling.updateLabel(element, val);
+    },
+    deep: true
+  }
+}</code></pre>
+
 
 <p>获取store里的值然后通过<code>modeling.updateLabel</code>方法来更新节点的名称，至此问题完美解决</p>
 <h2 id="_2">写在最后</h2>

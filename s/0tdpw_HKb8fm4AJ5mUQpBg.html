@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -51,26 +51,26 @@
 <p>文档非常清晰，操作总共就只有4个步骤，分别是安装<code>MegaCli</code>工具-&gt;磁盘做RAID-&gt;格式化磁盘-&gt;挂载到目录，看到文档我就立刻想到一个脚本全部搞定，便开始准备脚本，解决了几个问题，简单罗列如下</p>
 <p>操作第一步是上传<code>MegaCli</code>工具并安装，上传的这个操作就不太好做进脚本里，所以我就把工具包上传到了下载服务器，可以直接通过<code>wget</code>下载，这样脚本处理起来就方便了，但发现这些机器不通外网，只能内网访问，所以就上传到了其中一台机器上，然后临时开个http服务来提供下载，临时开http服务很简单，直接通过python的http模块一个命令就搞定</p>
 <p>python 2.x版本开启http服务的命令是：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">python -m SimpleHTTPServer</span>
-</code></pre></div>
+<pre class="codehilite"><code>python -m SimpleHTTPServer</code></pre>
+
 
 <p>python 3.x版本开启http服务的命令是：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">python -m http.server</span>
-</code></pre></div>
+<pre class="codehilite"><code>python -m http.server</code></pre>
+
 
 <p>解决了文件下载的问题，另外一个问题是在执行磁盘格式化命令<code>mkfs.ext4</code>时需要交互输入来确认，这种交互操作在脚本里是不能出现的，人工干预影响效率，这里我们可以通过管道来处理</p>
-<div class="codehilite"><pre><span></span><code><span class="err">yes | mkfs.ext4 /dev/sdb</span>
-</code></pre></div>
+<pre class="codehilite"><code>yes | mkfs.ext4 /dev/sdb</code></pre>
+
 
 <p>解决了以上两个问题整个脚本就跑通了，但这并不代表结束，一个好的习惯是我们的脚本要能够把结果反馈给我们，能让我们清晰的知道本次执行究竟有没有达到理想的效果，既然这个脚本处理的是磁盘问题，那么我们就要知道这个脚本执行完成后所有的磁盘都是可以正常使用的，所以我在脚本的最后加上了磁盘写文件的测试</p>
-<div class="codehilite"><pre><span></span><code><span class="err">echo ops-coffee.cn &gt; /data/test &amp;&amp; rm -rf /data/test &amp;&amp;\</span>
-<span class="err">echo ok ||</span>
-<span class="err">echo fail</span>
-</code></pre></div>
+<pre class="codehilite"><code>echo ops-coffee.cn &gt; /data/test &amp;&amp; rm -rf /data/test &amp;&amp;\
+echo ok ||
+echo fail</code></pre>
+
 
 <p>脚本写完测试通过，也丢到了临时下载服务器上，一个命令全搞定</p>
-<div class="codehilite"><pre><span></span><code><span class="err">wget https://ops-coffee.cn:8000/init.sh &amp;&amp; /bin/bash init.sh</span>
-</code></pre></div>
+<pre class="codehilite"><code>wget https://ops-coffee.cn:8000/init.sh &amp;&amp; /bin/bash init.sh</code></pre>
+
 
 <h2 id="_1">后记</h2>
 <p>刚刚接到伙伴反馈时，我觉得这个任务很简单，写个脚本跑下就完了，但考虑到自己好多年没处理过这个都忘记了，不确定是否真的一个脚本能全部搞定，所以并没有贸然的表达自己的想法，还是让小伙伴整理了文档，自己亲自实践了一下确实可行。我觉得做技术的还是要严谨一点，自己没有试验过不要太过武断，这是对别人也是对自己的尊重</p>

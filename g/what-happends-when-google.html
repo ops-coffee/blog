@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -130,11 +130,11 @@
 <li>我们发送一个二层（ OSI 模型_ 中的数据链路层）ARP 请求：</li>
 </ul>
 <p><code>ARP Request</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="err">    Sender MAC: interface:mac:address:here</span>
-<span class="err">    Sender IP: interface.ip.goes.here</span>
-<span class="err">    Target MAC: FF:FF:FF:FF:FF:FF (Broadcast)</span>
-<span class="err">    Target IP: target.ip.goes.here</span>
-</code></pre></div>
+<pre class="codehilite"><code>    Sender MAC: interface:mac:address:here
+    Sender IP: interface.ip.goes.here
+    Target MAC: FF:FF:FF:FF:FF:FF (Broadcast)
+    Target IP: target.ip.goes.here</code></pre>
+
 
 <p>根据连接主机和路由器的硬件类型不同，可以分为以下几种情况：</p>
 <p>直连：</p>
@@ -152,11 +152,11 @@
 <li>如果路由器也“连接”在其中，它会返回一个 <code>ARP Reply</code></li>
 </ul>
 <p><code>ARP Reply</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="err">    Sender MAC: target:mac:address:here</span>
-<span class="err">    Sender IP: target.ip.goes.here</span>
-<span class="err">    Target MAC: interface:mac:address:here</span>
-<span class="err">    Target IP: interface.ip.goes.here</span>
-</code></pre></div>
+<pre class="codehilite"><code>    Sender MAC: target:mac:address:here
+    Sender IP: target.ip.goes.here
+    Target MAC: interface:mac:address:here
+    Target IP: interface.ip.goes.here</code></pre>
+
 
 <p>现在我们有了 DNS 服务器或者默认网关的 IP 地址，我们可以继续 DNS 请求了：</p>
 <ul>
@@ -227,11 +227,11 @@
 <h2 id="http">HTTP 协议</h2>
 <p>如果浏览器是 Google 出品的，它不会使用 HTTP协议来获取页面信息，而是会与服务器端发送请求，商讨使用 SPDY 协议。</p>
 <p>如果浏览器使用 HTTP 协议而不支持 SPDY协议，它会向服务器发送这样的一个请求:</p>
-<div class="codehilite"><pre><span></span><code><span class="err">    GET / HTTP/1.1</span>
-<span class="err">    Host: google.com</span>
-<span class="err">    Connection: close</span>
-<span class="err">    [其他头部]</span>
-</code></pre></div>
+<pre class="codehilite"><code>    GET / HTTP/1.1
+    Host: google.com
+    Connection: close
+    [其他头部]</code></pre>
+
 
 <p>“其他头部”包含了一系列的由冒号分割开的键值对，它们的格式符合HTTP协议标准，它们之间由一个换行符分割开来。（这里我们假设浏览器没有违反HTTP协议标准的bug，同时假设浏览器使用<code>HTTP/1.1</code> 协议，不然的话头部可能不包含 <code>Host</code> 字段，同时 <code>GET</code>请求中的版本号会变成 <code>HTTP/1.0</code> 或者 <code>HTTP/0.9</code> 。）</p>
 <p>HTTP/1.1 定义了“关闭连接”的选项"close"，发送者使用这个选项指示这次连接在响应结束之后会断开。例如：</p>
@@ -241,15 +241,15 @@
 <p>不支持持久连接的 HTTP/1.1 应用必须在每条消息中都包含 "close" 选项。</p>
 <p>在发送完这些请求和头部之后，浏览器发送一个换行符，表示要发送的内容已经结束了。</p>
 <p>服务器端返回一个响应码，指示这次请求的状态，响应的形式是这样的:</p>
-<div class="codehilite"><pre><span></span><code><span class="err">    200 OK</span>
-<span class="err">    [响应头部]</span>
-</code></pre></div>
+<pre class="codehilite"><code>    200 OK
+    [响应头部]</code></pre>
+
 
 <p>然后是一个换行，接下来有效载荷(payload)，也就是 <code>www.google.com</code>的HTML内容。服务器下面可能会关闭连接，如果客户端请求保持连接的话，服务器端会保持连接打开，以供之后的请求重用。</p>
 <p>如果浏览器发送的HTTP头部包含了足够多的信息（例如包含了 Etag头部），以至于服务器可以判断出，浏览器缓存的文件版本自从上次获取之后没有再更改过，服务器可能会返回这样的响应:</p>
-<div class="codehilite"><pre><span></span><code><span class="err">    304 Not Modified</span>
-<span class="err">    [响应头部]</span>
-</code></pre></div>
+<pre class="codehilite"><code>    304 Not Modified
+    [响应头部]</code></pre>
+
 
 <p>这个响应没有有效载荷，浏览器会从自己的缓存中取出想要的内容。</p>
 <p>在解析完 HTML之后，浏览器和客户端会重复上面的过程，直到HTML页面引入的所有资源（图片，CSS，favicon.ico等等）全部都获取完毕，区别只是头部的<code>GET / HTTP/1.1</code> 会变成 <code>GET /$(相对www.google.com的URL) HTTP/1.1</code> 。</p>

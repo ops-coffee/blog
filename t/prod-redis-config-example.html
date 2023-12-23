@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -43,44 +43,44 @@
         <h1 id="art-title">生产环境下的Redis标准配置</h1>
 
         <h2 id="redis">当Redis仅做缓存时的配置</h2>
-<div class="codehilite"><pre><span></span><code><span class="n">daemonize</span> <span class="n">yes</span>
-<span class="n">pidfile</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">redis</span><span class="o">/</span><span class="n">redis</span><span class="o">-</span><span class="n">server</span><span class="o">.</span><span class="n">pid</span>
-<span class="n">port</span> <span class="mi">6379</span>
-<span class="n">tcp</span><span class="o">-</span><span class="n">backlog</span> <span class="mi">511</span>
-<span class="n">bind</span> <span class="mf">0.0</span><span class="o">.</span><span class="mf">0.0</span>
-<span class="n">timeout</span> <span class="mi">0</span>
-<span class="n">tcp</span><span class="o">-</span><span class="n">keepalive</span> <span class="mi">0</span>
-<span class="n">loglevel</span> <span class="n">warning</span>
-<span class="n">logfile</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="nb">log</span><span class="o">/</span><span class="n">redis</span><span class="o">/</span><span class="n">redis</span><span class="o">-</span><span class="n">server</span><span class="o">.</span><span class="n">log</span>
-<span class="n">databases</span> <span class="mi">16</span>
-<span class="n">slave</span><span class="o">-</span><span class="n">serve</span><span class="o">-</span><span class="n">stale</span><span class="o">-</span><span class="n">data</span> <span class="n">yes</span>
-<span class="n">slave</span><span class="o">-</span><span class="n">read</span><span class="o">-</span><span class="n">only</span> <span class="n">yes</span>
-<span class="n">repl</span><span class="o">-</span><span class="n">disable</span><span class="o">-</span><span class="n">tcp</span><span class="o">-</span><span class="n">nodelay</span> <span class="n">no</span>
-<span class="n">slave</span><span class="o">-</span><span class="n">priority</span> <span class="mi">100</span>
+<pre class="codehilite"><code>daemonize yes
+pidfile /var/run/redis/redis-server.pid
+port 6379
+tcp-backlog 511
+bind 0.0.0.0
+timeout 0
+tcp-keepalive 0
+loglevel warning
+logfile /var/log/redis/redis-server.log
+databases 16
+slave-serve-stale-data yes
+slave-read-only yes
+repl-disable-tcp-nodelay no
+slave-priority 100
 
-<span class="n">maxmemory</span> <span class="mi">2</span><span class="n">GB</span>
-<span class="n">maxmemory</span><span class="o">-</span><span class="n">policy</span> <span class="n">allkeys</span><span class="o">-</span><span class="n">lru</span>
+maxmemory 2GB
+maxmemory-policy allkeys-lru
 
-<span class="n">slowlog</span><span class="o">-</span><span class="nb">log</span><span class="o">-</span><span class="n">slower</span><span class="o">-</span><span class="n">than</span> <span class="mi">10000</span>
-<span class="n">slowlog</span><span class="o">-</span><span class="nb">max</span><span class="o">-</span><span class="n">len</span> <span class="mi">128</span>
-<span class="n">latency</span><span class="o">-</span><span class="n">monitor</span><span class="o">-</span><span class="n">threshold</span> <span class="mi">0</span>
-<span class="n">notify</span><span class="o">-</span><span class="n">keyspace</span><span class="o">-</span><span class="n">events</span> <span class="s2">&quot;&quot;</span>
-<span class="nb">hash</span><span class="o">-</span><span class="nb">max</span><span class="o">-</span><span class="n">ziplist</span><span class="o">-</span><span class="n">entries</span> <span class="mi">512</span>
-<span class="nb">hash</span><span class="o">-</span><span class="nb">max</span><span class="o">-</span><span class="n">ziplist</span><span class="o">-</span><span class="n">value</span> <span class="mi">64</span>
-<span class="n">list</span><span class="o">-</span><span class="nb">max</span><span class="o">-</span><span class="n">ziplist</span><span class="o">-</span><span class="n">entries</span> <span class="mi">512</span>
-<span class="n">list</span><span class="o">-</span><span class="nb">max</span><span class="o">-</span><span class="n">ziplist</span><span class="o">-</span><span class="n">value</span> <span class="mi">64</span>
-<span class="n">set</span><span class="o">-</span><span class="nb">max</span><span class="o">-</span><span class="n">intset</span><span class="o">-</span><span class="n">entries</span> <span class="mi">512</span>
-<span class="n">zset</span><span class="o">-</span><span class="nb">max</span><span class="o">-</span><span class="n">ziplist</span><span class="o">-</span><span class="n">entries</span> <span class="mi">128</span>
-<span class="n">zset</span><span class="o">-</span><span class="nb">max</span><span class="o">-</span><span class="n">ziplist</span><span class="o">-</span><span class="n">value</span> <span class="mi">64</span>
-<span class="n">hll</span><span class="o">-</span><span class="n">sparse</span><span class="o">-</span><span class="nb">max</span><span class="o">-</span><span class="n">bytes</span> <span class="mi">3000</span>
-<span class="n">activerehashing</span> <span class="n">yes</span>
-<span class="n">client</span><span class="o">-</span><span class="n">output</span><span class="o">-</span><span class="n">buffer</span><span class="o">-</span><span class="n">limit</span> <span class="n">normal</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
-<span class="n">client</span><span class="o">-</span><span class="n">output</span><span class="o">-</span><span class="n">buffer</span><span class="o">-</span><span class="n">limit</span> <span class="n">slave</span> <span class="mi">256</span><span class="n">mb</span> <span class="mi">64</span><span class="n">mb</span> <span class="mi">60</span>
-<span class="n">client</span><span class="o">-</span><span class="n">output</span><span class="o">-</span><span class="n">buffer</span><span class="o">-</span><span class="n">limit</span> <span class="n">pubsub</span> <span class="mi">32</span><span class="n">mb</span> <span class="mi">8</span><span class="n">mb</span> <span class="mi">60</span>
-<span class="n">hz</span> <span class="mi">10</span>
+slowlog-log-slower-than 10000
+slowlog-max-len 128
+latency-monitor-threshold 0
+notify-keyspace-events &quot;&quot;
+hash-max-ziplist-entries 512
+hash-max-ziplist-value 64
+list-max-ziplist-entries 512
+list-max-ziplist-value 64
+set-max-intset-entries 512
+zset-max-ziplist-entries 128
+zset-max-ziplist-value 64
+hll-sparse-max-bytes 3000
+activerehashing yes
+client-output-buffer-limit normal 0 0 0
+client-output-buffer-limit slave 256mb 64mb 60
+client-output-buffer-limit pubsub 32mb 8mb 60
+hz 10
 
-<span class="n">slaveof</span> <span class="mf">10.63</span><span class="o">.</span><span class="mf">62.86</span> <span class="mi">6379</span>        <span class="c1">#从上多出的配置</span>
-</code></pre></div>
+slaveof 10.63.62.86 6379        #从上多出的配置</code></pre>
+
 
 <p>需注意<code>maxmemory</code>配置合适的内存大小</p>
 

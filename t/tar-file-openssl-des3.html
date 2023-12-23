@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -43,21 +43,21 @@
         <h1 id="art-title">Openssl Des3对压缩文件进行加密命令详解</h1>
 
         <p>群友提问：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">致力于明天</span><span class="o">:</span>
-<span class="n">tar</span> <span class="o">-</span><span class="n">cvf</span>  <span class="o">-</span> <span class="n">WMG_Back_</span><span class="s2">&quot;$Today&quot;</span><span class="o">|</span><span class="n">openssl</span> <span class="n">des3</span> <span class="o">-</span><span class="n">salt</span> <span class="o">-</span><span class="n">k</span> <span class="n">hY91gd3GJAAfghECleLwWQAPGK9Cxs</span> <span class="o">-</span><span class="n">out</span> <span class="n">$dir_backup_today</span><span class="o">.</span><span class="na">tar</span><span class="o">.</span><span class="na">des3</span>
+<pre class="codehilite"><code>致力于明天:
+tar -cvf  - WMG_Back_&quot;$Today&quot;|openssl des3 -salt -k hY91gd3GJAAfghECleLwWQAPGK9Cxs -out $dir_backup_today.tar.des3
 
-<span class="err">致力于明天</span><span class="o">:</span>
-<span class="err">有人懂这个吗？</span><span class="o">=</span> <span class="o">=</span> 
+致力于明天:
+有人懂这个吗？= = 
 
-<span class="mi">37</span><span class="err">丫</span><span class="mi">37</span><span class="o">:</span>
-<span class="err">对压缩包进行</span><span class="n">des3的加密</span>
+37丫37:
+对压缩包进行des3的加密
 
-<span class="err">致力于明天</span><span class="o">:</span>
-<span class="err">能详细解释一下吗？</span>
+致力于明天:
+能详细解释一下吗？
 
-<span class="err">致力于明天</span><span class="o">:</span>
-<span class="err">谢谢</span>
-</code></pre></div>
+致力于明天:
+谢谢</code></pre>
+
 
 <p>详细解释如下：</p>
 <p>这个命令主要分为两部分</p>
@@ -76,13 +76,12 @@
 </ul>
 <p>两部分之前用<code>|</code>隔开，<code>|</code>作为连接符连接两个命令，表示以前边命令的输出为后边命令的输入，也就是以前边命令的结果作为后便命令处理的内容，</p>
 <p>openssl des3加密命令实际上应该是这样的</p>
-<div class="codehilite"><pre><span></span><code><span class="err">openssl des3 -salt -k ops-coffee.cn -in file.tar -out file.tar.des3</span>
-</code></pre></div>
+<pre class="codehilite"><code>openssl des3 -salt -k ops-coffee.cn -in file.tar -out file.tar.des3</code></pre>
+
 
 <p>需要用<code>-in</code>传入一个要加密的文件，而用了<code>|</code>连接符后默认会将前一个命令的输出结果作为<code>-in</code>的内容</p>
 <p>如果需要解密，可以使用下边这个命令</p>
-<div class="codehilite"><pre><span></span><code><span class="err">openssl des3 -d -salt -k ops-coffee.cn -in file.tar.des3 -out file.tar</span>
-</code></pre></div>
+<pre class="codehilite"><code>openssl des3 -d -salt -k ops-coffee.cn -in file.tar.des3 -out file.tar</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

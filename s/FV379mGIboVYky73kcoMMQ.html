@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -63,32 +63,32 @@
 <p><img alt="" loading="lazy" src="/static/images/20201203.04.png" /></p>
 <p><img alt="" loading="lazy" src="/static/images/20201203.05.png" /></p>
 <p>无论是证书还是黑白名单最终都是为实例也就是Nginx的Server服务的，对于作为代理的Server配置很简单，下方是一个模板</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">upstream</span> <span class="nt">11</span> <span class="p">{</span>
-    <span class="err">server</span> <span class="err">192.168.106.110:80</span><span class="p">;</span>
-<span class="p">}</span>
+<pre class="codehilite"><code>upstream 11 {
+    server 192.168.106.110:80;
+}
 
-<span class="nt">server</span> <span class="p">{</span>
-    <span class="err">listen</span>       <span class="err">443</span><span class="p">;</span>
-    <span class="err">server_name</span>  <span class="err">blog.ops-coffee.cn</span> <span class="p">;</span>
+server {
+    listen       443;
+    server_name  blog.ops-coffee.cn ;
 
-    <span class="err">ssl</span>                  <span class="err">on</span><span class="p">;</span>
-    <span class="err">ssl_certificate</span>      <span class="err">ssl/1.crt</span><span class="p">;</span>
-    <span class="err">ssl_certificate_key</span>  <span class="err">ssl/1.key</span><span class="p">;</span>
+    ssl                  on;
+    ssl_certificate      ssl/1.crt;
+    ssl_certificate_key  ssl/1.key;
 
-    <span class="err">include</span> <span class="err">acl/1.conf</span><span class="p">;</span>
-    <span class="err">include</span> <span class="err">acl/3.conf</span><span class="p">;</span>
-    <span class="err">deny</span> <span class="err">all</span><span class="p">;</span>
+    include acl/1.conf;
+    include acl/3.conf;
+    deny all;
 
-    <span class="err">auth_basic</span> <span class="err">&quot;please</span> <span class="err">input</span> <span class="err">user&amp;passwd&quot;</span><span class="p">;</span>
-    <span class="err">auth_basic_user_file</span> <span class="err">key/11.key</span><span class="p">;</span>
+    auth_basic &quot;please input user&amp;passwd&quot;;
+    auth_basic_user_file key/11.key;
 
-    <span class="err">location</span> <span class="err">/</span> <span class="err">{</span>
-        <span class="err">proxy_pass</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">11</span><span class="p">;</span>
-    <span class="p">}</span>
+    location / {
+        proxy_pass http://11;
+    }
 
-    <span class="nt">access_log</span>  <span class="o">/</span><span class="nt">home</span><span class="o">/</span><span class="nt">logs</span><span class="o">/</span><span class="nt">nginx</span><span class="o">/</span><span class="nt">11</span><span class="p">.</span><span class="nc">log</span>  <span class="nt">main</span><span class="o">;</span>
-<span class="err">}</span>
-</code></pre></div>
+    access_log  /home/logs/nginx/11.log  main;
+}</code></pre>
+
 
 <p>从这个模板里可以看出，我们大概需要如下一些信息，域名<code>server_name</code>、开放端口<code>listen</code>、是否开启<code>ssl</code>以及SSL的证书和密钥、是否有<code>acl</code>白名单以及白名单的地址、是否需要<code>auth_base</code>认证以及账号密码这几类信息，于是对于新建实例我们就需要如下这些信息</p>
 <p><img alt="" loading="lazy" src="/static/images/20201203.07.png" /></p>

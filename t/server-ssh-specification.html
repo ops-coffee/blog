@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -53,34 +53,34 @@
 </ol>
 <h2 id="_2">建议生成方法</h2>
 <p>推荐使用Linux系统命令<code>ssh-keygen -t rsa -b 2048</code>生成密钥对</p>
-<div class="codehilite"><pre><span></span><code><span class="err">ops-coffee@onlinegame:~$ ssh-keygen -t rsa -b 2048</span>
-<span class="err">Generating public/private rsa key pair.</span>
-<span class="err">Enter file in which to save the key (/home/ops-coffee/.ssh/id_rsa): </span>
-<span class="err">Created directory &#39;/home/ops-coffee/.ssh&#39;.</span>
-<span class="err">Enter passphrase (empty for no passphrase): </span>
-<span class="err">Enter same passphrase again: </span>
-<span class="err">Your identification has been saved in /home/ops-coffee/.ssh/id_rsa.</span>
-<span class="err">Your public key has been saved in /home/ops-coffee/.ssh/id_rsa.pub.</span>
-<span class="err">The key fingerprint is:</span>
-<span class="c">21:d2:db:70:05:44:7d:c0:4a:1e:94:bd:8e:19:cd:09 ops-coffee@onlinegame.ops-coffee.cn</span>
-<span class="err">The key&#39;s randomart image is:</span>
-<span class="err">+--[ RSA 2048]----+</span>
-<span class="err">|       +=*o.     |</span>
-<span class="err">|     .  E.+ .    |</span>
-<span class="err">|    . +oo* +     |</span>
-<span class="err">|     . *+.=      |</span>
-<span class="err">|      . S=       |</span>
-<span class="err">|        o .      |</span>
-<span class="err">|                 |</span>
-<span class="err">|                 |</span>
-<span class="err">|                 |</span>
-<span class="err">+-----------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>ops-coffee@onlinegame:~$ ssh-keygen -t rsa -b 2048
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/ops-coffee/.ssh/id_rsa): 
+Created directory '/home/ops-coffee/.ssh'.
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/ops-coffee/.ssh/id_rsa.
+Your public key has been saved in /home/ops-coffee/.ssh/id_rsa.pub.
+The key fingerprint is:
+21:d2:db:70:05:44:7d:c0:4a:1e:94:bd:8e:19:cd:09 ops-coffee@onlinegame.ops-coffee.cn
+The key's randomart image is:
++--[ RSA 2048]----+
+|       +=*o.     |
+|     .  E.+ .    |
+|    . +oo* +     |
+|     . *+.=      |
+|      . S=       |
+|        o .      |
+|                 |
+|                 |
+|                 |
++-----------------+</code></pre>
+
 
 <p>生成的公钥格式如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">ops-coffee@onlinegame:~$ cat ~/.ssh/id_rsa.pub </span>
-<span class="err">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCrxA9WuM/cTLiQ06Fj/DnygPeBz3Mka3dt/tmxIK5T1hmHceurD6eZ6x0K/hOhsJVZb3AXdAQyeLYLXtKF9r5xoo1idmSoxrLa+YWedFcCy2rjnrKPeSwhlIJoHhJNqUzm3+JLyZLzK5cTqbXibHWKjPU/s4hgZ2LItbb+zbqB9jgzWf70QQ03jRf9T82TFjjZLrptghwmINpC7LfYfkKQy9Gi9KyIm0OhqkIwq5epoXEOU87Vw5ZXXMqNwdk3yO/e0mil8gXHxOt+YoQCLjNC2Ydc+uPdX86GEINlUXaHT7NRZGJN5J79fh83qi7pSYstqGNWOmQjw0VWjPtKL2Gr ops-coffee@onlinegame.ops-coffee.cn</span>
-</code></pre></div>
+<pre class="codehilite"><code>ops-coffee@onlinegame:~$ cat ~/.ssh/id_rsa.pub 
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCrxA9WuM/cTLiQ06Fj/DnygPeBz3Mka3dt/tmxIK5T1hmHceurD6eZ6x0K/hOhsJVZb3AXdAQyeLYLXtKF9r5xoo1idmSoxrLa+YWedFcCy2rjnrKPeSwhlIJoHhJNqUzm3+JLyZLzK5cTqbXibHWKjPU/s4hgZ2LItbb+zbqB9jgzWf70QQ03jRf9T82TFjjZLrptghwmINpC7LfYfkKQy9Gi9KyIm0OhqkIwq5epoXEOU87Vw5ZXXMqNwdk3yO/e0mil8gXHxOt+YoQCLjNC2Ydc+uPdX86GEINlUXaHT7NRZGJN5J79fh83qi7pSYstqGNWOmQjw0VWjPtKL2Gr ops-coffee@onlinegame.ops-coffee.cn</code></pre>
+
 
 <h2 id="_3">密钥使用场景</h2>
 <ol>

@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -50,181 +50,181 @@
 <p>这就比较简单了，既然我们已经实现了浏览器操作Kubernetes的Pod，那么想想操作Pod和物理机虚拟机有什么区别呢？</p>
 <p>整个数据流是一点没变：用户打开浏览器--》浏览器发送websocket请求给Django建立长连接--》Django与要操作的服务器建立SSH通道，实时的将收到的用户数据发送给SSH后的主机，并将主机执行的结果数据返回给浏览器</p>
 <p>唯一不一样的地方就是Django与要操作的服务器建立SSH通道的方式，在Kubernetes中是通过Kubernetes提供的API建立的Stream流，而操作物理机或者虚拟机的时候我们可以使用<code>Paramiko</code>模块来建立SSH长连接隧道，<code>Paramiko</code>模块建立SSH长连接通道的方法如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="err">实例化</span><span class="n">SSHClient</span>
-<span class="n">ssh</span> <span class="o">=</span> <span class="n">paramiko</span><span class="p">.</span><span class="n">SSHClient</span><span class="p">()</span>
+<pre class="codehilite"><code># 实例化SSHClient
+ssh = paramiko.SSHClient()
 
-<span class="o">#</span> <span class="err">当远程服务器没有本地主机的密钥时自动添加到本地，这样不用在建立连接的时候输入</span><span class="n">yes或no进行确认</span>
-<span class="n">ssh</span><span class="p">.</span><span class="n">set_missing_host_key_policy</span><span class="p">(</span><span class="n">paramiko</span><span class="p">.</span><span class="n">AutoAddPolicy</span><span class="p">())</span>
+# 当远程服务器没有本地主机的密钥时自动添加到本地，这样不用在建立连接的时候输入yes或no进行确认
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-<span class="o">#</span> <span class="err">连接</span><span class="n">SSH服务器</span><span class="err">，这里以账号密码的方式进行认证，也可以用</span><span class="k">key</span>
-<span class="n">ssh</span><span class="p">.</span><span class="k">connect</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="k">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+# 连接SSH服务器，这里以账号密码的方式进行认证，也可以用key
+ssh.connect(hostname=host, port=port, username=username, password=password, timeout=8)
 
-<span class="o">#</span> <span class="err">打开</span><span class="n">ssh通道</span><span class="err">，建立长连接</span>
-<span class="n">transport</span> <span class="o">=</span> <span class="n">ssh</span><span class="p">.</span><span class="n">get_transport</span><span class="p">()</span>
-<span class="k">self</span><span class="p">.</span><span class="n">ssh_channel</span> <span class="o">=</span> <span class="n">transport</span><span class="p">.</span><span class="n">open_session</span><span class="p">()</span>
+# 打开ssh通道，建立长连接
+transport = ssh.get_transport()
+self.ssh_channel = transport.open_session()
 
-<span class="o">#</span> <span class="err">获取</span><span class="n">ssh通道</span><span class="err">，并设置</span><span class="n">term和终端大小</span>
-<span class="k">self</span><span class="p">.</span><span class="n">ssh_channel</span><span class="p">.</span><span class="n">get_pty</span><span class="p">(</span><span class="n">term</span><span class="o">=</span><span class="n">term</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="k">rows</span><span class="p">)</span>
+# 获取ssh通道，并设置term和终端大小
+self.ssh_channel.get_pty(term=term, width=cols, height=rows)
 
-<span class="o">#</span> <span class="err">激活终端，这样就可以正常登陆了</span>
-<span class="k">self</span><span class="p">.</span><span class="n">ssh_channel</span><span class="p">.</span><span class="n">invoke_shell</span><span class="p">()</span>
-</code></pre></div>
+# 激活终端，这样就可以正常登陆了
+self.ssh_channel.invoke_shell()</code></pre>
+
 
 <p>连接建立，可以通过如下方法给SSH通道发送数据</p>
-<div class="codehilite"><pre><span></span><code><span class="err">self.ssh_channel.send(data)</span>
-</code></pre></div>
+<pre class="codehilite"><code>self.ssh_channel.send(data)</code></pre>
+
 
 <p>当然SSH返回的数据也可以通过如下方法持续的输出给Websocket</p>
-<div class="codehilite"><pre><span></span><code><span class="err">while not self.ssh_channel.exit_status_ready():</span>
-<span class="err">    # SSH返回的数据需要转码为utf-8，否则json序列化会失败</span>
-<span class="err">    data = self.ssh_channel.recv(1024).decode(&#39;utf-8&#39;,&#39;ignore&#39;)</span>
-<span class="err">    if len(data) != 0:</span>
-<span class="err">        message = {&#39;flag&#39;: &#39;success&#39;, &#39;message&#39;: data}</span>
-<span class="err">        self.websocket.send(json.dumps(message))</span>
-<span class="err">    else:</span>
-<span class="err">        break</span>
-</code></pre></div>
+<pre class="codehilite"><code>while not self.ssh_channel.exit_status_ready():
+    # SSH返回的数据需要转码为utf-8，否则json序列化会失败
+    data = self.ssh_channel.recv(1024).decode('utf-8','ignore')
+    if len(data) != 0:
+        message = {'flag': 'success', 'message': data}
+        self.websocket.send(json.dumps(message))
+    else:
+        break</code></pre>
+
 
 <p>有了这些信息，结合<a href="/s/FHDyvHsh-oO1cn7AXk_4WA">Django实现WebSSH操作Kubernetes Pod</a>的文章，实现WebSSH浏览器操作物理机或者虚拟机就不算困难了，完整的Consumer代码如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">io</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">paramiko</span>
-<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
-<span class="kn">from</span> <span class="nn">channels.generic.websocket</span> <span class="kn">import</span> <span class="n">WebsocketConsumer</span>
-<span class="kn">from</span> <span class="nn">cmdb.backends.sshargs</span> <span class="kn">import</span> <span class="n">args</span>
+<pre class="codehilite"><code>import io
+import json
+import paramiko
+from threading import Thread
+from channels.generic.websocket import WebsocketConsumer
+from cmdb.backends.sshargs import args
 
 
-<span class="k">class</span> <span class="nc">SSHBridge</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">websocket</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">websocket</span> <span class="o">=</span> <span class="n">websocket</span>
+class SSHBridge(object):
+    def __init__(self, websocket):
+        self.websocket = websocket
 
-    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">authtype</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">pkey</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">term</span><span class="o">=</span><span class="s1">&#39;xterm&#39;</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">24</span><span class="p">):</span>
-        <span class="n">ssh</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">()</span>
-        <span class="n">ssh</span><span class="o">.</span><span class="n">set_missing_host_key_policy</span><span class="p">(</span><span class="n">paramiko</span><span class="o">.</span><span class="n">AutoAddPolicy</span><span class="p">())</span>
+    def connect(self, host, port, username, authtype, password=None, pkey=None, term='xterm', cols=80, rows=24):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">authtype</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="n">pkey</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">RSAKey</span><span class="o">.</span><span class="n">from_private_key</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">pkey</span><span class="p">))</span>
-                <span class="n">ssh</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">hostname</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">pkey</span><span class="o">=</span><span class="n">pkey</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">ssh</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;flag&#39;</span><span class="p">:</span> <span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)})</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">websocket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        try:
+            if authtype == 2:
+                pkey = paramiko.RSAKey.from_private_key(io.StringIO(pkey))
+                ssh.connect(username=username, hostname=host, port=port, pkey=pkey, timeout=8)
+            else:
+                ssh.connect(hostname=host, port=port, username=username, password=password, timeout=8)
+        except Exception as e:
+            message = json.dumps({'flag': 'error', 'message': str(e)})
+            self.websocket.send(message)
 
-            <span class="k">return</span> <span class="bp">False</span>
+            return False
 
-        <span class="c1"># 打开一个ssh通道并建立连接</span>
-        <span class="n">transport</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ssh_channel</span> <span class="o">=</span> <span class="n">transport</span><span class="o">.</span><span class="n">open_session</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ssh_channel</span><span class="o">.</span><span class="n">get_pty</span><span class="p">(</span><span class="n">term</span><span class="o">=</span><span class="n">term</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">rows</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ssh_channel</span><span class="o">.</span><span class="n">invoke_shell</span><span class="p">()</span>
+        # 打开一个ssh通道并建立连接
+        transport = ssh.get_transport()
+        self.ssh_channel = transport.open_session()
+        self.ssh_channel.get_pty(term=term, width=cols, height=rows)
+        self.ssh_channel.invoke_shell()
 
-        <span class="c1"># 连接建立一次，之后交互数据不会再进入该方法</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
-            <span class="n">recv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_channel</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;flag&#39;</span><span class="p">:</span> <span class="s1">&#39;success&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">recv</span><span class="p">})</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">websocket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        # 连接建立一次，之后交互数据不会再进入该方法
+        for i in range(2):
+            recv = self.ssh_channel.recv(1024).decode('utf-8', 'ignore')
+            message = json.dumps({'flag': 'success', 'message': recv})
+            self.websocket.send(message)
 
-    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">websocket</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ssh_channel</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">pass</span>
+    def close(self):
+        try:
+            self.websocket.close()
+            self.ssh_channel.close()
+        except BaseException as e:
+            pass
 
-    <span class="k">def</span> <span class="nf">_ws_to_ssh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ssh_channel</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    def _ws_to_ssh(self, data):
+        try:
+            self.ssh_channel.send(data)
+        except OSError as e:
+            self.close()
 
-    <span class="k">def</span> <span class="nf">_ssh_to_ws</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_channel</span><span class="o">.</span><span class="n">exit_status_ready</span><span class="p">():</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_channel</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;flag&#39;</span><span class="p">:</span> <span class="s1">&#39;success&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">}</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">websocket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">message</span><span class="p">))</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">break</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;flag&#39;</span><span class="p">:</span> <span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">websocket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">message</span><span class="p">))</span>
+    def _ssh_to_ws(self):
+        try:
+            while not self.ssh_channel.exit_status_ready():
+                data = self.ssh_channel.recv(1024).decode('utf-8', 'ignore')
+                if len(data) != 0:
+                    message = {'flag': 'success', 'message': data}
+                    self.websocket.send(json.dumps(message))
+                else:
+                    break
+        except Exception as e:
+            message = {'flag': 'error', 'message': str(e)}
+            self.websocket.send(json.dumps(message))
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            self.close()
 
-    <span class="k">def</span> <span class="nf">shell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_ws_to_ssh</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">data</span><span class="p">,))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-        <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_ssh_to_ws</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    def shell(self, data):
+        Thread(target=self._ws_to_ssh, args=(data,)).start()
+        Thread(target=self._ssh_to_ws).start()
 
-<span class="k">class</span> <span class="nc">SSHConsumer</span><span class="p">(</span><span class="n">WebsocketConsumer</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">[</span><span class="s1">&#39;url_route&#39;</span><span class="p">][</span><span class="s1">&#39;kwargs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;query_string&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">]</span>
+class SSHConsumer(WebsocketConsumer):
+    def connect(self):
+        self.pk = self.scope['url_route']['kwargs'].get('id')
+        self.query = self.scope.get('query_string')
+        self.user = self.scope['user']
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+        self.accept()
 
-        <span class="c1"># ssh_connect_args为SSH连接需要的参数</span>
-        <span class="n">ssh_connect_args</span> <span class="o">=</span> <span class="n">args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pk</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
+        # ssh_connect_args为SSH连接需要的参数
+        ssh_connect_args = args(self.pk, self.user, self.query)
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ssh</span> <span class="o">=</span> <span class="n">SSHBridge</span><span class="p">(</span><span class="n">websocket</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="o">**</span><span class="n">ssh_connect_args</span><span class="p">)</span>
+        self.ssh = SSHBridge(websocket=self)
+        self.ssh.connect(**ssh_connect_args)
 
-    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">close_code</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    def disconnect(self, close_code):
+        self.ssh.close()
 
-    <span class="k">def</span> <span class="nf">receive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text_data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="n">text_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">text_data</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">shell</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">text_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
-</code></pre></div>
+    def receive(self, text_data=None):
+        text_data = json.loads(text_data)
+        self.ssh.shell(data=text_data.get('data', ''))</code></pre>
+
 
 <h2 id="_1">动态调整终端窗口大小</h2>
 <p>看了<a href="/s/4jE9hivFG4GmbIA4kKq7Wg">Kubernetes WebSSH终端窗口自适应Resize</a>文章，小伙伴又说了，你这只能在连接建立时确定终端窗口的大小，如果我中途调整了浏览器的大小，显示就乱了，这该怎么办？</p>
 <p>不要着急，接下来就让我们看看怎么让终端窗口随着浏览器大小的调整而改变，上边的文章中已经说过，终端窗口的大小需要浏览器和后端返回的Terminal大小保持一致，单单调整页面窗口大小或者后端返回的Terminal窗口大小都是不行的，那么从这两个方向来说明该如何动态调整窗口的大小</p>
 <p>首先<code>Paramiko</code>模块建立的SSH通道可以通过<code>resize_pty</code>来动态改变返回Terminal窗口的大小，使用方法如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">def resize_pty(self, cols, rows):</span>
-<span class="err">    self.ssh_channel.resize_pty(width=cols, height=rows)</span>
-</code></pre></div>
+<pre class="codehilite"><code>def resize_pty(self, cols, rows):
+    self.ssh_channel.resize_pty(width=cols, height=rows)</code></pre>
+
 
 <p>然后Django的Channels每次接收到前端发过来的数据时，判断一下窗口是否有变化，如果有变化则调用上边的方法动态改变Terminal输出窗口的大小</p>
 <p>我在实现时会给传过来的数据加个flag，如果flag是resize，则调用resize_pty的方法动态调整窗口大小，否则就正常调用执行命令的方法，代码如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span> <span class="n">receive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text_data</span><span class="o">=</span><span class="n">None</span><span class="p">):</span>
-    <span class="n">text_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">text_data</span><span class="p">)</span>
+<pre class="codehilite"><code>def receive(self, text_data=None):
+    text_data = json.loads(text_data)
 
-    <span class="k">if</span> <span class="n">text_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;flag&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;resize&#39;</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">resize_pty</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">text_data</span><span class="p">[</span><span class="s1">&#39;cols&#39;</span><span class="p">],</span> <span class="n">rows</span><span class="o">=</span><span class="n">text_data</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">])</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">shell</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">text_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
-</code></pre></div>
+    if text_data.get('flag') == 'resize':
+        self.ssh.resize_pty(cols=text_data['cols'], rows=text_data['rows'])
+    else:
+        self.ssh.shell(data=text_data.get('data', ''))</code></pre>
+
 
 <p>后端都搞定了，那么来看看前端如何处理吧</p>
 <p>首先有一个terminal_size的方法根据浏览器窗口大小除以每个字符所占用的大小计算出cols和rows的值，无论是xterm.js还是Paramiko都是根据这两个值来调整窗口大小的</p>
-<div class="codehilite"><pre><span></span><code><span class="err">function terminal_size() {</span>
-<span class="err">    return {</span>
-<span class="err">        cols: Math.floor($(&#39;#terminal&#39;).width() / 9),</span>
-<span class="err">        rows: Math.floor($(window).height() / 17),</span>
-<span class="err">    }</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>function terminal_size() {
+    return {
+        cols: Math.floor($('#terminal').width() / 9),
+        rows: Math.floor($(window).height() / 17),
+    }
+}</code></pre>
+
 
 <p>然后通过<code>$(window).resize()</code>来检测浏览器窗口的变化，一旦发生变化，则发送一个带resize标记的数据给Django，同时传递的数据还有新的cols和rows</p>
-<div class="codehilite"><pre><span></span><code><span class="o">//</span> <span class="n">terminal</span> <span class="n">resize</span>
-<span class="err">$</span><span class="p">(</span><span class="n">window</span><span class="p">).</span><span class="n">resize</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="err">{</span>
-    <span class="n">let</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">terminal_size</span><span class="p">().</span><span class="n">cols</span><span class="p">;</span>
-    <span class="n">let</span> <span class="k">rows</span> <span class="o">=</span> <span class="n">terminal_size</span><span class="p">().</span><span class="k">rows</span><span class="p">;</span>
+<pre class="codehilite"><code>// terminal resize
+$(window).resize(function () {
+    let cols = terminal_size().cols;
+    let rows = terminal_size().rows;
 
-    <span class="n">send_data</span> <span class="o">=</span> <span class="n">JSON</span><span class="p">.</span><span class="n">stringify</span><span class="p">(</span><span class="err">{</span>
-        <span class="s1">&#39;flag&#39;</span><span class="p">:</span> <span class="s1">&#39;resize&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;cols&#39;</span><span class="p">:</span> <span class="n">cols</span><span class="p">,</span>
-        <span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="k">rows</span>
-    <span class="err">}</span><span class="p">);</span>
+    send_data = JSON.stringify({
+        'flag': 'resize',
+        'cols': cols,
+        'rows': rows
+    });
 
-    <span class="n">socket</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">send_data</span><span class="p">);</span>
-    <span class="n">term</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="k">rows</span><span class="p">)</span>
-<span class="err">}</span><span class="p">)</span>
-</code></pre></div>
+    socket.send(send_data);
+    term.resize(cols, rows)
+})</code></pre>
+
 
 <p>最后通过<code>term.resize</code>来调整xterm渲染的窗口的大小</p>
 <p>这样一个完整的动态调整窗口大小的方案就完成了</p>

@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -49,29 +49,29 @@
 <ol>
 <li>修改配置文件gitlab.yml</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="n">ldap</span><span class="o">:</span>
-<span class="n">enabled</span><span class="o">:</span> <span class="kc">true</span>
-<span class="n">servers</span><span class="o">:</span>
-  <span class="n">main</span><span class="o">:</span> 
-    <span class="n">label</span><span class="o">:</span> <span class="s1">&#39;LDAP&#39;</span>
+<pre class="codehilite"><code>ldap:
+enabled: true
+servers:
+  main: 
+    label: 'LDAP'
 
-    <span class="n">host</span><span class="o">:</span> <span class="s1">&#39;ldap.ops-coffee.cn&#39;</span>
-    <span class="n">port</span><span class="o">:</span> <span class="mi">389</span>
-    <span class="n">uid</span><span class="o">:</span> <span class="s1">&#39;uid&#39;</span>
-    <span class="n">method</span><span class="o">:</span> <span class="s1">&#39;plain&#39;</span>
-    <span class="n">bind_dn</span><span class="o">:</span> <span class="s1">&#39;uid=authz,ou=Public,dc=ops-coffee,dc=cn&#39;</span>
-    <span class="n">password</span><span class="o">:</span> <span class="s1">&#39;ImNVZODT884&#39;</span>
+    host: 'ldap.ops-coffee.cn'
+    port: 389
+    uid: 'uid'
+    method: 'plain'
+    bind_dn: 'uid=authz,ou=Public,dc=ops-coffee,dc=cn'
+    password: 'ImNVZODT884'
 
-    <span class="n">timeout</span><span class="o">:</span> <span class="mi">10</span>
+    timeout: 10
 
-    <span class="n">active_directory</span><span class="o">:</span> <span class="kc">false</span>
-    <span class="n">allow_username_or_email_login</span><span class="o">:</span> <span class="kc">false</span>
+    active_directory: false
+    allow_username_or_email_login: false
 
-    <span class="n">block_auto_created_users</span><span class="o">:</span> <span class="kc">false</span>
+    block_auto_created_users: false
 
-    <span class="n">base</span><span class="o">:</span> <span class="s1">&#39;dc=ops-coffee,dc=cn&#39;</span>
-    <span class="n">user_filter</span><span class="o">:</span> <span class="s1">&#39;&#39;</span>
-</code></pre></div>
+    base: 'dc=ops-coffee,dc=cn'
+    user_filter: ''</code></pre>
+
 
 <ol>
 <li>重启GitLab服务，看到页面已经有LDAP的登录选项了 </li>

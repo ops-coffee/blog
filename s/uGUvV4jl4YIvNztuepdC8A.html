@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -77,100 +77,100 @@
 </ul>
 <h5 id="etcd_1">所有服务器都需要执行以下命令来安装etcd和创建目录</h5>
 <p>1.下载etcd安装包并解压</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># wget https://github.com/coreos/etcd/releases/download/v3.3.9/etcd-v3.3.9-linux-amd64.tar.gz</span>
-<span class="c1"># tar -zxvf etcd-v3.3.9-linux-amd64.tar.gz </span>
-</code></pre></div>
+<pre class="codehilite"><code># wget https://github.com/coreos/etcd/releases/download/v3.3.9/etcd-v3.3.9-linux-amd64.tar.gz
+# tar -zxvf etcd-v3.3.9-linux-amd64.tar.gz </code></pre>
+
 
 <p>2.拷贝程序到/usr/bin目录下方便执行，etcd为go编写，直接可运行，主要有两个文件etcd和ectdctl，</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># mv etcd-v3.3.9-linux-amd64/etcd* /usr/bin/</span>
-</code></pre></div>
+<pre class="codehilite"><code># mv etcd-v3.3.9-linux-amd64/etcd* /usr/bin/</code></pre>
+
 
 <p>3.创建etcd配置文件目录<code>/etc/etcd</code>和数据存放目录<code>/home/data/etcd</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err"># mkdir /etc/etcd /home/data/etcd</span>
-</code></pre></div>
+<pre class="codehilite"><code># mkdir /etc/etcd /home/data/etcd</code></pre>
+
 
 <h5 id="nodeetcd">三个node节点etcd配置文件分别如下</h5>
 <p>node1配置</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="n">cat</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">etcd</span><span class="o">/</span><span class="n">etcd</span><span class="p">.</span><span class="n">conf</span> 
-<span class="n">name</span><span class="p">:</span> <span class="s1">&#39;node1&#39;</span>
-<span class="k">data</span><span class="o">-</span><span class="n">dir</span><span class="p">:</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="k">data</span><span class="o">/</span><span class="n">etcd</span>
+<pre class="codehilite"><code># cat /etc/etcd/etcd.conf 
+name: 'node1'
+data-dir: /home/data/etcd
 
-<span class="k">listen</span><span class="o">-</span><span class="n">peer</span><span class="o">-</span><span class="n">urls</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">101</span><span class="p">:</span><span class="mi">2380</span>
-<span class="k">listen</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">urls</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">101</span><span class="p">:</span><span class="mi">2379</span><span class="p">,</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">:</span><span class="mi">2379</span>
+listen-peer-urls: http://192.168.107.101:2380
+listen-client-urls: http://192.168.107.101:2379,http://127.0.0.1:2379
 
-<span class="n">initial</span><span class="o">-</span><span class="k">cluster</span><span class="o">-</span><span class="k">state</span><span class="p">:</span> <span class="s1">&#39;new&#39;</span>
-<span class="n">initial</span><span class="o">-</span><span class="k">cluster</span><span class="o">-</span><span class="n">token</span><span class="p">:</span> <span class="s1">&#39;etcd-cluster-conf&#39;</span>
-<span class="n">advertise</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">urls</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">101</span><span class="p">:</span><span class="mi">2379</span>
-<span class="n">initial</span><span class="o">-</span><span class="n">advertise</span><span class="o">-</span><span class="n">peer</span><span class="o">-</span><span class="n">urls</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">101</span><span class="p">:</span><span class="mi">2380</span>
-<span class="n">initial</span><span class="o">-</span><span class="k">cluster</span><span class="p">:</span> <span class="n">node1</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">101</span><span class="p">:</span><span class="mi">2380</span><span class="p">,</span><span class="n">node2</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">102</span><span class="p">:</span><span class="mi">2380</span><span class="p">,</span><span class="n">node3</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">103</span><span class="p">:</span><span class="mi">2380</span>
-</code></pre></div>
+initial-cluster-state: 'new'
+initial-cluster-token: 'etcd-cluster-conf'
+advertise-client-urls: http://192.168.107.101:2379
+initial-advertise-peer-urls: http://192.168.107.101:2380
+initial-cluster: node1=http://192.168.107.101:2380,node2=http://192.168.107.102:2380,node3=http://192.168.107.103:2380</code></pre>
+
 
 <p>node2配置</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="n">cat</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">etcd</span><span class="o">/</span><span class="n">etcd</span><span class="p">.</span><span class="n">conf</span> 
-<span class="n">name</span><span class="p">:</span> <span class="s1">&#39;node2&#39;</span>
-<span class="k">data</span><span class="o">-</span><span class="n">dir</span><span class="p">:</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="k">data</span><span class="o">/</span><span class="n">etcd</span>
+<pre class="codehilite"><code># cat /etc/etcd/etcd.conf 
+name: 'node2'
+data-dir: /home/data/etcd
 
-<span class="k">listen</span><span class="o">-</span><span class="n">peer</span><span class="o">-</span><span class="n">urls</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">102</span><span class="p">:</span><span class="mi">2380</span>
-<span class="k">listen</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">urls</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">102</span><span class="p">:</span><span class="mi">2379</span><span class="p">,</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">:</span><span class="mi">2379</span>
+listen-peer-urls: http://192.168.107.102:2380
+listen-client-urls: http://192.168.107.102:2379,http://127.0.0.1:2379
 
-<span class="n">initial</span><span class="o">-</span><span class="k">cluster</span><span class="o">-</span><span class="k">state</span><span class="p">:</span> <span class="s1">&#39;new&#39;</span>
-<span class="n">initial</span><span class="o">-</span><span class="k">cluster</span><span class="o">-</span><span class="n">token</span><span class="p">:</span> <span class="s1">&#39;etcd-cluster-conf&#39;</span>
-<span class="n">advertise</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">urls</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">102</span><span class="p">:</span><span class="mi">2379</span>
-<span class="n">initial</span><span class="o">-</span><span class="n">advertise</span><span class="o">-</span><span class="n">peer</span><span class="o">-</span><span class="n">urls</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">102</span><span class="p">:</span><span class="mi">2380</span>
-<span class="n">initial</span><span class="o">-</span><span class="k">cluster</span><span class="p">:</span> <span class="n">node1</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">101</span><span class="p">:</span><span class="mi">2380</span><span class="p">,</span><span class="n">node2</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">102</span><span class="p">:</span><span class="mi">2380</span><span class="p">,</span><span class="n">node3</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">103</span><span class="p">:</span><span class="mi">2380</span>
-</code></pre></div>
+initial-cluster-state: 'new'
+initial-cluster-token: 'etcd-cluster-conf'
+advertise-client-urls: http://192.168.107.102:2379
+initial-advertise-peer-urls: http://192.168.107.102:2380
+initial-cluster: node1=http://192.168.107.101:2380,node2=http://192.168.107.102:2380,node3=http://192.168.107.103:2380</code></pre>
+
 
 <p>node3配置</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="n">cat</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">etcd</span><span class="o">/</span><span class="n">etcd</span><span class="p">.</span><span class="n">conf</span> 
-<span class="n">name</span><span class="p">:</span> <span class="s1">&#39;node3&#39;</span>
-<span class="k">data</span><span class="o">-</span><span class="n">dir</span><span class="p">:</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="k">data</span><span class="o">/</span><span class="n">etcd</span>
+<pre class="codehilite"><code># cat /etc/etcd/etcd.conf 
+name: 'node3'
+data-dir: /home/data/etcd
 
-<span class="k">listen</span><span class="o">-</span><span class="n">peer</span><span class="o">-</span><span class="n">urls</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">103</span><span class="p">:</span><span class="mi">2380</span>
-<span class="k">listen</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">urls</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">103</span><span class="p">:</span><span class="mi">2379</span><span class="p">,</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">:</span><span class="mi">2379</span>
+listen-peer-urls: http://192.168.107.103:2380
+listen-client-urls: http://192.168.107.103:2379,http://127.0.0.1:2379
 
-<span class="n">initial</span><span class="o">-</span><span class="k">cluster</span><span class="o">-</span><span class="k">state</span><span class="p">:</span> <span class="s1">&#39;new&#39;</span>
-<span class="n">initial</span><span class="o">-</span><span class="k">cluster</span><span class="o">-</span><span class="n">token</span><span class="p">:</span> <span class="s1">&#39;etcd-cluster-conf&#39;</span>
-<span class="n">advertise</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">urls</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">103</span><span class="p">:</span><span class="mi">2379</span>
-<span class="n">initial</span><span class="o">-</span><span class="n">advertise</span><span class="o">-</span><span class="n">peer</span><span class="o">-</span><span class="n">urls</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">103</span><span class="p">:</span><span class="mi">2380</span>
-<span class="n">initial</span><span class="o">-</span><span class="k">cluster</span><span class="p">:</span> <span class="n">node1</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">101</span><span class="p">:</span><span class="mi">2380</span><span class="p">,</span><span class="n">node2</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">102</span><span class="p">:</span><span class="mi">2380</span><span class="p">,</span><span class="n">node3</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">107</span><span class="p">.</span><span class="mi">103</span><span class="p">:</span><span class="mi">2380</span>
-</code></pre></div>
+initial-cluster-state: 'new'
+initial-cluster-token: 'etcd-cluster-conf'
+advertise-client-urls: http://192.168.107.103:2379
+initial-advertise-peer-urls: http://192.168.107.103:2380
+initial-cluster: node1=http://192.168.107.101:2380,node2=http://192.168.107.102:2380,node3=http://192.168.107.103:2380</code></pre>
+
 
 <h5 id="_4">每个节点配置完成后均启动</h5>
 <p>需要放在后台运行，推荐使用<code>screen</code>工具</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># /usr/bin/etcd --config-file /etc/etcd/etcd.conf </span>
-</code></pre></div>
+<pre class="codehilite"><code># /usr/bin/etcd --config-file /etc/etcd/etcd.conf </code></pre>
+
 
 <p>三个节点全部启动完成后，可通过<code>etcdctl member list</code>命令查看集群列表，确认集群状态</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># etcdctl member list</span>
-<span class="c">732ca490026f580d: name=node3 peerURLs=http://192.168.107.103:2380 clientURLs=http://192.168.107.103:2379 isLeader=false</span>
-<span class="c">bc16d35c3ad1c5ee: name=node2 peerURLs=http://192.168.107.102:2380 clientURLs=http://192.168.107.102:2379 isLeader=true</span>
-<span class="c">f7a043d3b65cd4a4: name=node1 peerURLs=http://192.168.107.101:2380 clientURLs=http://192.168.107.101:2379 isLeader=false</span>
-</code></pre></div>
+<pre class="codehilite"><code># etcdctl member list
+732ca490026f580d: name=node3 peerURLs=http://192.168.107.103:2380 clientURLs=http://192.168.107.103:2379 isLeader=false
+bc16d35c3ad1c5ee: name=node2 peerURLs=http://192.168.107.102:2380 clientURLs=http://192.168.107.102:2379 isLeader=true
+f7a043d3b65cd4a4: name=node1 peerURLs=http://192.168.107.101:2380 clientURLs=http://192.168.107.101:2379 isLeader=false</code></pre>
+
 
 <h2 id="confd">Confd</h2>
 <p>1.下载confd并放到<code>/usr/bin/</code>目录下方便使用</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># wget https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64</span>
-<span class="c1"># mv confd-0.16.0-linux-amd64 /usr/bin/confd</span>
-<span class="c1"># chmod +x /usr/bin/confd</span>
-</code></pre></div>
+<pre class="codehilite"><code># wget https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64
+# mv confd-0.16.0-linux-amd64 /usr/bin/confd
+# chmod +x /usr/bin/confd</code></pre>
+
 
 <p>2.新建confd配置文件目录</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># mkdir /etc/confd/{conf.d,templates}</span>
-</code></pre></div>
+<pre class="codehilite"><code># mkdir /etc/confd/{conf.d,templates}</code></pre>
+
 
 <p>3.新建资源文件，<code>.toml</code>文件结尾已经成了固定格式</p>
-<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">cat</span><span class="w"> </span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">confd</span><span class="o">/</span><span class="n">conf</span><span class="p">.</span><span class="n">d</span><span class="o">/</span><span class="n">nginx</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">toml</span><span class="w"> </span>
-<span class="o">[</span><span class="n">template</span><span class="o">]</span><span class="w"></span>
-<span class="n">src</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;nginx.conf.tmpl&quot;</span><span class="w"></span>
-<span class="n">dest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;/tmp/nginx.conf&quot;</span><span class="w"></span>
+<pre class="codehilite"><code># cat /etc/confd/conf.d/nginx.conf.toml 
+[template]
+src = &quot;nginx.conf.tmpl&quot;
+dest = &quot;/tmp/nginx.conf&quot;
 
-<span class="n">keys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n"></span>
-<span class="n">   &quot;/conf/project/env/nginx/nginx.conf&quot;,</span>
-<span class="o">]</span><span class="w"></span>
+keys = [
+   &quot;/conf/project/env/nginx/nginx.conf&quot;,
+]
 
-<span class="n">check_cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;/usr/sbin/nginx -t -c {{.src}}&quot;</span><span class="w"></span>
-<span class="n">reload_cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;/usr/sbin/service nginx reload&quot;</span><span class="w"></span>
-</code></pre></div>
+check_cmd = &quot;/usr/sbin/nginx -t -c {{.src}}&quot;
+reload_cmd = &quot;/usr/sbin/service nginx reload&quot;</code></pre>
+
 
 <p>这里我们新建了一个nginx配置的资源文件，参数解释：</p>
 <ul>
@@ -188,9 +188,9 @@
 <li><strong>mode</strong>：配置生成配置文件的权限</li>
 </ul>
 <p>4.新建模板文件</p>
-<div class="codehilite"><pre><span></span><code><span class="x"># cat /etc/confd/templates/nginx.conf.tmpl </span>
-<span class="cp">{{</span><span class="nv">getv</span> <span class="s2">&quot;/conf/project/env/nginx/nginx.conf&quot;</span><span class="cp">}}</span><span class="x"></span>
-</code></pre></div>
+<pre class="codehilite"><code># cat /etc/confd/templates/nginx.conf.tmpl 
+{{getv &quot;/conf/project/env/nginx/nginx.conf&quot;}}</code></pre>
+
 
 <ul>
 <li>confd的模板语法有很多，这里不赘述，具体可查官网</li>
@@ -199,68 +199,68 @@
 <h2 id="_5">联调测试</h2>
 <p>部署好了etcd集群和confd服务，接下来我们就要测试下他们是否能够正常协同工作了</p>
 <p>1.在Etcd服务器新建一个KV值</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># etcdctl set /conf/project/env/nginx/nginx.conf &#39;user  www-data;</span>
-<span class="o">&gt;</span> <span class="n">worker_processes</span> <span class="mi">4</span><span class="p">;</span>
-<span class="o">&gt;</span> 
-<span class="o">&gt;</span> <span class="n">pid</span>        <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">nginx</span><span class="o">.</span><span class="n">pid</span><span class="p">;</span>
-<span class="o">&gt;</span> <span class="n">error_log</span>  <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">logs</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">error</span><span class="o">.</span><span class="n">log</span>  <span class="n">warn</span><span class="p">;</span>
-<span class="o">&gt;</span> 
-<span class="o">&gt;</span> <span class="n">events</span>  <span class="p">{</span>
-<span class="o">&gt;</span>     <span class="n">use</span> <span class="n">epoll</span><span class="p">;</span>
-<span class="o">&gt;</span>     <span class="n">worker_connections</span> <span class="mi">51200</span><span class="p">;</span>
-<span class="o">&gt;</span> <span class="p">}</span>
-<span class="o">&gt;</span> 
-<span class="o">&gt;</span> <span class="n">http</span> <span class="p">{</span>
-<span class="o">&gt;</span>     <span class="n">default_type</span>  <span class="n">application</span><span class="o">/</span><span class="n">octet</span><span class="o">-</span><span class="n">stream</span><span class="p">;</span>
-<span class="o">&gt;</span> 
-<span class="o">&gt;</span>     <span class="n">server</span> <span class="p">{</span>
-<span class="o">&gt;</span>         <span class="n">listen</span>       <span class="mi">80</span><span class="p">;</span>
-<span class="o">&gt;</span>         <span class="n">server_name</span>  <span class="n">domain</span><span class="o">.</span><span class="n">com</span><span class="p">;</span>
-<span class="o">&gt;</span> 
-<span class="o">&gt;</span>         <span class="n">root</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">webroot</span><span class="p">;</span>
-<span class="o">&gt;</span>         <span class="n">index</span> <span class="n">index</span><span class="o">.</span><span class="n">shtml</span> <span class="n">index</span><span class="o">.</span><span class="n">html</span><span class="p">;</span>
-<span class="o">&gt;</span>     <span class="p">}</span>
-<span class="o">&gt;</span> <span class="p">}</span><span class="s1">&#39;</span>
-</code></pre></div>
+<pre class="codehilite"><code># etcdctl set /conf/project/env/nginx/nginx.conf 'user  www-data;
+&gt; worker_processes 4;
+&gt; 
+&gt; pid        /var/run/nginx.pid;
+&gt; error_log  /home/logs/nginx/error.log  warn;
+&gt; 
+&gt; events  {
+&gt;     use epoll;
+&gt;     worker_connections 51200;
+&gt; }
+&gt; 
+&gt; http {
+&gt;     default_type  application/octet-stream;
+&gt; 
+&gt;     server {
+&gt;         listen       80;
+&gt;         server_name  domain.com;
+&gt; 
+&gt;         root /home/project/webroot;
+&gt;         index index.shtml index.html;
+&gt;     }
+&gt; }'</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="c1"># 查看设置key的内容</span>
-<span class="c1"># etcdctl get /conf/project/env/nginx/nginx.conf</span>
-<span class="n">user</span>  <span class="n">www</span><span class="o">-</span><span class="n">data</span><span class="p">;</span>
-<span class="n">worker_processes</span> <span class="mi">4</span><span class="p">;</span>
 
-<span class="n">pid</span>        <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">nginx</span><span class="o">.</span><span class="n">pid</span><span class="p">;</span>
-<span class="n">error_log</span>  <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">logs</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">error</span><span class="o">.</span><span class="n">log</span>  <span class="n">warn</span><span class="p">;</span>
+<pre class="codehilite"><code># 查看设置key的内容
+# etcdctl get /conf/project/env/nginx/nginx.conf
+user  www-data;
+worker_processes 4;
 
-<span class="n">events</span>  <span class="p">{</span>
-    <span class="n">use</span> <span class="n">epoll</span><span class="p">;</span>
-    <span class="n">worker_connections</span> <span class="mi">51200</span><span class="p">;</span>
-<span class="p">}</span>
+pid        /var/run/nginx.pid;
+error_log  /home/logs/nginx/error.log  warn;
 
-<span class="n">http</span> <span class="p">{</span>
-    <span class="n">default_type</span>  <span class="n">application</span><span class="o">/</span><span class="n">octet</span><span class="o">-</span><span class="n">stream</span><span class="p">;</span>
+events  {
+    use epoll;
+    worker_connections 51200;
+}
 
-    <span class="n">server</span> <span class="p">{</span>
-        <span class="n">listen</span>       <span class="mi">80</span><span class="p">;</span>
-        <span class="n">server_name</span>  <span class="n">domain</span><span class="o">.</span><span class="n">com</span><span class="p">;</span>
+http {
+    default_type  application/octet-stream;
 
-        <span class="n">root</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">webroot</span><span class="p">;</span>
-        <span class="n">index</span> <span class="n">index</span><span class="o">.</span><span class="n">shtml</span> <span class="n">index</span><span class="o">.</span><span class="n">html</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+    server {
+        listen       80;
+        server_name  domain.com;
+
+        root /home/project/webroot;
+        index index.shtml index.html;
+    }
+}</code></pre>
+
 
 <ul>
 <li>Etcd API分v2和v3版本，两个版本差别较大，v3优化了很多，但考虑兼容性等问题我们这里使用v2版本</li>
 <li>默认为v2版本，可以通过环境变量<code>export ETCDCTL_API=3</code>来切换到v3版本，v2通过<code>etcdctl -v</code>可以查看api版本，v3通过<code>etcdctl version</code>查看api版本</li>
 </ul>
 <p>2.启动confd</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># confd -watch -backend etcd -node=http://192.168.107.101:2379 -node=http://192.168.107.102:2379 -node=http://192.168.107.103:2379</span>
-<span class="c">2018-08-23T13:46:13+08:00 onlinegame.i.nease.net confd[17084]: INFO Backend set to etcd</span>
-<span class="c">2018-08-23T13:46:13+08:00 onlinegame.i.nease.net confd[17084]: INFO Starting confd</span>
-<span class="c">2018-08-23T13:46:13+08:00 onlinegame.i.nease.net confd[17084]: INFO Backend source(s) set to http://192.168.107.101:2379, http://192.168.107.102:2379, http://192.168.107.103:2379</span>
-<span class="c">2018-08-23T13:46:13+08:00 onlinegame.i.nease.net confd[17084]: INFO Target config /tmp/nginx.conf out of sync</span>
-<span class="c">2018-08-23T13:46:13+08:00 onlinegame.i.nease.net confd[17084]: INFO Target config /tmp/nginx.conf has been updated</span>
-</code></pre></div>
+<pre class="codehilite"><code># confd -watch -backend etcd -node=http://192.168.107.101:2379 -node=http://192.168.107.102:2379 -node=http://192.168.107.103:2379
+2018-08-23T13:46:13+08:00 onlinegame.i.nease.net confd[17084]: INFO Backend set to etcd
+2018-08-23T13:46:13+08:00 onlinegame.i.nease.net confd[17084]: INFO Starting confd
+2018-08-23T13:46:13+08:00 onlinegame.i.nease.net confd[17084]: INFO Backend source(s) set to http://192.168.107.101:2379, http://192.168.107.102:2379, http://192.168.107.103:2379
+2018-08-23T13:46:13+08:00 onlinegame.i.nease.net confd[17084]: INFO Target config /tmp/nginx.conf out of sync
+2018-08-23T13:46:13+08:00 onlinegame.i.nease.net confd[17084]: INFO Target config /tmp/nginx.conf has been updated</code></pre>
+
 
 <p>配置参数说明</p>
 <ul>

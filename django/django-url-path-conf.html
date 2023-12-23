@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -44,25 +44,25 @@
 
         <p>Django通过URLconf来实现请求的路由，URLConf定义了URL到视图函数的映射关系</p>
 <p>一个简单的URLconf如下</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">include</span>
-<span class="kn">from</span> <span class="nn">django.views.generic.base</span> <span class="kn">import</span> <span class="n">TemplateView</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+<pre class="codehilite"><code>from django.urls import path, include
+from django.views.generic.base import TemplateView
+from django.contrib.auth.decorators import login_required
 
-<span class="kn">from</span> <span class="nn">cmdb.views</span> <span class="kn">import</span> <span class="n">CmdbList</span><span class="p">,</span> <span class="n">CmdbDetail</span><span class="p">,</span> <span class="n">PasswordList</span><span class="p">,</span> <span class="n">PasswordDetail</span>
+from cmdb.views import CmdbList, CmdbDetail, PasswordList, PasswordDetail
 
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">login_required</span><span class="p">(</span><span class="n">TemplateView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;index.html&#39;</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;index-url&#39;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;commons/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;sadmin.commons.urls&#39;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;accounts/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;sadmin.accounts.urls&#39;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;project/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;sadmin.project.urls&#39;</span><span class="p">)),</span>
+urlpatterns = [
+    path('', login_required(TemplateView.as_view(template_name='index.html')), name='index-url'),
+    path('commons/', include('sadmin.commons.urls')),
+    path('accounts/', include('sadmin.accounts.urls')),
+    path('project/', include('sadmin.project.urls')),
 
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;cmdb/&#39;</span><span class="p">,</span> <span class="n">CmdbList</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;cmdb/&lt;int:pk&gt;/&#39;</span><span class="p">,</span> <span class="n">CmdbDetail</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
+    path('cmdb/', CmdbList.as_view()),
+    path('cmdb/&lt;int:pk&gt;/', CmdbDetail.as_view()),
 
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;password/&#39;</span><span class="p">,</span> <span class="n">PasswordList</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;password/&lt;int:pk&gt;/&#39;</span><span class="p">,</span> <span class="n">PasswordDetail</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
-<span class="p">]</span>
-</code></pre></div>
+    path('password/', PasswordList.as_view()),
+    path('password/&lt;int:pk&gt;/', PasswordDetail.as_view()),
+]</code></pre>
+
 
 <h2 id="path">path</h2>
 <p><code>path()</code>有四个参数，两个必须参数：route和view，两个可选参数kwargs和name</p>
@@ -93,84 +93,84 @@
 </ul>
 <h2 id="re_path">re_path</h2>
 <p>使用<code>re_path</code>可以通过正则表达式去匹配复杂的URL，例如</p>
-<div class="codehilite"><pre><span></span><code><span class="err">re_path(&#39;static/(?P&lt;path&gt;.*)$&#39;, static.serve, {&#39;document_root&#39;: settings.STATIC_ROOT}, name=&#39;static&#39;),</span>
-</code></pre></div>
+<pre class="codehilite"><code>re_path('static/(?P&lt;path&gt;.*)$', static.serve, {'document_root': settings.STATIC_ROOT}, name='static'),</code></pre>
+
 
 <p>在 Python 正则表达式中，命名正则表达式组的语法是<code>(?P&lt;name&gt;pattern)</code>，其中name是组名，pattern是要匹配的模式。组名name可以省略，不过不推荐</p>
 <h2 id="_1">模板中使用</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">{% url &#39;monitor-list&#39; %}</span>
-</code></pre></div>
+<pre class="codehilite"><code>{% url 'monitor-list' %}</code></pre>
+
 
 <p>传递参数</p>
-<div class="codehilite"><pre><span></span><code><span class="err">{% url &#39;monitor-detail&#39; data.id %}</span>
-</code></pre></div>
+<pre class="codehilite"><code>{% url 'monitor-detail' data.id %}</code></pre>
+
 
 <h2 id="view_1">View中使用</h2>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+<pre class="codehilite"><code>from django.urls import reverse
 
-<span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;index-url&#39;</span><span class="p">)</span>
-</code></pre></div>
+reverse('index-url')</code></pre>
+
 
 <p>reverse支持添加动态参数，使用方法为：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">reverse(&#39;accounts:user-list&#39;, kwargs={&#39;pk&#39;: id})</span>
-</code></pre></div>
+<pre class="codehilite"><code>reverse('accounts:user-list', kwargs={'pk': id})</code></pre>
+
 
 <h2 id="viewurl">View中的URL重定向</h2>
 <p>URL重定向有两种方式，分别是<code>HttpResponseRedirect</code>、<code>redirect</code></p>
 <h3 id="httpresponseredirect">HttpResponseRedirect</h3>
 <p>HttpResponseRedirect是Django中推荐的重定向方式，在view中使用方法如下</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponseRedirect</span>
+<pre class="codehilite"><code>from django.http import HttpResponseRedirect
 
-<span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">AuthenticationForm</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+def login(request):
+    if request.method == &quot;POST&quot;:
+        form = AuthenticationForm(request, data=request.POST)
 
-        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-            <span class="n">auth</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">form</span><span class="o">.</span><span class="n">get_user</span><span class="p">())</span>
+        if form.is_valid():
+            auth.login(request, form.get_user())
 
-            <span class="c1"># 登录成功重定向到next页面</span>
-            <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="n">_next</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;next&#39;</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">AuthenticationForm</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            # 登录成功重定向到next页面
+            return HttpResponseRedirect(_next = request.POST.get('next'))
+    else:
+        form = AuthenticationForm(request)
 
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/login.html&#39;</span><span class="p">,</span> <span class="p">{</span>
-            <span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
-            <span class="s1">&#39;next&#39;</span><span class="p">:</span> <span class="n">_next</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;next&#39;</span><span class="p">)</span>
-        <span class="p">})</span>
-</code></pre></div>
+        return render(request, 'accounts/login.html', {
+            'form': form,
+            'next': _next = request.POST.get('next')
+        })</code></pre>
+
 
 <p>HttpResponseRedirect接收一个参数就是要重定向到的URL地址</p>
 <h3 id="redirect">redirect</h3>
 <p>redirect是HttpResponseRedirect的便捷写法，HttpResponseRedirect能支持的URL重定向redirect都支持，例如以下三种常见写法</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span>
-<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+<pre class="codehilite"><code>from django.shortcuts import redirect
+from django.urls import reverse
 
-<span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;/index/&#39;</span><span class="p">)</span>
+def login(request):
+    return redirect('/index/')
 
-<span class="k">def</span> <span class="nf">goto</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;https://blog.ops-coffee.cn&#39;</span><span class="p">)</span>
+def goto(request):
+    return redirect('https://blog.ops-coffee.cn')
 
-<span class="k">def</span> <span class="nf">logout</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;accounts:logout-url&#39;</span><span class="p">))</span>
-</code></pre></div>
+def logout(request):
+    return redirect(reverse('accounts:logout-url'))</code></pre>
+
 
 <p>redirect不仅能根据URL重定向，还可以根据对象或试图重定向</p>
-<div class="codehilite"><pre><span></span><code><span class="err">def group(request):</span>
-<span class="err">    obj = Model.objects.get(id=1)</span>
-<span class="err">    return redirect(obj)</span>
-</code></pre></div>
+<pre class="codehilite"><code>def group(request):
+    obj = Model.objects.get(id=1)
+    return redirect(obj)</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err">def login(request):</span>
-<span class="err">    return redirect(&#39;some-view-name&#39;, name=&#39;coffee&#39;)</span>
-</code></pre></div>
+
+<pre class="codehilite"><code>def login(request):
+    return redirect('some-view-name', name='coffee')</code></pre>
+
 
 <h2 id="urlurl">URL中的URL重定向</h2>
 <p>如果想在urls.py中直接配置URL重定向，可以通过如下方法</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">RedirectView</span>
+<pre class="codehilite"><code>from django.views.generic import RedirectView
 
-<span class="n">path</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">RedirectView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/dashboard/&#39;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;index-url&#39;</span><span class="p">),</span>
-</code></pre></div>
+path('', RedirectView.as_view(url='/dashboard/'), name='index-url'),</code></pre>
+
 
 <p>以上的意思是将<code>/</code>重定向到<code>/dashboard</code></p>
 

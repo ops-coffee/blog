@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -50,8 +50,8 @@
 <p>zmodem采用串流的方式传输文件，是xmodem和ymodem协议的改良进化版，具有传输速度快，支持断点续传、支持完整性校验等优点，成为目前最流行的文件传输协议之一，也被众多终端所支持，例如Xshell、SecureCRT、item2等</p>
 <p>优点之外，zmodem也有一定的局限性，其中之一便是只能可靠地传输大小<strong>不超过4GB</strong>的文件，但对于大部分场景下已够用，超大文件的传输一般也会寻求其他的传输方式</p>
 <p>lrzsz就是基于zmodem协议实现的文件传输，linux下使用非常方便，只需要一个简单的命令就可以安装，例如centos系统安装方式如下</p>
-<div class="codehilite"><pre><span></span><code><span class="err">yum install lrzsz</span>
-</code></pre></div>
+<pre class="codehilite"><code>yum install lrzsz</code></pre>
+
 
 <p>安装完成后就可以通过<code>rz</code>命令上传文件，或者<code>sz</code>命令下载文件了，这么说上传或下载其实不是很准确，在zmodem协议中，使用receive接收和send发送来解释更为准确，无论是receive还是send都是由<strong>服务端来发起</strong>的</p>
 <p><code>rz</code>的意思为recevie zmodem，服务端来接收数据，对于客户端来说就是上传</p>
@@ -59,8 +59,8 @@
 <p>文件的传输需要服务端和客户端都支持zmodem协议，服务端通过安装lrzsz实现了对zmodem协议的支持，Xshell和SecureCRT也支持zmodem协议，所以他们能通过rz或sz命令实现文件的上传和下载，那么Web浏览器要如何支持zmodem协议呢？</p>
 <p>我们所使用的终端工具xterm.js在3.x版本提供过zmodem扩展插件，但很可惜在4.x版本中已经停止支持了，还好给xterm.js提供zmodem扩展插件的作者开源了一个项目：<a href="https://github.com/FGasper/zmodemjs">zmodemjs</a>，用来提供浏览器Web对zmodem协议的支持，且能很好的跟xterm.js工具相结合，有了zmodemjs我们就可以通过浏览器与终端交互，调用系统rzsz命令实现文件上传下载了</p>
 <p>需要注意的是zmodem是个二进制协议，只支持二进制流，所以通过websocket传输的数据必须是二进制的，在django的channel中可以通过指定发送消息的类型为<code>bytes_data</code>来实现websocket传输二进制数据，这是后端实现的核心</p>
-<div class="codehilite"><pre><span></span><code><span class="err">websocket.send(bytes_data=data)</span>
-</code></pre></div>
+<pre class="codehilite"><code>websocket.send(bytes_data=data)</code></pre>
+
 
 <p>配合zmodemjs的前端实现，最终的效果如下</p>
 <p><img alt="" loading="lazy" src="/static/images/20191206.gif" /></p>

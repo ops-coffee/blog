@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -49,80 +49,80 @@
 <p>在上一篇文章<a href="/s/oqZqGiQ3uNrNuT-nGrh9lg">Asciinema：你的所有操作都将被录制</a>中有两个地方表述有错误或瑕疵，这里更正一下</p>
 <p>第一个地方为录制时的参数<code>--stdin</code>，参数的意思是启用标准输入录制，原文中说看不到效果，可能官方还未支持，实际上官方已经支持了，且查看录制文件内容时可以看到区别，以下两个对比的例子来说明</p>
 <p>例一：执行下方的命令进行录制，录制开始之后执行ssh命令输入密码连接另一台主机</p>
-<div class="codehilite"><pre><span></span><code><span class="err">asciinema rec ops-coffee.cast</span>
-</code></pre></div>
+<pre class="codehilite"><code>asciinema rec ops-coffee.cast</code></pre>
+
 
 <p>执行<code>asciinema cat</code>命令查看执行命令</p>
-<div class="codehilite"><pre><span></span><code><span class="cp"># asciinema cat ops-coffee.cast </span>
-<span class="n">root</span><span class="p">@</span><span class="nl">onlinegame</span><span class="p">:</span><span class="o">~</span><span class="err">#</span> <span class="n">ssh</span> <span class="n">root</span><span class="mf">@192.168.106.192</span> <span class="n">ls</span> <span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span>
-<span class="n">root</span><span class="mf">@192.168.106.192</span><span class="err">&#39;</span><span class="n">s</span> <span class="nl">password</span><span class="p">:</span> 
-<span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span>
-<span class="n">root</span><span class="p">@</span><span class="nl">onlinegame</span><span class="p">:</span><span class="o">~</span><span class="err">#</span> <span class="n">exit</span>
-<span class="n">exit</span>
-</code></pre></div>
+<pre class="codehilite"><code># asciinema cat ops-coffee.cast 
+root@onlinegame:~# ssh root@192.168.106.192 ls ops-coffee.cn
+root@192.168.106.192's password: 
+ops-coffee.cn
+root@onlinegame:~# exit
+exit</code></pre>
+
 
 <p>打印录制的文件内容如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="cp"># cat ops-coffee.cast </span>
-<span class="p">{</span><span class="s">&quot;version&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&quot;width&quot;</span><span class="o">:</span> <span class="mi">237</span><span class="p">,</span> <span class="s">&quot;height&quot;</span><span class="o">:</span> <span class="mi">55</span><span class="p">,</span> <span class="s">&quot;timestamp&quot;</span><span class="o">:</span> <span class="mi">1574060513</span><span class="p">,</span> <span class="s">&quot;env&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s">&quot;SHELL&quot;</span><span class="o">:</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">,</span> <span class="s">&quot;TERM&quot;</span><span class="o">:</span> <span class="s">&quot;linux&quot;</span><span class="p">}}</span>
-<span class="p">[</span><span class="mf">0.012221</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;root@onlinegame:~# &quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">0.607184</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;exit&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">1.07092</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\b\b\b\b</span><span class="s">ssh root@192.168.106.192 ls ops-coffee.cn&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">1.703405</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\r\n</span><span class="s">&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">1.762974</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;root@192.168.106.192&#39;s password: &quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">4.550759</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\r\n</span><span class="s">&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">4.558138</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;ops-coffee.cn</span><span class="se">\r\n</span><span class="s">&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">4.559187</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;root@onlinegame:~# &quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">5.182817</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;e&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">5.582643</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;x&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">5.838648</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">6.03067</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;t&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">6.759346</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\r\n</span><span class="s">exit</span><span class="se">\r\n</span><span class="s">&quot;</span><span class="p">]</span>
-</code></pre></div>
+<pre class="codehilite"><code># cat ops-coffee.cast 
+{&quot;version&quot;: 2, &quot;width&quot;: 237, &quot;height&quot;: 55, &quot;timestamp&quot;: 1574060513, &quot;env&quot;: {&quot;SHELL&quot;: &quot;/bin/bash&quot;, &quot;TERM&quot;: &quot;linux&quot;}}
+[0.012221, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]
+[0.607184, &quot;o&quot;, &quot;exit&quot;]
+[1.07092, &quot;o&quot;, &quot;\b\b\b\bssh root@192.168.106.192 ls ops-coffee.cn&quot;]
+[1.703405, &quot;o&quot;, &quot;\r\n&quot;]
+[1.762974, &quot;o&quot;, &quot;root@192.168.106.192's password: &quot;]
+[4.550759, &quot;o&quot;, &quot;\r\n&quot;]
+[4.558138, &quot;o&quot;, &quot;ops-coffee.cn\r\n&quot;]
+[4.559187, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]
+[5.182817, &quot;o&quot;, &quot;e&quot;]
+[5.582643, &quot;o&quot;, &quot;x&quot;]
+[5.838648, &quot;o&quot;, &quot;i&quot;]
+[6.03067, &quot;o&quot;, &quot;t&quot;]
+[6.759346, &quot;o&quot;, &quot;\r\nexit\r\n&quot;]</code></pre>
+
 
 <p>例二：执行同样的命令，加上<code>--stdin</code>参数</p>
-<div class="codehilite"><pre><span></span><code><span class="err">asciinema rec --stdin ops-coffee.1.cast</span>
-</code></pre></div>
+<pre class="codehilite"><code>asciinema rec --stdin ops-coffee.1.cast</code></pre>
+
 
 <p>执行<code>asciinema cat</code>命令查看执行命令</p>
-<div class="codehilite"><pre><span></span><code><span class="cp"># asciinema cat ops-coffee.1.cast </span>
-<span class="n">root</span><span class="p">@</span><span class="nl">onlinegame</span><span class="p">:</span><span class="o">~</span><span class="err">#</span> <span class="n">ssh</span> <span class="n">root</span><span class="mf">@192.168.106.192</span> <span class="n">ls</span> <span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span>
-<span class="n">root</span><span class="mf">@192.168.106.192</span><span class="err">&#39;</span><span class="n">s</span> <span class="nl">password</span><span class="p">:</span> 
-<span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span>
-<span class="n">root</span><span class="p">@</span><span class="nl">onlinegame</span><span class="p">:</span><span class="o">~</span><span class="err">#</span> <span class="n">exit</span>
-<span class="n">exit</span>
-</code></pre></div>
+<pre class="codehilite"><code># asciinema cat ops-coffee.1.cast 
+root@onlinegame:~# ssh root@192.168.106.192 ls ops-coffee.cn
+root@192.168.106.192's password: 
+ops-coffee.cn
+root@onlinegame:~# exit
+exit</code></pre>
+
 
 <p>这次再看录制文件的内容：</p>
-<div class="codehilite"><pre><span></span><code><span class="cp"># cat ops-coffee.1.cast</span>
-<span class="p">{</span><span class="s">&quot;version&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&quot;width&quot;</span><span class="o">:</span> <span class="mi">237</span><span class="p">,</span> <span class="s">&quot;height&quot;</span><span class="o">:</span> <span class="mi">55</span><span class="p">,</span> <span class="s">&quot;timestamp&quot;</span><span class="o">:</span> <span class="mi">1574060808</span><span class="p">,</span> <span class="s">&quot;env&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s">&quot;SHELL&quot;</span><span class="o">:</span> <span class="s">&quot;/bin/bash&quot;</span><span class="p">,</span> <span class="s">&quot;TERM&quot;</span><span class="o">:</span> <span class="s">&quot;linux&quot;</span><span class="p">}}</span>
-<span class="p">[</span><span class="mf">0.01012</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;root@onlinegame:~# &quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">1.654752</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\u001b</span><span class="s">[A&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">1.654971</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;exit&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">2.014568</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\u001b</span><span class="s">[A&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">2.014727</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\b\b\b\b</span><span class="s">ssh root@192.168.106.192 ls ops-coffee.cn&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">3.7185</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\r</span><span class="s">&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">3.719167</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\r\n</span><span class="s">&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">3.781231</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;root@192.168.106.192&#39;s password: &quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">5.198467</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;s&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">5.542343</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">5.774451</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">5.85435</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;l&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">5.990628</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;e&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">6.342587</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\r</span><span class="s">&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">6.342817</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\r\n</span><span class="s">&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">6.351245</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;ops-coffee.cn</span><span class="se">\r\n</span><span class="s">&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">6.351475</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;root@onlinegame:~# &quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">7.182384</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;e&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">7.182585</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;e&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">7.461976</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;x&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">7.462183</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;x&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">7.543019</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">7.543306</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">7.686868</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;t&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">7.68703</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;t&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">7.87045</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\r</span><span class="s">&quot;</span><span class="p">]</span>
-<span class="p">[</span><span class="mf">7.871348</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\r\n</span><span class="s">exit</span><span class="se">\r\n</span><span class="s">&quot;</span><span class="p">]</span>
-</code></pre></div>
+<pre class="codehilite"><code># cat ops-coffee.1.cast
+{&quot;version&quot;: 2, &quot;width&quot;: 237, &quot;height&quot;: 55, &quot;timestamp&quot;: 1574060808, &quot;env&quot;: {&quot;SHELL&quot;: &quot;/bin/bash&quot;, &quot;TERM&quot;: &quot;linux&quot;}}
+[0.01012, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]
+[1.654752, &quot;i&quot;, &quot;\u001b[A&quot;]
+[1.654971, &quot;o&quot;, &quot;exit&quot;]
+[2.014568, &quot;i&quot;, &quot;\u001b[A&quot;]
+[2.014727, &quot;o&quot;, &quot;\b\b\b\bssh root@192.168.106.192 ls ops-coffee.cn&quot;]
+[3.7185, &quot;i&quot;, &quot;\r&quot;]
+[3.719167, &quot;o&quot;, &quot;\r\n&quot;]
+[3.781231, &quot;o&quot;, &quot;root@192.168.106.192's password: &quot;]
+[5.198467, &quot;i&quot;, &quot;s&quot;]
+[5.542343, &quot;i&quot;, &quot;m&quot;]
+[5.774451, &quot;i&quot;, &quot;i&quot;]
+[5.85435, &quot;i&quot;, &quot;l&quot;]
+[5.990628, &quot;i&quot;, &quot;e&quot;]
+[6.342587, &quot;i&quot;, &quot;\r&quot;]
+[6.342817, &quot;o&quot;, &quot;\r\n&quot;]
+[6.351245, &quot;o&quot;, &quot;ops-coffee.cn\r\n&quot;]
+[6.351475, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]
+[7.182384, &quot;i&quot;, &quot;e&quot;]
+[7.182585, &quot;o&quot;, &quot;e&quot;]
+[7.461976, &quot;i&quot;, &quot;x&quot;]
+[7.462183, &quot;o&quot;, &quot;x&quot;]
+[7.543019, &quot;i&quot;, &quot;i&quot;]
+[7.543306, &quot;o&quot;, &quot;i&quot;]
+[7.686868, &quot;i&quot;, &quot;t&quot;]
+[7.68703, &quot;o&quot;, &quot;t&quot;]
+[7.87045, &quot;i&quot;, &quot;\r&quot;]
+[7.871348, &quot;o&quot;, &quot;\r\nexit\r\n&quot;]</code></pre>
+
 
 <p>会发现在实际执行命令完全一致的情况下，录像文件与上一个没有加<code>--stdin</code>时的不一样，其中就多了输入密码的记录<code>smile</code></p>
 <p>且在asciinema文件IO流信息的第二个字段不仅有了<code>o</code>，还有<code>i</code>的出现，上一篇文章讲到<code>o</code>是一个固定字符串不知道作用，经过深入查询确认，IO信息流的第二个字段就是固定string字符串，且只会是<code>i</code>或<code>o</code>之间的一种，分别表示<code>stdin</code>标准输入或<code>stdout</code>标准输出</p>
@@ -130,20 +130,20 @@
 <h2 id="web">Web端使用</h2>
 <p>asciinema录制文件在web端播放是通过<code>asciinema-player</code>组件来实现的，使用也是非常的简单</p>
 <p>分别引入css和js文件，添加一个<code>asciinema-player</code>的标签即可播放标签内文件的录像</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;html&gt;</span>
-<span class="nt">&lt;head&gt;</span>
+<pre class="codehilite"><code>&lt;html&gt;
+&lt;head&gt;
   ...
-  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="na">href=</span><span class="s">&quot;/asciinema-player.css&quot;</span> <span class="nt">/&gt;</span>
+  &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/asciinema-player.css&quot; /&gt;
   ...
-<span class="nt">&lt;/head&gt;</span>
-<span class="nt">&lt;body&gt;</span>
+&lt;/head&gt;
+&lt;body&gt;
   ...
-  <span class="nt">&lt;asciinema-player</span> <span class="na">src=</span><span class="s">&quot;/ops-coffee.cast&quot;</span><span class="nt">&gt;&lt;/asciinema-player&gt;</span>
+  &lt;asciinema-player src=&quot;/ops-coffee.cast&quot;&gt;&lt;/asciinema-player&gt;
   ...
-  <span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;/asciinema-player.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-<span class="nt">&lt;/body&gt;</span>
-<span class="nt">&lt;/html&gt;</span>
-</code></pre></div>
+  &lt;script src=&quot;/asciinema-player.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
 
 <p>asciinema-player标签内可以添加如下一些属性：</p>
 <p><strong>cols：</strong> 播放终端的列数，默认为80，如果cast文件的header头有设置<code>width</code>，这里无需设置</p>
@@ -160,16 +160,16 @@
 <p>还有几个参数<strong>title</strong>、<strong>author</strong>、<strong>author-url</strong>、<strong>author-img-url</strong>分别表示了录像的标题、作者、作者的主页、作者的头像，这些配置会在全屏观看录像时显示在标题栏中，像下边这样</p>
 <p><img alt="" loading="lazy" src="/static/images/20191118.png" /></p>
 <p>最后使用以下参数设置asciinema-player，看看播放的效果</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;asciinema-player</span> <span class="na">id=</span><span class="s">&quot;play&quot;</span> 
-    <span class="na">title=</span><span class="s">&quot;WebSSH Record&quot;</span> 
-    <span class="na">author=</span><span class="s">&quot;ops-coffee.cn&quot;</span> 
-    <span class="na">author-url=</span><span class="s">&quot;https://ops-coffee.cn&quot;</span> 
-    <span class="na">author-img-url=</span><span class="s">&quot;/static/img/logo.png&quot;</span> 
-    <span class="na">src=</span><span class="s">&quot;/static/record/ops-coffee.cast&quot;</span> 
-    <span class="na">speed=</span><span class="s">&quot;3&quot;</span> <span class="na">idle-time-limit=</span><span class="s">&quot;2&quot;</span> 
-    <span class="na">poster=</span><span class="s">&quot;data:text/plain,\x1b[1;32m2019-11-18 16:26:18\x1b[1;0m用户\x1b[1;32madmin\x1b[1;0m连接主机\x1b[1;32m192.168.106.101:22\x1b[1;0m的录像记录&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;/asciinema-player&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&lt;asciinema-player id=&quot;play&quot; 
+    title=&quot;WebSSH Record&quot; 
+    author=&quot;ops-coffee.cn&quot; 
+    author-url=&quot;https://ops-coffee.cn&quot; 
+    author-img-url=&quot;/static/img/logo.png&quot; 
+    src=&quot;/static/record/ops-coffee.cast&quot; 
+    speed=&quot;3&quot; idle-time-limit=&quot;2&quot; 
+    poster=&quot;data:text/plain,\x1b[1;32m2019-11-18 16:26:18\x1b[1;0m用户\x1b[1;32madmin\x1b[1;0m连接主机\x1b[1;32m192.168.106.101:22\x1b[1;0m的录像记录&quot;&gt;
+&lt;/asciinema-player&gt;</code></pre>
+
 
 <p>播放效果如下</p>
 <p><img alt="" loading="lazy" src="/static/images/20191118.gif" /></p>

@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -47,58 +47,57 @@
 </blockquote>
 <h2 id="_1">方法一</h2>
 <p>1.切换到新分支</p>
-<div class="codehilite"><pre><span></span><code><span class="err">git checkout --orphan latest</span>
-</code></pre></div>
+<pre class="codehilite"><code>git checkout --orphan latest</code></pre>
+
 
 <p>2.缓存所有文件</p>
-<div class="codehilite"><pre><span></span><code><span class="err">git add -A</span>
-</code></pre></div>
+<pre class="codehilite"><code>git add -A</code></pre>
+
 
 <p>3.提交跟踪过的文件</p>
-<div class="codehilite"><pre><span></span><code><span class="err">git commit -m ops-coffee.cn</span>
-</code></pre></div>
+<pre class="codehilite"><code>git commit -m ops-coffee.cn</code></pre>
+
 
 <p>4.删除master分支</p>
-<div class="codehilite"><pre><span></span><code><span class="err">git branch -D master</span>
-</code></pre></div>
+<pre class="codehilite"><code>git branch -D master</code></pre>
+
 
 <p>5.重命名当前分支为master</p>
-<div class="codehilite"><pre><span></span><code><span class="err">git branch -m master</span>
-</code></pre></div>
+<pre class="codehilite"><code>git branch -m master</code></pre>
+
 
 <p>6.提交到远程master分支</p>
-<div class="codehilite"><pre><span></span><code><span class="err">git push -f origin master</span>
-</code></pre></div>
+<pre class="codehilite"><code>git push -f origin master</code></pre>
+
 
 <p>PS：可配合删除github/gitee仓库，然后创建同名仓库的方式来清楚其他痕迹</p>
 <h2 id="_2">方法二</h2>
 <p>1.进入本地存放代码的目录删除<code>.git</code>隐藏目录</p>
 <p>2.windows+R输入<code>cmd</code>进入windows命令行</p>
 <p>3.切换到操作目录</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;cd /d D:\=githubs\ops-coffee.cn</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;cd /d D:\=githubs\ops-coffee.cn</code></pre>
+
 
 <p>4.执行<code>git init</code>命令初始化本地目录为一个git仓库</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;git init</span>
-<span class="err">Initialized empty Git repository in D:/=githubs/ops-coffee.cn/.git/</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;git init
+Initialized empty Git repository in D:/=githubs/ops-coffee.cn/.git/</code></pre>
+
 
 <p>5.执行<code>git add -A</code>命令添加本地代码到仓库</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;git add -A</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;git add -A</code></pre>
+
 
 <p>6.执行<code>git commit</code>命令提交本地代码到仓库</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;git commit -m ops-coffee</span>
-<span class="err">[master (root-commit) b660ede] &#39;ops-coffee&#39;</span>
-<span class="err"> 10 files changed, 729 insertions(+)</span>
-<span class="err"> create mode 100644 CNAME</span>
-<span class="err"> create mode 100644 blog.json</span>
-<span class="err"> create mode 100644 css/style.min.css</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;git commit -m ops-coffee
+[master (root-commit) b660ede] 'ops-coffee'
+ 10 files changed, 729 insertions(+)
+ create mode 100644 CNAME
+ create mode 100644 blog.json
+ create mode 100644 css/style.min.css</code></pre>
+
 
 <p>7.执行<code>git push -f</code>命令强制提交到远程仓库</p>
-<div class="codehilite"><pre><span></span><code><span class="err">git push -f https://github.com/ops-coffee/ops-coffee.github.com.git  master</span>
-</code></pre></div>
+<pre class="codehilite"><code>git push -f https://github.com/ops-coffee/ops-coffee.github.com.git  master</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

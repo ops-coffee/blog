@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -48,101 +48,101 @@
 <h2 id="request">request哪里来的</h2>
 <p>在日常开发Django的过程中，如果你有用到默认的template，那么通常会通过<code>request.user.username</code>来获取登陆用户的用户名，你有没有想过这个<code>request</code>是哪来的？即便是后端<code>view</code>里不返回这边变量依然可以使用，怎么会如此神奇</p>
 <p>这要从Django默认配置文件<code>settings.py</code>里的<code>TEMPLATES</code>配置说起，默认的TEMPLATES配置如下</p>
-<div class="codehilite"><pre><span></span><code><span class="err">TEMPLATES = [</span>
-<span class="err">    {</span>
-<span class="err">        &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;,</span>
-<span class="err">        &#39;DIRS&#39;: [os.path.join(BASE_DIR, &#39;templates&#39;)],</span>
-<span class="err">        &#39;APP_DIRS&#39;: True,</span>
-<span class="err">        &#39;OPTIONS&#39;: {</span>
-<span class="err">            &#39;context_processors&#39;: [</span>
-<span class="err">                &#39;django.template.context_processors.debug&#39;,</span>
-<span class="err">                &#39;django.template.context_processors.request&#39;,</span>
-<span class="err">                &#39;django.contrib.auth.context_processors.auth&#39;,</span>
-<span class="err">                &#39;django.contrib.messages.context_processors.messages&#39;,</span>
-<span class="err">            ],</span>
-<span class="err">        },</span>
-<span class="err">    },</span>
-<span class="err">]</span>
-</code></pre></div>
+<pre class="codehilite"><code>TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]</code></pre>
+
 
 <p>其中<code>BACKENDS</code>指定了Djanog默认使用的模版引擎，默认的是Django自己开发的<code>DjangoTemplates</code>，当然你也可以替换成功能更为强大的<code>jinja2</code>，<code>DIRS</code>指定了项目中模板文件的位置，<code>APP_DIRS</code>配置是否开启在已安装的app下查找template，<code>OPTIONS</code>则指定template的后端设置</p>
 <p>之所以可以在模板中使用<code>request</code>的奥秘便隐藏在<code>context_processors</code>下，这个配置指定了Django渲染时执行的Python路径列表。<strong>当模板在渲染时，会执行<code>context_processors</code>列表中的所有函数，并将结果与上下文的context进行合并</strong>，也就是说模板接收到的参数除了<code>render</code>返回的<code>context</code>外，还有以上这个列表执行返回的结果</p>
 <p><code>django.template.context_processors.request</code>函数返回的字典中包含了<code>request</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err">def request(request):</span>
-<span class="err">    return {&#39;request&#39;: request}</span>
-</code></pre></div>
+<pre class="codehilite"><code>def request(request):
+    return {'request': request}</code></pre>
+
 
 <p>所以如下这样一个view，即便是返回结果中没有返回<code>request</code>，我们依然可以在<code>setting.html</code>模版中使用<code>request.user</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err">def setting(request):</span>
-<span class="err">    return render(request, &#39;setting.html&#39;, {})</span>
-</code></pre></div>
+<pre class="codehilite"><code>def setting(request):
+    return render(request, 'setting.html', {})</code></pre>
+
 
 <p>同样的我们可以直接在模板中使用<code>perms.opscoffee.select_user</code>来判断用户是否拥有相应的权限，而不需要在view中返回<code>perms</code>，这也是因为<code>django.contrib.auth.context_processors.auth</code>返回了<code>perms</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">auth</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return context variables required by apps that use Django&#39;s authentication</span>
-<span class="sd">    system.</span>
+<pre class="codehilite"><code>def auth(request):
+    &quot;&quot;&quot;
+    Return context variables required by apps that use Django's authentication
+    system.
 
-<span class="sd">    If there is no &#39;user&#39; attribute in the request, use AnonymousUser (from</span>
-<span class="sd">    django.contrib.auth).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">):</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">AnonymousUser</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">AnonymousUser</span><span class="p">()</span>
+    If there is no 'user' attribute in the request, use AnonymousUser (from
+    django.contrib.auth).
+    &quot;&quot;&quot;
+    if hasattr(request, 'user'):
+        user = request.user
+    else:
+        from django.contrib.auth.models import AnonymousUser
+        user = AnonymousUser()
 
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
-        <span class="s1">&#39;perms&#39;</span><span class="p">:</span> <span class="n">PermWrapper</span><span class="p">(</span><span class="n">user</span><span class="p">),</span>
-    <span class="p">}</span>
-</code></pre></div>
+    return {
+        'user': user,
+        'perms': PermWrapper(user),
+    }</code></pre>
+
 
 <p>类似<code>request</code>和<code>perms</code>这些在所有模板中都可以调用的变量，可以看作是django的全局变量了</p>
 <h2 id="_1">如何自定义全局变量</h2>
 <p>上边我们知道了Django是如何定义全局变量<code>requests</code>的，那么我们只需照虎画猫写个类似的函数并加入<code>context_processors</code>就可以了，实现步骤如下</p>
 <p>先在名为<code>commons</code>的APP下创建个文件<code>context_processors.py</code>，编写如下的函数，返回<code>site</code>作为全局变量</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">commons.models</span> <span class="kn">import</span> <span class="n">Setting</span>
+<pre class="codehilite"><code>from commons.models import Setting
 
 
-<span class="k">def</span> <span class="nf">site</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">site_name</span> <span class="o">=</span> <span class="n">Setting</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;site_name&#39;</span><span class="p">)</span>
-    <span class="n">site_title</span> <span class="o">=</span> <span class="n">Setting</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;site_title&#39;</span><span class="p">)</span>
+def site(request):
+    site_name = Setting.objects.filter(key='site_name')
+    site_title = Setting.objects.filter(key='site_title')
 
-    <span class="n">site_name</span> <span class="o">=</span> <span class="n">site_name</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">site_name</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
-    <span class="n">site_title</span> <span class="o">=</span> <span class="n">site_title</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">site_title</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+    site_name = site_name.first().value if site_name else ''
+    site_title = site_title.first().value if site_title else ''
 
-    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;site&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;site_name&#39;</span><span class="p">:</span> <span class="n">site_name</span><span class="p">,</span> <span class="s1">&#39;site_title&#39;</span><span class="p">:</span> <span class="n">site_title</span><span class="p">}}</span>
-</code></pre></div>
+    return {'site': {'site_name': site_name, 'site_title': site_title}}</code></pre>
+
 
 <p>然后在<code>TEMPLATES</code>的<code>context_processors</code>写上对应的路径</p>
-<div class="codehilite"><pre><span></span><code><span class="err">TEMPLATES = [</span>
-<span class="err">    {</span>
-<span class="err">        ...</span>
-<span class="err">        &#39;OPTIONS&#39;: {</span>
-<span class="err">            &#39;context_processors&#39;: [</span>
-<span class="err">                ...</span>
-<span class="err">                &#39;commons.context_processors.site&#39;,  # 添加这一行信息</span>
-<span class="err">            ],</span>
-<span class="err">        },</span>
-<span class="err">    },</span>
-<span class="err">]</span>
-</code></pre></div>
+<pre class="codehilite"><code>TEMPLATES = [
+    {
+        ...
+        'OPTIONS': {
+            'context_processors': [
+                ...
+                'commons.context_processors.site',  # 添加这一行信息
+            ],
+        },
+    },
+]</code></pre>
+
 
 <p>最后就可以在模板中通过<code>site.site_title</code>来获取站点title，以及通过<code>site.site_name</code>获取站点名称</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;head&gt;</span>
-  <span class="nt">&lt;title&gt;</span><span class="cp">{{</span> <span class="nv">site.site_title</span> <span class="cp">}}</span><span class="nt">&lt;/title&gt;</span>
-<span class="nt">&lt;/head&gt;</span>
-<span class="nt">&lt;body&gt;</span>
-  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;wrapper&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;header</span> <span class="na">class=</span><span class="s">&quot;main-header&quot;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span> <span class="na">class=</span><span class="s">&quot;logo&quot;</span><span class="nt">&gt;</span>
-        <span class="cp">{{</span> <span class="nv">site.site_name</span> <span class="cp">}}</span>
-      <span class="nt">&lt;/a&gt;</span>
-    <span class="nt">&lt;/header&gt;</span>
-  <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/body&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&lt;head&gt;
+  &lt;title&gt;{{ site.site_title }}&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;wrapper&quot;&gt;
+    &lt;header class=&quot;main-header&quot;&gt;
+      &lt;a href=&quot;/&quot; class=&quot;logo&quot;&gt;
+        {{ site.site_name }}
+      &lt;/a&gt;
+    &lt;/header&gt;
+  &lt;/div&gt;
+&lt;/body&gt;</code></pre>
+
 
 <p>至此，问题顺利解决</p>
 

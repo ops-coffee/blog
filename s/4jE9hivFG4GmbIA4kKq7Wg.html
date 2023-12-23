@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -50,121 +50,121 @@
 <p><img alt="" loading="lazy" src="/static/images/20191018.02.png" /></p>
 <h2 id="resize_channel">RESIZE_CHANNEL</h2>
 <p>前文说到<code>kubectl exec</code>有两个参数<code>COLUMNS</code>和<code>LINES</code>可以调整tty内容窗口的大小，命令如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">kubectl exec -i -t $1 env COLUMNS=$COLUMNS LINES=$LINES bash</span>
-</code></pre></div>
+<pre class="codehilite"><code>kubectl exec -i -t $1 env COLUMNS=$COLUMNS LINES=$LINES bash</code></pre>
+
 
 <p>这实际上就是将<code>COLUMNS</code>和<code>LINES</code>两个环境变量传递到了容器内，由于Kubernetes stream底层也是通过<code>kubernetes exec</code>实现的，所以我们在启动容器时也将这两个变量传递进去就可以了，就像这样</p>
-<div class="codehilite"><pre><span></span><code><span class="n">exec_command</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;/bin/sh&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;-c&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;export LINES=20; export COLUMNS=100; &#39;</span>
-    <span class="s1">&#39;TERM=xterm-256color; export TERM; [ -x /bin/bash ] &#39;</span>
-    <span class="s1">&#39;&amp;&amp; ([ -x /usr/bin/script ] &#39;</span>
-    <span class="s1">&#39;&amp;&amp; /usr/bin/script -q -c &quot;/bin/bash&quot; /dev/null || exec /bin/bash) &#39;</span>
-    <span class="s1">&#39;|| exec /bin/sh&#39;</span><span class="p">]</span>
-</code></pre></div>
+<pre class="codehilite"><code>exec_command = [
+    &quot;/bin/sh&quot;,
+    &quot;-c&quot;,
+    'export LINES=20; export COLUMNS=100; '
+    'TERM=xterm-256color; export TERM; [ -x /bin/bash ] '
+    '&amp;&amp; ([ -x /usr/bin/script ] '
+    '&amp;&amp; /usr/bin/script -q -c &quot;/bin/bash&quot; /dev/null || exec /bin/bash) '
+    '|| exec /bin/sh']</code></pre>
+
 
 <p>添加了<code>export LINES=20; export COLUMNS=100;</code>，可以实现改变tty的输出大小，但这有个问题就是只能在建立链接时指定一次，不能动态的更新，也就是在一次websocket会话的过程中，如果页面大小改变了，后端输出的LINES和COLUMNS是无法随着改变的</p>
 <p>在解决问题的过程中发现官方源码中有个<code>RESIZE_CHANNEL</code>的配置，同样可以控制窗口的大小，使用方法如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="n">cont_stream</span> <span class="o">=</span> <span class="n">stream</span><span class="p">(</span><span class="n">api_instance</span><span class="o">.</span><span class="n">connect_get_namespaced_pod_exec</span><span class="p">,</span>
-                     <span class="n">name</span><span class="o">=</span><span class="n">pod_name</span><span class="p">,</span>
-                     <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">namespace</span><span class="p">,</span>
-                     <span class="n">container</span><span class="o">=</span><span class="n">container</span><span class="p">,</span>
-                     <span class="n">command</span><span class="o">=</span><span class="n">exec_command</span><span class="p">,</span>
-                     <span class="n">stderr</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">True</span><span class="p">,</span>
-                     <span class="n">stdout</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">tty</span><span class="o">=</span><span class="n">True</span><span class="p">,</span>
-                     <span class="n">_preload_content</span><span class="o">=</span><span class="n">False</span>
-                     <span class="p">)</span>
+<pre class="codehilite"><code>cont_stream = stream(api_instance.connect_get_namespaced_pod_exec,
+                     name=pod_name,
+                     namespace=self.namespace,
+                     container=container,
+                     command=exec_command,
+                     stderr=True, stdin=True,
+                     stdout=True, tty=True,
+                     _preload_content=False
+                     )
 
-<span class="n">cont_stream</span><span class="o">.</span><span class="n">write_channel</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;Height&quot;</span><span class="p">:</span> <span class="nb nb-Type">int</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="s2">&quot;Width&quot;</span><span class="p">:</span> <span class="nb nb-Type">int</span><span class="p">(</span><span class="n">cols</span><span class="p">)}))</span>
-</code></pre></div>
+cont_stream.write_channel(4, json.dumps({&quot;Height&quot;: int(rows), &quot;Width&quot;: int(cols)}))</code></pre>
+
 
 <p>这样我们就可以修改stream输出的窗口大小了</p>
 <h2 id="xtermjs-fit">xterm.js fit</h2>
 <p>一顿操作后，打开页面，咦？怎么页面不行，原来窗口的调整不仅需要调整stream输出数据的窗口大小，前端页面也要跟着一并调整</p>
 <p>这里用到了xterm.js的另一个组件<strong>fit</strong>，fit可以调整终端大小的<code>cols</code>和<code>rows</code>适配父级元素</p>
 <p>首先调整terminal块的宽度和高度为整个页面可视区域的大小，要让整个可视区域为终端窗口</p>
-<div class="codehilite"><pre><span></span><code><span class="err">document.getElementById(&#39;terminal&#39;).style.height = window.innerHeight + &#39;px&#39;;</span>
-</code></pre></div>
+<pre class="codehilite"><code>document.getElementById('terminal').style.height = window.innerHeight + 'px';</code></pre>
+
 
 <p>然后引入fit组件，在term初始化之后执行<code>fit</code>操作</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;/static/plugins/xterm/xterm.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-<span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;/static/plugins/xterm/addons/fit/fit.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-<span class="nt">&lt;script&gt;</span>
+<pre class="codehilite"><code>&lt;script src=&quot;/static/plugins/xterm/xterm.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;/static/plugins/xterm/addons/fit/fit.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
   // 修改terminal的高度为body的高度
-  document.getElementById(&#39;terminal&#39;).style.height = window.innerHeight + &#39;px&#39;;
+  document.getElementById('terminal').style.height = window.innerHeight + 'px';
 
   var term = new Terminal({cursorBlink: true});
-  term.open(document.getElementById(&#39;terminal&#39;));
+  term.open(document.getElementById('terminal'));
 
   // xterm fullscreen config
   Terminal.applyAddon(fit);
   term.fit();
 
   console.log(term.cols, term.rows);
-<span class="nt">&lt;/script&gt;</span>
-</code></pre></div>
+&lt;/script&gt;</code></pre>
+
 
 <p>fit之后就可以通过<code>term.cols</code>和<code>term.rows</code>取到xterm.js根据字体大小自动计算过的<code>cols</code>和<code>rows</code>的值了，然后把这两个值传递给kubernetes，kubernetes再根据这两个值输出窗口大小，这样前后端匹配就完美了</p>
 <h2 id="_1">数据传递</h2>
 <p>xterm.js可以通过如下的方法动态的将<code>cols</code>和<code>rows</code>传递给后端</p>
-<div class="codehilite"><pre><span></span><code><span class="err">term.on(&#39;resize&#39;, size =&gt; {</span>
-<span class="err">  socket.send(&#39;resize&#39;, [size.cols, size.rows]);</span>
-<span class="err">})</span>
-</code></pre></div>
+<pre class="codehilite"><code>term.on('resize', size =&gt; {
+  socket.send('resize', [size.cols, size.rows]);
+})</code></pre>
+
 
 <p>但当窗口由大变小时，之前输出的内容会有样式错乱，我为了方便直接在WebSocket连接建立时采用url传参的方式把<code>cols</code>和<code>rows</code>两个值传递给后端，kubernetes根据这两个值来设置输出内容的窗口大小，这样做的缺点是不会随着前端页面的变化动态的去调整后端stream输出窗口的大小，不过问题不大，如果页面调整大小，刷新下页面重新建立连接就可以啦，具体实现如下</p>
 <p>首先需要修改的就是WebSocket的url地址</p>
 <p>前端增加<code>term.cols</code>和<code>term.rows</code>两个参数的传递</p>
-<div class="codehilite"><pre><span></span><code><span class="k">var</span> <span class="n">socket</span> <span class="o">=</span> <span class="n">new</span> <span class="n">WebSocket</span><span class="p">(</span>
-<span class="s1">&#39;ws://&#39;</span> <span class="o">+</span> <span class="n">window</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">host</span> <span class="o">+</span> <span class="s1">&#39;/pod/{{ name }}/&#39;</span><span class="o">+</span><span class="n">term</span><span class="o">.</span><span class="n">cols</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">term</span><span class="o">.</span><span class="n">rows</span><span class="p">);</span>
-</code></pre></div>
+<pre class="codehilite"><code>var socket = new WebSocket(
+'ws://' + window.location.host + '/pod/{{ name }}/'+term.cols+'/'+term.rows);</code></pre>
+
 
 <p>Routing增加两个参数的解析</p>
-<div class="codehilite"><pre><span></span><code><span class="err">re_path(r&#39;^pod/(?P&lt;name&gt;\w+)/(?P&lt;cols&gt;\d+)/(?P&lt;rows&gt;\d+)$&#39;, SSHConsumer),</span>
-</code></pre></div>
+<pre class="codehilite"><code>re_path(r'^pod/(?P&lt;name&gt;\w+)/(?P&lt;cols&gt;\d+)/(?P&lt;rows&gt;\d+)$', SSHConsumer),</code></pre>
+
 
 <p>Consumer解析URL将对应参数传递给Kubernetes stream</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">SSHConsumer</span>(<span class="n">WebsocketConsumer</span>):
-    <span class="n">def</span> <span class="nb">connect</span>(<span class="nb">self</span>):
-        <span class="nb">self</span>.<span class="nb">name</span> = <span class="nb">self</span>.<span class="nb">scope</span>[<span class="s">&quot;url_route&quot;</span>][<span class="s">&quot;kwargs&quot;</span>][<span class="s">&quot;name&quot;</span>]
-        <span class="nb">self</span>.<span class="n">cols</span> = <span class="nb">self</span>.<span class="nb">scope</span>[<span class="s">&quot;url_route&quot;</span>][<span class="s">&quot;kwargs&quot;</span>][<span class="s">&quot;cols&quot;</span>]
-        <span class="nb">self</span>.<span class="n">rows</span> = <span class="nb">self</span>.<span class="nb">scope</span>[<span class="s">&quot;url_route&quot;</span>][<span class="s">&quot;kwargs&quot;</span>][<span class="s">&quot;rows&quot;</span>]
+<pre class="codehilite"><code>class SSHConsumer(WebsocketConsumer):
+    def connect(self):
+        self.name = self.scope[&quot;url_route&quot;][&quot;kwargs&quot;][&quot;name&quot;]
+        self.cols = self.scope[&quot;url_route&quot;][&quot;kwargs&quot;][&quot;cols&quot;]
+        self.rows = self.scope[&quot;url_route&quot;][&quot;kwargs&quot;][&quot;rows&quot;]
 
-        <span class="c1"># kube exec</span>
-        <span class="nb">self</span>.<span class="n">stream</span> = <span class="n">KubeApi</span>().<span class="n">pod_exec</span>(<span class="nb">self</span>.<span class="nb">name</span>, <span class="n">cols</span>=<span class="nb">self</span>.<span class="n">cols</span>, <span class="n">rows</span>=<span class="nb">self</span>.<span class="n">rows</span>)
-        <span class="n">kub_stream</span> = <span class="n">K8SStreamThread</span>(<span class="nb">self</span>, <span class="nb">self</span>.<span class="n">stream</span>)
-        <span class="n">kub_stream</span>.<span class="nb">start</span>()
+        # kube exec
+        self.stream = KubeApi().pod_exec(self.name, cols=self.cols, rows=self.rows)
+        kub_stream = K8SStreamThread(self, self.stream)
+        kub_stream.start()
 
-        <span class="nb">self</span>.<span class="nb">accept</span>()
-</code></pre></div>
+        self.accept()</code></pre>
+
 
 <p>最后Kubernetes stream接收参数并修改窗口大小</p>
-<div class="codehilite"><pre><span></span><code>    <span class="n">def</span> <span class="n">pod_exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RAND</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">80</span><span class="p">):</span>
-        <span class="n">api_instance</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">CoreV1Api</span><span class="p">()</span>
+<pre class="codehilite"><code>    def pod_exec(self, RAND, container=&quot;&quot;, rows=24, cols=80):
+        api_instance = client.CoreV1Api()
 
-        <span class="n">exec_command</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;/bin/sh&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;-c&quot;</span><span class="p">,</span>
-            <span class="s1">&#39;TERM=xterm-256color; export TERM; [ -x /bin/bash ] &#39;</span>
-            <span class="s1">&#39;&amp;&amp; ([ -x /usr/bin/script ] &#39;</span>
-            <span class="s1">&#39;&amp;&amp; /usr/bin/script -q -c &quot;/bin/bash&quot; /dev/null || exec /bin/bash) &#39;</span>
-            <span class="s1">&#39;|| exec /bin/sh&#39;</span><span class="p">]</span>
+        exec_command = [
+            &quot;/bin/sh&quot;,
+            &quot;-c&quot;,
+            'TERM=xterm-256color; export TERM; [ -x /bin/bash ] '
+            '&amp;&amp; ([ -x /usr/bin/script ] '
+            '&amp;&amp; /usr/bin/script -q -c &quot;/bin/bash&quot; /dev/null || exec /bin/bash) '
+            '|| exec /bin/sh']
 
-        <span class="n">cont_stream</span> <span class="o">=</span> <span class="n">stream</span><span class="p">(</span><span class="n">api_instance</span><span class="o">.</span><span class="n">connect_get_namespaced_pod_exec</span><span class="p">,</span>
-                             <span class="n">name</span><span class="o">=</span><span class="n">pod_name</span><span class="p">,</span>
-                             <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">namespace</span><span class="p">,</span>
-                             <span class="n">container</span><span class="o">=</span><span class="n">container</span><span class="p">,</span>
-                             <span class="n">command</span><span class="o">=</span><span class="n">exec_command</span><span class="p">,</span>
-                             <span class="n">stderr</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">True</span><span class="p">,</span>
-                             <span class="n">stdout</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">tty</span><span class="o">=</span><span class="n">True</span><span class="p">,</span>
-                             <span class="n">_preload_content</span><span class="o">=</span><span class="n">False</span>
-                             <span class="p">)</span>
+        cont_stream = stream(api_instance.connect_get_namespaced_pod_exec,
+                             name=pod_name,
+                             namespace=self.namespace,
+                             container=container,
+                             command=exec_command,
+                             stderr=True, stdin=True,
+                             stdout=True, tty=True,
+                             _preload_content=False
+                             )
 
-        <span class="n">cont_stream</span><span class="o">.</span><span class="n">write_channel</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;Height&quot;</span><span class="p">:</span> <span class="nb nb-Type">int</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="s2">&quot;Width&quot;</span><span class="p">:</span> <span class="nb nb-Type">int</span><span class="p">(</span><span class="n">cols</span><span class="p">)}))</span>
+        cont_stream.write_channel(4, json.dumps({&quot;Height&quot;: int(rows), &quot;Width&quot;: int(cols)}))
 
-        <span class="k">return</span> <span class="n">cont_stream</span>
-</code></pre></div>
+        return cont_stream</code></pre>
+
 
 <p>至此，每次WebSocket连接建立，前后端就会有一样的输出窗口大小，问题解决~</p>
 

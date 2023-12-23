@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -77,12 +77,12 @@
 <p>一个URL存储字段，像所有的CharField子类一样，URLField接受可选的<code>max_length</code>参数。如果你没有指定<code>max_length</code>参数，默认为200</p>
 <h3 id="uuidfield">UUIDField</h3>
 <p>一个用于存储通用唯一标识符的字段。使用Python的UUID类</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<pre class="codehilite"><code>import uuid
+from django.db import models
 
-<span class="k">class</span> <span class="nc">MyUUIDModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="nb">id</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">UUIDField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">,</span> <span class="n">editable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-</code></pre></div>
+class MyUUIDModel(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)</code></pre>
+
 
 <h3 id="emailfield">EmailField</h3>
 <p>一个CharField类型的字段，仅在数据校验时会检验存储的数据是否符合电子邮件格式</p>

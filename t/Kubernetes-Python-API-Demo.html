@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -45,433 +45,433 @@
         <p>本篇内容由<strong>Eagle</strong>整理，感谢他的辛勤付出</p>
 <h2 id="token">创建管理员用户，授权，获取Token</h2>
 <h3 id="_1">创建用户</h3>
-<div class="codehilite"><pre><span></span><code><span class="err">vi CreateServiceAccount.yaml</span>
-<span class="c">apiVersion: v1</span>
-<span class="c">kind: ServiceAccount</span>
-<span class="c">metadata:</span>
-<span class="c">  name: admin-user</span>
-<span class="c">  namespace: kube-system</span>
-</code></pre></div>
+<pre class="codehilite"><code>vi CreateServiceAccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kube-system</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err">kubectl create -f CreateServiceAccount.yaml</span>
-</code></pre></div>
+
+<pre class="codehilite"><code>kubectl create -f CreateServiceAccount.yaml</code></pre>
+
 
 <h3 id="_2">用户授权</h3>
-<div class="codehilite"><pre><span></span><code><span class="err">vi RoleBinding.yaml</span>
-<span class="c">apiVersion: rbac.authorization.k8s.io/v1beta1</span>
-<span class="c">kind: ClusterRoleBinding</span>
-<span class="c">metadata:</span>
-<span class="c">  name: admin-user</span>
-<span class="c">roleRef:</span>
-<span class="c">  apiGroup: rbac.authorization.k8s.io</span>
-<span class="c">  kind: ClusterRole</span>
-<span class="c">  name: cluster-admin</span>
-<span class="c">subjects:</span>
-<span class="err">- kind: ServiceAccount</span>
-<span class="err">  name: admin-user</span>
-<span class="err">  namespace: kube-system</span>
-</code></pre></div>
+<pre class="codehilite"><code>vi RoleBinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin-user
+  namespace: kube-system</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err">kubectl create -f RoleBinding.yaml</span>
-</code></pre></div>
+
+<pre class="codehilite"><code>kubectl create -f RoleBinding.yaml</code></pre>
+
 
 <h3 id="token_1">获取Token</h3>
-<div class="codehilite"><pre><span></span><code><span class="err">kubectl describe secret $(kubectl get secret -n kube-system | grep ^admin-user | awk &#39;{print $1}&#39;) -n kube-system | grep -E &#39;^token&#39;| awk &#39;{print $2}&#39;</span>
-</code></pre></div>
+<pre class="codehilite"><code>kubectl describe secret $(kubectl get secret -n kube-system | grep ^admin-user | awk '{print $1}') -n kube-system | grep -E '^token'| awk '{print $2}'</code></pre>
+
 
 <h2 id="kubernetes-python-sdk">安装kubernetes python sdk</h2>
 <h3 id="_3">模块安装</h3>
-<div class="codehilite"><pre><span></span><code><span class="err">pip install kubernetes</span>
-</code></pre></div>
+<pre class="codehilite"><code>pip install kubernetes</code></pre>
+
 
 <h3 id="demo">测试demo</h3>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span>
+<pre class="codehilite"><code>from kubernetes import client, config
 
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>  <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+ApiToken = &quot;xxxxx&quot;  #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
-<span class="n">k8s_api_obj</span>  <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">CoreV1Api</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">ApiClient</span><span class="p">(</span><span class="n">configuration</span><span class="p">))</span>
-<span class="n">ret</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">list_namespaced_pod</span><span class="p">(</span><span class="s2">&quot;dev&quot;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
-</code></pre></div>
+k8s_api_obj  = client.CoreV1Api(client.ApiClient(configuration))
+ret = k8s_api_obj.list_namespaced_pod(&quot;dev&quot;)
+print(ret)</code></pre>
+
 
 <h2 id="_4">接口操作案例</h2>
 <h3 id="namespace">创建namespace</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#create_namespace">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#create_namespace</a></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span>
+<pre class="codehilite"><code>from kubernetes import client, config
 
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>                              <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>                    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+ApiToken = &quot;xxxxx&quot;                              #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;                    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
-<span class="n">k8s_api_obj</span>  <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">CoreV1Api</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">ApiClient</span><span class="p">(</span><span class="n">configuration</span><span class="p">))</span>
-<span class="n">body</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;apiVersion&quot;</span><span class="p">:</span> <span class="s2">&quot;v1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;Namespace&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test123&quot;</span><span class="p">,</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+k8s_api_obj  = client.CoreV1Api(client.ApiClient(configuration))
+body = {
+    &quot;apiVersion&quot;: &quot;v1&quot;,
+    &quot;kind&quot;: &quot;Namespace&quot;,
+    &quot;metadata&quot;: {
+        &quot;name&quot;: &quot;test123&quot;,
+    }
+}
 
-<span class="n">ret</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">create_namespace</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">)</span>
-<span class="k">print</span> <span class="p">(</span><span class="n">ret</span><span class="p">)</span>
-</code></pre></div>
+ret = k8s_api_obj.create_namespace(body=body)
+print (ret)</code></pre>
+
 
 <h3 id="namespace_1">删除namespace</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md</a></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span>
+<pre class="codehilite"><code>from kubernetes import client, config
 
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>                              <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>                    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+ApiToken = &quot;xxxxx&quot;                              #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;                    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
-<span class="n">k8s_api_obj</span>  <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">CoreV1Api</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">ApiClient</span><span class="p">(</span><span class="n">configuration</span><span class="p">))</span>
-<span class="n">body</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">V1DeleteOptions</span><span class="p">()</span>
-<span class="n">body</span><span class="o">.</span><span class="n">api_version</span> <span class="o">=</span> <span class="s2">&quot;v1&quot;</span>
-<span class="n">body</span><span class="o">.</span><span class="n">grace_period_seconds</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">ret</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">delete_namespace</span><span class="p">(</span><span class="s2">&quot;test123&quot;</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
-</code></pre></div>
+k8s_api_obj  = client.CoreV1Api(client.ApiClient(configuration))
+body = client.V1DeleteOptions()
+body.api_version = &quot;v1&quot;
+body.grace_period_seconds = 0
+ret = k8s_api_obj.delete_namespace(&quot;test123&quot;, body=body)
+print(ret)</code></pre>
+
 
 <h3 id="namespace_2">查看namespace列表</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#list_namespace">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#list_namespace</a></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes.client.rest</span> <span class="kn">import</span> <span class="n">ApiException</span>
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>                              <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>                    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+<pre class="codehilite"><code>from kubernetes.client.rest import ApiException
+ApiToken = &quot;xxxxx&quot;                              #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;                    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
-<span class="n">k8s_api_obj</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">CoreV1Api</span><span class="p">()</span>
-<span class="n">limit</span> <span class="o">=</span> <span class="mi">56</span>                                  <span class="c1">#返回最大值,可选参数可以不写</span>
-<span class="n">timeout_seconds</span> <span class="o">=</span> <span class="mi">56</span>                                <span class="c1">#超时时间可选参数</span>
-<span class="n">watch</span> <span class="o">=</span> <span class="bp">False</span>                                   <span class="c1">#监听资源，可选参数可以不填</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">api_response</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">list_namespace</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span><span class="n">timeout_seconds</span><span class="o">=</span><span class="n">timeout_seconds</span><span class="p">,</span> <span class="n">watch</span><span class="o">=</span><span class="n">watch</span><span class="p">)</span>
-    <span class="k">for</span>  <span class="n">namespace</span> <span class="ow">in</span> <span class="n">api_response</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">namespace</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">ApiException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Exception when calling CoreV1Api-&gt;list_namespace: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
-</code></pre></div>
+k8s_api_obj = client.CoreV1Api()
+limit = 56                                  #返回最大值,可选参数可以不写
+timeout_seconds = 56                                #超时时间可选参数
+watch = False                                   #监听资源，可选参数可以不填
+try:
+    api_response = k8s_api_obj.list_namespace(limit=limit,timeout_seconds=timeout_seconds, watch=watch)
+    for  namespace in api_response.items:
+        print(namespace.metadata.name)
+except ApiException as e:
+    print(&quot;Exception when calling CoreV1Api-&gt;list_namespace: %s\n&quot; % e)</code></pre>
+
 
 <h3 id="pod">创建pod</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md</a></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span>
+<pre class="codehilite"><code>from kubernetes import client, config
 
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>                              <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>                    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+ApiToken = &quot;xxxxx&quot;                              #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;                    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
-<span class="n">k8s_api_obj</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">AppsV1beta2Api</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">ApiClient</span><span class="p">(</span><span class="n">configuration</span><span class="p">))</span>
-<span class="n">body</span><span class="o">=</span><span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;{&#39;kind&#39;: &#39;Deployment&#39;, &#39;spec&#39;: {&#39;replicas&#39;: 1, &#39;template&#39;: {&#39;spec&#39;: {&#39;containers&#39;: [{&#39;image&#39;: &#39;nginx:1.7.9&#39;, &#39;name&#39;: &#39;nginx&#39;, &#39;ports&#39;: [{&#39;contain</span>
-<span class="n">erPort</span><span class="s1">&#39;: 80}]}]}, &#39;</span><span class="n">metadata</span><span class="s1">&#39;: {&#39;</span><span class="n">labels</span><span class="s1">&#39;: {&#39;</span><span class="n">app</span><span class="s1">&#39;: &#39;</span><span class="n">nginx</span><span class="o">-</span><span class="n">deployment</span><span class="s1">&#39;}}}, &#39;</span><span class="n">selector</span><span class="s1">&#39;: {&#39;</span><span class="n">matchLabels</span><span class="s1">&#39;: {&#39;</span><span class="n">app</span><span class="s1">&#39;: &#39;</span><span class="n">nginx</span><span class="o">-</span><span class="n">deployment</span><span class="s1">&#39;}}}, &#39;</span><span class="n">apiVersion</span><span class="s1">&#39;: &#39;</span><span class="n">apps</span><span class="o">/</span><span class="n">v1beta2</span><span class="s1">&#39;, &#39;</span><span class="n">metadata</span><span class="s1">&#39;: {&#39;</span><span class="n">labels</span><span class="s1">&#39;: {&#39;</span><span class="n">app</span><span class="s1">&#39;: &#39;</span><span class="n">nginx</span><span class="o">-</span><span class="n">deployment</span><span class="s1">&#39;}, &#39;</span><span class="n">namespace</span><span class="s1">&#39;: &#39;</span><span class="n">default</span><span class="s1">&#39;, &#39;</span><span class="n">name</span><span class="s1">&#39;: &#39;</span><span class="n">nginx</span><span class="o">-</span><span class="n">deployment</span><span class="s1">&#39;}}&quot;)</span>
+k8s_api_obj = client.AppsV1beta2Api(client.ApiClient(configuration))
+body=eval(&quot;{'kind': 'Deployment', 'spec': {'replicas': 1, 'template': {'spec': {'containers': [{'image': 'nginx:1.7.9', 'name': 'nginx', 'ports': [{'contain
+erPort': 80}]}]}, 'metadata': {'labels': {'app': 'nginx-deployment'}}}, 'selector': {'matchLabels': {'app': 'nginx-deployment'}}}, 'apiVersion': 'apps/v1beta2', 'metadata': {'labels': {'app': 'nginx-deployment'}, 'namespace': 'default', 'name': 'nginx-deployment'}}&quot;)
 
-<span class="n">resp</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">create_namespaced_deployment</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
-</code></pre></div>
+resp = k8s_api_obj.create_namespaced_deployment(body=body, namespace=&quot;default&quot;)
+print(resp)</code></pre>
+
 
 <h3 id="pod_1">删除pod</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md#delete_namespaced_deployment">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md#delete_namespaced_deployment</a></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span>
+<pre class="codehilite"><code>from kubernetes import client, config
 
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>                              <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>                    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+ApiToken = &quot;xxxxx&quot;                              #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;                    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
 
-<span class="n">k8s_api_obj</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">AppsV1beta2Api</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">ApiClient</span><span class="p">(</span><span class="n">configuration</span><span class="p">))</span>
-<span class="n">resp</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">delete_namespaced_deployment</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;nginx-deployment&quot;</span><span class="p">,</span>
-                                               <span class="n">namespace</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
-                                               <span class="n">body</span><span class="o">=</span><span class="n">client</span><span class="o">.</span><span class="n">V1DeleteOptions</span><span class="p">(</span>
-                                                       <span class="n">propagation_policy</span><span class="o">=</span><span class="s1">&#39;Foreground&#39;</span><span class="p">,</span>
-                                                       <span class="n">grace_period_seconds</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-                                               <span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
-</code></pre></div>
+k8s_api_obj = client.AppsV1beta2Api(client.ApiClient(configuration))
+resp = k8s_api_obj.delete_namespaced_deployment(name=&quot;nginx-deployment&quot;,
+                                               namespace=&quot;default&quot;,
+                                               body=client.V1DeleteOptions(
+                                                       propagation_policy='Foreground',
+                                                       grace_period_seconds=0)
+                                               )
+print(resp)</code></pre>
+
 
 <h3 id="pod_2">更新pod</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md#patch_namespaced_deployment">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md#patch_namespaced_deployment</a></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span>
+<pre class="codehilite"><code>from kubernetes import client, config
 
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>                              <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>                    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+ApiToken = &quot;xxxxx&quot;                              #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;                    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
-<span class="n">k8s_api_obj</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">AppsV1beta2Api</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">ApiClient</span><span class="p">(</span><span class="n">configuration</span><span class="p">))</span>
+k8s_api_obj = client.AppsV1beta2Api(client.ApiClient(configuration))
 
-<span class="n">body</span><span class="o">=</span><span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;{&#39;kind&#39;: &#39;Deployment&#39;, &#39;spec&#39;: {&#39;replicas&#39;: 1, &#39;template&#39;: {&#39;spec&#39;: {&#39;containers&#39;: [{&#39;image&#39;: &#39;nginx&#39;, &#39;name&#39;: &#39;nginx&#39;, &#39;ports&#39;: [{&#39;containerPort</span>
-<span class="s1">&#39;: 80}]}]}, &#39;</span><span class="n">metadata</span><span class="s1">&#39;: {&#39;</span><span class="n">labels</span><span class="s1">&#39;: {&#39;</span><span class="n">app</span><span class="s1">&#39;: &#39;</span><span class="n">nginx</span><span class="o">-</span><span class="n">deployment</span><span class="s1">&#39;}}}, &#39;</span><span class="n">selector</span><span class="s1">&#39;: {&#39;</span><span class="n">matchLabels</span><span class="s1">&#39;: {&#39;</span><span class="n">app</span><span class="s1">&#39;: &#39;</span><span class="n">nginx</span><span class="o">-</span><span class="n">deployment</span><span class="s1">&#39;}}}, &#39;</span><span class="n">apiVersion</span><span class="s1">&#39;: &#39;</span><span class="n">apps</span><span class="o">/</span><span class="n">v1beta2</span><span class="s1">&#39;, &#39;</span><span class="n">metadata</span><span class="s1">&#39;: {&#39;</span><span class="n">labels</span><span class="s1">&#39;: {&#39;</span><span class="n">app</span><span class="s1">&#39;: &#39;</span><span class="n">nginx</span><span class="o">-</span><span class="n">deployment</span><span class="s1">&#39;}, &#39;</span><span class="n">namespace</span><span class="s1">&#39;: &#39;</span><span class="n">default</span><span class="s1">&#39;, &#39;</span><span class="n">name</span><span class="s1">&#39;: &#39;</span><span class="n">nginx</span><span class="o">-</span><span class="n">deployment</span><span class="s1">&#39;}}&quot;)</span>
+body=eval(&quot;{'kind': 'Deployment', 'spec': {'replicas': 1, 'template': {'spec': {'containers': [{'image': 'nginx', 'name': 'nginx', 'ports': [{'containerPort
+': 80}]}]}, 'metadata': {'labels': {'app': 'nginx-deployment'}}}, 'selector': {'matchLabels': {'app': 'nginx-deployment'}}}, 'apiVersion': 'apps/v1beta2', 'metadata': {'labels': {'app': 'nginx-deployment'}, 'namespace': 'default', 'name': 'nginx-deployment'}}&quot;)
 
-<span class="n">resp</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">patch_namespaced_deployment</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nginx-deployment&quot;</span><span class="p">,</span>
-                <span class="n">namespace</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
-                <span class="n">body</span><span class="o">=</span><span class="n">body</span>
-            <span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
-</code></pre></div>
+resp = k8s_api_obj.patch_namespaced_deployment(
+                name=&quot;nginx-deployment&quot;,
+                namespace=&quot;default&quot;,
+                body=body
+            )
+print(resp)</code></pre>
+
 
 <h3 id="pod_3">查询pod</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#list_namespaced_pod">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#list_namespaced_pod</a></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span>
-<span class="kn">from</span> <span class="nn">kubernetes.client.rest</span> <span class="kn">import</span> <span class="n">ApiException</span>
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>                              <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>                    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+<pre class="codehilite"><code>from kubernetes import client, config
+from kubernetes.client.rest import ApiException
+ApiToken = &quot;xxxxx&quot;                              #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;                    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
-<span class="n">k8s_api_obj</span>  <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">CoreV1Api</span><span class="p">()</span>
-<span class="n">resp</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">list_namespaced_pod</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">label_selector</span><span class="o">=</span><span class="s2">&quot;app=&quot;</span> <span class="o">+</span> <span class="s2">&quot;nginx-deployment&quot;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
-</code></pre></div>
+k8s_api_obj  = client.CoreV1Api()
+resp = k8s_api_obj.list_namespaced_pod(&quot;default&quot;, label_selector=&quot;app=&quot; + &quot;nginx-deployment&quot;)
+print(resp)</code></pre>
+
 
 <h3 id="svc">创建svc</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#create_namespaced_service">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#create_namespaced_service</a></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span>
-<span class="kn">from</span> <span class="nn">kubernetes.client.rest</span> <span class="kn">import</span> <span class="n">ApiException</span>
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>                              <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>                    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+<pre class="codehilite"><code>from kubernetes import client, config
+from kubernetes.client.rest import ApiException
+ApiToken = &quot;xxxxx&quot;                              #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;                    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
-<span class="n">k8s_api_obj</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">CoreV1Api</span><span class="p">()</span>
-<span class="n">namespace</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
-<span class="n">body</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;apiVersion&#39;</span><span class="p">:</span> <span class="s1">&#39;v1&#39;</span><span class="p">,</span> <span class="s1">&#39;kind&#39;</span><span class="p">:</span> <span class="s1">&#39;Service&#39;</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;nginx-service&#39;</span><span class="p">,</span> <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;app&#39;</span><span class="p">:</span> <span class="s1">&#39;nginx&#39;</span><span class="p">}},</span> <span class="s1">&#39;spec&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ports&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="s1">&#39;targetPor</span>
-<span class="n">t</span><span class="s1">&#39;: 80}], &#39;</span><span class="n">selector</span><span class="s1">&#39;: {&#39;</span><span class="n">app</span><span class="s1">&#39;: &#39;</span><span class="n">nginx</span><span class="s1">&#39;}}}</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">api_response</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">create_namespaced_service</span><span class="p">(</span><span class="n">namespace</span> <span class="p">,</span> <span class="n">body</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">api_response</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">ApiException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Exception when calling CoreV1Api-&gt;create_namespaced_service: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
-</code></pre></div>
+k8s_api_obj = client.CoreV1Api()
+namespace = &quot;default&quot;
+body = {'apiVersion': 'v1', 'kind': 'Service', 'metadata': {'name': 'nginx-service', 'labels': {'app': 'nginx'}}, 'spec': {'ports': [{'port': 80, 'targetPor
+t': 80}], 'selector': {'app': 'nginx'}}}
+try:
+    api_response = k8s_api_obj.create_namespaced_service(namespace , body)
+    print(api_response)
+except ApiException as e:
+    print(&quot;Exception when calling CoreV1Api-&gt;create_namespaced_service: %s\n&quot; % e)</code></pre>
+
 
 <h3 id="svc_1">删除svc</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#delete_namespaced_service">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#delete_namespaced_service</a></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span>
-<span class="kn">from</span> <span class="nn">kubernetes.client.rest</span> <span class="kn">import</span> <span class="n">ApiException</span>
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>                              <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>                    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+<pre class="codehilite"><code>from kubernetes import client, config
+from kubernetes.client.rest import ApiException
+ApiToken = &quot;xxxxx&quot;                              #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;                    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
-<span class="n">k8s_api_obj</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">CoreV1Api</span><span class="p">()</span>
-<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;nginx-service&#39;</span>                              <span class="c1">#要删除svc名称</span>
-<span class="n">namespace</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>                               <span class="c1">#命名空间</span>
-<span class="n">grace_period_seconds</span> <span class="o">=</span> <span class="mi">0</span>                            <span class="c1">#延迟时间,0立即删除</span>
-<span class="n">body</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">V1DeleteOptions</span><span class="p">()</span>                         <span class="c1">#删除选项</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">api_response</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">delete_namespaced_service</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">namespace</span><span class="p">,</span><span class="n">body</span><span class="p">,</span>  <span class="n">grace_period_seconds</span><span class="o">=</span><span class="n">grace_period_seconds</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">api_response</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">ApiException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Exception when calling CoreV1Api-&gt;delete_namespaced_service: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
-</code></pre></div>
+k8s_api_obj = client.CoreV1Api()
+name = 'nginx-service'                              #要删除svc名称
+namespace = 'default'                               #命名空间
+grace_period_seconds = 0                            #延迟时间,0立即删除
+body = client.V1DeleteOptions()                         #删除选项
+try:
+    api_response = k8s_api_obj.delete_namespaced_service(name, namespace,body,  grace_period_seconds=grace_period_seconds)
+    print(api_response)
+except ApiException as e:
+    print(&quot;Exception when calling CoreV1Api-&gt;delete_namespaced_service: %s\n&quot; % e)</code></pre>
+
 
 <h3 id="pod_4">pod列表</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md#list_namespaced_deployment">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md#list_namespaced_deployment</a></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span>
-<span class="kn">from</span> <span class="nn">kubernetes.client.rest</span> <span class="kn">import</span> <span class="n">ApiException</span>
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>                              <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>                    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+<pre class="codehilite"><code>from kubernetes import client, config
+from kubernetes.client.rest import ApiException
+ApiToken = &quot;xxxxx&quot;                              #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;                    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
-<span class="n">k8s_api_obj</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">AppsV1beta2Api</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">ApiClient</span><span class="p">(</span><span class="n">configuration</span><span class="p">))</span>
-<span class="n">namespace</span> <span class="o">=</span> <span class="s1">&#39;dev&#39;</span>                               <span class="c1">#命名空间</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">api_response</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">list_namespaced_deployment</span><span class="p">(</span><span class="n">namespace</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">deployment</span> <span class="ow">in</span> <span class="n">api_response</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">deployment</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">ApiException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Exception when calling AppsV1beta2Api-&gt;list_namespaced_deployment: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
-</code></pre></div>
+k8s_api_obj = client.AppsV1beta2Api(client.ApiClient(configuration))
+namespace = 'dev'                               #命名空间
+try:
+    api_response = k8s_api_obj.list_namespaced_deployment(namespace)
+    for deployment in api_response.items:
+        print(deployment.metadata.name)
+except ApiException as e:
+    print(&quot;Exception when calling AppsV1beta2Api-&gt;list_namespaced_deployment: %s\n&quot; % e)</code></pre>
+
 
 <h3 id="configmap">创建ConfigMap</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#create_namespaced_config_map">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#create_namespaced_config_map</a></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span>
+<pre class="codehilite"><code>from kubernetes import client, config
 
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>                              <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>                    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+ApiToken = &quot;xxxxx&quot;                              #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;                    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
-<span class="n">k8s_api_obj</span>  <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">CoreV1Api</span><span class="p">()</span>
-<span class="n">body</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;apiVersion&#39;</span><span class="p">:</span> <span class="s1">&#39;v1&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;kind&#39;</span><span class="p">:</span> <span class="s1">&#39;ConfigMap&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;filebeat-configmap&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;namespace&#39;</span><span class="p">:</span> <span class="s1">&#39;default&#39;</span>
-        <span class="p">},</span>
-        <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;filebeat.yml&#39;</span><span class="p">:</span> <span class="s1">&#39;filebeat.prospectors: </span><span class="se">\n</span><span class="s1"> - input_type: log\ n paths: </span><span class="se">\n</span><span class="s1"> - &quot;/mnt/*/logs/app/app.log&quot;</span><span class="se">\n</span><span class="s1"> tags: [&quot;json&quot;]\ n json.keys_under_roo</span>
-<span class="n">t</span><span class="p">:</span> <span class="n">true</span>\ <span class="n">n</span> <span class="n">json</span><span class="o">.</span><span class="n">overwrite_keys</span><span class="p">:</span> <span class="n">true</span>\ <span class="n">noutput</span><span class="o">.</span><span class="n">elasticsearch</span><span class="p">:</span> \<span class="n">n</span> <span class="n">hosts</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;xx.xx.xx.xx:9200&quot;</span><span class="p">]</span>\ <span class="n">n</span> <span class="n">username</span><span class="p">:</span> <span class="s2">&quot;elastic&quot;</span>\<span class="n">n</span> <span class="n">password</span><span class="p">:</span> <span class="s2">&quot;elastic&quot;</span>\<span class="n">n</span> <span class="n">template</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span> <span class="n">false</span>\ <span class="n">n</span> <span class="n">index</span><span class="p">:</span> <span class="s2">&quot;dev_namespace_name_java_log-%{+yyyy.MM.dd}&quot;</span>\<span class="n">n</span> <span class="s1">&#39;}     </span>
-   <span class="p">}</span>
+k8s_api_obj  = client.CoreV1Api()
+body = {
+        'apiVersion': 'v1',
+        'kind': 'ConfigMap',
+        'metadata': {
+                'name': 'filebeat-configmap',
+                'namespace': 'default'
+        },
+        'data': {
+                'filebeat.yml': 'filebeat.prospectors: \n - input_type: log\ n paths: \n - &quot;/mnt/*/logs/app/app.log&quot;\n tags: [&quot;json&quot;]\ n json.keys_under_roo
+t: true\ n json.overwrite_keys: true\ noutput.elasticsearch: \n hosts: [&quot;xx.xx.xx.xx:9200&quot;]\ n username: &quot;elastic&quot;\n password: &quot;elastic&quot;\n template.enabled: false\ n index: &quot;dev_namespace_name_java_log-%{+yyyy.MM.dd}&quot;\n '}     
+   }
 
 
-<span class="n">resp</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">create_namespaced_config_map</span><span class="p">(</span>
-                <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
-</code></pre></div>
+resp = k8s_api_obj.create_namespaced_config_map(
+                body=body, namespace=&quot;default&quot;)
+print(resp)</code></pre>
+
 
 <h3 id="configmap_1">删除ConfigMap</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#delete_namespaced_config_map">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#delete_namespaced_config_map</a></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span>
+<pre class="codehilite"><code>from kubernetes import client, config
 
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>                              <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>                    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+ApiToken = &quot;xxxxx&quot;                              #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;                    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
-<span class="n">k8s_api_obj</span>  <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">CoreV1Api</span><span class="p">()</span>
-<span class="n">resp</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">delete_namespaced_config_map</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;filebeat-configmap&quot;</span><span class="p">,</span>
-                <span class="n">namespace</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
-                <span class="n">body</span><span class="o">=</span><span class="n">client</span><span class="o">.</span><span class="n">V1DeleteOptions</span><span class="p">()</span>
-            <span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
-</code></pre></div>
+k8s_api_obj  = client.CoreV1Api()
+resp = k8s_api_obj.delete_namespaced_config_map(
+                name=&quot;filebeat-configmap&quot;,
+                namespace=&quot;default&quot;,
+                body=client.V1DeleteOptions()
+            )
+print(resp)</code></pre>
+
 
 <h3 id="configmap_2">查看ConfigMap</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#list_namespaced_config_map">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#list_namespaced_config_map</a></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span>
-<span class="kn">from</span> <span class="nn">kubernetes.client.rest</span> <span class="kn">import</span> <span class="n">ApiException</span>
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>                              <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>                    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+<pre class="codehilite"><code>from kubernetes import client, config
+from kubernetes.client.rest import ApiException
+ApiToken = &quot;xxxxx&quot;                              #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;                    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
-<span class="n">k8s_api_obj</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">CoreV1Api</span><span class="p">()</span>
-<span class="n">namespace</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">api_response</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">list_namespaced_config_map</span><span class="p">(</span><span class="n">namespace</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">config_map</span> <span class="ow">in</span>  <span class="n">api_response</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">config_map</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">ApiException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Exception when calling CoreV1Api-&gt;list_namespaced_config_map: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
-</code></pre></div>
+k8s_api_obj = client.CoreV1Api()
+namespace = 'default'
+try:
+    api_response = k8s_api_obj.list_namespaced_config_map(namespace)
+    for config_map in  api_response.items:
+        print(config_map.metadata.name)
+except ApiException as e:
+    print(&quot;Exception when calling CoreV1Api-&gt;list_namespaced_config_map: %s\n&quot; % e)</code></pre>
+
 
 <h3 id="node">获取Node节点信息</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#read_node">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#read_node</a></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span>
-<span class="kn">from</span> <span class="nn">kubernetes.client.rest</span> <span class="kn">import</span> <span class="n">ApiException</span>
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>                              <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>                    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+<pre class="codehilite"><code>from kubernetes import client, config
+from kubernetes.client.rest import ApiException
+ApiToken = &quot;xxxxx&quot;                              #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;                    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
-<span class="n">k8s_api_obj</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">CoreV1Api</span><span class="p">()</span>
-<span class="n">exact</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">export</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.50&quot;</span>               <span class="c1">#此处填写node名称</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">api_response</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">read_node</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">exact</span><span class="o">=</span><span class="n">exact</span><span class="p">,</span> <span class="n">export</span><span class="o">=</span><span class="n">export</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">api_response</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">ApiException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Exception when calling CoreV1Api-&gt;read_node: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
-</code></pre></div>
+k8s_api_obj = client.CoreV1Api()
+exact = True
+export = True
+name = &quot;192.168.1.50&quot;               #此处填写node名称
+try:
+    api_response = k8s_api_obj.read_node(name, exact=exact, export=export)
+    print(api_response)
+except ApiException as e:
+    print(&quot;Exception when calling CoreV1Api-&gt;read_node: %s\n&quot; % e)</code></pre>
+
 
 <h3 id="node_1">获取Node状态信息</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#read_node_status">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#read_node_status</a></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span>
-<span class="kn">from</span> <span class="nn">kubernetes.client.rest</span> <span class="kn">import</span> <span class="n">ApiException</span>
-<span class="n">ApiToken</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span>                              <span class="c1">#ApiToken</span>
-<span class="n">configuration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="p">()</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;https://xxxx:6443&quot;</span>                    <span class="c1">#ApiHost</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">configuration</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">ApiToken</span><span class="p">}</span>
-<span class="n">client</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">set_default</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+<pre class="codehilite"><code>from kubernetes import client, config
+from kubernetes.client.rest import ApiException
+ApiToken = &quot;xxxxx&quot;                              #ApiToken
+configuration = client.Configuration()
+setattr(configuration, 'verify_ssl', False)
+client.Configuration.set_default(configuration)
+configuration.host = &quot;https://xxxx:6443&quot;                    #ApiHost
+configuration.verify_ssl = False
+configuration.debug = True
+configuration.api_key = {&quot;authorization&quot;: &quot;Bearer &quot; + ApiToken}
+client.Configuration.set_default(configuration)
 
-<span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.50&quot;</span>                               <span class="c1">#此处填写node名称</span>
-<span class="n">k8s_api_obj</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">CoreV1Api</span><span class="p">()</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">api_response</span> <span class="o">=</span> <span class="n">k8s_api_obj</span><span class="o">.</span><span class="n">read_node_status</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">pretty</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">api_response</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">ApiException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Exception when calling CoreV1Api-&gt;read_node_status: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
-</code></pre></div>
+name = &quot;192.168.1.50&quot;                               #此处填写node名称
+k8s_api_obj = client.CoreV1Api()
+try:
+    api_response = k8s_api_obj.read_node_status(name, pretty=True)
+    print(api_response)
+except ApiException as e:
+    print(&quot;Exception when calling CoreV1Api-&gt;read_node_status: %s\n&quot; % e)</code></pre>
+
 
 <p>Kubernetes Python Api应用文章推荐阅读：</p>
 <ul>

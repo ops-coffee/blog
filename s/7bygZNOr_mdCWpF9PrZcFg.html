@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -129,51 +129,51 @@
 <li>kibana读取elasticsearch集群数据展示在web上，开发、运维等需要查看日志的用户登录kibana查看</li>
 </ol>
 <p><strong>Client端Filebeat配置</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="n">filebeat</span><span class="p">.</span><span class="n">prospectors</span><span class="p">:</span>
+<pre class="codehilite"><code>filebeat.prospectors:
 
-<span class="o">-</span> <span class="n">input_type</span><span class="p">:</span> <span class="n">log</span>
-  <span class="n">paths</span><span class="p">:</span>
-    <span class="o">-</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">logs</span><span class="o">/</span><span class="n">app</span><span class="o">/</span><span class="n">business</span><span class="p">.</span><span class="n">log</span>
-    <span class="o">-</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">logs</span><span class="o">/</span><span class="n">app</span><span class="o">/</span><span class="k">exception</span><span class="p">.</span><span class="n">log</span>
+- input_type: log
+  paths:
+    - /home/logs/app/business.log
+    - /home/logs/app/exception.log
 
-  <span class="n">json</span><span class="p">.</span><span class="n">message_key</span><span class="p">:</span> <span class="n">log</span>
-  <span class="n">json</span><span class="p">.</span><span class="n">keys_under_root</span><span class="p">:</span> <span class="k">true</span>
+  json.message_key: log
+  json.keys_under_root: true
 
-<span class="k">output</span><span class="p">.</span><span class="n">kafka</span><span class="p">:</span>
-  <span class="n">hosts</span><span class="p">:</span> <span class="p">[</span><span class="ss">&quot;10.82.9.202:9092&quot;</span><span class="p">,</span><span class="ss">&quot;10.82.9.203:9092&quot;</span><span class="p">,</span><span class="ss">&quot;10.82.9.204:9092&quot;</span><span class="p">]</span>
-  <span class="n">topic</span><span class="p">:</span> <span class="n">filebeat_docker_java</span>
-</code></pre></div>
+output.kafka:
+  hosts: [&quot;10.82.9.202:9092&quot;,&quot;10.82.9.203:9092&quot;,&quot;10.82.9.204:9092&quot;]
+  topic: filebeat_docker_java</code></pre>
+
 
 <p><strong>Kafka接收到的数据格式</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="s">&quot;@timestamp&quot;</span><span class="o">:</span><span class="s">&quot;2018-09-05T13:17:46.051Z&quot;</span><span class="p">,</span><span class="s">&quot;appname&quot;</span><span class="o">:</span><span class="s">&quot;app01&quot;</span><span class="p">,</span><span class="s">&quot;beat&quot;</span><span class="o">:</span><span class="p">{</span><span class="s">&quot;hostname&quot;</span><span class="o">:</span><span class="s">&quot;52fc9bef4575&quot;</span><span class="p">,</span><span class="s">&quot;name&quot;</span><span class="o">:</span><span class="s">&quot;52fc9bef4575&quot;</span><span class="p">,</span><span class="s">&quot;version&quot;</span><span class="o">:</span><span class="s">&quot;5.4.0&quot;</span><span class="p">},</span><span class="s">&quot;classname&quot;</span><span class="o">:</span><span class="s">&quot;com.domain.pay.service.ApiService&quot;</span><span class="p">,</span><span class="s">&quot;date&quot;</span><span class="o">:</span><span class="s">&quot;2018-09-05 21:17:45.953+0800&quot;</span><span class="p">,</span><span class="s">&quot;filename&quot;</span><span class="o">:</span><span class="s">&quot;ApiService.java&quot;</span><span class="p">,</span><span class="s">&quot;hostname&quot;</span><span class="o">:</span><span class="s">&quot;172.17.0.2&quot;</span><span class="p">,</span><span class="s">&quot;level&quot;</span><span class="o">:</span><span class="s">&quot;INFO&quot;</span><span class="p">,</span><span class="s">&quot;linenumber&quot;</span><span class="o">:</span><span class="mi">285</span><span class="p">,</span><span class="s">&quot;message&quot;</span><span class="o">:</span><span class="s">&quot;param[{</span><span class="se">\&quot;</span><span class="s">email</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">TEST@163.COM</span><span class="se">\&quot;</span><span class="s">,</span><span class="se">\&quot;</span><span class="s">claimeeIP</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">123.191.2.75</span><span class="se">\&quot;</span><span class="s">,</span><span class="se">\&quot;</span><span class="s">AccountName</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;\&quot;</span><span class="s">}]&quot;</span><span class="p">,</span><span class="s">&quot;source&quot;</span><span class="o">:</span><span class="s">&quot;/home/logs/business.log&quot;</span><span class="p">,</span><span class="s">&quot;thread&quot;</span><span class="o">:</span><span class="s">&quot;Thread-11&quot;</span><span class="p">,</span><span class="s">&quot;timestamp&quot;</span><span class="o">:</span><span class="mi">1536153465953</span><span class="p">,</span><span class="s">&quot;type&quot;</span><span class="o">:</span><span class="s">&quot;log&quot;</span><span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>{&quot;@timestamp&quot;:&quot;2018-09-05T13:17:46.051Z&quot;,&quot;appname&quot;:&quot;app01&quot;,&quot;beat&quot;:{&quot;hostname&quot;:&quot;52fc9bef4575&quot;,&quot;name&quot;:&quot;52fc9bef4575&quot;,&quot;version&quot;:&quot;5.4.0&quot;},&quot;classname&quot;:&quot;com.domain.pay.service.ApiService&quot;,&quot;date&quot;:&quot;2018-09-05 21:17:45.953+0800&quot;,&quot;filename&quot;:&quot;ApiService.java&quot;,&quot;hostname&quot;:&quot;172.17.0.2&quot;,&quot;level&quot;:&quot;INFO&quot;,&quot;linenumber&quot;:285,&quot;message&quot;:&quot;param[{\&quot;email\&quot;:\&quot;TEST@163.COM\&quot;,\&quot;claimeeIP\&quot;:\&quot;123.191.2.75\&quot;,\&quot;AccountName\&quot;:\&quot;\&quot;}]&quot;,&quot;source&quot;:&quot;/home/logs/business.log&quot;,&quot;thread&quot;:&quot;Thread-11&quot;,&quot;timestamp&quot;:1536153465953,&quot;type&quot;:&quot;log&quot;}</code></pre>
+
 
 <p><strong>Server端Logstash配置</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="k">input</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">kafka</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">bootstrap_servers</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;10.82.9.202:9092,10.82.9.203:9092,10.82.9.204:9092&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="n">topics</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;filebeat_docker_java&quot;</span><span class="o">]</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
-<span class="err">}</span><span class="w"></span>
+<pre class="codehilite"><code>input {
+    kafka {
+        bootstrap_servers =&gt; &quot;10.82.9.202:9092,10.82.9.203:9092,10.82.9.204:9092&quot;
+        topics =&gt; [&quot;filebeat_docker_java&quot;]
+    }
+}
 
-<span class="k">filter</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">json</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">source</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;message&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
+filter {
+    json {
+        source =&gt; &quot;message&quot;
+    }
 
-<span class="w">    </span><span class="nc">date</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;timestamp&quot;,&quot;UNIX_MS&quot;</span><span class="o">]</span><span class="w"></span>
-<span class="w">        </span><span class="n">target</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;@timestamp&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
-<span class="err">}</span><span class="w"></span>
+    date {
+        match =&gt; [&quot;timestamp&quot;,&quot;UNIX_MS&quot;]
+        target =&gt; &quot;@timestamp&quot;
+    }
+}
 
-<span class="k">output</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">elasticsearch</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">hosts</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;10.82.9.205&quot;, &quot;10.82.9.206&quot;, &quot;10.82.9.207&quot;</span><span class="o">]</span><span class="w"></span>
-<span class="w">        </span><span class="k">index</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;filebeat-docker-java-%{+YYYY.MM.dd}&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
-<span class="err">}</span><span class="w"></span>
-</code></pre></div>
+output {
+    elasticsearch {
+        hosts =&gt; [&quot;10.82.9.205&quot;, &quot;10.82.9.206&quot;, &quot;10.82.9.207&quot;]
+        index =&gt; &quot;filebeat-docker-java-%{+YYYY.MM.dd}&quot;
+    }
+}</code></pre>
+
 
 <p>都是基础配置很简单，不做过多解释，通过以上简单的配置就能实现任何应用程序的日志收集</p>
 <h1 id="_4">日志展示</h1>

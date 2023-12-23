@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -49,293 +49,293 @@
 <p>以下演示代码基于上一节搭建好的vue环境，使用bpmn版本为当前最新版7.3.0</p>
 <h2 id="_1">从本地文件中加载流程</h2>
 <p>上一节的演示代码中我们将bpmn流程图内容作为字符串赋予给了变量<code>xmlStr</code>，在渲染时通过<code>importXML(xmlStr)</code>直接读取了<code>xmlStr</code>变量的内容从而实现了绘图，核心代码如下所示</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="p">{</span> <span class="n">xmlStr</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;../mock/xmlStr&quot;</span><span class="p">;</span>
+<pre class="codehilite"><code>import { xmlStr } from &quot;../mock/xmlStr&quot;;
 
-<span class="o">...</span>
+...
 
-<span class="n">async</span> <span class="n">createNewDiagram</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">try</span> <span class="p">{</span>
-    <span class="n">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">importXML</span><span class="p">(</span><span class="n">xmlStr</span><span class="p">);</span>
-    <span class="n">const</span> <span class="p">{</span> <span class="n">warnings</span> <span class="p">}</span> <span class="o">=</span> <span class="n">result</span><span class="p">;</span>
-    <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">warnings</span><span class="p">);</span>
-  <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">warnings</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">},</span>
-</code></pre></div>
+async createNewDiagram() {
+  try {
+    const result = await this.bpmnModeler.importXML(xmlStr);
+    const { warnings } = result;
+    console.log(warnings);
+  } catch (err) {
+    console.log(err.message, err.warnings);
+  }
+},</code></pre>
+
 
 <p>如果想要从本地导入bpmn格式的流程文件该如何实现呢？借助于上边的思路，其实只需要以下两步即可</p>
 <p>template模版，添加一个type为file的input输入框，用于文件上传，为了好看这里将input给隐藏，这里用一个a标签通过<code>$refs.refFile.click()</code>模拟点击触发弹出资源管理器，然后input通过change事件触发<code>loadXML</code>函数的执行</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;template&gt;</span>
-  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;containers&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;canvas&quot;</span> <span class="na">ref=</span><span class="s">&quot;canvas&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+<pre class="codehilite"><code>&lt;template&gt;
+  &lt;div class=&quot;containers&quot;&gt;
+    &lt;div class=&quot;canvas&quot; ref=&quot;canvas&quot;&gt;&lt;/div&gt;
 
-    <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">&quot;buttons&quot;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;li&gt;</span>
-        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;javascript:&quot;</span> <span class="err">@</span><span class="na">click=</span><span class="s">&quot;$refs.refFile.click()&quot;</span><span class="nt">&gt;</span>加载本地BPMN文件<span class="nt">&lt;/a&gt;</span>
-        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;file&quot;</span> <span class="na">id=</span><span class="s">&quot;files&quot;</span> <span class="na">ref=</span><span class="s">&quot;refFile&quot;</span> <span class="na">style=</span><span class="s">&quot;display: none&quot;</span> <span class="err">@</span><span class="na">change=</span><span class="s">&quot;loadXML&quot;</span> <span class="nt">/&gt;</span>
-      <span class="nt">&lt;/li&gt;</span>
-    <span class="nt">&lt;/ul&gt;</span>
-  <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/template&gt;</span>
-</code></pre></div>
+    &lt;ul class=&quot;buttons&quot;&gt;
+      &lt;li&gt;
+        &lt;a href=&quot;javascript:&quot; @click=&quot;$refs.refFile.click()&quot;&gt;加载本地BPMN文件&lt;/a&gt;
+        &lt;input type=&quot;file&quot; id=&quot;files&quot; ref=&quot;refFile&quot; style=&quot;display: none&quot; @change=&quot;loadXML&quot; /&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+
 
 <p><code>loadXML</code>主要用来接收用户上传的文件，然后将文件内容赋予变量<code>xmlStr</code>，之后调用<code>createNewDiagram</code>方法将bpmn文件内容渲染到编辑器，完整的代码如下</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="n">script</span><span class="o">&gt;</span>
-<span class="kn">import</span> <span class="nn">BpmnModeler</span> <span class="nn">from</span> <span class="s2">&quot;bpmn-js/lib/Modeler&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="p">{</span> <span class="n">xmlStr</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;../mock/xmlStr&quot;</span><span class="p">;</span>
+<pre class="codehilite"><code>&lt;script&gt;
+import BpmnModeler from &quot;bpmn-js/lib/Modeler&quot;;
+import { xmlStr } from &quot;../mock/xmlStr&quot;;
 
-<span class="n">export</span> <span class="n">default</span> <span class="p">{</span>
-  <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;ops-coffee&quot;</span><span class="p">,</span>
-  <span class="n">mounted</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">this</span><span class="o">.</span><span class="n">init</span><span class="p">();</span>
-  <span class="p">},</span>
-  <span class="n">data</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="p">{</span>
-      <span class="n">bpmnModeler</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
-      <span class="n">container</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
-      <span class="n">canvas</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
-      <span class="n">xmlStr</span><span class="p">:</span> <span class="n">xmlStr</span>
-    <span class="p">};</span>
-  <span class="p">},</span>
-  <span class="n">methods</span><span class="p">:</span> <span class="p">{</span>
-    <span class="n">init</span><span class="p">()</span> <span class="p">{</span>
-      <span class="n">const</span> <span class="n">canvas</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="err">$</span><span class="n">refs</span><span class="o">.</span><span class="n">canvas</span><span class="p">;</span>
-      <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span> <span class="o">=</span> <span class="n">new</span> <span class="n">BpmnModeler</span><span class="p">({</span>
-        <span class="n">container</span><span class="p">:</span> <span class="n">canvas</span>
-      <span class="p">});</span>
+export default {
+  name: &quot;ops-coffee&quot;,
+  mounted() {
+    this.init();
+  },
+  data() {
+    return {
+      bpmnModeler: null,
+      container: null,
+      canvas: null,
+      xmlStr: xmlStr
+    };
+  },
+  methods: {
+    init() {
+      const canvas = this.$refs.canvas;
+      this.bpmnModeler = new BpmnModeler({
+        container: canvas
+      });
 
-      <span class="n">this</span><span class="o">.</span><span class="n">createNewDiagram</span><span class="p">();</span>
-    <span class="p">},</span>
-    <span class="n">createNewDiagram</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">try</span> <span class="p">{</span>
-        <span class="n">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">importXML</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">xmlStr</span><span class="p">);</span>
-        <span class="n">const</span> <span class="p">{</span> <span class="n">warnings</span> <span class="p">}</span> <span class="o">=</span> <span class="n">result</span><span class="p">;</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">warnings</span><span class="p">);</span>
-      <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">warnings</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="n">loadXML</span><span class="p">()</span> <span class="p">{</span>
-      <span class="n">const</span> <span class="n">that</span> <span class="o">=</span> <span class="n">this</span><span class="p">;</span>
-      <span class="n">const</span> <span class="nb">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="err">$</span><span class="n">refs</span><span class="o">.</span><span class="n">refFile</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      this.createNewDiagram();
+    },
+    createNewDiagram() {
+      try {
+        const result = this.bpmnModeler.importXML(this.xmlStr);
+        const { warnings } = result;
+        console.log(warnings);
+      } catch (err) {
+        console.log(err.message, err.warnings);
+      }
+    },
+    loadXML() {
+      const that = this;
+      const file = this.$refs.refFile.files[0];
 
-      <span class="n">var</span> <span class="n">reader</span> <span class="o">=</span> <span class="n">new</span> <span class="n">FileReader</span><span class="p">();</span>
-      <span class="n">reader</span><span class="o">.</span><span class="n">readAsText</span><span class="p">(</span><span class="nb">file</span><span class="p">);</span>
-      <span class="n">reader</span><span class="o">.</span><span class="n">onload</span> <span class="o">=</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">that</span><span class="o">.</span><span class="n">xmlStr</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">result</span><span class="p">;</span>
-        <span class="n">that</span><span class="o">.</span><span class="n">createNewDiagram</span><span class="p">();</span>
-      <span class="p">};</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-<span class="o">&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
-</code></pre></div>
+      var reader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = function() {
+        that.xmlStr = this.result;
+        that.createNewDiagram();
+      };
+    }
+  }
+};
+&lt;/script&gt;</code></pre>
+
 
 <p>需要注意的是，新增了一个<code>xmlStr</code>的变量，初始值赋予了默认的bpmn格式字符串，这样在每次新打开页面时都可以正常渲染默认的流程，当上传bpmn文件后会替换掉这个<code>xmlStr</code>变量的值为新上传的文件内容，再次渲染时就能渲染新上传的流程文件了</p>
 <p>另外这里也可以做一些基础的判断，例如只接收.bpmn后缀的文件等等，让程序更健壮</p>
 <p>为了让添加的按钮看起来好看一点，新增了如下CSS</p>
-<div class="codehilite"><pre><span></span><code><span class="p">.</span><span class="nc">buttons</span> <span class="p">{</span>
-  <span class="k">position</span><span class="p">:</span> <span class="kc">absolute</span><span class="p">;</span>
-  <span class="k">left</span><span class="p">:</span> <span class="mi">20</span><span class="kt">px</span><span class="p">;</span>
-  <span class="k">bottom</span><span class="p">:</span> <span class="mi">20</span><span class="kt">px</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="p">.</span><span class="nc">buttons</span> <span class="nt">li</span> <span class="p">{</span>
-  <span class="k">display</span><span class="p">:</span> <span class="kc">inline-block</span><span class="p">;</span>
-  <span class="k">margin</span><span class="p">:</span> <span class="mi">5</span><span class="kt">px</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="p">.</span><span class="nc">buttons</span> <span class="nt">li</span> <span class="nt">a</span> <span class="p">{</span>
-  <span class="k">color</span><span class="p">:</span> <span class="mh">#333</span><span class="p">;</span>
-  <span class="k">background</span><span class="p">:</span> <span class="mh">#fff</span><span class="p">;</span>
-  <span class="k">cursor</span><span class="p">:</span> <span class="kc">pointer</span><span class="p">;</span>
-  <span class="k">padding</span><span class="p">:</span> <span class="mi">8</span><span class="kt">px</span><span class="p">;</span>
-  <span class="k">border</span><span class="p">:</span> <span class="mi">1</span><span class="kt">px</span> <span class="kc">solid</span> <span class="mh">#ccc</span><span class="p">;</span>
-  <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">none</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>.buttons {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+}
+.buttons li {
+  display: inline-block;
+  margin: 5px;
+}
+.buttons li a {
+  color: #333;
+  background: #fff;
+  cursor: pointer;
+  padding: 8px;
+  border: 1px solid #ccc;
+  text-decoration: none;
+}</code></pre>
+
 
 <h2 id="_2">将流程保存到本地文件</h2>
 <p>上边讲了如何导入本地文件，那么本地文件从哪里来呢？官方提供了一个<code>saveXML</code>方法可以将绘制的工作流输出为xml格式的数据，而我们可以将xml格式的数据保存到本地文件，而这个文件就能通过上边的导入步骤导入渲染啦</p>
 <p><code>saveXML</code>使用也非常简单，第一步依然是添加一个导出的按钮</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;li&gt;</span>
-  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;javascript:&quot;</span> <span class="err">@</span><span class="na">click=</span><span class="s">&quot;saveXML&quot;</span> <span class="na">title=</span><span class="s">&quot;保存为bpmn&quot;</span><span class="nt">&gt;</span>保存为BPMN文件<span class="nt">&lt;/a&gt;</span>
-<span class="nt">&lt;/li&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&lt;li&gt;
+  &lt;a href=&quot;javascript:&quot; @click=&quot;saveXML&quot; title=&quot;保存为bpmn&quot;&gt;保存为BPMN文件&lt;/a&gt;
+&lt;/li&gt;</code></pre>
+
 
 <p>然后编写一个<code>saveXML</code>的方法来实现将xml格式数据保存为本地文件，完整代码如下</p>
-<div class="codehilite"><pre><span></span><code><span class="n">async</span> <span class="n">saveXML</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">try</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">saveXML</span><span class="p">({</span> <span class="n">format</span><span class="p">:</span> <span class="bp">true</span> <span class="p">});</span>
-    <span class="k">const</span> <span class="p">{</span> <span class="n">xml</span> <span class="p">}</span> <span class="o">=</span> <span class="n">result</span><span class="p">;</span>
+<pre class="codehilite"><code>async saveXML() {
+  try {
+    const result = await this.bpmnModeler.saveXML({ format: true });
+    const { xml } = result;
 
-    <span class="k">var</span> <span class="n">xmlBlob</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Blob</span><span class="p">([</span><span class="n">xml</span><span class="p">],</span> <span class="p">{</span>
-      <span class="n">type</span><span class="p">:</span> <span class="s2">&quot;application/bpmn20-xml;charset=UTF-8,&quot;</span>
-    <span class="p">});</span>
+    var xmlBlob = new Blob([xml], {
+      type: &quot;application/bpmn20-xml;charset=UTF-8,&quot;
+    });
 
-    <span class="k">var</span> <span class="n">downloadLink</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">);</span>
-    <span class="n">downloadLink</span><span class="o">.</span><span class="n">download</span> <span class="o">=</span> <span class="s2">&quot;ops-coffee-bpmn.bpmn&quot;</span><span class="p">;</span>
-    <span class="n">downloadLink</span><span class="o">.</span><span class="n">innerHTML</span> <span class="o">=</span> <span class="s2">&quot;Get BPMN SVG&quot;</span><span class="p">;</span>
-    <span class="n">downloadLink</span><span class="o">.</span><span class="n">href</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">createObjectURL</span><span class="p">(</span><span class="n">xmlBlob</span><span class="p">);</span>
-    <span class="n">downloadLink</span><span class="o">.</span><span class="n">onclick</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">document</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">removeChild</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">target</span><span class="p">);</span>
-    <span class="p">};</span>
-    <span class="n">downloadLink</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">visibility</span> <span class="o">=</span> <span class="s2">&quot;hidden&quot;</span><span class="p">;</span>
-    <span class="n">document</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">downloadLink</span><span class="p">);</span>
-    <span class="n">downloadLink</span><span class="o">.</span><span class="n">click</span><span class="p">();</span>
-  <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">},</span>
-</code></pre></div>
+    var downloadLink = document.createElement(&quot;a&quot;);
+    downloadLink.download = &quot;ops-coffee-bpmn.bpmn&quot;;
+    downloadLink.innerHTML = &quot;Get BPMN SVG&quot;;
+    downloadLink.href = window.URL.createObjectURL(xmlBlob);
+    downloadLink.onclick = function(event) {
+      document.body.removeChild(event.target);
+    };
+    downloadLink.style.visibility = &quot;hidden&quot;;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+  } catch (err) {
+    console.log(err);
+  }
+},</code></pre>
+
 
 <p>同样的，官方除了支持导出为xml格式的bpmn文件外，还支持直接导出为svg格式的图片，方法与导出bpmn文件类似，代码如下</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;li&gt;</span>
-  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;javascript:&quot;</span> <span class="err">@</span><span class="na">click=</span><span class="s">&quot;saveSVG&quot;</span> <span class="na">title=</span><span class="s">&quot;保存为svg&quot;</span><span class="nt">&gt;</span>保存为SVG图片<span class="nt">&lt;/a&gt;</span>
-<span class="nt">&lt;/li&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&lt;li&gt;
+  &lt;a href=&quot;javascript:&quot; @click=&quot;saveSVG&quot; title=&quot;保存为svg&quot;&gt;保存为SVG图片&lt;/a&gt;
+&lt;/li&gt;</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="n">async</span> <span class="n">saveSVG</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">try</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">saveSVG</span><span class="p">();</span>
-    <span class="k">const</span> <span class="p">{</span> <span class="n">svg</span> <span class="p">}</span> <span class="o">=</span> <span class="n">result</span><span class="p">;</span>
 
-    <span class="k">var</span> <span class="n">svgBlob</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Blob</span><span class="p">([</span><span class="n">svg</span><span class="p">],</span> <span class="p">{</span>
-      <span class="n">type</span><span class="p">:</span> <span class="s2">&quot;image/svg+xml&quot;</span>
-    <span class="p">});</span>
+<pre class="codehilite"><code>async saveSVG() {
+  try {
+    const result = await this.bpmnModeler.saveSVG();
+    const { svg } = result;
 
-    <span class="k">var</span> <span class="n">downloadLink</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">);</span>
-    <span class="n">downloadLink</span><span class="o">.</span><span class="n">download</span> <span class="o">=</span> <span class="s2">&quot;ops-coffee-bpmn.svg&quot;</span><span class="p">;</span>
-    <span class="n">downloadLink</span><span class="o">.</span><span class="n">innerHTML</span> <span class="o">=</span> <span class="s2">&quot;Get BPMN SVG&quot;</span><span class="p">;</span>
-    <span class="n">downloadLink</span><span class="o">.</span><span class="n">href</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">createObjectURL</span><span class="p">(</span><span class="n">svgBlob</span><span class="p">);</span>
-    <span class="n">downloadLink</span><span class="o">.</span><span class="n">onclick</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">document</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">removeChild</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">target</span><span class="p">);</span>
-    <span class="p">};</span>
-    <span class="n">downloadLink</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">visibility</span> <span class="o">=</span> <span class="s2">&quot;hidden&quot;</span><span class="p">;</span>
-    <span class="n">document</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">downloadLink</span><span class="p">);</span>
-    <span class="n">downloadLink</span><span class="o">.</span><span class="n">click</span><span class="p">();</span>
-  <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">},</span>
-</code></pre></div>
+    var svgBlob = new Blob([svg], {
+      type: &quot;image/svg+xml&quot;
+    });
+
+    var downloadLink = document.createElement(&quot;a&quot;);
+    downloadLink.download = &quot;ops-coffee-bpmn.svg&quot;;
+    downloadLink.innerHTML = &quot;Get BPMN SVG&quot;;
+    downloadLink.href = window.URL.createObjectURL(svgBlob);
+    downloadLink.onclick = function(event) {
+      document.body.removeChild(event.target);
+    };
+    downloadLink.style.visibility = &quot;hidden&quot;;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+  } catch (err) {
+    console.log(err);
+  }
+},</code></pre>
+
 
 <h3 id="_3">监听变化下载文件</h3>
 <p>以上下载文件的方式是在每一次点击下载按钮时去构建下载链接，而官方示例里还给了另外一种下载文件的方式，那就是通过<code>bpmnModeler.on</code>的监听方法，监听到流程图变化然后直接构建下载链接，用户点击下载按钮时直接下载，不再构建下载链接</p>
 <p>官方示例代码地址https://github.com/bpmn-io/bpmn-js-examples/blob/ebd40ecbb9672227f1d9eb5c00bc1aaf38127df6/modeler/app/app.js</p>
 <p>优化后可在本项目中使用的代码如下</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;li&gt;</span>
-  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;javascript:&quot;</span> <span class="na">ref=</span><span class="s">&quot;saveXML&quot;</span> <span class="na">title=</span><span class="s">&quot;保存为bpmn&quot;</span><span class="nt">&gt;</span>保存为BPMN文件<span class="nt">&lt;/a&gt;</span>
-<span class="nt">&lt;/li&gt;</span>
-<span class="nt">&lt;li&gt;</span>
-  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;javascript:&quot;</span> <span class="na">ref=</span><span class="s">&quot;saveSvg&quot;</span> <span class="na">title=</span><span class="s">&quot;保存为svg&quot;</span><span class="nt">&gt;</span>保存为SVG图片<span class="nt">&lt;/a&gt;</span>
-<span class="nt">&lt;/li&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&lt;li&gt;
+  &lt;a href=&quot;javascript:&quot; ref=&quot;saveXML&quot; title=&quot;保存为bpmn&quot;&gt;保存为BPMN文件&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;
+  &lt;a href=&quot;javascript:&quot; ref=&quot;saveSvg&quot; title=&quot;保存为svg&quot;&gt;保存为SVG图片&lt;/a&gt;
+&lt;/li&gt;</code></pre>
+
 
 <p>为了优化结构，参考了网上成熟的例子，在渲染完成后调用了<code>success</code>方法，而<code>success</code>方法调用<code>addBpmnListener</code>，在<code>addBpmnListener</code>内通过<code>bpmnModeler.on</code>来监听流程变化从而更新下载链接</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="n">script</span><span class="o">&gt;</span>
-<span class="k">export</span> <span class="n">default</span> <span class="p">{</span>
-  <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;ops-coffee&quot;</span><span class="p">,</span>
-  <span class="n">mounted</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">this</span><span class="o">.</span><span class="n">init</span><span class="p">();</span>
-  <span class="p">},</span>
-  <span class="n">data</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="p">{</span>
-      <span class="n">bpmnModeler</span><span class="p">:</span> <span class="nb nb-Type">null</span><span class="p">,</span>
-      <span class="n">container</span><span class="p">:</span> <span class="nb nb-Type">null</span><span class="p">,</span>
-      <span class="n">canvas</span><span class="p">:</span> <span class="nb nb-Type">null</span><span class="p">,</span>
-      <span class="n">xmlStr</span><span class="p">:</span> <span class="n">xmlStr</span>
-    <span class="p">};</span>
-  <span class="p">},</span>
-  <span class="n">methods</span><span class="p">:</span> <span class="p">{</span>
-    <span class="n">init</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">const</span> <span class="n">canvas</span> <span class="o">=</span> <span class="n">this</span><span class="o">.$</span><span class="n">refs</span><span class="o">.</span><span class="n">canvas</span><span class="p">;</span>
-      <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span> <span class="o">=</span> <span class="n">new</span> <span class="n">BpmnModeler</span><span class="p">({</span>
-        <span class="n">container</span><span class="p">:</span> <span class="n">canvas</span>
-      <span class="p">});</span>
+<pre class="codehilite"><code>&lt;script&gt;
+export default {
+  name: &quot;ops-coffee&quot;,
+  mounted() {
+    this.init();
+  },
+  data() {
+    return {
+      bpmnModeler: null,
+      container: null,
+      canvas: null,
+      xmlStr: xmlStr
+    };
+  },
+  methods: {
+    init() {
+      const canvas = this.$refs.canvas;
+      this.bpmnModeler = new BpmnModeler({
+        container: canvas
+      });
 
-      <span class="n">this</span><span class="o">.</span><span class="n">createNewDiagram</span><span class="p">();</span>
-    <span class="p">},</span>
-    <span class="n">async</span> <span class="n">createNewDiagram</span><span class="p">()</span> <span class="p">{</span>
-      <span class="n">try</span> <span class="p">{</span>
-        <span class="k">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">importXML</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">xmlStr</span><span class="p">);</span>
-        <span class="k">const</span> <span class="p">{</span> <span class="n">warnings</span> <span class="p">}</span> <span class="o">=</span> <span class="n">result</span><span class="p">;</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">warnings</span><span class="p">);</span>
+      this.createNewDiagram();
+    },
+    async createNewDiagram() {
+      try {
+        const result = await this.bpmnModeler.importXML(this.xmlStr);
+        const { warnings } = result;
+        console.log(warnings);
 
-        <span class="n">this</span><span class="o">.</span><span class="n">success</span><span class="p">();</span>
-      <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">warnings</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="n">success</span><span class="p">()</span> <span class="p">{</span>
-      <span class="n">this</span><span class="o">.</span><span class="n">addBpmnListener</span><span class="p">();</span>
-    <span class="p">},</span>
-    <span class="n">async</span> <span class="n">loadXML</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">const</span> <span class="n">that</span> <span class="o">=</span> <span class="n">this</span><span class="p">;</span>
-      <span class="k">const</span> <span class="n">file</span> <span class="o">=</span> <span class="n">this</span><span class="o">.$</span><span class="n">refs</span><span class="o">.</span><span class="n">refFile</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        this.success();
+      } catch (err) {
+        console.log(err.message, err.warnings);
+      }
+    },
+    success() {
+      this.addBpmnListener();
+    },
+    async loadXML() {
+      const that = this;
+      const file = this.$refs.refFile.files[0];
 
-      <span class="k">var</span> <span class="n">reader</span> <span class="o">=</span> <span class="n">new</span> <span class="n">FileReader</span><span class="p">();</span>
-      <span class="n">reader</span><span class="o">.</span><span class="n">readAsText</span><span class="p">(</span><span class="n">file</span><span class="p">);</span>
-      <span class="n">reader</span><span class="o">.</span><span class="n">onload</span> <span class="o">=</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">that</span><span class="o">.</span><span class="n">xmlStr</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">result</span><span class="p">;</span>
-        <span class="n">that</span><span class="o">.</span><span class="n">createNewDiagram</span><span class="p">();</span>
-      <span class="p">};</span>
-    <span class="p">},</span>
-    <span class="n">async</span> <span class="n">addBpmnListener</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">const</span> <span class="n">that</span> <span class="o">=</span> <span class="n">this</span><span class="p">;</span>
-      <span class="k">const</span> <span class="n">downloadLink</span> <span class="o">=</span> <span class="n">this</span><span class="o">.$</span><span class="n">refs</span><span class="o">.</span><span class="n">saveXML</span><span class="p">;</span>
-      <span class="k">const</span> <span class="n">downloadSvgLink</span> <span class="o">=</span> <span class="n">this</span><span class="o">.$</span><span class="n">refs</span><span class="o">.</span><span class="n">saveSvg</span><span class="p">;</span>
+      var reader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = function() {
+        that.xmlStr = this.result;
+        that.createNewDiagram();
+      };
+    },
+    async addBpmnListener() {
+      const that = this;
+      const downloadLink = this.$refs.saveXML;
+      const downloadSvgLink = this.$refs.saveSvg;
 
-      <span class="n">async</span> <span class="n">function</span> <span class="n">opscoffee</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">try</span> <span class="p">{</span>
-          <span class="k">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">that</span><span class="o">.</span><span class="n">saveSVG</span><span class="p">();</span>
-          <span class="k">const</span> <span class="p">{</span> <span class="n">svg</span> <span class="p">}</span> <span class="o">=</span> <span class="n">result</span><span class="p">;</span>
+      async function opscoffee() {
+        try {
+          const result = await that.saveSVG();
+          const { svg } = result;
 
-          <span class="n">that</span><span class="o">.</span><span class="n">setEncoded</span><span class="p">(</span><span class="n">downloadSvgLink</span><span class="p">,</span> <span class="s2">&quot;ops-coffee.svg&quot;</span><span class="p">,</span> <span class="n">svg</span><span class="p">);</span>
-        <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-          <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
-        <span class="p">}</span>
+          that.setEncoded(downloadSvgLink, &quot;ops-coffee.svg&quot;, svg);
+        } catch (err) {
+          console.log(err);
+        }
 
-        <span class="n">try</span> <span class="p">{</span>
-          <span class="k">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">that</span><span class="o">.</span><span class="n">saveXML</span><span class="p">();</span>
-          <span class="k">const</span> <span class="p">{</span> <span class="n">xml</span> <span class="p">}</span> <span class="o">=</span> <span class="n">result</span><span class="p">;</span>
+        try {
+          const result = await that.saveXML();
+          const { xml } = result;
 
-          <span class="n">that</span><span class="o">.</span><span class="n">setEncoded</span><span class="p">(</span><span class="n">downloadLink</span><span class="p">,</span> <span class="s2">&quot;ops-coffee.bpmn&quot;</span><span class="p">,</span> <span class="n">xml</span><span class="p">);</span>
-        <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-          <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
+          that.setEncoded(downloadLink, &quot;ops-coffee.bpmn&quot;, xml);
+        } catch (err) {
+          console.log(err);
+        }
+      }
 
-      <span class="n">opscoffee</span><span class="p">();</span>
-      <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s2">&quot;commandStack.changed&quot;</span><span class="p">,</span> <span class="n">opscoffee</span><span class="p">);</span>
-    <span class="p">},</span>
-    <span class="n">async</span> <span class="n">saveSVG</span><span class="p">(</span><span class="n">done</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">try</span> <span class="p">{</span>
-        <span class="k">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">saveSVG</span><span class="p">(</span><span class="n">done</span><span class="p">);</span>
-        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
-      <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="n">async</span> <span class="n">saveXML</span><span class="p">(</span><span class="n">done</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">try</span> <span class="p">{</span>
-        <span class="k">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">saveXML</span><span class="p">({</span> <span class="n">format</span><span class="p">:</span> <span class="bp">true</span> <span class="p">},</span> <span class="n">done</span><span class="p">);</span>
-        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
-      <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="n">setEncoded</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">const</span> <span class="n">encodedData</span> <span class="o">=</span> <span class="n">encodeURIComponent</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+      opscoffee();
+      this.bpmnModeler.on(&quot;commandStack.changed&quot;, opscoffee);
+    },
+    async saveSVG(done) {
+      try {
+        const result = await this.bpmnModeler.saveSVG(done);
+        return result;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async saveXML(done) {
+      try {
+        const result = await this.bpmnModeler.saveXML({ format: true }, done);
+        return result;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    setEncoded(link, name, data) {
+      const encodedData = encodeURIComponent(data);
 
-      <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">link</span><span class="o">.</span><span class="n">href</span> <span class="o">=</span> <span class="s2">&quot;data:application/bpmn20-xml;charset=UTF-8,&quot;</span> <span class="o">+</span> <span class="n">encodedData</span><span class="p">;</span>
-        <span class="n">link</span><span class="o">.</span><span class="n">download</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-<span class="o">&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
-</code></pre></div>
+      if (data) {
+        link.href = &quot;data:application/bpmn20-xml;charset=UTF-8,&quot; + encodedData;
+        link.download = name;
+      }
+    }
+  }
+};
+&lt;/script&gt;</code></pre>
+
 
 <p>以上两个功能完成后就可以愉快的将流程图保存到本地或者选择本地流程文件渲染流程图啦</p>
 <p><img alt="" loading="lazy" src="/static/images/20200910.01.png" /></p>

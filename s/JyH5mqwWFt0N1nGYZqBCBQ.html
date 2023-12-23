@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -68,30 +68,30 @@
 <h2 id="openldap_1">部署OpenLDAP</h2>
 <p>部署环境：Debian 8.4</p>
 <p>1.安装OpenLDAP,OpenLDAP服务端程序叫slapd</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># apt-get install -y slapd</span>
-</code></pre></div>
+<pre class="codehilite"><code># apt-get install -y slapd</code></pre>
+
 
 <p>2.安装完成之后，会自动生成一个OpenLDAP的系统账号</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># cat /etc/passwd</span>
-<span class="n">openldap</span><span class="p">:</span><span class="n">x</span><span class="p">:</span><span class="mi">110</span><span class="p">:</span><span class="mi">115</span><span class="p">:</span><span class="n">OpenLDAP</span> <span class="n">Server</span> <span class="n">Account</span><span class="p">,,,:</span><span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">ldap</span><span class="p">:</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="bp">false</span>
-</code></pre></div>
+<pre class="codehilite"><code># cat /etc/passwd
+openldap:x:110:115:OpenLDAP Server Account,,,:/var/lib/ldap:/bin/false</code></pre>
+
 
 <p>3.生成OpenLDAP管理员账号的密码（后边修改配置文件需要使用）</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># slappasswd</span>
-<span class="err">New password: </span>
-<span class="err">Re-enter new password: </span>
-<span class="err">{SSHA}TpWoSebaT5gKy2Y3EHmZh+Wc0hJaFp7y</span>
-</code></pre></div>
+<pre class="codehilite"><code># slappasswd
+New password: 
+Re-enter new password: 
+{SSHA}TpWoSebaT5gKy2Y3EHmZh+Wc0hJaFp7y</code></pre>
+
 
 <p>4.新建OpenLDAP配置文件</p>
-<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">cp</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">slapd</span><span class="o">/</span><span class="n">slapd</span><span class="p">.</span><span class="n">conf</span><span class="w"> </span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ldap</span><span class="o">/</span><span class="w"></span>
-<span class="err">#</span><span class="w"> </span><span class="n">配置文件中有很多</span><span class="nv">@xxx@的配置替换为真实配置</span><span class="w"></span>
+<pre class="codehilite"><code># cp /usr/share/slapd/slapd.conf /etc/ldap/
+# 配置文件中有很多@xxx@的配置替换为真实配置
 
-<span class="err">#</span><span class="w"> </span><span class="n">slaptest</span><span class="w"> </span><span class="o">-</span><span class="n">f</span><span class="w"> </span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ldap</span><span class="o">/</span><span class="n">slapd</span><span class="p">.</span><span class="n">conf</span><span class="w"> </span>
-<span class="mi">5</span><span class="n">ad9b19d</span><span class="w"> </span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ldap</span><span class="o">/</span><span class="n">slapd</span><span class="p">.</span><span class="nl">conf</span><span class="p">:</span><span class="w"> </span><span class="n">line</span><span class="w"> </span><span class="mi">105</span><span class="err">:</span><span class="w"> </span><span class="n">rootdn</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">always</span><span class="w"> </span><span class="n">granted</span><span class="w"> </span><span class="n">unlimited</span><span class="w"> </span><span class="k">privileges</span><span class="p">.</span><span class="w"></span>
-<span class="mi">5</span><span class="n">ad9b19d</span><span class="w"> </span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ldap</span><span class="o">/</span><span class="n">slapd</span><span class="p">.</span><span class="nl">conf</span><span class="p">:</span><span class="w"> </span><span class="n">line</span><span class="w"> </span><span class="mi">122</span><span class="err">:</span><span class="w"> </span><span class="n">rootdn</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">always</span><span class="w"> </span><span class="n">granted</span><span class="w"> </span><span class="n">unlimited</span><span class="w"> </span><span class="k">privileges</span><span class="p">.</span><span class="w"></span>
-<span class="n">config</span><span class="w"> </span><span class="k">file</span><span class="w"> </span><span class="n">testing</span><span class="w"> </span><span class="n">succeeded</span><span class="w"></span>
-</code></pre></div>
+# slaptest -f /etc/ldap/slapd.conf 
+5ad9b19d /etc/ldap/slapd.conf: line 105: rootdn is always granted unlimited privileges.
+5ad9b19d /etc/ldap/slapd.conf: line 122: rootdn is always granted unlimited privileges.
+config file testing succeeded</code></pre>
+
 
 <p>配置文件重要参数说明（需要自己修改的，其他未提到的可以不修改）：</p>
 <ul>
@@ -103,22 +103,22 @@
 <li><code>access to</code>：权限配置下边详细说明</li>
 </ul>
 <p>5.删除原配置，生成新配置</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ldap</span><span class="o">/</span><span class="n">slapd</span><span class="p">.</span><span class="n">d</span><span class="cm">/*</span>
-<span class="cm"># slaptest -f /etc/ldap/slapd.conf -F /etc/ldap/slapd.d/</span>
+<pre class="codehilite"><code># rm -rf /etc/ldap/slapd.d/*
+# slaptest -f /etc/ldap/slapd.conf -F /etc/ldap/slapd.d/
 
-<span class="cm"># 给新生成的配置文件赋予OpenLdap的权限</span>
-<span class="cm"># chown -R openldap.openldap /etc/ldap/slapd.d/</span>
-</code></pre></div>
+# 给新生成的配置文件赋予OpenLdap的权限
+# chown -R openldap.openldap /etc/ldap/slapd.d/</code></pre>
+
 
 <p>6.重启OpenLdap</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># /etc/init.d/slapd restart</span>
-</code></pre></div>
+<pre class="codehilite"><code># /etc/init.d/slapd restart</code></pre>
+
 
 <h2 id="acl">ACL权限控制</h2>
 <p>ACL访问指令的格式：</p>
-<div class="codehilite"><pre><span></span><code><span class="n">access</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="o">[</span><span class="n">what</span><span class="o">]</span><span class="w"></span>
-<span class="w">    </span><span class="k">by</span><span class="w"> </span><span class="o">[</span><span class="n">who</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">control</span><span class="o">]</span><span class="w"></span>
-</code></pre></div>
+<pre class="codehilite"><code>access to [what]
+    by [who] [control]</code></pre>
+
 
 <p>简单解释：通过access to约束我们访问的范围（what），通过by设定哪个用户（who）有什么权限（control）</p>
 <p>ACL的详细配置还是比较复杂的，可以看下下边参考文档的第三篇，写的比较详细，这里都不再赘述。</p>
@@ -129,32 +129,32 @@
 <li>普通用户只能修改自己的密码，别的权限都没有</li>
 </ol>
 <p>配置如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="k">access</span> <span class="k">to</span> <span class="n">attrs</span><span class="o">=</span><span class="n">userPassword通过属性找到访问范围密码</span><span class="p">,</span>
-<span class="o">#</span> <span class="err">超级管理员也就是我们</span><span class="n">ldap配置文件里写的rootdn</span><span class="err">：</span><span class="ss">&quot;cn=admin,dc=163,dc=com&quot;</span><span class="err">有写</span><span class="p">(</span><span class="k">write</span><span class="p">)</span><span class="err">权限；</span>
-<span class="o">#</span> <span class="err">由于管理员可能不止一个，我创建了个管理员组</span><span class="ss">&quot;ou=Admin,dc=163,dc=com&quot;</span><span class="err">把管理员统一都放到这个组下，管理员组下的所有用户（</span><span class="n">dn</span><span class="p">.</span><span class="n">children</span><span class="err">）有写权限；</span>
-<span class="o">#</span> <span class="err">匿名用户</span><span class="p">(</span><span class="n">anonymous</span><span class="p">)</span><span class="err">要通过验证</span><span class="p">(</span><span class="n">auth</span><span class="p">);</span>
-<span class="o">#</span> <span class="err">自己</span><span class="p">(</span><span class="k">self</span><span class="p">)</span><span class="err">有对自己密码的写（</span><span class="k">write</span><span class="err">）权限，其他人</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="err">都没有权限</span><span class="p">(</span><span class="k">none</span><span class="p">).</span>
-<span class="k">access</span> <span class="k">to</span> <span class="n">attrs</span><span class="o">=</span><span class="n">userPassword</span><span class="p">,</span><span class="n">shadowLastChange</span>
-        <span class="k">by</span> <span class="n">dn</span><span class="o">=</span><span class="ss">&quot;cn=admin,dc=163,dc=com&quot;</span> <span class="k">write</span>
-        <span class="k">by</span> <span class="n">dn</span><span class="p">.</span><span class="n">children</span><span class="o">=</span><span class="ss">&quot;ou=Admin,dc=163,dc=com&quot;</span> <span class="k">write</span>
-        <span class="k">by</span> <span class="n">anonymous</span> <span class="n">auth</span>
-        <span class="k">by</span> <span class="k">self</span> <span class="k">write</span>
-        <span class="k">by</span> <span class="o">*</span> <span class="k">none</span>
+<pre class="codehilite"><code># access to attrs=userPassword通过属性找到访问范围密码,
+# 超级管理员也就是我们ldap配置文件里写的rootdn：&quot;cn=admin,dc=163,dc=com&quot;有写(write)权限；
+# 由于管理员可能不止一个，我创建了个管理员组&quot;ou=Admin,dc=163,dc=com&quot;把管理员统一都放到这个组下，管理员组下的所有用户（dn.children）有写权限；
+# 匿名用户(anonymous)要通过验证(auth);
+# 自己(self)有对自己密码的写（write）权限，其他人(*)都没有权限(none).
+access to attrs=userPassword,shadowLastChange
+        by dn=&quot;cn=admin,dc=163,dc=com&quot; write
+        by dn.children=&quot;ou=Admin,dc=163,dc=com&quot; write
+        by anonymous auth
+        by self write
+        by * none
 
-<span class="o">#</span> <span class="k">access</span> <span class="k">to</span> <span class="o">*</span> <span class="err">所有其他属性，</span>
-<span class="o">#</span> <span class="err">超级管理员</span><span class="n">rootdn</span><span class="err">：</span><span class="ss">&quot;cn=admin,dc=163,dc=com&quot;</span><span class="err">有写</span><span class="p">(</span><span class="k">write</span><span class="p">)</span><span class="err">权限；</span>
-<span class="o">#</span> <span class="err">管理员</span><span class="ss">&quot;ou=Admin,dc=163,dc=com&quot;</span><span class="err">成员有写</span><span class="p">(</span><span class="k">write</span><span class="p">)</span><span class="err">权限；</span>
-<span class="o">#</span> <span class="err">其他人</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="err">只有读</span><span class="p">(</span><span class="k">read</span><span class="p">)</span><span class="err">权限</span>
-<span class="k">access</span> <span class="k">to</span> <span class="o">*</span>
-        <span class="k">by</span> <span class="n">dn</span><span class="o">=</span><span class="ss">&quot;cn=admin,dc=163,dc=com&quot;</span> <span class="k">write</span>
-        <span class="k">by</span> <span class="n">dn</span><span class="p">.</span><span class="n">children</span><span class="o">=</span><span class="ss">&quot;ou=Admin,dc=163,dc=com&quot;</span> <span class="k">write</span>
-        <span class="k">by</span> <span class="o">*</span> <span class="k">read</span>
-</code></pre></div>
+# access to * 所有其他属性，
+# 超级管理员rootdn：&quot;cn=admin,dc=163,dc=com&quot;有写(write)权限；
+# 管理员&quot;ou=Admin,dc=163,dc=com&quot;成员有写(write)权限；
+# 其他人(*)只有读(read)权限
+access to *
+        by dn=&quot;cn=admin,dc=163,dc=com&quot; write
+        by dn.children=&quot;ou=Admin,dc=163,dc=com&quot; write
+        by * read</code></pre>
+
 
 <h2 id="_3">备份和还原</h2>
 <h3 id="_4">备份</h3>
-<div class="codehilite"><pre><span></span><code><span class="err"># ldapsearch -x -b &quot;dc=163,dc=com&quot; -D &quot;uid=authz,ou=Public,dc=163,dc=com&quot; -w &quot;AzdfD863M4&quot; &gt; ldap.20180626.ldif</span>
-</code></pre></div>
+<pre class="codehilite"><code># ldapsearch -x -b &quot;dc=163,dc=com&quot; -D &quot;uid=authz,ou=Public,dc=163,dc=com&quot; -w &quot;AzdfD863M4&quot; &gt; ldap.20180626.ldif</code></pre>
+
 
 <p>参数说明：</p>
 <ul>
@@ -165,8 +165,8 @@
 </ul>
 <p>authz账号要有<code>"dc=163,dc=com"</code>的查询权限</p>
 <h3 id="_5">还原</h3>
-<div class="codehilite"><pre><span></span><code><span class="err"># ldapadd -x -c -D &quot;cn=admin,dc=163,dc=com&quot; -w &quot;smile&quot; -f ldap.20180626.ldif</span>
-</code></pre></div>
+<pre class="codehilite"><code># ldapadd -x -c -D &quot;cn=admin,dc=163,dc=com&quot; -w &quot;smile&quot; -f ldap.20180626.ldif</code></pre>
+
 
 <p>参数说明：</p>
 <ul>
@@ -179,12 +179,12 @@
 <h2 id="ldap-account-manager">ldap-account-manager</h2>
 <h3 id="_6">安装</h3>
 <p>1.安装ldap-account-management</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># apt-get install ldap-account-manager</span>
-</code></pre></div>
+<pre class="codehilite"><code># apt-get install ldap-account-manager</code></pre>
+
 
 <p>2.浏览器访问</p>
-<div class="codehilite"><pre><span></span><code><span class="c">http://ip/lam</span>
-</code></pre></div>
+<pre class="codehilite"><code>http://ip/lam</code></pre>
+
 
 <h3 id="_7">配置</h3>
 <p>lam的所有配置都可以在web端配置，不需要去服务器上修改一行代码，这个太好用了。</p>

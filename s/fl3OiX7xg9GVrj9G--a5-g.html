@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -65,43 +65,43 @@
 <ul>
 <li>nginx配置了白名单，client端访问的IP不在白名单内</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err">allow 192.168.0.152;</span>
-<span class="err">deny all;</span>
-</code></pre></div>
+<pre class="codehilite"><code>allow 192.168.0.152;
+deny all;</code></pre>
+
 
 <ul>
 <li>访问的路径是个目录，而nginx配置了禁止列目录</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err">#nginx中这个配置默认就是off，改成on当访问的路径是目录时，可以列出目录中的内容</span>
-<span class="err">autoindex           off;</span>
-</code></pre></div>
+<pre class="codehilite"><code>#nginx中这个配置默认就是off，改成on当访问的路径是目录时，可以列出目录中的内容
+autoindex           off;</code></pre>
+
 
 <ul>
 <li>访问的路径是个文件，但nginx服务配置的用户和用户组对文件没有读取权限</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err">#nginx中这个配置指定nginx服务的用户和用户组                                                                                                                  </span>
-<span class="err">user  www-data www-data;                                              </span>
-</code></pre></div>
+<pre class="codehilite"><code>#nginx中这个配置指定nginx服务的用户和用户组                                                                                                                  
+user  www-data www-data;                                              </code></pre>
+
 
 <ul>
 <li>目录索引index配置错误，例如你的目录下只有index.html，你却配置了index.shmtl或index.php等等</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err">index index.shtml index.php;</span>
-</code></pre></div>
+<pre class="codehilite"><code>index index.shtml index.php;</code></pre>
+
 
 <hr />
 <p>常见的有以上问题会导致nginx返回403，迅速排查了一下，发现就是权限的问题导致的，nginx配置的用户和用户组为www-data，而css文件的属主属组都是root，且其他用户没有任何权限</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="n">cat</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">nginx</span><span class="p">.</span><span class="n">conf</span>                                                                                                                     
-<span class="k">user</span>  <span class="n">www</span><span class="o">-</span><span class="k">data</span> <span class="n">www</span><span class="o">-</span><span class="k">data</span><span class="p">;</span>
+<pre class="codehilite"><code># cat /etc/nginx/nginx.conf                                                                                                                     
+user  www-data www-data;
 
-<span class="o">#</span> <span class="n">ls</span> <span class="o">-</span><span class="n">lh</span> <span class="n">csl</span><span class="p">.</span><span class="n">css</span>                                                                                                                                
-<span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="c1">----- 1 root root 7.9K Jul 24 12:34 csl.css</span>
-</code></pre></div>
+# ls -lh csl.css                                                                                                                                
+-rw-r----- 1 root root 7.9K Jul 24 12:34 csl.css</code></pre>
+
 
 <hr />
 <p><strong>这里再详细讲解下linux下的文件权限</strong>，以上边的csl.css文件为例：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">-rw-r----- 1 root root 7.9K Jul 24 12:34 csl.css</span>
-</code></pre></div>
+<pre class="codehilite"><code>-rw-r----- 1 root root 7.9K Jul 24 12:34 csl.css</code></pre>
+
 
 <p>以空格分割</p>
 <ul>
@@ -130,11 +130,11 @@ umask值用来设置用户在创建文件时的默认权限，跟设置文件权
 <hr />
 <p>查了root用户的umask、jenkins用户的umask，都为0022，没问题呀，并且登录这两个账号创建了新文件权限也都正常，就剩下一种情况了Jenkins！</p>
 <p>Jenkins没有地方可以给配置UMASK，Jenkins跑在tomcat容器里，老版本的varian也有相似的处理逻辑一直没问题，本次升级了tomcat8，难道tomcat8更新了UMASK？半信半疑的看了下，果然！tomcat8的umask默认改成了0027，麻溜的改成了0022，问题顺利解决</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># vi tomcat/bin/catalina.sh </span>
-<span class="err">if [ -z &quot;$UMASK&quot; ]; then</span>
-<span class="err">    UMASK=&quot;0027&quot;</span>
-<span class="err">fi</span>
-</code></pre></div>
+<pre class="codehilite"><code># vi tomcat/bin/catalina.sh 
+if [ -z &quot;$UMASK&quot; ]; then
+    UMASK=&quot;0027&quot;
+fi</code></pre>
+
 
 <p>终于破案了，还真相于世人！</p>
 

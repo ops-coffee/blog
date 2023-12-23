@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -61,151 +61,151 @@
 <h3 id="aggregate">aggregate</h3>
 <p>aggregate聚合函数，用于对QuerySet整个对象结果的汇总，例如获取员工总数（COUNT），平均（AVG）年龄，最大（MAX）年龄，最小（MIN）年龄，销售总额（SUM）等，输出的结果是一个字典</p>
 <p>我们有一个model如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">class Employee(models.Model):</span>
-<span class="err">    name = models.CharField(max_length=32, verbose_name=&#39;姓名&#39;)</span>
-<span class="err">    age = models.IntegerField(verbose_name=&#39;年龄&#39;)</span>
-<span class="err">    salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=&#39;薪资&#39;)</span>
-</code></pre></div>
+<pre class="codehilite"><code>class Employee(models.Model):
+    name = models.CharField(max_length=32, verbose_name='姓名')
+    age = models.IntegerField(verbose_name='年龄')
+    salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='薪资')</code></pre>
+
 
 <p>想要获取员工的工资总额，我们可以这样写</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Sum</span>
+<pre class="codehilite"><code>&gt;&gt;&gt; from django.db.models import Sum
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">Employee</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">Sum</span><span class="p">(</span><span class="s1">&#39;salary&#39;</span><span class="p">))</span>
-<span class="p">{</span><span class="s1">&#39;salary__sum&#39;</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;5000.00&#39;</span><span class="p">)}</span>
-</code></pre></div>
+&gt;&gt;&gt; Employee.objects.aggregate(Sum('salary'))
+{'salary__sum': Decimal('5000.00')}</code></pre>
+
 
 <p>想要同时获取员工的平均年龄、最大年龄和最小年龄，我们可以这样写</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Avg</span><span class="p">,</span> <span class="n">Max</span><span class="p">,</span> <span class="n">Min</span>
+<pre class="codehilite"><code>&gt;&gt;&gt; from django.db.models import Avg, Max, Min
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">Employee</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">Avg</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">),</span> <span class="n">Max</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">),</span> <span class="n">Min</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">))</span>
-<span class="p">{</span><span class="s1">&#39;age__avg&#39;</span><span class="p">:</span> <span class="mf">23.333333333333332</span><span class="p">,</span> <span class="s1">&#39;age__max&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;age__min&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">}</span>
-</code></pre></div>
+&gt;&gt;&gt; Employee.objects.aggregate(Avg('age'), Max('age'), Min('age'))
+{'age__avg': 23.333333333333332, 'age__max': 30, 'age__min': 18}</code></pre>
+
 
 <h3 id="annotate">annotate</h3>
 <p>annotate函数区别于aggregate函数的一个最重要的地方是annotate函数<strong>输出的结果是一个QuerySet对象</strong>，这个非常重要，aggregate函数最后输出的结果是个字典，也就不能再在字典的基础上进行QuerySet操作了，而annotate函数执行完成后输出QuerySet对象可以继续调用Django内置的filter、order_by等函数来完成更加复杂的查询计算操作</p>
 <p>用到annotate函数的逻辑往往比较复杂，Django非常人性化的提供了query方法，方便查看annotate生成的SQL语句帮助我们确定执行过程</p>
 <p>以上边的实际需求为例，model如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">EventInfo</span>(<span class="n">models</span>.<span class="n">Model</span>):
-    <span class="n">event_location</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">30</span>)
+<pre class="codehilite"><code>class EventInfo(models.Model):
+    event_location = models.CharField(max_length=30)
 
-    <span class="k">class</span> <span class="n">Meta:</span>
-        <span class="n">db_table</span> = <span class="s">&quot;app_event_info&quot;</span>
-</code></pre></div>
+    class Meta:
+        db_table = &quot;app_event_info&quot;</code></pre>
+
 
 <p>我们需要先对地点event_location进行group by：</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">_t</span> <span class="o">=</span> <span class="n">EventInfo</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;event_location&#39;</span><span class="p">).</span><span class="n">annotate</span><span class="p">(</span><span class="k">Count</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">))</span>
+<pre class="codehilite"><code>&gt;&gt;&gt; _t = EventInfo.objects.values_list('event_location').annotate(Count('id'))
 
-<span class="o">#</span> <span class="n">values_list可以获取evnet_location的元组列表</span><span class="err">。</span>
-<span class="o">#</span> <span class="n">values_list方法加个参数flat</span><span class="o">=</span><span class="n">True可以获取event_location的值列表</span><span class="err">。</span>
-</code></pre></div>
+# values_list可以获取evnet_location的元组列表。
+# values_list方法加个参数flat=True可以获取event_location的值列表。</code></pre>
+
 
 <p>group by之后我们就需要order by排序了，如果我们不知道order by的字段，我们可以通过query先查看group by生成的SQL语句</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; print(_t.query)</span>
-<span class="err">SELECT &quot;app_event_info&quot;.&quot;event_location&quot;, COUNT(&quot;app_event_info&quot;.&quot;id&quot;) AS &quot;id__count&quot; FROM &quot;app_event_info&quot; GROUP BY &quot;app_event_info&quot;.&quot;event_location&quot;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; print(_t.query)
+SELECT &quot;app_event_info&quot;.&quot;event_location&quot;, COUNT(&quot;app_event_info&quot;.&quot;id&quot;) AS &quot;id__count&quot; FROM &quot;app_event_info&quot; GROUP BY &quot;app_event_info&quot;.&quot;event_location&quot;</code></pre>
+
 
 <p>这个时候可以看到实际上输出的结果有一个叫<code>id__count</code>的字段表示地点的总数，那么我们就可以接着对地点总数进行排序了,因为是要倒叙，需要在字段名<code>id__count</code>前边加上<code>-</code>号来表示倒序</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; _x = _t.order_by(&#39;-id__count&#39;)</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt; print(_x.query)</span>
-<span class="err">SELECT &quot;app_event_info&quot;.&quot;event_location&quot;, COUNT(&quot;app_event_info&quot;.&quot;id&quot;) AS &quot;id__count&quot; FROM &quot;app_event_info&quot; GROUP BY &quot;app_event_info&quot;.&quot;event_location&quot; ORDER BY &quot;id__count&quot; DESC</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; _x = _t.order_by('-id__count')
+&gt;&gt;&gt;
+&gt;&gt;&gt; print(_x.query)
+SELECT &quot;app_event_info&quot;.&quot;event_location&quot;, COUNT(&quot;app_event_info&quot;.&quot;id&quot;) AS &quot;id__count&quot; FROM &quot;app_event_info&quot; GROUP BY &quot;app_event_info&quot;.&quot;event_location&quot; ORDER BY &quot;id__count&quot; DESC</code></pre>
+
 
 <p>最后limit取前二十，Django中limit可以直接通过QuerySet结果后加python的数组切片语法来实现，就像[0:20]（其中0可以省略）相当于limit 20一样，[10:20]意思为取第10到第20条数据</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; _y = _x[:20]</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt; print(_y.query)</span>
-<span class="err">SELECT &quot;app_event_info&quot;.&quot;event_location&quot;, COUNT(&quot;app_event_info&quot;.&quot;id&quot;) AS &quot;id__count&quot; FROM &quot;app_event_info&quot; GROUP BY &quot;app_event_info&quot;.&quot;event_location&quot; ORDER BY &quot;id__count&quot; DESC LIMIT 20</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; _y = _x[:20]
+&gt;&gt;&gt;
+&gt;&gt;&gt; print(_y.query)
+SELECT &quot;app_event_info&quot;.&quot;event_location&quot;, COUNT(&quot;app_event_info&quot;.&quot;id&quot;) AS &quot;id__count&quot; FROM &quot;app_event_info&quot; GROUP BY &quot;app_event_info&quot;.&quot;event_location&quot; ORDER BY &quot;id__count&quot; DESC LIMIT 20</code></pre>
+
 
 <p>上边的每一步我们都通过query打印了SQL，确定是我们想要的结果了。需求分析清楚，所有的关键点我们也都知道怎么处理了，那么接下来实现就水到渠成了。</p>
 <h1 id="_3">实现代码</h1>
 <p>URL如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span>
-<span class="kn">from</span> <span class="nn">django.views.generic.base</span> <span class="kn">import</span> <span class="n">TemplateView</span>
+<pre class="codehilite"><code>from django.urls import path
+from django.views.generic.base import TemplateView
 
-<span class="kn">from</span> <span class="nn">.views</span> <span class="kn">import</span> <span class="n">echarts_data</span>
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;echarts/&#39;</span><span class="p">,</span> <span class="n">TemplateView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;echarts.html&#39;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;echarts-url&#39;</span><span class="p">),</span>
+from .views import echarts_data
+urlpatterns = [
+    path('echarts/', TemplateView.as_view(template_name='echarts.html'), name='echarts-url'),
 
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;api/echarts/&#39;</span><span class="p">,</span> <span class="n">echarts_data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;api-echarts&#39;</span><span class="p">)</span>
-<span class="p">]</span>
-</code></pre></div>
+    path('api/echarts/', echarts_data, name='api-echarts')
+]</code></pre>
+
 
 <p>因为是前后端分离的，所以我这里用了两个url<code>echarts</code>和<code>api/echarts</code></p>
 <p><code>echarts</code>为前台访问地址，对应下边的html代码，通过ajax方式调用后端接口，所以这里直接用了TemplateView，不需要再写额外的view代码</p>
 <p><code>api/echarts</code>为后端API的地址，对应下边的view代码，为前台提供数据接口</p>
 <p>前端HTML：</p>
-<div class="codehilite"><pre><span></span><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&quot;utf-8&quot;</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>ops-coffee<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
-  <span class="c">&lt;!-- 引入 echarts.js --&gt;</span>
-  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;/static/js/jquery.min.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;/static/js/echarts/echarts.common.min.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
-  <span class="c">&lt;!-- 为ECharts准备一个具备大小（宽高）的Dom --&gt;</span>
-  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;main&quot;</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;height:400px;&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text/javascript&quot;</span><span class="p">&gt;</span>
-    <span class="c1">// 基于准备好的dom，初始化echarts实例</span>
-    <span class="kd">var</span> <span class="nx">myChart</span> <span class="o">=</span> <span class="nx">echarts</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">));</span>
+<pre class="codehilite"><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;title&gt;ops-coffee&lt;/title&gt;
+  &lt;!-- 引入 echarts.js --&gt;
+  &lt;script src=&quot;/static/js/jquery.min.js&quot;&gt;&lt;/script&gt;
+  &lt;script src=&quot;/static/js/echarts/echarts.common.min.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- 为ECharts准备一个具备大小（宽高）的Dom --&gt;
+  &lt;div id=&quot;main&quot; style=&quot;height:400px;&quot;&gt;&lt;/div&gt;
+  &lt;script type=&quot;text/javascript&quot;&gt;
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
 
 
-    <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
-      <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;get&quot;</span><span class="p">,</span>
-      <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;/api/echarts&quot;</span><span class="p">,</span>
-      <span class="nx">dataType</span><span class="o">:</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>
-      <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    $.ajax({
+      type: &quot;get&quot;,
+      url: &quot;/api/echarts&quot;,
+      dataType: &quot;json&quot;,
+      success: function (data) {
 
-        <span class="c1">// 指定图表的配置项和数据</span>
-        <span class="kd">var</span> <span class="nx">option</span> <span class="o">=</span> <span class="p">{</span>
-          <span class="nx">title</span><span class="o">:</span> <span class="p">{</span>
-            <span class="nx">left</span><span class="o">:</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span>
-            <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;ops-coffee 运维咖啡吧&#39;</span>
-          <span class="p">},</span>
-          <span class="nx">tooltip</span><span class="o">:</span> <span class="p">{},</span>
-          <span class="nx">xAxis</span><span class="o">:</span> <span class="p">{</span>
-              <span class="nx">data</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">key</span>
-          <span class="p">},</span>
-          <span class="nx">yAxis</span><span class="o">:</span> <span class="p">{},</span>
-          <span class="nx">series</span><span class="o">:</span> <span class="p">[{</span>
-            <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;数量&#39;</span><span class="p">,</span>
-            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;bar&#39;</span><span class="p">,</span>
-            <span class="nx">data</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">value</span>
-          <span class="p">}]</span>
-        <span class="p">};</span>
+        // 指定图表的配置项和数据
+        var option = {
+          title: {
+            left: 'center',
+            text: 'ops-coffee 运维咖啡吧'
+          },
+          tooltip: {},
+          xAxis: {
+              data: data.key
+          },
+          yAxis: {},
+          series: [{
+            name: '数量',
+            type: 'bar',
+            data: data.value
+          }]
+        };
 
-        <span class="c1">// 使用刚指定的配置项和数据显示图表。</span>
-        <span class="nx">myChart</span><span class="p">.</span><span class="nx">setOption</span><span class="p">(</span><span class="nx">option</span><span class="p">);</span>
-      <span class="p">},</span>
-      <span class="nx">error</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-        <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Error: ajax 请求出错！&#39;</span><span class="p">)</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-  <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
-</code></pre></div>
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+      },
+      error: function () {
+        alert('Error: ajax 请求出错！')
+      }
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
 
 <p>实例比较简单，抄的echarts官方示例，这里会看到echarts渲染图形实际上只需要X轴和Y轴两个数据变量，且都为list列表类型</p>
 <p>后端VIEW：</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">JsonResponse</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
+<pre class="codehilite"><code>from django.http import JsonResponse
+from django.db.models import Count
 
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">EventInfo</span>
+from .models import EventInfo
 
-<span class="k">def</span> <span class="nf">echarts_data</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">_x</span> <span class="o">=</span> <span class="n">EventInfo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;event_location&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">Count</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-id__count&#39;</span><span class="p">)[:</span><span class="mi">20</span><span class="p">]</span>
+def echarts_data(request):
+    _x = EventInfo.objects.values_list('event_location').annotate(Count('id')).order_by('-id__count')[:20]
 
-    <span class="n">jsondata</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_x</span><span class="p">],</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_x</span><span class="p">]</span>
-    <span class="p">}</span>
+    jsondata = {
+        &quot;key&quot;: [i[0] for i in _x],
+        &quot;value&quot;: [i[1] for i in _x]
+    }
 
-    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">(</span><span class="n">jsondata</span><span class="p">)</span>
-</code></pre></div>
+    return JsonResponse(jsondata)</code></pre>
+
 
 <p>最核心的那行group by + order by + limit的ORM拼接，我们上边已经详细的介绍过了，那么这里只需要在输出的结果中单独的把城市跟数量转成两个列表对应echarts里边需要的X轴Y轴数据就可以了</p>
 <p>最后访问url:https://ops-coffee.cn/echarts 可以看到我们想要的结果

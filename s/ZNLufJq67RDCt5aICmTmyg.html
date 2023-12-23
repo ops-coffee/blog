@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -52,38 +52,38 @@
 </ul>
 <h2 id="_2">集成过程</h2>
 <p>Django集成LDAP认证有现成的<code>django-auth-ldap</code>模块可以使用，本文也主要以这个模块的使用为主，先安装模块</p>
-<div class="codehilite"><pre><span></span><code><span class="err">pip install django-auth-ldap</span>
-</code></pre></div>
+<pre class="codehilite"><code>pip install django-auth-ldap</code></pre>
+
 
 <p>然后在setting.py全局配置文件中添加如下内容就可以正常使用了：</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">ldap</span>
-<span class="kn">from</span> <span class="nn">django_auth_ldap.config</span> <span class="kn">import</span> <span class="n">LDAPSearch</span><span class="p">,</span> <span class="n">GroupOfNamesType</span>
+<pre class="codehilite"><code>import ldap
+from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 
-<span class="c1"># Baseline configuration.</span>
-<span class="n">AUTH_LDAP_SERVER_URI</span> <span class="o">=</span> <span class="s1">&#39;ldap://ldap.ops-coffee.cn&#39;</span>
+# Baseline configuration.
+AUTH_LDAP_SERVER_URI = 'ldap://ldap.ops-coffee.cn'
 
-<span class="n">AUTH_LDAP_BIND_DN</span> <span class="o">=</span> <span class="s1">&#39;uid=authz,ou=Public,dc=ops-coffee,dc=cn&#39;</span>
-<span class="n">AUTH_LDAP_BIND_PASSWORD</span> <span class="o">=</span> <span class="s1">&#39;CzfdX629K7&#39;</span>
+AUTH_LDAP_BIND_DN = 'uid=authz,ou=Public,dc=ops-coffee,dc=cn'
+AUTH_LDAP_BIND_PASSWORD = 'CzfdX629K7'
 
-<span class="n">AUTH_LDAP_USER_SEARCH</span> <span class="o">=</span> <span class="n">LDAPSearch</span><span class="p">(</span>
-    <span class="s1">&#39;ou=People,dc=ops-coffee,dc=cn&#39;</span><span class="p">,</span>
-    <span class="n">ldap</span><span class="o">.</span><span class="n">SCOPE_SUBTREE</span><span class="p">,</span>
-    <span class="s1">&#39;(uid=</span><span class="si">%(user)s</span><span class="s1">)&#39;</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="c1"># Or:</span>
-<span class="c1"># AUTH_LDAP_USER_DN_TEMPLATE = &#39;uid=%(user)s,ou=People,dc=ops-coffee,dc=cn&#39;</span>
+AUTH_LDAP_USER_SEARCH = LDAPSearch(
+    'ou=People,dc=ops-coffee,dc=cn',
+    ldap.SCOPE_SUBTREE,
+    '(uid=%(user)s)',
+)
+# Or:
+# AUTH_LDAP_USER_DN_TEMPLATE = 'uid=%(user)s,ou=People,dc=ops-coffee,dc=cn'
 
-<span class="n">AUTH_LDAP_USER_ATTR_MAP</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;first_name&#39;</span><span class="p">:</span> <span class="s1">&#39;cn&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;sn&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="s1">&#39;mail&#39;</span><span class="p">,</span>
-<span class="p">}</span>
+AUTH_LDAP_USER_ATTR_MAP = {
+    'first_name': 'cn',
+    'last_name': 'sn',
+    'email': 'mail',
+}
 
-<span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s1">&#39;django_auth_ldap.backend.LDAPBackend&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;django.contrib.auth.backends.ModelBackend&#39;</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
+AUTHENTICATION_BACKENDS = (
+    'django_auth_ldap.backend.LDAPBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)</code></pre>
+
 
 <p>这里详细解释下上边配置的含义：</p>
 <p><strong>AUTH_LDAP_SERVER_URI：</strong> LDAP服务器的地址</p>
@@ -93,21 +93,21 @@
 <p><strong>AUTH_LDAP_USER_SEARCH：</strong> 可通过LDAP登录的用户的范围，如上配置会去<code>ou=People,dc=ops-coffee,dc=cn</code>下搜索用户是否存在</p>
 <p>其中<code>(uid=%(user)s)'</code>指明了作为Django的username所对应的LDAP的属性，这里为LDAP用户的<code>uid</code>属性作为Django的username</p>
 <p>以上配置是在一个OU下查找用户，当需要在多个OU下搜索用户时用如下配置：</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django_auth_ldap.config</span> <span class="kn">import</span> <span class="n">LDAPSearch</span><span class="p">,</span> <span class="n">LDAPSearchUnion</span>
+<pre class="codehilite"><code>from django_auth_ldap.config import LDAPSearch, LDAPSearchUnion
 
-<span class="n">AUTH_LDAP_USER_SEARCH</span> <span class="o">=</span> <span class="n">LDAPSearchUnion</span><span class="p">(</span>
-    <span class="n">LDAPSearch</span><span class="p">(</span>
-        <span class="s1">&#39;ou=Public,dc=ops-coffee,dc=cn&#39;</span><span class="p">,</span>
-        <span class="n">ldap</span><span class="o">.</span><span class="n">SCOPE_SUBTREE</span><span class="p">,</span>
-        <span class="s1">&#39;(uid=</span><span class="si">%(user)s</span><span class="s1">)&#39;</span>
-    <span class="p">),</span>
-    <span class="n">LDAPSearch</span><span class="p">(</span>
-        <span class="s1">&#39;ou=PeoPle,dc=ops-coffee,dc=cn&#39;</span><span class="p">,</span>
-        <span class="n">ldap</span><span class="o">.</span><span class="n">SCOPE_SUBTREE</span><span class="p">,</span>
-        <span class="s1">&#39;(uid=</span><span class="si">%(user)s</span><span class="s1">)&#39;</span>
-    <span class="p">),</span>
-<span class="p">)</span>
-</code></pre></div>
+AUTH_LDAP_USER_SEARCH = LDAPSearchUnion(
+    LDAPSearch(
+        'ou=Public,dc=ops-coffee,dc=cn',
+        ldap.SCOPE_SUBTREE,
+        '(uid=%(user)s)'
+    ),
+    LDAPSearch(
+        'ou=PeoPle,dc=ops-coffee,dc=cn',
+        ldap.SCOPE_SUBTREE,
+        '(uid=%(user)s)'
+    ),
+)</code></pre>
+
 
 <p><strong>AUTH_LDAP_USER_ATTR_MAP：</strong> LDAP中的用户属性跟Django后台用户属性的对应关系，当用户第一次登录且验证成功后会将LDAP中对应的用户属性写入到Django的User表中</p>
 <p><strong>AUTHENTICATION_BACKENDS：</strong> 配置Django的后端认证列表</p>
@@ -122,85 +122,84 @@
 <h2 id="_4">高级配置</h2>
 <p>所谓高级配置这里主要是说明下<code>django-auth-ldap</code>中组相关的配置，这需要对LDAP的组有一定的概念，为了方便理解，接下来我们以实际的例子来说明</p>
 <p>假如我们有三个组overmind、kerrigan、admin，配置如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># ldapsearch -LLL -x -D &quot;uid=authz,ou=Public,dc=ops-coffee,dc=cn&quot; -w &quot;CzfdX629K7&quot; -b cn=overmind,ou=Group,dc=ops-coffee,dc=cn </span>
-<span class="c">dn: cn=overmind,ou=Group,dc=ops-coffee,dc=cn</span>
-<span class="c">cn: overmind</span>
-<span class="c">member: uid=sre,ou=People,dc=ops-coffee,dc=cn</span>
-<span class="c">objectClass: groupOfNames</span>
-<span class="c">objectClass: top</span>
-</code></pre></div>
+<pre class="codehilite"><code># ldapsearch -LLL -x -D &quot;uid=authz,ou=Public,dc=ops-coffee,dc=cn&quot; -w &quot;CzfdX629K7&quot; -b cn=overmind,ou=Group,dc=ops-coffee,dc=cn 
+dn: cn=overmind,ou=Group,dc=ops-coffee,dc=cn
+cn: overmind
+member: uid=sre,ou=People,dc=ops-coffee,dc=cn
+objectClass: groupOfNames
+objectClass: top</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># ldapsearch -LLL -x -D &quot;uid=authz,ou=Public,dc=ops-coffee,dc=cn&quot; -w &quot;CzfdX629K7&quot; -b cn=kerrigan,ou=Group,dc=ops-coffee,dc=cn </span>
-<span class="c">dn: cn=kerrigan,ou=Group,dc=ops-coffee,dc=cn</span>
-<span class="c">cn: kerrigan</span>
-<span class="c">objectClass: groupOfNames</span>
-<span class="c">objectClass: top</span>
-<span class="c">member: uid=u1,ou=Public,dc=ops-coffee,dc=cn</span>
-<span class="c">member: uid=u2,ou=People,dc=ops-coffee,dc=cn</span>
-</code></pre></div>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># ldapsearch -LLL -x -D &quot;uid=authz,ou=Public,dc=ops-coffee,dc=cn&quot; -w &quot;CzfdX629K7&quot; -b cn=admin,ou=Group,dc=ops-coffee,dc=cn </span>
-<span class="c">dn: cn=admin,ou=Group,dc=ops-coffee,dc=cn</span>
-<span class="c">cn: admin</span>
-<span class="c">member: uid=u3,ou=Admin,dc=ops-coffee,dc=cn</span>
-<span class="c">objectClass: groupOfNames</span>
-<span class="c">objectClass: top</span>
-</code></pre></div>
+<pre class="codehilite"><code># ldapsearch -LLL -x -D &quot;uid=authz,ou=Public,dc=ops-coffee,dc=cn&quot; -w &quot;CzfdX629K7&quot; -b cn=kerrigan,ou=Group,dc=ops-coffee,dc=cn 
+dn: cn=kerrigan,ou=Group,dc=ops-coffee,dc=cn
+cn: kerrigan
+objectClass: groupOfNames
+objectClass: top
+member: uid=u1,ou=Public,dc=ops-coffee,dc=cn
+member: uid=u2,ou=People,dc=ops-coffee,dc=cn</code></pre>
+
+
+<pre class="codehilite"><code># ldapsearch -LLL -x -D &quot;uid=authz,ou=Public,dc=ops-coffee,dc=cn&quot; -w &quot;CzfdX629K7&quot; -b cn=admin,ou=Group,dc=ops-coffee,dc=cn 
+dn: cn=admin,ou=Group,dc=ops-coffee,dc=cn
+cn: admin
+member: uid=u3,ou=Admin,dc=ops-coffee,dc=cn
+objectClass: groupOfNames
+objectClass: top</code></pre>
+
 
 <p>我们需要实现Django集成LDAP认证，且不允许隶属于kerrigan分组的用户登录系统，如果用户隶属于admin分组，则需要在登录Django时给设置为管理员，接下来的配置将会解释如何实现该需求</p>
 <p>django-auth-ldap中与group有关的配置：</p>
-<div class="codehilite"><pre><span></span><code><span class="n">AUTH_LDAP_GROUP_SEARCH</span> <span class="o">=</span> <span class="n">LDAPSearch</span><span class="p">(</span>
-    <span class="s1">&#39;ou=Group,dc=ops-coffee,dc=cn&#39;</span><span class="p">,</span>
-    <span class="n">ldap</span><span class="p">.</span><span class="n">SCOPE_SUBTREE</span><span class="p">,</span>
-    <span class="s1">&#39;(objectClass=groupOfNames)&#39;</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">AUTH_LDAP_GROUP_TYPE</span> <span class="o">=</span> <span class="n">GroupOfNamesType</span><span class="p">(</span><span class="n">name_attr</span><span class="o">=</span><span class="s1">&#39;cn&#39;</span><span class="p">)</span>
+<pre class="codehilite"><code>AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+    'ou=Group,dc=ops-coffee,dc=cn',
+    ldap.SCOPE_SUBTREE,
+    '(objectClass=groupOfNames)',
+)
+AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr='cn')
 
-<span class="o">#</span> <span class="k">Simple</span> <span class="k">group</span> <span class="n">restrictions</span>
-<span class="o">#</span> <span class="n">AUTH_LDAP_REQUIRE_GROUP</span> <span class="o">=</span> <span class="s1">&#39;cn=overmind,ou=Group,dc=ops-coffee,dc=cn&#39;</span>
-<span class="n">AUTH_LDAP_DENY_GROUP</span> <span class="o">=</span> <span class="s1">&#39;cn=kerrigan,ou=Group,dc=ops-coffee,dc=cn&#39;</span>
+# Simple group restrictions
+# AUTH_LDAP_REQUIRE_GROUP = 'cn=overmind,ou=Group,dc=ops-coffee,dc=cn'
+AUTH_LDAP_DENY_GROUP = 'cn=kerrigan,ou=Group,dc=ops-coffee,dc=cn'
 
-<span class="n">AUTH_LDAP_USER_FLAGS_BY_GROUP</span> <span class="o">=</span> <span class="err">{</span>
-    <span class="s1">&#39;is_superuser&#39;</span><span class="p">:</span> <span class="s1">&#39;cn=admin,ou=Group,dc=ops-coffee,dc=cn&#39;</span><span class="p">,</span>
-<span class="err">}</span>
-</code></pre></div>
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+    'is_superuser': 'cn=admin,ou=Group,dc=ops-coffee,dc=cn',
+}</code></pre>
+
 
 <p>以上配置的详细解释如下：</p>
 <p><strong>AUTH_LDAP_GROUP_SEARCH：</strong> 搜索某个ou下的信息，与<code>AUTH_LDAP_USER_SEARCH</code>参数类似，这里的ou一般指group，例如<code>ou=Group,dc=ops-coffee,dc=cn</code>的组目录</p>
 <p><strong>AUTH_LDAP_GROUP_TYPE：</strong> 返回的组的类型，组DN的第一个属性值，例如组DN<code>cn=overmind,ou=Group,dc=ops-coffee,dc=cn</code>,那么这里为<code>cn</code></p>
 <p><strong>AUTH_LDAP_REQUIRE_GROUP：</strong> 设置允许哪些组成员登录，如果我们只允许overmind组的成员可以登录系统的话这里可以设置</p>
-<div class="codehilite"><pre><span></span><code><span class="err">AUTH_LDAP_REQUIRE_GROUP = &#39;cn=overmind,ou=Group,dc=ops-coffee,dc=cn&#39;</span>
-</code></pre></div>
+<pre class="codehilite"><code>AUTH_LDAP_REQUIRE_GROUP = 'cn=overmind,ou=Group,dc=ops-coffee,dc=cn'</code></pre>
+
 
 <p><strong>AUTH_LDAP_DENY_GROUP：</strong> 设置拒绝哪些组成员登录，如果我们不允许kerrigan组的成员可以登录系统的话这里可以设置</p>
-<div class="codehilite"><pre><span></span><code><span class="err">AUTH_LDAP_DENY_GROUP = &#39;cn=kerrigan,ou=Group,dc=ops-coffee,dc=cn&#39;</span>
-</code></pre></div>
+<pre class="codehilite"><code>AUTH_LDAP_DENY_GROUP = 'cn=kerrigan,ou=Group,dc=ops-coffee,dc=cn'</code></pre>
+
 
 <p>当我们同时设置了用户既属于overmind组又属于kerrigan组，也就是这个用户即设置了允许登录，又设置了拒绝登录，那么以拒绝登录为准，用户无法登录</p>
 <p><strong>AUTH_LDAP_USER_FLAGS_BY_GROUP：</strong> 根据LDAP的group设置Django用户的额外属性，例如我们想要设置LDAP中admin组具有Django中超级管理员的权限，除了在Django中手动设置外，还可以直接在setting中配置<code>AUTH_LDAP_USER_FLAGS_BY_GROUP</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err">AUTH_LDAP_USER_FLAGS_BY_GROUP = {</span>
-<span class="err">    &#39;is_superuser&#39;: &#39;cn=admin,ou=Group,dc=ops-coffee,dc=cn&#39;,</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+    'is_superuser': 'cn=admin,ou=Group,dc=ops-coffee,dc=cn',
+}</code></pre>
+
 
 <p>当admin组用户登录的时候就会自动给用户的<code>is_superuser</code>属性设置为True</p>
 <p>至此我们对django-auth-ldap有了一个全面的了解，在实际项目集成中可以做到游刃有余，如有问题可以参考我github的代码</p>
 <h2 id="_5">踩坑记录</h2>
 <p>windowns 10下安装<code>python-ldap</code>即<code>django-auth-ldap</code>报错：</p>
-<div class="codehilite"><pre><span></span><code><span class="n">c</span><span class="p">:</span>\<span class="n">users</span>\<span class="n">ops</span><span class="o">-</span><span class="n">coffee</span>\<span class="n">appdata</span>\<span class="n">local</span>\<span class="n">temp</span>\<span class="n">pip</span><span class="o">-</span><span class="n">install</span><span class="o">-</span><span class="n">sec1o036</span>\<span class="n">python</span><span class="o">-</span><span class="n">ldap</span>\<span class="n">modules</span>\<span class="n">constants</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">7</span><span class="p">):</span> <span class="n">fatal</span> <span class="n">error</span> <span class="n">C1083</span><span class="p">:</span> <span class="n">Cannot</span> <span class="n">open</span> <span class="n">include</span> <span class="n">file</span><span class="p">:</span> <span class="s1">&#39;lber.h&#39;</span><span class="p">:</span> <span class="n">No</span> <span class="n">such</span> <span class="n">file</span> <span class="ow">or</span> <span class="n">directory</span>
-    <span class="n">error</span><span class="p">:</span> <span class="n">command</span> <span class="s1">&#39;C:</span><span class="se">\\</span><span class="s1">Program Files (x86)</span><span class="se">\\</span><span class="s1">Microsoft Visual Studio 14.0</span><span class="se">\\</span><span class="s1">VC</span><span class="se">\\</span><span class="s1">BIN</span><span class="se">\\</span><span class="s1">x86_amd64</span><span class="se">\\</span><span class="s1">cl.exe&#39;</span> <span class="n">failed</span> <span class="n">with</span> <span class="n">exit</span> <span class="n">status</span> <span class="mi">2</span>
-</code></pre></div>
+<pre class="codehilite"><code>c:\users\ops-coffee\appdata\local\temp\pip-install-sec1o036\python-ldap\modules\constants.h(7): fatal error C1083: Cannot open include file: 'lber.h': No such file or directory
+    error: command 'C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\BIN\\x86_amd64\\cl.exe' failed with exit status 2</code></pre>
+
 
 <p>这个报错需要手动安装下whl文件，具体方法为：</p>
 <p>先在这个网站<a href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#python-ldap">https://www.lfd.uci.edu/~gohlke/pythonlibs/#python-ldap</a>下载对应版本的python-ldap的whl文件</p>
 <p>然后使用pip命令安装whl，注意文件路径要正确</p>
-<div class="codehilite"><pre><span></span><code><span class="c">D:\demo\openldap&gt;python -m pip install python_ldap-3.2.0-cp36-cp36m-win_amd64.whl</span>
-<span class="err">Processing d:\demo\openldap\python_ldap-3.2.0-cp36-cp36m-win_amd64.whl</span>
-<span class="err">Requirement already satisfied: pyasn1&gt;=0.3.7 in c:\python36\lib\site-packages (from python-ldap==3.2.0) (0.4.2)</span>
-<span class="err">Requirement already satisfied: pyasn1-modules&gt;=0.1.5 in c:\python36\lib\site-packages (from python-ldap==3.2.0) (0.2.4)</span>
-<span class="err">Installing collected packages: python-ldap</span>
-<span class="err">Successfully installed python-ldap-3.2.0</span>
-</code></pre></div>
+<pre class="codehilite"><code>D:\demo\openldap&gt;python -m pip install python_ldap-3.2.0-cp36-cp36m-win_amd64.whl
+Processing d:\demo\openldap\python_ldap-3.2.0-cp36-cp36m-win_amd64.whl
+Requirement already satisfied: pyasn1&gt;=0.3.7 in c:\python36\lib\site-packages (from python-ldap==3.2.0) (0.4.2)
+Requirement already satisfied: pyasn1-modules&gt;=0.1.5 in c:\python36\lib\site-packages (from python-ldap==3.2.0) (0.2.4)
+Installing collected packages: python-ldap
+Successfully installed python-ldap-3.2.0</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

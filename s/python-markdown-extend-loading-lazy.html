@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -47,57 +47,57 @@
 <h2 id="lazy-loading">Lazy loading</h2>
 <p>在页面中有很多图片的时候，图片加载就需要很多时间，不仅影响渲染速度还会浪费带宽，为了解决这个问题，提高用户体验，就出现了懒加载这种方式来减轻服务器的压力，优先加载用户当前可视区域的图片，其他不在可视区域内的图片会在进入用户可视区域或即将进入用户可视区域时再加载</p>
 <p>图片懒加载的实现方式有很多种，我选择了通过HTML元素延迟加载属性loading来实现，主打一个简单，从2019年的Chrome浏览器76版本开始，IMG图片和IFRAME框架已经支持原生懒加载特性，使用<code>loading="lazy"</code>语法，用法如下</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="n">img</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;ops-coffee&quot;</span> <span class="n">loading</span><span class="o">=</span><span class="s2">&quot;lazy&quot;</span> <span class="n">src</span><span class="o">=</span><span class="s2">&quot;https://blog.ops-coffee.cn/static/images/wx.sou1.png&quot;</span> <span class="o">/&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&lt;img alt=&quot;ops-coffee&quot; loading=&quot;lazy&quot; src=&quot;https://blog.ops-coffee.cn/static/images/wx.sou1.png&quot; /&gt;</code></pre>
+
 
 <p>在img标签内添加<code>loading="lazy"</code>无需其他额外操作，浏览器就会自动的判断先加载哪些图片，哪些图片延迟加载。loading除了<code>lazy</code>配置是懒加载之外，还有两个配置<code>eager</code>无视一切进行加载和<code>auto</code>基于浏览器自己的策略进行加载，其中Auto是默认值，如果没有显式地设置loading属性或者loading属性设置错误，则都被当作<code>auto</code>来处理</p>
 <h2 id="python-markdown">python-markdown自定义扩展</h2>
 <p>此时我们知道修改HTML的IMG标签添加<code>loading="lazy"</code>即可实现图片懒加载，我的HTML文件都是通过<code>python-markdown</code>这个工具生成的，使用起来很简单</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">markdown</span> <span class="kn">import</span> <span class="n">markdown</span>
-<span class="o">&gt;&gt;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="s1">&#39;![](https://blog.ops-coffee.cn/static/images/wx.sou1.png)&#39;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">markdown</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-<span class="s1">&#39;&lt;p&gt;&lt;img alt=&quot;&quot; src=&quot;https://blog.ops-coffee.cn/static/images/wx.sou1.png&quot; /&gt;&lt;/p&gt;&#39;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; from markdown import markdown
+&gt;&gt;&gt;
+&gt;&gt;&gt; a = '![](https://blog.ops-coffee.cn/static/images/wx.sou1.png)'
+&gt;&gt;&gt; markdown(a)
+'&lt;p&gt;&lt;img alt=&quot;&quot; src=&quot;https://blog.ops-coffee.cn/static/images/wx.sou1.png&quot; /&gt;&lt;/p&gt;'</code></pre>
+
 
 <p>默认生成的IMG标签没有loading属性，怎么能让markdown工具在生成HTML文件时添加loading属性呢？<code>python-markdown</code>工具提供了内置的扩展来实现给元素添加属性，用法如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">{: #someid .someclass somekey=&#39;some value&#39; }</span>
-</code></pre></div>
+<pre class="codehilite"><code>{: #someid .someclass somekey='some value' }</code></pre>
+
 
 <p>用<code>#</code>开头的是元素id，用<code>.</code>开始的是分配给元素的class的列表，后面的键值等式，将被赋到元素上。借助扩展我们就可以给IMG添加loading属性了</p>
-<div class="codehilite"><pre><span></span><code>&gt;&gt;&gt; a = &#39;![](https://blog.ops-coffee.cn/static/images/wx.sou1.png){: #ops-coffee-id .ops-coffee-class loading=&quot;lazy&quot; }&#39;
+<pre class="codehilite"><code>&gt;&gt;&gt; a = '![](https://blog.ops-coffee.cn/static/images/wx.sou1.png){: #ops-coffee-id .ops-coffee-class loading=&quot;lazy&quot; }'
 &gt;&gt;&gt;
-&gt;&gt;&gt; markdown(a, extensions=[&#39;extra&#39;])
-&#39;<span class="nt">&lt;p&gt;&lt;img</span> <span class="na">alt=</span><span class="s">&quot;&quot;</span> <span class="na">class=</span><span class="s">&quot;ops-coffee-class&quot;</span> <span class="na">id=</span><span class="s">&quot;ops-coffee-id&quot;</span> <span class="na">loading=</span><span class="s">&quot;lazy&quot;</span> <span class="na">src=</span><span class="s">&quot;https://blog.ops-coffee.cn/static/images/wx.sou1.png&quot;</span> <span class="nt">/&gt;&lt;/p&gt;</span>&#39;
-&gt;&gt;&gt;
-</code></pre></div>
+&gt;&gt;&gt; markdown(a, extensions=['extra'])
+'&lt;p&gt;&lt;img alt=&quot;&quot; class=&quot;ops-coffee-class&quot; id=&quot;ops-coffee-id&quot; loading=&quot;lazy&quot; src=&quot;https://blog.ops-coffee.cn/static/images/wx.sou1.png&quot; /&gt;&lt;/p&gt;'
+&gt;&gt;&gt;</code></pre>
+
 
 <p>但这有一个问题，那么多历史文章，那么多文章配图，如果都想实现懒加载，就要通过修改markdown给图片加上这一段特殊的标记才能实现，一来麻烦，二来也降低了markdown的通用性，我若要markdown贴到其他地方还要手动去除这段标记，有没有更好的办法呢？此时我注意到<code>python-markdown</code>工具支持自定义扩展</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">markdown</span> <span class="kn">import</span> <span class="n">markdown</span>
-<span class="kn">from</span> <span class="nn">markdown.extensions</span> <span class="kn">import</span> <span class="n">Extension</span>
-<span class="kn">from</span> <span class="nn">markdown.treeprocessors</span> <span class="kn">import</span> <span class="n">Treeprocessor</span>
+<pre class="codehilite"><code>from markdown import markdown
+from markdown.extensions import Extension
+from markdown.treeprocessors import Treeprocessor
 
 
-<span class="k">class</span> <span class="nc">CustomTreeprocessor</span><span class="p">(</span><span class="n">Treeprocessor</span><span class="p">):</span>
+class CustomTreeprocessor(Treeprocessor):
 
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">iter</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">elem</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;img&#39;</span><span class="p">:</span>
-                <span class="n">elem</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;loading&quot;</span><span class="p">,</span> <span class="s2">&quot;lazy&quot;</span><span class="p">)</span>
+    def run(self, root):
+        for elem in root.iter():
+            if elem.tag == 'img':
+                elem.set(&quot;loading&quot;, &quot;lazy&quot;)
 
-        <span class="k">return</span> <span class="n">root</span>
-
-
-<span class="k">class</span> <span class="nc">CustomExtension</span><span class="p">(</span><span class="n">Extension</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="nf">extendMarkdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">md</span><span class="p">):</span>
-        <span class="n">md</span><span class="o">.</span><span class="n">treeprocessors</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">CustomTreeprocessor</span><span class="p">(</span><span class="n">md</span><span class="p">),</span> <span class="s1">&#39;ops-coffee-img&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        return root
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="s1">&#39;![](https://blog.ops-coffee.cn/static/images/wx.sou1.png)&#39;</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">markdown</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;extra&#39;</span><span class="p">,</span> <span class="n">CustomExtension</span><span class="p">()]))</span>
-</code></pre></div>
+class CustomExtension(Extension):
+
+    def extendMarkdown(self, md):
+        md.treeprocessors.register(CustomTreeprocessor(md), 'ops-coffee-img', 1)
+
+
+if __name__ == '__main__':
+    c = '![](https://blog.ops-coffee.cn/static/images/wx.sou1.png)'
+    print(markdown(c, extensions=['extra', CustomExtension()]))</code></pre>
+
 
 <p>编写<code>CustomExtension</code>自定义扩展类，然后在生成HTML文件时引用扩展类，就可以不需要修改markdown内容，自动在IMG标签上添加loading属性了，问题完美解决</p>
 

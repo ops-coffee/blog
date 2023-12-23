@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -43,38 +43,37 @@
         <h1 id="art-title">生产环境下的IPTABLES标准配置</h1>
 
         <p>Iptables防火墙对于服务器的安全来说至关重要，这里列出生产使用的Iptables配置以供参考</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
-<span class="c1">#last update date:2016/06/28</span>
-<span class="nv">IPTABLES</span><span class="o">=</span><span class="s2">&quot;/sbin/iptables&quot;</span>
+<pre class="codehilite"><code class="language-bash linenums">#!/bin/bash
+#last update date:2016/06/28
+IPTABLES=&quot;/sbin/iptables&quot;
 
-<span class="nv">$IPTABLES</span> -F
-<span class="nv">$IPTABLES</span> -F -t nat
+$IPTABLES -F
+$IPTABLES -F -t nat
 
-<span class="c1"># default accept</span>
-<span class="nv">$IPTABLES</span> -P INPUT ACCEPT
-<span class="nv">$IPTABLES</span> -P OUTPUT ACCEPT
-<span class="nv">$IPTABLES</span> -P FORWARD ACCEPT
-<span class="nv">$IPTABLES</span> -A INPUT -i lo -j ACCEPT
-<span class="nv">$IPTABLES</span> -A OUTPUT -o lo -j ACCEPT
-<span class="nv">$IPTABLES</span> -A INPUT -p icmp -j ACCEPT
-<span class="nv">$IPTABLES</span> -A INPUT -p ipencap -j ACCEPT
-<span class="nv">$IPTABLES</span> -A INPUT -m state --stat RELATED,ESTABLISHED -j ACCEPT
+# default accept
+$IPTABLES -P INPUT ACCEPT
+$IPTABLES -P OUTPUT ACCEPT
+$IPTABLES -P FORWARD ACCEPT
+$IPTABLES -A INPUT -i lo -j ACCEPT
+$IPTABLES -A OUTPUT -o lo -j ACCEPT
+$IPTABLES -A INPUT -p icmp -j ACCEPT
+$IPTABLES -A INPUT -p ipencap -j ACCEPT
+$IPTABLES -A INPUT -m state --stat RELATED,ESTABLISHED -j ACCEPT
 
-<span class="c1"># accept lannat</span>
-<span class="nv">$IPTABLES</span> -A INPUT -s <span class="m">192</span>.168.105.91 -p tcp --dport <span class="m">32200</span> -j ACCEPT
-<span class="nv">$IPTABLES</span> -A INPUT -s <span class="m">192</span>.168.106.153 -p tcp --dport <span class="m">32200</span> -j ACCEPT
+# accept lannat
+$IPTABLES -A INPUT -s 192.168.105.91 -p tcp --dport 32200 -j ACCEPT
+$IPTABLES -A INPUT -s 192.168.106.153 -p tcp --dport 32200 -j ACCEPT
 
-<span class="c1"># web</span>
-<span class="nv">$IPTABLES</span> -I INPUT -s <span class="m">192</span>.168.0.0/16 -p tcp --dport <span class="m">80</span> -j ACCEPT
+# web
+$IPTABLES -I INPUT -s 192.168.0.0/16 -p tcp --dport 80 -j ACCEPT
 
-<span class="c1"># all drop</span>
-<span class="nv">$IPTABLES</span> -A INPUT -j DROP
-</code></pre></div>
+# all drop
+$IPTABLES -A INPUT -j DROP</code></pre>
+
 
 <p>通常我会将服务器上的脚本文件统一存放于<code>/home/scripts/</code>目录下，并配置其开机自动启动</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># cat /etc/rc.local</span>
-<span class="err">/bin/bash /home/scripts/iptables.sh</span>
-</code></pre></div>
+<pre class="codehilite"><code># cat /etc/rc.local
+/bin/bash /home/scripts/iptables.sh</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

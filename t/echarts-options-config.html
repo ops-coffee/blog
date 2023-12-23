@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -43,42 +43,41 @@
         <h1 id="art-title">Echarts常见问题处理</h1>
 
         <h2 id="tooltip">tooltip排序</h2>
-<div class="codehilite"><pre><span></span><code><span class="n">tooltip</span><span class="p">:</span> <span class="p">{</span>
-  <span class="n">trigger</span><span class="p">:</span> <span class="s1">&#39;axis&#39;</span><span class="p">,</span>
-  <span class="n">formatter</span><span class="p">:</span> <span class="n">function</span><span class="p">(</span><span class="n">params</span><span class="p">){</span>
-    <span class="n">let</span> <span class="n">newParams</span> <span class="o">=</span> <span class="p">[];</span>
-    <span class="n">let</span> <span class="n">tooltipString</span> <span class="o">=</span> <span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;&lt;br/&gt;&#39;</span><span class="p">];</span>
-    <span class="n">newParams</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="n">params</span><span class="p">];</span>
-    <span class="n">newParams</span><span class="o">.</span><span class="n">sort</span><span class="p">((</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="k">return</span> <span class="n">b</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="n">a</span><span class="o">.</span><span class="n">value</span><span class="p">});</span>
-    <span class="n">newParams</span><span class="o">.</span><span class="n">forEach</span><span class="p">((</span><span class="n">p</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="k">const</span> <span class="n">cont</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">marker</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">seriesName</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="s1">&#39;&lt;br/&gt;&#39;</span><span class="p">;</span>
-        <span class="n">tooltipString</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">cont</span><span class="p">);</span>
-    <span class="p">});</span>
+<pre class="codehilite"><code>tooltip: {
+  trigger: 'axis',
+  formatter: function(params){
+    let newParams = [];
+    let tooltipString = [params[0].name + '&lt;br/&gt;'];
+    newParams = [...params];
+    newParams.sort((a,b) =&gt; {return b.value - a.value});
+    newParams.forEach((p) =&gt; {
+        const cont = p.marker + ' ' + p.seriesName + ': ' + p.value + '&lt;br/&gt;';
+        tooltipString.push(cont);
+    });
 
-    <span class="k">return</span> <span class="n">tooltipString</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+    return tooltipString.join('');
 
-    <span class="o">//</span> <span class="err">仅显示</span><span class="n">Top</span> <span class="mi">10</span>
-    <span class="o">//</span> <span class="k">return</span> <span class="n">tooltipString</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">},</span>
-</code></pre></div>
+    // 仅显示Top 10
+    // return tooltipString.slice(0,10).join('');
+  }
+},</code></pre>
+
 
 <h2 id="tooltip_1">tooltip内容过多显示不全</h2>
-<div class="codehilite"><pre><span></span><code><span class="n">tooltip</span><span class="p">:</span> <span class="p">{</span>
-  <span class="n">trigger</span><span class="p">:</span> <span class="s1">&#39;axis&#39;</span><span class="p">,</span>
-  <span class="n">position</span><span class="p">:</span> <span class="n">function</span> <span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">dom</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">var</span> <span class="n">obj</span> <span class="o">=</span> <span class="p">{</span><span class="n">top</span><span class="p">:</span> <span class="mi">60</span><span class="p">};</span>
+<pre class="codehilite"><code>tooltip: {
+  trigger: 'axis',
+  position: function (pos, params, dom, rect, size) {
+    var obj = {top: 60};
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">size</span><span class="o">.</span><span class="n">viewSize</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">size</span><span class="o">.</span><span class="n">viewSize</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span>
-    <span class="p">}</span>
+    if (pos[0] &lt; size.viewSize[0] / 2) {
+        obj['left'] = pos[0] + 10
+    } else {
+        obj['right'] = size.viewSize[0] - pos[0] + 10
+    }
 
-    <span class="k">return</span> <span class="n">obj</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">},</span>
-</code></pre></div>
+    return obj;
+  }
+},</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

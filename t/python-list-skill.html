@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -43,32 +43,31 @@
         <h1 id="art-title">python list 列表操作总结</h1>
 
         <h2 id="_1">添加元素至末尾</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">list.append(&#39;ops-coffee.cn&#39;)</span>
-</code></pre></div>
+<pre class="codehilite"><code>list.append('ops-coffee.cn')</code></pre>
+
 
 <h2 id="_2">添加元素至开头</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">list.insert(0, &#39;ops-coffee.cn&#39;)</span>
-</code></pre></div>
+<pre class="codehilite"><code>list.insert(0, 'ops-coffee.cn')</code></pre>
+
 
 <h2 id="_3">列表合并</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">listA.extend(listB)</span>
-</code></pre></div>
+<pre class="codehilite"><code>listA.extend(listB)</code></pre>
+
 
 <h2 id="_4">列表反转</h2>
-<div class="codehilite"><pre><span></span><code><span class="s s-Atom">list</span><span class="p">[</span><span class="s s-Atom">::-</span><span class="mi">1</span><span class="p">]</span>
-</code></pre></div>
+<pre class="codehilite"><code>list[::-1]</code></pre>
+
 
 <h2 id="_5">获取交集</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">list(set(listA).intersection(set(listB)))</span>
-</code></pre></div>
+<pre class="codehilite"><code>list(set(listA).intersection(set(listB)))</code></pre>
+
 
 <h2 id="_6">获取并集</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">list(set(listA).union(set(listB)))</span>
-</code></pre></div>
+<pre class="codehilite"><code>list(set(listA).union(set(listB)))</code></pre>
+
 
 <h2 id="_7">获取差集</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">list(set(listA).difference(set(listB)))</span>
-</code></pre></div>
+<pre class="codehilite"><code>list(set(listA).difference(set(listB)))</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

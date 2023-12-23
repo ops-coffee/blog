@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -57,163 +57,163 @@
 <h2 id="celery">单Celery任务</h2>
 <p>任务系统的核心逻辑是：模板包含多个子任务，任务关联模板，执行任务时实际上就是按照编排好的顺序依次执行模板下的子任务</p>
 <p>之所以之前的任务系统无法实现手动审批任务，主要是因为任务流是通过单一Celery任务来处理的，我们看一下之前的代码，用户执行任务，进入<code>taskrun</code>函数，先入库做记录，然后直接调用名为<code>run_task</code>的Celery异步任务执行</p>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span> <span class="n">taskrun</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="k">data</span><span class="p">):</span>
-    <span class="o">#</span> <span class="err">入库做记录</span>
-    <span class="n">_t</span> <span class="o">=</span> <span class="n">tasklog</span> <span class="o">=</span> <span class="n">TaskLog</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">create</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="k">data</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="s1">&#39;task_name&#39;</span><span class="p">),</span>
-        <span class="n">template_id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="k">data</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="s1">&#39;template_id&#39;</span><span class="p">))</span>
-    <span class="p">)</span>
+<pre class="codehilite"><code>def taskrun(request, data):
+    # 入库做记录
+    _t = tasklog = TaskLog.objects.create(
+        name=data.get('task_name'),
+        template_id=int(data.get('template_id'))
+    )
 
-    <span class="o">#</span> <span class="err">调用</span><span class="n">celery任务异步执行</span>
-    <span class="n">run_task</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="n">tasklog</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>
-    <span class="k">return</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;任务正在执行中，请稍后查看状态&#39;</span><span class="p">,</span> <span class="n">tasklog</span><span class="p">.</span><span class="n">id</span>
-</code></pre></div>
+    # 调用celery任务异步执行
+    run_task.delay(tasklog.id)
+    return 1, '任务正在执行中，请稍后查看状态', tasklog.id</code></pre>
+
 
 <p>在<code>run_task</code>中会先获取tasklog，然后拿到tasklog关联的模板，从模板里取出全部子任务，循环执行，直到全部执行成功</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">@shared_task</span><span class="w"></span>
-<span class="n">def</span><span class="w"> </span><span class="n">run_task</span><span class="p">(</span><span class="n">tid</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
-<span class="w">    </span><span class="k">try</span><span class="err">:</span><span class="w"></span>
-<span class="w">        </span><span class="n">tasklog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TaskLog</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">id</span><span class="o">=</span><span class="n">tid</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="ow">except</span><span class="w"> </span><span class="n">TaskLog</span><span class="p">.</span><span class="nl">DoesNotExist</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">True</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;当前要执行的Task不存在，tid：%d&#39;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">tid</span><span class="w"></span>
+<pre class="codehilite"><code>@shared_task
+def run_task(tid):
+    try:
+        tasklog = TaskLog.objects.get(id=tid)
+    except TaskLog.DoesNotExist:
+        return True, '当前要执行的Task不存在，tid：%d' % tid
 
-<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="n">获取所有子任务</span><span class="w"></span>
-<span class="w">    </span><span class="n">subtasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tasklog</span><span class="p">.</span><span class="n">template</span><span class="p">.</span><span class="n">get_temptasks</span><span class="w"></span>
+    # 获取所有子任务
+    subtasks = tasklog.template.get_temptasks
 
-<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="n">循环执行子任务</span><span class="w"></span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">sub</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">subtasks</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="n">Logger</span><span class="p">(</span><span class="n">tid</span><span class="p">).</span><span class="k">add</span><span class="p">(</span><span class="s1">&#39;开始执行子任务 - %s\n&#39;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">sub</span><span class="p">.</span><span class="n">subtask</span><span class="p">.</span><span class="n">name</span><span class="p">)</span><span class="w"></span>
+    # 循环执行子任务
+    for sub in subtasks:
+        Logger(tid).add('开始执行子任务 - %s\n' % sub.subtask.name)
 
-<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="n">全部子任务执行完成</span><span class="err">，</span><span class="n">修改tasklog状态</span><span class="w"></span>
-<span class="w">    </span><span class="n">tasklog</span><span class="p">.</span><span class="k">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
-<span class="w">    </span><span class="n">tasklog</span><span class="p">.</span><span class="k">save</span><span class="p">()</span><span class="w"></span>
+    # 全部子任务执行完成，修改tasklog状态
+    tasklog.state = 1
+    tasklog.save()
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">True</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;success&#39;</span><span class="w"></span>
-</code></pre></div>
+    return True, 'success'</code></pre>
+
 
 <p>一个任务流实际上就是启动了一个celery异步任务去运行，异步任务内通过for循环依次执行子任务，而对于这种模式来说想要加入可以中断执行的手动审批任务就比较困难了</p>
 <h2 id="celery_1">多Celery任务</h2>
 <p>在任务流执行的过程中遇到手动审批类型的子任务，要先中断执行等待用户审批通过才能继续往下执行，既然单Celery任务无法实现，那很自然的就想到了对任务流的执行由单Celery任务进行拆分，控制任务流执行的逻辑拿出来，仅仅在遇到可以自动执行的子任务时才丢给celery去处理，这样整个任务流就可以随意中断了</p>
 <p>看下下边的代码，用户执行会新进入<code>TaskRun</code>类，<code>TaskRun</code>类会进行一系列的基础处理，例如参数解析，之后交给<code>task_run</code>函数继续处理</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">TaskRun</span>(<span class="n">RetrieveUpdateDestroyView</span>):
-    <span class="n">model</span> = <span class="n">Task</span>
-    <span class="n">permission</span> = {<span class="s">&#39;post&#39;</span>: <span class="s">&#39;engine.task_run&#39;</span>}
+<pre class="codehilite"><code>class TaskRun(RetrieveUpdateDestroyView):
+    model = Task
+    permission = {'post': 'engine.task_run'}
 
-    <span class="n">def</span> <span class="n">post</span>(<span class="nb">self</span>, <span class="n">request</span>, <span class="n">pk</span>):
-        <span class="n">task</span> = <span class="nb">self</span>.<span class="n">model</span>.<span class="n">objects</span>.<span class="nb">get</span>(<span class="nb">id</span>=<span class="n">int</span>(<span class="n">pk</span>))
+    def post(self, request, pk):
+        task = self.model.objects.get(id=int(pk))
 
-        <span class="c1"># 获取post提交数据并转为字典</span>
-        <span class="n">validated_data</span> = <span class="n">post_data_to_dict</span>(<span class="n">request</span>)
+        # 获取post提交数据并转为字典
+        validated_data = post_data_to_dict(request)
 
-        <span class="c1"># 获取到前台传入的参数与任务默认参数合并</span>
-        <span class="nb">args</span> = <span class="n">dict</span>(<span class="n">literal_eval</span>(<span class="n">task</span>.<span class="nb">args</span>) <span class="k">if</span> <span class="n">task</span>.<span class="nb">args</span> <span class="k">else</span> {}, **<span class="n">validated_data</span>)
+        # 获取到前台传入的参数与任务默认参数合并
+        args = dict(literal_eval(task.args) if task.args else {}, **validated_data)
 
-        <span class="c1"># 调用任务执行函数执行任务</span>
-        <span class="k">state</span>, <span class="nb">message</span>, <span class="n">tid</span> = <span class="n">task_run</span>(<span class="n">request</span>, <span class="n">task</span>, <span class="nb">args</span>)
-        <span class="k">return</span> <span class="n">JsonResponse</span>({<span class="s">&#39;state&#39;</span>: <span class="k">state</span>, <span class="s">&#39;message&#39;</span>: <span class="nb">message</span>, <span class="s">&#39;tid&#39;</span>: <span class="n">tid</span>})
-</code></pre></div>
+        # 调用任务执行函数执行任务
+        state, message, tid = task_run(request, task, args)
+        return JsonResponse({'state': state, 'message': message, 'tid': tid})</code></pre>
+
 
 <p><code>task_run</code>函数则会进行参数校验，数据入库等等一系列的逻辑处理，然后传给了<code>exec_subtask</code>函数去处理</p>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span> <span class="n">task_run</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-    <span class="o">#</span> <span class="err">判断</span><span class="n">subtask所需参数是否都存在</span>
-    <span class="n">success</span><span class="p">,</span> <span class="n">cmd_args</span> <span class="o">=</span> <span class="n">diff_args</span><span class="p">(</span><span class="n">_all_subtasks_args</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
-    <span class="k">if</span> <span class="k">not</span> <span class="n">success</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;参数匹配失败：&#39;</span> <span class="o">+</span> <span class="n">str</span><span class="p">(</span><span class="n">cmd_args</span><span class="p">),</span> <span class="mi">0</span>
+<pre class="codehilite"><code>def task_run(request, task, args):
+    # 判断subtask所需参数是否都存在
+    success, cmd_args = diff_args(_all_subtasks_args, args)
+    if not success:
+        return 0, '参数匹配失败：' + str(cmd_args), 0
 
-    <span class="o">#</span> <span class="err">添加</span><span class="n">tasklog记录</span>
-    <span class="n">_t</span> <span class="o">=</span> <span class="n">tasklog</span> <span class="o">=</span> <span class="n">TaskLog</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">create</span><span class="p">(</span>
-        <span class="n">create_user</span><span class="o">=</span><span class="n">request</span><span class="p">.</span><span class="k">user</span><span class="p">,</span>
-        <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
-    <span class="p">)</span>
+    # 添加tasklog记录
+    _t = tasklog = TaskLog.objects.create(
+        create_user=request.user,
+        task=task,
+    )
 
-    <span class="n">exec_subtask</span><span class="p">(</span><span class="n">tasklog</span><span class="p">)</span>
-    <span class="k">return</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;任务正在执行中，请稍后查看状态&#39;</span><span class="p">,</span> <span class="n">tasklog</span><span class="p">.</span><span class="n">id</span>
-</code></pre></div>
+    exec_subtask(tasklog)
+    return 1, '任务正在执行中，请稍后查看状态', tasklog.id</code></pre>
+
 
 <p><code>exec_subtask</code>函数则会获取下一步要执行的子任务，然后交给名为<code>run_subtask</code>的Celery任务去异步执行</p>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span> <span class="n">exec_subtask</span><span class="p">(</span><span class="n">tasklog</span><span class="p">,</span> <span class="n">subtasklog</span><span class="o">=</span><span class="k">None</span><span class="p">):</span>
-    <span class="o">#</span> <span class="err">获取所有子任务</span>
-    <span class="n">subtasklogs</span> <span class="o">=</span> <span class="n">tasklog</span><span class="p">.</span><span class="n">get_subtasklogs</span>
+<pre class="codehilite"><code>def exec_subtask(tasklog, subtasklog=None):
+    # 获取所有子任务
+    subtasklogs = tasklog.get_subtasklogs
 
-    <span class="k">if</span> <span class="n">subtasklog</span><span class="p">:</span>
-        <span class="o">#</span> <span class="err">如果所传</span><span class="n">subtask为任务下的最后一个子任务</span><span class="err">，则结束整个任务</span>
-        <span class="k">if</span> <span class="n">subtasklog</span> <span class="o">==</span> <span class="n">subtasklogs</span><span class="p">.</span><span class="k">last</span><span class="p">():</span>
-            <span class="n">subtasklog</span><span class="p">.</span><span class="n">tasklog</span><span class="p">.</span><span class="k">state</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="n">subtasklog</span><span class="p">.</span><span class="n">tasklog</span><span class="p">.</span><span class="n">save</span><span class="p">()</span>
+    if subtasklog:
+        # 如果所传subtask为任务下的最后一个子任务，则结束整个任务
+        if subtasklog == subtasklogs.last():
+            subtasklog.tasklog.state = 1
+            subtasklog.tasklog.save()
 
-            <span class="k">return</span> <span class="k">True</span><span class="p">,</span> <span class="s1">&#39;Finished&#39;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="o">#</span> <span class="err">否则获取下一条要执行的</span><span class="n">subtask</span>
-            <span class="n">next_subtask</span> <span class="o">=</span> <span class="n">subtasklogs</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__gt</span><span class="o">=</span><span class="n">subtasklog</span><span class="p">.</span><span class="n">id</span><span class="p">).</span><span class="k">first</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="o">#</span> <span class="err">如果没有传</span><span class="n">subtask则默认取第一条</span>
-        <span class="n">next_subtask</span> <span class="o">=</span> <span class="n">subtasklogs</span><span class="p">.</span><span class="k">first</span><span class="p">()</span>
+            return True, 'Finished'
+        else:
+            # 否则获取下一条要执行的subtask
+            next_subtask = subtasklogs.filter(id__gt=subtasklog.id).first()
+    else:
+        # 如果没有传subtask则默认取第一条
+        next_subtask = subtasklogs.first()
 
-    <span class="o">#</span> <span class="err">将要执行的子任务传给</span><span class="n">run_subtask异步执行</span>
-    <span class="n">celery_task</span> <span class="o">=</span> <span class="n">run_subtask</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="n">next_subtask</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>
+    # 将要执行的子任务传给run_subtask异步执行
+    celery_task = run_subtask.delay(next_subtask.id)
 
-    <span class="o">#</span> <span class="err">记录</span><span class="n">celery任务的ID</span><span class="err">，终止任务执行时使用</span>
-    <span class="n">next_subtask</span><span class="p">.</span><span class="n">celery_task_id</span> <span class="o">=</span> <span class="n">celery_task</span>
-    <span class="n">next_subtask</span><span class="p">.</span><span class="n">save</span><span class="p">()</span>
+    # 记录celery任务的ID，终止任务执行时使用
+    next_subtask.celery_task_id = celery_task
+    next_subtask.save()
 
-    <span class="k">return</span> <span class="k">True</span><span class="p">,</span> <span class="s1">&#39;Next&#39;</span>
-</code></pre></div>
+    return True, 'Next'</code></pre>
+
 
 <p><code>run_subtask</code>则会判断任务类型，如果是命令或脚本之类的任务则会自动执行，如果是审批就发送审批通知并中止任务执行</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">@shared_task</span><span class="w"></span>
-<span class="n">def</span><span class="w"> </span><span class="n">run_subtask</span><span class="p">(</span><span class="n">tid</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
-<span class="w">    </span><span class="k">try</span><span class="err">:</span><span class="w"></span>
-<span class="w">        </span><span class="n">subtasklog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SubTaskLog</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">id</span><span class="o">=</span><span class="n">tid</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="ow">except</span><span class="w"> </span><span class="n">SubTaskLog</span><span class="p">.</span><span class="nl">DoesNotExist</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">True</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;当前要执行的Task不存在，tid：%d&#39;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">tid</span><span class="w"></span>
+<pre class="codehilite"><code>@shared_task
+def run_subtask(tid):
+    try:
+        subtasklog = SubTaskLog.objects.get(id=tid)
+    except SubTaskLog.DoesNotExist:
+        return True, '当前要执行的Task不存在，tid：%d' % tid
 
-<span class="w">    </span><span class="n">Logger</span><span class="p">(</span><span class="n">tid</span><span class="p">).</span><span class="k">add</span><span class="p">(</span><span class="s1">&#39;开始执行子任务 - %s\n&#39;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">subtasklog</span><span class="p">.</span><span class="n">temptask</span><span class="p">.</span><span class="n">subtask</span><span class="p">.</span><span class="n">name</span><span class="p">)</span><span class="w"></span>
+    Logger(tid).add('开始执行子任务 - %s\n' % subtasklog.temptask.subtask.name)
 
-<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="n">修改任务状态</span><span class="err">，</span><span class="n">当任务类型为审批时改为7待审批</span><span class="err">，</span><span class="n">否则为9执行中</span><span class="w"></span>
-<span class="w">    </span><span class="n">subtasklog</span><span class="p">.</span><span class="k">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">subtasklog</span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="mi">9</span><span class="w"></span>
-<span class="w">    </span><span class="n">subtasklog</span><span class="p">.</span><span class="k">save</span><span class="p">()</span><span class="w"></span>
+    # 修改任务状态，当任务类型为审批时改为7待审批，否则为9执行中
+    subtasklog.state = 7 if subtasklog.type == 6 else 9
+    subtasklog.save()
 
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">subtasklog</span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">subtasklog</span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="err">:</span><span class="w"></span>
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">如果是命令或脚本类型子任务则调用执行系统执行</span><span class="w"></span>
+    if subtasklog.type == 1 or subtasklog.type == 2:
+        # 如果是命令或脚本类型子任务则调用执行系统执行
 
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">subtasklog</span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">6</span><span class="err">:</span><span class="w"></span>
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">如果是审批类型子任务</span><span class="err">，</span><span class="n">则修改子任务状态为待审批</span><span class="err">，</span><span class="n">等待后续审批</span><span class="w"></span>
-<span class="w">        </span><span class="n">Logger</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">).</span><span class="k">add</span><span class="p">(</span><span class="s1">&#39;\n通知已发送，等待审批\n通知用户：%s&#39;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">_notify_users</span><span class="p">)</span><span class="w"></span>
+    if subtasklog.type == 6:
+        # 如果是审批类型子任务，则修改子任务状态为待审批，等待后续审批
+        Logger(tid, 7).add('\n通知已发送，等待审批\n通知用户：%s' % _notify_users)
 
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">中止流程</span><span class="err">，</span><span class="n">待审批之后再进行后续流程</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">True</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Notify Done, Waitting Approve&#39;</span><span class="w"></span>
+        # 中止流程，待审批之后再进行后续流程
+        return True, 'Notify Done, Waitting Approve'
 
-<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="n">最后继续交给exec_subtask去循环执行剩余子任务</span><span class="w"></span>
-<span class="w">    </span><span class="n">exec_subtask</span><span class="p">(</span><span class="n">subtasklog</span><span class="p">.</span><span class="n">tasklog</span><span class="p">,</span><span class="w"> </span><span class="n">subtasklog</span><span class="p">)</span><span class="w"></span>
+    # 最后继续交给exec_subtask去循环执行剩余子任务
+    exec_subtask(subtasklog.tasklog, subtasklog)
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">True</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Subtask Done, Next Subtask&#39;</span><span class="w"></span>
-</code></pre></div>
+    return True, 'Subtask Done, Next Subtask'</code></pre>
+
 
 <p>此时有审批权限的用户会收到审批通知，在页面上可以对任务进行审批</p>
 <p><img alt="" loading="lazy" src="/static/images/20220226.05.png" /></p>
 <p>审批请求会发送给<code>SubTasklogApprove</code>类，<code>SubTasklogApprove</code>记录用户审批结果，如果审批通过则继续调用<code>exec_subtask</code>执行接下来的流程，若审批拒绝就直接结束整个流程了</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">SubTasklogApprove</span>(<span class="n">RetrieveUpdateDestroyView</span>):
-    <span class="n">model</span> = <span class="n">SubTaskLog</span>
+<pre class="codehilite"><code>class SubTasklogApprove(RetrieveUpdateDestroyView):
+    model = SubTaskLog
 
-    <span class="n">def</span> <span class="nb">put</span>(<span class="nb">self</span>, <span class="n">request</span>, <span class="n">pk</span>):
-        <span class="n">_t</span> = <span class="nb">self</span>.<span class="n">model</span>.<span class="n">objects</span>.<span class="nb">get</span>(<span class="nb">id</span>=<span class="n">pk</span>)
+    def put(self, request, pk):
+        _t = self.model.objects.get(id=pk)
 
-        <span class="n">_t</span>.<span class="k">state</span> = <span class="n">postdata</span>.<span class="nb">get</span>(<span class="s">&#39;state&#39;</span>)
-        <span class="n">_t</span>.<span class="n">approve_user</span> = <span class="n">request</span>.<span class="n">user</span>
-        <span class="n">_t</span>.<span class="n">details</span> += <span class="n">_details</span>
-        <span class="n">_t</span>.<span class="n">save</span>()
+        _t.state = postdata.get('state')
+        _t.approve_user = request.user
+        _t.details += _details
+        _t.save()
 
-        <span class="k">if</span> <span class="n">_t</span>.<span class="k">state</span> == <span class="mi">11</span>:
-            <span class="c1"># 审批通过继续走接下来的流程</span>
-            <span class="n">exec_subtask</span>(<span class="n">_t</span>.<span class="n">tasklog</span>, <span class="n">_t</span>)
+        if _t.state == 11:
+            # 审批通过继续走接下来的流程
+            exec_subtask(_t.tasklog, _t)
 
-        <span class="k">if</span> <span class="n">_t</span>.<span class="k">state</span> == <span class="mi">12</span>:
-            <span class="c1"># 审批拒绝则直接结束整个流程</span>
-            <span class="n">_t</span>.<span class="n">tasklog</span>.<span class="k">state</span> = <span class="mi">12</span>
-            <span class="n">_t</span>.<span class="n">tasklog</span>.<span class="n">save</span>()
+        if _t.state == 12:
+            # 审批拒绝则直接结束整个流程
+            _t.tasklog.state = 12
+            _t.tasklog.save()
 
-        <span class="k">return</span> <span class="n">JsonResponse</span>({<span class="s">&quot;state&quot;</span>: <span class="mi">1</span>, <span class="s">&quot;message&quot;</span>: <span class="s">&quot;审批完成&quot;</span>})
-</code></pre></div>
+        return JsonResponse({&quot;state&quot;: 1, &quot;message&quot;: &quot;审批完成&quot;})</code></pre>
+
 
 <p>至此整个审批任务流完成了，对于以上代码只保留了主线逻辑，做了大量精简，所以不要吹毛求疵了，主要目的是介绍清楚逻辑，你有收获吗</p>
 

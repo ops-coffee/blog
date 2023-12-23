@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -53,9 +53,9 @@
 <h2 id="ztree">zTree</h2>
 <p>zTree是一个开源的依靠JQuery实现的多功能树插件，具有性能优异、配置灵活、功能强大的特点</p>
 <p>之前的<a href="https://mp.weixin.qq.com/mp/homepage?__biz=MzU5MDY1MzcyOQ==&amp;hid=12&amp;sn=07358cd1f94e69d5cbc7e236a84aa50d">系列前端插件文章</a>已经多次介绍过将前端插件引入自己项目中的方法，这里就不赘述了，如有问题也可以参考文章末尾给出的Demo代码，在引入JS/CSS之后只需要如下代码即可构建一颗树</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;treeDemo&quot;</span> <span class="na">class=</span><span class="s">&quot;ztree&quot;</span><span class="nt">&gt;&lt;/ul&gt;</span>
+<pre class="codehilite"><code>&lt;ul id=&quot;treeDemo&quot; class=&quot;ztree&quot;&gt;&lt;/ul&gt;
 
-<span class="nt">&lt;script&gt;</span>
+&lt;script&gt;
     var setting = {
       data: {
         simpleData: {
@@ -77,55 +77,55 @@
     ];
 
     $.fn.zTree.init($(&quot;#treeDemo&quot;), setting, zNodes);
-<span class="nt">&lt;/script&gt;</span>
-</code></pre></div>
+&lt;/script&gt;</code></pre>
+
 
 <p><code>$.fn.zTree.init</code>初始化树，这里需要三个参数，第一个参数是加载树结构的Jquery对象，<code>setting</code>为ztree的各种配置参数，<code>zNodes</code>为ztree的具体数据</p>
 <p>zTree的配置采用json的格式，按照配置类型分为了界面配置<code>view</code>，数据配置<code>data</code>，编辑配置<code>edit</code>，复选框配置<code>check</code>，异步加载配置<code>async</code>以及各种回调函数配置<code>callback</code>，配置丰富且强大</p>
 <p>zTree支持两种数据模式，简单数据模式和标准数据模式，简单数据模式就像我们上边例子中这样的数据结构，而标准数据模式就需要将数据构造成复杂的JSON嵌套格式，像下边这样</p>
-<div class="codehilite"><pre><span></span><code><span class="k">var</span> <span class="n">zNodes</span> <span class="o">=</span> <span class="p">[{</span>
-  <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;OPS-COFFEE&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">,</span>
-  <span class="s2">&quot;children&quot;</span><span class="p">:</span> <span class="p">[</span>
-      <span class="p">{</span>
-          <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;运营部&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">,</span>
-          <span class="s2">&quot;children&quot;</span><span class="p">:</span> <span class="p">[</span>
-              <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;产品部&quot;</span><span class="p">,</span><span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">},</span>
-              <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;技术部&quot;</span><span class="p">,</span><span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">}</span>
-          <span class="p">]</span>
-      <span class="p">},</span>
-      <span class="p">{</span>
-          <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;市场部&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">,</span>
-          <span class="s2">&quot;children&quot;</span><span class="p">:</span> <span class="p">[</span>
-              <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;销售部&quot;</span><span class="p">,</span><span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">}</span>
-          <span class="p">]</span>
-      <span class="p">},</span>
-      <span class="p">{</span>
-          <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;综合部&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">,</span>
-          <span class="s2">&quot;children&quot;</span><span class="p">:</span> <span class="p">[</span>
-              <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;人事部&quot;</span><span class="p">,</span><span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">},</span>
-              <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;财务部&quot;</span><span class="p">,</span><span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="bp">true</span><span class="p">}</span>
-          <span class="p">]</span>
-      <span class="p">}</span>
-  <span class="p">]</span>
-<span class="p">}];</span>
-</code></pre></div>
+<pre class="codehilite"><code>var zNodes = [{
+  &quot;name&quot;: &quot;OPS-COFFEE&quot;,
+  &quot;open&quot;: true,
+  &quot;children&quot;: [
+      {
+          &quot;name&quot;: &quot;运营部&quot;,
+          &quot;open&quot;: true,
+          &quot;children&quot;: [
+              {&quot;name&quot;: &quot;产品部&quot;,&quot;open&quot;: true},
+              {&quot;name&quot;: &quot;技术部&quot;,&quot;open&quot;: true}
+          ]
+      },
+      {
+          &quot;name&quot;: &quot;市场部&quot;,
+          &quot;open&quot;: true,
+          &quot;children&quot;: [
+              {&quot;name&quot;: &quot;销售部&quot;,&quot;open&quot;: true}
+          ]
+      },
+      {
+          &quot;name&quot;: &quot;综合部&quot;,
+          &quot;open&quot;: true,
+          &quot;children&quot;: [
+              {&quot;name&quot;: &quot;人事部&quot;,&quot;open&quot;: true},
+              {&quot;name&quot;: &quot;财务部&quot;,&quot;open&quot;: true}
+          ]
+      }
+  ]
+}];</code></pre>
+
 
 <p>标准模式数据结构复杂但父子关系清晰，简单模式数据则相反，示例中我们使用了简单数据模式，需要配置simpleData的<code>enable</code>属性为true</p>
 <p>完成以上配置后可以看到页面效果如下</p>
 <p><img alt="" loading="lazy" src="/static/images/20190816.tree01.png" /></p>
 <h2 id="django">Django</h2>
 <p>既然前端页面已经能够正常展示树了，后端就只需要返回前端对应的数据格式即可，Django中最简单的方式就是使用Foreignkey的自关联，模型设计如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Department</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span>
-        <span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;名称&#39;</span><span class="p">)</span>
-    <span class="n">parent</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
-        <span class="s1">&#39;self&#39;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">PROTECT</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">,</span>
-        <span class="nb nb-Type">null</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;父部门&#39;</span><span class="p">)</span>
-</code></pre></div>
+<pre class="codehilite"><code>class Department(models.Model):
+    name = models.CharField(
+        max_length=128, unique=True, verbose_name='名称')
+    parent = models.ForeignKey(
+        'self', on_delete=models.PROTECT, db_constraint=False,
+        null=True, blank=True, verbose_name='父部门')</code></pre>
+
 
 <p>ForeignKey第一个参数用<code>self</code>就表示自关联，自己关联自己，还有两个Foreignkey的重要参数解释如下：</p>
 <p><strong>on_delete：</strong> 控制当外键引用的对象被删除时指定的SQL约束行为</p>
@@ -137,36 +137,36 @@
 <li>DO_NOTHING：什么也不做，但这可能会导致你在调用数据时报错</li>
 <li>SET：设置一个指定的自定义实例，官方案例如下</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<pre class="codehilite"><code>from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.db import models
 
-<span class="k">def</span> <span class="nf">get_sentinel_user</span><span class="p">():</span>
-    <span class="k">return</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;deleted&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+def get_sentinel_user():
+    return get_user_model().objects.get_or_create(username='deleted')[0]
 
-<span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
-        <span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span>
-        <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">SET</span><span class="p">(</span><span class="n">get_sentinel_user</span><span class="p">),</span>
-    <span class="p">)</span>
-</code></pre></div>
+class MyModel(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET(get_sentinel_user),
+    )</code></pre>
+
 
 <p>这个案例的意思是当删除外键字段user有关联时调用<code>get_sentinel_user</code>方法，这个方法会返回一个username为deleted的实例</p>
 <p><strong>db_constraint：</strong> 控制是否在数据库中为此外键创建约束，默认为True。在数据库中创建外键约束是<strong>数据库规范中明令禁止</strong>的行为，那么我们可以设置<code>db_constraint</code>为<code>False</code>从而不在数据库层面创建约束，但同样可以使用Django为Foreignkey提供的各种关联查询</p>
 <p>接下来可以通过如下代码将数据库中的数据转成ztree所能使用的简单模式数据并返回</p>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span> <span class="n">tree</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">mList</span> <span class="o">=</span> <span class="n">Department</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">all</span><span class="p">()</span>
+<pre class="codehilite"><code>def tree(request):
+    mList = Department.objects.all()
 
-    <span class="n">_data</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="err">{</span>
-            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="s1">&#39;pId&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">id</span> <span class="k">if</span> <span class="n">x</span><span class="p">.</span><span class="n">parent</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;open&#39;</span><span class="p">:</span> <span class="mi">1</span>
-        <span class="err">}</span> <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="n">mList</span>
-    <span class="p">]</span>
+    _data = [
+        {
+            'id': x.id,
+            'name': x.name,
+            'pId': x.parent.id if x.parent else 0, 'open': 1
+        } for x in mList
+    ]
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;tree.html&#39;</span><span class="p">,</span> <span class="err">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">_data</span><span class="err">}</span><span class="p">)</span>
-</code></pre></div>
+    return render(request, 'tree.html', {'data': _data})</code></pre>
+
 
 <p>注意在前端使用时需要用<code>{{data|safe}}</code>的方式，添加<code>|safe</code>主要是因为Django为了安全默认会对HTML、JS等语法标签进行转义，但我们所传给前端的数据不希望转义可以通过添加<code>|safe</code>来实现</p>
 <h2 id="demo">完整Demo</h2>

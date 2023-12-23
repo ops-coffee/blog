@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -51,27 +51,27 @@
 <h2 id="_1">安装配置</h2>
 <p><code>django-guardian</code>当前的最新版本是v2.2.0，支持django2.1以上版本，包括django3.0，依赖python版本3.5+，以下演示代码均基于django3.0.2</p>
 <p>可以直接通过pip来安装<code>django-guardian</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err">pip install django-guardian</span>
-</code></pre></div>
+<pre class="codehilite"><code>pip install django-guardian</code></pre>
+
 
 <p>安装完成后，需要将guardian以独立app的方式安装进django</p>
 <p>修改django配置文件settings.py，在INSTALLED_APPS配置中添加<code>guardian</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err">INSTALLED_APPS = [</span>
-<span class="err">    &#39;guardian&#39;,</span>
-<span class="err">]</span>
-</code></pre></div>
+<pre class="codehilite"><code>INSTALLED_APPS = [
+    'guardian',
+]</code></pre>
+
 
 <p>然后将guardian作为额外的授权BACKEND添加进配置文件settings.py</p>
-<div class="codehilite"><pre><span></span><code><span class="err">AUTHENTICATION_BACKENDS = (</span>
-<span class="err">    &#39;django.contrib.auth.backends.ModelBackend&#39;,</span>
-<span class="err">    &#39;guardian.backends.ObjectPermissionBackend&#39;,</span>
-<span class="err">)</span>
-</code></pre></div>
+<pre class="codehilite"><code>AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
+)</code></pre>
+
 
 <p>django默认通过<code>django.contrib.auth.backends.ModelBackend</code>进行用户验证授权，我们这里添加了<code>guardian.backends.ObjectPermissionBackend</code>作为默认验证授权的扩展</p>
 <p>最后创建guardian的数据库表</p>
-<div class="codehilite"><pre><span></span><code><span class="err">python manage.py migrate</span>
-</code></pre></div>
+<pre class="codehilite"><code>python manage.py migrate</code></pre>
+
 
 <p>创建完成后，会发现数据库里多了两张表<code>guardian_groupobjectpermission</code>和<code>guardian_userobjectpermission</code>，两个表分别记录了用户/组与model以及model内的具体object的权限对应关系，以<code>guardian_groupobjectpermission</code>表为例，说下各字段的含义</p>
 <ul>
@@ -85,47 +85,47 @@
 <h2 id="_2">权限分配</h2>
 <p>启用guardian对象权限之后，可以通过<code>guardian.shortcuts.assign_perm()</code>方法来为用户/组分配权限</p>
 <p>假如我们有<code>CommonTask</code>表如下</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">CommonTask</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">create_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;创建时间&#39;</span><span class="p">)</span>
-    <span class="n">update_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;更新时间&#39;</span><span class="p">)</span>
+<pre class="codehilite"><code>class CommonTask(models.Model):
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
-    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">DO_NOTHING</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">)</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;任务名称&#39;</span><span class="p">)</span>
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, db_constraint=False)
+    name = models.CharField(max_length=128, unique=True, verbose_name='任务名称')
 
-    <span class="n">template</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Template</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">PROTECT</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="nb nb-Type">null</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;参数&#39;</span><span class="p">)</span>
+    template = models.ForeignKey(Template, on_delete=models.PROTECT, db_constraint=False)
+    args = models.CharField(max_length=255, null=True, verbose_name='参数')
 
-    <span class="n">def</span> <span class="n">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+    def __str__(self):
+        return self.name
 
-    <span class="k">class</span> <span class="n">Meta</span><span class="p">:</span>
-        <span class="n">default_permissions</span> <span class="o">=</span> <span class="p">()</span>
+    class Meta:
+        default_permissions = ()
 
-        <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="p">(</span><span class="s2">&quot;commontask_select&quot;</span><span class="p">,</span> <span class="s2">&quot;常用任务查看权限&quot;</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;commontask_change&quot;</span><span class="p">,</span> <span class="s2">&quot;常用任务修改权限&quot;</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;commontask_run&quot;</span><span class="p">,</span> <span class="s2">&quot;执行常用任务&quot;</span><span class="p">),</span>
-        <span class="p">)</span>
-</code></pre></div>
+        permissions = (
+            (&quot;commontask_select&quot;, &quot;常用任务查看权限&quot;),
+            (&quot;commontask_change&quot;, &quot;常用任务修改权限&quot;),
+            (&quot;commontask_run&quot;, &quot;执行常用任务&quot;),
+        )</code></pre>
+
 
 <p>如果想把name为<code>dev-ops-coffee-build</code>的CommonTask赋权给name为<code>dev@ops-coffee.cn</code>的用户，可以这样处理</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># 获取任务对象</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">engine.models</span> <span class="kn">import</span> <span class="n">CommonTask</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">task</span> <span class="o">=</span> <span class="n">CommonTask</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;dev-ops-coffee-build&#39;</span><span class="p">)</span>
+<pre class="codehilite"><code># 获取任务对象
+&gt;&gt;&gt; from engine.models import CommonTask
+&gt;&gt;&gt; task = CommonTask.objects.get(name='dev-ops-coffee-build')
 
-<span class="c1"># 获取用户对象</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">accounts.models</span> <span class="kn">import</span> <span class="n">User</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;dev@ops-coffee.cn&#39;</span><span class="p">)</span>
+# 获取用户对象
+&gt;&gt;&gt; from accounts.models import User
+&gt;&gt;&gt; user = User.objects.get(username='dev@ops-coffee.cn')
 
-<span class="c1"># 确认用户dev@ops-coffee.cn对任务dev-ops-coffee-build无权限</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">user</span><span class="o">.</span><span class="n">has_perm</span><span class="p">(</span><span class="s1">&#39;engine.commontask_run&#39;</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span>
-<span class="bp">False</span>
+# 确认用户dev@ops-coffee.cn对任务dev-ops-coffee-build无权限
+&gt;&gt;&gt; user.has_perm('engine.commontask_run', task)
+False
 
-<span class="c1"># 给用户赋权</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">guardian.shortcuts</span> <span class="kn">import</span> <span class="n">assign_perm</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">assign_perm</span><span class="p">(</span><span class="s1">&#39;commontask_run&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span>
-<span class="o">&lt;</span><span class="n">UserObjectPermission</span><span class="p">:</span> <span class="n">dev</span><span class="o">-</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="o">-</span><span class="n">build</span> <span class="o">|</span> <span class="n">dev</span><span class="nd">@ops</span><span class="o">-</span><span class="n">coffee</span><span class="o">.</span><span class="n">cn</span> <span class="o">|</span> <span class="n">commontask_run</span><span class="o">&gt;</span>
-</code></pre></div>
+# 给用户赋权
+&gt;&gt;&gt; from guardian.shortcuts import assign_perm
+&gt;&gt;&gt; assign_perm('commontask_run', user, task)
+&lt;UserObjectPermission: dev-ops-coffee-build | dev@ops-coffee.cn | commontask_run&gt;</code></pre>
+
 
 <p>通过<code>assign_perm</code>可以给用户赋权，<code>assign_perm</code>接收三个参数，分别为<code>perm</code>、<code>user_or_group</code>以及<code>object</code></p>
 <ul>
@@ -135,196 +135,196 @@
 </ul>
 <p>通过<code>has_perm</code>可以检查用户是否具有权限，has_perm接收两个参数，第一个参数为权限，第二个参数为具体的对象，其中第二个参数为可选参数，如果没有则跟django默认权限机制一样会去检查用户对model是否具有权限，如果有则检查用户对model下的object是否有权限</p>
 <p>赋权过后就可以再次查看用户是否有此对象的对应权限了</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; user.has_perm(&#39;engine.commontask_run&#39;, task)</span>
-<span class="err">True</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; user.has_perm('engine.commontask_run', task)
+True</code></pre>
+
 
 <p>对于group组授权，操作类似</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># 获取用户对象</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;qa@ops-coffee.cn&#39;</span><span class="p">)</span>
+<pre class="codehilite"><code># 获取用户对象
+&gt;&gt;&gt; user = User.objects.get(username='qa@ops-coffee.cn')
 
-<span class="c1"># 获取组对象</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">Group</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;测试组&#39;</span><span class="p">)</span>
+# 获取组对象
+&gt;&gt;&gt; from django.contrib.auth.models import Group
+&gt;&gt;&gt; group = Group.objects.get(name='测试组')
 
-<span class="c1"># 给用户加入组</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+# 给用户加入组
+&gt;&gt;&gt; user.groups.add(group)
 
-<span class="c1"># 先确认下用户qa@ops-coffee.cn对任务dev-ops-coffee.cn无权限</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">user</span><span class="o">.</span><span class="n">has_perm</span><span class="p">(</span><span class="s1">&#39;engine.commontask_run&#39;</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span>
-<span class="bp">False</span>
+# 先确认下用户qa@ops-coffee.cn对任务dev-ops-coffee.cn无权限
+&gt;&gt;&gt; user.has_perm('engine.commontask_run', task)
+False
 
-<span class="c1"># 给组赋权</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">assign_perm</span><span class="p">(</span><span class="s1">&#39;commontask_run&#39;</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span>
-<span class="o">&lt;</span><span class="n">GroupObjectPermission</span><span class="p">:</span> <span class="n">dev</span><span class="o">-</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="o">-</span><span class="n">build</span> <span class="o">|</span> <span class="err">测试组</span> <span class="o">|</span> <span class="n">commontask_run</span><span class="o">&gt;</span>
-</code></pre></div>
+# 给组赋权
+&gt;&gt;&gt; assign_perm('commontask_run', group, task)
+&lt;GroupObjectPermission: dev-ops-coffee-build | 测试组 | commontask_run&gt;</code></pre>
+
 
 <p><code>assign_perm</code>同样可以给组赋权，只需要把第二个参数替换为组对象即可，赋权过后查看组内用户就有权限了</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; user.has_perm(&#39;engine.commontask_run&#39;, task)</span>
-<span class="err">True</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; user.has_perm('engine.commontask_run', task)
+True</code></pre>
+
 
 <p>由于只赋予了用户组对某个具体对象的权限，并没有赋予用户组对整个model的权限，所以<code>has_perm</code>检查用户对model的权限时会返回False</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; user.has_perm(&#39;engine.commontask_run&#39;)</span>
-<span class="err">False</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; user.has_perm('engine.commontask_run')
+False</code></pre>
+
 
 <h2 id="_3">去除权限</h2>
 <p>当我们需要去除权限时，可以使用<code>remove_perm</code>方法，<code>remove_perm</code>方法与<code>assign_perm</code>方法类似，同样接收三个参数，参数类型也类似，唯一不同的是<code>assign_perm</code>的第二个参数可以是QuerySet，而<code>remove_perm</code>的第二个参数必须是instance</p>
 <p>就像这样<code>assign_perm</code>可以同时给多个用户赋权</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; task =  CommonTask.objects.get(name=&#39;dev-ops-coffee-build&#39;)</span>
-<span class="err">&gt;&gt;&gt; assign_perm(&#39;engine.commontask_run&#39;, User.objects.filter(id__in=[3,4]), task)</span>
-<span class="err">[&lt;UserObjectPermission: dev-ops-coffee-build | test@ops-coffee.cn | commontask_run&gt;, &lt;UserObjectPermission: dev-ops-coffee-build | dev@ops-coffee.cn | commontask_run&gt;]</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; task =  CommonTask.objects.get(name='dev-ops-coffee-build')
+&gt;&gt;&gt; assign_perm('engine.commontask_run', User.objects.filter(id__in=[3,4]), task)
+[&lt;UserObjectPermission: dev-ops-coffee-build | test@ops-coffee.cn | commontask_run&gt;, &lt;UserObjectPermission: dev-ops-coffee-build | dev@ops-coffee.cn | commontask_run&gt;]</code></pre>
+
 
 <p>却不能同时去除多个用户的权限，以下用法会报错</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; remove_perm(&#39;engine.commontask_run&#39;, User.objects.filter(id__in=[3,4]), task)</span>
-<span class="err">Traceback (most recent call last):</span>
-<span class="err">    ...</span>
-<span class="err">    &#39;The QuerySet value for an exact lookup must be limited to &#39;</span>
-<span class="c">ValueError: The QuerySet value for an exact lookup must be limited to one result using slicing.</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; remove_perm('engine.commontask_run', User.objects.filter(id__in=[3,4]), task)
+Traceback (most recent call last):
+    ...
+    'The QuerySet value for an exact lookup must be limited to '
+ValueError: The QuerySet value for an exact lookup must be limited to one result using slicing.</code></pre>
+
 
 <p>一个清除权限的例子如下，以下例子会清除用户<code>dev@ops-coffee.cn</code>对CommonTask表下所有对象<code>engine.commontask_run</code>的权限</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">guardian.shortcuts</span> <span class="kn">import</span> <span class="n">remove_perm</span>
-<span class="o">&gt;&gt;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">remove_perm</span><span class="p">(</span><span class="s1">&#39;engine.commontask_run&#39;</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;dev@ops-coffee.cn&#39;</span><span class="p">),</span> <span class="n">CommonTask</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
-<span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;guardian.UserObjectPermission&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; from guardian.shortcuts import remove_perm
+&gt;&gt;&gt;
+&gt;&gt;&gt; remove_perm('engine.commontask_run', User.objects.get(username='dev@ops-coffee.cn'), CommonTask.objects.all())
+(3, {'guardian.UserObjectPermission': 3})</code></pre>
+
 
 <p>当然第三个参数object是可以不用写的，意思也是清除整个model的权限，与以下用法效果一样</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; remove_perm(&#39;engine.commontask_run&#39;, User.objects.get(username=&#39;dev@ops-coffee.cn&#39;))</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; remove_perm('engine.commontask_run', User.objects.get(username='dev@ops-coffee.cn'))</code></pre>
+
 
 <h2 id="_4">根据用户和对象获取权限</h2>
 <p><code>get_perms</code>方法可以根据用户或组以及对象来获取权限，接收两个参数<code>user_or_group</code>实例以及对象实例</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">guardian.shortcuts</span> <span class="kn">import</span> <span class="n">get_perms</span>
+<pre class="codehilite"><code>&gt;&gt;&gt; from guardian.shortcuts import get_perms
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">get_perms</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;dev@ops-coffee.cn&#39;</span><span class="p">),</span> <span class="n">task</span><span class="p">)</span>
-<span class="p">[</span><span class="s1">&#39;commontask_run&#39;</span><span class="p">]</span>
-</code></pre></div>
+&gt;&gt;&gt; get_perms(User.objects.get(username='dev@ops-coffee.cn'), task)
+['commontask_run']</code></pre>
+
 
 <h2 id="_5">根据对象和权限获取用户</h2>
 <p>当我们需要获取某个对象哪些用户有权限时，可以通过<code>get_users_with_perms</code>方法来处理，例子如下</p>
 <p>先来准备数据</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">task</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">CommonTask</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;dev-ops-coffee-build&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="o">&gt;&gt;&gt;</span><span class="w"></span>
-<span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">u1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;dev@ops-coffee.cn&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">u2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;qa@ops-coffee.cn&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="o">&gt;&gt;&gt;</span><span class="w"></span>
-<span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="k">group</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">Group</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
-<span class="o">&gt;&gt;&gt;</span><span class="w"></span>
-<span class="err">#</span><span class="w"> </span><span class="n">赋予用户u1对task对象有commontask_run的权限</span><span class="w"></span>
-<span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">assign_perm</span><span class="p">(</span><span class="s1">&#39;commontask_run&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">u1</span><span class="p">,</span><span class="w"> </span><span class="n">task</span><span class="p">)</span><span class="w"></span>
-<span class="o">&lt;</span><span class="nl">UserObjectPermission</span><span class="p">:</span><span class="w"> </span><span class="n">dev</span><span class="o">-</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="o">-</span><span class="n">build</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">dev</span><span class="nv">@ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">commontask_run</span><span class="o">&gt;</span><span class="w"></span>
+<pre class="codehilite"><code>&gt;&gt;&gt; task =  CommonTask.objects.get(name='dev-ops-coffee-build')
+&gt;&gt;&gt;
+&gt;&gt;&gt; u1 = User.objects.get(username='dev@ops-coffee.cn')
+&gt;&gt;&gt; u2 = User.objects.get(username='qa@ops-coffee.cn')
+&gt;&gt;&gt;
+&gt;&gt;&gt; group = Group.objects.get(id=1)
+&gt;&gt;&gt;
+# 赋予用户u1对task对象有commontask_run的权限
+&gt;&gt;&gt; assign_perm('commontask_run', u1, task)
+&lt;UserObjectPermission: dev-ops-coffee-build | dev@ops-coffee.cn | commontask_run&gt;
 
-<span class="err">#</span><span class="w"> </span><span class="n">赋予用户u2对task对象有commontask_change的权限</span><span class="w"></span>
-<span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">assign_perm</span><span class="p">(</span><span class="s1">&#39;commontask_change&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">u2</span><span class="p">,</span><span class="w"> </span><span class="n">task</span><span class="p">)</span><span class="w"></span>
-<span class="o">&lt;</span><span class="nl">UserObjectPermission</span><span class="p">:</span><span class="w"> </span><span class="n">dev</span><span class="o">-</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="o">-</span><span class="n">build</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">qa</span><span class="nv">@ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">commontask_change</span><span class="o">&gt;</span><span class="w"></span>
-<span class="o">&gt;&gt;&gt;</span><span class="w"></span>
+# 赋予用户u2对task对象有commontask_change的权限
+&gt;&gt;&gt; assign_perm('commontask_change', u2, task)
+&lt;UserObjectPermission: dev-ops-coffee-build | qa@ops-coffee.cn | commontask_change&gt;
+&gt;&gt;&gt;
 
-<span class="err">#</span><span class="w"> </span><span class="n">把用户test</span><span class="nv">@ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn加入到组group</span><span class="w"></span>
-<span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="k">User</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;test@ops-coffee.cn&#39;</span><span class="p">).</span><span class="n">groups</span><span class="p">.</span><span class="k">add</span><span class="p">(</span><span class="k">group</span><span class="p">)</span><span class="w"></span>
+# 把用户test@ops-coffee.cn加入到组group
+&gt;&gt;&gt; User.objects.get(username='test@ops-coffee.cn').groups.add(group)
 
-<span class="err">#</span><span class="w"> </span><span class="n">赋予组group对task对象有commontask_select的权限</span><span class="w"></span>
-<span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">assign_perm</span><span class="p">(</span><span class="s1">&#39;commontask_select&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">group</span><span class="p">,</span><span class="w"> </span><span class="n">task</span><span class="p">)</span><span class="w"></span>
-<span class="o">&lt;</span><span class="nl">GroupObjectPermission</span><span class="p">:</span><span class="w"> </span><span class="n">dev</span><span class="o">-</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="o">-</span><span class="n">build</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">开发组</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">commontask_select</span><span class="o">&gt;</span><span class="w"></span>
-<span class="o">&gt;&gt;&gt;</span><span class="w"></span>
-</code></pre></div>
+# 赋予组group对task对象有commontask_select的权限
+&gt;&gt;&gt; assign_perm('commontask_select', group, task)
+&lt;GroupObjectPermission: dev-ops-coffee-build | 开发组 | commontask_select&gt;
+&gt;&gt;&gt;</code></pre>
+
 
 <p>通过<code>get_users_whth_perms</code>方法获取对象的所有权限</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">guardian.shortcuts</span> <span class="kn">import</span> <span class="n">get_users_with_perms</span>
-<span class="o">&gt;&gt;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">get_users_with_perms</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
-<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">User</span><span class="p">:</span> <span class="n">dev</span><span class="nd">@ops</span><span class="o">-</span><span class="n">coffee</span><span class="o">.</span><span class="n">cn</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">User</span><span class="p">:</span> <span class="n">qa</span><span class="nd">@ops</span><span class="o">-</span><span class="n">coffee</span><span class="o">.</span><span class="n">cn</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">User</span><span class="p">:</span> <span class="n">test</span><span class="nd">@ops</span><span class="o">-</span><span class="n">coffee</span><span class="o">.</span><span class="n">cn</span><span class="o">&gt;</span><span class="p">]</span><span class="o">&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; from guardian.shortcuts import get_users_with_perms
+&gt;&gt;&gt;
+&gt;&gt;&gt; get_users_with_perms(task)
+&lt;QuerySet [&lt;User: dev@ops-coffee.cn&gt;, &lt;User: qa@ops-coffee.cn&gt;, &lt;User: test@ops-coffee.cn&gt;]&gt;</code></pre>
+
 
 <p>这里发现superuser用户并没有在最终的用户列表里，如果我们想让superuser用户也包含在内，可以设置参数<code>with_superusers=True</code></p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">get_users_with_perms</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">with_superusers</span><span class="o">=</span><span class="n">True</span><span class="p">)</span>
-<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span><span class="o">&lt;</span><span class="nl">User</span><span class="p">:</span> <span class="n">admin</span><span class="mf">@163.</span><span class="n">com</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nl">User</span><span class="p">:</span> <span class="n">dev</span><span class="p">@</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nl">User</span><span class="p">:</span> <span class="n">qa</span><span class="p">@</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nl">User</span><span class="p">:</span> <span class="n">test</span><span class="p">@</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span><span class="o">&gt;</span><span class="p">]</span><span class="o">&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; get_users_with_perms(task, with_superusers=True)
+&lt;QuerySet [&lt;User: admin@163.com&gt;, &lt;User: dev@ops-coffee.cn&gt;, &lt;User: qa@ops-coffee.cn&gt;, &lt;User: test@ops-coffee.cn&gt;]&gt;</code></pre>
+
 
 <p>以上输出结果展示了所有具有权限的用户，如果我们想要查看用户具有的权限，可以设置参数<code>attach_perms=True</code>，返回的结构是以用户为key权限为value的一个字典，看起来清晰明了</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">get_users_with_perms</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">with_superusers</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">attach_perms</span><span class="o">=</span><span class="n">True</span><span class="p">)</span>
-<span class="p">{</span><span class="o">&lt;</span><span class="nl">User</span><span class="p">:</span> <span class="n">admin</span><span class="mf">@163.</span><span class="n">com</span><span class="o">&gt;:</span> <span class="p">[</span><span class="err">&#39;</span><span class="n">commontask_change</span><span class="err">&#39;</span><span class="p">,</span> <span class="err">&#39;</span><span class="n">commontask_run</span><span class="err">&#39;</span><span class="p">,</span> <span class="err">&#39;</span><span class="n">commontask_select</span><span class="err">&#39;</span><span class="p">],</span> <span class="o">&lt;</span><span class="nl">User</span><span class="p">:</span> <span class="n">dev</span><span class="p">@</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span><span class="o">&gt;:</span> <span class="p">[</span><span class="err">&#39;</span><span class="n">commontask_run</span><span class="err">&#39;</span><span class="p">,</span>
- <span class="err">&#39;</span><span class="n">commontask_select</span><span class="err">&#39;</span><span class="p">],</span> <span class="o">&lt;</span><span class="nl">User</span><span class="p">:</span> <span class="n">qa</span><span class="p">@</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span><span class="o">&gt;:</span> <span class="p">[</span><span class="err">&#39;</span><span class="n">commontask_change</span><span class="err">&#39;</span><span class="p">,</span> <span class="err">&#39;</span><span class="n">commontask_run</span><span class="err">&#39;</span><span class="p">],</span> <span class="o">&lt;</span><span class="nl">User</span><span class="p">:</span> <span class="n">test</span><span class="p">@</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span><span class="o">&gt;:</span> <span class="p">[</span><span class="err">&#39;</span><span class="n">commontask_select</span><span class="err">&#39;</span><span class="p">]}</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; get_users_with_perms(task, with_superusers=True, attach_perms=True)
+{&lt;User: admin@163.com&gt;: ['commontask_change', 'commontask_run', 'commontask_select'], &lt;User: dev@ops-coffee.cn&gt;: ['commontask_run',
+ 'commontask_select'], &lt;User: qa@ops-coffee.cn&gt;: ['commontask_change', 'commontask_run'], &lt;User: test@ops-coffee.cn&gt;: ['commontask_select']}</code></pre>
+
 
 <p>如果我们仅想查看具有某个权限的用户，可以设置<code>only_with_perms_in</code>参数，例如我们只想查看对象所有具有<code>commontask_change</code>权限的用户</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">get_users_with_perms</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">with_superusers</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">only_with_perms_in</span><span class="o">=</span><span class="p">[</span><span class="err">&#39;</span><span class="n">commontask_change</span><span class="err">&#39;</span><span class="p">])</span>
-<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span><span class="o">&lt;</span><span class="nl">User</span><span class="p">:</span> <span class="n">admin</span><span class="mf">@163.</span><span class="n">com</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nl">User</span><span class="p">:</span> <span class="n">qa</span><span class="p">@</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span><span class="o">&gt;</span><span class="p">]</span><span class="o">&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; get_users_with_perms(task, with_superusers=True, only_with_perms_in=['commontask_change'])
+&lt;QuerySet [&lt;User: admin@163.com&gt;, &lt;User: qa@ops-coffee.cn&gt;]&gt;</code></pre>
+
 
 <p>默认情况下用户所数组如果具有权限的话也会返回，例如上边的我们把用户<code>test@ops-coffee.cn</code>加入到了group，然后给group赋予了权限，那么用户也就具有了相应的权限，如果我们只想查看直接赋予用户的权限，而并非间接通过group取得的权限用户列表，我们可以设置参数<code>with_group_users=False</code>，此参数默认为True</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">get_users_with_perms</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">with_superusers</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">with_group_users</span><span class="o">=</span><span class="n">False</span><span class="p">)</span>
-<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span><span class="o">&lt;</span><span class="nl">User</span><span class="p">:</span> <span class="n">admin</span><span class="mf">@163.</span><span class="n">com</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nl">User</span><span class="p">:</span> <span class="n">dev</span><span class="p">@</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nl">User</span><span class="p">:</span> <span class="n">qa</span><span class="p">@</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span><span class="o">&gt;</span><span class="p">]</span><span class="o">&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; get_users_with_perms(task, with_superusers=True, with_group_users=False)
+&lt;QuerySet [&lt;User: admin@163.com&gt;, &lt;User: dev@ops-coffee.cn&gt;, &lt;User: qa@ops-coffee.cn&gt;]&gt;</code></pre>
+
 
 <p>与<code>get_users_with_perms</code>方法相类似的是<code>get_groups_with_perms</code>方法，但<code>get_groups_with_perms</code>要简单许多，只能接收两个参数<code>object</code>和<code>attach_perms</code></p>
 <h2 id="_6">根据用户和权限获取对象</h2>
 <p>当我们给对象赋予权限后，很多时候我们都需要根据用户和权限来获取对象列表，此时可以通过<code>get_objects_for_user</code>方法来实现</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">guardian.shortcuts</span> <span class="kn">import</span> <span class="n">get_objects_for_user</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;dev@ops-coffee.cn&#39;</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">get_objects_for_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="s1">&#39;engine.commontask_run&#39;</span><span class="p">)</span>
-<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">CommonTask</span><span class="p">:</span> <span class="n">Dev</span><span class="o">-</span><span class="n">Coffee</span><span class="o">-</span><span class="n">Web</span><span class="o">-</span><span class="err">发布</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">CommonTask</span><span class="p">:</span> <span class="n">Qa</span><span class="o">-</span><span class="n">Coffee</span><span class="o">-</span><span class="n">Web</span><span class="o">-</span><span class="err">发布</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">CommonTask</span><span class="p">:</span> <span class="n">dev</span><span class="o">-</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="o">-</span><span class="n">build</span><span class="o">&gt;</span><span class="p">]</span><span class="o">&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; from guardian.shortcuts import get_objects_for_user
+&gt;&gt;&gt; user = User.objects.get(username='dev@ops-coffee.cn')
+&gt;&gt;&gt; 
+&gt;&gt;&gt; get_objects_for_user(user, 'engine.commontask_run')
+&lt;QuerySet [&lt;CommonTask: Dev-Coffee-Web-发布&gt;, &lt;CommonTask: Qa-Coffee-Web-发布&gt;, &lt;CommonTask: dev-ops-coffee-build&gt;]&gt;</code></pre>
+
 
 <p><code>get_objects_for_user</code>接收两个参数，第一个参数为用户对象，第二个参数为权限，同时第二个参数也可以写成列表的方式，表示<strong>同时满足</strong>列表中的权限</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; get_objects_for_user(user, [&#39;engine.commontask_run&#39;, &#39;engine.commontask_change&#39;])</span>
-<span class="err">&lt;QuerySet [&lt;CommonTask: Dev-Coffee-Web-发布&gt;]&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; get_objects_for_user(user, ['engine.commontask_run', 'engine.commontask_change'])
+&lt;QuerySet [&lt;CommonTask: Dev-Coffee-Web-发布&gt;]&gt;</code></pre>
+
 
 <p>如果想要仅满足列表中的<strong>任意一个</strong>权限，可以添加第三个参数<code>any_perm=True</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; get_objects_for_user(user, [&#39;engine.commontask_run&#39;, &#39;engine.commontask_change&#39;], any_perm=True)</span>
-<span class="err">&lt;QuerySet [&lt;CommonTask: Dev-Coffee-Web-发布&gt;, &lt;CommonTask: Qa-Coffee-Web-发布&gt;, &lt;CommonTask: dev-ops-coffee-build&gt;]&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; get_objects_for_user(user, ['engine.commontask_run', 'engine.commontask_change'], any_perm=True)
+&lt;QuerySet [&lt;CommonTask: Dev-Coffee-Web-发布&gt;, &lt;CommonTask: Qa-Coffee-Web-发布&gt;, &lt;CommonTask: dev-ops-coffee-build&gt;]&gt;</code></pre>
+
 
 <p>与<code>get_objects_for_user</code>类似的方法还有<code>get_objects_for_group</code>，可以根据group和权限来获取对象列表，使用方法参考<code>get_objects_for_user</code>即可</p>
 <h2 id="_7">装饰器的使用</h2>
 <p>django默认权限机制就提供了一个<code>permission_required</code>的装饰器，以方便在view中对用户权限的检查，在guardian中对<code>permission_required</code>装饰器做了扩展，不仅能够检查全局权限，还能对对象权限做校验</p>
 <p>使用方式兼容django默认的<code>permission_required</code>装饰器</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">guardian.decorators</span> <span class="kn">import</span> <span class="n">permission_required</span>
+<pre class="codehilite"><code>from guardian.decorators import permission_required
 
-<span class="nd">@permission_required</span><span class="p">(</span><span class="s1">&#39;engine.commontask_change&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">commontask_update_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;Hello&#39;</span><span class="p">)</span>
-</code></pre></div>
+@permission_required('engine.commontask_change')
+def commontask_update_view(request):
+    return HttpResponse('Hello')</code></pre>
+
 
 <p>当仅有一个权限参数时，则与django默认的<code>permission_required</code>装饰器无疑，表示用户是否具有整个model的<code>commontask_change</code>权限</p>
 <p>但在guardian的<code>permission_required</code>装饰器还支持第二个参数，参数类型为一个元组，类似这样<code>(CommonTask, 'id', 'pk')</code>，用来指定具体的对象，其中<code>CommonTask</code>为model，<code>id</code>为model的字段，<code>pk</code>为view中用户传入的具体参数，<code>id</code>与<code>pk</code>为对应关系，大概的查询逻辑就是<code>CommonTask.objects.get(id=pk)</code>，判断用户对此对象是否有CommonTask的权限，示例代码如下</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">@permission_required</span><span class="p">(</span><span class="s1">&#39;engine.commontask_change&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">CommonTask</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;pk&#39;</span><span class="p">))</span><span class="w"></span>
-<span class="n">def</span><span class="w"> </span><span class="n">commontask_delete_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">pk</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="k">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;POST&#39;</span><span class="err">:</span><span class="w"></span>
-<span class="w">        </span><span class="k">try</span><span class="err">:</span><span class="w"></span>
-<span class="w">            </span><span class="n">_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CommonTask</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">id</span><span class="o">=</span><span class="nc">int</span><span class="p">(</span><span class="n">pk</span><span class="p">))</span><span class="w"></span>
-<span class="w">            </span><span class="n">_data</span><span class="p">.</span><span class="k">delete</span><span class="p">()</span><span class="w"></span>
+<pre class="codehilite"><code>@permission_required('engine.commontask_change', (CommonTask, 'id', 'pk'))
+def commontask_delete_view(request, pk):
+    if request.method == 'POST':
+        try:
+            _data = CommonTask.objects.get(id=int(pk))
+            _data.delete()
 
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">JsonResponse</span><span class="p">(</span><span class="err">{</span><span class="s1">&#39;state&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;message&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;删除成功!&#39;</span><span class="err">}</span><span class="p">)</span><span class="w"></span>
-<span class="w">        </span><span class="ow">except</span><span class="w"> </span><span class="k">Exception</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nl">e</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">JsonResponse</span><span class="p">(</span><span class="err">{</span><span class="s1">&#39;state&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;message&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;Error: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="err">}</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="k">else</span><span class="err">:</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">JsonResponse</span><span class="p">(</span><span class="err">{</span><span class="ss">&quot;state&quot;</span><span class="err">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;message&quot;</span><span class="err">:</span><span class="w"> </span><span class="ss">&quot;Request method &#39;%s&#39; not supported&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="k">method</span><span class="p">.</span><span class="nf">upper</span><span class="p">()</span><span class="err">}</span><span class="p">)</span><span class="w"></span>
-</code></pre></div>
+            return JsonResponse({'state': 1, 'message': '删除成功!'})
+        except Exception as e:
+            return JsonResponse({'state': 0, 'message': 'Error: ' + str(e)})
+    else:
+        return JsonResponse({&quot;state&quot;: 0, &quot;message&quot;: &quot;Request method '%s' not supported&quot; % request.method.upper()})</code></pre>
+
 
 <p><code>permission_required</code>还接收以下几个参数：<code>login_url</code>、<code>redirect_field_name</code>、<code>return_403</code>、<code>return_404</code>、<code>accept_global_perms</code>，其中<code>accept_global_perms</code>参数表示是否检查用户的全局权限，如果指定了特定对象，且设置了<code>accept_global_perms=False</code>则只检查对象权限，不检查全局权限，<code>accept_global_perms</code>默认为False</p>
 <h2 id="_8">模板中使用</h2>
 <p>guardian提供了模板标签，以方便在模板中对用户进行对象权限的校验，使用起来也比较简单</p>
 <p>先加载标签</p>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="o">%</span> <span class="nb">load</span> <span class="n">guardian_tags</span> <span class="o">%</span><span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>{% load guardian_tags %}</code></pre>
+
 
 <p>然后就可以使用<code>get_obj_perms</code>来获取用户或组关于对象的权限列表了</p>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="o">%</span> <span class="n">get_obj_perms</span> <span class="n">user</span><span class="o">/</span><span class="n">group</span> <span class="k">for</span> <span class="n">obj</span> <span class="k">as</span> <span class="s2">&quot;context_var&quot;</span> <span class="o">%</span><span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>{% get_obj_perms user/group for obj as &quot;context_var&quot; %}</code></pre>
+
 
 <p>一个简单的例子如下，如果当前登陆的用户对<code>task</code>对象有<code>commontask_change</code>权限，则能看到删除按钮</p>
-<div class="codehilite"><pre><span></span><code><span class="cp">{%</span> <span class="k">get_obj_perms</span> <span class="nv">request.user</span> <span class="nv">for</span> <span class="nv">task</span> <span class="k">as</span> <span class="s2">&quot;task_perms&quot;</span> <span class="cp">%}</span>
+<pre class="codehilite"><code>{% get_obj_perms request.user for task as &quot;task_perms&quot; %}
 
-<span class="cp">{%</span> <span class="k">if</span> <span class="s2">&quot;commontask_change&quot;</span> <span class="k">in</span> <span class="nv">task_perms</span> <span class="cp">%}</span>
-    <span class="nt">&lt;button&gt;</span>删除<span class="nt">&lt;/button&gt;</span>
-<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
-</code></pre></div>
+{% if &quot;commontask_change&quot; in task_perms %}
+    &lt;button&gt;删除&lt;/button&gt;
+{% endif %}</code></pre>
+
 
 <p>至此，你了解了guardian的所有基础知识，可以通过guardian搞定几乎所有的权限问题了，开启愉快的使用旅程吧~</p>
 

@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -44,24 +44,23 @@
 
         <p>只需三步即可轻松解决：</p>
 <p>1.确保settings.py文件有以下三个配置</p>
-<div class="codehilite"><pre><span></span><code><span class="err">STATIC_URL = &#39;/static/&#39;</span>
-<span class="err">STATIC_ROOT = os.path.join(BASE_DIR, &#39;/static/&#39;)</span>
-<span class="err">STATICFILES_DIRS = (os.path.join(BASE_DIR, &#39;static&#39;),)</span>
-</code></pre></div>
+<pre class="codehilite"><code>STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)</code></pre>
+
 
 <p>2.在urls中添加如下配置</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.views</span> <span class="kn">import</span> <span class="n">static</span>
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">re_path</span><span class="p">,</span> <span class="n">include</span>
+<pre class="codehilite"><code>from django.views import static
+from django.conf import settings
+from django.urls import path, re_path, include
 
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">re_path</span><span class="p">(</span><span class="s1">&#39;static/(?P&lt;path&gt;.*)$&#39;</span><span class="p">,</span> <span class="n">static</span><span class="o">.</span><span class="n">serve</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;document_root&#39;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">STATIC_ROOT</span><span class="p">}),</span>
-<span class="p">]</span>
-</code></pre></div>
+urlpatterns = [
+    re_path('static/(?P&lt;path&gt;.*)$', static.serve, {'document_root': settings.STATIC_ROOT}),
+]</code></pre>
+
 
 <p>3.控制台下执行collectstatic命令收集静态文件</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># python manage.py collectstatic</span>
-</code></pre></div>
+<pre class="codehilite"><code># python manage.py collectstatic</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -51,34 +51,34 @@
 <p>blank与null不同的是，blank是纯验证相关的，并不会影响到数据库，而null则是与数据库相关的，如果设置了<code>null=True</code>，则在数据库字段上会有<code>NOT NULL</code>的限制，而设置了<code>blank=True</code>则不会修改数据库，仅仅是在Django验证表单时允许为空</p>
 <h3 id="choices">choices</h3>
 <p>当字段的内容比较固定时，Choices非常有用，例如性别字段，只会有固定的几个，这时候我们可以通过CHOICES来处理</p>
-<div class="codehilite"><pre><span></span><code><span class="n">SEX_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;男&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;女&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;保密&#39;</span><span class="p">),</span>
-<span class="p">)</span>
+<pre class="codehilite"><code>SEX_CHOICES = (
+    (1, '男'),
+    (2, '女'),
+    (3, '保密'),
+)
 
-<span class="k">class</span> <span class="k">User</span><span class="p">(</span><span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">sex</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">SmallIntegerField</span><span class="p">(</span><span class="n">choices</span><span class="o">=</span><span class="n">SEX_CHOICES</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;性别&#39;</span><span class="p">)</span>
+class User(models.Model):
+    sex = models.SmallIntegerField(choices=SEX_CHOICES, verbose_name='性别')
 
-    <span class="n">def</span> <span class="n">to_dict</span><span class="p">(</span><span class="k">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="err">{</span>
-            <span class="ss">&quot;id&quot;</span><span class="p">:</span> <span class="k">self</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="ss">&quot;sex&quot;</span><span class="p">:</span> <span class="k">self</span><span class="p">.</span><span class="n">get_sex_display</span><span class="p">(),</span>
-        <span class="err">}</span>
-</code></pre></div>
+    def to_dict(self):
+        return {
+            &quot;id&quot;: self.id,
+            &quot;sex&quot;: self.get_sex_display(),
+        }</code></pre>
+
 
 <p>通常CHOICES选项的类型为元组，元组内有嵌套了元组，嵌套的元组定义数据，嵌套元组包含了两个数据，第一个数据为值，值会记录进数据库，第二个数据为可读的选项名称，可读的选项名称不会记录进数据库</p>
 <p>对于每一个设置了choices的模型字段，Django会添加一个方法来检索字段当前值的可读名称，用法是：<code>get_sex_display()</code>，其中<code>sex</code>为字段名称</p>
 <h3 id="default">default</h3>
 <p>配置字段的默认值，当添加新的模型实例且没有为该字段提供值时，使用默认值</p>
 <p>default可以是一个值或者是个可调用的对象，如果是个可调用对象，每次实例化模型时都会调用该对象</p>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">contact_default</span><span class="p">()</span><span class="err">:</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="err">{</span><span class="ss">&quot;email&quot;</span><span class="err">:</span><span class="w"> </span><span class="ss">&quot;to1@example.com&quot;</span><span class="err">}</span><span class="w"></span>
+<pre class="codehilite"><code>def contact_default():
+    return {&quot;email&quot;: &quot;to1@example.com&quot;}
 
-<span class="k">class</span><span class="w"> </span><span class="k">User</span><span class="p">(</span><span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
-<span class="w">    </span><span class="n">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">models</span><span class="p">.</span><span class="n">SmallIntegerField</span><span class="p">(</span><span class="k">default</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span><span class="w"> </span><span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;年龄&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="n">contact_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JSONField</span><span class="p">(</span><span class="ss">&quot;ContactInfo&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">default</span><span class="o">=</span><span class="n">contact_default</span><span class="p">)</span><span class="w"></span>
-</code></pre></div>
+class User(models.Model):
+    age = models.SmallIntegerField(default=18, verbose_name='年龄')
+    contact_info = JSONField(&quot;ContactInfo&quot;, default=contact_default)</code></pre>
+
 
 <p>对于像ForeignKey这样映射到模型实例的字段，默认应该是它们引用的字段的值，而不是模型实例，ForeignKey引用字段的值默认是pk，如果设置过<code>to_field</code>，那引用字段字段的值将会变成<code>to_field</code>设置的字段值</p>
 <h3 id="unique">unique</h3>
@@ -87,10 +87,10 @@
 <p>当<code>unique=True</code>时，无需为字段创建索引，因为unique意味着创建一个索引</p>
 <h3 id="unique_for_date">unique_for_date</h3>
 <p>将其设置为DateField或DateTimeField的名称，要求该字段的日期字段值是唯一的</p>
-<div class="codehilite"><pre><span></span><code><span class="err">def Article(models.Model):</span>
-<span class="err">    pub_date = models.DateField(auto_now_add=True, verbose_name=&#39;发布时间&#39;)</span>
-<span class="err">    title = models.CharField(max_length=32, unique_for_date=pub_date, verbose_name=&#39;标题&#39;)</span>
-</code></pre></div>
+<pre class="codehilite"><code>def Article(models.Model):
+    pub_date = models.DateField(auto_now_add=True, verbose_name='发布时间')
+    title = models.CharField(max_length=32, unique_for_date=pub_date, verbose_name='标题')</code></pre>
+
 
 <p>例如字段title有<code>unique_for_date=pub_date</code>配置，那么Django就不允许输入两条相同title和pub_date的记录</p>
 <h3 id="unique_for_month">unique_for_month</h3>

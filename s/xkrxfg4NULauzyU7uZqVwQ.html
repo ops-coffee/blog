@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -55,8 +55,8 @@
 <ol>
 <li>下载代码仓库到自己的项目下，仓库地址如下：</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="c">https://github.com/ops-coffee/demo/tree/master/live2d</span>
-</code></pre></div>
+<pre class="codehilite"><code>https://github.com/ops-coffee/demo/tree/master/live2d</code></pre>
+
 
 <p>其中index.hmtl为示例代码，将整个项目放在nginx下可以直接查看效果</p>
 <p>live2d文件夹存放了猫的模型以及需要用到的两个js文件</p>
@@ -64,17 +64,17 @@
 <ol>
 <li>添加如下JS代码到需要显示猫的页面上</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;/live2d/L2Dwidget.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-<span class="nt">&lt;script</span> <span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+<pre class="codehilite"><code>&lt;script src=&quot;/live2d/L2Dwidget.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
   L2Dwidget.init({
     model: {
-      jsonPath: &#39;/live2d/tororo/assets/tororo.model.json&#39;,
+      jsonPath: '/live2d/tororo/assets/tororo.model.json',
     },
     display: {
       superSample: 2,
       width: 150,
       height: 150,
-      position: &#39;right&#39;,
+      position: 'right',
       hOffset: 0,
       vOffset: 0,
     },
@@ -88,8 +88,8 @@
       opacityOnHover: 0.2,
     }
   })
-<span class="nt">&lt;/script&gt;</span>
-</code></pre></div>
+&lt;/script&gt;</code></pre>
+
 
 <p><strong>model：</strong> 指定<code>model.json</code>位置，如果你不喜欢猫也可以在<a href="https://github.com/QiShaoXuan/live2DModel"><code>live2DModel</code></a>这个仓库下查找自己喜欢的模型，然后将模型目录拷贝到live2d文件夹下，然后修改model路径参数以及display显示参数即可</p>
 <p><strong>display：</strong> 控制live2d模型在页面上显示的位置</p>

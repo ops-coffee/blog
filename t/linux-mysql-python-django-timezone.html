@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -43,25 +43,24 @@
         <h1 id="art-title">各系统或服务查询时区方法汇总</h1>
 
         <h2 id="linux">Linux系统查看时区</h2>
-<div class="codehilite"><pre><span></span><code><span class="err"># cat /etc/timezone</span>
-<span class="err">Asia/Shanghai</span>
-</code></pre></div>
+<pre class="codehilite"><code># cat /etc/timezone
+Asia/Shanghai</code></pre>
+
 
 <p>or</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># date +&#39;%z&#39;</span>
-<span class="err">+0800</span>
-</code></pre></div>
+<pre class="codehilite"><code># date +'%z'
++0800</code></pre>
+
 
 <h2 id="mysql">MySQL查看时区</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">MySQL [(ops-coffee.cn)]&gt; show VARIABLES like &#39;%time_zone%&#39;;</span>
-<span class="err">+------------------+--------+</span>
-<span class="err">| Variable_name    | Value  |</span>
-<span class="err">+------------------+--------+</span>
-<span class="err">| system_time_zone | CST    |</span>
-<span class="err">| time_zone        | SYSTEM |</span>
-<span class="err">+------------------+--------+</span>
-<span class="err">2 rows in set (0.003 sec)</span>
-</code></pre></div>
+<pre class="codehilite"><code>MySQL [(ops-coffee.cn)]&gt; show VARIABLES like '%time_zone%';
++------------------+--------+
+| Variable_name    | Value  |
++------------------+--------+
+| system_time_zone | CST    |
+| time_zone        | SYSTEM |
++------------------+--------+
+2 rows in set (0.003 sec)</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

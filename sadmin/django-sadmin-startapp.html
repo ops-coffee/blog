@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -43,125 +43,125 @@
         <h1 id="art-title">基于Sadmin新建APP</h1>
 
         <p>1.Start APP, Create a new app named coffee</p>
-<div class="codehilite"><pre><span></span><code><span class="err">python manage.py startapp coffee</span>
-</code></pre></div>
+<pre class="codehilite"><code>python manage.py startapp coffee</code></pre>
+
 
 <p>2.Installed APP, Edit <code>settings.py</code>，insert <code>coffee</code> to <code>INSTALLED_APPS</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err">INSTALLED_APPS = [</span>
-<span class="err">    ...</span>
-<span class="err">    &#39;sadmin.commons&#39;,</span>
-<span class="err">    &#39;sadmin.accounts&#39;,</span>
-<span class="err">    &#39;sadmin.project&#39;,</span>
-<span class="err">    &#39;coffee&#39;,</span>
-<span class="err">]</span>
-</code></pre></div>
+<pre class="codehilite"><code>INSTALLED_APPS = [
+    ...
+    'sadmin.commons',
+    'sadmin.accounts',
+    'sadmin.project',
+    'coffee',
+]</code></pre>
+
 
 <p>3.Add Model, Add <code>Production</code> model to  coffee/models.py file</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<pre class="codehilite"><code>from django.db import models
 
-<span class="kn">from</span> <span class="nn">sadmin.commons.backends.modles</span> <span class="kn">import</span> <span class="n">UserBaseModel</span>
+from sadmin.commons.backends.modles import UserBaseModel
 
-<span class="k">class</span> <span class="nc">Production</span><span class="p">(</span><span class="n">UserBaseModel</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;名称&#39;</span><span class="p">)</span>
-    <span class="n">code</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;代码&#39;</span><span class="p">)</span>
+class Production(UserBaseModel):
+    name = models.CharField(max_length=32, unique=True, verbose_name='名称')
+    code = models.CharField(max_length=16, unique=True, verbose_name='代码')
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+    def __str__(self):
+        return self.name
 
-    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="p">(</span><span class="s2">&quot;production_select&quot;</span><span class="p">,</span> <span class="s2">&quot;产品查看权限&quot;</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;production_change&quot;</span><span class="p">,</span> <span class="s2">&quot;产品修改权限&quot;</span><span class="p">),</span>
-        <span class="p">)</span>
-</code></pre></div>
+    class Meta:
+        permissions = (
+            (&quot;production_select&quot;, &quot;产品查看权限&quot;),
+            (&quot;production_change&quot;, &quot;产品修改权限&quot;),
+        )</code></pre>
+
 
 <p>4.Add View, Add <code>ProductionList</code> and <code>ProductionDetail</code> class to coffee/views.py file</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">sadmin.commons.options</span> <span class="kn">import</span> <span class="n">ListCreateView</span><span class="p">,</span> <span class="n">RetrieveUpdateDestroyView</span>
+<pre class="codehilite"><code>from sadmin.commons.options import ListCreateView, RetrieveUpdateDestroyView
 
-<span class="k">class</span> <span class="nc">ProductionList</span><span class="p">(</span><span class="n">ListCreateView</span><span class="p">):</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">Tag</span>
-    <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;coffee/production.index.html&#39;</span>
-    <span class="n">permission</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;get&#39;</span><span class="p">:</span> <span class="s1">&#39;coffee.production_select&#39;</span><span class="p">,</span> <span class="s1">&#39;post&#39;</span><span class="p">:</span> <span class="s1">&#39;coffee.production_change&#39;</span><span class="p">}</span>
+class ProductionList(ListCreateView):
+    model = Tag
+    template = 'coffee/production.index.html'
+    permission = {'get': 'coffee.production_select', 'post': 'coffee.production_change'}
 
 
-<span class="k">class</span> <span class="nc">ProductionDetail</span><span class="p">(</span><span class="n">RetrieveUpdateDestroyView</span><span class="p">):</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">Tag</span>
-    <span class="n">permission</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;get&#39;</span><span class="p">:</span> <span class="s1">&#39;coffee.production_select&#39;</span><span class="p">,</span> <span class="s1">&#39;put&#39;</span><span class="p">:</span> <span class="s1">&#39;coffee.production_change&#39;</span><span class="p">,</span> <span class="s1">&#39;delete&#39;</span><span class="p">:</span> <span class="s1">&#39;coffee.production_change&#39;</span><span class="p">}</span>
-</code></pre></div>
+class ProductionDetail(RetrieveUpdateDestroyView):
+    model = Tag
+    permission = {'get': 'coffee.production_select', 'put': 'coffee.production_change', 'delete': 'coffee.production_change'}</code></pre>
+
 
 <p>5.Add Template, edit coffee/templates/coffee/production.index.html file</p>
-<div class="codehilite"><pre><span></span><code><span class="cp">{%</span> <span class="k">extends</span> <span class="s2">&quot;base.html&quot;</span> <span class="cp">%}</span>
+<pre class="codehilite"><code>{% extends &quot;base.html&quot; %}
 
-<span class="cp">{%</span> <span class="k">block</span> <span class="nv">css</span> <span class="cp">%}</span>
-<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;/static/plugins/DataTables/datatables.min.css&quot;</span><span class="nt">&gt;</span>
-<span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
+{% block css %}
+&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/plugins/DataTables/datatables.min.css&quot;&gt;
+{% endblock %}
 
-<span class="cp">{%</span> <span class="k">block</span> <span class="nv">breadcrumb</span> <span class="cp">%}</span>
-<span class="cp">{%</span> <span class="k">if</span> <span class="nv">perms.coffee.production_change</span> <span class="cp">%}</span>
-<span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">&quot;btn btn-success&quot;</span> <span class="na">type=</span><span class="s">&quot;button&quot;</span> <span class="na">onclick=</span><span class="s">&quot;createForm()&quot;</span><span class="nt">&gt;&lt;i</span> <span class="na">class=</span><span class="s">&quot;fa fa-plus&quot;</span><span class="nt">&gt;&lt;/i&gt;</span> 新建<span class="nt">&lt;/button&gt;</span>
-<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
-<span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
+{% block breadcrumb %}
+{% if perms.coffee.production_change %}
+&lt;button class=&quot;btn btn-success&quot; type=&quot;button&quot; onclick=&quot;createForm()&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; 新建&lt;/button&gt;
+{% endif %}
+{% endblock %}
 
-<span class="cp">{%</span> <span class="k">block</span> <span class="nv">content</span> <span class="cp">%}</span>
-<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;card mb-4&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;card-body&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">&quot;table table-striped&quot;</span> <span class="na">id=</span><span class="s">&quot;id_table&quot;</span> <span class="na">style=</span><span class="s">&quot;width:100%&quot;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;thead&gt;</span>
-      <span class="nt">&lt;tr&gt;</span>
-        <span class="nt">&lt;th&gt;</span>ID<span class="nt">&lt;/th&gt;</span>
-        <span class="nt">&lt;th&gt;</span>名称<span class="nt">&lt;/th&gt;</span>
-        <span class="cp">{%</span> <span class="k">if</span> <span class="nv">perms.coffee.production_change</span> <span class="cp">%}</span>
-        <span class="nt">&lt;th&gt;</span>操作<span class="nt">&lt;/th&gt;</span>
-        <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
-      <span class="nt">&lt;/tr&gt;</span>
-      <span class="nt">&lt;/thead&gt;</span>
-    <span class="nt">&lt;/table&gt;</span>
-  <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
+{% block content %}
+&lt;div class=&quot;card mb-4&quot;&gt;
+  &lt;div class=&quot;card-body&quot;&gt;
+    &lt;table class=&quot;table table-striped&quot; id=&quot;id_table&quot; style=&quot;width:100%&quot;&gt;
+      &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;ID&lt;/th&gt;
+        &lt;th&gt;名称&lt;/th&gt;
+        {% if perms.coffee.production_change %}
+        &lt;th&gt;操作&lt;/th&gt;
+        {% endif %}
+      &lt;/tr&gt;
+      &lt;/thead&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
 
-<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;modal fade&quot;</span> <span class="na">id=</span><span class="s">&quot;modalForm&quot;</span> <span class="na">tabindex=</span><span class="s">&quot;-1&quot;</span> <span class="na">role=</span><span class="s">&quot;dialog&quot;</span> <span class="na">aria-hidden=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;modal-dialog modal-xl&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;modal-content&quot;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;modal-header&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;h5</span> <span class="na">class=</span><span class="s">&quot;modal-title&quot;</span> <span class="na">id=</span><span class="s">&quot;modalForm_title&quot;</span><span class="nt">&gt;&lt;/h5&gt;</span>
-        <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">&quot;btn-close&quot;</span> <span class="na">type=</span><span class="s">&quot;button&quot;</span> <span class="na">data-coreui-dismiss=</span><span class="s">&quot;modal&quot;</span> <span class="na">aria-label=</span><span class="s">&quot;Close&quot;</span><span class="nt">&gt;&lt;/button&gt;</span>
-      <span class="nt">&lt;/div&gt;</span>
-      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;modal-body&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;tab-content&quot;</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;form</span> <span class="na">class=</span><span class="s">&quot;form-horizontal&quot;</span> <span class="na">id=</span><span class="s">&quot;modalForm_Content&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span> <span class="na">action=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span><span class="cp">{%</span> <span class="k">csrf_token</span> <span class="cp">%}</span>
-            <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">autocomplete=</span><span class="s">&quot;off&quot;</span> <span class="na">id=</span><span class="s">&quot;form_id&quot;</span> <span class="na">value=</span><span class="s">&quot;0&quot;</span> <span class="err">hidden</span><span class="nt">&gt;</span>
+&lt;div class=&quot;modal fade&quot; id=&quot;modalForm&quot; tabindex=&quot;-1&quot; role=&quot;dialog&quot; aria-hidden=&quot;true&quot;&gt;
+  &lt;div class=&quot;modal-dialog modal-xl&quot;&gt;
+    &lt;div class=&quot;modal-content&quot;&gt;
+      &lt;div class=&quot;modal-header&quot;&gt;
+        &lt;h5 class=&quot;modal-title&quot; id=&quot;modalForm_title&quot;&gt;&lt;/h5&gt;
+        &lt;button class=&quot;btn-close&quot; type=&quot;button&quot; data-coreui-dismiss=&quot;modal&quot; aria-label=&quot;Close&quot;&gt;&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;modal-body&quot;&gt;
+        &lt;div class=&quot;tab-content&quot;&gt;
+          &lt;form class=&quot;form-horizontal&quot; id=&quot;modalForm_Content&quot; method=&quot;post&quot; action=&quot;&quot;&gt;{% csrf_token %}
+            &lt;input type=&quot;text&quot; autocomplete=&quot;off&quot; id=&quot;form_id&quot; value=&quot;0&quot; hidden&gt;
 
-            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row mb-3&quot;</span><span class="nt">&gt;</span>
-              <span class="nt">&lt;label</span> <span class="na">class=</span><span class="s">&quot;col-2 col-form-label text-end&quot;</span><span class="nt">&gt;</span>* 名称<span class="nt">&lt;/label&gt;</span>
-              <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-9&quot;</span><span class="nt">&gt;</span>
-                <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">autocomplete=</span><span class="s">&quot;off&quot;</span> <span class="na">class=</span><span class="s">&quot;form-control&quot;</span> <span class="na">id=</span><span class="s">&quot;form_name&quot;</span> <span class="na">name=</span><span class="s">&quot;name&quot;</span> <span class="err">required</span>
-                       <span class="na">placeholder=</span><span class="s">&quot;请输入名称，命名应见名知意&quot;</span><span class="nt">&gt;</span>
-              <span class="nt">&lt;/div&gt;</span>
-            <span class="nt">&lt;/div&gt;</span>
+            &lt;div class=&quot;row mb-3&quot;&gt;
+              &lt;label class=&quot;col-2 col-form-label text-end&quot;&gt;* 名称&lt;/label&gt;
+              &lt;div class=&quot;col-9&quot;&gt;
+                &lt;input type=&quot;text&quot; autocomplete=&quot;off&quot; class=&quot;form-control&quot; id=&quot;form_name&quot; name=&quot;name&quot; required
+                       placeholder=&quot;请输入名称，命名应见名知意&quot;&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
 
-            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;modal-footer&quot;</span><span class="nt">&gt;</span>
-              <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">&quot;button&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-secondary&quot;</span> <span class="na">data-coreui-dismiss=</span><span class="s">&quot;modal&quot;</span><span class="nt">&gt;</span>Close<span class="nt">&lt;/button&gt;</span>
-              <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-primary&quot;</span><span class="nt">&gt;</span>Save Changes<span class="nt">&lt;/button&gt;</span>
-            <span class="nt">&lt;/div&gt;</span>
-          <span class="nt">&lt;/form&gt;</span>
-        <span class="nt">&lt;/div&gt;</span>
+            &lt;div class=&quot;modal-footer&quot;&gt;
+              &lt;button type=&quot;button&quot; class=&quot;btn btn-secondary&quot; data-coreui-dismiss=&quot;modal&quot;&gt;Close&lt;/button&gt;
+              &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;Save Changes&lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/form&gt;
+        &lt;/div&gt;
 
-      <span class="nt">&lt;/div&gt;</span>
-    <span class="nt">&lt;/div&gt;</span>
-  <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-<span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+{% endblock %}
 
 
-<span class="cp">{%</span> <span class="k">block</span> <span class="nv">js</span> <span class="cp">%}</span>
-<span class="nt">&lt;script</span> <span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;/static/plugins/DataTables/datatables.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+{% block js %}
+&lt;script type=&quot;text/javascript&quot; src=&quot;/static/plugins/DataTables/datatables.min.js&quot;&gt;&lt;/script&gt;
 
-<span class="nt">&lt;script&gt;</span>
-  $(&#39;#page_header&#39;).text(&#39;Production管理&#39;);
-  $(&#39;#page_header_descript&#39;).text(&#39;&#39;);
+&lt;script&gt;
+  $('#page_header').text('Production管理');
+  $('#page_header_descript').text('');
 
   // 加载表格
-  var table = $(&#39;#id_table&#39;).DataTable({
+  var table = $('#id_table').DataTable({
     &quot;ajax&quot;: {
       &quot;url&quot;: window.location.pathname,
       &quot;data&quot;: function (d) {
@@ -176,30 +176,30 @@
     &quot;columns&quot;: [
       {&quot;data&quot;: &quot;id&quot;},
       {&quot;data&quot;: &quot;name&quot;},
-      <span class="cp">{%</span> <span class="k">if</span> <span class="nv">perms.coffee.production_change</span> <span class="cp">%}</span>
+      {% if perms.coffee.production_change %}
       {
         &quot;data&quot;: &quot;id&quot;,
         &quot;render&quot;: function (data, type, row) {
-          return &#39;<span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">&quot;btn btn-warning btn-sm&quot;</span> <span class="na">onclick=</span><span class="s">&quot;updateForm(&#39;+row.id+&#39;)&quot;</span><span class="nt">&gt;&lt;i</span> <span class="na">class=</span><span class="s">&quot;fa fa-pencil-square-o&quot;</span><span class="nt">&gt;&lt;/i&gt;</span> 编辑<span class="nt">&lt;/button&gt;</span><span class="ni">&amp;nbsp;</span>&#39; +
-                 &#39;<span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger btn-sm&quot;</span> <span class="na">onclick=</span><span class="s">&quot;deleteForm(&amp;quot;&#39;+ window.location.pathname +&#39;&amp;quot;, &#39;+row.id+&#39;)&quot;</span><span class="nt">&gt;&lt;i</span> <span class="na">class=</span><span class="s">&quot;fa fa-trash&quot;</span><span class="nt">&gt;&lt;/i&gt;</span> 删除<span class="nt">&lt;/button&gt;</span>&#39;
+          return '&lt;button class=&quot;btn btn-warning btn-sm&quot; onclick=&quot;updateForm('+row.id+')&quot;&gt;&lt;i class=&quot;fa fa-pencil-square-o&quot;&gt;&lt;/i&gt; 编辑&lt;/button&gt;&amp;nbsp;' +
+                 '&lt;button class=&quot;btn btn-danger btn-sm&quot; onclick=&quot;deleteForm(&amp;quot;'+ window.location.pathname +'&amp;quot;, '+row.id+')&quot;&gt;&lt;i class=&quot;fa fa-trash&quot;&gt;&lt;/i&gt; 删除&lt;/button&gt;'
         }
       }
-      <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+      {% endif %}
     ]
   });
 
   // 点击创建时的表单信息
   function createForm() {
-    $(&#39;#modalForm_title&#39;).text(&#39;添加Production&#39;);
-    $(&#39;#modalForm_Content&#39;).trigger(&quot;reset&quot;);
+    $('#modalForm_title').text('添加Production');
+    $('#modalForm_Content').trigger(&quot;reset&quot;);
 
-    $(&#39;#modalForm&#39;).modal(&#39;show&#39;);
+    $('#modalForm').modal('show');
   }
 
   // 点击编辑时的表单信息
   function updateForm(id) {
-    $(&#39;#modalForm_title&#39;).text(&#39;修改Production&#39;);
-    $(&#39;#modalForm_Content&#39;).trigger(&quot;reset&quot;);
+    $('#modalForm_title').text('修改Production');
+    $('#modalForm_Content').trigger(&quot;reset&quot;);
 
     var data = {
       &quot;format&quot;: &quot;json&quot;,
@@ -208,10 +208,10 @@
     $.get(window.location.pathname + id + &quot;/&quot;, data, function(data) {
       if (data.state) {
         $.each(data.data, function (k, v) {
-          $(&#39;#form_&#39; + k).val(v);
+          $('#form_' + k).val(v);
         });
 
-        $(&#39;#modalForm&#39;).modal(&#39;show&#39;);
+        $('#modalForm').modal('show');
       } else {
         toastr.error(data.message);
       }
@@ -219,19 +219,19 @@
   }
 
   // 使用ajax submit提交表单数据
-  $(&#39;#modalForm_Content&#39;).submit(function (event) {
+  $('#modalForm_Content').submit(function (event) {
     event.preventDefault();
 
     if (confirm(&quot;确认提交这些数据吗？&quot;)) {
-      var formid = $(&#39;#form_id&#39;).val();
-      var params = $(&#39;#modalForm_Content&#39;).serializeJson();
+      var formid = $('#form_id').val();
+      var params = $('#modalForm_Content').serializeJson();
 
       if (formid == &quot;0&quot;) {
         $.post(window.location.pathname, JSON.stringify(params), function(data, status){
           if (data.state) {
             table.draw(false);
             toastr.success(data.message);
-            $(&#39;#modalForm&#39;).modal(&#39;hide&#39;);
+            $('#modalForm').modal('hide');
           } else {
             toastr.error(data.message)
           }
@@ -242,7 +242,7 @@
           if (data.state) {
             table.draw(false);
             toastr.success(data.message);
-            $(&#39;#modalForm&#39;).modal(&#39;hide&#39;);
+            $('#modalForm').modal('hide');
           } else {
             toastr.error(data.message)
           }
@@ -250,33 +250,33 @@
       }
     }
   });
-<span class="nt">&lt;/script&gt;</span>
-<span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
-</code></pre></div>
+&lt;/script&gt;
+{% endblock %}</code></pre>
+
 
 <p>6.Add URL, Add <code>production/</code> and <code>production/&lt;int:pk&gt;/</code> URL to coffee/views.py file</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">views</span>
-<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span>
+<pre class="codehilite"><code>from . import views
+from django.urls import path
 
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;production/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">ProductionInstanceList</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;production-list-url&#39;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;production/&lt;int:pk&gt;/&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">ProductionInstanceDetail</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;production-detail-url&#39;</span><span class="p">),</span>
-<span class="p">]</span>
-</code></pre></div>
+urlpatterns = [
+    path('production/', views.ProductionInstanceList.as_view(), name='production-list-url'),
+    path('production/&lt;int:pk&gt;/', views.ProductionInstanceDetail.as_view(), name='production-detail-url'),
+]</code></pre>
+
 
 <p>Insert coffee path to webapp/urls.py file</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="n">re_path</span>
+<pre class="codehilite"><code>from django.urls import path, include, re_path
 
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="o">...</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;coffee/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;coffee.urls&#39;</span><span class="p">)),</span>
-<span class="p">]</span>
-</code></pre></div>
+urlpatterns = [
+    ...
+    path('coffee/', include('coffee.urls')),
+]</code></pre>
+
 
 <p>7.Makemigrations &amp; Migrate</p>
-<div class="codehilite"><pre><span></span><code><span class="err">python manage.py makemigrations</span>
-<span class="err">python manage.py migrate</span>
-</code></pre></div>
+<pre class="codehilite"><code>python manage.py makemigrations
+python manage.py migrate</code></pre>
+
 
 <p>8.Runserver</p>
 

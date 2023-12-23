@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -68,8 +68,8 @@
 <p>这两种方案都不是很好，新建DNS还需要用户都修改自己的DNS指向到新DNS，而绑定hosts无疑会增加使用成本，那该如何处理呢？</p>
 <p><strong>DNS泛域名解析</strong>，利用通配符<code>*</code>来做次级域名以实现所有的次级域名均指向同一IP地址</p>
 <p>在内部DNS上创建一条匹配所有的次级域名的记录，指向到Kubernetes的Ingress服务器，例如</p>
-<div class="codehilite"><pre><span></span><code><span class="err">*.ops-coffee.cn -&gt; 192.168.107.143</span>
-</code></pre></div>
+<pre class="codehilite"><code>*.ops-coffee.cn -&gt; 192.168.107.143</code></pre>
+
 
 <p>这样无论生成任何<code>xxx.ops-coffee.cn</code>的域名都可以请求到Kubernetes的Ingress，然后Ingress转发请求到对应的service，最终到pod，完美的解决了这个问题</p>
 <h2 id="_4">域名绑定</h2>

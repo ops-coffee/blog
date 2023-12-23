@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -49,13 +49,13 @@
 <p>两个必选参数，分别是模型类和<code>on_delete</code>选项</p>
 <h4 id="_3">模型类</h4>
 <p>关联的模型，默认情况下指向关联的模型对象，某些情况下需要模型对象关联自身，例如用户表里有个<code>leader</code>字段用来标识当前用户的直属领导，直属领导也是个用户，所以需要跟用户表自身相关联，那模型类就需要写成<code>self</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">User</span>(<span class="n">models</span>.<span class="n">Model</span>):
-    <span class="n">username</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">16</span>, <span class="n">verbose_name</span>=<span class="s">&#39;用户名称&#39;</span>)
-    <span class="n">leader</span> = <span class="n">models</span>.<span class="n">ForeignKey</span>(<span class="s">&#39;self&#39;</span>, <span class="n">on_delete</span>=<span class="n">models</span>.<span class="n">PROTECT</span>, <span class="n">verbose_name</span>=<span class="s">&#39;直属领导&#39;</span>)
+<pre class="codehilite"><code>class User(models.Model):
+    username = models.CharField(max_length=16, verbose_name='用户名称')
+    leader = models.ForeignKey('self', on_delete=models.PROTECT, verbose_name='直属领导')
 
-    <span class="n">def</span> <span class="n">__str__</span>(<span class="nb">self</span>):
-        <span class="k">return</span> <span class="nb">self</span>.<span class="n">username</span>
-</code></pre></div>
+    def __str__(self):
+        return self.username</code></pre>
+
 
 <h4 id="on_delete">on_delete</h4>
 <p>on_delete的值主要有以下几个</p>
@@ -80,104 +80,103 @@
 <h2 id="_5">表现</h2>
 <p>默认情况下，当migrate应用表修改后，查询数据库会发现，所有ForeignKey字段在数据库里的字段名称会加上<code>_id</code>，例如上边User表的leader字段，在数据库里讲会变成<code>leader_id</code></p>
 <p>当然你可以通过<code>db_column</code>来改变字段在数据库中的名字，不过一般没必要，通常保持默认就好了</p>
-<div class="codehilite"><pre><span></span><code> <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">`accounts_user`</span> <span class="p">(</span>
-  <span class="n">`id`</span> <span class="kt">bigint</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="k">AUTO_INCREMENT</span><span class="p">,</span>
-  <span class="n">`username`</span> <span class="kt">varchar</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
-  <span class="n">`leader_id`</span> <span class="kt">bigint</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
-  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">`id`</span><span class="p">),</span>
-  <span class="k">KEY</span> <span class="n">`accounts_user_leader_id_28d81690`</span> <span class="p">(</span><span class="n">`leader_id`</span><span class="p">)</span>
-<span class="p">)</span> <span class="k">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span> <span class="k">AUTO_INCREMENT</span><span class="o">=</span><span class="mi">49</span> <span class="k">DEFAULT</span> <span class="k">CHARSET</span><span class="o">=</span><span class="n">utf8</span>
-</code></pre></div>
+<pre class="codehilite"><code> CREATE TABLE `accounts_user` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `username` varchar(16) NOT NULL,
+  `leader_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `accounts_user_leader_id_28d81690` (`leader_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8</code></pre>
+
 
 <h2 id="_6">管理</h2>
 <p>以下演示代码参考如下表设计</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Host</span>(<span class="n">TimeBaseModel</span>):
-    <span class="n">ip</span> = <span class="n">models</span>.<span class="n">GenericIPAddressField</span>(<span class="n">verbose_name</span>=<span class="s">&#39;IP地址&#39;</span>)
-    <span class="n">port</span> = <span class="n">models</span>.<span class="n">SmallIntegerField</span>(<span class="n">verbose_name</span>=<span class="s">&#39;主机端口&#39;</span>)
+<pre class="codehilite"><code>class Host(TimeBaseModel):
+    ip = models.GenericIPAddressField(verbose_name='IP地址')
+    port = models.SmallIntegerField(verbose_name='主机端口')
 
 
-<span class="k">class</span> <span class="n">Password</span>(<span class="n">TimeBaseModel</span>):
-    <span class="n">host</span> = <span class="n">models</span>.<span class="n">ForeignKey</span>(<span class="n">Host</span>, <span class="n">on_delete</span>=<span class="n">models</span>.<span class="n">CASCADE</span>, <span class="n">verbose_name</span>=<span class="s">&#39;主机&#39;</span>)
-    <span class="n">user</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">32</span>, <span class="n">verbose_name</span>=<span class="s">&#39;账号&#39;</span>)
-    <span class="n">password</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">32</span>, <span class="n">verbose_name</span>=<span class="s">&#39;密码&#39;</span>)
-    <span class="n">contact</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">64</span>, <span class="n">verbose_name</span>=<span class="s">&#39;联系人&#39;</span>)
-    <span class="nb">note</span> = <span class="n">models</span>.<span class="n">TextField</span>(<span class="n">max_length</span>=<span class="mi">64</span>, <span class="n">verbose_name</span>=<span class="s">&#39;备注&#39;</span>)
-</code></pre></div>
+class Password(TimeBaseModel):
+    host = models.ForeignKey(Host, on_delete=models.CASCADE, verbose_name='主机')
+    user = models.CharField(max_length=32, verbose_name='账号')
+    password = models.CharField(max_length=32, verbose_name='密码')
+    contact = models.CharField(max_length=64, verbose_name='联系人')
+    note = models.TextField(max_length=64, verbose_name='备注')</code></pre>
+
 
 <h3 id="_7">新增</h3>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; h1 = Host.objects.create(ip=&#39;192.168.3.1&#39;, port=22)</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt; h2 = Host.objects.create(ip=&#39;192.168.3.2&#39;, port=22)</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt; h1.id</span>
-<span class="err">29</span>
-<span class="err">&gt;&gt;&gt; h2.id</span>
-<span class="err">30</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; h1 = Host.objects.create(ip='192.168.3.1', port=22)
+&gt;&gt;&gt;
+&gt;&gt;&gt; h2 = Host.objects.create(ip='192.168.3.2', port=22)
+&gt;&gt;&gt;
+&gt;&gt;&gt;
+&gt;&gt;&gt; h1.id
+29
+&gt;&gt;&gt; h2.id
+30</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; p1 = Password.objects.create(host=h1, user=&#39;root&#39;, password=&#39;123&#39;, contact=&#39;fei.liu&#39;, note=&#39;&#39;)</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt; p2 = Password.objects.create(host_id=30, user=&#39;root&#39;, password=&#39;123&#39;, contact=&#39;fei.liu&#39;, note=&#39;&#39;)</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt; p1.host.id</span>
-<span class="err">29</span>
-<span class="err">&gt;&gt;&gt; p2.host.id</span>
-<span class="err">30</span>
-</code></pre></div>
+
+<pre class="codehilite"><code>&gt;&gt;&gt; p1 = Password.objects.create(host=h1, user='root', password='123', contact='fei.liu', note='')
+&gt;&gt;&gt;
+&gt;&gt;&gt; p2 = Password.objects.create(host_id=30, user='root', password='123', contact='fei.liu', note='')
+&gt;&gt;&gt;
+&gt;&gt;&gt;
+&gt;&gt;&gt; p1.host.id
+29
+&gt;&gt;&gt; p2.host.id
+30</code></pre>
+
 
 <p>可以通过<strong>instance实例</strong>或<strong>instance_id</strong>两种方式来新增数据</p>
 <h3 id="_8">查询</h3>
 <p>正向查询</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; p = Password.objects.get(id=3)</span>
-<span class="err">&gt;&gt;&gt; p.host.ip</span>
-<span class="err">&#39;192.168.3.1&#39;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; p = Password.objects.get(id=3)
+&gt;&gt;&gt; p.host.ip
+'192.168.3.1'</code></pre>
+
 
 <p>反向查询</p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; h = Host.objects.get(id=30)</span>
-<span class="err">&gt;&gt;&gt; h.password_set.all()</span>
-<span class="err">&lt;QuerySet [&lt;Password: Password object (5)&gt;]&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; h = Host.objects.get(id=30)
+&gt;&gt;&gt; h.password_set.all()
+&lt;QuerySet [&lt;Password: Password object (5)&gt;]&gt;</code></pre>
+
 
 <p>related_name</p>
-<div class="codehilite"><pre><span></span><code><span class="err">class Password(TimeBaseModel):</span>
-<span class="err">    host = models.ForeignKey(Host, on_delete=models.CASCADE, related_name=&#39;users&#39;, verbose_name=&#39;主机&#39;)</span>
-</code></pre></div>
+<pre class="codehilite"><code>class Password(TimeBaseModel):
+    host = models.ForeignKey(Host, on_delete=models.CASCADE, related_name='users', verbose_name='主机')</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">h</span> <span class="o">=</span> <span class="n">Host</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="kt">id</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">h</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">all</span><span class="p">()</span>
-<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span><span class="o">&lt;</span><span class="nl">Password</span><span class="p">:</span> <span class="n">root</span><span class="mf">@192.168.3.2</span><span class="o">&gt;</span><span class="p">]</span><span class="o">&gt;</span>
-</code></pre></div>
+
+<pre class="codehilite"><code>&gt;&gt;&gt; h = Host.objects.get(id=30)
+&gt;&gt;&gt; h.users.all()
+&lt;QuerySet [&lt;Password: root@192.168.3.2&gt;]&gt;</code></pre>
+
 
 <p>当<code>related_name</code>配置存在时，则可以通过<code>related_name</code>定义的值进行查询</p>
 <h3 id="_9">修改</h3>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; p = Password.objects.get(id=5)</span>
-<span class="err">&gt;&gt;&gt; p.host_id = 29</span>
-<span class="err">&gt;&gt;&gt; p.save()</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt; p.host</span>
-<span class="err">&lt;Host: 192.168.3.1&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; p = Password.objects.get(id=5)
+&gt;&gt;&gt; p.host_id = 29
+&gt;&gt;&gt; p.save()
+&gt;&gt;&gt;
+&gt;&gt;&gt; p.host
+&lt;Host: 192.168.3.1&gt;</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; h = Host.objects.get(id=30)</span>
-<span class="err">&gt;&gt;&gt; h.ip</span>
-<span class="err">&#39;192.168.3.2&#39;</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt; p.host = h</span>
-<span class="err">&gt;&gt;&gt; p.save()</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt; p.host</span>
-<span class="err">&lt;Host: 192.168.3.2&gt;</span>
-</code></pre></div>
+
+<pre class="codehilite"><code>&gt;&gt;&gt; h = Host.objects.get(id=30)
+&gt;&gt;&gt; h.ip
+'192.168.3.2'
+&gt;&gt;&gt;
+&gt;&gt;&gt; p.host = h
+&gt;&gt;&gt; p.save()
+&gt;&gt;&gt;
+&gt;&gt;&gt; p.host
+&lt;Host: 192.168.3.2&gt;</code></pre>
+
 
 <p>同样的也能通过<strong>instance实例</strong>或<strong>instance_id</strong>两种方式来修改数据</p>
 <h3 id="_10">删除</h3>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; p = Password.objects.get(id=5)</span>
-<span class="err">&gt;&gt;&gt; p.delete()</span>
-<span class="err">(1, {&#39;cmdb.Password&#39;: 1})</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; p = Password.objects.get(id=5)
+&gt;&gt;&gt; p.delete()
+(1, {'cmdb.Password': 1})</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

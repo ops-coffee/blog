@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -47,8 +47,8 @@
 <p><img alt="" loading="lazy" src="/static/images/20211014.01.png" /></p>
 <h2 id="_1">获取数据</h2>
 <p>Prometheus提供<code>query</code>和<code>query_range</code>两个API来获取数据，<code>query</code>可以查询给定时间点的数据，而<code>query_range</code>支持查询给定时间段内的数据集合，对于我们的需求<code>query_range</code>再合适不过了</p>
-<div class="codehilite"><pre><span></span><code><span class="err">GET /api/v1/query_range</span>
-</code></pre></div>
+<pre class="codehilite"><code>GET /api/v1/query_range</code></pre>
+
 
 <p>API支持以下几个参数：</p>
 <p><strong>query</strong>：Prometheus查询表达式，string类型</p>
@@ -57,85 +57,85 @@
 <p><strong>step</strong>：步长，可以是<code>15s</code>这样的持续时间格式</p>
 <p><strong>timeout</strong>：超时时间</p>
 <p>根据这些信息就可以编写获取数据的程序了，大概如下</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">PrometheusApi:</span>
-    <span class="n">def</span> <span class="n">__init__</span>(<span class="nb">self</span>, <span class="nb">range</span>=<span class="mi">1</span>):
-        <span class="nb">self</span>.<span class="n">domain</span> = <span class="s">&quot;https://prometheus.ops-coffee.cn&quot;</span>
+<pre class="codehilite"><code>class PrometheusApi:
+    def __init__(self, range=1):
+        self.domain = &quot;https://prometheus.ops-coffee.cn&quot;
 
-        <span class="nb">self</span>.<span class="n">nowtime</span> = <span class="n">datetime</span>.<span class="n">datetime</span>.<span class="nb">now</span>(<span class="n">datetime</span>.<span class="nb">timezone</span>.<span class="nb">utc</span>)
-        <span class="nb">self</span>.<span class="n">start_time</span> = <span class="nb">self</span>.<span class="n">nowtime</span> - <span class="n">datetime</span>.<span class="n">timedelta</span>(<span class="n">hours</span>=<span class="n">int</span>(<span class="nb">range</span>))
+        self.nowtime = datetime.datetime.now(datetime.timezone.utc)
+        self.start_time = self.nowtime - datetime.timedelta(hours=int(range))
 
-    <span class="n">def</span> <span class="n">get_pod_metric</span>(<span class="nb">self</span>, <span class="n">namespace</span>, <span class="n">pod</span>):
-        <span class="n">_data</span> = {<span class="s">&quot;datetime&quot;</span>: [], <span class="s">&quot;cpu&quot;</span>: {}, <span class="s">&quot;memory&quot;</span>: {}, <span class="s">&quot;bandwidth&quot;</span>: {}, <span class="s">&quot;iops&quot;</span>: {}}
+    def get_pod_metric(self, namespace, pod):
+        _data = {&quot;datetime&quot;: [], &quot;cpu&quot;: {}, &quot;memory&quot;: {}, &quot;bandwidth&quot;: {}, &quot;iops&quot;: {}}
 
-        <span class="c1"># cpu</span>
-        <span class="nb">params</span> = {
-            <span class="s">&quot;query&quot;</span>: <span class="s">&quot;sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=&#39;%s&#39;, pod=&#39;%s&#39;}) by (container)&quot;</span> % (
-                <span class="n">namespace</span>, <span class="n">pod</span>),
-            <span class="s">&quot;start&quot;</span>: <span class="nb">self</span>.<span class="n">start_time</span>.<span class="n">isoformat</span>(),
-            <span class="s">&quot;end&quot;</span>: <span class="nb">self</span>.<span class="n">nowtime</span>.<span class="n">isoformat</span>(),
-            <span class="s">&quot;step&quot;</span>: <span class="s">&quot;60s&quot;</span>
+        # cpu
+        params = {
+            &quot;query&quot;: &quot;sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace='%s', pod='%s'}) by (container)&quot; % (
+                namespace, pod),
+            &quot;start&quot;: self.start_time.isoformat(),
+            &quot;end&quot;: self.nowtime.isoformat(),
+            &quot;step&quot;: &quot;60s&quot;
         }
-        <span class="n">rc</span> = <span class="n">requests</span>.<span class="nb">get</span>(<span class="nb">self</span>.<span class="n">domain</span> + <span class="s">&#39;/api/v1/query_range&#39;</span>, <span class="nb">params</span>=<span class="nb">params</span>)
+        rc = requests.get(self.domain + '/api/v1/query_range', params=params)
 
-        <span class="k">for</span> <span class="n">c</span> <span class="nb">in</span> <span class="n">rc</span>.<span class="n">json</span>().<span class="nb">get</span>(<span class="s">&#39;data&#39;</span>).<span class="nb">get</span>(<span class="s">&#39;result&#39;</span>):
-            <span class="n">_data</span>[<span class="s">&#39;cpu&#39;</span>][<span class="n">c</span>[<span class="s">&#39;metric&#39;</span>][<span class="s">&#39;container&#39;</span>]] = [<span class="n">j</span>[<span class="mi">1</span>] <span class="k">for</span> <span class="n">j</span> <span class="nb">in</span> <span class="n">c</span>[<span class="s">&#39;values&#39;</span>]]
+        for c in rc.json().get('data').get('result'):
+            _data['cpu'][c['metric']['container']] = [j[1] for j in c['values']]
 
-        <span class="k">return</span> <span class="nb">True</span>, <span class="mi">200</span>, <span class="n">_data</span>
-</code></pre></div>
+        return True, 200, _data</code></pre>
+
 
 <p>这里如果对Prometheus的查询表达式不熟悉，可以直接去Grafana图形那复制表达式来使用，这里我把cpu\memory等需要展示的数据统一在一个函数里处理了，这样只需要根据namesapce、pod和时间范围就能获取到一个pod的所有监控数据，方便前端展示</p>
 <p>需要注意的是Prometheus默认使用的是UTC时间，所以在做时间处理时需要跟本地时间做转换</p>
 <h2 id="_2">画图展示</h2>
 <p>数据获取到了，下一步就是画图展示，这里采用了echarts，使用也非常简单，大概代码如下</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;tab-pane&quot;</span> <span class="na">id=</span><span class="s">&quot;tab-monitor&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-4&quot;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;input-group&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;input-group-btn&quot;</span><span class="nt">&gt;&lt;button</span> <span class="na">class=</span><span class="s">&quot;btn btn-default&quot;</span><span class="nt">&gt;</span>选择实例<span class="nt">&lt;/button&gt;&lt;/div&gt;</span>
-        <span class="nt">&lt;select</span> <span class="na">class=</span><span class="s">&quot;form-control&quot;</span> <span class="na">id=</span><span class="s">&quot;id_pod_monitor&quot;</span> <span class="na">onchange=</span><span class="s">&quot;getPodMonitor()&quot;</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>------<span class="nt">&lt;/option&gt;</span>
-        <span class="nt">&lt;/select&gt;</span>
-      <span class="nt">&lt;/div&gt;</span>
-    <span class="nt">&lt;/div&gt;</span>
+<pre class="codehilite"><code>&lt;div class=&quot;tab-pane&quot; id=&quot;tab-monitor&quot;&gt;
+  &lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;col-md-4&quot;&gt;
+      &lt;div class=&quot;input-group&quot;&gt;
+        &lt;div class=&quot;input-group-btn&quot;&gt;&lt;button class=&quot;btn btn-default&quot;&gt;选择实例&lt;/button&gt;&lt;/div&gt;
+        &lt;select class=&quot;form-control&quot; id=&quot;id_pod_monitor&quot; onchange=&quot;getPodMonitor()&quot;&gt;
+          &lt;option value=&quot;&quot;&gt;------&lt;/option&gt;
+        &lt;/select&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
 
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-2&quot;</span><span class="nt">&gt;</span>
-       <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;input-group&quot;</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;input-group-btn&quot;</span><span class="nt">&gt;&lt;button</span> <span class="na">class=</span><span class="s">&quot;btn btn-default&quot;</span><span class="nt">&gt;</span>时间范围<span class="nt">&lt;/button&gt;&lt;/div&gt;</span>
-          <span class="nt">&lt;select</span> <span class="na">class=</span><span class="s">&quot;form-control&quot;</span> <span class="na">id=</span><span class="s">&quot;id_pod_monitor_time&quot;</span> <span class="na">onchange=</span><span class="s">&quot;getPodMonitor()&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;1&quot;</span> <span class="na">selected=</span><span class="s">&quot;selected&quot;</span><span class="nt">&gt;</span>最近1小时<span class="nt">&lt;/option&gt;</span>
-            <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;4&quot;</span><span class="nt">&gt;</span>最近4小时<span class="nt">&lt;/option&gt;</span>
-            <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;24&quot;</span><span class="nt">&gt;</span>最近24小时<span class="nt">&lt;/option&gt;</span>
-            <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;48&quot;</span><span class="nt">&gt;</span>最近48小时<span class="nt">&lt;/option&gt;</span>
-            <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;72&quot;</span><span class="nt">&gt;</span>最近72小时<span class="nt">&lt;/option&gt;</span>
-          <span class="nt">&lt;/select&gt;</span>
-        <span class="nt">&lt;/div&gt;</span>
-    <span class="nt">&lt;/div&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-6&quot;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;pull-right&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">&quot;btn btn-default&quot;</span> <span class="na">onclick=</span><span class="s">&quot;getPodMonitor()&quot;</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;glyphicon glyphicon-refresh&quot;</span><span class="nt">&gt;&lt;/span&gt;</span> 刷新
-        <span class="nt">&lt;/button&gt;</span>
-      <span class="nt">&lt;/div&gt;</span>
-    <span class="nt">&lt;/div&gt;</span>
-  <span class="nt">&lt;/div&gt;</span>
+    &lt;div class=&quot;col-md-2&quot;&gt;
+       &lt;div class=&quot;input-group&quot;&gt;
+          &lt;div class=&quot;input-group-btn&quot;&gt;&lt;button class=&quot;btn btn-default&quot;&gt;时间范围&lt;/button&gt;&lt;/div&gt;
+          &lt;select class=&quot;form-control&quot; id=&quot;id_pod_monitor_time&quot; onchange=&quot;getPodMonitor()&quot;&gt;
+            &lt;option value=&quot;1&quot; selected=&quot;selected&quot;&gt;最近1小时&lt;/option&gt;
+            &lt;option value=&quot;4&quot;&gt;最近4小时&lt;/option&gt;
+            &lt;option value=&quot;24&quot;&gt;最近24小时&lt;/option&gt;
+            &lt;option value=&quot;48&quot;&gt;最近48小时&lt;/option&gt;
+            &lt;option value=&quot;72&quot;&gt;最近72小时&lt;/option&gt;
+          &lt;/select&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;col-md-6&quot;&gt;
+      &lt;div class=&quot;pull-right&quot;&gt;
+        &lt;button class=&quot;btn btn-default&quot; onclick=&quot;getPodMonitor()&quot;&gt;
+          &lt;span class=&quot;glyphicon glyphicon-refresh&quot;&gt;&lt;/span&gt; 刷新
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
 
-  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span> <span class="na">style=</span><span class="s">&quot;margin-top:10px;&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-6&quot;</span> <span class="na">id=</span><span class="s">&quot;id_chart_cpu&quot;</span> <span class="na">style=</span><span class="s">&quot;position: relative; height: 300px;&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-6&quot;</span> <span class="na">id=</span><span class="s">&quot;id_chart_memory&quot;</span> <span class="na">style=</span><span class="s">&quot;position: relative; height: 300px;&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-6&quot;</span> <span class="na">id=</span><span class="s">&quot;id_chart_bandwidth&quot;</span> <span class="na">style=</span><span class="s">&quot;position: relative; height: 300px;&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-6&quot;</span> <span class="na">id=</span><span class="s">&quot;id_chart_iops&quot;</span> <span class="na">style=</span><span class="s">&quot;position: relative; height: 300px;&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-  <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
+  &lt;div class=&quot;row&quot; style=&quot;margin-top:10px;&quot;&gt;
+    &lt;div class=&quot;col-md-6&quot; id=&quot;id_chart_cpu&quot; style=&quot;position: relative; height: 300px;&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;col-md-6&quot; id=&quot;id_chart_memory&quot; style=&quot;position: relative; height: 300px;&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;col-md-6&quot; id=&quot;id_chart_bandwidth&quot; style=&quot;position: relative; height: 300px;&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;col-md-6&quot; id=&quot;id_chart_iops&quot; style=&quot;position: relative; height: 300px;&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
 
-<span class="nt">&lt;script&gt;</span>
-    var chart_cpu = echarts.init(document.getElementById(&#39;id_chart_cpu&#39;)),
-        chart_memory = echarts.init(document.getElementById(&#39;id_chart_memory&#39;)),
-        chart_bandwidth = echarts.init(document.getElementById(&#39;id_chart_bandwidth&#39;)),
-        chart_iops = echarts.init(document.getElementById(&#39;id_chart_iops&#39;));
+&lt;script&gt;
+    var chart_cpu = echarts.init(document.getElementById('id_chart_cpu')),
+        chart_memory = echarts.init(document.getElementById('id_chart_memory')),
+        chart_bandwidth = echarts.init(document.getElementById('id_chart_bandwidth')),
+        chart_iops = echarts.init(document.getElementById('id_chart_iops'));
 
     function getPodMonitor() {
-      var pod = $(&#39;#id_pod_monitor&#39;).val(), range = $(&#39;#id_pod_monitor_time&#39;).val();
-      $.get(&quot;/kubeops/namespace/<span class="cp">{{</span> <span class="nv">namespace</span> <span class="cp">}}</span>/pod/&quot; + pod + &quot;/monitor/?range=&quot;+ range +&quot;<span class="err">&amp;</span>format=json&quot;, function(data) {
+      var pod = $('#id_pod_monitor').val(), range = $('#id_pod_monitor_time').val();
+      $.get(&quot;/kubeops/namespace/{{ namespace }}/pod/&quot; + pod + &quot;/monitor/?range=&quot;+ range +&quot;&amp;format=json&quot;, function(data) {
         if (data.state) {
           let cpu_legend = new Array, cpu_series = new Array;
           $.each(data.data.cpu, function (k, v) {
@@ -143,25 +143,25 @@
             cpu_series.push({
               data: v,
               name: k,
-              type: &#39;line&#39;
+              type: 'line'
             });
           })
 
           chart_cpu.setOption(
             {
-              title: {text: &#39;CPU使用(单位:core)&#39;},
-              tooltip: {trigger: &#39;axis&#39;},
+              title: {text: 'CPU使用(单位:core)'},
+              tooltip: {trigger: 'axis'},
               legend: {data:cpu_legend},
               xAxis: {data: data.data.datetime},
-              yAxis: {type: &#39;value&#39;},
+              yAxis: {type: 'value'},
               series: cpu_series
             }
           )
         }
       })
     }
-<span class="nt">&lt;/script&gt;</span>
-</code></pre></div>
+&lt;/script&gt;</code></pre>
+
 
 <p>echarts使用了最简单的折线图，也没有太多花里胡哨的东西，就是去后端取数据然后展示</p>
 <p>至此搞定Probius集成POD监控，虽然这只是一个小功能但却是很有用~</p>

@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -62,80 +62,80 @@
 <h2 id="_2">日志数据定义</h2>
 <p>我们只希望用户能够查询固定的几个日志文件，就不是用数据库仅借助settings.py文件里写全局变量来实现数据存储</p>
 <p>在settings.py里添加一个叫<code>TAILF</code>的变量，类型为字典，key标识文件的编号，value标识文件的路径</p>
-<div class="codehilite"><pre><span></span><code><span class="err">TAILF = {</span>
-<span class="err">    1: &#39;/ops/coffee/error.log&#39;,</span>
-<span class="err">    2: &#39;/ops/coffee/access.log&#39;,</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>TAILF = {
+    1: '/ops/coffee/error.log',
+    2: '/ops/coffee/access.log',
+}</code></pre>
+
 
 <h2 id="web">基础Web页面搭建</h2>
 <p>假设你已经创建好了一个叫tailf的app，并添加到了settings.py的INSTALLED_APPS中，app的目录结构大概如下</p>
-<div class="codehilite"><pre><span></span><code><span class="err">tailf</span>
-<span class="err">    - migrations</span>
-<span class="err">        - __init__.py</span>
-<span class="err">    - __init__.py</span>
-<span class="err">    - admin.py</span>
-<span class="err">    - apps.py</span>
-<span class="err">    - models.py</span>
-<span class="err">    - tests.py</span>
-<span class="err">    - views.py</span>
-</code></pre></div>
+<pre class="codehilite"><code>tailf
+    - migrations
+        - __init__.py
+    - __init__.py
+    - admin.py
+    - apps.py
+    - models.py
+    - tests.py
+    - views.py</code></pre>
+
 
 <p>依然先构建一个标准的Django页面，相关代码如下</p>
 <p>url:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.views</span> <span class="kn">import</span> <span class="n">LoginView</span><span class="p">,</span><span class="n">LogoutView</span>
+<pre class="codehilite"><code>from django.urls import path
+from django.contrib.auth.views import LoginView,LogoutView
 
-<span class="kn">from</span> <span class="nn">tailf.views</span> <span class="kn">import</span> <span class="n">tailf</span>
+from tailf.views import tailf
 
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;tailf&#39;</span><span class="p">,</span> <span class="n">tailf</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;tailf-url&#39;</span><span class="p">),</span>
+urlpatterns = [
+    path('tailf', tailf, name='tailf-url'),
 
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">,</span> <span class="n">LoginView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;login.html&#39;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;login-url&#39;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;logout&#39;</span><span class="p">,</span> <span class="n">LogoutView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;login.html&#39;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;logout-url&#39;</span><span class="p">),</span>
-<span class="p">]</span>
-</code></pre></div>
+    path('login', LoginView.as_view(template_name='login.html'), name='login-url'),
+    path('logout', LogoutView.as_view(template_name='login.html'), name='logout-url'),
+]</code></pre>
+
 
 <p>因为我们规定只有通过登录的用户才能查看日志，所以引入Django自带的LoginView，logoutView帮助我们快速构建Login，Logout功能</p>
 <p>指定了登录模板使用<code>login.html</code>，它就是一个标准的登录页面，post传入username和password两个参数即可，不贴代码了</p>
 <p>view:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+<pre class="codehilite"><code>from django.conf import settings
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 
-<span class="c1"># Create your views here.</span>
-<span class="nd">@login_required</span><span class="p">(</span><span class="n">login_url</span><span class="o">=</span><span class="s1">&#39;/login&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">tailf</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">logDict</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">TAILF</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;tailf/index.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;logDict&quot;</span><span class="p">:</span> <span class="n">logDict</span><span class="p">})</span>
-</code></pre></div>
+# Create your views here.
+@login_required(login_url='/login')
+def tailf(request):
+    logDict = settings.TAILF
+    return render(request, 'tailf/index.html', {&quot;logDict&quot;: logDict})</code></pre>
+
 
 <p>引入了<code>login_required</code>装饰器，来判断用户是否登录，未登录就给跳到<code>/login</code>登录页面</p>
 <p><strong>logDict</strong> 去setting里取我们定义好的<code>TAILF</code>字典赋值，并传递给前端</p>
 <p>template:</p>
-<div class="codehilite"><pre><span></span><code><span class="cp">{%</span> <span class="k">extends</span> <span class="s2">&quot;base.html&quot;</span> <span class="cp">%}</span>
+<pre class="codehilite"><code>{% extends &quot;base.html&quot; %}
 
-<span class="cp">{%</span> <span class="k">block</span> <span class="nv">content</span> <span class="cp">%}</span>
-<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-sm-8&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;select</span> <span class="na">class=</span><span class="s">&quot;form-control&quot;</span> <span class="na">id=</span><span class="s">&quot;file&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>选择要监听的日志<span class="nt">&lt;/option&gt;</span>
-    <span class="cp">{%</span> <span class="k">for</span> <span class="nv">k</span><span class="o">,</span><span class="nv">v</span> <span class="k">in</span> <span class="nv">logDict.items</span> <span class="cp">%}</span>
-    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">k</span> <span class="cp">}}</span><span class="s">&quot;</span><span class="nt">&gt;</span><span class="cp">{{</span> <span class="nv">v</span> <span class="cp">}}</span><span class="nt">&lt;/option&gt;</span>
-    <span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
-  <span class="nt">&lt;/select&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-sm-2&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;input</span> <span class="na">class=</span><span class="s">&quot;btn btn-success btn-block&quot;</span> <span class="na">type=</span><span class="s">&quot;button&quot;</span> <span class="na">onclick=</span><span class="s">&quot;connect()&quot;</span> <span class="na">value=</span><span class="s">&quot;开始监听&quot;</span><span class="nt">/&gt;&lt;br/&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-sm-2&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;input</span> <span class="na">class=</span><span class="s">&quot;btn btn-warning btn-block&quot;</span> <span class="na">type=</span><span class="s">&quot;button&quot;</span> <span class="na">onclick=</span><span class="s">&quot;goclose()&quot;</span> <span class="na">value=</span><span class="s">&quot;终止监听&quot;</span><span class="nt">/&gt;&lt;br/&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-sm-12&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;textarea</span> <span class="na">class=</span><span class="s">&quot;form-control&quot;</span> <span class="na">id=</span><span class="s">&quot;chat-log&quot;</span> <span class="err">disabled</span> <span class="na">rows=</span><span class="s">&quot;20&quot;</span><span class="nt">&gt;&lt;/textarea&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-<span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
-</code></pre></div>
+{% block content %}
+&lt;div class=&quot;col-sm-8&quot;&gt;
+  &lt;select class=&quot;form-control&quot; id=&quot;file&quot;&gt;
+    &lt;option value=&quot;&quot;&gt;选择要监听的日志&lt;/option&gt;
+    {% for k,v in logDict.items %}
+    &lt;option value=&quot;{{ k }}&quot;&gt;{{ v }}&lt;/option&gt;
+    {% endfor %}
+  &lt;/select&gt;
+&lt;/div&gt;
+&lt;div class=&quot;col-sm-2&quot;&gt;
+  &lt;input class=&quot;btn btn-success btn-block&quot; type=&quot;button&quot; onclick=&quot;connect()&quot; value=&quot;开始监听&quot;/&gt;&lt;br/&gt;
+&lt;/div&gt;
+&lt;div class=&quot;col-sm-2&quot;&gt;
+  &lt;input class=&quot;btn btn-warning btn-block&quot; type=&quot;button&quot; onclick=&quot;goclose()&quot; value=&quot;终止监听&quot;/&gt;&lt;br/&gt;
+&lt;/div&gt;
+&lt;div class=&quot;col-sm-12&quot;&gt;
+  &lt;textarea class=&quot;form-control&quot; id=&quot;chat-log&quot; disabled rows=&quot;20&quot;&gt;&lt;/textarea&gt;
+&lt;/div&gt;
+{% endblock %}</code></pre>
+
 
 <p>前端拿到<code>TAILF</code>后通过循环的方式填充到select选择框下，因为数据是字典格式，使用<code>logDict.items</code>的方式可以循环出字典的key和value</p>
 <p>这样一个日志监听页面就完成了，但还无法实现日志的监听，继续往下</p>
@@ -145,22 +145,22 @@
 <ol>
 <li>先添加routing路由，直接修改<code>webapp/routing.py</code></li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">channels.auth</span> <span class="kn">import</span> <span class="n">AuthMiddlewareStack</span>
-<span class="kn">from</span> <span class="nn">channels.routing</span> <span class="kn">import</span> <span class="n">ProtocolTypeRouter</span><span class="p">,</span> <span class="n">URLRouter</span>
+<pre class="codehilite"><code>from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
 
-<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">re_path</span>
-<span class="kn">from</span> <span class="nn">chat.consumers</span> <span class="kn">import</span> <span class="n">ChatConsumer</span>
-<span class="kn">from</span> <span class="nn">tailf.consumers</span> <span class="kn">import</span> <span class="n">TailfConsumer</span>
+from django.urls import path, re_path
+from chat.consumers import ChatConsumer
+from tailf.consumers import TailfConsumer
 
-<span class="n">application</span> <span class="o">=</span> <span class="n">ProtocolTypeRouter</span><span class="p">({</span>
-    <span class="s1">&#39;websocket&#39;</span><span class="p">:</span> <span class="n">AuthMiddlewareStack</span><span class="p">(</span>
-        <span class="n">URLRouter</span><span class="p">([</span>
-            <span class="n">path</span><span class="p">(</span><span class="s1">&#39;ws/chat/&#39;</span><span class="p">,</span> <span class="n">ChatConsumer</span><span class="p">),</span>
-            <span class="n">re_path</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^ws/tailf/(?P&lt;id&gt;\d+)/$&#39;</span><span class="p">,</span> <span class="n">TailfConsumer</span><span class="p">),</span>
-        <span class="p">])</span>
-    <span class="p">)</span>
-<span class="p">})</span>
-</code></pre></div>
+application = ProtocolTypeRouter({
+    'websocket': AuthMiddlewareStack(
+        URLRouter([
+            path('ws/chat/', ChatConsumer),
+            re_path(r'^ws/tailf/(?P&lt;id&gt;\d+)/$', TailfConsumer),
+        ])
+    )
+})</code></pre>
+
 
 <p>直接将路由信息写入到了<code>URLRouter</code>里，注意路由信息的外层多了一个list，区别于上一篇中介绍的写路由文件路径的方式</p>
 <p>页面需要将监听的日志文件传递给后端，我们使用routing正则<code>P&lt;id&gt;\d+</code>传文件ID给后端程序，后端程序拿到ID之后根据settings中指定的<code>TAILF</code>解析出日志路径</p>
@@ -168,30 +168,30 @@
 <ol>
 <li>添加consumer在<code>tailf/consumers.py</code>文件中</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">channels.generic.websocket</span> <span class="kn">import</span> <span class="n">WebsocketConsumer</span>
-<span class="kn">from</span> <span class="nn">tailf.tasks</span> <span class="kn">import</span> <span class="n">tailf</span>
+<pre class="codehilite"><code>import json
+from channels.generic.websocket import WebsocketConsumer
+from tailf.tasks import tailf
 
 
-<span class="k">class</span> <span class="nc">TailfConsumer</span><span class="p">(</span><span class="n">WebsocketConsumer</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">file_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">[</span><span class="s2">&quot;url_route&quot;</span><span class="p">][</span><span class="s2">&quot;kwargs&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+class TailfConsumer(WebsocketConsumer):
+    def connect(self):
+        self.file_id = self.scope[&quot;url_route&quot;][&quot;kwargs&quot;][&quot;id&quot;]
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">tailf</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_name</span><span class="p">)</span>
+        self.result = tailf.delay(self.file_id, self.channel_name)
 
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;connect:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+        print('connect:', self.channel_name, self.result.id)
+        self.accept()
 
-    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">close_code</span><span class="p">):</span>
-        <span class="c1"># 中止执行中的Task</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">revoke</span><span class="p">(</span><span class="n">terminate</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;disconnect:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_name</span><span class="p">)</span>
+    def disconnect(self, close_code):
+        # 中止执行中的Task
+        self.result.revoke(terminate=True)
+        print('disconnect:', self.file_id, self.channel_name)
 
-    <span class="k">def</span> <span class="nf">send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">text_data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
-            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span>
-        <span class="p">}))</span>
-</code></pre></div>
+    def send_message(self, event):
+        self.send(text_data=json.dumps({
+            &quot;message&quot;: event[&quot;message&quot;]
+        }))</code></pre>
+
 
 <p>这里使用Channels的单通道模式，每一个新连接都会启用一个新的channel，彼此互不影响，可以随意终止任何一个监听日志的请求</p>
 <p><strong>connect</strong> </p>
@@ -200,15 +200,15 @@
 <p><strong>disconnect</strong> </p>
 <p>当websocket连接断开的时候我们需要终止Celery的Task执行，以清除celery的资源占用</p>
 <p>终止Celery任务使用到<code>revoke</code>指令，采用如下代码来实现</p>
-<div class="codehilite"><pre><span></span><code><span class="err">self.result.revoke(terminate=True)</span>
-</code></pre></div>
+<pre class="codehilite"><code>self.result.revoke(terminate=True)</code></pre>
+
 
 <p>注意<code>self.result</code>是一个result对象，而非id</p>
 <p>参数<code>terminate=True</code>的意思是是否立即终止Task，为True时无论Task是否正在执行都立即终止，为False（默认）时需要等待Task运行结束之后才会终止，我们使用了While循环不设置为True就永远不会终止了</p>
 <p>终止Celery任务的另外一种方法是：</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">webapp.celery</span> <span class="kn">import</span> <span class="n">app</span>
-<span class="n">app</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">revoke</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">terminate</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</code></pre></div>
+<pre class="codehilite"><code>from webapp.celery import app
+app.control.revoke(result.id, terminate=True)</code></pre>
+
 
 <p><strong>send_message</strong> </p>
 <p>方便我们通过Django的view或者Celery的task调用给channel发送消息，官方也比较推荐这种方式</p>
@@ -216,110 +216,110 @@
 <p>上边已经集成了Channels实现了WebSocket，但connect函数中的celery任务<code>tailf</code>还没有实现，下边来实现它</p>
 <p>关于Celery的详细内容可以看这篇文章：<a href="/s/lXrp3igYo9W2UuE5Gauysg">《Django配置Celery执行异步任务和定时任务》</a>，本文就不介绍集成使用以及细节原理，只讲一下任务task</p>
 <p>task实现代码如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">celery</span> <span class="kn">import</span> <span class="n">shared_task</span>
+<pre class="codehilite"><code>from __future__ import absolute_import
+from celery import shared_task
 
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">channels.layers</span> <span class="kn">import</span> <span class="n">get_channel_layer</span>
-<span class="kn">from</span> <span class="nn">asgiref.sync</span> <span class="kn">import</span> <span class="n">async_to_sync</span>
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+import time
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from django.conf import settings
 
 
-<span class="nd">@shared_task</span>
-<span class="k">def</span> <span class="nf">tailf</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">channel_name</span><span class="p">):</span>
-    <span class="n">channel_layer</span> <span class="o">=</span> <span class="n">get_channel_layer</span><span class="p">()</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">TAILF</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">)]</span>
+@shared_task
+def tailf(id, channel_name):
+    channel_layer = get_channel_layer()
+    filename = settings.TAILF[int(id)]
 
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    try:
+        with open(filename) as f:
+            f.seek(0, 2)
 
-            <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            while True:
+                line = f.readline()
 
-                <span class="k">if</span> <span class="n">line</span><span class="p">:</span>
-                    <span class="k">print</span><span class="p">(</span><span class="n">channel_name</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
-                    <span class="n">async_to_sync</span><span class="p">(</span><span class="n">channel_layer</span><span class="o">.</span><span class="n">send</span><span class="p">)(</span>
-                        <span class="n">channel_name</span><span class="p">,</span>
-                        <span class="p">{</span>
-                            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;send.message&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;微信公众号【运维咖啡吧】原创 版权所有 &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-                        <span class="p">}</span>
-                    <span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-</code></pre></div>
+                if line:
+                    print(channel_name, line)
+                    async_to_sync(channel_layer.send)(
+                        channel_name,
+                        {
+                            &quot;type&quot;: &quot;send.message&quot;,
+                            &quot;message&quot;: &quot;微信公众号【运维咖啡吧】原创 版权所有 &quot; + str(line)
+                        }
+                    )
+                else:
+                    time.sleep(0.5)
+    except Exception as e:
+        print(e)</code></pre>
+
 
 <p>这里边主要涉及到Channels中另一个非常重要的点：<strong>从Channels的外部发送消息给Channel</strong></p>
 <p>其实<a href="/s/hqaPrPS7w3D-9SeegQAB2Q">上篇文章</a>中检查通道层是否能够正常工作的时候使用的方法就是从外部给Channel通道发消息的示例，本文的具体代码如下</p>
-<div class="codehilite"><pre><span></span><code><span class="err">async_to_sync(channel_layer.send)(</span>
-<span class="err">    channel_name,</span>
-<span class="err">    {</span>
-<span class="err">        &quot;type&quot;: &quot;send.message&quot;,</span>
-<span class="err">        &quot;message&quot;: &quot;微信公众号【运维咖啡吧】原创 版权所有 &quot; + str(line)</span>
-<span class="err">    }</span>
-<span class="err">)</span>
-</code></pre></div>
+<pre class="codehilite"><code>async_to_sync(channel_layer.send)(
+    channel_name,
+    {
+        &quot;type&quot;: &quot;send.message&quot;,
+        &quot;message&quot;: &quot;微信公众号【运维咖啡吧】原创 版权所有 &quot; + str(line)
+    }
+)</code></pre>
+
 
 <p><strong>channel_name</strong> 对应于传递给这个任务的channel_name，发送消息给这个名字的channel</p>
 <p><strong>type</strong> 对应于我们Channels的TailfConsumer类中的<code>send_message</code>方法，将方法中的<code>_</code>换成<code>.</code>即可</p>
 <p><strong>message</strong> 就是要发送给这个channel的具体信息</p>
 <p>上边是发送给单Channel的情况，如果是需要发送到Group的话需要使用如下代码</p>
-<div class="codehilite"><pre><span></span><code><span class="err">async_to_sync(channel_layer.group_send)(</span>
-<span class="err">    group_name,</span>
-<span class="err">    {</span>
-<span class="err">        &#39;type&#39;: &#39;chat.message&#39;,</span>
-<span class="err">        &#39;message&#39;: &#39;欢迎关注公众号【运维咖啡吧】&#39;</span>
-<span class="err">    }</span>
-<span class="err">)</span>
-</code></pre></div>
+<pre class="codehilite"><code>async_to_sync(channel_layer.group_send)(
+    group_name,
+    {
+        'type': 'chat.message',
+        'message': '欢迎关注公众号【运维咖啡吧】'
+    }
+)</code></pre>
+
 
 <p>只需要将发送单channel的<code>send</code>改为<code>group_send</code>，<code>channel_name</code>改为<code>group_name</code>即可</p>
 <p>需要特别注意的是：<strong>使用了channel layer之后一定要通过async_to_sync来异步执行</strong></p>
 <h2 id="websocket">页面添加WebSocket支持</h2>
 <p>后端功能都已经完成，我们最后需要添加前端页面支持WebSocket</p>
-<div class="codehilite"><pre><span></span><code>  <span class="n">function</span> <span class="n">connect</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span> <span class="o">$</span><span class="p">(</span><span class="s1">&#39;#file&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">val</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
-      <span class="n">window</span><span class="o">.</span><span class="n">chatSocket</span> <span class="o">=</span> <span class="n">new</span> <span class="n">WebSocket</span><span class="p">(</span>
-        <span class="s1">&#39;ws://&#39;</span> <span class="o">+</span> <span class="n">window</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">host</span> <span class="o">+</span> <span class="s1">&#39;/ws/tailf/&#39;</span> <span class="o">+</span> <span class="o">$</span><span class="p">(</span><span class="s1">&#39;#file&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">val</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="p">);</span>
+<pre class="codehilite"><code>  function connect() {
+    if ( $('#file').val() ) {
+      window.chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/tailf/' + $('#file').val() + '/');
 
-      <span class="n">chatSocket</span><span class="o">.</span><span class="n">onmessage</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">var</span> <span class="n">data</span> <span class="o">=</span> <span class="n">JSON</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">data</span><span class="p">);</span>
-        <span class="k">var</span> <span class="n">message</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">];</span>
-        <span class="n">document</span><span class="o">.</span><span class="n">querySelector</span><span class="p">(</span><span class="s1">&#39;#chat-log&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span> <span class="o">+=</span> <span class="p">(</span><span class="n">message</span><span class="p">);</span>
-        <span class="o">//</span> <span class="err">跳转到页面底部</span>
-        <span class="o">$</span><span class="p">(</span><span class="s1">&#39;#chat-log&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">scrollTop</span><span class="p">(</span><span class="o">$</span><span class="p">(</span><span class="s1">&#39;#chat-log&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scrollHeight</span><span class="p">);</span>
-      <span class="p">};</span>
+      chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+        document.querySelector('#chat-log').value += (message);
+        // 跳转到页面底部
+        $('#chat-log').scrollTop($('#chat-log')[0].scrollHeight);
+      };
 
-      <span class="n">chatSocket</span><span class="o">.</span><span class="n">onerror</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">toastr</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;服务端连接异常！&#39;</span><span class="p">)</span>
-      <span class="p">};</span>
+      chatSocket.onerror = function(e) {
+        toastr.error('服务端连接异常！')
+      };
 
-      <span class="n">chatSocket</span><span class="o">.</span><span class="n">onclose</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">toastr</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;websocket已关闭！&#39;</span><span class="p">)</span>
-      <span class="p">};</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="n">toastr</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;请选择要监听的日志文件&#39;</span><span class="p">)</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-</code></pre></div>
+      chatSocket.onclose = function(e) {
+        toastr.error('websocket已关闭！')
+      };
+    } else {
+      toastr.warning('请选择要监听的日志文件')
+    }
+  }</code></pre>
+
 
 <p><a href="/s/hqaPrPS7w3D-9SeegQAB2Q">上一篇文章</a>中有详细介绍过websocket的消息类型，这里不多介绍了</p>
 <p>至此我们一个日志监听页面完成了，包含了完整的监听功能，但还无法终止，接着看下面的内容</p>
 <h2 id="webwebsocket">Web页面主动断开WebSocket</h2>
 <p>web页面上“终止监听”按钮的主要逻辑就是触发WebSocket的onclose方法，从而可以触发Channels后端consumer的<code>disconnect</code>方法，进而终止Celery的循环读取日志任务</p>
 <p>前端页面通过<code>.close()</code>可以直接触发WebSocket关闭，当然你如果直接关掉页面的话也会触发WebSocket的onclose消息，所以不用担心Celery任务无法结束的问题</p>
-<div class="codehilite"><pre><span></span><code>  <span class="k">function</span> <span class="n">goclose</span><span class="p">()</span> <span class="err">{</span>
-    <span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="n">window</span><span class="p">.</span><span class="n">chatSocket</span><span class="p">);</span>
+<pre class="codehilite"><code>  function goclose() {
+    console.log(window.chatSocket);
 
-    <span class="n">window</span><span class="p">.</span><span class="n">chatSocket</span><span class="p">.</span><span class="k">close</span><span class="p">();</span>
-    <span class="n">window</span><span class="p">.</span><span class="n">chatSocket</span><span class="p">.</span><span class="n">onclose</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="err">{</span>
-      <span class="n">toastr</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="s1">&#39;已终止日志监听！&#39;</span><span class="p">)</span>
-    <span class="err">}</span><span class="p">;</span>
-  <span class="err">}</span>
-</code></pre></div>
+    window.chatSocket.close();
+    window.chatSocket.onclose = function(e) {
+      toastr.success('已终止日志监听！')
+    };
+  }</code></pre>
+
 
 <p>至此我们包含完善功能的Tailf日志监听、终止页面就全部完成了</p>
 <h1 id="_3">写在最后</h1>

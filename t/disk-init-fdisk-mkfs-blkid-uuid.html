@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -80,27 +80,26 @@
 <p>修改<code>/etc/fstab</code>文件，使其开机自动挂载</p>
 </li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="err">UUID=09761a1c-c938-44e7-8e7d-dda5489971cf /data ext4 defaults 1 2</span>
-</code></pre></div>
+<pre class="codehilite"><code>UUID=09761a1c-c938-44e7-8e7d-dda5489971cf /data ext4 defaults 1 2</code></pre>
+
 
 <h2 id="uuid">查看磁盘UUID值</h2>
-<div class="codehilite"><pre><span></span><code><span class="err"># blkid</span>
-</code></pre></div>
+<pre class="codehilite"><code># blkid</code></pre>
+
 
 <h2 id="_3">格式化磁盘报错处理</h2>
 <p>报错：</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># mkfs -t ext4 -c /dev/sdb1</span>
-<span class="err">mke2fs 1.41.12 (17-May-2010)</span>
-<span class="err">/dev/sdb1 is apparently in use by the system; will not make a filesystem here!</span>
-</code></pre></div>
+<pre class="codehilite"><code># mkfs -t ext4 -c /dev/sdb1
+mke2fs 1.41.12 (17-May-2010)
+/dev/sdb1 is apparently in use by the system; will not make a filesystem here!</code></pre>
+
 
 <p>处理：</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># dmsetup status</span>
-<span class="c">ddf1_4c5349202020202080862682000000004711471100001e78: 0 1462890496 linear</span>
-<span class="c">ddf1_4c5349202020202080862682000000004711471100001e78p1: 0 1462878837 linear</span>
-<span class="err"># dmsetup remove_all</span>
-<span class="err"># mkfs -t ext4 -c /dev/sdb1</span>
-</code></pre></div>
+<pre class="codehilite"><code># dmsetup status
+ddf1_4c5349202020202080862682000000004711471100001e78: 0 1462890496 linear
+ddf1_4c5349202020202080862682000000004711471100001e78p1: 0 1462878837 linear
+# dmsetup remove_all
+# mkfs -t ext4 -c /dev/sdb1</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

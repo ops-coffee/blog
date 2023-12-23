@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -53,43 +53,42 @@
 <ol>
 <li>修改settings.py文件关闭DEBUG模式</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="err">DEBUG = False</span>
-</code></pre></div>
+<pre class="codehilite"><code>DEBUG = False</code></pre>
+
 
 <p>自定义错误页面在<code>Debug = True</code>时不生效</p>
 <ol>
 <li>创建错误页面，例如errors/403.html</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="err">You Don&#39;t have permission !</span>
-<span class="err">Please contact ops-coffee.cn</span>
-</code></pre></div>
+<pre class="codehilite"><code>You Don't have permission !
+Please contact ops-coffee.cn</code></pre>
+
 
 <ol>
 <li>view.py视图中创建自定义错误处理方法</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+<pre class="codehilite"><code>from django.shortcuts import render
 
-<span class="k">def</span> <span class="nf">bad_request_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;errors/400.html&#39;</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template_name</span><span class="p">)</span>
+def bad_request_view(request, exception, template_name='errors/400.html'):
+    return render(request, template_name)
 
-<span class="k">def</span> <span class="nf">permission_denied_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;errors/403.html&#39;</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template_name</span><span class="p">)</span>
+def permission_denied_view(request, exception, template_name='errors/403.html'):
+    return render(request, template_name)
 
-<span class="k">def</span> <span class="nf">page_not_found_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;errors/404.html&#39;</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template_name</span><span class="p">)</span>
+def page_not_found_view(request, exception, template_name='errors/404.html'):
+    return render(request, template_name)
 
-<span class="k">def</span> <span class="nf">error_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;errors/500.html&#39;</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template_name</span><span class="p">)</span>
-</code></pre></div>
+def error_view(request, exception, template_name='errors/500.html'):
+    return render(request, template_name)</code></pre>
+
 
 <ol>
 <li>urls.py中添加错误行为由自定义程序处理</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="err">handler400 = &#39;webapp.views.bad_request_view&#39;</span>
-<span class="err">handler403 = &#39;webapp.views.permission_denied_view&#39;</span>
-<span class="err">handler404 = &#39;webapp.views.page_not_found_view&#39;</span>
-<span class="err">handler500 = &#39;webapp.views.error_view&#39;</span>
-</code></pre></div>
+<pre class="codehilite"><code>handler400 = 'webapp.views.bad_request_view'
+handler403 = 'webapp.views.permission_denied_view'
+handler404 = 'webapp.views.page_not_found_view'
+handler500 = 'webapp.views.error_view'</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

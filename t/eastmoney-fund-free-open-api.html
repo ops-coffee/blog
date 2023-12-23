@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -43,74 +43,74 @@
         <h1 id="art-title">天天基金免费开放数据API使用说明</h1>
 
         <h2 id="_1">实时涨跌</h2>
-<div class="codehilite"><pre><span></span><code><span class="c">https://fundgz.1234567.com.cn/js/007345.js?v=20200908175500</span>
-</code></pre></div>
+<pre class="codehilite"><code>https://fundgz.1234567.com.cn/js/007345.js?v=20200908175500</code></pre>
+
 
 <p>数字为基金代码，rt为时间戳</p>
-<div class="codehilite"><pre><span></span><code><span class="err">jsonpgz({</span>
-<span class="err">  &quot;fundcode&quot;: &quot;007345&quot;,</span>
-<span class="err">  &quot;name&quot;: &quot;: &quot;富国科技创新灵活配置混合&quot;,</span>
-<span class="err">  &quot;jzrq&quot;: &quot;2020-09-17&quot;,</span>
-<span class="err">  &quot;dwjz&quot;: &quot;1.9441&quot;,</span>
-<span class="err">  &quot;gsz&quot;: &quot;1.9717&quot;,</span>
-<span class="err">  &quot;gszzl&quot;: &quot;1.42&quot;,</span>
-<span class="err">  &quot;gztime&quot;: &quot;2020-09-18 15:00&quot;</span>
-<span class="err">});</span>
-</code></pre></div>
+<pre class="codehilite"><code>jsonpgz({
+  &quot;fundcode&quot;: &quot;007345&quot;,
+  &quot;name&quot;: &quot;: &quot;富国科技创新灵活配置混合&quot;,
+  &quot;jzrq&quot;: &quot;2020-09-17&quot;,
+  &quot;dwjz&quot;: &quot;1.9441&quot;,
+  &quot;gsz&quot;: &quot;1.9717&quot;,
+  &quot;gszzl&quot;: &quot;1.42&quot;,
+  &quot;gztime&quot;: &quot;2020-09-18 15:00&quot;
+});</code></pre>
+
 
 <h2 id="_2">基金列表</h2>
-<div class="codehilite"><pre><span></span><code><span class="c">http://fund.eastmoney.com/js/fundcode_search.js</span>
-</code></pre></div>
+<pre class="codehilite"><code>http://fund.eastmoney.com/js/fundcode_search.js</code></pre>
+
 
 <p>返回数据</p>
-<div class="codehilite"><pre><span></span><code><span class="k">var</span> <span class="n">r</span> <span class="o">=</span> <span class="p">[</span>
-  <span class="p">[</span>
-    <span class="s2">&quot;000001&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;HXCZHH&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;华夏成长混合&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;混合型&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;HUAXIACHENGZHANGHUNHE&quot;</span>
-  <span class="p">],</span>
-  <span class="p">[</span>
-    <span class="s2">&quot;000002&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;HXCZHH&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;华夏成长混合(后端)&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;混合型&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;HUAXIACHENGZHANGHUNHE&quot;</span>
-  <span class="p">]</span>
-<span class="p">]</span>
-</code></pre></div>
+<pre class="codehilite"><code>var r = [
+  [
+    &quot;000001&quot;,
+    &quot;HXCZHH&quot;,
+    &quot;华夏成长混合&quot;,
+    &quot;混合型&quot;,
+    &quot;HUAXIACHENGZHANGHUNHE&quot;
+  ],
+  [
+    &quot;000002&quot;,
+    &quot;HXCZHH&quot;,
+    &quot;华夏成长混合(后端)&quot;,
+    &quot;混合型&quot;,
+    &quot;HUAXIACHENGZHANGHUNHE&quot;
+  ]
+]</code></pre>
+
 
 <h2 id="_3">基金详情</h2>
-<div class="codehilite"><pre><span></span><code><span class="c">http://fund.eastmoney.com/pingzhongdata/007345.js?v=20200908175500</span>
-</code></pre></div>
+<pre class="codehilite"><code>http://fund.eastmoney.com/pingzhongdata/007345.js?v=20200908175500</code></pre>
+
 
 <h2 id="_4">基金公司列表</h2>
-<div class="codehilite"><pre><span></span><code><span class="c">http://fund.eastmoney.com/js/jjjz_gs.js</span>
-</code></pre></div>
+<pre class="codehilite"><code>http://fund.eastmoney.com/js/jjjz_gs.js</code></pre>
+
 
 <p>返回数据</p>
-<div class="codehilite"><pre><span></span><code><span class="k">var</span> <span class="n">gs</span><span class="o">=</span><span class="p">{</span>
-  <span class="n">op</span><span class="p">:</span> <span class="p">[</span>
-    <span class="p">[</span>
-      <span class="s2">&quot;80163340&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;安信基金&quot;</span>
-    <span class="p">],</span>
-    <span class="p">[</span>
-      <span class="s2">&quot;80036782&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;招商基金&quot;</span>
-    <span class="p">]</span>
-  <span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>var gs={
+  op: [
+    [
+      &quot;80163340&quot;,
+      &quot;安信基金&quot;
+    ],
+    [
+      &quot;80036782&quot;,
+      &quot;招商基金&quot;
+    ]
+  ]
+}</code></pre>
+
 
 <h2 id="_5">基金净值数据</h2>
-<div class="codehilite"><pre><span></span><code><span class="c">http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz&amp;code=007345&amp;page=1&amp;per=20&amp;sdate=2020-09-01&amp;edate=2020-09-18</span>
-</code></pre></div>
+<pre class="codehilite"><code>http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz&amp;code=007345&amp;page=1&amp;per=20&amp;sdate=2020-09-01&amp;edate=2020-09-18</code></pre>
+
 
 <h2 id="_6">基金增幅排名</h2>
-<div class="codehilite"><pre><span></span><code><span class="c">http://fund.eastmoney.com/data/rankhandler.aspx?op=ph&amp;dt=kf&amp;ft=gp&amp;rs=&amp;gs=0&amp;sc=zzf&amp;st=desc&amp;sd=2016-03-29&amp;ed=2017-03-29&amp;qdii=&amp;tabSubtype=,,,,,&amp;pi=1&amp;pn=50&amp;dx=1&amp;v=0.6370068000914493</span>
-</code></pre></div>
+<pre class="codehilite"><code>http://fund.eastmoney.com/data/rankhandler.aspx?op=ph&amp;dt=kf&amp;ft=gp&amp;rs=&amp;gs=0&amp;sc=zzf&amp;st=desc&amp;sd=2016-03-29&amp;ed=2017-03-29&amp;qdii=&amp;tabSubtype=,,,,,&amp;pi=1&amp;pn=50&amp;dx=1&amp;v=0.6370068000914493</code></pre>
+
 
 <p>ft： fund type类型 所有-all 股票型-gp 混合型-hh 债券型-zq 指数型-zs 保本型-bb QDII-qdii LOF-lof</p>
 <h2 id="_7">实时查看基金涨跌工具</h2>

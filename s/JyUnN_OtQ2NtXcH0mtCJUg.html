@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -46,197 +46,197 @@
 <p>文章列举了几个Nginx常见的，实用的，有趣的配置，希望看过之后能说一句：学到了！</p>
 </blockquote>
 <h2 id="_1">一个站点配置多个域名</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">server {</span>
-<span class="err">    listen       80;</span>
-<span class="err">    server_name  ops-coffee.cn b.ops-coffee.cn;</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>server {
+    listen       80;
+    server_name  ops-coffee.cn b.ops-coffee.cn;
+}</code></pre>
+
 
 <p><strong>server_name</strong> 后跟多个域名即可，多个域名之间用空格分隔</p>
 <h2 id="_2">一个服务配置多个站点</h2>
-<div class="codehilite"><pre><span></span><code><span class="n">server</span> <span class="err">{</span>
-    <span class="k">listen</span>       <span class="mi">80</span><span class="p">;</span>
-    <span class="k">server_name</span>  <span class="n">a</span><span class="p">.</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span><span class="p">;</span>
+<pre class="codehilite"><code>server {
+    listen       80;
+    server_name  a.ops-coffee.cn;
 
-    <span class="k">location</span> <span class="o">/</span> <span class="err">{</span>
-        <span class="n">root</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">pa</span><span class="p">;</span>
-        <span class="k">index</span> <span class="k">index</span><span class="p">.</span><span class="n">html</span><span class="p">;</span>
-    <span class="err">}</span>
-<span class="err">}</span>
+    location / {
+        root /home/project/pa;
+        index index.html;
+    }
+}
 
-<span class="n">server</span> <span class="err">{</span>
-    <span class="k">listen</span>       <span class="mi">80</span><span class="p">;</span>
-    <span class="k">server_name</span>  <span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span> <span class="n">b</span><span class="p">.</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span><span class="p">;</span>
+server {
+    listen       80;
+    server_name  ops-coffee.cn b.ops-coffee.cn;
 
-    <span class="k">location</span> <span class="o">/</span> <span class="err">{</span>
-        <span class="n">root</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">pb</span><span class="p">;</span>
-        <span class="k">index</span> <span class="k">index</span><span class="p">.</span><span class="n">html</span><span class="p">;</span>
-    <span class="err">}</span>
-<span class="err">}</span>
+    location / {
+        root /home/project/pb;
+        index index.html;
+    }
+}
 
-<span class="n">server</span> <span class="err">{</span>
-    <span class="k">listen</span>       <span class="mi">80</span><span class="p">;</span>
-    <span class="k">server_name</span>  <span class="k">c</span><span class="p">.</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span><span class="p">;</span>
+server {
+    listen       80;
+    server_name  c.ops-coffee.cn;
 
-    <span class="k">location</span> <span class="o">/</span> <span class="err">{</span>
-        <span class="n">root</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">pc</span><span class="p">;</span>
-        <span class="k">index</span> <span class="k">index</span><span class="p">.</span><span class="n">html</span><span class="p">;</span>
-    <span class="err">}</span>
-<span class="err">}</span>
-</code></pre></div>
+    location / {
+        root /home/project/pc;
+        index index.html;
+    }
+}</code></pre>
+
 
 <p>基于Nginx虚拟主机配置实现，Nginx有三种类型的虚拟主机</p>
 <p><strong>基于IP的虚拟主机：</strong> 需要你的服务器上有多个地址，每个站点对应不同的地址，这种方式使用的比较少</p>
 <p><strong>基于端口的虚拟主机：</strong> 每个站点对应不同的端口，访问的时候使用ip:port的方式访问，可以修改listen的端口来使用</p>
 <p><strong>基于域名的虚拟主机：</strong> 使用最广的方式，上边例子中就是用了基于域名的虚拟主机，前提条件是你有多个域名分别对应每个站点，server_name填写不同的域名即可</p>
 <h2 id="nginx">nginx添加账号密码验证</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">server {</span>
-<span class="err">    location / {</span>
-<span class="err">        auth_basic &quot;please input user&amp;passwd&quot;;</span>
-<span class="err">        auth_basic_user_file key/auth.key;</span>
-<span class="err">    }</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>server {
+    location / {
+        auth_basic &quot;please input user&amp;passwd&quot;;
+        auth_basic_user_file key/auth.key;
+    }
+}</code></pre>
+
 
 <p>有很多服务通过nginx访问，但本身没有提供账号认证的功能，就可以通过nginx提供的authbase账号密码认证来实现，可以用以下脚本来生成账号的密码</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># cat pwd.pl </span>
-<span class="c1">#!/usr/bin/perl</span>
-<span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+<pre class="codehilite"><code># cat pwd.pl 
+#!/usr/bin/perl
+use strict;
 
-<span class="k">my</span> <span class="nv">$pw</span><span class="o">=</span><span class="nv">$ARGV</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">;</span>
-<span class="k">print</span> <span class="nb">crypt</span><span class="p">(</span><span class="nv">$pw</span><span class="p">,</span><span class="nv">$pw</span><span class="p">)</span><span class="o">.</span><span class="s">&quot;\n&quot;</span><span class="p">;</span>
-</code></pre></div>
+my $pw=$ARGV[0] ;
+print crypt($pw,$pw).&quot;\n&quot;;</code></pre>
+
 
 <p>使用方法：</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># perl pwd.pl ops-coffee.cn</span>
-<span class="err">opf8BImqCAXww</span>
-<span class="err"># echo &quot;admin:opf8BImqCAXww&quot; &gt; key/auth.key</span>
-</code></pre></div>
+<pre class="codehilite"><code># perl pwd.pl ops-coffee.cn
+opf8BImqCAXww
+# echo &quot;admin:opf8BImqCAXww&quot; &gt; key/auth.key</code></pre>
+
 
 <h2 id="nginx_1">nginx开启列目录</h2>
 <p>当你想让nginx作为文件下载服务器存在时，需要开启nginx列目录</p>
-<div class="codehilite"><pre><span></span><code><span class="n">server</span> <span class="p">{</span>
-    <span class="n">location</span> <span class="n">download</span> <span class="p">{</span>
-        <span class="n">autoindex</span> <span class="n">on</span><span class="p">;</span>
+<pre class="codehilite"><code>server {
+    location download {
+        autoindex on;
 
-        <span class="n">autoindex_exact_size</span> <span class="n">off</span><span class="p">;</span>
-        <span class="n">autoindex_localtime</span> <span class="n">on</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+        autoindex_exact_size off;
+        autoindex_localtime on;
+    }
+}</code></pre>
+
 
 <p><strong>autoindex_exact_size：</strong> 为on(默认)时显示文件的确切大小，单位是byte；改为off显示文件大概大小，单位KB或MB或GB</p>
 <p><strong>autoindex_localtime：</strong> 为off(默认)时显示的文件时间为GMT时间；改为on后，显示的文件时间为服务器时间</p>
 <p>默认当访问列出的txt等文件时会在浏览器上显示文件的内容，如果你先让浏览器直接下载，加上下边的配置</p>
-<div class="codehilite"><pre><span></span><code><span class="err">if ($request_filename ~* ^.*?\.(txt|pdf|jpg|png)$) {</span>
-<span class="err">    add_header Content-Disposition &#39;attachment&#39;;</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>if ($request_filename ~* ^.*?\.(txt|pdf|jpg|png)$) {
+    add_header Content-Disposition 'attachment';
+}</code></pre>
+
 
 <h2 id="_3">配置默认站点</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">server {</span>
-<span class="err">    listen 80 default;</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>server {
+    listen 80 default;
+}</code></pre>
+
 
 <p>当一个nginx服务上创建了多个虚拟主机时默认会<strong>从上到下</strong>查找，如果匹配不到虚拟主机则会返回<strong>第一个</strong>虚拟主机的内容，如果你想指定一个默认站点时，可以将这个站点的虚拟主机放在配置文件中第一个虚拟主机的位置，或者在这个站点的虚拟主机上配置listen default</p>
 <h2 id="ip">不允许通过IP访问</h2>
-<div class="codehilite"><pre><span></span><code><span class="n">server</span> <span class="err">{</span>
-    <span class="k">listen</span>       <span class="mi">80</span> <span class="k">default</span><span class="p">;</span>
-    <span class="k">server_name</span>  <span class="n">_</span><span class="p">;</span>
+<pre class="codehilite"><code>server {
+    listen       80 default;
+    server_name  _;
 
-    <span class="k">return</span>      <span class="mi">404</span><span class="p">;</span>
-<span class="err">}</span>
-</code></pre></div>
+    return      404;
+}</code></pre>
+
 
 <p>可能有一些未备案的域名或者你不希望的域名将服务器地址指向了你的服务器，这时候就会对你的站点造成一定的影响，需要禁止IP或未配置的域名访问，我们利用上边所说的default规则，将默认流量都转到404去</p>
 <p>上边这个方法比较粗暴，当然你也可以配置下所有未配置的地址访问时直接301重定向到你的网站去，也能为你的网站带来一定的流量</p>
-<div class="codehilite"><pre><span></span><code><span class="err">server {</span>
-<span class="err">    rewrite ^/(.*)$ https://ops-coffee.cn/$1    permanent;</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>server {
+    rewrite ^/(.*)$ https://ops-coffee.cn/$1    permanent;
+}</code></pre>
+
 
 <h2 id="_4">直接返回验证文件</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">location = /XDFyle6tNA.txt {</span>
-<span class="err">    default_type text/plain;</span>
-<span class="err">    return 200 &#39;d6296a84657eb275c05c31b10924f6ea&#39;;</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>location = /XDFyle6tNA.txt {
+    default_type text/plain;
+    return 200 'd6296a84657eb275c05c31b10924f6ea';
+}</code></pre>
+
 
 <p>很多时候微信等程序都需要我们放一个txt的文件到项目里以验证项目归属，我们可以直接通过上边这种方式修改nginx即可，无需真正的把文件给放到服务器上</p>
 <h2 id="nginxupstream">nginx配置upstream反向代理</h2>
-<div class="codehilite"><pre><span></span><code><span class="nt">http</span> <span class="p">{</span>
-    <span class="err">...</span>
-    <span class="err">upstream</span> <span class="err">tomcats</span> <span class="err">{</span>
-        <span class="err">server</span> <span class="err">192.168.106.176</span> <span class="err">weight=1</span><span class="p">;</span>
-        <span class="err">server</span> <span class="err">192.168.106.177</span> <span class="err">weight=1</span><span class="p">;</span>
-    <span class="p">}</span>
+<pre class="codehilite"><code>http {
+    ...
+    upstream tomcats {
+        server 192.168.106.176 weight=1;
+        server 192.168.106.177 weight=1;
+    }
 
-    <span class="nt">server</span> <span class="p">{</span>
-        <span class="err">location</span> <span class="err">/ops-coffee/</span> <span class="err">{</span> 
-            <span class="err">proxy_pass</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">tomcats</span><span class="p">;</span> 
+    server {
+        location /ops-coffee/ { 
+            proxy_pass http://tomcats; 
 
-            <span class="err">proxy_set_header</span> <span class="err">Host</span> <span class="err">$host</span><span class="p">;</span>
-            <span class="err">proxy_set_header</span> <span class="err">X-Real-IP</span> <span class="err">$remote_addr</span><span class="p">;</span>
-            <span class="err">proxy_set_header</span> <span class="err">X-Forwarded-For</span> <span class="err">$proxy_add_x_forwarded_for</span><span class="p">;</span>
-            <span class="err">proxy_set_header</span> <span class="err">X-Forwarded-Proto</span> <span class="err">$scheme</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="err">}</span>
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
 
-<span class="err">}</span>
-</code></pre></div>
+}</code></pre>
+
 
 <p>稍不注意可能会落入一个<code>proxy_pass</code>加杠不加杠的陷阱，这里详细说下<code>proxy_pass http://tomcats</code>与<code>proxy_pass http://tomcats/</code>的区别：</p>
 <p>虽然只是一个/的区别但结果确千差万别。分为以下两种情况：</p>
 <p>1.目标地址中不带uri（<code>proxy_pass http://tomcats</code>）。此时新的目标url中，匹配的uri部分不做修改，原来是什么就是什么。</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">location</span> <span class="o">/</span><span class="nt">ops-coffee</span><span class="o">/</span> <span class="p">{</span>
-    <span class="err">proxy_pass</span>  <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">192.168.106.135</span><span class="o">:</span><span class="mi">8181</span><span class="p">;</span>
-<span class="p">}</span>
+<pre class="codehilite"><code>location /ops-coffee/ {
+    proxy_pass  http://192.168.106.135:8181;
+}
 
-<span class="nt">http</span><span class="o">://</span><span class="nt">domain</span><span class="o">/</span><span class="nt">ops-coffee</span><span class="o">/</span>   <span class="nt">--</span><span class="o">&gt;</span>     <span class="nt">http</span><span class="o">://</span><span class="nt">192</span><span class="p">.</span><span class="nc">168</span><span class="p">.</span><span class="nc">106</span><span class="p">.</span><span class="nc">135</span><span class="p">:</span><span class="nd">8181</span><span class="o">/</span><span class="nt">ops-coffee</span><span class="o">/</span>
-<span class="nt">http</span><span class="o">://</span><span class="nt">domain</span><span class="o">/</span><span class="nt">ops-coffee</span><span class="o">/</span><span class="nt">action</span><span class="o">/</span><span class="nt">abc</span>   <span class="nt">--</span><span class="o">&gt;</span>     <span class="nt">http</span><span class="o">://</span><span class="nt">192</span><span class="p">.</span><span class="nc">168</span><span class="p">.</span><span class="nc">106</span><span class="p">.</span><span class="nc">135</span><span class="p">:</span><span class="nd">8181</span><span class="o">/</span><span class="nt">ops-coffee</span><span class="o">/</span><span class="nt">action</span><span class="o">/</span><span class="nt">abc</span>
-</code></pre></div>
+http://domain/ops-coffee/   --&gt;     http://192.168.106.135:8181/ops-coffee/
+http://domain/ops-coffee/action/abc   --&gt;     http://192.168.106.135:8181/ops-coffee/action/abc</code></pre>
+
 
 <p>2.目标地址中带uri（<code>proxy_pass http://tomcats/</code>，/也是uri）,此时新的目标url中，匹配的uri部分将会被修改为该参数中的uri。</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">location</span> <span class="o">/</span><span class="nt">ops-coffee</span><span class="o">/</span> <span class="p">{</span>
-    <span class="err">proxy_pass</span>  <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">192.168.106.135</span><span class="o">:</span><span class="mi">8181</span><span class="o">/</span><span class="p">;</span>
-<span class="p">}</span>
+<pre class="codehilite"><code>location /ops-coffee/ {
+    proxy_pass  http://192.168.106.135:8181/;
+}
 
-<span class="nt">http</span><span class="o">://</span><span class="nt">domain</span><span class="o">/</span><span class="nt">ops-coffee</span><span class="o">/</span>   <span class="nt">--</span><span class="o">&gt;</span>     <span class="nt">http</span><span class="o">://</span><span class="nt">192</span><span class="p">.</span><span class="nc">168</span><span class="p">.</span><span class="nc">106</span><span class="p">.</span><span class="nc">135</span><span class="p">:</span><span class="nd">8181</span>
-<span class="nt">http</span><span class="o">://</span><span class="nt">domain</span><span class="o">/</span><span class="nt">ops-coffee</span><span class="o">/</span><span class="nt">action</span><span class="o">/</span><span class="nt">abc</span>   <span class="nt">--</span><span class="o">&gt;</span>     <span class="nt">http</span><span class="o">://</span><span class="nt">192</span><span class="p">.</span><span class="nc">168</span><span class="p">.</span><span class="nc">106</span><span class="p">.</span><span class="nc">135</span><span class="p">:</span><span class="nd">8181</span><span class="o">/</span><span class="nt">action</span><span class="o">/</span><span class="nt">abc</span>
-</code></pre></div>
+http://domain/ops-coffee/   --&gt;     http://192.168.106.135:8181
+http://domain/ops-coffee/action/abc   --&gt;     http://192.168.106.135:8181/action/abc</code></pre>
+
 
 <h2 id="nginx-upstreamkeepalive">nginx upstream开启keepalive</h2>
-<div class="codehilite"><pre><span></span><code><span class="nt">upstream</span> <span class="nt">tomcat</span> <span class="p">{</span>
-    <span class="err">server</span> <span class="err">ops-coffee.</span><span class="n">cn</span><span class="p">:</span><span class="mi">8080</span><span class="p">;</span>
-    <span class="err">keepalive</span> <span class="err">1024</span><span class="p">;</span>
-<span class="p">}</span>
+<pre class="codehilite"><code>upstream tomcat {
+    server ops-coffee.cn:8080;
+    keepalive 1024;
+}
 
-<span class="nt">server</span> <span class="p">{</span>
-    <span class="err">location</span> <span class="err">/</span> <span class="err">{</span>
-        <span class="err">proxy_http_version</span> <span class="err">1.1</span><span class="p">;</span>
-        <span class="err">proxy_set_header</span> <span class="err">Connection</span> <span class="err">&quot;&quot;</span><span class="p">;</span>
+server {
+    location / {
+        proxy_http_version 1.1;
+        proxy_set_header Connection &quot;&quot;;
 
-        <span class="err">proxy_pass</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">tomcat</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="err">}</span>
-</code></pre></div>
+        proxy_pass http://tomcat;
+    }
+}</code></pre>
+
 
 <p>nginx在项目中大多数情况下会作为反向代理使用，例如nginx后接tomcat，nginx后接php等，这时我们开启nginx和后端服务之间的keepalive能够减少频繁创建TCP连接造成的资源消耗，配置如上</p>
 <p><strong>keepalive：</strong> 指定每个nginxworker可以保持的最大连接数量为1024，默认不设置，即nginx作为client时keepalive未生效</p>
 <p><strong>proxy_http_version 1.1：</strong> 开启keepalive要求HTTP协议版本为HTTP 1.1</p>
 <p><strong>proxy_set_header Connection ""：</strong> 为了兼容老的协议以及防止http头中有<code>Connection close</code>导致的keepalive失效，这里需要及时清掉HTTP头部的Connection</p>
 <h2 id="404">404自动跳转到首页</h2>
-<div class="codehilite"><pre><span></span><code><span class="n">server</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">location</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">       </span><span class="n">error_page</span><span class="w"> </span><span class="mi">404</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="nv">@ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
+<pre class="codehilite"><code>server {
+    location / {
+       error_page 404 =  @ops-coffee;
+    }
 
-<span class="w">    </span><span class="n">location</span><span class="w"> </span><span class="nv">@ops</span><span class="o">-</span><span class="n">coffee</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">       </span><span class="n">rewrite</span><span class="w">  </span><span class="p">.</span><span class="o">*</span><span class="w">  </span><span class="o">/</span><span class="w"> </span><span class="n">permanent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
-<span class="err">}</span><span class="w"></span>
-</code></pre></div>
+    location @ops-coffee {
+       rewrite  .*  / permanent;
+    }
+}</code></pre>
+
 
 <p>网站出现404页面不是特别友好，我们可以通过上边的配置在出现404之后给自动跳转到首页去</p>
 

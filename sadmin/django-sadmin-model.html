@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -51,50 +51,50 @@
 <p><strong>project：</strong> 所属项目，当project存在时，默认会按照项目进行数据检索与处理</p>
 <p><strong>is_deleted：</strong> 逻辑删除，判断这条数据是否被删除，如果model中有<code>is_deleted</code>字段存在，则在QuerySet获取数据时会自动过滤掉已删除的数据，也就是<code>.filter(is_deleted=False)</code></p>
 <p>以<code>Template</code>为例</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Template</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">create_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;创建时间&#39;</span><span class="p">)</span>
-    <span class="n">update_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;更新时间&#39;</span><span class="p">)</span>
-    <span class="n">create_user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">DO_NOTHING</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;创建用户&#39;</span><span class="p">)</span>
-    <span class="n">project</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Project</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">PROTECT</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;所属项目&#39;</span><span class="p">)</span>
+<pre class="codehilite"><code>class Template(models.Model):
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+    create_user = models.ForeignKey(User, on_delete=models.DO_NOTHING, db_constraint=False, verbose_name='创建用户')
+    project = models.ForeignKey(Project, on_delete=models.PROTECT, db_constraint=False, verbose_name='所属项目')
 
-    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;名称&#39;</span><span class="p">)</span>
-    <span class="n">description</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="nb nb-Type">null</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;描述&#39;</span><span class="p">)</span>
+    name = models.CharField(max_length=128, unique=True, verbose_name='名称')
+    description = models.TextField(null=True, verbose_name='描述')
 
-    <span class="n">is_deleted</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">False</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;已删除&#39;</span><span class="p">)</span>
+    is_deleted = models.BooleanField(default=False, verbose_name='已删除')
 
-    <span class="n">def</span> <span class="n">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
-</code></pre></div>
+    def __str__(self):
+        return self.name</code></pre>
+
 
 <p>其中：<code>create_time</code>、<code>update_time</code>、<code>create_user</code>、<code>project</code>、<code>is_deleted</code>为保留字段，在数据的增删改查中无需过多关注，系统会自动处理</p>
 <h2 id="_2">保留函数</h2>
 <p>model中有一个保留函数：<code>to_dict</code>，将model转成字典，当model中有<code>to_dict</code>函数存在时，在QuerySet取数据时默认会按照<code>to_dict</code>定义好的格式生成最终的json数据，否则的话会按照model字段自动生成</p>
 <p>以<code>TempTask</code>为例</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">TempTask</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">create_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;创建时间&#39;</span><span class="p">)</span>
-    <span class="n">update_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;更新时间&#39;</span><span class="p">)</span>
+<pre class="codehilite"><code>class TempTask(models.Model):
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
-    <span class="n">template</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Template</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">PROTECT</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">)</span>
-    <span class="n">subtask</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">SubTask</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">PROTECT</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">)</span>
+    template = models.ForeignKey(Template, on_delete=models.PROTECT, db_constraint=False)
+    subtask = models.ForeignKey(SubTask, on_delete=models.PROTECT, db_constraint=False)
 
-    <span class="n">sortnum</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SmallIntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">37</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;排序ID&#39;</span><span class="p">)</span>
-    <span class="n">exechost</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;执行主机&#39;</span><span class="p">)</span>
-    <span class="n">execuser</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">ExecUser</span><span class="p">,</span> <span class="nb nb-Type">null</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">PROTECT</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">)</span>
+    sortnum = models.SmallIntegerField(default=37, verbose_name='排序ID')
+    exechost = models.CharField(max_length=64, default='localhost', verbose_name='执行主机')
+    execuser = models.ForeignKey(ExecUser, null=True, on_delete=models.PROTECT, db_constraint=False)
 
-    <span class="n">def</span> <span class="n">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="s1">&#39;template&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="s1">&#39;template_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="s1">&#39;subtask&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">subtask</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="s1">&#39;subtask_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">subtask</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="s1">&#39;subtask_rcmd&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">subtask</span><span class="o">.</span><span class="n">rcmd</span><span class="p">,</span>
-            <span class="s1">&#39;subtask_args&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">subtask</span><span class="o">.</span><span class="n">args</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subtask</span><span class="o">.</span><span class="n">args</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;sortnum&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sortnum</span><span class="p">,</span>
-            <span class="s1">&#39;exechost&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">exechost</span><span class="p">,</span>
-            <span class="s1">&#39;execuser&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">execuser</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">execuser</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
-        <span class="p">}</span>
-</code></pre></div>
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'template': self.template.name,
+            'template_id': self.template.id,
+            'subtask': self.subtask.name,
+            'subtask_id': self.subtask.id,
+            'subtask_rcmd': self.subtask.rcmd,
+            'subtask_args': self.subtask.args if self.subtask.args else '',
+            'sortnum': self.sortnum,
+            'exechost': self.exechost,
+            'execuser': self.execuser.name if self.execuser else ''
+        }</code></pre>
+
 
 <p>最终返回的数据中将会额外包含template_id，subtask_id，subtask_rcmd，subtask_args四个TempTask原本并不包含的字段</p>
 

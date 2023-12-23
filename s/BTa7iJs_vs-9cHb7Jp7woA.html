@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -49,166 +49,166 @@
 <p>以下演示代码基于上一节搭建好的vue环境，使用bpmn版本为当前最新版7.3.0</p>
 <h2 id="_1">基本使用</h2>
 <p>Viewer的使用与Modeler并无太大区别，示例代码如下</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="n">template</span><span class="o">&gt;</span>
-  <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;containers&quot;</span><span class="o">&gt;</span>
-    <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;canvas&quot;</span> <span class="n">ref</span><span class="o">=</span><span class="s2">&quot;canvas&quot;</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-  <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
-<span class="o">&lt;/</span><span class="n">template</span><span class="o">&gt;</span>
+<pre class="codehilite"><code>&lt;template&gt;
+  &lt;div class=&quot;containers&quot;&gt;
+    &lt;div class=&quot;canvas&quot; ref=&quot;canvas&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
 
-<span class="o">&lt;</span><span class="n">script</span><span class="o">&gt;</span>
-<span class="kn">import</span> <span class="nn">BpmnViewer</span> <span class="nn">from</span> <span class="s2">&quot;bpmn-js/lib/Viewer&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="p">{</span> <span class="n">xmlStr</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;../mock/xmlStr&quot;</span><span class="p">;</span>
+&lt;script&gt;
+import BpmnViewer from &quot;bpmn-js/lib/Viewer&quot;;
+import { xmlStr } from &quot;../mock/xmlStr&quot;;
 
-<span class="n">export</span> <span class="n">default</span> <span class="p">{</span>
-  <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;ops-coffee&quot;</span><span class="p">,</span>
-  <span class="n">mounted</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">this</span><span class="o">.</span><span class="n">init</span><span class="p">();</span>
-  <span class="p">},</span>
-  <span class="n">data</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="p">{</span>
-      <span class="n">bpmnViewer</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
-      <span class="n">container</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
-      <span class="n">canvas</span><span class="p">:</span> <span class="n">null</span>
-    <span class="p">};</span>
-  <span class="p">},</span>
-  <span class="n">methods</span><span class="p">:</span> <span class="p">{</span>
-    <span class="n">init</span><span class="p">()</span> <span class="p">{</span>
-      <span class="n">const</span> <span class="n">canvas</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="err">$</span><span class="n">refs</span><span class="o">.</span><span class="n">canvas</span><span class="p">;</span>
-      <span class="n">this</span><span class="o">.</span><span class="n">bpmnViewer</span> <span class="o">=</span> <span class="n">new</span> <span class="n">BpmnViewer</span><span class="p">({</span>
-        <span class="n">container</span><span class="p">:</span> <span class="n">canvas</span>
-      <span class="p">});</span>
+export default {
+  name: &quot;ops-coffee&quot;,
+  mounted() {
+    this.init();
+  },
+  data() {
+    return {
+      bpmnViewer: null,
+      container: null,
+      canvas: null
+    };
+  },
+  methods: {
+    init() {
+      const canvas = this.$refs.canvas;
+      this.bpmnViewer = new BpmnViewer({
+        container: canvas
+      });
 
-      <span class="n">this</span><span class="o">.</span><span class="n">createNewDiagram</span><span class="p">();</span>
-    <span class="p">},</span>
-    <span class="n">async</span> <span class="n">createNewDiagram</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">try</span> <span class="p">{</span>
-        <span class="n">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnViewer</span><span class="o">.</span><span class="n">importXML</span><span class="p">(</span><span class="n">xmlStr</span><span class="p">);</span>
-        <span class="n">const</span> <span class="p">{</span> <span class="n">warnings</span> <span class="p">}</span> <span class="o">=</span> <span class="n">result</span><span class="p">;</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">warnings</span><span class="p">);</span>
-      <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">warnings</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-<span class="o">&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
-</code></pre></div>
+      this.createNewDiagram();
+    },
+    async createNewDiagram() {
+      try {
+        const result = await this.bpmnViewer.importXML(xmlStr);
+        const { warnings } = result;
+        console.log(warnings);
+      } catch (err) {
+        console.log(err.message, err.warnings);
+      }
+    }
+  }
+};
+&lt;/script&gt;</code></pre>
+
 
 <h2 id="_2">屏幕自适应</h2>
 <p>流程图渲染完成后可能会出现集中在画布左侧/右侧等情形，导致整体不够美观，通过<code>zoom</code>可以配置自适应画布，保证渲染图位于画布的中间位置</p>
-<div class="codehilite"><pre><span></span><code><span class="k">const</span> <span class="n">canvas</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnViewer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;canvas&quot;</span><span class="p">);</span>
-<span class="n">canvas</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="s2">&quot;fit-viewport&quot;</span><span class="p">,</span> <span class="s2">&quot;auto&quot;</span><span class="p">);</span>
-</code></pre></div>
+<pre class="codehilite"><code>const canvas = this.bpmnViewer.get(&quot;canvas&quot;);
+canvas.zoom(&quot;fit-viewport&quot;, &quot;auto&quot;);</code></pre>
+
 
 <h2 id="_3">自定义颜色设置</h2>
 <p>bpmn-js提供了三种修改颜色的方式，如果你想在Modeler（编辑）模式下修改颜色，推荐使用<code>setColor</code>方式，而Viewer（预览）模式则只能通过另外两种<code>overlay</code>和<code>Marker</code>方式来实现，以下为bpmn-js提供的三种修改颜色的方法</p>
 <h3 id="overlay">overlay</h3>
 <p>Viewer模式下可用</p>
 <p>先添加CSS</p>
-<div class="codehilite"><pre><span></span><code><span class="na">.highlight-overlay</span> <span class="err">{</span>
-    <span class="nl">background-color:</span> <span class="nf">green</span><span class="c1">;</span>
-    <span class="nl">opacity:</span> <span class="err">0</span><span class="nf">.4</span><span class="c1">;</span>
-    <span class="nl">pointer-events:</span> <span class="nf">none</span><span class="c1">;</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>.highlight-overlay {
+    background-color: green;
+    opacity: 0.4;
+    pointer-events: none;
+}</code></pre>
+
 
 <p>然后修改节点颜色</p>
-<div class="codehilite"><pre><span></span><code><span class="k">var</span> <span class="n">overlays</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;overlays&#39;</span><span class="p">),</span>
-    <span class="n">elementRegistry</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;elementRegistry&#39;</span><span class="p">);</span>
+<pre class="codehilite"><code>var overlays = viewer.get('overlays'),
+    elementRegistry = viewer.get('elementRegistry');
 
-<span class="k">var</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Activity_0djl6l0&#39;</span><span class="p">);</span>
+var shape = elementRegistry.get('Activity_0djl6l0');
 
-<span class="k">var</span> <span class="o">$</span><span class="n">overlayHtml</span> <span class="o">=</span> <span class="o">$</span><span class="p">(</span><span class="s1">&#39;&lt;div class=&quot;highlight-overlay&quot;&gt;&#39;</span><span class="p">)</span>
-                        <span class="o">.</span><span class="n">css</span><span class="p">({</span>
-                          <span class="n">width</span><span class="p">:</span> <span class="n">shape</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
-                          <span class="n">height</span><span class="p">:</span> <span class="n">shape</span><span class="o">.</span><span class="n">height</span>
-                        <span class="p">});</span>
+var $overlayHtml = $('&lt;div class=&quot;highlight-overlay&quot;&gt;')
+                        .css({
+                          width: shape.width,
+                          height: shape.height
+                        });
 
-<span class="n">overlays</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;Activity_0djl6l0&#39;</span><span class="p">,</span> <span class="p">{</span>
-  <span class="n">position</span><span class="p">:</span> <span class="p">{</span>
-    <span class="n">top</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">left</span><span class="p">:</span> <span class="mi">0</span>
-  <span class="p">},</span>
-  <span class="n">html</span><span class="p">:</span> <span class="o">$</span><span class="n">overlayHtml</span>
-<span class="p">});</span>
-</code></pre></div>
+overlays.add('Activity_0djl6l0', {
+  position: {
+    top: 0,
+    left: 0
+  },
+  html: $overlayHtml
+});</code></pre>
+
 
 <h3 id="marker">Marker +</h3>
 <p>Viewer模式下可用</p>
 <p>先添加CSS</p>
-<div class="codehilite"><pre><span></span><code><span class="na">.highlight</span> <span class="no">.djs-visual</span> <span class="err">&gt;</span> <span class="p">:</span><span class="no">nth-child</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="err">{</span>
-    <span class="nl">stroke:</span> <span class="nf">green</span> <span class="p">!</span><span class="no">important</span><span class="c1">;</span>
-    <span class="nl">fill:</span> <span class="nf">rgba</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="no">.4</span><span class="p">)</span> <span class="p">!</span><span class="no">important</span><span class="c1">;</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>.highlight .djs-visual &gt; :nth-child(1) {
+    stroke: green !important;
+    fill: rgba(0, 80, 0, 0.4) !important;
+}</code></pre>
+
 
 <p>然后修改节点颜色</p>
-<div class="codehilite"><pre><span></span><code><span class="k">var</span> <span class="n">canvas</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;canvas&#39;</span><span class="p">);</span>
-<span class="n">canvas</span><span class="o">.</span><span class="n">addMarker</span><span class="p">(</span><span class="s1">&#39;Activity_0djl6l0&#39;</span><span class="p">,</span> <span class="s1">&#39;highlight&#39;</span><span class="p">);</span>
-</code></pre></div>
+<pre class="codehilite"><code>var canvas = viewer.get('canvas');
+canvas.addMarker('Activity_0djl6l0', 'highlight');</code></pre>
+
 
 <h3 id="setcolor">setColor</h3>
 <p>Modeler模式下可用</p>
-<div class="codehilite"><pre><span></span><code><span class="n">bpmnModeler</span><span class="o">.</span><span class="n">importXML</span><span class="p">(</span><span class="n">diagramXML</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">var</span> <span class="n">elementRegistry</span> <span class="o">=</span> <span class="n">bpmnModeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;elementRegistry&#39;</span><span class="p">);</span>
-    <span class="k">var</span> <span class="n">elementToColor</span> <span class="o">=</span> <span class="n">elementRegistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Flow_1xnf3iv&#39;</span><span class="p">);</span>
+<pre class="codehilite"><code>bpmnModeler.importXML(diagramXML, function(err) {
+    var elementRegistry = bpmnModeler.get('elementRegistry');
+    var elementToColor = elementRegistry.get('Flow_1xnf3iv');
 
-    <span class="k">var</span> <span class="n">modeling</span> <span class="o">=</span> <span class="n">bpmnModeler</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;modeling&#39;</span><span class="p">);</span>
-    <span class="n">modeling</span><span class="o">.</span><span class="n">setColor</span><span class="p">([</span> <span class="n">elementToColor</span> <span class="p">],</span> <span class="p">{</span>
-      <span class="n">stroke</span><span class="p">:</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span>
-      <span class="n">fill</span><span class="p">:</span> <span class="s1">&#39;rgba(0, 80, 0, 0.4)&#39;</span>
-    <span class="p">});</span>
-<span class="p">});</span>
-</code></pre></div>
+    var modeling = bpmnModeler.get('modeling');
+    modeling.setColor([ elementToColor ], {
+      stroke: 'green',
+      fill: 'rgba(0, 80, 0, 0.4)'
+    });
+});</code></pre>
+
 
 <h3 id="_4">我们的使用示例</h3>
 <p>Viewer预览模式下，后端传递过来的xml数据里包含了<code>run_state</code>的标记，标识当前节点的状态，需要根据这个状态给节点渲染上对应的颜色</p>
 <p>xml文件大概如下，截取了包含<code>run_state</code>的一段</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;sequenceFlow</span> <span class="na">id=</span><span class="s">&quot;Flow_1d9q74f&quot;</span> <span class="na">sourceRef=</span><span class="s">&quot;Activity_1eq68tk&quot;</span> <span class="na">targetRef=</span><span class="s">&quot;Activity_0o8b5cf&quot;</span> <span class="na">run_state=</span><span class="s">&quot;3&quot;</span> <span class="nt">/&gt;</span>
-<span class="nt">&lt;scriptTask</span> <span class="na">id=</span><span class="s">&quot;Activity_0o8b5cf&quot;</span> <span class="na">name=</span><span class="s">&quot;脚本节点&quot;</span> <span class="na">run_state=</span><span class="s">&quot;5&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;incoming&gt;</span>Flow_1d9q74f<span class="nt">&lt;/incoming&gt;</span>
-  <span class="nt">&lt;outgoing&gt;</span>Flow_0b23d51<span class="nt">&lt;/outgoing&gt;</span>
-<span class="nt">&lt;/scriptTask&gt;</span>
-<span class="nt">&lt;sequenceFlow</span> <span class="na">id=</span><span class="s">&quot;Flow_0b23d51&quot;</span> <span class="na">sourceRef=</span><span class="s">&quot;Activity_0o8b5cf&quot;</span> <span class="na">targetRef=</span><span class="s">&quot;Event_0idqhms&quot;</span> <span class="na">run_state=</span><span class="s">&quot;4&quot;</span> <span class="nt">/&gt;</span>
-<span class="nt">&lt;intermediateCatchEvent</span> <span class="na">id=</span><span class="s">&quot;Event_0idqhms&quot;</span> <span class="na">name=</span><span class="s">&quot;定时&quot;</span> <span class="na">run_state=</span><span class="s">&quot;6&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;incoming&gt;</span>Flow_0b23d51<span class="nt">&lt;/incoming&gt;</span>
-  <span class="nt">&lt;outgoing&gt;</span>Flow_17tttbw<span class="nt">&lt;/outgoing&gt;</span>
-  <span class="nt">&lt;timerEventDefinition</span> <span class="na">id=</span><span class="s">&quot;TimerEventDefinition_1w7apdl&quot;</span> <span class="nt">/&gt;</span>
-<span class="nt">&lt;/intermediateCatchEvent&gt;</span>
-<span class="nt">&lt;sequenceFlow</span> <span class="na">id=</span><span class="s">&quot;Flow_17tttbw&quot;</span> <span class="na">sourceRef=</span><span class="s">&quot;Event_0idqhms&quot;</span> <span class="na">targetRef=</span><span class="s">&quot;Activity_0qkzn5l&quot;</span> <span class="na">run_state=</span><span class="s">&quot;0&quot;</span> <span class="nt">/&gt;</span>
-<span class="nt">&lt;manualTask</span> <span class="na">id=</span><span class="s">&quot;Activity_0qkzn5l&quot;</span> <span class="na">name=</span><span class="s">&quot;手动节点&quot;</span> <span class="na">run_state=</span><span class="s">&quot;7&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;incoming&gt;</span>Flow_17tttbw<span class="nt">&lt;/incoming&gt;</span>
-  <span class="nt">&lt;outgoing&gt;</span>Flow_0h1ee5i<span class="nt">&lt;/outgoing&gt;</span>
-<span class="nt">&lt;/manualTask&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&lt;sequenceFlow id=&quot;Flow_1d9q74f&quot; sourceRef=&quot;Activity_1eq68tk&quot; targetRef=&quot;Activity_0o8b5cf&quot; run_state=&quot;3&quot; /&gt;
+&lt;scriptTask id=&quot;Activity_0o8b5cf&quot; name=&quot;脚本节点&quot; run_state=&quot;5&quot;&gt;
+  &lt;incoming&gt;Flow_1d9q74f&lt;/incoming&gt;
+  &lt;outgoing&gt;Flow_0b23d51&lt;/outgoing&gt;
+&lt;/scriptTask&gt;
+&lt;sequenceFlow id=&quot;Flow_0b23d51&quot; sourceRef=&quot;Activity_0o8b5cf&quot; targetRef=&quot;Event_0idqhms&quot; run_state=&quot;4&quot; /&gt;
+&lt;intermediateCatchEvent id=&quot;Event_0idqhms&quot; name=&quot;定时&quot; run_state=&quot;6&quot;&gt;
+  &lt;incoming&gt;Flow_0b23d51&lt;/incoming&gt;
+  &lt;outgoing&gt;Flow_17tttbw&lt;/outgoing&gt;
+  &lt;timerEventDefinition id=&quot;TimerEventDefinition_1w7apdl&quot; /&gt;
+&lt;/intermediateCatchEvent&gt;
+&lt;sequenceFlow id=&quot;Flow_17tttbw&quot; sourceRef=&quot;Event_0idqhms&quot; targetRef=&quot;Activity_0qkzn5l&quot; run_state=&quot;0&quot; /&gt;
+&lt;manualTask id=&quot;Activity_0qkzn5l&quot; name=&quot;手动节点&quot; run_state=&quot;7&quot;&gt;
+  &lt;incoming&gt;Flow_17tttbw&lt;/incoming&gt;
+  &lt;outgoing&gt;Flow_0h1ee5i&lt;/outgoing&gt;
+&lt;/manualTask&gt;</code></pre>
+
 
 <p>在页面加载完xml后，调用setColor的方法来设置颜色</p>
-<div class="codehilite"><pre><span></span><code><span class="n">setColor</span><span class="p">()</span> <span class="p">{</span>
-  <span class="o">//</span> <span class="n">access</span> <span class="n">viewer</span> <span class="n">components</span>
-  <span class="k">const</span> <span class="n">canvas</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnViewer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;canvas&quot;</span><span class="p">);</span>
+<pre class="codehilite"><code>setColor() {
+  // access viewer components
+  const canvas = this.bpmnViewer.get(&quot;canvas&quot;);
 
-  <span class="o">//</span> <span class="err">获取到全部节点</span>
-  <span class="k">const</span> <span class="n">allShapes</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">bpmnViewer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;elementRegistry&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getAll</span><span class="p">();</span>
+  // 获取到全部节点
+  const allShapes = this.bpmnViewer.get(&quot;elementRegistry&quot;).getAll();
 
-  <span class="o">//</span><span class="err">循环节点添加颜色</span>
-  <span class="n">allShapes</span><span class="o">.</span><span class="n">forEach</span><span class="p">(</span><span class="n">element</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="n">shapeId</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">businessObject</span><span class="o">.</span><span class="n">id</span><span class="p">;</span>
-    <span class="k">const</span> <span class="n">shapeAttrs</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">businessObject</span><span class="o">.$</span><span class="n">attrs</span><span class="p">;</span>
+  //循环节点添加颜色
+  allShapes.forEach(element =&gt; {
+    const shapeId = element.businessObject.id;
+    const shapeAttrs = element.businessObject.$attrs;
 
-    <span class="o">//</span> <span class="n">add</span> <span class="n">marker</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">businessObject</span><span class="o">.$</span><span class="n">type</span> <span class="o">!=</span> <span class="s2">&quot;bpmn:Group&quot;</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">businessObject</span><span class="o">.$</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;bpmn:SequenceFlow&quot;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">canvas</span><span class="o">.</span><span class="n">addMarker</span><span class="p">(</span><span class="n">shapeId</span><span class="p">,</span> <span class="s2">&quot;highlight-2&quot;</span> <span class="o">+</span> <span class="n">shapeAttrs</span><span class="o">.</span><span class="n">run_state</span><span class="p">);</span>
-      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="n">canvas</span><span class="o">.</span><span class="n">addMarker</span><span class="p">(</span><span class="n">shapeId</span><span class="p">,</span> <span class="s2">&quot;highlight-&quot;</span> <span class="o">+</span> <span class="n">shapeAttrs</span><span class="o">.</span><span class="n">run_state</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">});</span>
-<span class="p">}</span>
-</code></pre></div>
+    // add marker
+    if (element.businessObject.$type != &quot;bpmn:Group&quot;) {
+      if (element.businessObject.$type == &quot;bpmn:SequenceFlow&quot;) {
+        canvas.addMarker(shapeId, &quot;highlight-2&quot; + shapeAttrs.run_state);
+      } else {
+        canvas.addMarker(shapeId, &quot;highlight-&quot; + shapeAttrs.run_state);
+      }
+    }
+  });
+}</code></pre>
+
 
 <p>设置颜色实际上就是通过<code>addMarker</code>方法给节点设置CSS，因为连线无需设置fill属性，对于连线有特殊的处理，对应的CSS如下</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;style&gt;</span>
+<pre class="codehilite"><code>&lt;style&gt;
 .highlight-0 .djs-visual &gt; :nth-child(1) {
   stroke: black !important;
 }
@@ -235,8 +235,8 @@
 .highlight-24 .djs-visual &gt; :nth-child(1) {
   stroke: red !important;
 }
-<span class="nt">&lt;/style&gt;</span>
-</code></pre></div>
+&lt;/style&gt;</code></pre>
+
 
 <p>最后渲染完成的样子如下，未来我们的<a href="/s/eZX5qoJzuCSuLI98gSCtpw">【开源一站式DevOps平台CODO】</a>的流程图展示或许就长这个样子，期待一下吧</p>
 <p><img alt="" loading="lazy" src="/static/images/20200915.01.png" /></p>
@@ -244,37 +244,37 @@
 <p>当流程图比较复杂，节点众多的时候，单单有屏幕自适应可能是不够的，我们还希望流程图可以拖动，bpmn-js的Viewer模式默认并不支持此功能，但提供了<code>diagram-js</code>插件来实现</p>
 <p>使用起来稍微复杂，但根据下边的步骤就能轻松搞定</p>
 <p>先在package.json中添加<code>diagram-js</code>，然后运行<code>npm install</code>安装<code>diagram-js</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err">&quot;dependencies&quot;: {</span>
-<span class="err">    &quot;bpmn-js&quot;: &quot;^7.3.0&quot;,</span>
-<span class="err">    &quot;diagram-js&quot;: &quot;^5.0.0&quot;</span>
-<span class="err">},</span>
-</code></pre></div>
+<pre class="codehilite"><code>&quot;dependencies&quot;: {
+    &quot;bpmn-js&quot;: &quot;^7.3.0&quot;,
+    &quot;diagram-js&quot;: &quot;^5.0.0&quot;
+},</code></pre>
+
 
 <p>编写自定义Viewer添加<code>ZoomScrollModule</code>和<code>MoveCanvasModule</code>模块来扩展默认Viewer的功能，自定义Viewer文件位于<code>src/components/customBpmn/index.js</code>下，内容如下</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">inherits</span> <span class="nn">from</span> <span class="s2">&quot;inherits&quot;</span><span class="p">;</span>
+<pre class="codehilite"><code>import inherits from &quot;inherits&quot;;
 
-<span class="kn">import</span> <span class="nn">Viewer</span> <span class="nn">from</span> <span class="s2">&quot;bpmn-js/lib/Viewer&quot;</span><span class="p">;</span>
+import Viewer from &quot;bpmn-js/lib/Viewer&quot;;
 
-<span class="kn">import</span> <span class="nn">ZoomScrollModule</span> <span class="nn">from</span> <span class="s2">&quot;diagram-js/lib/navigation/zoomscroll&quot;</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">MoveCanvasModule</span> <span class="nn">from</span> <span class="s2">&quot;diagram-js/lib/navigation/movecanvas&quot;</span><span class="p">;</span>
+import ZoomScrollModule from &quot;diagram-js/lib/navigation/zoomscroll&quot;;
+import MoveCanvasModule from &quot;diagram-js/lib/navigation/movecanvas&quot;;
 
-<span class="n">function</span> <span class="n">CustomViewer</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">Viewer</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">options</span><span class="p">);</span>
-<span class="p">}</span>
+function CustomViewer(options) {
+  Viewer.call(this, options);
+}
 
-<span class="n">inherits</span><span class="p">(</span><span class="n">CustomViewer</span><span class="p">,</span> <span class="n">Viewer</span><span class="p">);</span>
+inherits(CustomViewer, Viewer);
 
-<span class="n">CustomViewer</span><span class="o">.</span><span class="n">prototype</span><span class="o">.</span><span class="n">_modules</span> <span class="o">=</span> <span class="p">[]</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">Viewer</span><span class="o">.</span><span class="n">prototype</span><span class="o">.</span><span class="n">_modules</span><span class="p">,</span> <span class="p">[</span>
-  <span class="n">ZoomScrollModule</span><span class="p">,</span>
-  <span class="n">MoveCanvasModule</span>
-<span class="p">]);</span>
+CustomViewer.prototype._modules = [].concat(Viewer.prototype._modules, [
+  ZoomScrollModule,
+  MoveCanvasModule
+]);
 
-<span class="n">export</span> <span class="p">{</span> <span class="n">CustomModeler</span><span class="p">,</span> <span class="n">CustomViewer</span> <span class="p">};</span>
-</code></pre></div>
+export { CustomModeler, CustomViewer };</code></pre>
+
 
 <p>最后在页面中引用自定义Viewer</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="p">{</span> <span class="n">CustomViewer</span> <span class="p">}</span> <span class="kn">from</span> <span class="s2">&quot;../components/customBpmn&quot;</span><span class="p">;</span>
-</code></pre></div>
+<pre class="codehilite"><code>import { CustomViewer } from &quot;../components/customBpmn&quot;;</code></pre>
+
 
 <p>并将init初始化方法中的<code>BpmnViewer</code>替换为<code>CustomViewer</code>，然后刷新页面就会发现流程图可以拖动啦</p>
 <h2 id="_5">写在最后</h2>

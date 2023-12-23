@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -45,78 +45,78 @@
         <p>早前的一篇文章<a href="/s/L6Jud6gp5c9bbaUljUkNFA">Django开发密码管理表实例</a>有写我们写了个密码管理工具来实现对密码的管理，当时加密解密的功能在view层实现，一直运行稳定所以也没有过多关注实现是否优雅的问题。最近要多加几个密码表再次回头看之前的代码发现加解密在view层实现较为繁琐，尤其是使用了<a href="/s/xehCT6PMS90dvrf96E-Fzw">Sadmin公共库</a>之后view的代码简洁了很多，若再在view层处理显然不够优雅，是时候用更优雅的方式来实现了</p>
 <h2 id="sadmin">Sadmin增删改查</h2>
 <p>对数据库表的增删改查是开发过程中最常用到的功能，之前的文章也介绍过我们通过封装<a href="/s/xehCT6PMS90dvrf96E-Fzw">Sadmin公共库</a>用最为简洁的代码实现了对表的增删改查操作，具体有多简洁，看下边的代码</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">TableList</span>(<span class="n">ListCreateView</span>):
-    <span class="n">model</span> = <span class="n">Table</span>
-    <span class="n">template</span> = <span class="s">&#39;password/table.html&#39;</span>
-    <span class="n">permission</span> = {<span class="s">&#39;get&#39;</span>: <span class="s">&#39;password.select_table&#39;</span>, <span class="s">&#39;post&#39;</span>: <span class="s">&#39;password.create_table&#39;</span>}
+<pre class="codehilite"><code>class TableList(ListCreateView):
+    model = Table
+    template = 'password/table.html'
+    permission = {'get': 'password.select_table', 'post': 'password.create_table'}
 
 
-<span class="k">class</span> <span class="n">TableDetail</span>(<span class="n">RetrieveUpdateDestroyView</span>):
-    <span class="n">model</span> = <span class="n">Table</span>
-    <span class="n">permission</span> = {<span class="s">&#39;get&#39;</span>: <span class="s">&#39;password.select_table&#39;</span>, <span class="s">&#39;put&#39;</span>: <span class="s">&#39;password.update_table&#39;</span>,
-                  <span class="s">&#39;delete&#39;</span>: <span class="s">&#39;password.delete_table&#39;</span>}
-</code></pre></div>
+class TableDetail(RetrieveUpdateDestroyView):
+    model = Table
+    permission = {'get': 'password.select_table', 'put': 'password.update_table',
+                  'delete': 'password.delete_table'}</code></pre>
+
 
 <p><code>TableList</code>类可以实现对表的查询以及新建表数据，<code>TableDetail</code>可以实现对表内单条数据的查询、修改和删除，对应了两条URL</p>
-<div class="codehilite"><pre><span></span><code><span class="err">path(&#39;table/&#39;, views.TableList.as_view(), name=&#39;table-list-url&#39;),</span>
-<span class="err">path(&#39;table/&lt;int:pk&gt;/&#39;, views.TableDetail.as_view(), name=&#39;table-detail-url&#39;),</span>
-</code></pre></div>
+<pre class="codehilite"><code>path('table/', views.TableList.as_view(), name='table-list-url'),
+path('table/&lt;int:pk&gt;/', views.TableDetail.as_view(), name='table-detail-url'),</code></pre>
+
 
 <p>如果在view层实现表字段的加密的话，那就要重写<code>TableList</code>的post方法，以及<code>TableDetail</code>类的put方法，非常麻烦，那有什么更为优雅的方法呢？对表字段的处理最好能在表发生变化的时候来处理，直接在model层来实现显然要比view更合适，model层来实现的话通过<a href="/s/cMxdAfsTno56ixurmD4KXA">Django的signals</a>或是<a href="/s/fKDyRxjMr0XmXJGCAv6Ghw">重写model的save方法</a>都是不错的选择</p>
 <p>至于究竟是用signals还是重写save方法，两者都可以实现，个人觉得对于简单的处理逻辑采用重写save的方式比较好，而对于复杂的处理逻辑采用signals更清晰，而对于我们这个对字段进行加密的需求，逻辑简单代码也不需要太多，直接采用重写save的方式就好了</p>
 <h2 id="modelsave">重写model的save方法</h2>
 <p>对于加密解密的核心代码可以参考文章<a href="/s/L6Jud6gp5c9bbaUljUkNFA">Django开发密码管理表实例</a>给出的源码，重写model的save方法代码如下</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Table</span>(<span class="n">models</span>.<span class="n">Model</span>):
-    <span class="n">username</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">64</span>, <span class="n">verbose_name</span>=<span class="s">&#39;用户名&#39;</span>)
-    <span class="n">password</span> = <span class="n">models</span>.<span class="n">CharField</span>(<span class="n">max_length</span>=<span class="mi">512</span>, <span class="n">verbose_name</span>=<span class="s">&#39;密码&#39;</span>)
+<pre class="codehilite"><code>class Table(models.Model):
+    username = models.CharField(max_length=64, verbose_name='用户名')
+    password = models.CharField(max_length=512, verbose_name='密码')
 
-    <span class="n">def</span> <span class="n">__str__</span>(<span class="nb">self</span>):
-        <span class="k">return</span> <span class="nb">self</span>.<span class="n">application_name</span>
+    def __str__(self):
+        return self.application_name
 
-    <span class="n">def</span> <span class="n">save</span>(<span class="nb">self</span>, *<span class="nb">args</span>, **<span class="n">kwargs</span>):
-        <span class="n">_encrypt</span> = <span class="nb">True</span>
+    def save(self, *args, **kwargs):
+        _encrypt = True
 
-        <span class="k">if</span> <span class="nb">self</span>.<span class="n">pk:</span>
-            <span class="n">old_password</span> = <span class="n">Table</span>.<span class="n">objects</span>.<span class="nb">get</span>(<span class="nb">id</span>=<span class="nb">self</span>.<span class="nb">id</span>)
-            <span class="n">_encrypt</span> = <span class="nb">False</span> <span class="k">if</span> <span class="n">old_password</span>.<span class="n">password</span> == <span class="nb">self</span>.<span class="n">password</span> <span class="k">else</span> <span class="nb">True</span>
+        if self.pk:
+            old_password = Table.objects.get(id=self.id)
+            _encrypt = False if old_password.password == self.password else True
 
-        <span class="k">if</span> <span class="n">_encrypt:</span>
-            <span class="n">_m</span> = <span class="n">RsaCrypto</span>().<span class="n">encrypt</span>(<span class="nb">self</span>.<span class="n">password</span>)
-            <span class="k">if</span> <span class="n">_m</span>.<span class="nb">get</span>(<span class="s">&#39;state&#39;</span>):
-                <span class="nb">self</span>.<span class="n">password</span> = <span class="n">_m</span>.<span class="nb">get</span>(<span class="s">&#39;message&#39;</span>)
-            <span class="n">else:</span>
-                <span class="n">raise</span> <span class="nb">Exception</span>(<span class="s">&#39;加密失败：&#39;</span> + <span class="n">_m</span>.<span class="nb">get</span>(<span class="s">&#39;message&#39;</span>))
+        if _encrypt:
+            _m = RsaCrypto().encrypt(self.password)
+            if _m.get('state'):
+                self.password = _m.get('message')
+            else:
+                raise Exception('加密失败：' + _m.get('message'))
 
-        <span class="n">super</span>(<span class="n">Table</span>, <span class="nb">self</span>).<span class="n">save</span>(*<span class="nb">args</span>, **<span class="n">kwargs</span>)
-</code></pre></div>
+        super(Table, self).save(*args, **kwargs)</code></pre>
+
 
 <p>对于密码加密，通常会在首次新加记录，以及更新记录密码发生变化的情况下进行</p>
 <p>每当save时如何判断是insert还是update呢？可以通过是否存在<code>self.pk</code>来判断，Django的model必须有一个字段为主键，如果用户没有设置主键字段，那么Django会默认创建一个名为<code>id</code>的字段作主键，主键也用<code>pk</code>别名来表示，所以可以通过<code>self.pk</code>是否存在来判断本次save究竟是insert还是update</p>
 <p>当本次save为update时，我们也需要判断密码字段是否发生了变化，如果没有变化则不需要调用加密方法，判断字段是否变化就需要获取字段提交前的值，提交前的值可以通过<code>Table.objects.get(id=self.id)</code>来获取</p>
 <p>有了以上这些信息，那加密就水到渠成了。我们优雅的实现了字段的加密，那对于解密呢？个人觉得同样放在model里比写在veiw里更合适，可以在mdel里加个<code>decode_password</code>的方法</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Table</span>(<span class="n">models</span>.<span class="n">Model</span>):
+<pre class="codehilite"><code>class Table(models.Model):
     ...
 
-    <span class="n">def</span> <span class="n">decode_password</span>(<span class="nb">self</span>):
-        <span class="n">_m</span> = <span class="n">RsaCrypto</span>().<span class="n">decrypt</span>(<span class="nb">self</span>.<span class="n">password</span>)
-        <span class="k">if</span> <span class="n">_m</span>.<span class="nb">get</span>(<span class="s">&#39;state&#39;</span>):
-            <span class="k">return</span> {
-                <span class="s">&#39;state&#39;</span>: <span class="mi">1</span>,
-                <span class="s">&#39;message&#39;</span>: <span class="n">_m</span>.<span class="nb">get</span>(<span class="s">&#39;message&#39;</span>),
-                <span class="s">&#39;username&#39;</span>: <span class="nb">self</span>.<span class="n">username</span>
+    def decode_password(self):
+        _m = RsaCrypto().decrypt(self.password)
+        if _m.get('state'):
+            return {
+                'state': 1,
+                'message': _m.get('message'),
+                'username': self.username
             }
-        <span class="n">else:</span>
-            <span class="k">return</span> {<span class="s">&#39;state&#39;</span>: <span class="mi">0</span>, <span class="s">&#39;message&#39;</span>: <span class="s">&#39;Error: &#39;</span> + <span class="n">_m</span>.<span class="nb">get</span>(<span class="s">&#39;message&#39;</span>)}
-</code></pre></div>
+        else:
+            return {'state': 0, 'message': 'Error: ' + _m.get('message')}</code></pre>
+
 
 <p>需要解密时调用Model的<code>decode_password</code>方法就可以了</p>
-<div class="codehilite"><pre><span></span><code><span class="err">def decode_password(request, pk):</span>
-<span class="err">    try:</span>
-<span class="err">        _t = Table.objects.get(id=pk)</span>
-<span class="err">        return JsonResponse(_t.decode_password())</span>
-<span class="err">    except Exception as e:</span>
-<span class="err">        return JsonResponse({&#39;state&#39;: 0, &#39;message&#39;: &#39;Error: &#39; + str(e)})</span>
-</code></pre></div>
+<pre class="codehilite"><code>def decode_password(request, pk):
+    try:
+        _t = Table.objects.get(id=pk)
+        return JsonResponse(_t.decode_password())
+    except Exception as e:
+        return JsonResponse({'state': 0, 'message': 'Error: ' + str(e)})</code></pre>
+
 
 <h2 id="_1">写在最后</h2>
 <p>个人对代码有一点洁癖，实现功能也以简单实用为主，能2行搞定的绝对不会写3行，能有更优的解法就会毫不犹豫去重构，同时也坚决反对“又不是不能用”的说法。对于以上实现是否优雅，或是有更好的解决方法，欢迎讨论</p>

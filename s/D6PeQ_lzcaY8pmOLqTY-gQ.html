@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -47,24 +47,24 @@
 </blockquote>
 <p>上一篇文章<a href="/s/JyUnN_OtQ2NtXcH0mtCJUg">《Nginx的几个常用配置和技巧》</a>收到了不错的反馈，这里再总结下nginx配置中与安全有关的一些配置</p>
 <h2 id="_1">隐藏版本号</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">http {</span>
-<span class="err">    server_tokens off;</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>http {
+    server_tokens off;
+}</code></pre>
+
 
 <p>经常会有针对某个版本的nginx安全漏洞出现，隐藏nginx版本号就成了主要的安全优化手段之一，当然最重要的是及时升级修复漏洞</p>
 <h2 id="https">开启HTTPS</h2>
-<div class="codehilite"><pre><span></span><code><span class="nt">server</span> <span class="p">{</span>
-    <span class="err">listen</span> <span class="err">443</span><span class="p">;</span>
-    <span class="err">server_name</span> <span class="err">ops-coffee.cn</span><span class="p">;</span>
+<pre class="codehilite"><code>server {
+    listen 443;
+    server_name ops-coffee.cn;
 
-    <span class="err">ssl</span> <span class="err">on</span><span class="p">;</span>
-    <span class="err">ssl_certificate</span> <span class="err">/etc/nginx/server.crt</span><span class="p">;</span>
-    <span class="err">ssl_certificate_key</span> <span class="err">/etc/nginx/server.key</span><span class="p">;</span>
-    <span class="err">ssl_protocols</span>       <span class="err">TLSv1</span> <span class="err">TLSv1.1</span> <span class="err">TLSv1.2</span><span class="p">;</span>
-    <span class="err">ssl_ciphers</span>         <span class="n">HIGH</span><span class="p">:</span><span class="o">!</span><span class="n">aNULL</span><span class="o">:!</span><span class="n">MD5</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+    ssl on;
+    ssl_certificate /etc/nginx/server.crt;
+    ssl_certificate_key /etc/nginx/server.key;
+    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
+}</code></pre>
+
 
 <p><strong>ssl on：</strong> 开启https</p>
 <p><strong>ssl_certificate：</strong> 配置nginx ssl证书的路径</p>
@@ -73,136 +73,136 @@
 <p><strong>ssl_ciphers：</strong> 指定客户端连接时所使用的加密算法，你可以再这里配置更高安全的算法</p>
 <h2 id="_2">添加黑白名单</h2>
 <p>白名单配置</p>
-<div class="codehilite"><pre><span></span><code><span class="err">location /admin/ {</span>
-<span class="err">    allow   192.168.1.0/24;</span>
-<span class="err">    deny    all;</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>location /admin/ {
+    allow   192.168.1.0/24;
+    deny    all;
+}</code></pre>
+
 
 <p>上边表示只允许192.168.1.0/24网段的主机访问，拒绝其他所有</p>
 <p>也可以写成黑名单的方式禁止某些地址访问，允许其他所有，例如</p>
-<div class="codehilite"><pre><span></span><code><span class="err">location /ops-coffee/ {</span>
-<span class="err">    deny   192.168.1.0/24;</span>
-<span class="err">    allow    all;</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>location /ops-coffee/ {
+    deny   192.168.1.0/24;
+    allow    all;
+}</code></pre>
+
 
 <p>更多的时候客户端请求会经过层层代理，我们需要通过<code>$http_x_forwarded_for</code>来进行限制，可以这样写</p>
-<div class="codehilite"><pre><span></span><code><span class="err">set $allow false;</span>
-<span class="err">if ($http_x_forwarded_for = &quot;211.144.204.2&quot;) { set $allow true; }</span>
-<span class="err">if ($http_x_forwarded_for ~ &quot;108.2.66.[89]&quot;) { set $allow true; }</span>
-<span class="err">if ($allow = false) { return 404; }</span>
-</code></pre></div>
+<pre class="codehilite"><code>set $allow false;
+if ($http_x_forwarded_for = &quot;211.144.204.2&quot;) { set $allow true; }
+if ($http_x_forwarded_for ~ &quot;108.2.66.[89]&quot;) { set $allow true; }
+if ($allow = false) { return 404; }</code></pre>
+
 
 <h2 id="_3">添加账号认证</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">server {</span>
-<span class="err">    location / {</span>
-<span class="err">        auth_basic &quot;please input user&amp;passwd&quot;;</span>
-<span class="err">        auth_basic_user_file key/auth.key;</span>
-<span class="err">    }</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>server {
+    location / {
+        auth_basic &quot;please input user&amp;passwd&quot;;
+        auth_basic_user_file key/auth.key;
+    }
+}</code></pre>
+
 
 <p>关于账号认证<a href="/s/JyUnN_OtQ2NtXcH0mtCJUg">《Nginx的几个常用配置和技巧》</a>文章中已有详细介绍，这里不赘述</p>
 <h2 id="_4">限制请求方法</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">if ($request_method !~ ^(GET|POST)$ ) {</span>
-<span class="err">    return 405;</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>if ($request_method !~ ^(GET|POST)$ ) {
+    return 405;
+}</code></pre>
+
 
 <p><code>$request_method</code>能够获取到请求nginx的method</p>
 <p>配置只允许GET\POST方法访问，其他的method返回405</p>
 <h2 id="user-agent">拒绝User-Agent</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">if ($http_user_agent ~* LWP::Simple|BBBike|wget|curl) {</span>
-<span class="err">    return 444;</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>if ($http_user_agent ~* LWP::Simple|BBBike|wget|curl) {
+    return 444;
+}</code></pre>
+
 
 <p>可能有一些不法者会利用wget/curl等工具扫描我们的网站，我们可以通过禁止相应的user-agent来简单的防范</p>
 <p>Nginx的444状态比较特殊，如果返回444那么客户端将不会收到服务端返回的信息，就像是网站无法连接一样</p>
 <h2 id="_5">图片防盗链</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">location /images/ {</span>
-<span class="err">    valid_referers none blocked www.ops-coffee.cn ops-coffee.cn;</span>
-<span class="err">    if ($invalid_referer) {</span>
-<span class="err">        return  403;</span>
-<span class="err">    }</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>location /images/ {
+    valid_referers none blocked www.ops-coffee.cn ops-coffee.cn;
+    if ($invalid_referer) {
+        return  403;
+    }
+}</code></pre>
+
 
 <p><strong>valid_referers：</strong> 验证referer，其中<code>none</code>允许referer为空，<code>blocked</code>允许不带协议的请求，除了以上两类外仅允许referer为www.ops-coffee.cn或ops-coffee.cn时访问images下的图片资源，否则返回403</p>
 <p>当然你也可以给不符合referer规则的请求重定向到一个默认的图片，比如下边这样</p>
-<div class="codehilite"><pre><span></span><code><span class="err">location /images/ {</span>
-<span class="err">    valid_referers blocked www.ops-coffee.cn ops-coffee.cn</span>
-<span class="err">    if ($invalid_referer) {</span>
-<span class="err">        rewrite ^/images/.*\.(gif|jpg|jpeg|png)$ /static/qrcode.jpg last;</span>
-<span class="err">    }</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>location /images/ {
+    valid_referers blocked www.ops-coffee.cn ops-coffee.cn
+    if ($invalid_referer) {
+        rewrite ^/images/.*\.(gif|jpg|jpeg|png)$ /static/qrcode.jpg last;
+    }
+}</code></pre>
+
 
 <h2 id="_6">控制并发连接数</h2>
 <p>可以通过<code>ngx_http_limit_conn_module</code>模块限制一个IP的并发连接数</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">http</span> <span class="p">{</span>
-    <span class="err">limit_conn_zone</span> <span class="err">$binary_remote_addr</span> <span class="err">zone=</span><span class="n">ops</span><span class="p">:</span><span class="mi">10</span><span class="n">m</span><span class="p">;</span>
+<pre class="codehilite"><code>http {
+    limit_conn_zone $binary_remote_addr zone=ops:10m;
 
-    <span class="err">server</span> <span class="err">{</span>
-        <span class="err">listen</span>       <span class="err">80</span><span class="p">;</span>
-        <span class="err">server_name</span>  <span class="err">ops-coffee.cn</span><span class="p">;</span>
+    server {
+        listen       80;
+        server_name  ops-coffee.cn;
 
-        <span class="err">root</span> <span class="err">/home/project/webapp</span><span class="p">;</span>
-        <span class="err">index</span> <span class="err">index.html</span><span class="p">;</span>
+        root /home/project/webapp;
+        index index.html;
 
-        <span class="err">location</span> <span class="err">/</span> <span class="err">{</span>
-            <span class="err">limit_conn</span> <span class="err">ops</span> <span class="err">10</span><span class="p">;</span>
-        <span class="p">}</span>
+        location / {
+            limit_conn ops 10;
+        }
 
-        <span class="nt">access_log</span>  <span class="o">/</span><span class="nt">tmp</span><span class="o">/</span><span class="nt">nginx_access</span><span class="p">.</span><span class="nc">log</span>  <span class="nt">main</span><span class="o">;</span>
-    <span class="err">}</span>
-<span class="err">}</span>
-</code></pre></div>
+        access_log  /tmp/nginx_access.log  main;
+    }
+}</code></pre>
+
 
 <p><strong>limit_conn_zone：</strong> 设定保存各个键(例如<code>$binary_remote_addr</code>)状态的共享内存空间的参数，zone=空间名字:大小</p>
 <p>大小的计算与变量有关，例如<code>$binary_remote_addr</code>变量的大小对于记录IPV4地址是固定的4 bytes，而记录IPV6地址时固定的16 bytes，存储状态在32位平台中占用32或者64 bytes，在64位平台中占用64 bytes。1m的共享内存空间可以保存大约3.2万个32位的状态，1.6万个64位的状态</p>
 <p><strong>limit_conn：</strong> 指定一块已经设定的共享内存空间(例如name为<code>ops</code>的空间)，以及每个给定键值的最大连接数</p>
 <p>上边的例子表示同一IP同一时间只允许10个连接</p>
 <p>当有多个<code>limit_conn</code>指令被配置时，所有的连接数限制都会生效</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">http</span> <span class="p">{</span>
-    <span class="err">limit_conn_zone</span> <span class="err">$binary_remote_addr</span> <span class="err">zone=</span><span class="n">ops</span><span class="p">:</span><span class="mi">10</span><span class="n">m</span><span class="p">;</span>
-    <span class="err">limit_conn_zone</span> <span class="err">$server_name</span> <span class="err">zone=</span><span class="n">coffee</span><span class="p">:</span><span class="mi">10</span><span class="n">m</span><span class="p">;</span>
+<pre class="codehilite"><code>http {
+    limit_conn_zone $binary_remote_addr zone=ops:10m;
+    limit_conn_zone $server_name zone=coffee:10m;
 
-    <span class="err">server</span> <span class="err">{</span>
-        <span class="err">listen</span>       <span class="err">80</span><span class="p">;</span>
-        <span class="err">server_name</span>  <span class="err">ops-coffee.cn</span><span class="p">;</span>
+    server {
+        listen       80;
+        server_name  ops-coffee.cn;
 
-        <span class="err">root</span> <span class="err">/home/project/webapp</span><span class="p">;</span>
-        <span class="err">index</span> <span class="err">index.html</span><span class="p">;</span>
+        root /home/project/webapp;
+        index index.html;
 
-        <span class="err">location</span> <span class="err">/</span> <span class="err">{</span>
-            <span class="err">limit_conn</span> <span class="err">ops</span> <span class="err">10</span><span class="p">;</span>
-            <span class="err">limit_conn</span> <span class="err">coffee</span> <span class="err">2000</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="err">}</span>
-<span class="err">}</span>
-</code></pre></div>
+        location / {
+            limit_conn ops 10;
+            limit_conn coffee 2000;
+        }
+    }
+}</code></pre>
+
 
 <p>上边的配置不仅会限制单一IP来源的连接数为10，同时也会限制单一虚拟服务器的总连接数为2000</p>
 <h2 id="_7">缓冲区溢出攻击</h2>
 <p><strong>缓冲区溢出攻击</strong> 是通过将数据写入缓冲区并超出缓冲区边界和重写内存片段来实现的，限制缓冲区大小可有效防止</p>
-<div class="codehilite"><pre><span></span><code><span class="err">client_body_buffer_size  1K;</span>
-<span class="err">client_header_buffer_size 1k;</span>
-<span class="err">client_max_body_size 1k;</span>
-<span class="err">large_client_header_buffers 2 1k;</span>
-</code></pre></div>
+<pre class="codehilite"><code>client_body_buffer_size  1K;
+client_header_buffer_size 1k;
+client_max_body_size 1k;
+large_client_header_buffers 2 1k;</code></pre>
+
 
 <p><strong>client_body_buffer_size：</strong> 默认8k或16k，表示客户端请求body占用缓冲区大小。如果连接请求超过缓存区指定的值，那么这些请求实体的整体或部分将尝试写入一个临时文件。</p>
 <p><strong>client_header_buffer_size：</strong> 表示客户端请求头部的缓冲区大小。绝大多数情况下一个请求头不会大于1k，不过如果有来自于wap客户端的较大的cookie它可能会大于 1k，Nginx将分配给它一个更大的缓冲区，这个值可以在<code>large_client_header_buffers</code>里面设置</p>
 <p><strong>client_max_body_size：</strong> 表示客户端请求的最大可接受body大小，它出现在请求头部的Content-Length字段， 如果请求大于指定的值，客户端将收到一个"Request Entity Too Large" (413)错误，通常在上传文件到服务器时会受到限制</p>
 <p><strong>large_client_header_buffers</strong> 表示一些比较大的请求头使用的缓冲区数量和大小，默认一个缓冲区大小为操作系统中分页文件大小，通常是4k或8k，请求字段不能大于一个缓冲区大小，如果客户端发送一个比较大的头，nginx将返回"Request URI too large" (414)，请求的头部最长字段不能大于一个缓冲区，否则服务器将返回"Bad request" (400)</p>
 <p>同时需要修改几个超时时间的配置</p>
-<div class="codehilite"><pre><span></span><code><span class="err">client_body_timeout   10;</span>
-<span class="err">client_header_timeout 10;</span>
-<span class="err">keepalive_timeout     5 5;</span>
-<span class="err">send_timeout          10;</span>
-</code></pre></div>
+<pre class="codehilite"><code>client_body_timeout   10;
+client_header_timeout 10;
+keepalive_timeout     5 5;
+send_timeout          10;</code></pre>
+
 
 <p><strong>client_body_timeout：</strong> 表示读取请求body的超时时间，如果连接超过这个时间而客户端没有任何响应，Nginx将返回"Request time out" (408)错误</p>
 <p><strong>client_header_timeout：</strong> 表示读取客户端请求头的超时时间，如果连接超过这个时间而客户端没有任何响应，Nginx将返回"Request time out" (408)错误</p>
@@ -210,10 +210,10 @@
 <p><strong>send_timeout：</strong> 表示发送给客户端应答后的超时时间，Timeout是指没有进入完整established状态，只完成了两次握手，如果超过这个时间客户端没有任何响应，nginx将关闭连接</p>
 <h2 id="header">Header头设置</h2>
 <p>通过以下设置可有效防止XSS攻击</p>
-<div class="codehilite"><pre><span></span><code><span class="err">add_header X-Frame-Options &quot;SAMEORIGIN&quot;;</span>
-<span class="err">add_header X-XSS-Protection &quot;1; mode=block&quot;;</span>
-<span class="err">add_header X-Content-Type-Options &quot;nosniff&quot;;</span>
-</code></pre></div>
+<pre class="codehilite"><code>add_header X-Frame-Options &quot;SAMEORIGIN&quot;;
+add_header X-XSS-Protection &quot;1; mode=block&quot;;
+add_header X-Content-Type-Options &quot;nosniff&quot;;</code></pre>
+
 
 <p><strong>X-Frame-Options：</strong> 响应头表示是否允许浏览器加载frame等属性，有三个配置<code>DENY</code>禁止任何网页被嵌入,<code>SAMEORIGIN</code>只允许本网站的嵌套,<code>ALLOW-FROM</code>允许指定地址的嵌套</p>
 <p><strong>X-XSS-Protection：</strong> 表示启用XSS过滤（禁用过滤为<code>X-XSS-Protection: 0</code>），<code>mode=block</code>表示若检查到XSS攻击则停止渲染页面</p>
@@ -222,13 +222,13 @@
 <p>例如一个.jpg的图片文件被恶意嵌入了可执行的js代码，在开启资源类型猜测的情况下，浏览器将执行嵌入的js代码，可能会有意想不到的后果</p>
 <p>另外还有几个关于请求头的安全配置需要注意</p>
 <p><strong>Content-Security-Policy：</strong> 定义页面可以加载哪些资源，</p>
-<div class="codehilite"><pre><span></span><code><span class="err">add_header Content-Security-Policy &quot;default-src &#39;self&#39;&quot;;</span>
-</code></pre></div>
+<pre class="codehilite"><code>add_header Content-Security-Policy &quot;default-src 'self'&quot;;</code></pre>
+
 
 <p>上边的配置会限制所有的外部资源，都只能从当前域名加载，其中<code>default-src</code>定义针对所有类型资源的默认加载策略，<code>self</code>允许来自相同来源的内容</p>
 <p><strong>Strict-Transport-Security：</strong> 会告诉浏览器用HTTPS协议代替HTTP来访问目标站点</p>
-<div class="codehilite"><pre><span></span><code><span class="err">add_header Strict-Transport-Security &quot;max-age=31536000; includeSubDomains&quot;;</span>
-</code></pre></div>
+<pre class="codehilite"><code>add_header Strict-Transport-Security &quot;max-age=31536000; includeSubDomains&quot;;</code></pre>
+
 
 <p>上边的配置表示当用户第一次访问后，会返回一个包含了<code>Strict-Transport-Security</code>响应头的字段，这个字段会告诉浏览器，在接下来的31536000秒内，当前网站的所有请求都使用https协议访问，参数<code>includeSubDomains</code>是可选的，表示所有子域名也将采用同样的规则</p>
 

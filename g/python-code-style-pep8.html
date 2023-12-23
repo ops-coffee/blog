@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -125,84 +125,84 @@
 <h3 id="1_1">（1）缩进</h3>
 <p>每级缩进对应四个空格。   </p>
 <p>()、[]或者{}可以隐式的换行，三种括号所包裹的代码要么垂直对齐，要么悬挂缩进。当使用悬挂缩进时，应该注意：参数不能放在首行，续行要再缩进一级以便和后边的代码区别开。   </p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># 正确写法：   </span>
+<pre class="codehilite"><code># 正确写法：   
 
-<span class="c1"># 与左括号对齐（垂直对齐写法）</span>
-<span class="n">foo</span> <span class="o">=</span> <span class="n">long_function_name</span><span class="p">(</span><span class="n">var_one</span><span class="p">,</span> <span class="n">var_two</span><span class="p">,</span>
-                         <span class="n">var_three</span><span class="p">,</span> <span class="n">var_four</span><span class="p">)</span>
+# 与左括号对齐（垂直对齐写法）
+foo = long_function_name(var_one, var_two,
+                         var_three, var_four)
 
-<span class="c1"># 悬挂缩进</span>
-<span class="n">foo</span> <span class="o">=</span> <span class="n">long_function_name</span><span class="p">(</span>
-    <span class="n">var_one</span><span class="p">,</span> <span class="n">var_two</span><span class="p">,</span>
-    <span class="n">var_three</span><span class="p">,</span> <span class="n">var_four</span><span class="p">)</span>
+# 悬挂缩进
+foo = long_function_name(
+    var_one, var_two,
+    var_three, var_four)
 
-<span class="c1"># 如果后边有代码行，悬挂缩进增加一级</span>
-<span class="n">def</span> <span class="n">long_function_name</span><span class="p">(</span>
-        <span class="n">var_one</span><span class="p">,</span> <span class="n">var_two</span><span class="p">,</span> <span class="n">var_three</span><span class="p">,</span>
-        <span class="n">var_four</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">var_one</span><span class="p">)</span>
-</code></pre></div>
+# 如果后边有代码行，悬挂缩进增加一级
+def long_function_name(
+        var_one, var_two, var_three,
+        var_four):
+    print(var_one)</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="c1"># 错误写法：   </span>
 
-<span class="c1"># 参数放在第一行而没有垂直对齐</span>
-<span class="n">foo</span> <span class="o">=</span> <span class="n">long_function_name</span><span class="p">(</span><span class="n">var_one</span><span class="p">,</span> <span class="n">var_two</span><span class="p">,</span>
-    <span class="n">var_three</span><span class="p">,</span> <span class="n">var_four</span><span class="p">)</span>
+<pre class="codehilite"><code># 错误写法：   
 
-<span class="c1"># 后边有代码行时没有增加缩进</span>
-<span class="n">def</span> <span class="n">long_function_name</span><span class="p">(</span>
-    <span class="n">var_one</span><span class="p">,</span> <span class="n">var_two</span><span class="p">,</span> <span class="n">var_three</span><span class="p">,</span>
-    <span class="n">var_four</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">var_one</span><span class="p">)</span>
-</code></pre></div>
+# 参数放在第一行而没有垂直对齐
+foo = long_function_name(var_one, var_two,
+    var_three, var_four)
+
+# 后边有代码行时没有增加缩进
+def long_function_name(
+    var_one, var_two, var_three,
+    var_four):
+    print(var_one)</code></pre>
+
 
 <p>对于续行来说，4个空格的缩进规则可以不必遵守   </p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># 可以不采用是4个空格的缩进方法</span>
-<span class="n">foo</span> <span class="o">=</span> <span class="n">long_function_name</span><span class="p">(</span>
-  <span class="n">var_one</span><span class="p">,</span> <span class="n">var_two</span><span class="p">,</span>
-  <span class="n">var_three</span><span class="p">,</span> <span class="n">var_four</span><span class="p">)</span>
-</code></pre></div>
+<pre class="codehilite"><code># 可以不采用是4个空格的缩进方法
+foo = long_function_name(
+  var_one, var_two,
+  var_three, var_four)</code></pre>
+
 
 <p>当 if 语句的条件部分很长以至于需要将其写成多行时，需要注意，if 和单个空格以及左括号正好是 4 个空格缩进，这可能与嵌套在if语句中的代码块产生冲突。本文档不提供确切的方法来解决条件行和 if 语句的嵌套代码块的冲突。以下是一些可行的处理方法，但不必局限于此：　　　</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="err">无额外的缩进</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">this_is_one_thing</span> <span class="k">and</span>
-    <span class="n">that_is_another_thing</span><span class="p">):</span>
-    <span class="n">do_something</span><span class="p">()</span>
+<pre class="codehilite"><code># 无额外的缩进
+if (this_is_one_thing and
+    that_is_another_thing):
+    do_something()
 
-<span class="o">#</span> <span class="err">通过注释进行区分</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">this_is_one_thing</span> <span class="k">and</span>
-    <span class="n">that_is_another_thing</span><span class="p">):</span>
-    <span class="o">#</span> <span class="n">Since</span> <span class="k">both</span> <span class="n">conditions</span> <span class="k">are</span> <span class="k">true</span><span class="p">,</span> <span class="n">we</span> <span class="n">can</span> <span class="n">frobnicate</span><span class="p">.</span>
-    <span class="n">do_something</span><span class="p">()</span>
+# 通过注释进行区分
+if (this_is_one_thing and
+    that_is_another_thing):
+    # Since both conditions are true, we can frobnicate.
+    do_something()
 
-<span class="o">#</span> <span class="err">对条件行的续行增加缩进</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">this_is_one_thing</span>
-        <span class="k">and</span> <span class="n">that_is_another_thing</span><span class="p">):</span>
-    <span class="n">do_something</span><span class="p">()</span>
-</code></pre></div>
+# 对条件行的续行增加缩进
+if (this_is_one_thing
+        and that_is_another_thing):
+    do_something()</code></pre>
+
 
 <p>(另请参阅下面的关于在二元运算符之前还是之后换行的讨论。)   </p>
 <p>多行结构的右括号（包括圆括号，中括号和花括号）可以置于最后一行代码的第一个非空白字符下面，如下所示：   </p>
-<div class="codehilite"><pre><span></span><code><span class="err">my_list = [</span>
-<span class="err">    1, 2, 3,</span>
-<span class="err">    4, 5, 6,</span>
-<span class="err">    ]</span>
-<span class="err">result = some_function_that_takes_arguments(</span>
-<span class="err">    &#39;a&#39;, &#39;b&#39;, &#39;c&#39;,</span>
-<span class="err">    &#39;d&#39;, &#39;e&#39;, &#39;f&#39;,</span>
-<span class="err">    )</span>
-</code></pre></div>
+<pre class="codehilite"><code>my_list = [
+    1, 2, 3,
+    4, 5, 6,
+    ]
+result = some_function_that_takes_arguments(
+    'a', 'b', 'c',
+    'd', 'e', 'f',
+    )</code></pre>
+
 
 <p>或者，也可以放在多行结构的下一行的第一个字符位置，如下所示：   </p>
-<div class="codehilite"><pre><span></span><code><span class="err">my_list = [</span>
-<span class="err">    1, 2, 3,</span>
-<span class="err">    4, 5, 6,</span>
-<span class="err">]</span>
-<span class="err">result = some_function_that_takes_arguments(</span>
-<span class="err">    &#39;a&#39;, &#39;b&#39;, &#39;c&#39;,</span>
-<span class="err">    &#39;d&#39;, &#39;e&#39;, &#39;f&#39;,</span>
-<span class="err">)</span>
-</code></pre></div>
+<pre class="codehilite"><code>my_list = [
+    1, 2, 3,
+    4, 5, 6,
+]
+result = some_function_that_takes_arguments(
+    'a', 'b', 'c',
+    'd', 'e', 'f',
+)</code></pre>
+
 
 <h3 id="2tab">（2）Tab还是空格？</h3>
 <p>推荐使用空格控制缩进。   </p>
@@ -219,37 +219,37 @@
 <p>Python 标准库比较保守，选择将代码行最大长度限制为 79 个字符，注释或者文档字符串限制为 72 个字符。   </p>
 <p>Python 中首选的换行方式是使用括号括起来隐式地换行。使用括号可以将长的代码行分成多个较短行。这种写法要优先于使用 \ 换行。   </p>
 <p>在某些情况下，也可以使用 \ 换行，比如，当 with 语句很长，隐式换行又不方便，就可以使用 \ 。   </p>
-<div class="codehilite"><pre><span></span><code><span class="err">with open(&#39;/path/to/some/file/you/want/to/read&#39;) as file_1, \</span>
-<span class="err">     open(&#39;/path/to/some/file/being/written&#39;, &#39;w&#39;) as file_2:</span>
-<span class="err">    file_2.write(file_1.read())</span>
-</code></pre></div>
+<pre class="codehilite"><code>with open('/path/to/some/file/you/want/to/read') as file_1, \
+     open('/path/to/some/file/being/written', 'w') as file_2:
+    file_2.write(file_1.read())</code></pre>
+
 
 <p>(参阅前面有关多行 if 语句的讨论，进一步考虑这里 with 语句的缩进。)   </p>
 <p>另一个这样的例子是 assert 语句。   </p>
 <p>要确保续行的缩进适当。   </p>
 <h3 id="4">（4）在二元运算符之前还是之后换行？</h3>
 <p>长期以来，一直推荐的风格是在二元运算符之后换行，但是这会影响代码可读性，一是会使运算符分散在屏幕的不同列上，二是会使每个运算符留在前一行，并远离操作数分离。必须人为地判断应该加上或者减去哪些东西，这就增加了人眼的负担。   </p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="err">错误写法</span><span class="p">:</span>   
+<pre class="codehilite"><code># 错误写法:   
 
-<span class="o">#</span> <span class="err">运算符远离操作数</span>
-<span class="n">income</span> <span class="o">=</span> <span class="p">(</span><span class="n">gross_wages</span> <span class="o">+</span>
-          <span class="n">taxable_interest</span> <span class="o">+</span>
-          <span class="p">(</span><span class="n">dividends</span> <span class="o">-</span> <span class="n">qualified_dividends</span><span class="p">)</span> <span class="o">-</span>
-          <span class="n">ira_deduction</span> <span class="o">-</span>
-          <span class="n">student_loan_interest</span><span class="p">)</span>
-</code></pre></div>
+# 运算符远离操作数
+income = (gross_wages +
+          taxable_interest +
+          (dividends - qualified_dividends) -
+          ira_deduction -
+          student_loan_interest)</code></pre>
+
 
 <p>为了解决这一可读性问题，数学家和出版商遵循了相反的规约。Donald Knuth 在他的《Computers and Typesetting》丛书中解释了这一规约。“虽然段落中的公式总是在二元运算符后换行，但显示公式时总是在二元运算符之前换行。”   </p>
 <p>遵循数学上的传统可以写出可读性更好的代码。   </p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="err">正确写法</span><span class="p">:</span>   
+<pre class="codehilite"><code># 正确写法:   
 
-<span class="o">#</span> <span class="err">更容易匹配运算符与操作数</span>
-<span class="n">income</span> <span class="o">=</span> <span class="p">(</span><span class="n">gross_wages</span>
-          <span class="o">+</span> <span class="n">taxable_interest</span>
-          <span class="o">+</span> <span class="p">(</span><span class="n">dividends</span> <span class="o">-</span> <span class="n">qualified_dividends</span><span class="p">)</span>
-          <span class="o">-</span> <span class="n">ira_deduction</span>
-          <span class="o">-</span> <span class="n">student_loan_interest</span><span class="p">)</span>
-</code></pre></div>
+# 更容易匹配运算符与操作数
+income = (gross_wages
+          + taxable_interest
+          + (dividends - qualified_dividends)
+          - ira_deduction
+          - student_loan_interest)</code></pre>
+
 
 <p>在 Python 代码中，只要前后保持一致，在二元操作符之前或之后换行都可以。对于新写的代码，建议使用 Knuth 推荐的风格。   </p>
 <h3 id="5">（5）空行</h3>
@@ -270,18 +270,18 @@
 <ul>
 <li>导入语句应该分开写，而不是都放到一行，例如：   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="c1"># 正确写法：</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-</code></pre></div>
+<pre class="codehilite"><code># 正确写法：
+import os
+import sys</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="c1"># 错误写法：</span>
-<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 错误写法：
+import sys, os</code></pre>
+
 
 <p>这种写法也可以：   </p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">PIPE</span>
-</code></pre></div>
+<pre class="codehilite"><code>from subprocess import Popen, PIPE</code></pre>
+
 
 <ul>
 <li>导入语句一般放在文件开头，在模块注释和文档字符串之后，模块全局变量和常量之前。   </li>
@@ -296,29 +296,29 @@
 <ul>
 <li>推荐绝对路径导入方式，通常这样更有可读性，在系统配置错误时的情况下（比如包里的文件路径有以 sys.path 结尾的。），也会表现得更好（至少会给出更好的错误提示信息）：   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">mypkg.sibling</span>
-<span class="kn">from</span> <span class="nn">mypkg</span> <span class="kn">import</span> <span class="n">sibling</span>
-<span class="kn">from</span> <span class="nn">mypkg.sibling</span> <span class="kn">import</span> <span class="n">example</span>
-</code></pre></div>
+<pre class="codehilite"><code>import mypkg.sibling
+from mypkg import sibling
+from mypkg.sibling import example</code></pre>
+
 
 <p>然而，清晰的相对路径导入方式也可以接受，特别是当包的结构比较复杂，使用绝对路径导入方式没有必要，反而会使代码显得冗杂。   </p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">sibling</span>
-<span class="kn">from</span> <span class="nn">.sibling</span> <span class="kn">import</span> <span class="n">example</span>
-</code></pre></div>
+<pre class="codehilite"><code>from . import sibling
+from .sibling import example</code></pre>
+
 
 <p>标准库的代码没有复杂的包结构，并且一直使用绝对路径的导入方式。   </p>
 <p>不能使用隐式的相对路径导入，这在 Python3 中已经被移除。   </p>
 <ul>
 <li>当从包含类的模块中导入类时，可以使用以下写法：   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">myclass</span> <span class="kn">import</span> <span class="n">MyClass</span>
-<span class="kn">from</span> <span class="nn">foo.bar.yourclass</span> <span class="kn">import</span> <span class="n">YourClass</span>
-</code></pre></div>
+<pre class="codehilite"><code>from myclass import MyClass
+from foo.bar.yourclass import YourClass</code></pre>
+
 
 <p>如果这种写法导致和本地命名空间冲突，则改为：   </p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">myclass</span>
-<span class="kn">import</span> <span class="nn">foo.bar.yourclass</span>
-</code></pre></div>
+<pre class="codehilite"><code>import myclass
+import foo.bar.yourclass</code></pre>
+
 
 <p>然后使用<code>myclass.MyClass</code> 或者<code>foo.bar.yourclass.YourClass</code>。   </p>
 <ul>
@@ -327,20 +327,20 @@
 <p>当使用这种方式重新发布名称时，指南后面关于公共和内部接口的部分仍然适用。   </p>
 <h3 id="8">（8）模块级双下划线名称</h3>
 <p>模块级的双下划线名称（即在名称的开始和结尾处都有两条下划线）如__all__，<strong>author</strong>，<strong>version</strong> 等，应该写在文档字符串之后，除<code>from __future__</code>外其他导入语句之前。Python 要求在模块中<code>future-imports</code>语句要放在除文档字符串外的任何其他代码之前。例如：</p>
-<div class="codehilite"><pre><span></span><code><span class="sd">&quot;&quot;&quot;This is the example module.</span>
+<pre class="codehilite"><code>&quot;&quot;&quot;This is the example module.
 
-<span class="sd">This module does stuff.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+This module does stuff.
+&quot;&quot;&quot;
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">barry_as_FLUFL</span>
+from __future__ import barry_as_FLUFL
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.1&#39;</span>
-<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Cardinal Biggles&#39;</span>
+__all__ = ['a', 'b', 'c']
+__version__ = '0.1'
+__author__ = 'Cardinal Biggles'
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-</code></pre></div>
+import os
+import sys</code></pre>
+
 
 <h2 id="4_1">4、字符串引用</h2>
 <p>在 Python 中，单引号字符串和双引号字符串是一样的。本 PEP 文档在这一点上不做要求，选用一种并坚持下去就好。当字符串本身包含单引号或者双引号时，那就选用未包含的引号来表示字符串，这样可以避免使用<code>\</code>，代码也更易读。   </p>
@@ -351,91 +351,91 @@
 <ul>
 <li>括号内部紧挨括号的地方，包括圆括号、方括号和花括号。   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 正确写法：</span>
-<span class="err">spam(ham[1], {eggs: 2})</span>
-</code></pre></div>
+<pre class="codehilite"><code># 正确写法：
+spam(ham[1], {eggs: 2})</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 错误写法：</span>
-<span class="err">spam( ham[ 1 ], { eggs: 2 } )</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 错误写法：
+spam( ham[ 1 ], { eggs: 2 } )</code></pre>
+
 
 <ul>
 <li>逗号后面跟着右括号。   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 正确写法：</span>
-<span class="err">foo = (0,)</span>
-</code></pre></div>
+<pre class="codehilite"><code># 正确写法：
+foo = (0,)</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 错误写法：</span>
-<span class="err">bar = (0, )</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 错误写法：
+bar = (0, )</code></pre>
+
 
 <ul>
 <li>逗号，分号，和冒号之前。   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err">#</span> <span class="nt">正确写法</span><span class="err">：</span>
+<pre class="codehilite"><code># 正确写法：
 
-<span class="nt">if</span> <span class="nt">x</span> <span class="o">==</span> <span class="nt">4</span><span class="o">:</span> <span class="nt">print</span> <span class="nt">x</span><span class="o">,</span> <span class="nt">y</span><span class="o">;</span> <span class="nt">x</span><span class="o">,</span> <span class="nt">y</span> <span class="o">=</span> <span class="nt">y</span><span class="o">,</span> <span class="nt">x</span>
-</code></pre></div>
+if x == 4: print x, y; x, y = y, x</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 错误写法：</span>
-<span class="err">if x == 4 : print x , y ; x , y = y , x</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 错误写法：
+if x == 4 : print x , y ; x , y = y , x</code></pre>
+
 
 <ul>
 <li>然而，在切片操作中，冒号作为二元运算符，两边应该具有相同数目的空格（可将其视作最低优先级的运算符）。在扩展切片操作中，两个冒号左右两边的空格数都应该相等。当然，如果切片操作省略了参数，那么空白也应该省略。   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 正确写法：</span>
-<span class="err">ham[1:9], ham[1:9:3], ham[:9:3], ham[1::3], ham[1:9:]</span>
-<span class="err">ham[lower:upper], ham[lower:upper:], ham[lower::step]</span>
-<span class="err">ham[lower+offset : upper+offset]</span>
-<span class="err">ham[: upper_fn(x) : step_fn(x)], ham[:: step_fn(x)]</span>
-<span class="err">ham[lower + offset : upper + offset]</span>
-</code></pre></div>
+<pre class="codehilite"><code># 正确写法：
+ham[1:9], ham[1:9:3], ham[:9:3], ham[1::3], ham[1:9:]
+ham[lower:upper], ham[lower:upper:], ham[lower::step]
+ham[lower+offset : upper+offset]
+ham[: upper_fn(x) : step_fn(x)], ham[:: step_fn(x)]
+ham[lower + offset : upper + offset]</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="cp"># 错误写法：</span>
-<span class="n">ham</span><span class="p">[</span><span class="n">lower</span> <span class="o">+</span> <span class="nl">offset</span><span class="p">:</span><span class="n">upper</span> <span class="o">+</span> <span class="n">offset</span><span class="p">]</span>
-<span class="n">ham</span><span class="p">[</span><span class="mi">1</span><span class="o">:</span> <span class="mi">9</span><span class="p">],</span> <span class="n">ham</span><span class="p">[</span><span class="mi">1</span> <span class="o">:</span><span class="mi">9</span><span class="p">],</span> <span class="n">ham</span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">9</span> <span class="o">:</span><span class="mi">3</span><span class="p">]</span>
-<span class="n">ham</span><span class="p">[</span><span class="nl">lower</span> <span class="p">:</span> <span class="o">:</span> <span class="n">upper</span><span class="p">]</span>
-<span class="n">ham</span><span class="p">[</span> <span class="o">:</span> <span class="n">upper</span><span class="p">]</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 错误写法：
+ham[lower + offset:upper + offset]
+ham[1: 9], ham[1 :9], ham[1:9 :3]
+ham[lower : : upper]
+ham[ : upper]</code></pre>
+
 
 <ul>
 <li>函数调用时，包裹参数列表的左括号之前：   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 正确写法：</span>
-<span class="err">spam(1)</span>
-</code></pre></div>
+<pre class="codehilite"><code># 正确写法：
+spam(1)</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 错误写法：</span>
-<span class="err">spam (1)</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 错误写法：
+spam (1)</code></pre>
+
 
 <ul>
 <li>在索引或者切片操作紧挨着的左括号前边：   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">正确写法</span><span class="err">：</span><span class="w"></span>
-<span class="n">dct</span><span class="o">[</span><span class="n">&#39;key&#39;</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lst</span><span class="o">[</span><span class="n">index</span><span class="o">]</span><span class="w"></span>
-</code></pre></div>
+<pre class="codehilite"><code># 正确写法：
+dct['key'] = lst[index]</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">错误写法</span><span class="err">：</span><span class="w"></span>
-<span class="n">dct</span><span class="w"> </span><span class="o">[</span><span class="n">&#39;key&#39;</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lst</span><span class="w"> </span><span class="o">[</span><span class="n">index</span><span class="o">]</span><span class="w"></span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 错误写法：
+dct ['key'] = lst [index]</code></pre>
+
 
 <ul>
 <li>为了对齐，在赋值号或者其他运算符前后加多个空格。  </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="c1"># 正确写法：</span>
-<span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">y</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="n">long_variable</span> <span class="o">=</span> <span class="mi">3</span>
-</code></pre></div>
+<pre class="codehilite"><code># 正确写法：
+x = 1
+y = 2
+long_variable = 3</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="c1"># 错误写法：</span>
-<span class="n">x</span>             <span class="o">=</span> <span class="mi">1</span>
-<span class="n">y</span>             <span class="o">=</span> <span class="mi">2</span>
-<span class="n">long_variable</span> <span class="o">=</span> <span class="mi">3</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 错误写法：
+x             = 1
+y             = 2
+long_variable = 3</code></pre>
+
 
 <h3 id="2_1">（2）其他建议</h3>
 <ul>
@@ -449,124 +449,124 @@
 <p>如果混用了不同优先级的运算符，可以考虑在低优先级运算符两边增加空格。但不要超过一个，并且要保持二元运算符两边的空格数量相同。   </p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 正确写法：</span>
-<span class="err">i = i + 1</span>
-<span class="err">submitted += 1</span>
-<span class="err">x = x*2 - 1</span>
-<span class="err">hypot2 = x*x + y*y</span>
-<span class="err">c = (a+b) * (a-b)</span>
-</code></pre></div>
+<pre class="codehilite"><code># 正确写法：
+i = i + 1
+submitted += 1
+x = x*2 - 1
+hypot2 = x*x + y*y
+c = (a+b) * (a-b)</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 错误写法：</span>
-<span class="err">i=i+1</span>
-<span class="err">submitted +=1</span>
-<span class="err">x = x * 2 - 1</span>
-<span class="err">hypot2 = x * x + y * y</span>
-<span class="err">c = (a + b) * (a - b)</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 错误写法：
+i=i+1
+submitted +=1
+x = x * 2 - 1
+hypot2 = x * x + y * y
+c = (a + b) * (a - b)</code></pre>
+
 
 <ul>
 <li>当表示关键字参数或者默认参数时，等号两边不加空格。   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 正确写法：</span>
-<span class="err">def complex(real, imag=0.0):</span>
-<span class="err">return magic(r=real, i=imag)</span>
-</code></pre></div>
+<pre class="codehilite"><code># 正确写法：
+def complex(real, imag=0.0):
+return magic(r=real, i=imag)</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 错误写法：</span>
-<span class="err">def complex(real, imag = 0.0):</span>
-<span class="err">return magic(r = real, i = imag)</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 错误写法：
+def complex(real, imag = 0.0):
+return magic(r = real, i = imag)</code></pre>
+
 
 <ul>
 <li>函数注释中的冒号遵循一般的加空格的规则，如果有箭头，要在其两边加空格。（更多信息请见下面的函数注释。）   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 正确写法：</span>
-<span class="err">def munge(input: AnyStr): ...</span>
-<span class="err">def munge() -&gt; AnyStr: ...</span>
-</code></pre></div>
+<pre class="codehilite"><code># 正确写法：
+def munge(input: AnyStr): ...
+def munge() -&gt; AnyStr: ...</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 错误写法：</span>
-<span class="err">def munge(input:AnyStr): ...</span>
-<span class="err">def munge()-&gt;PosInt: ...</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 错误写法：
+def munge(input:AnyStr): ...
+def munge()-&gt;PosInt: ...</code></pre>
+
 
 <ul>
 <li>当组合使用参数注释和参数默认值时，赋值号两边要加空格（但仅对既有空格又有默认值的参数成立）。   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 正确写法：</span>
-<span class="err">def munge(sep: AnyStr = None): ...</span>
-<span class="err">def munge(input: AnyStr, sep: AnyStr = None, limit=1000): ...</span>
-</code></pre></div>
+<pre class="codehilite"><code># 正确写法：
+def munge(sep: AnyStr = None): ...
+def munge(input: AnyStr, sep: AnyStr = None, limit=1000): ...</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 错误写法：</span>
-<span class="err">def munge(input: AnyStr=None): ...</span>
-<span class="err">def munge(input: AnyStr, limit = 1000): ...</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 错误写法：
+def munge(input: AnyStr=None): ...
+def munge(input: AnyStr, limit = 1000): ...</code></pre>
+
 
 <ul>
 <li>通常不鼓励使用复合语句（即将多条语句写在一行）。   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 正确写法：</span>
-<span class="err">if foo == &#39;blah&#39;:</span>
-<span class="err">do_blah_thing()</span>
-<span class="err">do_one()</span>
-<span class="err">do_two()</span>
-<span class="err">do_three()</span>
-</code></pre></div>
+<pre class="codehilite"><code># 正确写法：
+if foo == 'blah':
+do_blah_thing()
+do_one()
+do_two()
+do_three()</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 最好不要这样写：</span>
-<span class="err">if foo == &#39;blah&#39;: do_blah_thing()</span>
-<span class="err">do_one(); do_two(); do_three()  </span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 最好不要这样写：
+if foo == 'blah': do_blah_thing()
+do_one(); do_two(); do_three()  </code></pre>
+
 
 <ul>
 <li>然而，小型的<code>if/for/whiel</code>语句放在一行是可以的。但是有多条分句时不要这样做。也要避免无谓的换行！   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 最好不要这样写：</span>
-<span class="err">if foo == &#39;blah&#39;: do_blah_thing()</span>
-<span class="err">for x in lst: total += x</span>
-<span class="err">while t &lt; 10: t = delay()</span>
-</code></pre></div>
+<pre class="codehilite"><code># 最好不要这样写：
+if foo == 'blah': do_blah_thing()
+for x in lst: total += x
+while t &lt; 10: t = delay()</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="err">绝对不要这样写：</span>
-<span class="k">if</span> <span class="n">foo</span> <span class="o">==</span> <span class="s1">&#39;blah&#39;</span><span class="p">:</span> <span class="n">do_blah_thing</span><span class="p">()</span>
-<span class="k">else</span><span class="p">:</span> <span class="n">do_non_blah_thing</span><span class="p">()</span>
 
-<span class="n">try</span><span class="p">:</span> <span class="n">something</span><span class="p">()</span>
-<span class="n">finally</span><span class="p">:</span> <span class="n">cleanup</span><span class="p">()</span>
+<pre class="codehilite"><code># 绝对不要这样写：
+if foo == 'blah': do_blah_thing()
+else: do_non_blah_thing()
 
-<span class="n">do_one</span><span class="p">();</span> <span class="n">do_two</span><span class="p">();</span> <span class="n">do_three</span><span class="p">(</span><span class="n">long</span><span class="p">,</span> <span class="n">argument</span><span class="p">,</span>
-                         <span class="n">list</span><span class="p">,</span> <span class="k">like</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+try: something()
+finally: cleanup()
 
-<span class="k">if</span> <span class="n">foo</span> <span class="o">==</span> <span class="s1">&#39;blah&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">();</span> <span class="n">two</span><span class="p">();</span> <span class="n">three</span><span class="p">()</span>
-</code></pre></div>
+do_one(); do_two(); do_three(long, argument,
+                         list, like, this)
+
+if foo == 'blah': one(); two(); three()</code></pre>
+
 
 <h2 id="6_1">6、何时在末尾加逗号</h2>
 <p>末尾的逗号通常是可选的。但是，在定义单元素元组时是必须的（而且在 Python2 中，逗号对 print 语句有特殊语义）。清楚起见，建议使用括号括起来（在技术上是冗余的）。   </p>
-<div class="codehilite"><pre><span></span><code><span class="err"># 正确写法：</span>
-<span class="err">FILES = (&#39;setup.cfg&#39;,)</span>
-</code></pre></div>
+<pre class="codehilite"><code># 正确写法：
+FILES = ('setup.cfg',)</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 也可以这样写，但是难于理解：</span>
-<span class="err">FILES = &#39;setup.cfg&#39;,</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 也可以这样写，但是难于理解：
+FILES = 'setup.cfg',</code></pre>
+
 
 <p>当使用版本控制系统时，在将来有可能扩展的值和参数列表或者导入条目的末尾添加冗余的逗号是有好处的。书写模式：每行只写一个值并且加上逗号，在最后的新行写上右括号。但是，把逗号和右括号写在同一行毫无意义（除了上面提到的单元素元组）。   </p>
-<div class="codehilite"><pre><span></span><code><span class="err"># 正确写法：</span>
-<span class="err">FILES = [</span>
-<span class="err">    &#39;setup.cfg&#39;,</span>
-<span class="err">    &#39;tox.ini&#39;,</span>
-<span class="err">    ]</span>
-<span class="err">initialize(FILES,</span>
-<span class="err">           error=True,</span>
-<span class="err">           )</span>
-</code></pre></div>
+<pre class="codehilite"><code># 正确写法：
+FILES = [
+    'setup.cfg',
+    'tox.ini',
+    ]
+initialize(FILES,
+           error=True,
+           )</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 错误写法：</span>
-<span class="err">FILES = [&#39;setup.cfg&#39;, &#39;tox.ini&#39;,]</span>
-<span class="err">initialize(FILES, error=True,)</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 错误写法：
+FILES = ['setup.cfg', 'tox.ini',]
+initialize(FILES, error=True,)</code></pre>
+
 
 <h2 id="7_1">7、注释</h2>
 <p>和代码相矛盾的注释还不如没有注释。当代码更新时，要优先更改注释，使其保持最新状态。   </p>
@@ -582,12 +582,12 @@
 <p>少用行内注释。   </p>
 <p>行内注释和代码语句写在同一行，至少以两个空格分隔。并且也以一个 # 和一个空格打头。   </p>
 <p>行内注释通常不是必要的，在代码含义很明显时甚至会让人分心。不要有以下写法：   </p>
-<div class="codehilite"><pre><span></span><code><span class="err">x = x + 1                 # Increment x</span>
-</code></pre></div>
+<pre class="codehilite"><code>x = x + 1                 # Increment x</code></pre>
+
 
 <p>但有时却是必要的：   </p>
-<div class="codehilite"><pre><span></span><code><span class="err">x = x + 1                 # Compensate for border</span>
-</code></pre></div>
+<pre class="codehilite"><code>x = x + 1                 # Compensate for border</code></pre>
+
 
 <h3 id="3_2">（3）文档字符串</h3>
 <p>要写出好的文档字符串（又名“docstrings”），请参阅 PEP 257 。   </p>
@@ -599,11 +599,11 @@
 <p>PEP 257 有好文档字符串规约。尤其注意，多行文档字符串结尾处的<code>"""</code>要单独占一行，例如：   </p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="ss">&quot;&quot;&quot;Return a foobang</span>
+<pre class="codehilite"><code>&quot;&quot;&quot;Return a foobang
 
-<span class="ss">Optional plotz says to frobnicate the bizbaz first.</span>
-<span class="ss">&quot;&quot;&quot;</span>
-</code></pre></div>
+Optional plotz says to frobnicate the bizbaz first.
+&quot;&quot;&quot;</code></pre>
+
 
 <ul>
 <li>对于单行文档字符串，可以把末尾的<code>"""</code>放在同一行。   </li>
@@ -636,8 +636,8 @@
 <li>_single_leading_underscore：内部使用的弱标识。例如，<code>from M import *</code>语句并不会导入以下划线开头的对象。   </li>
 <li>single_trailing_underscore_：以单下划线结尾避免和 Python 关键字冲突。例如：   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err">Tkinter.Toplevel(master, class_=&#39;ClassName&#39;)</span>
-</code></pre></div>
+<pre class="codehilite"><code>Tkinter.Toplevel(master, class_='ClassName')</code></pre>
+
 
 <ul>
 <li>__double_leading_underscore：以双下划线开头的风格命名类属性时触发命名修饰（在 FooBar 类内部， __boo 命名会被修饰成_Foo__boo；见以下）。   </li>
@@ -655,11 +655,11 @@
 <p>当接口已有文档说明且主要是被用作调用时，也可以使用函数的命名规约。注意，内建名称有独立的命名规约：大部分内建名称是一个单词（或者组合使用的两个单词），驼峰命名法只适用于异常名和内建常量。   </p>
 <h4 id="_4">类型变量命名</h4>
 <p>类型变量名在 PEP 484 中引入，一般使用驼峰命名法，且要尽量简短：<code>T</code> <code>AnyStr</code> <code>Num</code>。对应用到协变和逆变行为的相应变量名，建议添加后缀<code>_co</code>或<code>_contra</code>。例如：   </p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span>
+<pre class="codehilite"><code>from typing import TypeVar
 
-<span class="n">VT_co</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;VT_co&#39;</span><span class="p">,</span> <span class="n">covariant</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">KT_contra</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;KT_contra&#39;</span><span class="p">,</span> <span class="n">contravariant</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</code></pre></div>
+VT_co = TypeVar('VT_co', covariant=True)
+KT_contra = TypeVar('KT_contra', contravariant=True)</code></pre>
+
 
 <h4 id="_5">异常命名</h4>
 <p>因为异常也是类，所以类命名规约也使用于异常。但是，如果异常实际上是抛出错误时，那么异常名后应该加上"Error"。   </p>
@@ -727,13 +727,13 @@
 <ul>
 <li>建议使用<code>is not</code>运算符，而不是<code>not ... is</code>。虽然两个表达式功能相同，但前者可读性更高，应该被选用。   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 推荐写法：</span>
-<span class="err">if foo is not None:</span>
-</code></pre></div>
+<pre class="codehilite"><code># 推荐写法：
+if foo is not None:</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 不推荐写法：</span>
-<span class="err">if not foo is None:</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 不推荐写法：
+if not foo is None:</code></pre>
+
 
 <ul>
 <li>用富比较实现排序操作的时候，最好实现全部六个比较运算符（<code>__eq__</code>，<code>__ne__</code>，<code>__lt__</code>，<code>__le__</code>，<code>__gt__</code>，<code>__ge__</code>），而不是依靠其他代码来进行特定比较。   </li>
@@ -743,13 +743,13 @@
 <ul>
 <li>要使用定义语句，而不是利用赋值语句为某个标识符绑定<code>lambda</code>表达式。   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 推荐写法：</span>
-<span class="err">def f(x): return 2*x</span>
-</code></pre></div>
+<pre class="codehilite"><code># 推荐写法：
+def f(x): return 2*x</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 不推荐写法：</span>
-<span class="err">f = lambda x: 2*x</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 不推荐写法：
+f = lambda x: 2*x</code></pre>
+
 
 <p>第一种格式意味着生成的函数对象的名称是<code>f</code>而不是通用的<code>&lt;lambda&gt;</code>。通常这对异常追踪和字符串表述是更有用的。使用赋值语句消除了 lambda 表达式唯一优于显式 def 语句的地方，即 lambda 表达式可以嵌入到一个长语句中。   </p>
 <ul>
@@ -769,11 +769,11 @@
 <ul>
 <li>捕获异常时，尽可能使用明确的异常，而不是使用一个空的<code>except:</code>子句。例如：</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
-  <span class="kn">import</span> <span class="nn">platform_specific_module</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-  <span class="n">platform_specific_module</span> <span class="o">=</span> <span class="bp">None</span>
-</code></pre></div>
+<pre class="codehilite"><code>try:
+  import platform_specific_module
+except ImportError:
+  platform_specific_module = None</code></pre>
+
 
 <p>一个空的<code>except:</code>子句将会捕获到 SystemExit和 KeyboardInterrupt 异常，这样就很难使用 Ctrl + C 来中断程序，还会掩盖其他问题。如果你想捕获可以表示程序错误的所有异常，可以使用<code>except Exception:</code>(空<code>except:</code>等同于<code>except BaseException:</code>)。   </p>
 <p>经验告诉我们，在以下两种情况中要限制空<code>except:</code>子句的使用：   </p>
@@ -786,11 +786,11 @@
 <p>当要给异常绑定一个名称时，最好使用 Python 2.6 中加入的明确的名称绑定语法：   </p>
 </li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="k">try</span><span class="o">:</span>
-  <span class="n">process_data</span><span class="o">()</span>
-<span class="n">except</span> <span class="n">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="o">:</span>
-  <span class="n">raise</span> <span class="n">DataProcessingFailedError</span><span class="o">(</span><span class="n">str</span><span class="o">(</span><span class="n">exc</span><span class="o">))</span>
-</code></pre></div>
+<pre class="codehilite"><code>try:
+  process_data()
+except Exception as exc:
+  raise DataProcessingFailedError(str(exc))</code></pre>
+
 
 <p>这是 Python3 中唯一支持的语法，并且避免了与基于逗号的旧式语法产生二义性问题。   </p>
 <ul>
@@ -801,23 +801,23 @@
 <p>另外，对于所有的 try/except 子句，应将 try 子句限制为必要的最小的代码量。再者，可以避免掩盖问题。   </p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">推荐写法</span><span class="err">：</span><span class="w"></span>
-<span class="k">try</span><span class="err">:</span><span class="w"></span>
-<span class="w">  </span><span class="k">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">collection</span><span class="o">[</span><span class="n">key</span><span class="o">]</span><span class="w"></span>
-<span class="ow">except</span><span class="w"> </span><span class="nl">KeyError</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">key_not_found</span><span class="p">(</span><span class="k">key</span><span class="p">)</span><span class="w"></span>
-<span class="k">else</span><span class="err">:</span><span class="w"></span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">handle_value</span><span class="p">(</span><span class="k">value</span><span class="p">)</span><span class="w"></span>
-</code></pre></div>
+<pre class="codehilite"><code># 推荐写法：
+try:
+  value = collection[key]
+except KeyError:
+  return key_not_found(key)
+else:
+  return handle_value(value)</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">不推荐写法</span><span class="err">：</span><span class="w"></span>
-<span class="k">try</span><span class="err">:</span><span class="w"></span>
-<span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="n">Too</span><span class="w"> </span><span class="n">broad</span><span class="err">!</span><span class="w"></span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">handle_value</span><span class="p">(</span><span class="n">collection</span><span class="o">[</span><span class="n">key</span><span class="o">]</span><span class="p">)</span><span class="w"></span>
-<span class="ow">except</span><span class="w"> </span><span class="nl">KeyError</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="n">Will</span><span class="w"> </span><span class="n">also</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="n">KeyError</span><span class="w"> </span><span class="n">raised</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">handle_value</span><span class="p">()</span><span class="w"></span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">key_not_found</span><span class="p">(</span><span class="k">key</span><span class="p">)</span><span class="w"></span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 不推荐写法：
+try:
+  # Too broad!
+  return handle_value(collection[key])
+except KeyError:
+  # Will also catch KeyError raised by handle_value()
+  return key_not_found(key)</code></pre>
+
 
 <ul>
 <li>
@@ -827,43 +827,43 @@
 <p>只要不是获取和释放资源而是执行其他操作，上下文管理器都应该通过独立的函数或方法来调用。   </p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 推荐写法：</span>
-<span class="err">with conn.begin_transaction():</span>
-<span class="err">  do_stuff_in_transaction(conn)</span>
-</code></pre></div>
+<pre class="codehilite"><code># 推荐写法：
+with conn.begin_transaction():
+  do_stuff_in_transaction(conn)</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 不推荐写法</span>
-<span class="err">with conn:</span>
-<span class="err">  do_stuff_in_transaction(conn)</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 不推荐写法
+with conn:
+  do_stuff_in_transaction(conn)</code></pre>
+
 
 <p>第二个例子没有提供任何信息来表明：除了在事物处理之后关闭连接，__enter__ 和__exit__ 方法会做其他事情。在这种情况下，明确是很重要的。   </p>
 <ul>
 <li>坚持使用 return 语句。函数中的所有 return 语句都应该返回一个表达式或者 None。如果有 return 语句返回了一个表达式，那么，没有返回值的语句都要明确地用<code>return None</code>说明。如果可能的话，应该以一条清晰的 return 语句作为函数的结尾。   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="err">推荐写法：</span>
-<span class="n">def</span> <span class="n">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-  <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-      <span class="k">return</span> <span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-  <span class="k">else</span><span class="p">:</span>
-      <span class="k">return</span> <span class="k">None</span>
+<pre class="codehilite"><code># 推荐写法：
+def foo(x):
+  if x &gt;= 0:
+      return math.sqrt(x)
+  else:
+      return None
 
-<span class="n">def</span> <span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-  <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-      <span class="k">return</span> <span class="k">None</span>
-  <span class="k">return</span> <span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-</code></pre></div>
+def bar(x):
+  if x &lt; 0:
+      return None
+  return math.sqrt(x)</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="err">不推荐写法：</span>
-<span class="n">def</span> <span class="n">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-  <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-      <span class="k">return</span> <span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
-<span class="n">def</span> <span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-  <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-      <span class="k">return</span>
-  <span class="k">return</span> <span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-</code></pre></div>
+<pre class="codehilite"><code># 不推荐写法：
+def foo(x):
+  if x &gt;= 0:
+      return math.sqrt(x)
+
+def bar(x):
+  if x &lt; 0:
+      return
+  return math.sqrt(x)</code></pre>
+
 
 <ul>
 <li>用字符串方法代替字符串模块。   </li>
@@ -873,42 +873,42 @@
 <li>使用<code>''.startswith()</code>和<code>''.endswith()</code>而不是字符串切片操作来检查前缀和后缀。   </li>
 </ul>
 <p>startswith() 和 endswith() 更简洁，且不容易出错，例如： </p>
-<div class="codehilite"><pre><span></span><code><span class="err"># 推荐写法：</span>
-<span class="err">if foo.startswith(&#39;bar&#39;):</span>
-</code></pre></div>
+<pre class="codehilite"><code># 推荐写法：
+if foo.startswith('bar'):</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 不推荐写法：</span>
-<span class="err">if foo[:3] == &#39;bar&#39;:</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 不推荐写法：
+if foo[:3] == 'bar':</code></pre>
+
 
 <ul>
 <li>对象类型比较应该用 isinstance() 而不是直接比较。   </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 推荐写法：</span>
-<span class="err">if isinstance(obj, int):</span>
-</code></pre></div>
+<pre class="codehilite"><code># 推荐写法：
+if isinstance(obj, int):</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 不推荐写法：</span>
-<span class="err">if type(obj) is type(1):</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 不推荐写法：
+if type(obj) is type(1):</code></pre>
+
 
 <p>当检查一个对象是否为字符串时，注意它也可能是一个 Unicode 字符串。在 Python2 中，str 和 Unicode 有一个公共的基类即 basestring，所以你可以这样做：   </p>
-<div class="codehilite"><pre><span></span><code><span class="err">if isinstance(obj, basestring):</span>
-</code></pre></div>
+<pre class="codehilite"><code>if isinstance(obj, basestring):</code></pre>
+
 
 <p>注意，在 Python3 中，<code>unicode</code>和<code>basestring</code>已经不存在了（只有<code>str</code>）。并且<code>bytes</code>对象不再是一种字符串（反而是一种整数序列）。   </p>
 <ul>
 <li>对于序列（字符串、列表、元组）来说，空序列的布尔值为 False。  </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 推荐写法：</span>
-<span class="err">if not seq:</span>
-<span class="err">if seq:</span>
-</code></pre></div>
+<pre class="codehilite"><code># 推荐写法：
+if not seq:
+if seq:</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 不推荐写法：</span>
-<span class="err">if len(seq):</span>
-<span class="err">if not len(seq):</span>
-</code></pre></div>
+
+<pre class="codehilite"><code># 不推荐写法：
+if len(seq):
+if not len(seq):</code></pre>
+
 
 <ul>
 <li>
@@ -918,17 +918,17 @@
 <p>不要将布尔量与 True 或 False 用<code>==</code>做比较。  </p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># 推荐写法：</span>
-<span class="err">if greeting:</span>
-</code></pre></div>
+<pre class="codehilite"><code># 推荐写法：
+if greeting:</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 不推荐写法</span>
-<span class="err">if greeting == True:</span>
-</code></pre></div>
 
-<div class="codehilite"><pre><span></span><code><span class="err"># 错误写法：</span>
-<span class="err">if greeting is True:</span>
-</code></pre></div>
+<pre class="codehilite"><code># 不推荐写法
+if greeting == True:</code></pre>
+
+
+<pre class="codehilite"><code># 错误写法：
+if greeting is True:</code></pre>
+
 
 <h3 id="1_5">（1）函数注解</h3>
 <p>随着 PEP 484 被正式接受，函数注解的样式规则正在发生变化。   </p>
@@ -949,8 +949,8 @@
 <p>如果想要尝试函数注解的不同的使用方法，建议在文件顶部加入以下形式的注释：   </p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="err"># type: ignore</span>
-</code></pre></div>
+<pre class="codehilite"><code># type: ignore</code></pre>
+
 
 <p>这会告诉类型检查器忽略所有注解。（在 PEP 484 中可以找到更细致的方法减少类型检查器报错。）   </p>
 <ul>
@@ -977,21 +977,21 @@
 <p>如果赋值号有右值，那么等号两边都应该有一个空格。   </p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="err">推荐写法：</span>
-<span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
+<pre class="codehilite"><code># 推荐写法：
+code: int
 
-<span class="k">class</span> <span class="n">Point</span><span class="p">:</span>
-  <span class="n">coords</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
-  <span class="n">label</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="s1">&#39;&lt;unknown&gt;&#39;</span>
-</code></pre></div>
+class Point:
+  coords: Tuple[int, int]
+  label: str = '&lt;unknown&gt;'</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="err">不推荐写法：</span>
-<span class="n">code</span><span class="p">:</span><span class="nb">int</span>  <span class="o">#</span> <span class="k">No</span> <span class="k">space</span> <span class="k">after</span> <span class="n">colon</span>
-<span class="n">code</span> <span class="p">:</span> <span class="nb">int</span>  <span class="o">#</span> <span class="k">Space</span> <span class="k">before</span> <span class="n">colon</span>
 
-<span class="k">class</span> <span class="n">Test</span><span class="p">:</span>
-  <span class="k">result</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span>  <span class="o">#</span> <span class="k">No</span> <span class="n">spaces</span> <span class="n">around</span> <span class="n">equality</span> <span class="n">sign</span>
-</code></pre></div>
+<pre class="codehilite"><code># 不推荐写法：
+code:int  # No space after colon
+code : int  # Space before colon
+
+class Test:
+  result: int=0  # No spaces around equality sign</code></pre>
+
 
 <ul>
 <li>虽然 PEP 526 已被 Python3.6 所接受，但是对于所有 Python 版本中的存根文件，首选变量注解语法（详见 PEP 484）。   </li>

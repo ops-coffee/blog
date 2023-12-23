@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -44,69 +44,69 @@
 
         <h2 id="cat">cat基础</h2>
 <h3 id="cat_1">查看都有哪些cat指令</h3>
-<div class="codehilite"><pre><span></span><code><span class="k">GET</span> <span class="n">_cat</span>
+<pre class="codehilite"><code>GET _cat
 
-<span class="o">=^</span><span class="p">.</span><span class="o">^=</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">allocation</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">shards</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">shards</span><span class="o">/</span><span class="err">{</span><span class="k">index</span><span class="err">}</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">master</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">nodes</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">tasks</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">indices</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">indices</span><span class="o">/</span><span class="err">{</span><span class="k">index</span><span class="err">}</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">segments</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">segments</span><span class="o">/</span><span class="err">{</span><span class="k">index</span><span class="err">}</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="k">count</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="k">count</span><span class="o">/</span><span class="err">{</span><span class="k">index</span><span class="err">}</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">recovery</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">recovery</span><span class="o">/</span><span class="err">{</span><span class="k">index</span><span class="err">}</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">health</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">pending_tasks</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">aliases</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">aliases</span><span class="o">/</span><span class="err">{</span><span class="k">alias</span><span class="err">}</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">thread_pool</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">thread_pool</span><span class="o">/</span><span class="err">{</span><span class="n">thread_pools</span><span class="err">}</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">plugins</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">fielddata</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">fielddata</span><span class="o">/</span><span class="err">{</span><span class="n">fields</span><span class="err">}</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">nodeattrs</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">repositories</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">snapshots</span><span class="o">/</span><span class="err">{</span><span class="n">repository</span><span class="err">}</span>
-<span class="o">/</span><span class="n">_cat</span><span class="o">/</span><span class="n">templates</span>
-</code></pre></div>
+=^.^=
+/_cat/allocation
+/_cat/shards
+/_cat/shards/{index}
+/_cat/master
+/_cat/nodes
+/_cat/tasks
+/_cat/indices
+/_cat/indices/{index}
+/_cat/segments
+/_cat/segments/{index}
+/_cat/count
+/_cat/count/{index}
+/_cat/recovery
+/_cat/recovery/{index}
+/_cat/health
+/_cat/pending_tasks
+/_cat/aliases
+/_cat/aliases/{alias}
+/_cat/thread_pool
+/_cat/thread_pool/{thread_pools}
+/_cat/plugins
+/_cat/fielddata
+/_cat/fielddata/{fields}
+/_cat/nodeattrs
+/_cat/repositories
+/_cat/snapshots/{repository}
+/_cat/templates</code></pre>
+
 
 <h3 id="verbose">verbose显示指令的详细信息</h3>
-<div class="codehilite"><pre><span></span><code><span class="err">GET _cat/health?v</span>
-</code></pre></div>
+<pre class="codehilite"><code>GET _cat/health?v</code></pre>
+
 
 <h3 id="help">help显示指令返回参数的说明</h3>
-<div class="codehilite"><pre><span></span><code><span class="err">GET _cat/health?help</span>
-</code></pre></div>
+<pre class="codehilite"><code>GET _cat/health?help</code></pre>
+
 
 <h3 id="header">header选择要显示的列</h3>
-<div class="codehilite"><pre><span></span><code><span class="err">GET _cat/count?h=timestamp,count</span>
-</code></pre></div>
+<pre class="codehilite"><code>GET _cat/count?h=timestamp,count</code></pre>
+
 
 <h3 id="formatjsonyamltextsmilecbor">format设置返回内容的格式，支持json,yaml,text,smile,cbor</h3>
-<div class="codehilite"><pre><span></span><code><span class="err">GET _cat/master?format=json&amp;pretty</span>
-</code></pre></div>
+<pre class="codehilite"><code>GET _cat/master?format=json&amp;pretty</code></pre>
+
 
 <h3 id="sort">sort排序</h3>
-<div class="codehilite"><pre><span></span><code><span class="err">GET _cat/indices?s=store.size:desc</span>
-</code></pre></div>
+<pre class="codehilite"><code>GET _cat/indices?s=store.size:desc</code></pre>
+
 
 <h3 id="_1">可以多个参数一起使用，用&amp;连接</h3>
-<div class="codehilite"><pre><span></span><code><span class="err">GET _cat/indices?v&amp;s=store.size:desc</span>
-</code></pre></div>
+<pre class="codehilite"><code>GET _cat/indices?v&amp;s=store.size:desc</code></pre>
+
 
 <h2 id="cat_2">cat指令</h2>
 <h3 id="aliases">aliases</h3>
 <p>显示别名、过滤器、路由信息</p>
-<div class="codehilite"><pre><span></span><code><span class="k">GET</span> <span class="n">_cat</span><span class="o">/</span><span class="n">aliases</span><span class="o">?</span><span class="n">v</span>
+<pre class="codehilite"><code>GET _cat/aliases?v
 
-<span class="k">alias</span> <span class="k">index</span> <span class="n">filter</span> <span class="n">routing</span><span class="p">.</span><span class="k">index</span> <span class="n">routing</span><span class="p">.</span><span class="k">search</span>
-</code></pre></div>
+alias index filter routing.index routing.search</code></pre>
+
 
 <table>
 <thead>
@@ -140,13 +140,13 @@
 </table>
 <h3 id="allocation">allocation</h3>
 <p>显示每个节点分片数量、占用空间</p>
-<div class="codehilite"><pre><span></span><code><span class="k">GET</span> <span class="n">_cat</span><span class="o">/</span><span class="n">allocation</span><span class="o">?</span><span class="n">v</span>
+<pre class="codehilite"><code>GET _cat/allocation?v
 
-<span class="n">shards</span> <span class="n">disk</span><span class="p">.</span><span class="n">indices</span> <span class="n">disk</span><span class="p">.</span><span class="n">used</span> <span class="n">disk</span><span class="p">.</span><span class="n">avail</span> <span class="n">disk</span><span class="p">.</span><span class="n">total</span> <span class="n">disk</span><span class="p">.</span><span class="n">percent</span> <span class="k">host</span>        <span class="n">ip</span>          <span class="n">node</span>
-  <span class="mi">1073</span>        <span class="mi">1</span><span class="p">.</span><span class="mi">2</span><span class="n">tb</span>     <span class="mi">1</span><span class="p">.</span><span class="mi">2</span><span class="n">tb</span>    <span class="mi">787</span><span class="p">.</span><span class="mi">1</span><span class="n">gb</span>      <span class="mi">1</span><span class="p">.</span><span class="mi">9</span><span class="n">tb</span>           <span class="mi">61</span> <span class="mi">10</span><span class="p">.</span><span class="mi">82</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">205</span> <span class="mi">10</span><span class="p">.</span><span class="mi">82</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">205</span> <span class="n">node01</span>
-  <span class="mi">1072</span>        <span class="mi">1</span><span class="p">.</span><span class="mi">2</span><span class="n">tb</span>     <span class="mi">1</span><span class="p">.</span><span class="mi">2</span><span class="n">tb</span>      <span class="mi">1</span><span class="p">.</span><span class="mi">2</span><span class="n">tb</span>      <span class="mi">2</span><span class="p">.</span><span class="mi">4</span><span class="n">tb</span>           <span class="mi">50</span> <span class="mi">10</span><span class="p">.</span><span class="mi">82</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">207</span> <span class="mi">10</span><span class="p">.</span><span class="mi">82</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">207</span> <span class="n">node03</span>
-  <span class="mi">1073</span>        <span class="mi">1</span><span class="p">.</span><span class="mi">2</span><span class="n">tb</span>     <span class="mi">1</span><span class="p">.</span><span class="mi">2</span><span class="n">tb</span>    <span class="mi">787</span><span class="p">.</span><span class="mi">4</span><span class="n">gb</span>      <span class="mi">1</span><span class="p">.</span><span class="mi">9</span><span class="n">tb</span>           <span class="mi">61</span> <span class="mi">10</span><span class="p">.</span><span class="mi">82</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">206</span> <span class="mi">10</span><span class="p">.</span><span class="mi">82</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">206</span> <span class="n">node02</span>
-</code></pre></div>
+shards disk.indices disk.used disk.avail disk.total disk.percent host        ip          node
+  1073        1.2tb     1.2tb    787.1gb      1.9tb           61 10.82.9.205 10.82.9.205 node01
+  1072        1.2tb     1.2tb      1.2tb      2.4tb           50 10.82.9.207 10.82.9.207 node03
+  1073        1.2tb     1.2tb    787.4gb      1.9tb           61 10.82.9.206 10.82.9.206 node02</code></pre>
+
 
 <table>
 <thead>
@@ -196,11 +196,11 @@
 </table>
 <h3 id="count">count</h3>
 <p>显示索引文档数量</p>
-<div class="codehilite"><pre><span></span><code><span class="k">GET</span> <span class="n">_cat</span><span class="o">/</span><span class="k">count</span><span class="o">?</span><span class="n">v</span>
+<pre class="codehilite"><code>GET _cat/count?v
 
-<span class="n">epoch</span>      <span class="k">timestamp</span> <span class="k">count</span>
-<span class="mi">1558059594</span> <span class="mi">10</span><span class="p">:</span><span class="mi">19</span><span class="p">:</span><span class="mi">54</span>  <span class="mi">7829577019</span>
-</code></pre></div>
+epoch      timestamp count
+1558059594 10:19:54  7829577019</code></pre>
+
 
 <table>
 <thead>
@@ -226,11 +226,11 @@
 </table>
 <h3 id="health">health</h3>
 <p>查看集群健康状况</p>
-<div class="codehilite"><pre><span></span><code><span class="k">GET</span> <span class="n">_cat</span><span class="o">/</span><span class="n">health</span><span class="o">?</span><span class="n">v</span>
+<pre class="codehilite"><code>GET _cat/health?v
 
-<span class="n">epoch</span>      <span class="k">timestamp</span> <span class="k">cluster</span>   <span class="n">status</span> <span class="n">node</span><span class="p">.</span><span class="n">total</span> <span class="n">node</span><span class="p">.</span><span class="k">data</span> <span class="n">shards</span>  <span class="n">pri</span> <span class="n">relo</span> <span class="n">init</span> <span class="n">unassign</span> <span class="n">pending_tasks</span> <span class="n">max_task_wait_time</span> <span class="n">active_shards_percent</span>
-<span class="mi">1558059496</span> <span class="mi">10</span><span class="p">:</span><span class="mi">18</span><span class="p">:</span><span class="mi">16</span>  <span class="n">ops_coffee</span> <span class="n">green</span>           <span class="mi">7</span>         <span class="mi">5</span>   <span class="mi">5362</span> <span class="mi">2681</span>    <span class="mi">0</span>    <span class="mi">0</span>        <span class="mi">0</span>             <span class="mi">0</span>                  <span class="o">-</span>                <span class="mi">100</span><span class="p">.</span><span class="mi">0</span><span class="o">%</span>
-</code></pre></div>
+epoch      timestamp cluster   status node.total node.data shards  pri relo init unassign pending_tasks max_task_wait_time active_shards_percent
+1558059496 10:18:16  ops_coffee green           7         5   5362 2681    0    0        0             0                  -                100.0%</code></pre>
+
 
 <table>
 <thead>
@@ -300,12 +300,12 @@
 </table>
 <h3 id="indices">indices</h3>
 <p>查看索引信息</p>
-<div class="codehilite"><pre><span></span><code><span class="k">GET</span> <span class="n">_cat</span><span class="o">/</span><span class="n">indices</span><span class="o">?</span><span class="n">v</span>
+<pre class="codehilite"><code>GET _cat/indices?v
 
-<span class="n">health</span> <span class="n">status</span> <span class="k">index</span>                                <span class="n">uuid</span>                   <span class="n">pri</span> <span class="n">rep</span> <span class="n">docs</span><span class="p">.</span><span class="k">count</span> <span class="n">docs</span><span class="p">.</span><span class="n">deleted</span> <span class="n">store</span><span class="p">.</span><span class="k">size</span> <span class="n">pri</span><span class="p">.</span><span class="n">store</span><span class="p">.</span><span class="k">size</span>
-<span class="n">green</span>  <span class="k">open</span>   <span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="o">-</span><span class="n">slowlog</span><span class="o">-</span><span class="mi">2019</span><span class="p">.</span><span class="mi">04</span><span class="p">.</span><span class="mi">08</span>        <span class="mi">5</span><span class="n">ARM1TgqTy</span><span class="o">-</span><span class="n">fGO8RlJC_Jg</span>   <span class="mi">5</span>   <span class="mi">1</span>       <span class="mi">7743</span>            <span class="mi">0</span>     <span class="mi">57</span><span class="p">.</span><span class="mi">9</span><span class="n">mb</span>         <span class="mi">28</span><span class="p">.</span><span class="mi">9</span><span class="n">mb</span>
-<span class="n">green</span>  <span class="k">open</span>   <span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="o">-</span><span class="n">nginx</span><span class="o">-</span><span class="mi">2019</span><span class="p">.</span><span class="mi">04</span><span class="p">.</span><span class="mi">09</span>          <span class="mi">1</span><span class="n">VdeScHaQda6CF_htRZz_A</span>   <span class="mi">5</span>   <span class="mi">1</span>   <span class="mi">81519329</span>            <span class="mi">0</span>       <span class="mi">52</span><span class="n">gb</span>         <span class="mi">25</span><span class="p">.</span><span class="mi">8</span><span class="n">gb</span>
-</code></pre></div>
+health status index                                uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   ops-coffee-slowlog-2019.04.08        5ARM1TgqTy-fGO8RlJC_Jg   5   1       7743            0     57.9mb         28.9mb
+green  open   ops-coffee-nginx-2019.04.09          1VdeScHaQda6CF_htRZz_A   5   1   81519329            0       52gb         25.8gb</code></pre>
+
 
 <table>
 <thead>
@@ -359,11 +359,11 @@
 </table>
 <h3 id="master">master</h3>
 <p>显示master节点信息</p>
-<div class="codehilite"><pre><span></span><code><span class="k">GET</span> <span class="n">_cat</span><span class="o">/</span><span class="n">master</span><span class="o">?</span><span class="n">v</span>
+<pre class="codehilite"><code>GET _cat/master?v
 
-<span class="n">id</span>                     <span class="k">host</span>        <span class="n">ip</span>          <span class="n">node</span>
-<span class="n">dkof1ouuT96BTQOR1xyDhQ</span> <span class="mi">10</span><span class="p">.</span><span class="mi">82</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">205</span> <span class="mi">10</span><span class="p">.</span><span class="mi">82</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">205</span> <span class="n">node01</span>
-</code></pre></div>
+id                     host        ip          node
+dkof1ouuT96BTQOR1xyDhQ 10.82.9.205 10.82.9.205 node01</code></pre>
+
 
 <table>
 <thead>
@@ -393,10 +393,10 @@
 </table>
 <h3 id="nodeattrs">nodeattrs</h3>
 <p>显示node节点属性</p>
-<div class="codehilite"><pre><span></span><code><span class="k">GET</span> <span class="n">_cat</span><span class="o">/</span><span class="n">nodeattrs</span><span class="o">?</span><span class="n">v</span>
+<pre class="codehilite"><code>GET _cat/nodeattrs?v
 
-<span class="n">node</span> <span class="k">host</span> <span class="n">ip</span> <span class="n">attr</span> <span class="n">value</span>
-</code></pre></div>
+node host ip attr value</code></pre>
+
 
 <table>
 <thead>
@@ -430,14 +430,14 @@
 </table>
 <h3 id="nodes">nodes</h3>
 <p>显示node节点信息</p>
-<div class="codehilite"><pre><span></span><code><span class="n">GET</span> <span class="n">_cat</span><span class="o">/</span><span class="n">nodes</span><span class="err">?</span><span class="n">v</span>
+<pre class="codehilite"><code>GET _cat/nodes?v
 
-<span class="n">ip</span>          <span class="n">heap</span><span class="o">.</span><span class="n">percent</span> <span class="n">ram</span><span class="o">.</span><span class="n">percent</span> <span class="n">cpu</span> <span class="n">load_1m</span> <span class="n">load_5m</span> <span class="n">load_15m</span> <span class="n">node</span><span class="o">.</span><span class="n">role</span> <span class="k">master</span> <span class="n">name</span>
-<span class="mf">10.82</span><span class="o">.</span><span class="mf">9.205</span>           <span class="mi">50</span>          <span class="mi">99</span>   <span class="mi">6</span>    <span class="mf">2.32</span>    <span class="mf">2.82</span>     <span class="mf">3.37</span> <span class="n">mdi</span>       <span class="o">*</span>      <span class="n">node01</span>
-<span class="mf">10.82</span><span class="o">.</span><span class="mf">9.206</span>           <span class="mi">71</span>          <span class="mi">99</span>   <span class="mi">6</span>    <span class="mf">3.24</span>    <span class="mf">4.02</span>     <span class="mf">4.35</span> <span class="n">mdi</span>       <span class="o">-</span>      <span class="n">node02</span>
-<span class="mf">10.82</span><span class="o">.</span><span class="mf">9.208</span>           <span class="mi">25</span>          <span class="mi">94</span>   <span class="mi">3</span>    <span class="mf">0.40</span>    <span class="mf">0.42</span>     <span class="mf">0.36</span> <span class="n">i</span>         <span class="o">-</span>      <span class="n">node04</span>
-<span class="mf">10.82</span><span class="o">.</span><span class="mf">9.132</span>           <span class="mi">70</span>          <span class="mi">99</span>   <span class="mi">7</span>    <span class="mf">1.51</span>    <span class="mf">2.28</span>     <span class="mf">2.57</span> <span class="n">di</span>        <span class="o">-</span>      <span class="n">node11</span>
-</code></pre></div>
+ip          heap.percent ram.percent cpu load_1m load_5m load_15m node.role master name
+10.82.9.205           50          99   6    2.32    2.82     3.37 mdi       *      node01
+10.82.9.206           71          99   6    3.24    4.02     4.35 mdi       -      node02
+10.82.9.208           25          94   3    0.40    0.42     0.36 i         -      node04
+10.82.9.132           70          99   7    1.51    2.28     2.57 di        -      node11</code></pre>
+
 
 <table>
 <thead>
@@ -491,10 +491,10 @@
 </table>
 <h3 id="pending_tasks">pending_tasks</h3>
 <p>显示正在等待的任务</p>
-<div class="codehilite"><pre><span></span><code><span class="k">GET</span> <span class="n">_cat</span><span class="o">/</span><span class="n">pending_tasks</span><span class="o">?</span><span class="n">v</span>
+<pre class="codehilite"><code>GET _cat/pending_tasks?v
 
-<span class="n">insertOrder</span> <span class="n">timeInQueue</span> <span class="n">priority</span> <span class="k">source</span>
-</code></pre></div>
+insertOrder timeInQueue priority source</code></pre>
+
 
 <table>
 <thead>
@@ -524,10 +524,10 @@
 </table>
 <h3 id="plugins">plugins</h3>
 <p>显示每个运行插件节点的视图</p>
-<div class="codehilite"><pre><span></span><code><span class="k">GET</span> <span class="n">_cat</span><span class="o">/</span><span class="n">plugins</span><span class="o">?</span><span class="n">v</span>
+<pre class="codehilite"><code>GET _cat/plugins?v
 
-<span class="n">name</span> <span class="n">component</span> <span class="k">version</span>
-</code></pre></div>
+name component version</code></pre>
+
 
 <table>
 <thead>
@@ -553,11 +553,11 @@
 </table>
 <h3 id="recovery">recovery</h3>
 <p>显示正在进行和先前完成的索引碎片恢复的视图</p>
-<div class="codehilite"><pre><span></span><code><span class="k">GET</span> <span class="n">_cat</span><span class="o">/</span><span class="n">recovery</span><span class="o">?</span><span class="n">v</span>
+<pre class="codehilite"><code>GET _cat/recovery?v
 
-<span class="k">index</span>                                <span class="n">shard</span> <span class="k">time</span>  <span class="k">type</span>           <span class="n">stage</span> <span class="n">source_host</span> <span class="n">source_node</span> <span class="n">target_host</span> <span class="n">target_node</span> <span class="n">repository</span> <span class="n">snapshot</span> <span class="n">files</span> <span class="n">files_recovered</span> <span class="n">files_percent</span> <span class="n">files_total</span> <span class="n">bytes</span>      <span class="n">bytes_recovered</span> <span class="n">bytes_percent</span> <span class="n">bytes_total</span> <span class="n">translog_ops</span> <span class="n">translog_ops_recovered</span> <span class="n">translog_ops_percent</span>
-<span class="n">filebeat</span><span class="o">-</span><span class="n">docker</span><span class="o">-</span><span class="n">pay</span><span class="o">-</span><span class="mi">2019</span><span class="p">.</span><span class="mi">04</span><span class="p">.</span><span class="mi">18</span>       <span class="mi">0</span>     <span class="mi">209</span><span class="n">ms</span> <span class="n">peer</span>           <span class="n">done</span>  <span class="mi">10</span><span class="p">.</span><span class="mi">82</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">132</span> <span class="n">node11</span>      <span class="mi">10</span><span class="p">.</span><span class="mi">82</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">207</span> <span class="n">node03</span>      <span class="n">n</span><span class="o">/</span><span class="n">a</span>        <span class="n">n</span><span class="o">/</span><span class="n">a</span>      <span class="mi">0</span>     <span class="mi">0</span>               <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="o">%</span>          <span class="mi">0</span>           <span class="mi">0</span>          <span class="mi">0</span>               <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="o">%</span>          <span class="mi">0</span>           <span class="mi">0</span>            <span class="mi">0</span>                      <span class="mi">100</span><span class="p">.</span><span class="mi">0</span><span class="o">%</span>
-</code></pre></div>
+index                                shard time  type           stage source_host source_node target_host target_node repository snapshot files files_recovered files_percent files_total bytes      bytes_recovered bytes_percent bytes_total translog_ops translog_ops_recovered translog_ops_percent
+filebeat-docker-pay-2019.04.18       0     209ms peer           done  10.82.9.132 node11      10.82.9.207 node03      n/a        n/a      0     0               0.0%          0           0          0               0.0%          0           0            0                      100.0%</code></pre>
+
 
 <table>
 <thead>
@@ -659,11 +659,11 @@
 </table>
 <h3 id="segments">segments</h3>
 <p>显示碎片中的分段信息</p>
-<div class="codehilite"><pre><span></span><code><span class="k">GET</span> <span class="n">_cat</span><span class="o">/</span><span class="n">segments</span><span class="o">?</span><span class="n">v</span>
+<pre class="codehilite"><code>GET _cat/segments?v
 
-<span class="k">index</span>                                <span class="n">shard</span> <span class="n">prirep</span> <span class="n">ip</span>          <span class="n">segment</span> <span class="n">generation</span> <span class="n">docs</span><span class="p">.</span><span class="k">count</span> <span class="n">docs</span><span class="p">.</span><span class="n">deleted</span>     <span class="k">size</span> <span class="k">size</span><span class="p">.</span><span class="n">memory</span> <span class="k">committed</span> <span class="n">searchable</span> <span class="k">version</span> <span class="n">compound</span>
-<span class="n">filebeat</span><span class="o">-</span><span class="n">docker</span><span class="o">-</span><span class="n">pay</span><span class="o">-</span><span class="mi">2019</span><span class="p">.</span><span class="mi">04</span><span class="p">.</span><span class="mi">18</span>       <span class="mi">0</span>     <span class="n">r</span>      <span class="mi">10</span><span class="p">.</span><span class="mi">82</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">207</span> <span class="n">_8cu</span>         <span class="mi">10830</span>      <span class="mi">19470</span>            <span class="mi">0</span>   <span class="mi">17</span><span class="p">.</span><span class="mi">7</span><span class="n">mb</span>       <span class="mi">43546</span> <span class="k">true</span>      <span class="k">true</span>       <span class="mi">7</span><span class="p">.</span><span class="mi">2</span><span class="p">.</span><span class="mi">1</span>   <span class="k">false</span>
-</code></pre></div>
+index                                shard prirep ip          segment generation docs.count docs.deleted     size size.memory committed searchable version compound
+filebeat-docker-pay-2019.04.18       0     r      10.82.9.207 _8cu         10830      19470            0   17.7mb       43546 true      true       7.2.1   false</code></pre>
+
 
 <table>
 <thead>
@@ -732,12 +732,12 @@
 </tbody>
 </table>
 <h3 id="shards">shards</h3>
-<div class="codehilite"><pre><span></span><code><span class="k">GET</span> <span class="n">_cat</span><span class="o">/</span><span class="n">shards</span><span class="o">?</span><span class="n">v</span>
+<pre class="codehilite"><code>GET _cat/shards?v
 
-<span class="k">index</span>                                <span class="n">shard</span> <span class="n">prirep</span> <span class="k">state</span>       <span class="n">docs</span>    <span class="n">store</span> <span class="n">ip</span>          <span class="n">node</span>
-<span class="n">mysql</span><span class="o">-</span><span class="n">slowlog</span><span class="o">-</span><span class="mi">2019</span><span class="p">.</span><span class="mi">03</span><span class="p">.</span><span class="mi">14</span>             <span class="mi">4</span>     <span class="n">r</span>      <span class="n">STARTED</span>     <span class="mi">1381</span>    <span class="mi">4</span><span class="p">.</span><span class="mi">6</span><span class="n">mb</span> <span class="mi">10</span><span class="p">.</span><span class="mi">82</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">205</span> <span class="n">node01</span>
-<span class="n">mysql</span><span class="o">-</span><span class="n">slowlog</span><span class="o">-</span><span class="mi">2019</span><span class="p">.</span><span class="mi">03</span><span class="p">.</span><span class="mi">14</span>             <span class="mi">4</span>     <span class="n">p</span>      <span class="n">STARTED</span>     <span class="mi">1381</span>    <span class="mi">4</span><span class="p">.</span><span class="mi">5</span><span class="n">mb</span> <span class="mi">10</span><span class="p">.</span><span class="mi">82</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">206</span> <span class="n">node02</span>
-</code></pre></div>
+index                                shard prirep state       docs    store ip          node
+mysql-slowlog-2019.03.14             4     r      STARTED     1381    4.6mb 10.82.9.205 node01
+mysql-slowlog-2019.03.14             4     p      STARTED     1381    4.5mb 10.82.9.206 node02</code></pre>
+
 
 <table>
 <thead>
@@ -783,12 +783,12 @@
 </table>
 <h3 id="thread_pool">thread_pool</h3>
 <p>查看线程池信息</p>
-<div class="codehilite"><pre><span></span><code><span class="k">GET</span> <span class="n">_cat</span><span class="o">/</span><span class="n">thread_pool</span><span class="o">?</span><span class="n">v</span>
+<pre class="codehilite"><code>GET _cat/thread_pool?v
 
-<span class="n">node_name</span> <span class="n">name</span>                <span class="n">active</span> <span class="n">queue</span> <span class="n">rejected</span>
-<span class="n">node10</span>    <span class="n">bulk</span>                     <span class="mi">1</span>     <span class="mi">0</span>        <span class="mi">4</span>
-<span class="n">node10</span>    <span class="n">fetch_shard_started</span>      <span class="mi">0</span>     <span class="mi">0</span>        <span class="mi">0</span>
-</code></pre></div>
+node_name name                active queue rejected
+node10    bulk                     1     0        4
+node10    fetch_shard_started      0     0        0</code></pre>
+
 
 <table>
 <thead>

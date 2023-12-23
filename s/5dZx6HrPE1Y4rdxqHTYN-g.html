@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -49,7 +49,7 @@
 <h2 id="_1">数据加载</h2>
 <p>上篇文章中的所有数据都是直接渲染的html中的table数据，datatables还支持其他几种数据源，以方便实现更灵活的控制</p>
 <h3 id="_2">从数组中获取</h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;table</span> <span class="na">id=</span><span class="s">&quot;myTable-x&quot;</span> <span class="na">class=</span><span class="s">&quot;display&quot;</span> <span class="na">style=</span><span class="s">&quot;width:100%&quot;</span><span class="nt">&gt;&lt;/table&gt;</span>
+<pre class="codehilite"><code>&lt;table id=&quot;myTable-x&quot; class=&quot;display&quot; style=&quot;width:100%&quot;&gt;&lt;/table&gt;
 
 $(document).ready(function() {
     var dataSet = [
@@ -57,7 +57,7 @@ $(document).ready(function() {
       [&quot;9&quot;,&quot;https://demo.ops-coffee.cn&quot;, &quot;2019-08-06&quot;],
     ];
 
-    $(&#39;#myTable-x&#39;).DataTable({
+    $('#myTable-x').DataTable({
         &quot;data&quot;: dataSet,
         &quot;columns&quot;: [
           { title: &quot;Id&quot; },
@@ -65,29 +65,29 @@ $(document).ready(function() {
           { title: &quot;Date&quot; },
         ]
     })
-});
-</code></pre></div>
+});</code></pre>
+
 
 <p><strong>data：</strong> 指定数组</p>
 <p><strong>columns：</strong> 配置每一列的title</p>
 <p>注意：从数组中获取数据一定要有表头，如果没有则可能会报下边的错：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">Uncaught TypeError: Cannot read property &#39;aDataSort&#39; of undefined</span>
-</code></pre></div>
+<pre class="codehilite"><code>Uncaught TypeError: Cannot read property 'aDataSort' of undefined</code></pre>
+
 
 <p>解决方法就是datatables添加<code>columns</code>配置，或者写上table的thead</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;table</span> <span class="na">id=</span><span class="s">&quot;myTable-x&quot;</span> <span class="na">class=</span><span class="s">&quot;display&quot;</span> <span class="na">style=</span><span class="s">&quot;width:100%&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;thead&gt;</span>
-        <span class="nt">&lt;tr&gt;</span>
-            <span class="nt">&lt;th&gt;</span>ID<span class="nt">&lt;/th&gt;</span>
-            <span class="nt">&lt;th&gt;</span>Site<span class="nt">&lt;/th&gt;</span>
-            <span class="nt">&lt;th&gt;</span>Date<span class="nt">&lt;/th&gt;</span>
-        <span class="nt">&lt;/tr&gt;</span>
-    <span class="nt">&lt;/thead&gt;</span>
-<span class="nt">&lt;/table&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&lt;table id=&quot;myTable-x&quot; class=&quot;display&quot; style=&quot;width:100%&quot;&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;ID&lt;/th&gt;
+            &lt;th&gt;Site&lt;/th&gt;
+            &lt;th&gt;Date&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;</code></pre>
+
 
 <h3 id="_3">从对象中获取</h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;table</span> <span class="na">id=</span><span class="s">&quot;myTable-x&quot;</span> <span class="na">class=</span><span class="s">&quot;display&quot;</span> <span class="na">style=</span><span class="s">&quot;width:100%&quot;</span><span class="nt">&gt;&lt;/table&gt;</span>
+<pre class="codehilite"><code>&lt;table id=&quot;myTable-x&quot; class=&quot;display&quot; style=&quot;width:100%&quot;&gt;&lt;/table&gt;
 
 $(document).ready(function() {
     var dataSet = [
@@ -95,7 +95,7 @@ $(document).ready(function() {
       {&quot;Id&quot;:&quot;9&quot;,&quot;Site&quot;:&quot;https://demo.ops-coffee.cn&quot;,&quot;Date&quot;:&quot;2019-08-06&quot;},
     ];
 
-    $(&#39;#myTable-x&#39;).DataTable({
+    $('#myTable-x').DataTable({
         &quot;data&quot;: dataSet,
         &quot;columns&quot;: [
           {&quot;data&quot;: &quot;Id&quot;, &quot;title&quot;: &quot;Id&quot;},
@@ -103,62 +103,62 @@ $(document).ready(function() {
           {&quot;data&quot;: &quot;Date&quot;, &quot;title&quot;: &quot;Date&quot;},
         ]
     })
-});
-</code></pre></div>
+});</code></pre>
+
 
 <p>使用对象数组，一定要配置columns的<code>data</code>，告诉DataTables每列对应的属性，<code>title</code>配置可选，添加title会给表格添加表头</p>
 <h3 id="_4">从实例中获取</h3>
-<div class="codehilite"><pre><span></span><code><span class="err">$</span><span class="p">(</span><span class="n">document</span><span class="p">).</span><span class="n">ready</span><span class="p">(</span><span class="k">function</span><span class="p">()</span> <span class="err">{</span>
-    <span class="k">function</span> <span class="n">dataSet</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="nb">date</span><span class="p">)</span> <span class="err">{</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">site</span> <span class="o">=</span> <span class="n">site</span><span class="p">;</span>
-      <span class="n">this</span><span class="p">.</span><span class="nb">date</span> <span class="o">=</span> <span class="nb">date</span><span class="p">;</span>
-    <span class="err">}</span><span class="p">;</span>
+<pre class="codehilite"><code>$(document).ready(function() {
+    function dataSet(id, site, date) {
+      this.id = id;
+      this.site = site;
+      this.date = date;
+    };
 
-    <span class="err">$</span><span class="p">(</span><span class="s1">&#39;#myTable-x&#39;</span><span class="p">).</span><span class="n">dataTable</span><span class="p">(</span><span class="err">{</span>
-      <span class="k">data</span><span class="p">:</span> <span class="p">[</span>
-        <span class="k">new</span> <span class="n">dataSet</span><span class="p">(</span><span class="ss">&quot;3&quot;</span><span class="p">,</span> <span class="ss">&quot;https://ops-coffee.cn&quot;</span><span class="p">,</span> <span class="ss">&quot;2018-07-03&quot;</span><span class="p">),</span>
-        <span class="k">new</span> <span class="n">dataSet</span><span class="p">(</span><span class="ss">&quot;9&quot;</span><span class="p">,</span> <span class="ss">&quot;https://demo.ops-coffee.cn&quot;</span><span class="p">,</span> <span class="ss">&quot;2019-08-06&quot;</span><span class="p">),</span>
-      <span class="p">],</span>
-      <span class="n">columns</span><span class="p">:</span> <span class="p">[</span>
-          <span class="err">{</span><span class="ss">&quot;data&quot;</span><span class="p">:</span> <span class="ss">&quot;id&quot;</span><span class="p">,</span> <span class="ss">&quot;title&quot;</span><span class="p">:</span><span class="ss">&quot;Id&quot;</span><span class="err">}</span><span class="p">,</span>
-          <span class="err">{</span><span class="ss">&quot;data&quot;</span><span class="p">:</span> <span class="ss">&quot;site&quot;</span><span class="p">,</span> <span class="ss">&quot;title&quot;</span><span class="p">:</span><span class="ss">&quot;Site&quot;</span><span class="err">}</span><span class="p">,</span>
-          <span class="err">{</span><span class="ss">&quot;data&quot;</span><span class="p">:</span> <span class="ss">&quot;date&quot;</span><span class="p">,</span> <span class="ss">&quot;title&quot;</span><span class="p">:</span><span class="ss">&quot;Date&quot;</span><span class="err">}</span>
-      <span class="p">]</span>
-    <span class="err">}</span><span class="p">);</span>
-<span class="err">}</span><span class="p">);</span>
-</code></pre></div>
+    $('#myTable-x').dataTable({
+      data: [
+        new dataSet(&quot;3&quot;, &quot;https://ops-coffee.cn&quot;, &quot;2018-07-03&quot;),
+        new dataSet(&quot;9&quot;, &quot;https://demo.ops-coffee.cn&quot;, &quot;2019-08-06&quot;),
+      ],
+      columns: [
+          {&quot;data&quot;: &quot;id&quot;, &quot;title&quot;:&quot;Id&quot;},
+          {&quot;data&quot;: &quot;site&quot;, &quot;title&quot;:&quot;Site&quot;},
+          {&quot;data&quot;: &quot;date&quot;, &quot;title&quot;:&quot;Date&quot;}
+      ]
+    });
+});</code></pre>
+
 
 <h3 id="ajax">Ajax异步获取</h3>
 <p>Datatables还支持Ajax的方式异步加载数据，简单的方式是直接配置一个url地址即可</p>
-<div class="codehilite"><pre><span></span><code><span class="err">$(document).ready(function() {</span>
-<span class="err">    $(&#39;#myTable-x&#39;).dataTable({</span>
-<span class="err">        &quot;ajax&quot;: &#39;sdata.json&#39;</span>
-<span class="err">    });</span>
-<span class="err">});</span>
-</code></pre></div>
+<pre class="codehilite"><code>$(document).ready(function() {
+    $('#myTable-x').dataTable({
+        &quot;ajax&quot;: 'sdata.json'
+    });
+});</code></pre>
+
 
 <p>ajax接收的数据可以是数组或者对象，注意<code>columns</code>的配置，可以对应参考前文两种格式数据的处理</p>
 <p><img alt="" loading="lazy" src="/static/images/20190807.datatables02.png" /></p>
 <h2 id="_5">结果数据处理</h2>
 <p>上边的table可以发现有个site列的内容是一个网址，如果我们想让网址能够点击该如何实现呢？可以利用<code>columns</code>的<code>render</code>属性对展示结果进行更改</p>
-<div class="codehilite"><pre><span></span><code>$(document).ready(function() {
-    $(&#39;#myTable-x&#39;).dataTable({
-        &quot;ajax&quot;: &#39;sdata.json&#39;,
+<pre class="codehilite"><code>$(document).ready(function() {
+    $('#myTable-x').dataTable({
+        &quot;ajax&quot;: 'sdata.json',
         &quot;columns&quot;: [
             {&quot;data&quot;: &quot;id&quot;, &quot;title&quot;:&quot;Id&quot;},
             {
                 &quot;data&quot;: &quot;site&quot;, 
                 &quot;title&quot;:&quot;Site&quot;,
                 &quot;render&quot;: function (data, type, row) {
-                  return &#39;<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&#39;+data+&#39;</span> <span class="na">target=</span><span class="s">&quot;_blank&quot;</span><span class="nt">&gt;</span>&#39;+data+&#39;<span class="nt">&lt;/a&gt;</span>&#39;
+                  return '&lt;a href='+data+' target=&quot;_blank&quot;&gt;'+data+'&lt;/a&gt;'
                 }
             },
             {&quot;data&quot;: &quot;date&quot;, &quot;title&quot;:&quot;Date&quot;}
         ]
     });
-});
-</code></pre></div>
+});</code></pre>
+
 
 <p>render后边跟了个函数，每当数据表需要获取列中某个单元格的数据时<code>render</code>函数都会执行，且函数可能会被执行多次，函数默认接收三个参数，意思分别是：</p>
 <p><strong>data：</strong> 单元格的具体数据，例如<code>https://ops-coffee.cn</code></p>
@@ -166,13 +166,13 @@ $(document).ready(function() {
 <p><strong>row：</strong> 这一行的完整数据源，如果像Demo示例传了对象数据，那么可以通过<code>row.site</code>获取到这一行site列的数据</p>
 <p>拿到参数进行一系列的处理后可以通过<code>return</code>返回最终想要展示的内容</p>
 <p>当然也可以通过<code>columns</code>在表格末尾添加一列以实现编辑、删除的按钮展示</p>
-<div class="codehilite"><pre><span></span><code>&quot;columns&quot;: [
+<pre class="codehilite"><code>&quot;columns&quot;: [
     {&quot;data&quot;: &quot;id&quot;, &quot;title&quot;:&quot;Id&quot;},
     {
         &quot;data&quot;: &quot;site&quot;, 
         &quot;title&quot;:&quot;Site&quot;,
         &quot;render&quot;: function (data, type, row) {
-          return &#39;<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&#39;+data+&#39;</span> <span class="na">target=</span><span class="s">&quot;_blank&quot;</span><span class="nt">&gt;</span>&#39;+data+&#39;<span class="nt">&lt;/a&gt;</span>&#39;
+          return '&lt;a href='+data+' target=&quot;_blank&quot;&gt;'+data+'&lt;/a&gt;'
         }
     },  
     {&quot;data&quot;: &quot;date&quot;, &quot;title&quot;:&quot;Date&quot;},
@@ -180,12 +180,12 @@ $(document).ready(function() {
       &quot;data&quot;: &quot;id&quot;,
       &quot;title&quot;: &quot;操作&quot;,
       &quot;render&quot;: function (data, type, row) {
-        return &#39;<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#update/&#39;+row.id+&#39;/&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-warning btn-sm&quot;</span><span class="nt">&gt;</span>编辑<span class="nt">&lt;/a&gt;</span> &#39; +
-               &#39;<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#delete/&#39;+row.id+&#39;/&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-danger btn-sm&quot;</span><span class="nt">&gt;</span>删除<span class="nt">&lt;/a&gt;</span>&#39;
+        return '&lt;a href=&quot;#update/'+row.id+'/&quot; class=&quot;btn btn-warning btn-sm&quot;&gt;编辑&lt;/a&gt; ' +
+               '&lt;a href=&quot;#delete/'+row.id+'/&quot; class=&quot;btn btn-danger btn-sm&quot;&gt;删除&lt;/a&gt;'
       } 
     }   
-]
-</code></pre></div>
+]</code></pre>
+
 
 <p>最终呈现结果如下图</p>
 <p><img alt="" loading="lazy" src="/static/images/20190807.datatables03.png" /></p>
@@ -199,10 +199,10 @@ $(document).ready(function() {
 <p><strong>p：</strong> pagination，代表右下角的分页控件</p>
 <p><strong>r：</strong> processing，代表中间数据加载等待提示控件</p>
 <p>这些控件在datatables里可以通过配置<code>dom</code>来控制他们的显示位置，以及是否显示，默认的显示顺序是<code>lfrtip</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err">$(&#39;#myTable-x&#39;).dataTable({</span>
-<span class="err">    &quot;dom&quot;: &#39;lfrtip&#39;</span>
-<span class="err">})</span>
-</code></pre></div>
+<pre class="codehilite"><code>$('#myTable-x').dataTable({
+    &quot;dom&quot;: 'lfrtip'
+})</code></pre>
+
 
 <p>你如果不想显示某个控件，可以通过去掉<code>dom</code>配置项里对应的字母实现，同时Datatables支持四个自定义的标签，通过这四个标签可以方便的来修改DOM的展示</p>
 <p><code>&lt; &gt;</code> 尖括号就代表html里的div</p>
@@ -210,87 +210,87 @@ $(document).ready(function() {
 <p><code>&lt;"#id"&gt;</code> 代表了添加了id的div</p>
 <p><code>&lt;"#id.class"&gt;</code> 代表添加了id和class的div</p>
 <p>我们想把右上角的每页显示条数控件换成添加按钮的话可以这样写</p>
-<div class="codehilite"><pre><span></span><code>$(&#39;#myTable-x&#39;).dataTable({
-    &quot;dom&quot;: &#39;<span class="err">&lt;</span>&quot;#add-btn.toolbar&quot;&gt;frtip&#39;
+<pre class="codehilite"><code>$('#myTable-x').dataTable({
+    &quot;dom&quot;: '&lt;&quot;#add-btn.toolbar&quot;&gt;frtip'
 })
 
 $(&quot;#add-btn.toolbar&quot;).html(
-  &#39;<span class="nt">&lt;button</span> <span class="na">href=</span><span class="s">&quot;#add&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-success btn-sm&quot;</span><span class="nt">&gt;</span> + 添加<span class="nt">&lt;/button&gt;</span>&#39;
-)
-</code></pre></div>
+  '&lt;button href=&quot;#add&quot; class=&quot;btn btn-success btn-sm&quot;&gt; + 添加&lt;/button&gt;'
+)</code></pre>
+
 
 <p>遇到样式问题，需要添加css</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;style</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span>
+<pre class="codehilite"><code>&lt;style type=&quot;text/css&quot;&gt;
   .toolbar {float:left}
-<span class="nt">&lt;/style&gt;</span>
-</code></pre></div>
+&lt;/style&gt;</code></pre>
+
 
 <p>这样就完美实现了</p>
 <p><img alt="" loading="lazy" src="/static/images/20190807.datatables04.png" /></p>
 <h2 id="_6">服务器端处理</h2>
 <p>Datatables支持使用服务端进行数据处理，当开启服务端数据处理后，Datatables将在页面执行分页、排序、搜索等操作时向服务端发出Ajax请求，Ajax请求会传递许多变量给服务端，服务端接收到请求后根据变量的值对数据进行处理，处理完成按照固定的格式返回给前端页面，页面对返回的数据进行渲染提供给用户查看</p>
 <p>开启服务器模式只需要两个设置项<code>serverSide</code>和<code>ajax</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err">$(&#39;#myTable-x&#39;).dataTable({</span>
-<span class="err">    &quot;serverSide&quot;: true,</span>
-<span class="err">    &quot;processing&quot;: true,</span>
-<span class="err">    &quot;ajax&quot;: &#39;/api/site/data&#39;</span>
-<span class="err">})</span>
-</code></pre></div>
+<pre class="codehilite"><code>$('#myTable-x').dataTable({
+    &quot;serverSide&quot;: true,
+    &quot;processing&quot;: true,
+    &quot;ajax&quot;: '/api/site/data'
+})</code></pre>
+
 
 <p><strong>serverSide：</strong> 为true时表示开启服务端处理模式</p>
 <p><strong>processing：</strong> 为true时会开启数据处理中的提示，非必须</p>
 <p><strong>ajax：</strong> 指定服务器端的地址，可以像上边一样是个字符串，也可以像jQuery.ajax一样作为一个对象使用，例如我想传递额外的参数（datatables默认会给后端传递许多的参数，下边有讲）给后端服务器的话，可以这样用</p>
-<div class="codehilite"><pre><span></span><code><span class="err">$(&#39;#myTable-x&#39;).dataTable({</span>
-<span class="err">    &quot;serverSide&quot;: true,</span>
-<span class="err">    &quot;processing&quot;: true,</span>
-<span class="err">    &quot;ajax&quot;: {</span>
-<span class="err">        &quot;url&quot;: &quot;/api/site/data&quot;,</span>
-<span class="err">        &quot;data&quot;: function (d) {</span>
-<span class="err">            d.type = &#39;ops-coffee&#39;;</span>
-<span class="err">        }</span>
-<span class="err">    }</span>
-<span class="err">})</span>
-</code></pre></div>
+<pre class="codehilite"><code>$('#myTable-x').dataTable({
+    &quot;serverSide&quot;: true,
+    &quot;processing&quot;: true,
+    &quot;ajax&quot;: {
+        &quot;url&quot;: &quot;/api/site/data&quot;,
+        &quot;data&quot;: function (d) {
+            d.type = 'ops-coffee';
+        }
+    }
+})</code></pre>
+
 
 <p><strong>data：</strong> 可以在发送请求给后端时额外增加<code>type=ops-coffee</code>的参数</p>
 <h3 id="_7">发送到服务器端的参数</h3>
 <p>当开启服务端数据处理后，默认会给服务端传递许多参数，大概如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="n">draw</span><span class="err">：</span><span class="n">绘制计数器</span><span class="err">，</span><span class="n">主要用来确保Ajax从服务器端接收到的数据是对应同一次请求的</span><span class="w"></span>
-<span class="k">start</span><span class="err">：</span><span class="n">第一条数据的起始位置</span><span class="w"></span>
-<span class="n">length</span><span class="err">：</span><span class="n">每页显示的条数</span><span class="w"></span>
-<span class="k">search</span><span class="o">[</span><span class="n">value</span><span class="o">]</span><span class="err">：</span><span class="n">全局的检索关键字</span><span class="w"></span>
-<span class="k">order</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">column</span><span class="o">]</span><span class="err">：</span><span class="n">告诉服务器哪些列是需要排序的</span><span class="err">，</span><span class="n">i为排序列的序号</span><span class="err">，</span><span class="n">下边的i相同含义</span><span class="err">，</span><span class="n">注意i是从0开始的</span><span class="w"></span>
-<span class="k">order</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">dir</span><span class="o">]</span><span class="err">：</span><span class="n">告诉服务器排序的方式</span><span class="ss">&quot;desc&quot;</span><span class="p">,</span><span class="ss">&quot;asc&quot;</span><span class="w"></span>
-<span class="n">columns</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">data</span><span class="o">]</span><span class="err">：</span><span class="n">columns上定义的data属性值</span><span class="w"></span>
-<span class="n">columns</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">name</span><span class="o">]</span><span class="err">：</span><span class="n">columns上定义的name属性值</span><span class="w"></span>
-<span class="n">columns</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">searchable</span><span class="o">]</span><span class="err">：</span><span class="n">告诉服务器哪些列可以被搜索</span><span class="w"></span>
-<span class="n">columns</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">orderable</span><span class="o">]</span><span class="err">：</span><span class="n">告诉服务器哪些列可以进行排序</span><span class="w"></span>
-<span class="n">columns</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">search</span><span class="o">][</span><span class="n">value</span><span class="o">]</span><span class="err">：</span><span class="n">告诉服务器某些列的具体搜索条件</span><span class="w"></span>
-</code></pre></div>
+<pre class="codehilite"><code>draw：绘制计数器，主要用来确保Ajax从服务器端接收到的数据是对应同一次请求的
+start：第一条数据的起始位置
+length：每页显示的条数
+search[value]：全局的检索关键字
+order[i][column]：告诉服务器哪些列是需要排序的，i为排序列的序号，下边的i相同含义，注意i是从0开始的
+order[i][dir]：告诉服务器排序的方式&quot;desc&quot;,&quot;asc&quot;
+columns[i][data]：columns上定义的data属性值
+columns[i][name]：columns上定义的name属性值
+columns[i][searchable]：告诉服务器哪些列可以被搜索
+columns[i][orderable]：告诉服务器哪些列可以进行排序
+columns[i][search][value]：告诉服务器某些列的具体搜索条件</code></pre>
+
 
 <p>如果需要后台分页，那么需要拿到<code>start</code>、<code>length</code>两个参数做相应的处理，</p>
 <p>如果有搜索的内容，那么需要拿到<code>serch[value]</code>参数做处理</p>
 <h3 id="_8">服务端返回数据的格式</h3>
 <p>服务端需要返回datatables可以处理的数据格式，具体数据格式如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">{</span>
-<span class="err">    &quot;draw&quot;: 1,</span>
-<span class="err">    &quot;recordsTotal&quot;: 7,</span>
-<span class="err">    &quot;recordsFiltered&quot;: 7,</span>
-<span class="err">    &quot;data&quot;: [</span>
-<span class="err">        {</span>
-<span class="err">            &quot;id&quot;: 3,</span>
-<span class="err">            &quot;site&quot;: &quot;https://ops-coffee.cn&quot;,</span>
-<span class="err">            &quot;date&quot;: &quot;2018-07-03&quot;</span>
-<span class="err">        },</span>
-<span class="err">        {</span>
-<span class="err">            &quot;id&quot;: 9,</span>
-<span class="err">            &quot;site&quot;: &quot;https://demo.ops-coffee.cn&quot;,</span>
-<span class="err">            &quot;date&quot;: &quot;2019-08-06&quot;</span>
-<span class="err">        }</span>
-<span class="err">        // 省略其他结果</span>
-<span class="err">    ]</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>{
+    &quot;draw&quot;: 1,
+    &quot;recordsTotal&quot;: 7,
+    &quot;recordsFiltered&quot;: 7,
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 3,
+            &quot;site&quot;: &quot;https://ops-coffee.cn&quot;,
+            &quot;date&quot;: &quot;2018-07-03&quot;
+        },
+        {
+            &quot;id&quot;: 9,
+            &quot;site&quot;: &quot;https://demo.ops-coffee.cn&quot;,
+            &quot;date&quot;: &quot;2019-08-06&quot;
+        }
+        // 省略其他结果
+    ]
+}</code></pre>
+
 
 <p><strong>draw：</strong> 客户端调用服务端次数标识，客户端传过来是什么原样返回回去即可，无需修改</p>
 <p><strong>recordsTotal：</strong> 数据总条数，没有过滤的数据总条数</p>
@@ -300,25 +300,25 @@ $(&quot;#add-btn.toolbar&quot;).html(
 <p>Datatables提供了强大的API来处理表格上的数据，可以通过API添加数据到已经存在的表格，或者对已经存在的数据进行操作，API的类型非常丰富，详细的信息可以查阅官网，使用方法如下：</p>
 <h3 id="_9">跳转到页</h3>
 <p>跳转到第3页：</p>
-<div class="codehilite"><pre><span></span><code><span class="k">var</span> <span class="n">table</span> <span class="o">=</span> <span class="o">$</span><span class="p">(</span><span class="s1">&#39;#myTable&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">DataTable</span><span class="p">()</span>
+<pre class="codehilite"><code>var table = $('#myTable').DataTable()
 
-<span class="n">table</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">false</span><span class="p">)</span>
-</code></pre></div>
+table.page(2).draw(false)</code></pre>
+
 
 <p><strong>page(2)：</strong> page为分页方法，后边的2表示跳转到第几页，可以是一个数字，也可以是<code>first</code>、<code>next</code>、<code>previous</code>、<code>last</code>这样的字符串，当为数字时要从0算起，例如示例中为2实际上是跳转到了第3页</p>
 <p><strong>draw(false)：</strong> 对表格进行重绘以实现表格更新的显示，大多数的api操作都不会直接更新在页面上，所以需要调用下<code>draw</code>，默认情况下重绘后分页会被重置回到第一页，当设置为<code>false</code>时分页不会被重置</p>
 <h3 id="_10">搜索某列</h3>
 <p>搜索第2列包含<code>ops-coffee.cn</code>的行</p>
-<div class="codehilite"><pre><span></span><code><span class="k">var</span> <span class="n">tablx</span> <span class="o">=</span> <span class="o">$</span><span class="p">(</span><span class="s1">&#39;#myTable&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">dataTable</span><span class="p">()</span>
+<pre class="codehilite"><code>var tablx = $('#myTable').dataTable()
 
-<span class="n">tablx</span><span class="o">.</span><span class="n">api</span><span class="p">()</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;ops-coffee.cn&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-</code></pre></div>
+tablx.api().column(1).search('ops-coffee.cn').draw()</code></pre>
+
 
 <p>首先需要注意这个例子中的API调用使用了<code>.api()</code>，这是因为上一个例子在初始化时用了<code>.DataTable()</code>而这个例子初始化时用了<code>.dataTable()</code>，仅仅是d字母大小写的区别而已，但意义确不同，前者直接返回API实例，后者返回的是jQuery实例</p>
 <h4 id="_11">精确搜索</h4>
 <p>默认情况下搜索时模糊匹配的，例如你搜索<code>ops-coffee.cn</code>，会把<code>blog.ops-coffee.cn</code>、<code>nav.ops-coffee.cn</code>之类的都搜索出来，如果想要精确匹配，仅搜索完全匹配<code>ops-coffee.cn</code>的结果，则需要借助于正则表达式来实现</p>
-<div class="codehilite"><pre><span></span><code><span class="err">tablx.api().column(1).search(&#39;^ops-coffee.cn$&#39;, true, false).draw()</span>
-</code></pre></div>
+<pre class="codehilite"><code>tablx.api().column(1).search('^ops-coffee.cn$', true, false).draw()</code></pre>
+
 
 <p>search接收4个参数，分别是：input、regex、smart、caseInsen，每个参数的解释如下</p>
 <table>

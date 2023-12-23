@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -43,49 +43,48 @@
         <h1 id="art-title">Debian 8 Jessie安装python3.6</h1>
 
         <h2 id="python36">安装python3.6</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">wget https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz</span>
-<span class="err">tar xvf Python-3.6.8.tgz &amp;&amp; cd Python-3.6.8</span>
-<span class="err">./configure &amp;&amp; make &amp;&amp; make install &amp;&amp; cd ..</span>
-<span class="err">python3.6 -V</span>
-</code></pre></div>
+<pre class="codehilite"><code>wget https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz
+tar xvf Python-3.6.8.tgz &amp;&amp; cd Python-3.6.8
+./configure &amp;&amp; make &amp;&amp; make install &amp;&amp; cd ..
+python3.6 -V</code></pre>
+
 
 <h2 id="_1">设置软链接</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">ln -s /usr/local/bin/python3.6 /usr/bin/python3</span>
-<span class="err">ln -s /usr/local/bin/python3.6 /usr/bin/python</span>
-</code></pre></div>
+<pre class="codehilite"><code>ln -s /usr/local/bin/python3.6 /usr/bin/python3
+ln -s /usr/local/bin/python3.6 /usr/bin/python</code></pre>
+
 
 <h2 id="pip">安装pip</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">wget https://bootstrap.pypa.io/get-pip.py</span>
-<span class="err">python3 get-pip.py</span>
-</code></pre></div>
+<pre class="codehilite"><code>wget https://bootstrap.pypa.io/get-pip.py
+python3 get-pip.py</code></pre>
+
 
 <p>如果报错</p>
-<div class="codehilite"><pre><span></span><code><span class="err">subprocess.CalledProcessError: Command &#39;(&#39;lsb_release&#39;, &#39;-a&#39;)&#39; returned non-zero exit status 1.</span>
-</code></pre></div>
+<pre class="codehilite"><code>subprocess.CalledProcessError: Command '('lsb_release', '-a')' returned non-zero exit status 1.</code></pre>
+
 
 <p>则删除</p>
-<div class="codehilite"><pre><span></span><code><span class="err">rm /usr/bin/lsb_release</span>
-</code></pre></div>
+<pre class="codehilite"><code>rm /usr/bin/lsb_release</code></pre>
+
 
 <h2 id="pip_1">修改pip源</h2>
 <p>默认pip安装软件时会从官方源安装，比较慢，可修改为国内的源，这里提供临时修改和永久修改两种修改方式</p>
 <p>临时修改，只需要添加<code>-i</code>参数</p>
-<div class="codehilite"><pre><span></span><code><span class="err">pip install django -i https://pypi.tuna.tsinghua.edu.cn/simple</span>
-</code></pre></div>
+<pre class="codehilite"><code>pip install django -i https://pypi.tuna.tsinghua.edu.cn/simple</code></pre>
+
 
 <p>永久修改，需要修改文件，文件位置<code>~/.pip/pip.conf</code>，内容如下</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[global]</span>
-<span class="na">index-url</span> <span class="o">=</span> <span class="s">https://pypi.douban.com/simple</span>
-<span class="k">[install]</span>
-<span class="na">trusted-host</span><span class="o">=</span><span class="s">pypi.douban.com</span>
-</code></pre></div>
+<pre class="codehilite"><code>[global]
+index-url = https://pypi.douban.com/simple
+[install]
+trusted-host=pypi.douban.com</code></pre>
+
 
 <h2 id="ali">ali源配置</h2>
 <p>如果不想使用豆瓣的源，可以使用阿里的，配置如下</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[global]</span>
-<span class="na">index-url</span> <span class="o">=</span> <span class="s">http://mirrors.aliyun.com/pypi/simple/</span>
-<span class="na">trusted-host</span> <span class="o">=</span> <span class="s">mirrors.aliyun.com</span>
-</code></pre></div>
+<pre class="codehilite"><code>[global]
+index-url = http://mirrors.aliyun.com/pypi/simple/
+trusted-host = mirrors.aliyun.com</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -52,90 +52,90 @@
 <p><img alt="" loading="lazy" src="/static/images/20200117.01.png" /></p>
 <h2 id="_1">基本使用</h2>
 <p>这个项目引入非常简单，只需要引入一个ace.js文件即可，然后实例化即可</p>
-<div class="codehilite"><pre><span></span><code>// 引入js文件
-<span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;/static/js/ace.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<pre class="codehilite"><code>// 引入js文件
+&lt;script src=&quot;/static/js/ace.js&quot;&gt;&lt;/script&gt;
 
-<span class="nt">&lt;pre</span> <span class="na">id=</span><span class="s">&quot;content&quot;</span> <span class="na">style=</span><span class="s">&quot;height:620px&quot;</span><span class="nt">&gt;&lt;/pre&gt;</span>
+&lt;pre id=&quot;content&quot; style=&quot;height:620px&quot;&gt;&lt;/pre&gt;
 
 // 实例化编辑器
-var editor = ace.edit(&quot;content&quot;);
-</code></pre></div>
+var editor = ace.edit(&quot;content&quot;);</code></pre>
+
 
 <p>github上除了源码文件外，ace还贴心的准备了编译好的项目文件，以方便用户使用，我们只需要将编译好的文件目录copy到我们项目的js目录下即可，编译好的仓库地址是：https://github.com/ajaxorg/ace-builds</p>
 <p>推荐同时引入<code>ext-searchbox.js</code>文件，这样可以在编辑器中直接使用ctrl+F快捷键进行搜索</p>
 <h2 id="_2">基本配置</h2>
 <p>ace有许多的配置项可供选择，通过这些配置项可以打造自己的个性编辑器</p>
 <p>你可以通过<code>setTheme</code>来设置主题，需要注意的是主题文件要存在，并且需要与ace.js同级，命名规则为<code>theme-主题名.js</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.setTheme(&quot;ace/theme/twilight&quot;)</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.setTheme(&quot;ace/theme/twilight&quot;)</code></pre>
+
 
 <p>默认情况下编辑器为纯文本模式，你可以通过<code>setMode</code>来设置编辑器对应的语言模式，例如你想让其匹配markdown，就可以像下边这样配置，同样需要语言模式的文件存在，文件与ace.js同级，命名规则为<code>mode-语言模式.js</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.session.setMode(&quot;ace/mode/markdown&quot;)</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.session.setMode(&quot;ace/mode/markdown&quot;)</code></pre>
+
 
 <p>通过<code>setFontSize</code>可以设置编辑器内文本字体的大小</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.setFontSize(14);</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.setFontSize(14);</code></pre>
+
 
 <p>通过<code>setTabSize</code>可以设置制表符的长度</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.getSession().setTabSize(4);</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.getSession().setTabSize(4);</code></pre>
+
 
 <p>同时可以通过<code>setUseSoftTabs</code>将制表符变成对应长度的空格</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.session.setUseSoftTabs(true);</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.session.setUseSoftTabs(true);</code></pre>
+
 
 <p>如果你不想编辑，可以通过<code>setReadOnly</code>可以将编辑器设置为只读模式</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.setReadOnly(true)</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.setReadOnly(true)</code></pre>
+
 
 <p>默认情况下ace编辑器中会有一道竖线标识打印的边距，可以通过<code>setShowPrintMargin</code>来控制其是否显示</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.setShowPrintMargin(false);</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.setShowPrintMargin(false);</code></pre>
+
 
 <h2 id="_3">编辑器操作</h2>
 <p>ace可以方便的对编辑器内的数据进行获取和写入，甚至可以只获取选中的内容，同时也能实现获取行数，跳转到行等操作</p>
 <p>通过<code>getValue</code>可以获取到编辑器中的全部数据</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.getSession().getValue()</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.getSession().getValue()</code></pre>
+
 
 <p>如果编辑器内有部分数据被选中，则可以通过<code>getSelectionRange</code>来获取选中的部分内容</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.session.getTextRange(editor.getSelectionRange())</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.session.getTextRange(editor.getSelectionRange())</code></pre>
+
 
 <p>这在特性我实现SQL查询的功能中有用到，如果查询框内有多条SQL，可以选择其中一条SQL进行查询</p>
 <p><img alt="" loading="lazy" src="/static/images/20200117.02.png" /></p>
 <p>通过<code>setValue</code>可以给编辑器初始化数据</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.getSession().setValue(&quot;ops-coffee.cn&quot;)</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.getSession().setValue(&quot;ops-coffee.cn&quot;)</code></pre>
+
 
 <p>当你想往编辑器插入数据时，可以通过<code>insert</code>在光标处插入数据</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.insert(&#39;ops-coffee.cn&#39;)</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.insert('ops-coffee.cn')</code></pre>
+
 
 <p>通过<code>getLength</code>可以获取到编辑器内数据的总行数</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.session.getLength()</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.session.getLength()</code></pre>
+
 
 <p><code>goLine</code>则可以跳转到指定的行</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.gotoLine(37)</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.gotoLine(37)</code></pre>
+
 
 <p>通过<code>getCursor</code>可以获取到编辑器内光标的位置，输出结果为一个标识行和列的字典，像这样：<code>{row:13,column:37}</code></p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.selection.getCursor()</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.selection.getCursor()</code></pre>
+
 
 <h2 id="_4">搜索与替换</h2>
 <p>ace还实现了强大的搜索和替换功能，可以单个替换也可以全部替换</p>
 <p>通过<code>find</code>可以进行搜索</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.find(&#39;ops-coffee&#39;, {  </span>
-<span class="err">    backwards: false,  </span>
-<span class="err">    wrap: false,  </span>
-<span class="err">    caseSensitive: false,  </span>
-<span class="err">    wholeWord: false,  </span>
-<span class="err">    regExp: false  </span>
-<span class="err">});  </span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.find('ops-coffee', {  
+    backwards: false,  
+    wrap: false,  
+    caseSensitive: false,  
+    wholeWord: false,  
+    regExp: false  
+});  </code></pre>
+
 
 <p>find后边跟了两个参数， 第一个为要搜索的内容，第二个为搜索配置的字典， 字典内可以配置如下一些参数</p>
 <ul>
@@ -149,66 +149,66 @@ var editor = ace.edit(&quot;content&quot;);
 <li>skipCurrent: 是否不搜索当前行，默认为false  </li>
 </ul>
 <p>通过<code>findAll</code>可以高亮显示全部搜索到的内容</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.findAll();</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.findAll();</code></pre>
+
 
 <p><code>findNext</code>则可以查找下一个搜索到的内容</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.findNext();  </span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.findNext();  </code></pre>
+
 
 <p><code>findPrevious</code>查找上一个匹配的内容</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.findPrevious();  </span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.findPrevious();  </code></pre>
+
 
 <p>通过<code>replace</code>可以对<strong>当前</strong><code>find</code>查找到的字符串进行替换</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.replace(&#39;ops-coffee.cn&#39;); </span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.replace('ops-coffee.cn'); </code></pre>
+
 
 <p>而通过<code>replaceAll</code>则可以对<code>find</code>查找到的所有内容替换</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.replaceAll(&#39;ops-coffee.cn&#39;);</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.replaceAll('ops-coffee.cn');</code></pre>
+
 
 <p>需要注意的是，无论是<code>replace</code>还是<code>replaceAll</code>都需要配合<code>find</code>一起使用</p>
 <h2 id="_5">监听变化</h2>
 <p>ace另一个强大的地方是实现了对编辑器的监听，除了可以监听内容的变化外，还能监听选中内容的变化，甚至是光标的变化</p>
 <p>通过<code>change</code>可以监听到编辑器内容的变化</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.getSession().on(&#39;change&#39;, function(e) {</span>
-<span class="err">    console.log(&#39;内容有变化&#39;)</span>
-<span class="err">});</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.getSession().on('change', function(e) {
+    console.log('内容有变化')
+});</code></pre>
+
 
 <p><code>changeSelection</code>则可以监听到选择内容的变化</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.getSession().selection.on(&#39;changeSelection&#39;, function(e) {</span>
-<span class="err">    console.log(&#39;选择内容有变化&#39;)</span>
-<span class="err">});</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.getSession().selection.on('changeSelection', function(e) {
+    console.log('选择内容有变化')
+});</code></pre>
+
 
 <p>连光标的变化都可以通过<code>changeCursor</code>监听到</p>
-<div class="codehilite"><pre><span></span><code><span class="err">editor.getSession().selection.on(&#39;changeCursor&#39;, function(e) {</span>
-<span class="err">    console.log(&#39;监听光标的变化&#39;)</span>
-<span class="err">});</span>
-</code></pre></div>
+<pre class="codehilite"><code>editor.getSession().selection.on('changeCursor', function(e) {
+    console.log('监听光标的变化')
+});</code></pre>
+
 
 <h3 id="textarea">替换textarea</h3>
 <p>html中的textarea比较鸡肋，连最基本的换行都无法实现，所以我通常都会用ace来代替form表单中的textarea，但默认情况下submit无法自动获取pre标签的数据做提交，这该如何处理呢？</p>
 <p>一种简单的方式就是将textarea隐藏，同时创建一个ace编辑器来取代他，然后检测编辑器内数据的变化自动给填充到textarea内，完整的例子就像下边这样</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;form</span> <span class="na">class=</span><span class="s">&quot;form-horizontal&quot;</span> <span class="na">id=</span><span class="s">&quot;modalForm_Content&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span> <span class="na">action=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>{% csrf_token %}
-  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;form-group&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;label</span> <span class="na">class=</span><span class="s">&quot;col-md-2 control-label&quot;</span><span class="nt">&gt;</span> 内容<span class="nt">&lt;/label&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-9&quot;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;textarea</span> <span class="na">class=</span><span class="s">&quot;form-control&quot;</span> <span class="na">id=</span><span class="s">&quot;form_content&quot;</span> <span class="na">name=</span><span class="s">&quot;content&quot;</span> <span class="na">rows=</span><span class="s">&quot;20&quot;</span><span class="nt">&gt;&lt;/textarea&gt;</span>
-      <span class="nt">&lt;pre</span> <span class="na">id=</span><span class="s">&quot;content&quot;</span> <span class="na">style=</span><span class="s">&quot;height:415px&quot;</span><span class="nt">&gt;&lt;/pre&gt;</span>
-    <span class="nt">&lt;/div&gt;</span>
-  <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/form&gt;</span>
+<pre class="codehilite"><code>&lt;form class=&quot;form-horizontal&quot; id=&quot;modalForm_Content&quot; method=&quot;post&quot; action=&quot;&quot;&gt;{% csrf_token %}
+  &lt;div class=&quot;form-group&quot;&gt;
+    &lt;label class=&quot;col-md-2 control-label&quot;&gt; 内容&lt;/label&gt;
+    &lt;div class=&quot;col-md-9&quot;&gt;
+      &lt;textarea class=&quot;form-control&quot; id=&quot;form_content&quot; name=&quot;content&quot; rows=&quot;20&quot;&gt;&lt;/textarea&gt;
+      &lt;pre id=&quot;content&quot; style=&quot;height:415px&quot;&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/form&gt;
 
 // 加载ace editor
 var editor = ace.edit(&quot;content&quot;);
-var textarea = $(&#39;textarea[name=&quot;content&quot;]&#39;).hide();
-editor.getSession().on(&#39;change&#39;, function(){
+var textarea = $('textarea[name=&quot;content&quot;]').hide();
+editor.getSession().on('change', function(){
   textarea.val(editor.getSession().getValue());
-});
-</code></pre></div>
+});</code></pre>
+
 
 <p>非常完美的弥补了textarea的不足，简单好用且足够强大</p>
 

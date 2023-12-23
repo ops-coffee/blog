@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -45,13 +45,13 @@
         <p>以下内容来源于QQ群，出于隐私考虑，提问者昵称用“网友9527”代替</p>
 <hr />
 <p><span style="color:green">网友9527 17:32:34</span></p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; a = [1, 2]</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt; a[1] = a</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt; print(a[1])</span>
-<span class="err">[1, [...]]  </span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; a = [1, 2]
+&gt;&gt;&gt;
+&gt;&gt;&gt; a[1] = a
+&gt;&gt;&gt;
+&gt;&gt;&gt; print(a[1])
+[1, [...]]  </code></pre>
+
 
 <p>有没有大佬释义下这个结果为啥是[1, [...]]   </p>
 <p><span style="color:blue">ops-coffee.cn 17:59:05</span></p>
@@ -61,18 +61,18 @@
 <p><span style="color:blue">ops-coffee.cn 18:02:25</span></p>
 <p>简单来说这里实际上传递的不是值，而是内存地址，这样就导致了最终结果里边是一个无限循环</p>
 <p><span style="color:blue">ops-coffee.cn 18:09:54</span></p>
-<div class="codehilite"><pre><span></span><code><span class="err">&gt;&gt;&gt; a = [1, 2]</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt; id(a)</span>
-<span class="err">1332642909640</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt; id(a[1])</span>
-<span class="err">1578131712</span>
-<span class="err">&gt;&gt;&gt;</span>
-<span class="err">&gt;&gt;&gt;a[1] = a</span>
-<span class="err">&gt;&gt;&gt;id(a[1])</span>
-<span class="err">1332642909640</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; a = [1, 2]
+&gt;&gt;&gt;
+&gt;&gt;&gt; id(a)
+1332642909640
+&gt;&gt;&gt;
+&gt;&gt;&gt; id(a[1])
+1578131712
+&gt;&gt;&gt;
+&gt;&gt;&gt;a[1] = a
+&gt;&gt;&gt;id(a[1])
+1332642909640</code></pre>
+
 
 <p><span style="color:blue">ops-coffee.cn 18:10:04</span></p>
 <p>这个应该看得更清晰一点</p>

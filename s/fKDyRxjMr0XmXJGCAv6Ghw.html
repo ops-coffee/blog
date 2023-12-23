@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -52,48 +52,47 @@
 <h2 id="save">重写save方法</h2>
 <p>save方法的主要作用就是将一个对象保存到数据库。如果我们想在数据入库之前做一些处理，除了上边提到的<code>signals</code>之外，还可以通过重写save方法来实现。具体实现方式看下面这个例子</p>
 <p>假如我们定义了model如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">TempTask</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="o">...</span>
-
-    <span class="n">exechost</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;执行主机&#39;</span><span class="p">)</span>
-    <span class="n">execuser</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">ExecUser</span><span class="p">,</span> <span class="nb nb-Type">null</span><span class="o">=</span><span class="n">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">PROTECT</span><span class="p">,</span> <span class="n">db_constraint</span><span class="o">=</span><span class="n">False</span><span class="p">)</span>
-</code></pre></div>
-
-<p>exechost默认为Localhost，execuser默认为空，现有需求：当exechost不为localhost时，他必须符合<code>ip:port</code>的格式，且execuser不能为空。这是一个比较复杂的校验方式，我们可以通过重写save方法来处理</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">TempTask</span>(<span class="n">models</span>.<span class="n">Model</span>):
+<pre class="codehilite"><code>class TempTask(models.Model):
     ...
 
-    <span class="n">def</span> <span class="n">save</span>(<span class="nb">self</span>, *<span class="nb">args</span>, **<span class="n">kwargs</span>):
-        <span class="k">if</span> <span class="nb">self</span>.<span class="n">exechost</span> <span class="o">and</span> (<span class="nb">self</span>.<span class="n">exechost</span>.<span class="n">strip</span>() != <span class="s">&#39;localhost&#39;</span>):
-            <span class="k">if</span> <span class="n">len</span>(<span class="nb">self</span>.<span class="n">exechost</span>.<span class="nb">split</span>(<span class="s">&#39;:&#39;</span>)) != <span class="mi">2</span>:
-                <span class="n">raise</span> <span class="n">ValidationError</span>(<span class="s">&#39;执行主机格式错误，应为ip:port格式&#39;</span>)
+    exechost = models.CharField(max_length=64, default='localhost', verbose_name='执行主机')
+    execuser = models.ForeignKey(ExecUser, null=True, on_delete=models.PROTECT, db_constraint=False)</code></pre>
 
-            <span class="k">if</span> <span class="nb">not</span> <span class="nb">self</span>.<span class="n">execuser:</span>
-                <span class="n">raise</span> <span class="n">ValidationError</span>(<span class="s">&#39;当执行主机存在时执行用户不能为空&#39;</span>)
 
-        <span class="n">super</span>().<span class="n">save</span>(*<span class="nb">args</span>, **<span class="n">kwargs</span>)
-</code></pre></div>
+<p>exechost默认为Localhost，execuser默认为空，现有需求：当exechost不为localhost时，他必须符合<code>ip:port</code>的格式，且execuser不能为空。这是一个比较复杂的校验方式，我们可以通过重写save方法来处理</p>
+<pre class="codehilite"><code>class TempTask(models.Model):
+    ...
+
+    def save(self, *args, **kwargs):
+        if self.exechost and (self.exechost.strip() != 'localhost'):
+            if len(self.exechost.split(':')) != 2:
+                raise ValidationError('执行主机格式错误，应为ip:port格式')
+
+            if not self.execuser:
+                raise ValidationError('当执行主机存在时执行用户不能为空')
+
+        super().save(*args, **kwargs)</code></pre>
+
 
 <p>我们可以在save函数内执行各种自定义逻辑，但需要注意的是，最后必须要调用<code>super().save()</code>方法来保证执行了父类的<code>save()</code>，这样才能保证数据写入了数据库。</p>
 <p>这样在当我们执行create语句插入数据的时候就会先去执行save中的校验方法进行校验了</p>
-<div class="codehilite"><pre><span></span><code><span class="err">TempTask.objects.create(**postdata)</span>
-</code></pre></div>
+<pre class="codehilite"><code>TempTask.objects.create(**postdata)</code></pre>
+
 
 <h2 id="update">update踩坑</h2>
 <p>就当我以为一切都要结束准备起身冲杯咖啡的时候，我发现新加数据可以正常进行校验，但更新数据却不行，更新的代码如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">TempTask.objects.filter(id=pk).update(**postdata)</span>
-</code></pre></div>
+<pre class="codehilite"><code>TempTask.objects.filter(id=pk).update(**postdata)</code></pre>
+
 
 <p>经过一番查找发现了问题所在，官方文档中有这么一句话</p>
-<div class="codehilite"><pre><span></span><code><span class="err">Unfortunately, there isn’t a workaround when creating or updating objects in bulk, since none of save(), pre_save, and post_save are called.</span>
-</code></pre></div>
+<pre class="codehilite"><code>Unfortunately, there isn’t a workaround when creating or updating objects in bulk, since none of save(), pre_save, and post_save are called.</code></pre>
+
 
 <p>也就是说，<strong>当使用查询集批量更新对象时，将不会为每个对象调用save()方法</strong>，连<code>pre_save</code>和<code>post_save</code>也不会被调用。与<code>save()</code>类似的还有model的<code>delete()</code>方法，当批量删除的时候，同样不会调用model的<code>delete()</code>方法，但delete是可以使用<code>pre_delete</code>或<code>post_delete</code>信号的</p>
 <p>解决这个问题的方法很简单，那就是将更新的代码换成下边这种，保证调用到save方法</p>
-<div class="codehilite"><pre><span></span><code><span class="err">_t = TempTask.objects.get(id=pk)</span>
-<span class="err">_t.__dict__.update(**postdata)</span>
-<span class="err">_t.save()</span>
-</code></pre></div>
+<pre class="codehilite"><code>_t = TempTask.objects.get(id=pk)
+_t.__dict__.update(**postdata)
+_t.save()</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

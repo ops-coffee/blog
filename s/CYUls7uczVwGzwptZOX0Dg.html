@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -60,62 +60,62 @@
 </ol>
 <h2 id="rsyslog_1">Rsyslog升级</h2>
 <p>1.添加rsyslog源的key</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># apt-key adv --recv-keys --keyserver keys.gnupg.net AEF0CF8E</span>
-</code></pre></div>
+<pre class="codehilite"><code># apt-key adv --recv-keys --keyserver keys.gnupg.net AEF0CF8E</code></pre>
+
 
 <p>2.添加rsyslog源地址</p>
-<div class="codehilite"><pre><span></span><code><span class="err">echo &quot;deb http://debian.adiscon.com/v8-stable wheezy/&quot; &gt;&gt; /etc/apt/sources.list</span>
-<span class="err">echo &quot;deb-src http://debian.adiscon.com/v8-stable wheezy/&quot; &gt;&gt; /etc/apt/sources.list</span>
-</code></pre></div>
+<pre class="codehilite"><code>echo &quot;deb http://debian.adiscon.com/v8-stable wheezy/&quot; &gt;&gt; /etc/apt/sources.list
+echo &quot;deb-src http://debian.adiscon.com/v8-stable wheezy/&quot; &gt;&gt; /etc/apt/sources.list</code></pre>
+
 
 <p>3.升级rsyslog服务</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># apt-get update &amp;&amp; apt-get -y install rsyslog</span>
-</code></pre></div>
+<pre class="codehilite"><code># apt-get update &amp;&amp; apt-get -y install rsyslog</code></pre>
+
 
 <h2 id="omkafka">添加omkafka模块</h2>
 <p>1.安装编译工具，下边autoreconf需要用到，不然无法生成configure文件</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># apt-get -y install pkg-config autoconf automake libtool unzip</span>
-</code></pre></div>
+<pre class="codehilite"><code># apt-get -y install pkg-config autoconf automake libtool unzip</code></pre>
+
 
 <p>2.omkafka需要安装一堆的依赖包</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># apt-get -y install libdbi-dev libmysqlclient-dev postgresql-client libpq-dev  libnet-dev   librdkafka-dev   libgrok-dev libgrok1 libgrok-dev libpcre3-dev libtokyocabinet-dev libglib2.0-dev  libmongo-client-dev  libhiredis-dev</span>
-<span class="err"># apt-get -y install libestr-dev libfastjson-dev uuid-dev liblogging-stdlog-dev libgcrypt-dev</span>
-<span class="err"># apt-get -y install flex bison librdkafka1 librdkafka-dev librdkafka1-dbg</span>
-</code></pre></div>
+<pre class="codehilite"><code># apt-get -y install libdbi-dev libmysqlclient-dev postgresql-client libpq-dev  libnet-dev   librdkafka-dev   libgrok-dev libgrok1 libgrok-dev libpcre3-dev libtokyocabinet-dev libglib2.0-dev  libmongo-client-dev  libhiredis-dev
+# apt-get -y install libestr-dev libfastjson-dev uuid-dev liblogging-stdlog-dev libgcrypt-dev
+# apt-get -y install flex bison librdkafka1 librdkafka-dev librdkafka1-dbg</code></pre>
+
 
 <p>3.编译安装omkafka模块</p>
-<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">mkdir</span><span class="w"> </span><span class="n">tmp</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">cd</span><span class="w"> </span><span class="n">tmp</span><span class="w"></span>
+<pre class="codehilite"><code># mkdir tmp &amp;&amp; cd tmp
 
-<span class="err">#</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">init</span><span class="w"></span>
-<span class="err">#</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">pull</span><span class="w"> </span><span class="n">git</span><span class="nv">@github</span><span class="p">.</span><span class="nl">com</span><span class="p">:</span><span class="n">VertiPub</span><span class="o">/</span><span class="n">omkafka</span><span class="p">.</span><span class="n">git</span><span class="w"></span>
+# git init
+# git pull git@github.com:VertiPub/omkafka.git
 
-<span class="err">#</span><span class="w"> </span><span class="n">autoreconf</span><span class="w"> </span><span class="o">-</span><span class="n">fvi</span><span class="w"></span>
-<span class="err">#</span><span class="w"> </span><span class="p">.</span><span class="o">/</span><span class="n">configure</span><span class="w"> </span><span class="c1">--sbindir=/usr/sbin --libdir=/usr/lib --enable-omkafka &amp;&amp; make &amp;&amp; make install &amp;&amp; cd ..</span>
-</code></pre></div>
+# autoreconf -fvi
+# ./configure --sbindir=/usr/sbin --libdir=/usr/lib --enable-omkafka &amp;&amp; make &amp;&amp; make install &amp;&amp; cd ..</code></pre>
+
 
 <h2 id="rsyslognginx">Rsyslog收集nginx日志</h2>
 <h5 id="clientnginx">Client端Nginx配置</h5>
-<div class="codehilite"><pre><span></span><code><span class="nt">log_format</span>  <span class="nt">jsonlog</span> <span class="s1">&#39;{&#39;</span>
-    <span class="s1">&#39;&quot;host&quot;: &quot;$host&quot;,&#39;</span>
-    <span class="s1">&#39;&quot;server_addr&quot;: &quot;$server_addr&quot;,&#39;</span>
-    <span class="s1">&#39;&quot;http_x_forwarded_for&quot;:&quot;$http_x_forwarded_for&quot;,&#39;</span>
-    <span class="s1">&#39;&quot;remote_addr&quot;:&quot;$remote_addr&quot;,&#39;</span>
-    <span class="s1">&#39;&quot;time_local&quot;:&quot;$time_local&quot;,&#39;</span>
-    <span class="s1">&#39;&quot;request_method&quot;:&quot;$request_method&quot;,&#39;</span>
-    <span class="s1">&#39;&quot;request_uri&quot;:&quot;$request_uri&quot;,&#39;</span>
-    <span class="s1">&#39;&quot;status&quot;:$status,&#39;</span>
-    <span class="s1">&#39;&quot;body_bytes_sent&quot;:$body_bytes_sent,&#39;</span>
-    <span class="s1">&#39;&quot;http_referer&quot;:&quot;$http_referer&quot;,&#39;</span>
-    <span class="s1">&#39;&quot;http_user_agent&quot;:&quot;$http_user_agent&quot;,&#39;</span>
-    <span class="s1">&#39;&quot;upstream_addr&quot;:&quot;$upstream_addr&quot;,&#39;</span>
-    <span class="s1">&#39;&quot;upstream_status&quot;:&quot;$upstream_status&quot;,&#39;</span>
-    <span class="s1">&#39;&quot;upstream_response_time&quot;:&quot;$upstream_response_time&quot;,&#39;</span>
-    <span class="s1">&#39;&quot;request_time&quot;:$request_time&#39;</span>
-<span class="s1">&#39;}&#39;</span><span class="o">;</span>
+<pre class="codehilite"><code>log_format  jsonlog '{'
+    '&quot;host&quot;: &quot;$host&quot;,'
+    '&quot;server_addr&quot;: &quot;$server_addr&quot;,'
+    '&quot;http_x_forwarded_for&quot;:&quot;$http_x_forwarded_for&quot;,'
+    '&quot;remote_addr&quot;:&quot;$remote_addr&quot;,'
+    '&quot;time_local&quot;:&quot;$time_local&quot;,'
+    '&quot;request_method&quot;:&quot;$request_method&quot;,'
+    '&quot;request_uri&quot;:&quot;$request_uri&quot;,'
+    '&quot;status&quot;:$status,'
+    '&quot;body_bytes_sent&quot;:$body_bytes_sent,'
+    '&quot;http_referer&quot;:&quot;$http_referer&quot;,'
+    '&quot;http_user_agent&quot;:&quot;$http_user_agent&quot;,'
+    '&quot;upstream_addr&quot;:&quot;$upstream_addr&quot;,'
+    '&quot;upstream_status&quot;:&quot;$upstream_status&quot;,'
+    '&quot;upstream_response_time&quot;:&quot;$upstream_response_time&quot;,'
+    '&quot;request_time&quot;:$request_time'
+'}';
 
 
-<span class="nt">access_log</span> <span class="nt">syslog</span><span class="p">:</span><span class="nd">server</span><span class="o">=</span><span class="nt">rsyslog</span><span class="p">.</span><span class="nc">domain</span><span class="p">.</span><span class="nc">com</span><span class="o">,</span><span class="nt">facility</span><span class="o">=</span><span class="nt">local7</span><span class="o">,</span><span class="nt">tag</span><span class="o">=</span><span class="nt">nginx_access_log</span><span class="o">,</span><span class="nt">severity</span><span class="o">=</span><span class="nt">info</span> <span class="nt">jsonlog</span><span class="o">;</span>
-</code></pre></div>
+access_log syslog:server=rsyslog.domain.com,facility=local7,tag=nginx_access_log,severity=info jsonlog;</code></pre>
+
 
 <p>1.Nginx在<strong>v1.10之后</strong>的版本才支持syslog的方式处理日志，请确保你的Nginx版本高于1.10</p>
 <p>2.为了降低logstash的处理压力，同时也为了降低整个配置的复杂度，我们nginx的日志直接采用json格式</p>
@@ -129,30 +129,30 @@
 <li><strong>severity</strong>：定义日志的级别，例如debug，info，notice等，默认是error</li>
 </ul>
 <h5 id="serverrsyslog">Server端Rsyslog配置</h5>
-<div class="codehilite"><pre><span></span><code><span class="c1"># cat /etc/rsyslog.d/rsyslog_nginx_kafka_cluster.conf </span>
-<span class="n">module</span><span class="p">(</span><span class="nb">load</span><span class="o">=</span><span class="s2">&quot;imudp&quot;</span><span class="p">)</span>
-<span class="n">input</span><span class="p">(</span><span class="n">type</span><span class="o">=</span><span class="s2">&quot;imudp&quot;</span> <span class="n">port</span><span class="o">=</span><span class="s2">&quot;514&quot;</span><span class="p">)</span>
+<pre class="codehilite"><code># cat /etc/rsyslog.d/rsyslog_nginx_kafka_cluster.conf 
+module(load=&quot;imudp&quot;)
+input(type=&quot;imudp&quot; port=&quot;514&quot;)
 
-<span class="c1"># nginx access log ==&gt; rsyslog server(local) ==&gt; kafka</span>
-<span class="n">module</span><span class="p">(</span><span class="nb">load</span><span class="o">=</span><span class="s2">&quot;omkafka&quot;</span><span class="p">)</span>
+# nginx access log ==&gt; rsyslog server(local) ==&gt; kafka
+module(load=&quot;omkafka&quot;)
 
-<span class="n">template</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;nginxLog&quot;</span> <span class="n">type</span><span class="o">=</span><span class="s2">&quot;string&quot;</span> <span class="n">string</span><span class="o">=</span><span class="s2">&quot;%msg%&quot;</span><span class="p">)</span>
+template(name=&quot;nginxLog&quot; type=&quot;string&quot; string=&quot;%msg%&quot;)
 
-<span class="k">if</span> <span class="o">$</span><span class="n">inputname</span> <span class="o">==</span> <span class="s2">&quot;imudp&quot;</span> <span class="n">then</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">$</span><span class="n">programname</span> <span class="o">==</span> <span class="s2">&quot;nginx_access_log&quot;</span><span class="p">)</span> <span class="n">then</span>
-        <span class="n">action</span><span class="p">(</span><span class="n">type</span><span class="o">=</span><span class="s2">&quot;omkafka&quot;</span>
-            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;nginxLog&quot;</span>
-            <span class="n">broker</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;10.82.9.202:9092&quot;</span><span class="p">,</span><span class="s2">&quot;10.82.9.203:9092&quot;</span><span class="p">,</span><span class="s2">&quot;10.82.9.204:9092&quot;</span><span class="p">]</span>
-            <span class="n">topic</span><span class="o">=</span><span class="s2">&quot;rsyslog_nginx&quot;</span>
-            <span class="n">partitions</span><span class="o">.</span><span class="n">auto</span><span class="o">=</span><span class="s2">&quot;on&quot;</span>
-            <span class="n">confParam</span><span class="o">=</span><span class="p">[</span>
-                <span class="s2">&quot;socket.keepalive.enable=true&quot;</span>
-            <span class="p">]</span>
-        <span class="p">)</span>
-<span class="p">}</span>
+if $inputname == &quot;imudp&quot; then {
+    if ($programname == &quot;nginx_access_log&quot;) then
+        action(type=&quot;omkafka&quot;
+            template=&quot;nginxLog&quot;
+            broker=[&quot;10.82.9.202:9092&quot;,&quot;10.82.9.203:9092&quot;,&quot;10.82.9.204:9092&quot;]
+            topic=&quot;rsyslog_nginx&quot;
+            partitions.auto=&quot;on&quot;
+            confParam=[
+                &quot;socket.keepalive.enable=true&quot;
+            ]
+        )
+}
 
-<span class="p">:</span><span class="n">rawmsg</span><span class="p">,</span> <span class="n">contains</span><span class="p">,</span> <span class="s2">&quot;nginx_access_log&quot;</span> <span class="o">~</span>
-</code></pre></div>
+:rawmsg, contains, &quot;nginx_access_log&quot; ~</code></pre>
+
 
 <p>1.在rsyslog.d目录下添加一个专门处理nginx日志的配置文件</p>
 <p>2.rsyslog配置文件重要配置解释如下：</p>
@@ -165,36 +165,36 @@
 </ul>
 <p>3.omkafka模块检查kafka里边topic是否存在，如果不存在则创建，无需手动创建kafka的topic</p>
 <h5 id="serverlogstash">Server端logstash配置</h5>
-<div class="codehilite"><pre><span></span><code><span class="k">input</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">kafka</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">bootstrap_servers</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;10.82.9.202:9092,10.82.9.203:9092,10.82.9.204:9092&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="n">topics</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;rsyslog_nginx&quot;</span><span class="o">]</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
-<span class="err">}</span><span class="w"></span>
+<pre class="codehilite"><code>input {
+    kafka {
+        bootstrap_servers =&gt; &quot;10.82.9.202:9092,10.82.9.203:9092,10.82.9.204:9092&quot;
+        topics =&gt; [&quot;rsyslog_nginx&quot;]
+    }
+}
 
-<span class="k">filter</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">mutate</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">gsub</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;message&quot;, &quot;\\x&quot;, &quot;\\\x&quot;</span><span class="o">]</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
+filter {
+    mutate {
+        gsub =&gt; [&quot;message&quot;, &quot;\\x&quot;, &quot;\\\x&quot;]
+    }
 
-<span class="w">    </span><span class="n">json</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">source</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;message&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
+    json {
+        source =&gt; &quot;message&quot;
+    }
 
-<span class="w">    </span><span class="nc">date</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;time_local&quot;,&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;</span><span class="o">]</span><span class="w"></span>
-<span class="w">        </span><span class="n">target</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;@timestamp&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
+    date {
+        match =&gt; [&quot;time_local&quot;,&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;]
+        target =&gt; &quot;@timestamp&quot;
+    }
 
-<span class="err">}</span><span class="w"></span>
+}
 
-<span class="k">output</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">elasticsearch</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">hosts</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;10.82.9.205&quot;, &quot;10.82.9.206&quot;, &quot;10.82.9.207&quot;</span><span class="o">]</span><span class="w"></span>
-<span class="w">        </span><span class="k">index</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">&quot;rsyslog-nginx-%{+YYYY.MM.dd}&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="err">}</span><span class="w"></span>
-<span class="err">}</span><span class="w"></span>
-</code></pre></div>
+output {
+    elasticsearch {
+        hosts =&gt; [&quot;10.82.9.205&quot;, &quot;10.82.9.206&quot;, &quot;10.82.9.207&quot;]
+        index =&gt; &quot;rsyslog-nginx-%{+YYYY.MM.dd}&quot;
+    }
+}</code></pre>
+
 
 <p>重要配置参数解释如下：</p>
 <ul>
@@ -205,15 +205,15 @@
 <h5 id="_1">联调测试</h5>
 <p>配置完成后分别重启rsyslog服务和nginx服务，访问nginx产生日志</p>
 <p>1.查看kafka是否有正常生成topic</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># bin/kafka-topics.sh --list --zookeeper 127.0.0.1:2181</span>
-<span class="err">__consumer_offsets</span>
-<span class="err">rsyslog_nginx</span>
-</code></pre></div>
+<pre class="codehilite"><code># bin/kafka-topics.sh --list --zookeeper 127.0.0.1:2181
+__consumer_offsets
+rsyslog_nginx</code></pre>
+
 
 <p>2.查看topic是否能正常接收日志</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic rsyslog_nginx</span>
-<span class="err">{&quot;host&quot;: &quot;domain.com&quot;,&quot;server_addr&quot;: &quot;172.17.0.2&quot;,&quot;http_x_forwarded_for&quot;:&quot;58.52.198.68&quot;,&quot;remote_addr&quot;:&quot;10.120.89.84&quot;,&quot;time_local&quot;:&quot;28/Aug/2018:14:26:00 +0800&quot;,&quot;request_method&quot;:&quot;GET&quot;,&quot;request_uri&quot;:&quot;/&quot;,&quot;status&quot;:200,&quot;body_bytes_sent&quot;:1461,&quot;http_referer&quot;:&quot;-&quot;,&quot;http_user_agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36&quot;,&quot;upstream_addr&quot;:&quot;-&quot;,&quot;upstream_status&quot;:&quot;-&quot;,&quot;upstream_response_time&quot;:&quot;-&quot;,&quot;request_time&quot;:0.000}</span>
-</code></pre></div>
+<pre class="codehilite"><code># bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic rsyslog_nginx
+{&quot;host&quot;: &quot;domain.com&quot;,&quot;server_addr&quot;: &quot;172.17.0.2&quot;,&quot;http_x_forwarded_for&quot;:&quot;58.52.198.68&quot;,&quot;remote_addr&quot;:&quot;10.120.89.84&quot;,&quot;time_local&quot;:&quot;28/Aug/2018:14:26:00 +0800&quot;,&quot;request_method&quot;:&quot;GET&quot;,&quot;request_uri&quot;:&quot;/&quot;,&quot;status&quot;:200,&quot;body_bytes_sent&quot;:1461,&quot;http_referer&quot;:&quot;-&quot;,&quot;http_user_agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36&quot;,&quot;upstream_addr&quot;:&quot;-&quot;,&quot;upstream_status&quot;:&quot;-&quot;,&quot;upstream_response_time&quot;:&quot;-&quot;,&quot;request_time&quot;:0.000}</code></pre>
+
 
 <p>3.kibana添加index，查看Elasticsearch中是否有数据，如果前两步都正常，kibana搜不到index或index没有数据，多半是index名字写错了之类的基础问题，仔细检查</p>
 <h2 id="kibana">kibana查询展示</h2>

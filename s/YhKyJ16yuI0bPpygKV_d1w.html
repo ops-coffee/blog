@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -65,199 +65,199 @@
 <p><strong>只是为了技术研究</strong>，没有商用，代码和架构以实现需求为目的，未做优化，且非专业开发，凑合看</p>
 <h2 id="_4">抓取数据</h2>
 <p>翻了一遍平台官网发现有个页面直接展示了转让标的详细信息，无需登录，且是通过ajax方式异步加载的json字符串（但是json字符串里套了一堆的html代码，不知道咋设计的）的方式渲染页面的，那抓取工作简单多了，写了个抓取脚本，流程为：访问页面接口 --&gt; 取到数据 --&gt; 简单处理 --&gt; 录入数据库，抓取脚本直接放在计划任务里每三分钟执行一次，脚本内容如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">requests</span>
+<pre class="codehilite"><code>import re
+import time
+import datetime
+import requests
 
-<span class="kn">import</span> <span class="nn">pymysql</span>
+import pymysql
 
-<span class="c1"># 连接mysql数据库</span>
-<span class="n">db</span> <span class="o">=</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span><span class="s2">&quot;root&quot;</span><span class="p">,</span><span class="s2">&quot;passwd&quot;</span><span class="p">,</span><span class="s2">&quot;pzp&quot;</span><span class="p">)</span>
-<span class="n">cursor</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+# 连接mysql数据库
+db = pymysql.connect(&quot;127.0.0.1&quot;,&quot;root&quot;,&quot;passwd&quot;,&quot;pzp&quot;)
+cursor = db.cursor()
 
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9999</span><span class="p">):</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;RepaymentTypeId&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;pagesize&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;pageindex&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s2">&quot;startDeadLine&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;endDeadLine&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;rate&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;beginRate&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;endRate&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;strkey&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
-        <span class="s2">&quot;orderby&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
-        <span class="s2">&quot;unitStart&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;unitEnd&quot;</span><span class="p">:</span> <span class="mi">0</span>
-    <span class="p">}</span>
+for i in range(1, 9999):
+    data = {
+        &quot;RepaymentTypeId&quot;: 0,
+        &quot;pagesize&quot;: 1,
+        &quot;pageindex&quot;: i,
+        &quot;type&quot;: 1,
+        &quot;status&quot;: 2,
+        &quot;startDeadLine&quot;: 0,
+        &quot;endDeadLine&quot;: 0,
+        &quot;rate&quot;: 0,
+        &quot;beginRate&quot;: 0,
+        &quot;endRate&quot;: 0,
+        &quot;strkey&quot;: None,
+        &quot;orderby&quot;: 15,
+        &quot;unitStart&quot;: 0,
+        &quot;unitEnd&quot;: 0
+    }
 
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;https://www.tuandai.com/pages/zSharePlan/getZXList&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    try:
+        r = requests.post('https://www.tuandai.com/pages/zSharePlan/getZXList', data=data).json()
 
-        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;code&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">html</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;projectListHtml&#39;</span><span class="p">)</span>
+        if r.get('code') == 0:
+            html = r.get('data').get('projectListHtml')
 
-            <span class="n">dr</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;[^&gt;]+&gt;&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">S</span><span class="p">)</span>
-            <span class="n">dd</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            dr = re.compile(r'&lt;[^&gt;]+&gt;', re.S)
+            dd = dr.sub('', html).split()
 
-            <span class="c1"># 截取单号，只取字符串中的数字</span>
-            <span class="n">order_num</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;\d+&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">dd</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            # 截取单号，只取字符串中的数字
+            order_num = ''.join(re.compile('\d+').findall(dd[0]))
 
-            <span class="c1"># 查询mysql数据库</span>
-            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select order_num from tdw_zx_done where order_num = </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="n">order_num</span><span class="p">)</span>
-            <span class="c1"># 获取到查询结果</span>
-            <span class="n">ex</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+            # 查询mysql数据库
+            cursor.execute(&quot;select order_num from tdw_zx_done where order_num = %s&quot; %order_num)
+            # 获取到查询结果
+            ex = cursor.fetchone()
 
-            <span class="c1"># 判断单号是否已经记录过</span>
-            <span class="k">if</span> <span class="n">ex</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="c1"># 如果单号没有记录过，则计数器置为0</span>
-                <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+            # 判断单号是否已经记录过
+            if ex is None:
+                # 如果单号没有记录过，则计数器置为0
+                x = 0
 
-                <span class="n">publish_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
-                    <span class="s1">&#39;20</span><span class="si">%s</span><span class="s1">-</span><span class="si">%s</span><span class="s1">-</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">:</span><span class="si">%s</span><span class="s1">:</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">order_num</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span><span class="n">order_num</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span><span class="n">order_num</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">],</span><span class="n">order_num</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">8</span><span class="p">],</span><span class="n">order_num</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">10</span><span class="p">],</span><span class="n">order_num</span><span class="p">[</span><span class="mi">10</span><span class="p">:</span><span class="mi">12</span><span class="p">]),</span>
-                    <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span>
-                <span class="p">)</span>
+                publish_time = datetime.datetime.strptime(
+                    '20%s-%s-%s %s:%s:%s' %(order_num[0:2],order_num[2:4],order_num[4:6],order_num[6:8],order_num[8:10],order_num[10:12]),
+                    '%Y-%m-%d %H:%M:%S'
+                )
 
-                <span class="c1"># ‘元’单位都替换成‘万元’，并去掉汉字</span>
-                <span class="n">a</span> <span class="o">=</span> <span class="n">dd</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="k">if</span> <span class="s1">&#39;元&#39;</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
-                    <span class="n">money</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;\d+&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">a</span><span class="p">)))</span> <span class="o">/</span> <span class="mi">10000</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">money</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;万&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                # ‘元’单位都替换成‘万元’，并去掉汉字
+                a = dd[1].split(':')[1]
+                if '元' in a:
+                    money = int(''.join(re.compile('\d+').findall(a))) / 10000
+                else:
+                    money = a.replace('万','')
 
-                <span class="c1"># 取利率</span>
-                <span class="n">rate</span> <span class="o">=</span> <span class="n">dd</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                # 取利率
+                rate = dd[4].replace('%','')
 
-                <span class="c1"># 计算还款日期，借款日期 + 借款时间</span>
-                <span class="n">days</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;\d+&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">dd</span><span class="p">[</span><span class="mi">6</span><span class="p">]))</span>
-                <span class="n">repay</span> <span class="o">=</span> <span class="p">(</span><span class="n">publish_time</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">days</span><span class="p">)))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+                # 计算还款日期，借款日期 + 借款时间
+                days = ''.join(re.compile('\d+').findall(dd[6]))
+                repay = (publish_time + datetime.timedelta(days=int(days))).strftime('%Y-%m-%d')
 
-                <span class="k">print</span><span class="p">(</span><span class="n">publish_time</span><span class="p">,</span> <span class="n">order_num</span><span class="p">,</span> <span class="n">money</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">days</span><span class="p">,</span> <span class="n">repay</span><span class="p">)</span>
+                print(publish_time, order_num, money, rate, days, repay)
 
-                <span class="c1"># 往数据库里插入数据并提交</span>
-                <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO tdw_zx_done VALUES(&#39;</span><span class="si">%s</span><span class="s2">&#39;, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, &#39;</span><span class="si">%s</span><span class="s2">&#39;)&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">publish_time</span><span class="p">,</span> <span class="n">order_num</span><span class="p">,</span> <span class="n">money</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">days</span><span class="p">,</span> <span class="n">repay</span><span class="p">)</span>
-                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
-                <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+                # 往数据库里插入数据并提交
+                sql = &quot;INSERT INTO tdw_zx_done VALUES('%s', %s, %s, %s, %s, '%s')&quot; %(publish_time, order_num, money, rate, days, repay)
+                cursor.execute(sql)
+                db.commit()
 
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># 如果单号已经记录过，则计数器加1</span>
-                <span class="n">x</span> <span class="o">+=</span> <span class="mi">1</span>
+            else:
+                # 如果单号已经记录过，则计数器加1
+                x += 1
 
-                <span class="c1"># 如果单号已录入过数据库，则返回</span>
-                <span class="k">print</span><span class="p">(</span><span class="s1">&#39;单号已录入：</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="nb">str</span><span class="p">(</span><span class="n">order_num</span><span class="p">))</span>
+                # 如果单号已录入过数据库，则返回
+                print('单号已录入：%s' %str(order_num))
 
-            <span class="c1"># 判断如果有连续200个单号都已经录入过数据库，则跳出循环</span>
-            <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
-                <span class="k">break</span>
+            # 判断如果有连续200个单号都已经录入过数据库，则跳出循环
+            if x == 200:
+                break
 
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.02</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            time.sleep(0.02)
+        else:
+            print(r)
+    except Exception as e:
+        print(e)
 
-<span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</code></pre></div>
+db.close()</code></pre>
+
 
 <h2 id="_5">数据处理及缓存</h2>
 <p>上边已经获取到了原始数据，接下来需要对原始数据进行清洗，取自己需要的今日待还及实时成交，并写入缓存，写入缓存的目的是公众号并发查询的情况下，直接去缓存取数据，减小对数据库的压力，这个脚本程序也放在计划任务里每分钟执行</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">from</span> <span class="nn">decimal</span> <span class="kn">import</span> <span class="n">Decimal</span>
+<pre class="codehilite"><code>import os
+import sys
+import json
+import datetime
+from decimal import Decimal
 
-<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+os.chdir(sys.path[0])
 
-<span class="kn">from</span> <span class="nn">connection</span> <span class="kn">import</span> <span class="n">rediscon</span><span class="p">,</span> <span class="n">mysqlcon</span>
-<span class="n">mc</span><span class="p">,</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">mysqlcon</span><span class="p">()</span><span class="o">.</span><span class="n">cursor</span><span class="p">(),</span> <span class="n">rediscon</span><span class="p">()</span>
+from connection import rediscon, mysqlcon
+mc, rc = mysqlcon().cursor(), rediscon()
 
-<span class="k">def</span> <span class="nf">cache_now_data</span><span class="p">():</span>
-    <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+def cache_now_data():
+    today = datetime.date.today().strftime('%Y-%m-%d')
 
-    <span class="n">tj</span><span class="p">,</span> <span class="n">th</span><span class="p">,</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span>
+    tj, th, = '', ''
 
-    <span class="k">try</span><span class="p">:</span>
-        <span class="c1"># 成交数据统计</span>
-        <span class="n">mc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select count(1),sum(money) from tdw_zx_done where DATE(publish_time)=&#39;</span><span class="si">%s</span><span class="s2">&#39;;&quot;</span> <span class="o">%</span><span class="n">today</span><span class="p">)</span>
-        <span class="n">tj</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+    try:
+        # 成交数据统计
+        mc.execute(&quot;select count(1),sum(money) from tdw_zx_done where DATE(publish_time)='%s';&quot; %today)
+        tj = mc.fetchone()
 
-        <span class="n">tjie</span> <span class="o">=</span> <span class="s1">&#39;借款人数：</span><span class="si">%s</span><span class="s1"> 借款金额：</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">tj</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tj</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        tjie = '借款人数：%s 借款金额：%s' %(tj[0], tj[1])
 
-        <span class="c1"># 待还数据统计</span>
-        <span class="n">mc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select count(1),sum(money) from tdw_zx_done where repay=&#39;</span><span class="si">%s</span><span class="s2">&#39;;&quot;</span> <span class="o">%</span><span class="n">today</span><span class="p">)</span>
-        <span class="n">th</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+        # 待还数据统计
+        mc.execute(&quot;select count(1),sum(money) from tdw_zx_done where repay='%s';&quot; %today)
+        th = mc.fetchone()
 
-        <span class="n">thuan</span> <span class="o">=</span> <span class="s1">&#39;待还人数：</span><span class="si">%s</span><span class="s1"> 待还金额：</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">th</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">th</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        thuan = '待还人数：%s 待还金额：%s' %(th[0], th[1])
 
-        <span class="c1"># 完成还款预估时间</span>
-        <span class="k">if</span> <span class="n">th</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="n">tomorror_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">tomorror_time_str</span> <span class="o">=</span> <span class="n">tomorror_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> 00:00:00&#39;</span><span class="p">)</span>
-            <span class="n">tomorror_time_format</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">tomorror_time_str</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span> 
+        # 完成还款预估时间
+        if th[0]:
+            tomorror_date = datetime.date.today() + datetime.timedelta(days=1)
+            tomorror_time_str = tomorror_date.strftime('%Y-%m-%d 00:00:00')
+            tomorror_time_format = datetime.datetime.strptime(tomorror_time_str, '%Y-%m-%d %H:%M:%S') 
 
-            <span class="n">last_hour</span> <span class="o">=</span> <span class="p">(</span><span class="n">tomorror_time_format</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span><span class="o">.</span><span class="n">seconds</span> <span class="o">/</span> <span class="mi">60</span> <span class="o">/</span> <span class="mi">60</span>
-            <span class="n">avg_hour_money</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="n">th</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">tj</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">Decimal</span><span class="p">(</span><span class="n">last_hour</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
-            <span class="n">avg_hour_money</span> <span class="o">=</span> <span class="n">avg_hour_money</span> <span class="k">if</span> <span class="n">avg_hour_money</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">avg_hour_money</span> <span class="o">=</span> <span class="s1">&#39;无今日待还数据，无法计算&#39;</span>
+            last_hour = (tomorror_time_format - datetime.datetime.now()).seconds / 60 / 60
+            avg_hour_money = round(Decimal(th[1] - tj[1]) / Decimal(last_hour), 4)
+            avg_hour_money = avg_hour_money if avg_hour_money &gt; 0 else 0
+        else:
+            avg_hour_money = '无今日待还数据，无法计算'
 
-        <span class="c1"># 按小时统计详情</span>
-        <span class="n">mc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select Hour(publish_time) as Hour,count(1),sum(money) from tdw_zx_done where DATE(publish_time) =&#39;</span><span class="si">%s</span><span class="s2">&#39; group by Hour;&quot;</span> <span class="o">%</span><span class="n">today</span><span class="p">)</span>
-        <span class="n">tdetail</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        # 按小时统计详情
+        mc.execute(&quot;select Hour(publish_time) as Hour,count(1),sum(money) from tdw_zx_done where DATE(publish_time) ='%s' group by Hour;&quot; %today)
+        tdetail = mc.fetchall()
 
-        <span class="n">dl</span> <span class="o">=</span> <span class="s1">&#39;小时  |  成交额（万元）</span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tdetail</span><span class="p">:</span>
-            <span class="n">dl</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;  |  &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        dl = '小时  |  成交额（万元）\n'
+        for i in tdetail:
+            dl += str(i[0]) + '  |  ' + str(i[2]) + '\n'
 
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;数据库操作异常：</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="n">e</span><span class="p">)</span>
+    except Exception as e:
+        print('数据库操作异常：%s' %e)
 
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">key</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H%M&#39;</span><span class="p">)</span>
-        <span class="n">val</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;daihuan&quot;</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="n">th</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="s2">&quot;chengjiao&quot;</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="n">tj</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="s2">&quot;avg_hour_money&quot;</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="n">avg_hour_money</span><span class="p">)}</span>
+    try:
+        key = datetime.datetime.now().strftime('%Y%m%d%H%M')
+        val = {&quot;daihuan&quot;:str(th[1]),&quot;chengjiao&quot;:str(tj[1]),&quot;avg_hour_money&quot;:str(avg_hour_money)}
 
-        <span class="k">print</span><span class="p">(</span><span class="n">rc</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;tdw_zx_now_&#39;</span><span class="o">+</span><span class="n">key</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">ex</span><span class="o">=</span><span class="mi">7200</span><span class="p">))</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;缓存操作异常：</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="n">e</span><span class="p">)</span>
+        print(rc.set('tdw_zx_now_'+key, json.dumps(val), ex=7200))
+    except Exception as e:
+        print('缓存操作异常：%s' %e)
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">cache_now_data</span><span class="p">()</span>
-</code></pre></div>
+if __name__ == '__main__':
+    cache_now_data()</code></pre>
+
 
 <h2 id="_6">微信好友、群自动回复</h2>
 <p>我想看数据的时候如何去看呢？去服务器上执行下脚本这方式太low了吧，借助微信机器人，就像你跟朋友聊天一样，发消息“最新数据”，那他就立即回复最新消息给你，这个方式看起来不错，实现完成后有几个朋友觉得不错，也想看数据，那我干脆将这些需要看数据的朋友都拉倒一个群里吧，回复消息群里所有用户都看得到很方便了，技术实现主要借助了<code>itchat</code>模块（itchat主要通过网页版微信接口处理数据，网页版微信很多用户无法登陆了，也就没有办法使用itchat），代码如下</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">itchat</span>
+<pre class="codehilite"><code>import itchat
 
-<span class="kn">from</span> <span class="nn">tdw_data_statistics_now</span> <span class="kn">import</span> <span class="n">get_now_data</span>
+from tdw_data_statistics_now import get_now_data
 
-<span class="c1"># 处理好友消息</span>
-<span class="nd">@itchat.msg_register</span><span class="p">(</span><span class="n">itchat</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">TEXT</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">text_reply</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;Text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;命令：&#39;</span><span class="p">):</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;Content&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;命令：&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">msg</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s1">&#39;正在处理你的命令：</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">message</span><span class="p">))</span>
-    <span class="k">if</span> <span class="s1">&#39;最新数据&#39;</span> <span class="o">==</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;Text&#39;</span><span class="p">]:</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="n">get_now_data</span><span class="p">()</span>
-        <span class="n">msg</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+# 处理好友消息
+@itchat.msg_register(itchat.content.TEXT)
+def text_reply(msg):
+    if msg['Text'].startswith('命令：'):
+        message = msg['Content'].split('命令：')[1]
+        msg.user.send('正在处理你的命令：%s' %(message))
+    if '最新数据' == msg['Text']:
+        message = get_now_data()
+        msg.user.send(message)
 
-<span class="c1"># 处理群聊消息</span>
-<span class="nd">@itchat.msg_register</span><span class="p">(</span><span class="n">itchat</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">TEXT</span><span class="p">,</span> <span class="n">isGroupChat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">text_reply</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
-    <span class="c1">#itchat.send(u&#39;@%s\u2005I received: %s&#39; % (msg[&#39;ActualNickName&#39;], msg[&#39;Content&#39;]), msg[&#39;FromUserName&#39;])</span>
-    <span class="k">if</span> <span class="s1">&#39;最新数据&#39;</span> <span class="o">==</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;Text&#39;</span><span class="p">]:</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="n">get_now_data</span><span class="p">()</span>
-        <span class="n">msg</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+# 处理群聊消息
+@itchat.msg_register(itchat.content.TEXT, isGroupChat=True)
+def text_reply(msg):
+    #itchat.send(u'@%s\u2005I received: %s' % (msg['ActualNickName'], msg['Content']), msg['FromUserName'])
+    if '最新数据' == msg['Text']:
+        message = get_now_data()
+        msg.user.send(message)
 
-<span class="c1">#message = getMessage()</span>
-<span class="c1">#itchat.send(message, toUserName=&#39;filehelper&#39;)</span>
+#message = getMessage()
+#itchat.send(message, toUserName='filehelper')
 
-<span class="n">itchat</span><span class="o">.</span><span class="n">auto_login</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">enableCmdQR</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">itchat</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
-</code></pre></div>
+itchat.auto_login(True, enableCmdQR=True)
+itchat.run(True)</code></pre>
+
 
 <h2 id="_7">微信公众号自动回复</h2>
 <p>设想一个应用场景，如果有很多人需要这个数据怎么处理呢？让他们都加一下我的微信或把他们都给加到一个群里固然可以，只是不够优雅，这里想到了微信公众号，当用户关注公众号后，回复“最新数据”可把最新数据自动回复给用户是不是就优雅很多了。然后就写了个机器人自动处理，主要借助<code>werobot</code>模块实现。</p>
@@ -265,92 +265,92 @@
 <ul>
 <li>url</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span>
+<pre class="codehilite"><code>from django.urls import path
 
-<span class="kn">from</span> <span class="nn">werobot.contrib.django</span> <span class="kn">import</span> <span class="n">make_view</span>
-<span class="kn">from</span> <span class="nn">official.robot</span> <span class="kn">import</span> <span class="n">robot</span>
+from werobot.contrib.django import make_view
+from official.robot import robot
 
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;robot/&#39;</span><span class="p">,</span> <span class="n">make_view</span><span class="p">(</span><span class="n">robot</span><span class="p">)),</span>
-<span class="p">]</span>
-</code></pre></div>
+urlpatterns = [
+    path('robot/', make_view(robot)),
+]</code></pre>
+
 
 <ul>
 <li>机器人程序</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="c1"># cat official/robot.py</span>
-<span class="kn">import</span> <span class="nn">re</span>
+<pre class="codehilite"><code># cat official/robot.py
+import re
 
-<span class="kn">from</span> <span class="nn">werobot</span> <span class="kn">import</span> <span class="n">WeRoBot</span>
-<span class="kn">from</span> <span class="nn">werobot.replies</span> <span class="kn">import</span> <span class="n">ImageReply</span>
+from werobot import WeRoBot
+from werobot.replies import ImageReply
 
-<span class="kn">from</span> <span class="nn">official.backends.get_tdw_data</span> <span class="kn">import</span> <span class="n">get_now_data</span>
+from official.backends.get_tdw_data import get_now_data
 
-<span class="n">robot</span> <span class="o">=</span> <span class="n">WeRoBot</span><span class="p">(</span><span class="n">enable_session</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                <span class="n">token</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
-                <span class="n">APP_ID</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
-                <span class="n">APP_SECRET</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+robot = WeRoBot(enable_session=False,
+                token='',
+                APP_ID='',
+                APP_SECRET='')
 
-<span class="c1"># 新用户关注自动回复</span>
-<span class="nd">@robot.subscribe</span>
-<span class="k">def</span> <span class="nf">subscribe</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s1">&#39;&#39;&#39;来了？坐，好戏马上开始</span>
+# 新用户关注自动回复
+@robot.subscribe
+def subscribe(message):
+    return '''来了？坐，好戏马上开始
 
-<span class="s1">回复[最新数据]获取最新数据更新&#39;&#39;&#39;</span>
+回复[最新数据]获取最新数据更新'''
 
-<span class="c1"># 联系二维码，用户输入&quot;联系&quot;关键字回复作者二维码</span>
-<span class="nd">@robot.filter</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;.*?联系.*?&quot;</span><span class="p">))</span>
-<span class="k">def</span> <span class="nf">contact</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">ImageReply</span><span class="p">(</span>
-        <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
-        <span class="n">media_id</span><span class="o">=</span><span class="s2">&quot;DBO8qVu-8bwNF9O7o8wCyRs4awfVTjA_WuPoLkj33B1C8ZX9JVdmw30zZo9l8ovx&quot;</span>
-    <span class="p">)</span>
+# 联系二维码，用户输入&quot;联系&quot;关键字回复作者二维码
+@robot.filter(re.compile(&quot;.*?联系.*?&quot;))
+def contact(message):
+    return ImageReply(
+        message=message,
+        media_id=&quot;DBO8qVu-8bwNF9O7o8wCyRs4awfVTjA_WuPoLkj33B1C8ZX9JVdmw30zZo9l8ovx&quot;
+    )
 
-<span class="c1"># 处理文本消息</span>
-<span class="nd">@robot.text</span>
-<span class="k">def</span> <span class="nf">hello</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+# 处理文本消息
+@robot.text
+def hello(message):
+    try:
+        msg = message.content.strip().lower()
 
-        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;最新.*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
-            <span class="n">tdw_zx_now_data</span> <span class="o">=</span> <span class="n">get_now_data</span><span class="p">()</span>
+        if re.compile(&quot;最新.*&quot;).match(msg):
+            tdw_zx_now_data = get_now_data()
 
-            <span class="k">if</span> <span class="n">tdw_zx_now_data</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">tdw_zx_now_data</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="s1">&#39;暂时无法获取数据，请稍后再试&#39;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;请输入[ 最新数据 ]获取智享数据更新</span><span class="se">\n\n</span><span class="s1">如有疑问可以回复[ 联系作者 ]与我联系&#39;</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-</code></pre></div>
+            if tdw_zx_now_data:
+                return tdw_zx_now_data
+            else:
+                return '暂时无法获取数据，请稍后再试'
+        else:
+            return '请输入[ 最新数据 ]获取智享数据更新\n\n如有疑问可以回复[ 联系作者 ]与我联系'
+    except Exception as e:
+        print(e)</code></pre>
+
 
 <ul>
 <li>后台处理程序</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
+<pre class="codehilite"><code>import json
+import datetime
 
-<span class="kn">from</span> <span class="nn">django_redis</span> <span class="kn">import</span> <span class="n">get_redis_connection</span>
-<span class="n">cache</span> <span class="o">=</span> <span class="n">get_redis_connection</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
+from django_redis import get_redis_connection
+cache = get_redis_connection('default')
 
-<span class="k">def</span> <span class="nf">get_now_data</span><span class="p">():</span>
-    <span class="n">now_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-    <span class="n">prev_time</span> <span class="o">=</span> <span class="n">now_time</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+def get_now_data():
+    now_time = datetime.datetime.now()
+    prev_time = now_time - datetime.timedelta(minutes=1)
 
-    <span class="c1"># 直接去缓存取数据</span>
-    <span class="n">redis_value</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tdw_zx_now_&#39;</span><span class="o">+</span><span class="n">prev_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H%M&#39;</span><span class="p">))</span>
+    # 直接去缓存取数据
+    redis_value = cache.get('tdw_zx_now_'+prev_time.strftime('%Y%m%d%H%M'))
 
-    <span class="k">if</span> <span class="n">redis_value</span><span class="p">:</span>
-        <span class="n">jsondata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">redis_value</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
-        <span class="n">daihuan</span> <span class="o">=</span> <span class="s1">&#39;今日待还金额：</span><span class="si">%s</span><span class="s1">万元&#39;</span> <span class="o">%</span><span class="n">jsondata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;daihuan&#39;</span><span class="p">)</span>
-        <span class="n">chengjiao</span> <span class="o">=</span> <span class="s1">&#39;当前已成交金额：</span><span class="si">%s</span><span class="s1">万元&#39;</span> <span class="o">%</span><span class="n">jsondata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;chengjiao&#39;</span><span class="p">)</span>
-        <span class="n">avg_hour_money</span> <span class="o">=</span> <span class="s1">&#39;完成还款预估每小时需要成交：</span><span class="si">%s</span><span class="s1">万元&#39;</span> <span class="o">%</span><span class="n">jsondata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;avg_hour_money&#39;</span><span class="p">)</span>
+    if redis_value:
+        jsondata = json.loads(redis_value.decode())
+        daihuan = '今日待还金额：%s万元' %jsondata.get('daihuan')
+        chengjiao = '当前已成交金额：%s万元' %jsondata.get('chengjiao')
+        avg_hour_money = '完成还款预估每小时需要成交：%s万元' %jsondata.get('avg_hour_money')
 
-        <span class="k">return</span> <span class="s1">&#39;&#39;&#39;</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;&#39;&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">prev_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M&#39;</span><span class="p">),</span> <span class="n">daihuan</span><span class="p">,</span> <span class="n">chengjiao</span><span class="p">,</span> <span class="n">avg_hour_money</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">None</span>
-</code></pre></div>
+        return '''%s\n%s\n%s\n%s''' %(prev_time.strftime('%Y-%m-%d %H:%M'), daihuan, chengjiao, avg_hour_money)
+    else:
+        return None</code></pre>
+
 
 <h1 id="_8">总结</h1>
 <ol>

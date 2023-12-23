@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -60,19 +60,19 @@
 <p><img alt="" loading="lazy" src="/static/images/20200529.02.png" /></p>
 <p>理论上不限制脚本的类型，可以是shell、python或者go之类的，前提是系统上有脚本的运行环境，当命令或者脚本有参数的时候可以在参数列写上参数名称，然后在最终执行任务的时候需要传递具体参数的值过来</p>
 <p>在命令执行完成后，会根据命令的返回状态也就是<code>$?</code>的值来判断命令是否执行成功，当<code>$?</code>为0是表示执行成功，否则表示执行失败，如果是执行的脚本时，需要在脚本最后明确脚本返回状态，shell脚本可以在脚本执行成功时通过exit指定退出状态，例如</p>
-<div class="codehilite"><pre><span></span><code><span class="err">ls /ops-coffee.cn &amp;&amp;\</span>
-<span class="err">exit 0 ||\</span>
-<span class="err">exit 2</span>
-</code></pre></div>
+<pre class="codehilite"><code>ls /ops-coffee.cn &amp;&amp;\
+exit 0 ||\
+exit 2</code></pre>
+
 
 <p>而对于python脚本则可以借助<code>sys.exit</code>这样写</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span>
+<pre class="codehilite"><code>import sys
 
-<span class="k">if</span> <span class="s1">&#39;www&#39;</span> <span class="ow">in</span> <span class="s1">&#39;ops-coffee.cn&#39;</span><span class="p">:</span>
-  <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-  <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-</code></pre></div>
+if 'www' in 'ops-coffee.cn':
+  sys.exit(0)
+else:
+  sys.exit(3)</code></pre>
+
 
 <p>其他语言类似</p>
 <p>模板的创建分为几步，先创建一个模板</p>

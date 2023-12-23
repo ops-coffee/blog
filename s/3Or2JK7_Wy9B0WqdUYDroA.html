@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -53,33 +53,33 @@
 <ol>
 <li>引入CSS/JS文件，由于bootstrap-duallistbox是基于bootstrap的，所以要先引入bootstrap相关的css和js</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="c">&lt;!-- 加载bootstrap --&gt;</span>
-<span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;https://code.jquery.com/jquery-3.2.1.slim.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-<span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css&quot;</span><span class="nt">&gt;</span>
+<pre class="codehilite"><code>&lt;!-- 加载bootstrap --&gt;
+&lt;script src=&quot;https://code.jquery.com/jquery-3.2.1.slim.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css&quot;&gt;
 
-<span class="c">&lt;!-- 加载bootstrap-dualllistbox --&gt;</span>
-<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;static/bootstrap-duallistbox/bootstrap-duallistbox.css&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;static/bootstrap-duallistbox/jquery.bootstrap-duallistbox.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-</code></pre></div>
+&lt;!-- 加载bootstrap-dualllistbox --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;static/bootstrap-duallistbox/bootstrap-duallistbox.css&quot;&gt;
+&lt;script src=&quot;static/bootstrap-duallistbox/jquery.bootstrap-duallistbox.js&quot;&gt;&lt;/script&gt;</code></pre>
+
 
 <ol>
 <li>加载duallistbox插件</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;select</span> <span class="na">class=</span><span class="s">&quot;form-control&quot;</span> <span class="na">multiple=</span><span class="s">&quot;multiple&quot;</span> <span class="na">name=</span><span class="s">&quot;groups&quot;</span> <span class="na">size=</span><span class="s">&quot;10&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>GroupA<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="err">selected</span> <span class="na">value=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;</span>GroupB<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>GroupC<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;4&quot;</span><span class="nt">&gt;</span>GroupD<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="err">selected</span> <span class="na">value=</span><span class="s">&quot;5&quot;</span><span class="nt">&gt;</span>GroupE<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;6&quot;</span><span class="nt">&gt;</span>GroupF<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;7&quot;</span><span class="nt">&gt;</span>GroupG<span class="nt">&lt;/option&gt;</span>
-<span class="nt">&lt;/select&gt;</span>
+<pre class="codehilite"><code>&lt;select class=&quot;form-control&quot; multiple=&quot;multiple&quot; name=&quot;groups&quot; size=&quot;10&quot;&gt;
+    &lt;option value=&quot;1&quot;&gt;GroupA&lt;/option&gt;
+    &lt;option selected value=&quot;2&quot;&gt;GroupB&lt;/option&gt;
+    &lt;option value=&quot;3&quot;&gt;GroupC&lt;/option&gt;
+    &lt;option value=&quot;4&quot;&gt;GroupD&lt;/option&gt;
+    &lt;option selected value=&quot;5&quot;&gt;GroupE&lt;/option&gt;
+    &lt;option value=&quot;6&quot;&gt;GroupF&lt;/option&gt;
+    &lt;option value=&quot;7&quot;&gt;GroupG&lt;/option&gt;
+&lt;/select&gt;
 
-<span class="nt">&lt;script&gt;</span>
-    var selectorx = $(&#39;select[name=&quot;groups&quot;]&#39;).bootstrapDualListbox();
-<span class="nt">&lt;/script&gt;</span>
-</code></pre></div>
+&lt;script&gt;
+    var selectorx = $('select[name=&quot;groups&quot;]').bootstrapDualListbox();
+&lt;/script&gt;</code></pre>
+
 
 <ol>
 <li>完成以上两步可以看到页面效果如下</li>
@@ -88,20 +88,20 @@
 <p>非常简单，到这里已经可以正常使用这个控件了，更多的花样接着往下看</p>
 <h2 id="_2">配置说明</h2>
 <p>整个界面为英文显示，有默认提示，如果你想将提示改为中文或添加自定义的提示内容，那么可以通过如下配置</p>
-<div class="codehilite"><pre><span></span><code><span class="k">var</span> <span class="n">selectorx</span> <span class="o">=</span> <span class="o">$</span><span class="p">(</span><span class="s1">&#39;select[name=&quot;groups&quot;]&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">bootstrapDualListbox</span><span class="p">({</span>
-    <span class="n">nonSelectedListLabel</span><span class="p">:</span> <span class="s1">&#39;未选择的组&#39;</span><span class="p">,</span>
-    <span class="n">selectedListLabel</span><span class="p">:</span> <span class="s1">&#39;已选择的组&#39;</span><span class="p">,</span>
-    <span class="n">filterTextClear</span><span class="p">:</span> <span class="s1">&#39;展示所有&#39;</span><span class="p">,</span>
-    <span class="n">filterPlaceHolder</span><span class="p">:</span> <span class="s1">&#39;过滤搜索&#39;</span><span class="p">,</span>
-    <span class="n">moveSelectedLabel</span><span class="p">:</span> <span class="s2">&quot;添加&quot;</span><span class="p">,</span>
-    <span class="n">moveAllLabel</span><span class="p">:</span> <span class="s1">&#39;添加所有&#39;</span><span class="p">,</span>
-    <span class="n">removeSelectedLabel</span><span class="p">:</span> <span class="s2">&quot;移除&quot;</span><span class="p">,</span>
-    <span class="n">removeAllLabel</span><span class="p">:</span> <span class="s1">&#39;移除所有&#39;</span><span class="p">,</span>
-    <span class="n">infoText</span><span class="p">:</span> <span class="s1">&#39;共{0}个组&#39;</span><span class="p">,</span>
-    <span class="n">infoTextFiltered</span><span class="p">:</span> <span class="s1">&#39;搜索到{0}个组 ,共{1}个组&#39;</span><span class="p">,</span>
-    <span class="n">infoTextEmpty</span><span class="p">:</span> <span class="s1">&#39;列表为空&#39;</span><span class="p">,</span>
-<span class="p">});</span>
-</code></pre></div>
+<pre class="codehilite"><code>var selectorx = $('select[name=&quot;groups&quot;]').bootstrapDualListbox({
+    nonSelectedListLabel: '未选择的组',
+    selectedListLabel: '已选择的组',
+    filterTextClear: '展示所有',
+    filterPlaceHolder: '过滤搜索',
+    moveSelectedLabel: &quot;添加&quot;,
+    moveAllLabel: '添加所有',
+    removeSelectedLabel: &quot;移除&quot;,
+    removeAllLabel: '移除所有',
+    infoText: '共{0}个组',
+    infoTextFiltered: '搜索到{0}个组 ,共{1}个组',
+    infoTextEmpty: '列表为空',
+});</code></pre>
+
 
 <p>以上配置都比较简单，对照中文就能知晓意思，不做过多解释，另外有几个支持的参数说明如下：</p>
 <p><strong>infoText：</strong> 除了设置字符串外还可设置为<code>false</code>，当设置为<code>false</code>时可隐藏这段信息</p>
@@ -111,25 +111,25 @@
 <p><strong>selectedFilter：</strong> 已选中的默认规则，与<code>noSelectedFilter</code>类似</p>
 <h2 id="_3">使用进阶</h2>
 <p>获取已选择的值</p>
-<div class="codehilite"><pre><span></span><code><span class="err">selectorx.val()</span>
-</code></pre></div>
+<pre class="codehilite"><code>selectorx.val()</code></pre>
+
 
 <p>获取select插件对象</p>
-<div class="codehilite"><pre><span></span><code><span class="err">selectorx.bootstrapDualListbox(&#39;getContainer&#39;)</span>
-</code></pre></div>
+<pre class="codehilite"><code>selectorx.bootstrapDualListbox('getContainer')</code></pre>
+
 
 <p>刷新插件元素用户界面</p>
-<div class="codehilite"><pre><span></span><code><span class="err">selectorx.bootstrapDualListbox(&#39;refresh&#39;);</span>
-</code></pre></div>
+<pre class="codehilite"><code>selectorx.bootstrapDualListbox('refresh');</code></pre>
+
 
 <p>删除bootstrap-duallistbox插件，恢复select原样</p>
-<div class="codehilite"><pre><span></span><code><span class="err">selectorx.bootstrapDualListbox(&#39;destroy&#39;);</span>
-</code></pre></div>
+<pre class="codehilite"><code>selectorx.bootstrapDualListbox('destroy');</code></pre>
+
 
 <p>动态添加select的option</p>
-<div class="codehilite"><pre><span></span><code>selectorx.append(&#39;<span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;9&quot;</span> <span class="err">selected</span><span class="nt">&gt;</span>ops-coffee.cn<span class="nt">&lt;/option&gt;</span>&#39;);
-selectorx.bootstrapDualListbox(&#39;refresh&#39;);
-</code></pre></div>
+<pre class="codehilite"><code>selectorx.append('&lt;option value=&quot;9&quot; selected&gt;ops-coffee.cn&lt;/option&gt;');
+selectorx.bootstrapDualListbox('refresh');</code></pre>
+
 
 <p>注意：<strong>上文中的所有selectorx都为加载duallistbox时实例化的select对象</strong></p>
 <h2 id="demo">完整Demo</h2>

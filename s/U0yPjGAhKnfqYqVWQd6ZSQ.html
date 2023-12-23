@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -45,39 +45,39 @@
         <p>两年前写过一篇文章<a href="/s/JpnxTf-Z9vkKrwl8nXJljQ">Django开发中使用Cache缓存提升10倍效率</a>用来解决任务系统执行任务慢的问题，也就是在这个方案中引入了Django的Cache缓存系统，从此之后任务系统运行稳定，没再遇到其他问题。在加入新公司之后重新设计任务系统时依然沿用了这个方案，到现在新公司任务系统上线运行了近一年的时间，也稳定跑了跑了几千个任务没出现问题，这几天突然有小伙伴跟我反馈，任务日志被截断，没有显示全</p>
 <p><img alt="" loading="lazy" src="/static/images/20230113.01.png" /></p>
 <p>任务系统在之前一直运行稳定没有出现过日志截断的问题，我在想是不是最近更新了什么内容导致的bug，于是又运行了几个测试任务都正常。那大概率就是程序有bug，在某些特殊的情况下会触发，往往这种问题是最难解决的，我先仔细的去看了下代码，并没有发现什么问题，核心代码如下</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Logger:</span>
-    <span class="n">def</span> <span class="n">__init__</span>(<span class="nb">self</span>, <span class="n">tid</span>, <span class="k">state</span>=<span class="n">None</span>):
-        <span class="nb">self</span>.<span class="n">tid</span> = <span class="n">tid</span>
-        <span class="nb">self</span>.<span class="k">state</span> = <span class="k">state</span>
+<pre class="codehilite"><code>class Logger:
+    def __init__(self, tid, state=None):
+        self.tid = tid
+        self.state = state
 
-        <span class="nb">self</span>.<span class="nb">key</span> = <span class="s">&#39;engine_subtask_log_%d&#39;</span> % <span class="nb">self</span>.<span class="n">tid</span>
+        self.key = 'engine_subtask_log_%d' % self.tid
 
-    <span class="n">def</span> <span class="nb">add</span>(<span class="nb">self</span>, <span class="n">details</span>):
-        <span class="n">subtasklog</span> = <span class="n">SubTaskLog</span>.<span class="n">objects</span>.<span class="nb">get</span>(<span class="nb">id</span>=<span class="nb">self</span>.<span class="n">tid</span>)
+    def add(self, details):
+        subtasklog = SubTaskLog.objects.get(id=self.tid)
 
-        <span class="k">if</span> <span class="n">details:</span>
-            <span class="c1"># 将详情更新到缓存中</span>
-            <span class="n">old_log</span> = <span class="nb">cache</span>.<span class="nb">get</span>(<span class="nb">self</span>.<span class="nb">key</span>, <span class="s">&#39;&#39;</span>)
-            <span class="nb">cache</span>.<span class="n">set</span>(<span class="nb">self</span>.<span class="nb">key</span>, <span class="n">old_log</span> + <span class="n">details</span>) <span class="k">if</span> <span class="n">old_log</span> <span class="k">else</span> <span class="nb">cache</span>.<span class="n">set</span>(<span class="nb">self</span>.<span class="nb">key</span>, <span class="n">details</span>)
+        if details:
+            # 将详情更新到缓存中
+            old_log = cache.get(self.key, '')
+            cache.set(self.key, old_log + details) if old_log else cache.set(self.key, details)
 
-        <span class="k">if</span> <span class="nb">self</span>.<span class="k">state</span> <span class="k">is</span> <span class="nb">not</span> <span class="n">None:</span>
-            <span class="c1"># 将缓存写入数据库并保存</span>
-            <span class="n">subtasklog</span>.<span class="n">details</span> = <span class="n">_details</span>
-            <span class="n">subtasklog</span>.<span class="n">save</span>()
+        if self.state is not None:
+            # 将缓存写入数据库并保存
+            subtasklog.details = _details
+            subtasklog.save()
 
-            <span class="c1"># 删除缓存</span>
-            <span class="nb">cache</span>.<span class="n">delete</span>(<span class="nb">self</span>.<span class="nb">key</span>)
+            # 删除缓存
+            cache.delete(self.key)
 
-<span class="c1"># 执行命令循环获取日志</span>
+# 执行命令循环获取日志
 
-<span class="n">p</span> = <span class="n">subprocess</span>.<span class="n">Popen</span>(<span class="n">cmd</span>, <span class="nb">shell</span>=<span class="nb">shell</span>, <span class="n">stdin</span>=<span class="n">subprocess</span>.<span class="n">PIPE</span>, <span class="nb">stdout</span>=<span class="n">subprocess</span>.<span class="n">PIPE</span>,
-                     <span class="nb">stderr</span>=<span class="n">subprocess</span>.<span class="n">STDOUT</span>, <span class="n">env</span>=<span class="n">env</span>)
+p = subprocess.Popen(cmd, shell=shell, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                     stderr=subprocess.STDOUT, env=env)
 
-<span class="k">while</span> <span class="n">p</span>.<span class="nb">poll</span>() <span class="k">is</span> <span class="n">None:</span>
-    <span class="k">for</span> <span class="n">realtime_output</span> <span class="nb">in</span> <span class="n">iter</span>(<span class="n">p</span>.<span class="nb">stdout</span>.<span class="n">readline</span>, <span class="n">b&#39;&#39;</span>):
-        <span class="n">dt</span> = <span class="n">time</span>.<span class="n">strftime</span>(<span class="s">&#39;%Y-%m-%d %H:%M:%S&#39;</span>, <span class="n">time</span>.<span class="n">localtime</span>(<span class="n">time</span>.<span class="n">time</span>()))
-        <span class="n">Logger</span>(<span class="n">tid</span>).<span class="nb">add</span>(<span class="n">dt</span> + <span class="s">&#39; ----&gt; &#39;</span> + <span class="n">realtime_output</span>.<span class="nb">decode</span>(<span class="nb">encoding</span>=<span class="s">&#39;utf-8&#39;</span>))
-</code></pre></div>
+while p.poll() is None:
+    for realtime_output in iter(p.stdout.readline, b''):
+        dt = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+        Logger(tid).add(dt + ' ----&gt; ' + realtime_output.decode(encoding='utf-8'))</code></pre>
+
 
 <p>日志记录的逻辑大概就是：有新日志产生时调用Logger类的add方法，传入tid和details，tid用来标识是那个任务的日志，details就是新的日志信息，Logger程序根据任务日志拼装的key先去cache中获取value，如果value不存在也就是说当前任务还没有日志产生则会set当前details到cache中，如果value存在也就是说当前任务已经有日志输出，那就将新的日志与cache中已存在的任务日志合并之后再set回cache中</p>
 <p>整个逻辑比较清晰，看代码并没有发现什么问题，其他任务执行都正常，就那一条任务有日志截断的问题，那就去看看这条有问题的任务与其他任务有何区别，仔细分析后发现，这条任务执行时间较长，有差不多半个小时的时间，任务日志输出较多，可能有几万行占几M的空间，另外任务执行过程中还会有长时间的sleep</p>
@@ -88,23 +88,23 @@
 <li>一个长时间sleep的任务，任务执行过程中sleep了5分钟，复现了bug，出现了日志被截断的问题</li>
 </ol>
 <p>至此基本就确定问题就是因为任务执行过程中长时间sleep导致的，那就接着分析为什么长时间的sleep会导致日志截断，再返回上边的代码仔细看，存取日志主要两行</p>
-<div class="codehilite"><pre><span></span><code><span class="err">old_log = cache.get(self.key, &#39;&#39;)</span>
-<span class="err">cache.set(self.key, old_log + details) if old_log else cache.set(self.key, details)</span>
-</code></pre></div>
+<pre class="codehilite"><code>old_log = cache.get(self.key, '')
+cache.set(self.key, old_log + details) if old_log else cache.set(self.key, details)</code></pre>
+
 
 <p>从cache中获取日志是否存在<code>cache.get(self.key,'')</code>，若存在则追加不存在则添加。那是不是在任务执行的过程中没有获取到之前的日志，也就是<code>cache.get(self.key,'')</code>结果为空？按道理来说任务一旦执行就会有日志输出，那么在任务执行的过程中<code>cache.get(self.key,'')</code>是一定不会出现获取不到数据的情况，现在出现了获取不到数据的情况，那只有一个可能就是缓存中的这个key不存在了，代码中只有在任务执行结束显性传递状态之后才会删除key，任务执行过程中没有删除key的操作，那是什么个情况？这个时候自然就想到了key过期</p>
 <p>代码中在执行set操作时并没有指定key的过期时间，我原本以为不设置就是永不过期，看来跟我的想法不一致，于是测试了一下，果然如果不设置过期时间的话并不是永不过期，而是有大约300秒也就是5分钟的默认过期时间，那就可以解释为什么长时间的sleep会导致日志截断了</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="kn">import</span> <span class="n">cache</span>
-<span class="o">&gt;&gt;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;site&#39;</span><span class="p">,</span> <span class="s1">&#39;ops-coffee.cn&#39;</span><span class="p">)</span>
-<span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">cache</span><span class="o">.</span><span class="n">ttl</span><span class="p">(</span><span class="s1">&#39;site&#39;</span><span class="p">)</span>
-<span class="mi">293</span>
-</code></pre></div>
+<pre class="codehilite"><code>&gt;&gt;&gt; from django.core.cache import cache
+&gt;&gt;&gt;
+&gt;&gt;&gt; cache.set('site', 'ops-coffee.cn')
+True
+&gt;&gt;&gt; cache.ttl('site')
+293</code></pre>
+
 
 <p>知道了问题，那就很好解决了，又去翻了Django的官网，关于cache的TIMEOUT参数有这么一段描述：<strong>TIMEOUT: The default timeout, in seconds, to use for the cache. This argument defaults to 300 seconds (5 minutes). You can set TIMEOUT to None so that, by default, cache keys never expire. A value of 0 causes keys to immediately expire (effectively “don’t cache”)</strong>，可能是因为我英文太菜之前没有看仔细，TIMEOUT缓存过期时间默认5分钟，设置为None则是永不过期，设置为0是不缓存，我们不需要key过期，会在任务结束后主动删除，则设置为None永不过期即可，修改代码添加TIMEOUT参数为None</p>
-<div class="codehilite"><pre><span></span><code><span class="err">cache.set(self.key, old_log + details, None) if old_log else cache.set(self.key, details, None)</span>
-</code></pre></div>
+<pre class="codehilite"><code>cache.set(self.key, old_log + details, None) if old_log else cache.set(self.key, details, None)</code></pre>
+
 
 <p>至此，问题顺利解决</p>
 

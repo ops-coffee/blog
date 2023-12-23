@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -54,135 +54,135 @@
 <p><img alt="" loading="lazy" src="/static/images/20191128.01.jpg" /></p>
 <p>接下来看下具体实现，以下所有代码均是在这篇文章的基础上进行说明讲解：<a href="/s/a3eJjVTtuUjzwyk21nTBqQ">『Django实现WebSSH操作物理机或虚拟机』</a></p>
 <p>首先我们要启用layer，这个需要在settings.py中添加如下配置</p>
-<div class="codehilite"><pre><span></span><code><span class="err">CHANNEL_LAYERS = {</span>
-<span class="err">    &#39;default&#39;: {</span>
-<span class="err">        &#39;BACKEND&#39;: &#39;channels_redis.core.RedisChannelLayer&#39;,</span>
-<span class="err">        &#39;CONFIG&#39;: {</span>
-<span class="err">            &quot;hosts&quot;: [(&#39;ops-coffee.cn&#39;, 6379)],</span>
-<span class="err">        },</span>
-<span class="err">    },</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            &quot;hosts&quot;: [('ops-coffee.cn', 6379)],
+        },
+    },
+}</code></pre>
+
 
 <p>然后将处理WebSSH连接名为<code>SSHConsumer</code>的Consumer做改造，以使其支持layer，代码如下</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">SSHConsumer</span><span class="p">(</span><span class="n">WebsocketConsumer</span><span class="p">):</span>
-    <span class="n">def</span> <span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># 格式化参数</span>
-        <span class="n">ssh_connect_args</span> <span class="o">=</span> <span class="n">args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">)</span>
+<pre class="codehilite"><code>class SSHConsumer(WebsocketConsumer):
+    def connect(self):
+        # 格式化参数
+        ssh_connect_args = args(self.scope)
 
-        <span class="c1"># 新建录像记录</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">Host</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">ssh_connect_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">-</span><span class="si">%s</span><span class="s1">-</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
-            <span class="n">ssh_connect_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">),</span> <span class="n">ssh_connect_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">),</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+        # 新建录像记录
+        self.host = Host.objects.get(host=ssh_connect_args.get('host'))
+        self.group_name = '%s-%s-%d' % (
+            ssh_connect_args.get('host'), ssh_connect_args.get('username'), time.time())
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">therecord</span> <span class="o">=</span> <span class="n">Record</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">host</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span>
-            <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">],</span>
-            <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_name</span><span class="p">,</span>
-            <span class="n">channel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_name</span><span class="p">,</span>
-            <span class="n">cols</span><span class="o">=</span><span class="n">ssh_connect_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cols&#39;</span><span class="p">),</span>
-            <span class="n">rows</span><span class="o">=</span><span class="n">ssh_connect_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rows&#39;</span><span class="p">),</span>
-            <span class="n">is_connecting</span><span class="o">=</span><span class="n">True</span>
-        <span class="p">)</span>
+        self.therecord = Record.objects.create(
+            host=self.host,
+            user=self.scope['user'],
+            group=self.group_name,
+            channel=self.channel_name,
+            cols=ssh_connect_args.get('cols'),
+            rows=ssh_connect_args.get('rows'),
+            is_connecting=True
+        )
 
-        <span class="n">async_to_sync</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_layer</span><span class="o">.</span><span class="n">group_add</span><span class="p">)(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">group_name</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">channel_name</span>
-        <span class="p">)</span>
+        async_to_sync(self.channel_layer.group_add)(
+            self.group_name,
+            self.channel_name
+        )
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+        self.accept()
 
-        <span class="c1"># WebSocket连接成功后，连接ssh</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ssh</span> <span class="o">=</span> <span class="n">SSHBridge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">therecord</span><span class="p">,</span> <span class="n">websocket</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="o">**</span><span class="n">ssh_connect_args</span><span class="p">)</span>
+        # WebSocket连接成功后，连接ssh
+        self.ssh = SSHBridge(self.therecord, websocket=self)
+        self.ssh.connect(**ssh_connect_args)
 
-    <span class="n">def</span> <span class="n">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">close_code</span><span class="p">):</span>
-        <span class="c1"># 将连接状态置为False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">therecord</span><span class="o">.</span><span class="n">is_connecting</span> <span class="o">=</span> <span class="n">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">therecord</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    def disconnect(self, close_code):
+        # 将连接状态置为False
+        self.therecord.is_connecting = False
+        self.therecord.save()
 
-        <span class="n">async_to_sync</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_layer</span><span class="o">.</span><span class="n">group_discard</span><span class="p">)(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">group_name</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">channel_name</span>
-        <span class="p">)</span>
+        async_to_sync(self.channel_layer.group_discard)(
+            self.group_name,
+            self.channel_name
+        )
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        self.ssh.close()
 
-    <span class="n">def</span> <span class="n">receive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text_data</span><span class="o">=</span><span class="n">None</span><span class="p">):</span>
-        <span class="n">text_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">text_data</span><span class="p">)</span>
+    def receive(self, text_data=None):
+        text_data = json.loads(text_data)
 
-        <span class="k">if</span> <span class="n">text_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;flag&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;resize&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">resize_pty</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">text_data</span><span class="p">[</span><span class="s1">&#39;cols&#39;</span><span class="p">],</span> <span class="n">rows</span><span class="o">=</span><span class="n">text_data</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">])</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">shell</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">text_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+        if text_data.get('flag') == 'resize':
+            self.ssh.resize_pty(cols=text_data['cols'], rows=text_data['rows'])
+        else:
+            self.ssh.shell(data=text_data.get('data', ''))
 
-    <span class="n">def</span> <span class="n">ssh_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">text_data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
-            <span class="n">event</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span>
-        <span class="p">))</span>
-</code></pre></div>
+    def ssh_message(self, event):
+        self.send(text_data=json.dumps(
+            event['message']
+        ))</code></pre>
+
 
 <p>在connect连接建立时新建一条记录，存储主机、用户、<code>group_name</code>、<code>channel_name</code>以及初始窗口的<code>cols</code>、<code>rows</code>信息，同时标记<code>is_connecting</code>为True，这里的<code>group_name</code>命名与文章<a href="/s/XBKEfJKaucTFFcj-cS95LQ">『堡垒机的核心武器：WebSSH录像实现』</a>中我们定义的录像文件名规则一致，另外将这篇文章中新建录像记录的操作从<code>SSHBridge.record</code>中给转到了连接建立的connect中来，更合理也更方便</p>
 <p>在disconnect连接关闭时，将<code>is_connecting</code>标记为False，这样我们在前端页面上就可以根据这个标记来判断WebSSH是否正在连接，如果连接则展示<strong>监控</strong>和<strong>强制结束</strong>按钮，否则展示<strong>播放</strong>和<strong>命令提取</strong>按钮</p>
 <p>同时添加个ssh_message方法，用来接收发送到组的数据</p>
 <p>到这里，我们已经将WebSSH改造成了支持layer的模式，那么接下来就是要在用户点击监控的时候将用户与服务端建立的连接channel加入到上述group中</p>
 <p>新建一个名为<code>MonitorConsumer</code>的consumer，主要用来处理监控连接</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">MonitorConsumer</span>(<span class="n">WebsocketConsumer</span>):
-    <span class="n">def</span> <span class="nb">connect</span>(<span class="nb">self</span>):
-        <span class="n">pk</span> = <span class="nb">self</span>.<span class="nb">scope</span>[<span class="s">&#39;url_route&#39;</span>][<span class="s">&#39;kwargs&#39;</span>].<span class="nb">get</span>(<span class="s">&#39;id&#39;</span>)
-        <span class="nb">self</span>.<span class="n">group_name</span> = <span class="n">Record</span>.<span class="n">objects</span>.<span class="nb">get</span>(<span class="nb">id</span>=<span class="n">pk</span>).<span class="n">group</span>
+<pre class="codehilite"><code>class MonitorConsumer(WebsocketConsumer):
+    def connect(self):
+        pk = self.scope['url_route']['kwargs'].get('id')
+        self.group_name = Record.objects.get(id=pk).group
 
-        <span class="n">async_to_sync</span>(<span class="nb">self</span>.<span class="n">channel_layer</span>.<span class="n">group_add</span>)(
-            <span class="nb">self</span>.<span class="n">group_name</span>,
-            <span class="nb">self</span>.<span class="n">channel_name</span>
+        async_to_sync(self.channel_layer.group_add)(
+            self.group_name,
+            self.channel_name
         )
 
-        <span class="nb">self</span>.<span class="nb">accept</span>()
+        self.accept()
 
-        <span class="c1"># 判断用户已经结束了这个webssh连接时就关闭监控</span>
-        <span class="nb">self</span>.<span class="n">connecting</span> = <span class="n">Record</span>.<span class="n">objects</span>.<span class="nb">get</span>(<span class="nb">id</span>=<span class="n">pk</span>).<span class="n">is_connecting</span>
-        <span class="k">if</span> <span class="nb">not</span> <span class="nb">self</span>.<span class="n">connecting:</span>
-            <span class="nb">self</span>.<span class="nb">close</span>()
+        # 判断用户已经结束了这个webssh连接时就关闭监控
+        self.connecting = Record.objects.get(id=pk).is_connecting
+        if not self.connecting:
+            self.close()
 
-    <span class="n">def</span> <span class="n">disconnect</span>(<span class="nb">self</span>, <span class="n">close_code</span>):
-        <span class="n">async_to_sync</span>(<span class="nb">self</span>.<span class="n">channel_layer</span>.<span class="n">group_discard</span>)(
-            <span class="nb">self</span>.<span class="n">group_name</span>,
-            <span class="nb">self</span>.<span class="n">channel_name</span>
+    def disconnect(self, close_code):
+        async_to_sync(self.channel_layer.group_discard)(
+            self.group_name,
+            self.channel_name
         )
 
-        <span class="nb">self</span>.<span class="nb">close</span>()
+        self.close()
 
-    <span class="n">def</span> <span class="nb">receive</span>(<span class="nb">self</span>, <span class="n">text_data</span>=<span class="n">None</span>):
-        <span class="nb">pass</span>
+    def receive(self, text_data=None):
+        pass
 
-    <span class="n">def</span> <span class="n">ssh_message</span>(<span class="nb">self</span>, <span class="n">event</span>):
-        <span class="nb">self</span>.<span class="nb">send</span>(<span class="n">text_data</span>=<span class="n">json</span>.<span class="n">dumps</span>(
-            <span class="n">event</span>[<span class="s">&#39;message&#39;</span>]
-        ))
-</code></pre></div>
+    def ssh_message(self, event):
+        self.send(text_data=json.dumps(
+            event['message']
+        ))</code></pre>
+
 
 <p>MonitorConsumer与SSHConsumer有两个地方不一样，其一是<code>SSHConsumer</code>中我们直接新生成了个<code>group_name</code>，而<code>MonitorConsumer</code>中需要在connect时获取到要监控的ID，然后通过ID拿到<code>group_name</code>，将monitor连接加入到这个group，其二是监控只能看，不能操作，所以也不需要前端发送数据的<code>term.on</code>和Consumer的<code>receive</code>处理数据</p>
 <p>最后需要修改<code>SSHBridge</code>方法中发送给websocket的指令，从<code>self.websocket.send</code>改为发送到group的模式，如下</p>
-<div class="codehilite"><pre><span></span><code><span class="err">async_to_sync(self.websocket.channel_layer.group_send)(</span>
-<span class="err">    self.group_name,</span>
-<span class="err">    {</span>
-<span class="err">        &#39;type&#39;: &#39;ssh.message&#39;,</span>
-<span class="err">        &#39;message&#39;: message</span>
-<span class="err">    }</span>
-<span class="err">)</span>
-</code></pre></div>
+<pre class="codehilite"><code>async_to_sync(self.websocket.channel_layer.group_send)(
+    self.group_name,
+    {
+        'type': 'ssh.message',
+        'message': message
+    }
+)</code></pre>
+
 
 <p>至此，监控功能就算完成了，什么？前端页面怎么弄？参考下之前的WebSSH界面，几乎可以完全复制</p>
 <h2 id="_2">踢用户下线</h2>
 <p>踢用户下线就比较简单了，逻辑是点击页面上的<strong>强制结束</strong>按钮，给后端view发送个请求带上这条记录的ID，view拿到ID后，通过ID找到group_name，然后向group发送<code>disconnect</code>消息，这个group里的所有channel在收到disconnect消息后就会断开连接了</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">asgiref.sync</span> <span class="kn">import</span> <span class="n">async_to_sync</span>
-<span class="kn">from</span> <span class="nn">channels.layers</span> <span class="kn">import</span> <span class="n">get_channel_layer</span>
+<pre class="codehilite"><code>from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
-<span class="n">async_to_sync</span><span class="p">(</span><span class="n">get_channel_layer</span><span class="p">()</span><span class="o">.</span><span class="n">group_send</span><span class="p">)(</span>
-    <span class="n">Record</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">,</span>
-    <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;disconnect&#39;</span><span class="p">}</span>
-<span class="p">)</span>
-</code></pre></div>
+async_to_sync(get_channel_layer().group_send)(
+    Record.objects.get(id=pk).group,
+    {'type': 'disconnect'}
+)</code></pre>
+
 
 <h2 id="_3">演示与说明</h2>
 <p><img alt="" loading="lazy" src="/static/images/20191128.gif" /></p>

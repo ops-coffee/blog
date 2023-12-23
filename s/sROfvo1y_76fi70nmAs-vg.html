@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -72,152 +72,152 @@
 </ul>
 <h2 id="nagios_1">部署Nagios</h2>
 <p>1.安装基础环境</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># apt-get update</span>
-<span class="err"># apt-get install -y build-essential libgd2-xpm-dev autoconf gcc libc6 make wget</span>
-<span class="err"># apt-get install -y nginx php5-fpm spawn-fcgi fcgiwrap</span>
-</code></pre></div>
+<pre class="codehilite"><code># apt-get update
+# apt-get install -y build-essential libgd2-xpm-dev autoconf gcc libc6 make wget
+# apt-get install -y nginx php5-fpm spawn-fcgi fcgiwrap</code></pre>
+
 
 <p>2.下载并解压nagios</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># wget https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.0.8.tar.gz</span>
-<span class="c1"># tar -zxvf nagios-4.0.8.tar.gz </span>
-<span class="c1"># cd nagios-4.0.8</span>
+<pre class="codehilite"><code># wget https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.0.8.tar.gz
+# tar -zxvf nagios-4.0.8.tar.gz 
+# cd nagios-4.0.8
 
-<span class="c1"># ./configure &amp;&amp; make all</span>
+# ./configure &amp;&amp; make all
 
-<span class="c1"># make install-groups-users</span>
-<span class="c1"># usermod -a -G nagios www-data</span>
+# make install-groups-users
+# usermod -a -G nagios www-data
 
-<span class="c1"># make install</span>
-<span class="c1"># make install-init</span>
-<span class="c1"># make install-config</span>
-<span class="c1"># make install-commandmode</span>
-<span class="c1"># cd ..</span>
-</code></pre></div>
+# make install
+# make install-init
+# make install-config
+# make install-commandmode
+# cd ..</code></pre>
+
 
 <ul>
 <li>nagios安装完成后就可以启动了，但是web页面是无法访问的，查看日志会报错<code>(No output on stdout) stderr: execvp(/usr/local/nagios/libexec/check_ping, ...) failed. errno is 2: No such file or directory</code>，这是因为我们只安装了nagios的core，没有安装nagios的插件，需要安装插件来支持core工作</li>
 </ul>
 <p>3.安装nagios-plugins</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># wget https://nagios-plugins.org/download/nagios-plugins-2.2.1.tar.gz</span>
-<span class="c1"># tar -zxvf nagios-plugins-2.2.1.tar.gz</span>
-<span class="c1"># cd nagios-plugins-2.2.1</span>
-<span class="c1"># ./configure</span>
-<span class="c1"># make</span>
-<span class="c1"># make install</span>
-<span class="c1"># cd ..</span>
-</code></pre></div>
+<pre class="codehilite"><code># wget https://nagios-plugins.org/download/nagios-plugins-2.2.1.tar.gz
+# tar -zxvf nagios-plugins-2.2.1.tar.gz
+# cd nagios-plugins-2.2.1
+# ./configure
+# make
+# make install
+# cd ..</code></pre>
+
 
 <ul>
 <li>nagios的插件主要是添加了check_ping、checkhttp之类的辅助检查的脚本，默认位于<code>/usr/local/nagios/libexec/</code>下，可以借助这些插件来监控我们的HTTP接口或主机、服务状态</li>
 </ul>
 <p>4.创建nagios web访问的账号密码</p>
-<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">vi</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">htpasswd</span><span class="p">.</span><span class="n">pl</span><span class="w"></span>
-<span class="err">#!</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">perl</span><span class="w"></span>
+<pre class="codehilite"><code># vi /usr/local/bin/htpasswd.pl
+#!/usr/bin/perl
 
-<span class="k">use</span><span class="w"> </span><span class="n">strict</span><span class="p">;</span><span class="w"></span>
+use strict;
 
-<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nv">@ARGV</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">)</span><span class="err">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">print</span><span class="w"> </span><span class="ss">&quot;usage: /usr/local/bin/htpasswd.pl &lt;username&gt; &lt;password&gt;\n&quot;</span><span class="p">;</span><span class="w"></span>
-<span class="err">}</span><span class="w"></span>
-<span class="k">else</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">print</span><span class="w"> </span><span class="err">$</span><span class="n">ARGV</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">.</span><span class="ss">&quot;:&quot;</span><span class="p">.</span><span class="n">crypt</span><span class="p">(</span><span class="err">$</span><span class="n">ARGV</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="p">,</span><span class="err">$</span><span class="n">ARGV</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="p">).</span><span class="ss">&quot;\n&quot;</span><span class="p">;</span><span class="w"></span>
-<span class="err">}</span><span class="w"></span>
-<span class="err">#</span><span class="w"> </span><span class="n">chmod</span><span class="w"> </span><span class="o">+</span><span class="n">x</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">htpasswd</span><span class="p">.</span><span class="n">pl</span><span class="w"></span>
+if ( @ARGV != 2 ){
+    print &quot;usage: /usr/local/bin/htpasswd.pl &lt;username&gt; &lt;password&gt;\n&quot;;
+}
+else {
+    print $ARGV[0].&quot;:&quot;.crypt($ARGV[1],$ARGV[1]).&quot;\n&quot;;
+}
+# chmod +x /usr/local/bin/htpasswd.pl
 
-<span class="n">#利用perl脚本生成账号密码到htpasswd</span><span class="p">.</span><span class="n">users文件中</span><span class="w"></span>
-<span class="err">#</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">htpasswd</span><span class="p">.</span><span class="n">pl</span><span class="w"> </span><span class="n">nagiosadmin</span><span class="w"> </span><span class="n">nagios</span><span class="nv">@ops</span><span class="o">-</span><span class="n">coffee</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">local</span><span class="o">/</span><span class="n">nagios</span><span class="o">/</span><span class="n">htpasswd</span><span class="p">.</span><span class="n">users</span><span class="w"></span>
-</code></pre></div>
+#利用perl脚本生成账号密码到htpasswd.users文件中
+# /usr/local/bin/htpasswd.pl nagiosadmin nagios@ops-coffee &gt; /usr/local/nagios/htpasswd.users</code></pre>
+
 
 <ul>
 <li>nagios默认开启了账号认证，认证相关的配置在这个文件里<code>/usr/local/nagios/etc/cgi.cfg</code></li>
 <li>如果安装了httpd服务，可以直接接触htpasswd命令生成密码，这里我们没有httpd服务，所以写个perl脚本来生成密码</li>
 </ul>
 <p>5.nginx添加server配置，让浏览器可以访问</p>
-<div class="codehilite"><pre><span></span><code><span class="n">server</span> <span class="p">{</span>
-    <span class="n">listen</span>       <span class="mi">80</span><span class="p">;</span>
-    <span class="n">server_name</span>  <span class="n">ngs</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">com</span><span class="p">;</span>
+<pre class="codehilite"><code>server {
+    listen       80;
+    server_name  ngs.domain.com;
 
-    <span class="n">access_log</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="nb">log</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">nagios</span><span class="o">.</span><span class="n">access</span><span class="o">.</span><span class="n">log</span><span class="p">;</span>
-    <span class="n">error_log</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="nb">log</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">nagios</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">log</span><span class="p">;</span>
+    access_log /var/log/nginx/nagios.access.log;
+    error_log /var/log/nginx/nagios.error.log;
 
-    <span class="n">auth_basic</span> <span class="s2">&quot;Private&quot;</span><span class="p">;</span>
-    <span class="n">auth_basic_user_file</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">nagios</span><span class="o">/</span><span class="n">htpasswd</span><span class="o">.</span><span class="n">users</span><span class="p">;</span>
+    auth_basic &quot;Private&quot;;
+    auth_basic_user_file /usr/local/nagios/htpasswd.users;
 
-    <span class="n">root</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">nagios</span><span class="o">/</span><span class="n">share</span><span class="p">;</span>
-    <span class="n">index</span> <span class="n">index</span><span class="o">.</span><span class="n">php</span> <span class="n">index</span><span class="o">.</span><span class="n">html</span><span class="p">;</span>
+    root /usr/local/nagios/share;
+    index index.php index.html;
 
-    <span class="n">location</span> <span class="o">/</span> <span class="p">{</span>
-        <span class="n">try_files</span> <span class="o">$</span><span class="n">uri</span> <span class="o">$</span><span class="n">uri</span><span class="o">/</span> <span class="n">index</span><span class="o">.</span><span class="n">php</span> <span class="o">/</span><span class="n">nagios</span><span class="p">;</span>
-    <span class="p">}</span>
+    location / {
+        try_files $uri $uri/ index.php /nagios;
+    }
 
-    <span class="n">location</span> <span class="o">/</span><span class="n">nagios</span> <span class="p">{</span>
-        <span class="n">alias</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">nagios</span><span class="o">/</span><span class="n">share</span><span class="p">;</span>
-    <span class="p">}</span>
+    location /nagios {
+        alias /usr/local/nagios/share;
+    }
 
-    <span class="n">location</span> <span class="o">~</span> \<span class="o">.</span><span class="n">php</span><span class="o">$</span> <span class="p">{</span>
-        <span class="n">include</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">fastcgi_params</span><span class="p">;</span>
-        <span class="n">fastcgi_pass</span> <span class="n">unix</span><span class="p">:</span><span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">php5</span><span class="o">-</span><span class="n">fpm</span><span class="o">.</span><span class="n">sock</span><span class="p">;</span>
-        <span class="n">fastcgi_param</span> <span class="n">SCRIPT_FILENAME</span> <span class="o">$</span><span class="n">document_root</span><span class="o">$</span><span class="n">fastcgi_script_name</span><span class="p">;</span>
-    <span class="p">}</span>
+    location ~ \.php$ {
+        include /etc/nginx/fastcgi_params;
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
 
-    <span class="n">location</span> <span class="o">~</span> <span class="o">^/</span><span class="n">nagios</span><span class="o">/</span><span class="p">(</span><span class="o">.*</span>\<span class="o">.</span><span class="n">php</span><span class="p">)</span><span class="o">$</span> <span class="p">{</span>
-        <span class="n">alias</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">nagios</span><span class="o">/</span><span class="n">share</span><span class="o">/$</span><span class="mi">1</span><span class="p">;</span>
-        <span class="n">include</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">fastcgi_params</span><span class="p">;</span>
-        <span class="n">fastcgi_pass</span> <span class="n">unix</span><span class="p">:</span><span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">php5</span><span class="o">-</span><span class="n">fpm</span><span class="o">.</span><span class="n">sock</span><span class="p">;</span>
-    <span class="p">}</span>
+    location ~ ^/nagios/(.*\.php)$ {
+        alias /usr/local/nagios/share/$1;
+        include /etc/nginx/fastcgi_params;
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+    }
 
-    <span class="n">location</span> <span class="o">~</span> \<span class="o">.</span><span class="n">cgi</span><span class="o">$</span> <span class="p">{</span>
-        <span class="n">root</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">nagios</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="p">;</span>
-        <span class="n">rewrite</span> <span class="o">^/</span><span class="n">nagios</span><span class="o">/</span><span class="n">cgi</span><span class="o">-</span><span class="n">bin</span><span class="o">/</span><span class="p">(</span><span class="o">.*</span><span class="p">)</span>\<span class="o">.</span><span class="n">cgi</span> <span class="o">/$</span><span class="mf">1.</span><span class="n">cgi</span> <span class="k">break</span><span class="p">;</span>
-        <span class="n">fastcgi_param</span> <span class="n">AUTH_USER</span> <span class="o">$</span><span class="n">remote_user</span><span class="p">;</span>
-        <span class="n">fastcgi_param</span> <span class="n">REMOTE_USER</span> <span class="o">$</span><span class="n">remote_user</span><span class="p">;</span>
-        <span class="n">include</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">fastcgi_params</span><span class="p">;</span>
-        <span class="n">fastcgi_pass</span> <span class="n">unix</span><span class="p">:</span><span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">fcgiwrap</span><span class="o">.</span><span class="n">socket</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+    location ~ \.cgi$ {
+        root /usr/local/nagios/sbin/;
+        rewrite ^/nagios/cgi-bin/(.*)\.cgi /$1.cgi break;
+        fastcgi_param AUTH_USER $remote_user;
+        fastcgi_param REMOTE_USER $remote_user;
+        include /etc/nginx/fastcgi_params;
+        fastcgi_pass unix:/var/run/fcgiwrap.socket;
+    }
+}</code></pre>
+
 
 <p>6.检查配置文件并启动</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span><span class="err">检查配置文件是否有语法错误</span>
-<span class="o">#</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">local</span><span class="o">/</span><span class="n">nagios</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">nagios</span> <span class="o">-</span><span class="n">v</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">local</span><span class="o">/</span><span class="n">nagios</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nagios</span><span class="p">.</span><span class="n">cfg</span> 
+<pre class="codehilite"><code>#检查配置文件是否有语法错误
+# /usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg 
 
-<span class="o">#</span><span class="err">启动</span><span class="n">nagios服务</span>
-<span class="o">#</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">local</span><span class="o">/</span><span class="n">nagios</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">nagios</span> <span class="o">-</span><span class="n">d</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">local</span><span class="o">/</span><span class="n">nagios</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nagios</span><span class="p">.</span><span class="n">cfg</span>
+#启动nagios服务
+# /usr/local/nagios/bin/nagios -d /usr/local/nagios/etc/nagios.cfg
 
-<span class="o">#</span><span class="err">启动</span><span class="n">fcgiwrap和php5</span><span class="o">-</span><span class="n">fpm服务</span>
-<span class="o">#</span> <span class="n">service</span> <span class="n">fcgiwrap</span> <span class="k">restart</span>
-<span class="o">#</span> <span class="n">service</span> <span class="n">php5</span><span class="o">-</span><span class="n">fpm</span> <span class="k">restart</span>
-</code></pre></div>
+#启动fcgiwrap和php5-fpm服务
+# service fcgiwrap restart
+# service php5-fpm restart</code></pre>
+
 
 <p>7.浏览器访问服务器IP或域名就可以看到nagios的页面了，默认有本机的监控数据，不需要的话可以在配置文件<code>localhost.cfg</code>中删除
 <img alt="" loading="lazy" src="/static/images/20180918.01.png" /></p>
 <h2 id="nagios_2">Nagios配置</h2>
 <p>Nagios的主配置文件路径为<code>/usr/local/nagios/etc/nagios.cfg</code>，里边默认已经配置了一些配置文件的路径，cfg_file=后边配置的都是配置文件，nagios程序会来这里读取配置，我们可以新添加一个专门用来监控HTTP API的配置文件</p>
-<div class="codehilite"><pre><span></span><code><span class="err">cfg_file=/usr/local/nagios/etc/objects/check_api.cfg</span>
-</code></pre></div>
+<pre class="codehilite"><code>cfg_file=/usr/local/nagios/etc/objects/check_api.cfg</code></pre>
+
 
 <h5 id="check_apicfg">check_api.cfg里边的内容如下：</h5>
-<div class="codehilite"><pre><span></span><code><span class="n">define</span> <span class="n">service</span><span class="err">{</span>
-    <span class="n">use</span>                     <span class="n">generic</span><span class="o">-</span><span class="n">service</span>
-    <span class="n">host_name</span>               <span class="n">localhost</span>
-    <span class="n">service_description</span>     <span class="n">web_project_01</span>
-    <span class="n">check_command</span>           <span class="n">check_http</span><span class="o">!</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span> <span class="o">-</span><span class="n">S</span>
-<span class="err">}</span>
+<pre class="codehilite"><code>define service{
+    use                     generic-service
+    host_name               localhost
+    service_description     web_project_01
+    check_command           check_http!ops-coffee.cn -S
+}
 
-<span class="n">define</span> <span class="n">service</span><span class="err">{</span>
-    <span class="n">use</span>                     <span class="n">generic</span><span class="o">-</span><span class="n">service</span>
-    <span class="n">host_name</span>               <span class="n">localhost</span>
-    <span class="n">service_description</span>     <span class="n">web_project_02</span>
-    <span class="n">check_command</span>           <span class="n">check_http</span><span class="o">!</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span> <span class="o">-</span><span class="n">S</span> <span class="o">-</span><span class="n">u</span> <span class="o">/</span> <span class="o">-</span><span class="n">e</span> <span class="mi">200</span>
-<span class="err">}</span>
+define service{
+    use                     generic-service
+    host_name               localhost
+    service_description     web_project_02
+    check_command           check_http!ops-coffee.cn -S -u / -e 200
+}
 
-<span class="n">define</span> <span class="n">service</span><span class="err">{</span>
-    <span class="n">use</span>                     <span class="n">generic</span><span class="o">-</span><span class="n">service</span>
-    <span class="n">host_name</span>               <span class="n">localhost</span>
-    <span class="n">service_description</span>     <span class="n">web_project_03</span>
-    <span class="n">check_command</span>           <span class="n">check_http</span><span class="o">!</span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="p">.</span><span class="n">cn</span> <span class="o">-</span><span class="n">S</span> <span class="o">-</span><span class="n">u</span> <span class="o">/</span><span class="n">action</span><span class="o">/</span><span class="n">health</span> <span class="o">-</span><span class="n">k</span> <span class="ss">&quot;sign:e5dhn&quot;</span>
-<span class="err">}</span>
-</code></pre></div>
+define service{
+    use                     generic-service
+    host_name               localhost
+    service_description     web_project_03
+    check_command           check_http!ops-coffee.cn -S -u /action/health -k &quot;sign:e5dhn&quot;
+}</code></pre>
+
 
 <ul>
 <li><strong>define service</strong>：定义一个服务，每一个页面或api属于一个服务</li>
@@ -228,11 +228,11 @@
 <li>check_http检测https接口时可以使用-S参数，如果报错<code>SSL is not available</code>，那么你需要先安装libssl-dev包，然后重新编译（<code>./configure --with-openssl=/usr/bin/openssl</code>）部署nagios-plugin插件添加对ssl的支持</li>
 </ul>
 <h5 id="check_commandcheck_httpcommandscfgcheck_http"><strong>check_command</strong>我们配置了check_http，需要修改commands.cfg文件中默认的check_http配置如下：</h5>
-<div class="codehilite"><pre><span></span><code><span class="err">define command {</span>
-<span class="err">    command_name    check_http</span>
-<span class="err">    command_line    $USER1$/check_http -H $ARG1$</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>define command {
+    command_name    check_http
+    command_line    $USER1$/check_http -H $ARG1$
+}</code></pre>
+
 
 <ul>
 <li><strong>define command</strong>：定义一个command</li>
@@ -240,31 +240,31 @@
 <li><strong>command_line</strong>：定义命令的路径和执行方式，这个<code>check_http</code>就是我们通过安装nagios-plugin生成的，位于<code>/usr/local/nagios/libexec/</code>下，<code>check_http</code>的详细用法可以通过<code>check_http -h查看</code>，支持比较广泛</li>
 </ul>
 <h5 id="usegeneric-service"><strong>use</strong>我们配置了generic-service，可以通过配置服务模板定义很多默认的配置如下：</h5>
-<div class="codehilite"><pre><span></span><code><span class="err">define service {</span>
-<span class="err">    name                            generic-service         ; The &#39;name&#39; of this service template</span>
-<span class="err">    active_checks_enabled           1                       ; Active service checks are enabled</span>
-<span class="err">    passive_checks_enabled          1                       ; Passive service checks are enabled/accepted</span>
-<span class="err">    parallelize_check               1                       ; Active service checks should be parallelized (disabling this can lead to major performance problems)</span>
-<span class="err">    obsess_over_service             1                       ; We should obsess over this service (if necessary)</span>
-<span class="err">    check_freshness                 0                       ; Default is to NOT check service &#39;freshness&#39;</span>
-<span class="err">    notifications_enabled           1                       ; Service notifications are enabled</span>
-<span class="err">    event_handler_enabled           1                       ; Service event handler is enabled</span>
-<span class="err">    flap_detection_enabled          1                       ; Flap detection is enabled</span>
-<span class="err">    process_perf_data               1                       ; Process performance data</span>
-<span class="err">    retain_status_information       1                       ; Retain status information across program restarts</span>
-<span class="err">    retain_nonstatus_information    1                       ; Retain non-status information across program restarts</span>
-<span class="err">    is_volatile                     0                       ; The service is not volatile</span>
-<span class="err">    check_period                    24x7                    ; The service can be checked at any time of the day</span>
-<span class="err">    max_check_attempts              2                       ; Re-check the service up to 3 times in order to determine its final (hard) state</span>
-<span class="err">    check_interval                  1                      ; Check the service every 10 minutes under normal conditions</span>
-<span class="err">    retry_interval                  1                       ; Re-check the service every two minutes until a hard state can be determined</span>
-<span class="err">    contact_groups                  admins                  ; Notifications get sent out to everyone in the &#39;admins&#39; group</span>
-<span class="err">    notification_options            w,u,c,r                 ; Send notifications about warning, unknown, critical, and recovery events</span>
-<span class="err">    notification_interval           60                      ; Re-notify about service problems every hour</span>
-<span class="err">    notification_period             24x7                    ; Notifications can be sent out at any time</span>
-<span class="err">    register                        0                       ; DON&#39;T REGISTER THIS DEFINITION - ITS NOT A REAL SERVICE, JUST A TEMPLATE!</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>define service {
+    name                            generic-service         ; The 'name' of this service template
+    active_checks_enabled           1                       ; Active service checks are enabled
+    passive_checks_enabled          1                       ; Passive service checks are enabled/accepted
+    parallelize_check               1                       ; Active service checks should be parallelized (disabling this can lead to major performance problems)
+    obsess_over_service             1                       ; We should obsess over this service (if necessary)
+    check_freshness                 0                       ; Default is to NOT check service 'freshness'
+    notifications_enabled           1                       ; Service notifications are enabled
+    event_handler_enabled           1                       ; Service event handler is enabled
+    flap_detection_enabled          1                       ; Flap detection is enabled
+    process_perf_data               1                       ; Process performance data
+    retain_status_information       1                       ; Retain status information across program restarts
+    retain_nonstatus_information    1                       ; Retain non-status information across program restarts
+    is_volatile                     0                       ; The service is not volatile
+    check_period                    24x7                    ; The service can be checked at any time of the day
+    max_check_attempts              2                       ; Re-check the service up to 3 times in order to determine its final (hard) state
+    check_interval                  1                      ; Check the service every 10 minutes under normal conditions
+    retry_interval                  1                       ; Re-check the service every two minutes until a hard state can be determined
+    contact_groups                  admins                  ; Notifications get sent out to everyone in the 'admins' group
+    notification_options            w,u,c,r                 ; Send notifications about warning, unknown, critical, and recovery events
+    notification_interval           60                      ; Re-notify about service problems every hour
+    notification_period             24x7                    ; Notifications can be sent out at any time
+    register                        0                       ; DON'T REGISTER THIS DEFINITION - ITS NOT A REAL SERVICE, JUST A TEMPLATE!
+}</code></pre>
+
 
 <p>配置太多就不一一解释了，配合后边的英文注释应该看得懂，说几个重要的</p>
 <ul>
@@ -274,28 +274,28 @@
 <li><strong>contact_groups</strong>：定义联系人组，当发生故障需要报警时，发送报警给哪个组，这个组的配置文件在<code>/usr/local/nagios/etc/objects/contacts.cfg</code></li>
 </ul>
 <h5 id="contact_groupsadminscontactscfg"><strong>contact_groups</strong>我们配置了admins，接下来看下contacts.cfg的配置</h5>
-<div class="codehilite"><pre><span></span><code><span class="n">define</span><span class="w"> </span><span class="n">contact</span><span class="err">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">contact_name</span><span class="w">                    </span><span class="n">sa</span><span class="w">       </span><span class="p">;</span><span class="w"> </span><span class="n">Short</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">user</span><span class="w"></span>
-<span class="w">    </span><span class="k">use</span><span class="w">                             </span><span class="n">generic</span><span class="o">-</span><span class="n">contact</span><span class="w">     </span><span class="p">;</span><span class="w"> </span><span class="n">Inherit</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="k">values</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">generic</span><span class="o">-</span><span class="n">contact</span><span class="w"> </span><span class="n">template</span><span class="w"> </span><span class="p">(</span><span class="n">defined</span><span class="w"> </span><span class="n">above</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="k">alias</span><span class="w">                           </span><span class="n">Nagios</span><span class="w"> </span><span class="k">Admin</span><span class="w">        </span><span class="p">;</span><span class="w"> </span><span class="k">Full</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">user</span><span class="w"></span>
+<pre class="codehilite"><code>define contact{
+    contact_name                    sa       ; Short name of user
+    use                             generic-contact     ; Inherit default values from generic-contact template (defined above)
+    alias                           Nagios Admin        ; Full name of user
 
-<span class="w">    </span><span class="n">service_notification_period</span><span class="w">     </span><span class="mi">24</span><span class="n">x7</span><span class="w"></span>
-<span class="w">    </span><span class="n">host_notification_period</span><span class="w">        </span><span class="mi">24</span><span class="n">x7</span><span class="w"></span>
-<span class="w">    </span><span class="n">service_notification_options</span><span class="w">    </span><span class="n">w</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">r</span><span class="w"></span>
-<span class="w">    </span><span class="n">host_notification_options</span><span class="w">       </span><span class="n">d</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">r</span><span class="w"></span>
-<span class="w">    </span><span class="n">host_notification_commands</span><span class="w">      </span><span class="n">notify</span><span class="o">-</span><span class="k">host</span><span class="o">-</span><span class="k">by</span><span class="o">-</span><span class="n">email</span><span class="p">,</span><span class="n">notify</span><span class="o">-</span><span class="k">host</span><span class="o">-</span><span class="k">by</span><span class="o">-</span><span class="n">sms</span><span class="w"></span>
-<span class="w">    </span><span class="n">service_notification_commands</span><span class="w">   </span><span class="n">notify</span><span class="o">-</span><span class="n">service</span><span class="o">-</span><span class="k">by</span><span class="o">-</span><span class="n">email</span><span class="p">,</span><span class="n">notify</span><span class="o">-</span><span class="n">service</span><span class="o">-</span><span class="k">by</span><span class="o">-</span><span class="n">sms</span><span class="w"></span>
+    service_notification_period     24x7
+    host_notification_period        24x7
+    service_notification_options    w,u,c,r
+    host_notification_options       d,u,r
+    host_notification_commands      notify-host-by-email,notify-host-by-sms
+    service_notification_commands   notify-service-by-email,notify-service-by-sms
 
-<span class="w">    </span><span class="n">email</span><span class="w">                           </span><span class="n">ops</span><span class="o">-</span><span class="n">coffee</span><span class="nv">@domain</span><span class="p">.</span><span class="n">com</span><span class="w"></span>
-<span class="w">    </span><span class="n">pager</span><span class="w">                           </span><span class="mi">15821212121</span><span class="p">,</span><span class="mi">15822222222</span><span class="w"></span>
-<span class="err">}</span><span class="w"></span>
+    email                           ops-coffee@domain.com
+    pager                           15821212121,15822222222
+}
 
-<span class="n">define</span><span class="w"> </span><span class="n">contactgroup</span><span class="err">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">contactgroup_name</span><span class="w">       </span><span class="n">admins</span><span class="w"></span>
-<span class="w">    </span><span class="k">alias</span><span class="w">                   </span><span class="n">Nagios</span><span class="w"> </span><span class="n">Administrators</span><span class="w"></span>
-<span class="w">    </span><span class="n">members</span><span class="w">                 </span><span class="n">sa</span><span class="w"></span>
-<span class="err">}</span><span class="w"></span>
-</code></pre></div>
+define contactgroup{
+    contactgroup_name       admins
+    alias                   Nagios Administrators
+    members                 sa
+}</code></pre>
+
 
 <ul>
 <li>contactgroup就是我们定义的联系人组admins</li>

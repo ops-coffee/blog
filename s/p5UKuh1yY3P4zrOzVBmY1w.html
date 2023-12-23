@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -48,10 +48,10 @@
 <p>EXPLAIN：查看SQL语句的执行计划</p>
 <p>EXPLAIN命令可以帮助我们深入了解MySQL基于开销的优化器，还可以获得很多可能被优化器考虑到的访问策略的细节，以及当运行SQL语句时哪种策略预计会被优化器采用，在优化慢查询时非常有用</p>
 <p>执行explain之后结果集包含如下信息</p>
-<div class="codehilite"><pre><span></span><code><span class="err">+----+-------------+-------+------------+------+---------------+------+---------+------+--------+----------+-------+</span>
-<span class="err">| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows   | filtered | Extra |</span>
-<span class="err">+----+-------------+-------+------------+------+---------------+------+---------+------+--------+----------+-------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>+----+-------------+-------+------------+------+---------------+------+---------+------+--------+----------+-------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows   | filtered | Extra |
++----+-------------+-------+------------+------+---------------+------+---------+------+--------+----------+-------+</code></pre>
+
 
 <p>下面将对每一个值进行解释</p>
 <h4 id="1id">1、id</h4>
@@ -60,174 +60,174 @@
 <h4 id="2select_type">2、select_type</h4>
 <p>select_type表示查询使用的类型，有下面几种：</p>
 <p><strong>simple：</strong> 简单的select查询，没有union或者子查询</p>
-<div class="codehilite"><pre><span></span><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">explain</span> <span class="n">select</span> <span class="o">*</span> <span class="n">from</span>  <span class="n">test</span> <span class="n">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
-<span class="o">+----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</span>
-<span class="o">|</span> <span class="n">id</span> <span class="o">|</span> <span class="n">select_type</span> <span class="o">|</span> <span class="n">table</span> <span class="o">|</span> <span class="n">partitions</span> <span class="o">|</span> <span class="n">type</span>  <span class="o">|</span> <span class="n">possible_keys</span> <span class="o">|</span> <span class="n">key</span>     <span class="o">|</span> <span class="n">key_len</span> <span class="o">|</span> <span class="n">ref</span>   <span class="o">|</span> <span class="n">rows</span> <span class="o">|</span> <span class="n">filtered</span> <span class="o">|</span> <span class="n">Extra</span> <span class="o">|</span>
-<span class="o">+----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</span>
-<span class="o">|</span>  <span class="mi">1</span> <span class="o">|</span> <span class="n">SIMPLE</span>      <span class="o">|</span> <span class="n">test</span>  <span class="o">|</span> <span class="n">NULL</span>       <span class="o">|</span> <span class="k">const</span> <span class="o">|</span> <span class="n">PRIMARY</span>       <span class="o">|</span> <span class="n">PRIMARY</span> <span class="o">|</span> <span class="mi">4</span>       <span class="o">|</span> <span class="k">const</span> <span class="o">|</span>    <span class="mi">1</span> <span class="o">|</span>   <span class="mf">100.00</span> <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span>
-<span class="o">+----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from  test where id = 1000;
++----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+| id | select_type | table | partitions | type  | possible_keys | key     | key_len | ref   | rows | filtered | Extra |
++----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | test  | NULL       | const | PRIMARY       | PRIMARY | 4       | const |    1 |   100.00 | NULL  |
++----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</code></pre>
+
 
 <p><strong>primary：</strong> 最外层的select查询</p>
-<div class="codehilite"><pre><span></span><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">explain</span> <span class="n">select</span> <span class="o">*</span> <span class="n">from</span> <span class="p">(</span><span class="n">select</span> <span class="o">*</span> <span class="n">from</span> <span class="n">test</span> <span class="n">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="n">a</span><span class="p">;</span>
-<span class="o">+----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+</span>
-<span class="o">|</span> <span class="n">id</span> <span class="o">|</span> <span class="n">select_type</span> <span class="o">|</span> <span class="n">table</span>      <span class="o">|</span> <span class="n">type</span>   <span class="o">|</span> <span class="n">possible_keys</span> <span class="o">|</span> <span class="n">key</span>     <span class="o">|</span> <span class="n">key_len</span> <span class="o">|</span> <span class="n">ref</span>   <span class="o">|</span> <span class="n">rows</span> <span class="o">|</span> <span class="n">Extra</span> <span class="o">|</span>
-<span class="o">+----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+</span>
-<span class="o">|</span>  <span class="mi">1</span> <span class="o">|</span> <span class="n">PRIMARY</span>     <span class="o">|</span> <span class="o">&lt;</span><span class="n">derived2</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">system</span> <span class="o">|</span> <span class="n">NULL</span>          <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span>    <span class="mi">1</span> <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span>
-<span class="o">|</span>  <span class="mi">2</span> <span class="o">|</span> <span class="n">DERIVED</span>     <span class="o">|</span> <span class="n">test</span>       <span class="o">|</span> <span class="k">const</span>  <span class="o">|</span> <span class="n">PRIMARY</span>       <span class="o">|</span> <span class="n">PRIMARY</span> <span class="o">|</span> <span class="mi">8</span>       <span class="o">|</span> <span class="k">const</span> <span class="o">|</span>    <span class="mi">1</span> <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span>
-<span class="o">+----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from (select * from test where id = 1000) a;
++----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+
+| id | select_type | table      | type   | possible_keys | key     | key_len | ref   | rows | Extra |
++----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+
+|  1 | PRIMARY     | &lt;derived2&gt; | system | NULL          | NULL    | NULL    | NULL  |    1 | NULL  |
+|  2 | DERIVED     | test       | const  | PRIMARY       | PRIMARY | 8       | const |    1 | NULL  |
++----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+</code></pre>
+
 
 <p><strong>union：</strong> union中的第二个或随后的select查询，不依赖于外部查询的结果集</p>
-<div class="codehilite"><pre><span></span><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">explain</span> <span class="n">select</span> <span class="o">*</span> <span class="n">from</span> <span class="n">test</span> <span class="n">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1000</span> <span class="n">union</span> <span class="n">all</span> <span class="n">select</span> <span class="o">*</span> <span class="n">from</span> <span class="n">test2</span> <span class="p">;</span>
-<span class="o">+----+--------------+------------+-------+---------------+---------+---------+-------+-------+-----------------+</span>
-<span class="o">|</span> <span class="n">id</span> <span class="o">|</span> <span class="n">select_type</span>  <span class="o">|</span> <span class="n">table</span>      <span class="o">|</span> <span class="n">type</span>  <span class="o">|</span> <span class="n">possible_keys</span> <span class="o">|</span> <span class="n">key</span>     <span class="o">|</span> <span class="n">key_len</span> <span class="o">|</span> <span class="n">ref</span>   <span class="o">|</span> <span class="n">rows</span>  <span class="o">|</span> <span class="n">Extra</span>           <span class="o">|</span>
-<span class="o">+----+--------------+------------+-------+---------------+---------+---------+-------+-------+-----------------+</span>
-<span class="o">|</span>  <span class="mi">1</span> <span class="o">|</span> <span class="n">PRIMARY</span>      <span class="o">|</span> <span class="n">test</span>       <span class="o">|</span> <span class="k">const</span> <span class="o">|</span> <span class="n">PRIMARY</span>       <span class="o">|</span> <span class="n">PRIMARY</span> <span class="o">|</span> <span class="mi">8</span>       <span class="o">|</span> <span class="k">const</span> <span class="o">|</span>     <span class="mi">1</span> <span class="o">|</span> <span class="n">NULL</span>            <span class="o">|</span>
-<span class="o">|</span>  <span class="mi">2</span> <span class="o">|</span> <span class="n">UNION</span>        <span class="o">|</span> <span class="n">test2</span>      <span class="o">|</span> <span class="n">ALL</span>   <span class="o">|</span> <span class="n">NULL</span>          <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span> <span class="mi">67993</span> <span class="o">|</span> <span class="n">NULL</span>            <span class="o">|</span>
-<span class="o">|</span> <span class="n">NULL</span> <span class="o">|</span> <span class="n">UNION</span> <span class="n">RESULT</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">union1</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">ALL</span>   <span class="o">|</span> <span class="n">NULL</span>          <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span>  <span class="n">NULL</span> <span class="o">|</span> <span class="n">Using</span> <span class="n">temporary</span> <span class="o">|</span>
-<span class="o">+----+--------------+------------+-------+---------------+---------+---------+-------+-------+-----------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from test where id = 1000 union all select * from test2 ;
++----+--------------+------------+-------+---------------+---------+---------+-------+-------+-----------------+
+| id | select_type  | table      | type  | possible_keys | key     | key_len | ref   | rows  | Extra           |
++----+--------------+------------+-------+---------------+---------+---------+-------+-------+-----------------+
+|  1 | PRIMARY      | test       | const | PRIMARY       | PRIMARY | 8       | const |     1 | NULL            |
+|  2 | UNION        | test2      | ALL   | NULL          | NULL    | NULL    | NULL  | 67993 | NULL            |
+| NULL | UNION RESULT | &lt;union1,2&gt; | ALL   | NULL          | NULL    | NULL    | NULL  |  NULL | Using temporary |
++----+--------------+------------+-------+---------------+---------+---------+-------+-------+-----------------+</code></pre>
+
 
 <p><strong>dependent union：</strong> union中的第二个或随后的select查询，依赖于外部查询的结果集</p>
-<div class="codehilite"><pre><span></span><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">explain</span> <span class="n">select</span> <span class="o">*</span> <span class="n">from</span> <span class="n">test</span> <span class="n">where</span> <span class="n">id</span> <span class="ow">in</span> <span class="p">(</span><span class="n">select</span> <span class="n">id</span>  <span class="n">from</span> <span class="n">test</span> <span class="n">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1000</span> <span class="n">union</span> <span class="n">all</span> <span class="n">select</span> <span class="n">id</span> <span class="n">from</span> <span class="n">test2</span><span class="p">)</span> <span class="p">;</span>
-<span class="o">+----+--------------------+------------+--------+---------------+---------+---------+-------+-------+-----------------+</span>
-<span class="o">|</span> <span class="n">id</span> <span class="o">|</span> <span class="n">select_type</span>        <span class="o">|</span> <span class="n">table</span>      <span class="o">|</span> <span class="n">type</span>   <span class="o">|</span> <span class="n">possible_keys</span> <span class="o">|</span> <span class="n">key</span>     <span class="o">|</span> <span class="n">key_len</span> <span class="o">|</span> <span class="n">ref</span>   <span class="o">|</span> <span class="n">rows</span>  <span class="o">|</span> <span class="n">Extra</span>           <span class="o">|</span>
-<span class="o">+----+--------------------+------------+--------+---------------+---------+---------+-------+-------+-----------------+</span>
-<span class="o">|</span>  <span class="mi">1</span> <span class="o">|</span> <span class="n">PRIMARY</span>            <span class="o">|</span> <span class="n">test</span>       <span class="o">|</span> <span class="n">ALL</span>    <span class="o">|</span> <span class="n">NULL</span>          <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span> <span class="mi">68505</span> <span class="o">|</span> <span class="n">Using</span> <span class="n">where</span>     <span class="o">|</span>
-<span class="o">|</span>  <span class="mi">2</span> <span class="o">|</span> <span class="n">DEPENDENT</span> <span class="n">SUBQUERY</span> <span class="o">|</span> <span class="n">test</span>       <span class="o">|</span> <span class="k">const</span>  <span class="o">|</span> <span class="n">PRIMARY</span>       <span class="o">|</span> <span class="n">PRIMARY</span> <span class="o">|</span> <span class="mi">8</span>       <span class="o">|</span> <span class="k">const</span> <span class="o">|</span>     <span class="mi">1</span> <span class="o">|</span> <span class="n">Using</span> <span class="n">index</span>     <span class="o">|</span>
-<span class="o">|</span>  <span class="mi">3</span> <span class="o">|</span> <span class="n">DEPENDENT</span> <span class="n">UNION</span>    <span class="o">|</span> <span class="n">test2</span>      <span class="o">|</span> <span class="n">eq_ref</span> <span class="o">|</span> <span class="n">PRIMARY</span>       <span class="o">|</span> <span class="n">PRIMARY</span> <span class="o">|</span> <span class="mi">8</span>       <span class="o">|</span> <span class="k">func</span>  <span class="o">|</span>     <span class="mi">1</span> <span class="o">|</span> <span class="n">Using</span> <span class="n">index</span>     <span class="o">|</span>
-<span class="o">|</span> <span class="n">NULL</span> <span class="o">|</span> <span class="n">UNION</span> <span class="n">RESULT</span>       <span class="o">|</span> <span class="o">&lt;</span><span class="n">union2</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">ALL</span>    <span class="o">|</span> <span class="n">NULL</span>          <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span>  <span class="n">NULL</span> <span class="o">|</span> <span class="n">Using</span> <span class="n">temporary</span> <span class="o">|</span>
-<span class="o">+----+--------------------+------------+--------+---------------+---------+---------+-------+-------+-----------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from test where id in (select id  from test where id = 1000 union all select id from test2) ;
++----+--------------------+------------+--------+---------------+---------+---------+-------+-------+-----------------+
+| id | select_type        | table      | type   | possible_keys | key     | key_len | ref   | rows  | Extra           |
++----+--------------------+------------+--------+---------------+---------+---------+-------+-------+-----------------+
+|  1 | PRIMARY            | test       | ALL    | NULL          | NULL    | NULL    | NULL  | 68505 | Using where     |
+|  2 | DEPENDENT SUBQUERY | test       | const  | PRIMARY       | PRIMARY | 8       | const |     1 | Using index     |
+|  3 | DEPENDENT UNION    | test2      | eq_ref | PRIMARY       | PRIMARY | 8       | func  |     1 | Using index     |
+| NULL | UNION RESULT       | &lt;union2,3&gt; | ALL    | NULL          | NULL    | NULL    | NULL  |  NULL | Using temporary |
++----+--------------------+------------+--------+---------------+---------+---------+-------+-------+-----------------+</code></pre>
+
 
 <p><strong>subquery：</strong> 子查询中的第一个select查询，不依赖与外部查询的结果集</p>
-<div class="codehilite"><pre><span></span><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">explain</span> <span class="n">select</span> <span class="o">*</span> <span class="n">from</span> <span class="n">test</span> <span class="n">where</span> <span class="n">id</span> <span class="o">=</span> <span class="p">(</span><span class="n">select</span> <span class="n">id</span> <span class="n">from</span> <span class="n">test</span> <span class="n">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">);</span>
-<span class="o">+----+-------------+-------+-------+---------------+---------+---------+-------+------+-------------+</span>
-<span class="o">|</span> <span class="n">id</span> <span class="o">|</span> <span class="n">select_type</span> <span class="o">|</span> <span class="n">table</span> <span class="o">|</span> <span class="n">type</span>  <span class="o">|</span> <span class="n">possible_keys</span> <span class="o">|</span> <span class="n">key</span>     <span class="o">|</span> <span class="n">key_len</span> <span class="o">|</span> <span class="n">ref</span>   <span class="o">|</span> <span class="n">rows</span> <span class="o">|</span> <span class="n">Extra</span>       <span class="o">|</span>
-<span class="o">+----+-------------+-------+-------+---------------+---------+---------+-------+------+-------------+</span>
-<span class="o">|</span>  <span class="mi">1</span> <span class="o">|</span> <span class="n">PRIMARY</span>     <span class="o">|</span> <span class="n">test</span>  <span class="o">|</span> <span class="k">const</span> <span class="o">|</span> <span class="n">PRIMARY</span>       <span class="o">|</span> <span class="n">PRIMARY</span> <span class="o">|</span> <span class="mi">8</span>       <span class="o">|</span> <span class="k">const</span> <span class="o">|</span>    <span class="mi">1</span> <span class="o">|</span> <span class="n">NULL</span>        <span class="o">|</span>
-<span class="o">|</span>  <span class="mi">2</span> <span class="o">|</span> <span class="n">SUBQUERY</span>    <span class="o">|</span> <span class="n">test</span>  <span class="o">|</span> <span class="k">const</span> <span class="o">|</span> <span class="n">PRIMARY</span>       <span class="o">|</span> <span class="n">PRIMARY</span> <span class="o">|</span> <span class="mi">8</span>       <span class="o">|</span> <span class="k">const</span> <span class="o">|</span>    <span class="mi">1</span> <span class="o">|</span> <span class="n">Using</span> <span class="n">index</span> <span class="o">|</span>
-<span class="o">+----+-------------+-------+-------+---------------+---------+---------+-------+------+-------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from test where id = (select id from test where id = 1000);
++----+-------------+-------+-------+---------------+---------+---------+-------+------+-------------+
+| id | select_type | table | type  | possible_keys | key     | key_len | ref   | rows | Extra       |
++----+-------------+-------+-------+---------------+---------+---------+-------+------+-------------+
+|  1 | PRIMARY     | test  | const | PRIMARY       | PRIMARY | 8       | const |    1 | NULL        |
+|  2 | SUBQUERY    | test  | const | PRIMARY       | PRIMARY | 8       | const |    1 | Using index |
++----+-------------+-------+-------+---------------+---------+---------+-------+------+-------------+</code></pre>
+
 
 <p><strong>dependent subquery：</strong> 子查询中的第一个select查询，依赖于外部查询的结果集</p>
-<div class="codehilite"><pre><span></span><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">explain</span> <span class="n">select</span> <span class="o">*</span> <span class="n">from</span> <span class="n">test</span> <span class="n">where</span> <span class="n">id</span> <span class="ow">in</span> <span class="p">(</span><span class="n">select</span> <span class="n">id</span>  <span class="n">from</span> <span class="n">test</span> <span class="n">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1000</span> <span class="n">union</span> <span class="n">all</span> <span class="n">select</span> <span class="n">id</span> <span class="n">from</span> <span class="n">test2</span><span class="p">)</span> <span class="p">;</span>
-<span class="o">+----+--------------------+------------+--------+---------------+---------+---------+-------+-------+-----------------+</span>
-<span class="o">|</span> <span class="n">id</span> <span class="o">|</span> <span class="n">select_type</span>        <span class="o">|</span> <span class="n">table</span>      <span class="o">|</span> <span class="n">type</span>   <span class="o">|</span> <span class="n">possible_keys</span> <span class="o">|</span> <span class="n">key</span>     <span class="o">|</span> <span class="n">key_len</span> <span class="o">|</span> <span class="n">ref</span>   <span class="o">|</span> <span class="n">rows</span>  <span class="o">|</span> <span class="n">Extra</span>           <span class="o">|</span>
-<span class="o">+----+--------------------+------------+--------+---------------+---------+---------+-------+-------+-----------------+</span>
-<span class="o">|</span>  <span class="mi">1</span> <span class="o">|</span> <span class="n">PRIMARY</span>            <span class="o">|</span> <span class="n">test</span>       <span class="o">|</span> <span class="n">ALL</span>    <span class="o">|</span> <span class="n">NULL</span>          <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span> <span class="mi">68505</span> <span class="o">|</span> <span class="n">Using</span> <span class="n">where</span>     <span class="o">|</span>
-<span class="o">|</span>  <span class="mi">2</span> <span class="o">|</span> <span class="n">DEPENDENT</span> <span class="n">SUBQUERY</span> <span class="o">|</span> <span class="n">test</span>       <span class="o">|</span> <span class="k">const</span>  <span class="o">|</span> <span class="n">PRIMARY</span>       <span class="o">|</span> <span class="n">PRIMARY</span> <span class="o">|</span> <span class="mi">8</span>       <span class="o">|</span> <span class="k">const</span> <span class="o">|</span>     <span class="mi">1</span> <span class="o">|</span> <span class="n">Using</span> <span class="n">index</span>     <span class="o">|</span>
-<span class="o">|</span>  <span class="mi">3</span> <span class="o">|</span> <span class="n">DEPENDENT</span> <span class="n">UNION</span>    <span class="o">|</span> <span class="n">test2</span>      <span class="o">|</span> <span class="n">eq_ref</span> <span class="o">|</span> <span class="n">PRIMARY</span>       <span class="o">|</span> <span class="n">PRIMARY</span> <span class="o">|</span> <span class="mi">8</span>       <span class="o">|</span> <span class="k">func</span>  <span class="o">|</span>     <span class="mi">1</span> <span class="o">|</span> <span class="n">Using</span> <span class="n">index</span>     <span class="o">|</span>
-<span class="o">|</span> <span class="n">NULL</span> <span class="o">|</span> <span class="n">UNION</span> <span class="n">RESULT</span>       <span class="o">|</span> <span class="o">&lt;</span><span class="n">union2</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">ALL</span>    <span class="o">|</span> <span class="n">NULL</span>          <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span>  <span class="n">NULL</span> <span class="o">|</span> <span class="n">Using</span> <span class="n">temporary</span> <span class="o">|</span>
-<span class="o">+----+--------------------+------------+--------+---------------+---------+---------+-------+-------+-----------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from test where id in (select id  from test where id = 1000 union all select id from test2) ;
++----+--------------------+------------+--------+---------------+---------+---------+-------+-------+-----------------+
+| id | select_type        | table      | type   | possible_keys | key     | key_len | ref   | rows  | Extra           |
++----+--------------------+------------+--------+---------------+---------+---------+-------+-------+-----------------+
+|  1 | PRIMARY            | test       | ALL    | NULL          | NULL    | NULL    | NULL  | 68505 | Using where     |
+|  2 | DEPENDENT SUBQUERY | test       | const  | PRIMARY       | PRIMARY | 8       | const |     1 | Using index     |
+|  3 | DEPENDENT UNION    | test2      | eq_ref | PRIMARY       | PRIMARY | 8       | func  |     1 | Using index     |
+| NULL | UNION RESULT       | &lt;union2,3&gt; | ALL    | NULL          | NULL    | NULL    | NULL  |  NULL | Using temporary |
++----+--------------------+------------+--------+---------------+---------+---------+-------+-------+-----------------+</code></pre>
+
 
 <p><strong>derived：</strong> 用于from子句中有子查询的情况，mysql会递归执行这些子查询，此结果集放在临时表中</p>
-<div class="codehilite"><pre><span></span><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">explain</span> <span class="n">select</span> <span class="o">*</span> <span class="n">from</span> <span class="p">(</span><span class="n">select</span> <span class="o">*</span> <span class="n">from</span> <span class="n">test2</span> <span class="n">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span><span class="n">a</span><span class="p">;</span>
-<span class="o">+----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+</span>
-<span class="o">|</span> <span class="n">id</span> <span class="o">|</span> <span class="n">select_type</span> <span class="o">|</span> <span class="n">table</span>      <span class="o">|</span> <span class="n">type</span>   <span class="o">|</span> <span class="n">possible_keys</span> <span class="o">|</span> <span class="n">key</span>     <span class="o">|</span> <span class="n">key_len</span> <span class="o">|</span> <span class="n">ref</span>   <span class="o">|</span> <span class="n">rows</span> <span class="o">|</span> <span class="n">Extra</span> <span class="o">|</span>
-<span class="o">+----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+</span>
-<span class="o">|</span>  <span class="mi">1</span> <span class="o">|</span> <span class="n">PRIMARY</span>     <span class="o">|</span> <span class="o">&lt;</span><span class="n">derived2</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">system</span> <span class="o">|</span> <span class="n">NULL</span>          <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span>    <span class="mi">1</span> <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span>
-<span class="o">|</span>  <span class="mi">2</span> <span class="o">|</span> <span class="n">DERIVED</span>     <span class="o">|</span> <span class="n">test2</span>      <span class="o">|</span> <span class="k">const</span>  <span class="o">|</span> <span class="n">PRIMARY</span>       <span class="o">|</span> <span class="n">PRIMARY</span> <span class="o">|</span> <span class="mi">8</span>       <span class="o">|</span> <span class="k">const</span> <span class="o">|</span>    <span class="mi">1</span> <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span>
-<span class="o">+----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from (select * from test2 where id = 1000)a;
++----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+
+| id | select_type | table      | type   | possible_keys | key     | key_len | ref   | rows | Extra |
++----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+
+|  1 | PRIMARY     | &lt;derived2&gt; | system | NULL          | NULL    | NULL    | NULL  |    1 | NULL  |
+|  2 | DERIVED     | test2      | const  | PRIMARY       | PRIMARY | 8       | const |    1 | NULL  |
++----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+</code></pre>
+
 
 <h4 id="3table">3、table</h4>
 <p>table用来表示输出行所引用的表名</p>
 <h4 id="4type">4、type（重要）</h4>
 <p>type表示访问类型，下面依次解释各种类型，类型顺序从<strong>最好到最差</strong>排列</p>
 <p><strong>system：</strong> 表仅有一行，是const类型的一个特例</p>
-<div class="codehilite"><pre><span></span><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">explain</span> <span class="n">select</span> <span class="o">*</span> <span class="n">from</span> <span class="p">(</span><span class="n">select</span> <span class="o">*</span> <span class="n">from</span> <span class="n">test2</span> <span class="n">where</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span><span class="n">a</span><span class="p">;</span>
-<span class="o">+----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+</span>
-<span class="o">|</span> <span class="n">id</span> <span class="o">|</span> <span class="n">select_type</span> <span class="o">|</span> <span class="n">table</span>      <span class="o">|</span> <span class="n">type</span>   <span class="o">|</span> <span class="n">possible_keys</span> <span class="o">|</span> <span class="n">key</span>     <span class="o">|</span> <span class="n">key_len</span> <span class="o">|</span> <span class="n">ref</span>   <span class="o">|</span> <span class="n">rows</span> <span class="o">|</span> <span class="n">Extra</span> <span class="o">|</span>
-<span class="o">+----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+</span>
-<span class="o">|</span>  <span class="mi">1</span> <span class="o">|</span> <span class="n">PRIMARY</span>     <span class="o">|</span> <span class="o">&lt;</span><span class="n">derived2</span><span class="o">&gt;</span> <span class="o">|</span> <span class="n">system</span> <span class="o">|</span> <span class="n">NULL</span>          <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>    <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span>    <span class="mi">1</span> <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span>
-<span class="o">|</span>  <span class="mi">2</span> <span class="o">|</span> <span class="n">DERIVED</span>     <span class="o">|</span> <span class="n">test2</span>      <span class="o">|</span> <span class="k">const</span>  <span class="o">|</span> <span class="n">PRIMARY</span>       <span class="o">|</span> <span class="n">PRIMARY</span> <span class="o">|</span> <span class="mi">8</span>       <span class="o">|</span> <span class="k">const</span> <span class="o">|</span>    <span class="mi">1</span> <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span>
-<span class="o">+----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from (select * from test2 where id = 1000)a;
++----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+
+| id | select_type | table      | type   | possible_keys | key     | key_len | ref   | rows | Extra |
++----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+
+|  1 | PRIMARY     | &lt;derived2&gt; | system | NULL          | NULL    | NULL    | NULL  |    1 | NULL  |
+|  2 | DERIVED     | test2      | const  | PRIMARY       | PRIMARY | 8       | const |    1 | NULL  |
++----+-------------+------------+--------+---------------+---------+---------+-------+------+-------+</code></pre>
+
 
 <p>因为子查询只有一行数据，模拟了单表只有一行数据，此时type为system</p>
 <p><strong>const：</strong> 确定只有一行匹配的时候，mysql优化器会在查询前读取它并且只读取一次，速度非常快</p>
-<div class="codehilite"><pre><span></span><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">explain</span> <span class="n">select</span> <span class="o">*</span> <span class="n">from</span> <span class="n">test</span> <span class="n">where</span> <span class="n">id</span> <span class="o">=</span><span class="mi">1</span> <span class="p">;</span>
-<span class="o">+----+-------------+-------+-------+---------------+---------+---------+-------+------+-------+</span>
-<span class="o">|</span> <span class="n">id</span> <span class="o">|</span> <span class="n">select_type</span> <span class="o">|</span> <span class="n">table</span> <span class="o">|</span> <span class="n">type</span>  <span class="o">|</span> <span class="n">possible_keys</span> <span class="o">|</span> <span class="n">key</span>     <span class="o">|</span> <span class="n">key_len</span> <span class="o">|</span> <span class="n">ref</span>   <span class="o">|</span> <span class="n">rows</span> <span class="o">|</span> <span class="n">Extra</span> <span class="o">|</span>
-<span class="o">+----+-------------+-------+-------+---------------+---------+---------+-------+------+-------+</span>
-<span class="o">|</span>  <span class="mi">1</span> <span class="o">|</span> <span class="n">SIMPLE</span>      <span class="o">|</span> <span class="n">test</span>  <span class="o">|</span> <span class="k">const</span> <span class="o">|</span> <span class="n">PRIMARY</span>       <span class="o">|</span> <span class="n">PRIMARY</span> <span class="o">|</span> <span class="mi">8</span>       <span class="o">|</span> <span class="k">const</span> <span class="o">|</span>    <span class="mi">1</span> <span class="o">|</span> <span class="n">NULL</span>  <span class="o">|</span>
-<span class="o">+----+-------------+-------+-------+---------------+---------+---------+-------+------+-------+</span>
-<span class="mi">1</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">set</span> <span class="p">(</span><span class="mf">0.00</span> <span class="n">sec</span><span class="p">)</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from test where id =1 ;
++----+-------------+-------+-------+---------------+---------+---------+-------+------+-------+
+| id | select_type | table | type  | possible_keys | key     | key_len | ref   | rows | Extra |
++----+-------------+-------+-------+---------------+---------+---------+-------+------+-------+
+|  1 | SIMPLE      | test  | const | PRIMARY       | PRIMARY | 8       | const |    1 | NULL  |
++----+-------------+-------+-------+---------------+---------+---------+-------+------+-------+
+1 row in set (0.00 sec)</code></pre>
+
 
 <p><strong>eq_ref：</strong> 对于每个来自于前面的表的行组合，从该表中读取一行，常用在一个索引是unique key或者primary key</p>
-<div class="codehilite"><pre><span></span><code><span class="err">mysql&gt; explain select * from test,test2 where test.com_key=test2.com_key;</span>
-<span class="err">+----+-------------+-------+--------+---------------+--------------+---------+--------------------+-------+-------+</span>
-<span class="err">| id | select_type | table | type   | possible_keys | key          | key_len | ref                | rows  | Extra |</span>
-<span class="err">+----+-------------+-------+--------+---------------+--------------+---------+--------------------+-------+-------+</span>
-<span class="err">|  1 | SIMPLE      | test2 | ALL    | IDX(com_key)  | NULL         | NULL    | NULL               | 67993 | NULL  |</span>
-<span class="err">|  1 | SIMPLE      | test  | eq_ref | IDX(com_key)  | IDX(com_key) | 194     | test.test2.com_key |     1 | NULL  |</span>
-<span class="err">+----+-------------+-------+--------+---------------+--------------+---------+--------------------+-------+-------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from test,test2 where test.com_key=test2.com_key;
++----+-------------+-------+--------+---------------+--------------+---------+--------------------+-------+-------+
+| id | select_type | table | type   | possible_keys | key          | key_len | ref                | rows  | Extra |
++----+-------------+-------+--------+---------------+--------------+---------+--------------------+-------+-------+
+|  1 | SIMPLE      | test2 | ALL    | IDX(com_key)  | NULL         | NULL    | NULL               | 67993 | NULL  |
+|  1 | SIMPLE      | test  | eq_ref | IDX(com_key)  | IDX(com_key) | 194     | test.test2.com_key |     1 | NULL  |
++----+-------------+-------+--------+---------------+--------------+---------+--------------------+-------+-------+</code></pre>
+
 
 <p><strong>ref：</strong> 对于来自前面的表的行组合，所有有匹配索引值的行都从这张表中读取,如果联接只使用键的最左边的前缀，或如果键不是UNIQUE或PRIMARY KEY（换句话说，如果联接不能基于关键字选择单个行的话），则使用ref</p>
 <p>ref可以用于使用=或&lt;=&gt;操作符的带索引的列</p>
-<div class="codehilite"><pre><span></span><code><span class="err">mysql&gt; explain select * from test ,test2 where test.bnet_id=test2.aid;</span>
-<span class="err">+----+-------------+-------+------+---------------+---------+---------+-------------------+-------+-----------------------+</span>
-<span class="err">| id | select_type | table | type | possible_keys | key     | key_len | ref               | rows  | Extra                 |</span>
-<span class="err">+----+-------------+-------+------+---------------+---------+---------+-------------------+-------+-----------------------+</span>
-<span class="err">|  1 | SIMPLE      | test  | ALL  | NULL          | NULL    | NULL    | NULL              | 68505 | Using where           |</span>
-<span class="err">|  1 | SIMPLE      | test2 | ref  | idx_aid       | idx_aid | 5       | test.test.bnet_id | 34266 | Using index condition |</span>
-<span class="err">+----+-------------+-------+------+---------------+---------+---------+-------------------+-------+-----------------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from test ,test2 where test.bnet_id=test2.aid;
++----+-------------+-------+------+---------------+---------+---------+-------------------+-------+-----------------------+
+| id | select_type | table | type | possible_keys | key     | key_len | ref               | rows  | Extra                 |
++----+-------------+-------+------+---------------+---------+---------+-------------------+-------+-----------------------+
+|  1 | SIMPLE      | test  | ALL  | NULL          | NULL    | NULL    | NULL              | 68505 | Using where           |
+|  1 | SIMPLE      | test2 | ref  | idx_aid       | idx_aid | 5       | test.test.bnet_id | 34266 | Using index condition |
++----+-------------+-------+------+---------------+---------+---------+-------------------+-------+-----------------------+</code></pre>
+
 
 <p>test表<code>bnet_id</code>不是索引，test2表<code>aid</code>为索引列</p>
 <p><strong>ref_or_null：</strong> 类似ref，但是添加了可以专门搜索null值的行</p>
-<div class="codehilite"><pre><span></span><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">explain</span> <span class="n">select</span> <span class="o">*</span> <span class="n">from</span> <span class="n">test</span> <span class="n">where</span> <span class="n">bnet_id</span><span class="o">=</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">bnet_id</span> <span class="k">is</span> <span class="nb nb-Type">null</span><span class="p">;</span>
-<span class="o">+----+-------------+-------+-------------+---------------+----------+---------+-------+------+-----------------------+</span>
-<span class="o">|</span> <span class="n">id</span> <span class="o">|</span> <span class="n">select_type</span> <span class="o">|</span> <span class="n">table</span> <span class="o">|</span> <span class="n">type</span>        <span class="o">|</span> <span class="n">possible_keys</span> <span class="o">|</span> <span class="n">key</span>      <span class="o">|</span> <span class="n">key_len</span> <span class="o">|</span> <span class="n">ref</span>   <span class="o">|</span> <span class="n">rows</span> <span class="o">|</span> <span class="n">Extra</span>                 <span class="o">|</span>
-<span class="o">+----+-------------+-------+-------------+---------------+----------+---------+-------+------+-----------------------+</span>
-<span class="o">|</span>  <span class="mi">1</span> <span class="o">|</span> <span class="n">SIMPLE</span>      <span class="o">|</span> <span class="n">test</span>  <span class="o">|</span> <span class="n">ref_or_null</span> <span class="o">|</span> <span class="n">idx_bnet</span>      <span class="o">|</span> <span class="n">idx_bnet</span> <span class="o">|</span> <span class="mi">9</span>       <span class="o">|</span> <span class="k">const</span> <span class="o">|</span>    <span class="mi">2</span> <span class="o">|</span> <span class="n">Using</span> <span class="n">index</span> <span class="n">condition</span> <span class="o">|</span>
-<span class="o">+----+-------------+-------+-------------+---------------+----------+---------+-------+------+-----------------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from test where bnet_id=1 or bnet_id is null;
++----+-------------+-------+-------------+---------------+----------+---------+-------+------+-----------------------+
+| id | select_type | table | type        | possible_keys | key      | key_len | ref   | rows | Extra                 |
++----+-------------+-------+-------------+---------------+----------+---------+-------+------+-----------------------+
+|  1 | SIMPLE      | test  | ref_or_null | idx_bnet      | idx_bnet | 9       | const |    2 | Using index condition |
++----+-------------+-------+-------------+---------------+----------+---------+-------+------+-----------------------+</code></pre>
+
 
 <p>前提为<code>bnet_id</code>列为索引，且<code>bnet_id</code>列有null值</p>
 <p><strong>index_merge：</strong> 该访问类型使用了索引合并优化方法，key列包含了使用的索引的清单，key_len包含了使用的索引的最长的关键元素</p>
-<div class="codehilite"><pre><span></span><code><span class="err">mysql&gt; explain select * from test where id  = 1 or bnet_id = 1;</span>
-<span class="err">+----+-------------+-------+-------------+------------------+------------------+---------+------+------+--------------------------------------------+</span>
-<span class="err">| id | select_type | table | type        | possible_keys    | key              | key_len | ref  | rows | Extra                                      |</span>
-<span class="err">+----+-------------+-------+-------------+------------------+------------------+---------+------+------+--------------------------------------------+</span>
-<span class="err">|  1 | SIMPLE      | test  | index_merge | PRIMARY,idx_bnet | PRIMARY,idx_bnet | 8,9     | NULL |    2 | Using union(PRIMARY,idx_bnet); Using where |</span>
-<span class="err">+----+-------------+-------+-------------+------------------+------------------+---------+------+------+--------------------------------------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from test where id  = 1 or bnet_id = 1;
++----+-------------+-------+-------------+------------------+------------------+---------+------+------+--------------------------------------------+
+| id | select_type | table | type        | possible_keys    | key              | key_len | ref  | rows | Extra                                      |
++----+-------------+-------+-------------+------------------+------------------+---------+------+------+--------------------------------------------+
+|  1 | SIMPLE      | test  | index_merge | PRIMARY,idx_bnet | PRIMARY,idx_bnet | 8,9     | NULL |    2 | Using union(PRIMARY,idx_bnet); Using where |
++----+-------------+-------+-------------+------------------+------------------+---------+------+------+--------------------------------------------+</code></pre>
+
 
 <p>前提条件为<code>id</code>列和<code>bnet_id</code>列都有单列索引。如果出现index_merge，并且这类SQL后期使用较频繁，可以考虑把单列索引换为组合索引，这样效率更高</p>
 <p><strong>range：</strong> 只检索给定范围的行，使用一个索引来选择行。key列显示使用了哪个索引。key_len包含所使用索引的最长关键元素。在该类型中ref列为NULL</p>
 <p>当使用=、&lt;&gt;、&gt;、&gt;=、&lt;、&lt;=、IS NULL、&lt;=&gt;、BETWEEN或者IN操作符，用常量比较关键字列时，可以使用range</p>
-<div class="codehilite"><pre><span></span><code><span class="err">mysql&gt; explain select * from test where bnet_id &gt; 1000 and  bnet_id &lt; 10000;</span>
-<span class="err">+----+-------------+-------+-------+---------------+----------+---------+------+------+-----------------------+</span>
-<span class="err">| id | select_type | table | type  | possible_keys | key      | key_len | ref  | rows | Extra                 |</span>
-<span class="err">+----+-------------+-------+-------+---------------+----------+---------+------+------+-----------------------+</span>
-<span class="err">|  1 | SIMPLE      | test  | range | idx_bnet      | idx_bnet | 9       | NULL |    1 | Using index condition |</span>
-<span class="err">+----+-------------+-------+-------+---------------+----------+---------+------+------+-----------------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from test where bnet_id &gt; 1000 and  bnet_id &lt; 10000;
++----+-------------+-------+-------+---------------+----------+---------+------+------+-----------------------+
+| id | select_type | table | type  | possible_keys | key      | key_len | ref  | rows | Extra                 |
++----+-------------+-------+-------+---------------+----------+---------+------+------+-----------------------+
+|  1 | SIMPLE      | test  | range | idx_bnet      | idx_bnet | 9       | NULL |    1 | Using index condition |
++----+-------------+-------+-------+---------------+----------+---------+------+------+-----------------------+</code></pre>
+
 
 <p>前提条件为<code>bnet_id</code>列有索引</p>
 <p><strong>index：</strong> 在进行统计时非常常见，此联接类型实际上会扫描索引树</p>
-<div class="codehilite"><pre><span></span><code><span class="err">mysql&gt; explain select count(*) from test;</span>
-<span class="err">+----+-------------+-------+-------+---------------+----------+---------+------+-------+-------------+</span>
-<span class="err">| id | select_type | table | type  | possible_keys | key      | key_len | ref  | rows  | Extra       |</span>
-<span class="err">+----+-------------+-------+-------+---------------+----------+---------+------+-------+-------------+</span>
-<span class="err">|  1 | SIMPLE      | test  | index | NULL          | idx_bnet | 9       | NULL | 68505 | Using index |</span>
-<span class="err">+----+-------------+-------+-------+---------------+----------+---------+------+-------+-------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select count(*) from test;
++----+-------------+-------+-------+---------------+----------+---------+------+-------+-------------+
+| id | select_type | table | type  | possible_keys | key      | key_len | ref  | rows  | Extra       |
++----+-------------+-------+-------+---------------+----------+---------+------+-------+-------------+
+|  1 | SIMPLE      | test  | index | NULL          | idx_bnet | 9       | NULL | 68505 | Using index |
++----+-------------+-------+-------+---------------+----------+---------+------+-------+-------------+</code></pre>
+
 
 <p><strong>all：</strong> 对于每个来自于先前的表的行组合，进行完整的表扫描，通常可以增加更多的索引而不要使用ALL，使得行能基于前面的表中的常数值或列值被检索出</p>
-<div class="codehilite"><pre><span></span><code><span class="err">mysql&gt; explain select *  from test where create_time = &#39;0000-00-00 00:00:00&#39;;</span>
-<span class="err">+----+-------------+-------+------+---------------+------+---------+------+-------+-------------+</span>
-<span class="err">| id | select_type | table | type | possible_keys | key  | key_len | ref  | rows  | Extra       |</span>
-<span class="err">+----+-------------+-------+------+---------------+------+---------+------+-------+-------------+</span>
-<span class="err">|  1 | SIMPLE      | test  | ALL  | NULL          | NULL | NULL    | NULL | 68505 | Using where |</span>
-<span class="err">+----+-------------+-------+------+---------------+------+---------+------+-------+-------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select *  from test where create_time = '0000-00-00 00:00:00';
++----+-------------+-------+------+---------------+------+---------+------+-------+-------------+
+| id | select_type | table | type | possible_keys | key  | key_len | ref  | rows  | Extra       |
++----+-------------+-------+------+---------------+------+---------+------+-------+-------------+
+|  1 | SIMPLE      | test  | ALL  | NULL          | NULL | NULL    | NULL | 68505 | Using where |
++----+-------------+-------+------+---------------+------+---------+------+-------+-------------+</code></pre>
+
 
 <h4 id="5possible_keys">5、possible_keys</h4>
 <p>possible_keys是指在这个SQL中，mysql可以使用这个索引去辅助查找记录，当查询涉及到的字段，都会被列出，但不一定被查询使用.若为空则表示没有可以使用的索引，此时可以通过检查where语句看是否可以引用某些列或者新建索引来提高性能。</p>
@@ -288,62 +288,62 @@
 <h4 id="11extra">11、extra（重要）</h4>
 <p>extra表示不在其他列并且也很重要的额外信息</p>
 <p><strong>using index：</strong> 该值表示这个SQL语句使用了覆盖索引（覆盖索引是指可以直接在索引列中得到想要的结果，而不用去回表），此时效率最高</p>
-<div class="codehilite"><pre><span></span><code><span class="err">mysql&gt; explain select id from test;</span>
-<span class="err">+----+-------------+-------+-------+---------------+----------+---------+------+-------+-------------+</span>
-<span class="err">| id | select_type | table | type  | possible_keys | key      | key_len | ref  | rows  | Extra       |</span>
-<span class="err">+----+-------------+-------+-------+---------------+----------+---------+------+-------+-------------+</span>
-<span class="err">|  1 | SIMPLE      | test  | index | NULL          | idx_bnet | 9       | NULL | 68505 | Using index |</span>
-<span class="err">+----+-------------+-------+-------+---------------+----------+---------+------+-------+-------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select id from test;
++----+-------------+-------+-------+---------------+----------+---------+------+-------+-------------+
+| id | select_type | table | type  | possible_keys | key      | key_len | ref  | rows  | Extra       |
++----+-------------+-------+-------+---------------+----------+---------+------+-------+-------------+
+|  1 | SIMPLE      | test  | index | NULL          | idx_bnet | 9       | NULL | 68505 | Using index |
++----+-------------+-------+-------+---------------+----------+---------+------+-------+-------------+</code></pre>
+
 
 <p>这个例子中<code>id</code>字段为主键，但是key那里显示走的并不是主键索引，这个是因为mysql的所有二级索引中都会包含所有的主键信息，而mysql没有单独的存储主键索引，所以扫描二级索引的开销比全表扫描更快</p>
 <p><strong>using where：</strong> 表示存储引擎搜到记录后进行了后过滤(POST-FILTER)，如果查询未能使用索引，using where的作用只是提醒我们mysql要用where条件过滤结果集</p>
-<div class="codehilite"><pre><span></span><code><span class="err">mysql&gt; explain select * from test where id &gt; 1;</span>
-<span class="err">+----+-------------+-------+-------+---------------+---------+---------+------+-------+-------------+</span>
-<span class="err">| id | select_type | table | type  | possible_keys | key     | key_len | ref  | rows  | Extra       |</span>
-<span class="err">+----+-------------+-------+-------+---------------+---------+---------+------+-------+-------------+</span>
-<span class="err">|  1 | SIMPLE      | test  | range | PRIMARY       | PRIMARY | 8       | NULL | 34252 | Using where |</span>
-<span class="err">+----+-------------+-------+-------+---------------+---------+---------+------+-------+-------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from test where id &gt; 1;
++----+-------------+-------+-------+---------------+---------+---------+------+-------+-------------+
+| id | select_type | table | type  | possible_keys | key     | key_len | ref  | rows  | Extra       |
++----+-------------+-------+-------+---------------+---------+---------+------+-------+-------------+
+|  1 | SIMPLE      | test  | range | PRIMARY       | PRIMARY | 8       | NULL | 34252 | Using where |
++----+-------------+-------+-------+---------------+---------+---------+------+-------+-------------+</code></pre>
+
 
 <p><strong>using temporary</strong> 表示mysql需要使用临时表来存储结果集，常见于排序和分组查询</p>
-<div class="codehilite"><pre><span></span><code><span class="err">mysql&gt; explain select * from test where id in (1,2) group by bnet_id;</span>
-<span class="err">+----+-------------+-------+-------+-----------------------------------------+---------+---------+------+------+----------------------------------------------+</span>
-<span class="err">| id | select_type | table | type  | possible_keys                           | key     | key_len | ref  | rows | Extra                                        |</span>
-<span class="err">+----+-------------+-------+-------+-----------------------------------------+---------+---------+------+------+----------------------------------------------+</span>
-<span class="err">|  1 | SIMPLE      | test  | range | PRIMARY,IDX(event_key-bnet_Id),idx_bnet | PRIMARY | 8       | NULL |    2 | Using where; Using temporary; Using filesort |</span>
-<span class="err">+----+-------------+-------+-------+-----------------------------------------+---------+---------+------+------+----------------------------------------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from test where id in (1,2) group by bnet_id;
++----+-------------+-------+-------+-----------------------------------------+---------+---------+------+------+----------------------------------------------+
+| id | select_type | table | type  | possible_keys                           | key     | key_len | ref  | rows | Extra                                        |
++----+-------------+-------+-------+-----------------------------------------+---------+---------+------+------+----------------------------------------------+
+|  1 | SIMPLE      | test  | range | PRIMARY,IDX(event_key-bnet_Id),idx_bnet | PRIMARY | 8       | NULL |    2 | Using where; Using temporary; Using filesort |
++----+-------------+-------+-------+-----------------------------------------+---------+---------+------+------+----------------------------------------------+</code></pre>
+
 
 <p><strong>using filesort：</strong> 是指mysql无法利用索引直接完成排序（排序的字段不是索引字段），此时会用到缓冲空间来进行排序</p>
-<div class="codehilite"><pre><span></span><code><span class="err">mysql&gt; explain select * from test order by bnet_id;</span>
-<span class="err">+----+-------------+-------+------+---------------+------+---------+------+-------+----------------+</span>
-<span class="err">| id | select_type | table | type | possible_keys | key  | key_len | ref  | rows  | Extra          |</span>
-<span class="err">+----+-------------+-------+------+---------------+------+---------+------+-------+----------------+</span>
-<span class="err">|  1 | SIMPLE      | test  | ALL  | NULL          | NULL | NULL    | NULL | 68505 | Using filesort |</span>
-<span class="err">+----+-------------+-------+------+---------------+------+---------+------+-------+----------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from test order by bnet_id;
++----+-------------+-------+------+---------------+------+---------+------+-------+----------------+
+| id | select_type | table | type | possible_keys | key  | key_len | ref  | rows  | Extra          |
++----+-------------+-------+------+---------------+------+---------+------+-------+----------------+
+|  1 | SIMPLE      | test  | ALL  | NULL          | NULL | NULL    | NULL | 68505 | Using filesort |
++----+-------------+-------+------+---------------+------+---------+------+-------+----------------+</code></pre>
+
 
 <p><strong>using join buffer：</strong> 强调在获取连接条件时没有用到索引，并且需要连接缓冲区来存储中间结果。（性能可以通过添加索引或者修改连接字段改进）</p>
-<div class="codehilite"><pre><span></span><code><span class="err">mysql&gt; explain select * from test left join test2 on test.create_time = test2.create_time;</span>
-<span class="err">+----+-------------+-------+------------+------+---------------+------+---------+------+--------+----------+----------------------------------------------------+</span>
-<span class="err">| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows   | filtered | Extra                                              |</span>
-<span class="err">+----+-------------+-------+------------+------+---------------+------+---------+------+--------+----------+----------------------------------------------------+</span>
-<span class="err">|  1 | SIMPLE      | test  | NULL       | ALL  | NULL          | NULL | NULL    | NULL | 959692 |   100.00 | NULL                                               |</span>
-<span class="err">|  1 | SIMPLE      | test2 | NULL       | ALL  | NULL          | NULL | NULL    | NULL | 958353 |   100.00 | Using where; Using join buffer (Block Nested Loop) |</span>
-<span class="err">+----+-------------+-------+------------+------+---------------+------+---------+------+--------+----------+----------------------------------------------------+</span>
-<span class="err">2 rows in set, 1 warning (0.00 sec)</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from test left join test2 on test.create_time = test2.create_time;
++----+-------------+-------+------------+------+---------------+------+---------+------+--------+----------+----------------------------------------------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows   | filtered | Extra                                              |
++----+-------------+-------+------------+------+---------------+------+---------+------+--------+----------+----------------------------------------------------+
+|  1 | SIMPLE      | test  | NULL       | ALL  | NULL          | NULL | NULL    | NULL | 959692 |   100.00 | NULL                                               |
+|  1 | SIMPLE      | test2 | NULL       | ALL  | NULL          | NULL | NULL    | NULL | 958353 |   100.00 | Using where; Using join buffer (Block Nested Loop) |
++----+-------------+-------+------------+------+---------------+------+---------+------+--------+----------+----------------------------------------------------+
+2 rows in set, 1 warning (0.00 sec)</code></pre>
+
 
 <p>Block Nested Loop是指Block Nested-Loop Join算法：将外层循环的行/结果集存入join buffer, 内层循环的每一行与整个buffer中的记录做比较，从而减少内层循环的次数.</p>
 <p><strong>impossible where：</strong> 表示where条件导致没有返回的行</p>
-<div class="codehilite"><pre><span></span><code><span class="err">mysql&gt; explain select * from test where id is null;</span>
-<span class="err">+----+-------------+-------+------+---------------+------+---------+------+------+------------------+</span>
-<span class="err">| id | select_type | table | type | possible_keys | key  | key_len | ref  | rows | Extra            |</span>
-<span class="err">+----+-------------+-------+------+---------------+------+---------+------+------+------------------+</span>
-<span class="err">|  1 | SIMPLE      | NULL  | NULL | NULL          | NULL | NULL    | NULL | NULL | Impossible WHERE |</span>
-<span class="err">+----+-------------+-------+------+---------------+------+---------+------+------+------------------+</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysql&gt; explain select * from test where id is null;
++----+-------------+-------+------+---------------+------+---------+------+------+------------------+
+| id | select_type | table | type | possible_keys | key  | key_len | ref  | rows | Extra            |
++----+-------------+-------+------+---------------+------+---------+------+------+------------------+
+|  1 | SIMPLE      | NULL  | NULL | NULL          | NULL | NULL    | NULL | NULL | Impossible WHERE |
++----+-------------+-------+------+---------------+------+---------+------+------+------------------+</code></pre>
+
 
 <p><strong>using index condition：</strong> 是mysql 5.6 之后新加的特性，结合mysql的ICP（Index Condition Pushdown）特性使用。主要是优化了可以在索引（仅限二级索引）上进行 like 查找</p>
 <p>如果extra中出现多个上面结果，则表示顺序使用上面的方法进行解析查询</p>

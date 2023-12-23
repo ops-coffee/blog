@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -58,56 +58,56 @@
 </ol>
 <h1 id="_2">迁移功能</h1>
 <p>数据库迁移主要是利用mysql的导入导出功能，核心的命令就一个</p>
-<div class="codehilite"><pre><span></span><code><span class="err">mysqldump -h 10.82.9.19 -P 3306 -uops -pcoffee --default-character-set=utf8 --single-transaction --databases dbname | mysql -h 192.168.106.91 -P 3306 -uops -pcoffee --default-character-set=utf8 dbname</span>
-</code></pre></div>
+<pre class="codehilite"><code>mysqldump -h 10.82.9.19 -P 3306 -uops -pcoffee --default-character-set=utf8 --single-transaction --databases dbname | mysql -h 192.168.106.91 -P 3306 -uops -pcoffee --default-character-set=utf8 dbname</code></pre>
+
 
 <p>以上命令是shell命令，在python下没有找到直接导入导出mysql数据的包，只能在python代码中调用shell命令，推荐使用subprocess模块，这个模块有着更加丰富的使用方法，方便获取最终的命令执行状态和输出结果，转换成完整的python类如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">PIPE</span>
+<pre class="codehilite"><code>from subprocess import Popen, PIPE
 
 
-<span class="k">class</span> <span class="nc">Cmd</span><span class="p">():</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">src_host</span> <span class="o">=</span> <span class="s1">&#39;10.82.9.19&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">src_port</span> <span class="o">=</span> <span class="mi">3306</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">src_database</span> <span class="o">=</span> <span class="s1">&#39;dbname&#39;</span>
+class Cmd():
+    def __init__(self):
+        self.src_host = '10.82.9.19'
+        self.src_port = 3306
+        self.src_database = 'dbname'
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">des_host</span> <span class="o">=</span> <span class="s1">&#39;192.168.106.91&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">des_port</span> <span class="o">=</span> <span class="mi">3306</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">des_database</span> <span class="o">=</span> <span class="s1">&#39;dbname&#39;</span>
+        self.des_host = '192.168.106.91'
+        self.des_port = 3306
+        self.des_database = 'dbname'
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">tables</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span>
+        self.tables = 'all'
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="s1">&#39;ops&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s1">&#39;coffee&#39;</span>
+        self.username = 'ops'
+        self.password = 'coffee'
 
-    <span class="k">def</span> <span class="nf">migration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># 利用mysqldump命令备份</span>
-        <span class="n">dump</span> <span class="o">=</span> <span class="s2">&quot;mysqldump -h </span><span class="si">%s</span><span class="s2"> -P </span><span class="si">%d</span><span class="s2"> -u</span><span class="si">%s</span><span class="s2"> -p</span><span class="si">%s</span><span class="s2"> --default-character-set=utf8 --single-transaction --databases </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">src_host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_port</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_database</span>
-        <span class="p">)</span>
+    def migration(self):
+        # 利用mysqldump命令备份
+        dump = &quot;mysqldump -h %s -P %d -u%s -p%s --default-character-set=utf8 --single-transaction --databases %s&quot; % (
+            self.src_host, self.src_port, self.username, self.password, self.src_database
+        )
 
-        <span class="c1"># 如果是对表的导出则加上表名，是个字符串&#39;table1 table2 table3&#39;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tables</span> <span class="o">!=</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
-            <span class="n">dump</span> <span class="o">+=</span> <span class="s1">&#39; --tables </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">tables</span>
+        # 如果是对表的导出则加上表名，是个字符串'table1 table2 table3'
+        if self.tables != 'all':
+            dump += ' --tables %s' % self.tables
 
-        <span class="c1"># 利用mysql命令导入</span>
-        <span class="n">mysql</span> <span class="o">=</span> <span class="s2">&quot;mysql -h </span><span class="si">%s</span><span class="s2"> -P </span><span class="si">%d</span><span class="s2"> -u</span><span class="si">%s</span><span class="s2"> -p</span><span class="si">%s</span><span class="s2"> --default-character-set=utf8 </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">des_host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">des_port</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">des_database</span>
-        <span class="p">)</span>
+        # 利用mysql命令导入
+        mysql = &quot;mysql -h %s -P %d -u%s -p%s --default-character-set=utf8 %s&quot; % (
+            self.des_host, self.des_port, self.username, self.password, self.des_database
+        )
 
-        <span class="c1"># 执行导出导入shell命令</span>
-        <span class="n">process</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> | </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dump</span><span class="p">,</span> <span class="n">mysql</span><span class="p">),</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-        <span class="n">process_stdout</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        # 执行导出导入shell命令
+        process = Popen(&quot;%s | %s&quot; % (dump, mysql), stderr=PIPE, shell=True)
+        process_stdout = process.communicate()
 
-        <span class="c1"># 判断shell命令执行结果状态</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;迁移成功！&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="n">process_stdout</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        # 判断shell命令执行结果状态
+        if (process.returncode == 0):
+            print('迁移成功！')
+        else:
+            print(process_stdout[1].decode('utf8').strip())
 
 
-<span class="n">Cmd</span><span class="p">()</span><span class="o">.</span><span class="n">migration</span><span class="p">()</span>
-</code></pre></div>
+Cmd().migration()</code></pre>
+
 
 <p>这里采用了shell中的管道，管道用<code>|</code>符号分割两个命令，管道符前的命令正确输出作为管道符后命令的输入，好处是不需要生成单独的sql文件存放在磁盘上，也就不需要考虑文件删除，占用磁盘的问题，缺点是导出大的数据库时可能会造成OOM，这个要根据自身情况综合权衡。</p>
 <p>导数据属于耗时操作，在web中应异步执行，这里采用了Celery来处理，这篇文章<a href="/s/lXrp3igYo9W2UuE5Gauysg">Django配置Celery执行异步任务和定时任务</a>有详细介绍Django中Celery的使用</p>

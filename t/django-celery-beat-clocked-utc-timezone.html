@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -47,41 +47,41 @@
 <p>使用<code>django_celery_beat</code>做异步任务、定时任务和周期任务管理，异步任务、周期任务执行都正常，唯独定时任务会延迟8小时执行</p>
 <p>经验告诉我们遇到延迟8小时的大概率是因为时区的问题，但翻遍了文档，时区相关的配置都已添加仍然没用</p>
 <h2 id="_2">产生环境</h2>
-<div class="codehilite"><pre><span></span><code><span class="err"># pip3 list | grep celery</span>
-<span class="err">celery                      5.2.7</span>
-<span class="err">django-celery-beat          2.2.1</span>
-</code></pre></div>
+<pre class="codehilite"><code># pip3 list | grep celery
+celery                      5.2.7
+django-celery-beat          2.2.1</code></pre>
+
 
 <p>实际上涉及到的版本较多，不止我这里这个版本会出现，我测试了其他一些版本也都有这个问题，官方没修复</p>
 <h2 id="_3">解决方案</h2>
 <p>修改源码文件<code>django_celery_beat/clockedschedule.py</code>，以下这段</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">clocked</span>(<span class="n">schedules</span>.<span class="n">BaseSchedule</span>):
-    <span class="s">&quot;&quot;&quot;clocked schedule.</span>
+<pre class="codehilite"><code>class clocked(schedules.BaseSchedule):
+    &quot;&quot;&quot;clocked schedule.
 
-<span class="s">    Depends on PeriodicTask one_off=True</span>
-<span class="s">    &quot;&quot;&quot;</span>
+    Depends on PeriodicTask one_off=True
+    &quot;&quot;&quot;
 
-    <span class="n">def</span> <span class="n">__init__</span>(<span class="nb">self</span>, <span class="n">clocked_time</span>, <span class="n">nowfun</span>=<span class="n">None</span>, <span class="n">app</span>=<span class="n">None</span>):
-        <span class="s">&quot;&quot;&quot;Initialize clocked.&quot;&quot;&quot;</span>
-        <span class="nb">self</span>.<span class="n">clocked_time</span> = <span class="n">maybe_make_aware</span>(<span class="n">clocked_time</span>)
-        <span class="n">super</span>().<span class="n">__init__</span>(<span class="n">nowfun</span>=<span class="n">nowfun</span>, <span class="n">app</span>=<span class="n">app</span>)
-</code></pre></div>
+    def __init__(self, clocked_time, nowfun=None, app=None):
+        &quot;&quot;&quot;Initialize clocked.&quot;&quot;&quot;
+        self.clocked_time = maybe_make_aware(clocked_time)
+        super().__init__(nowfun=nowfun, app=app)</code></pre>
+
 
 <p>改为：</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">clocked</span><span class="p">(</span><span class="n">schedules</span><span class="o">.</span><span class="n">BaseSchedule</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;clocked schedule.</span>
+<pre class="codehilite"><code>class clocked(schedules.BaseSchedule):
+    &quot;&quot;&quot;clocked schedule.
 
-<span class="sd">    Depends on PeriodicTask one_off=True</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    Depends on PeriodicTask one_off=True
+    &quot;&quot;&quot;
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clocked_time</span><span class="p">,</span> <span class="n">nowfun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initialize clocked.&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">make_aware</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clocked_time</span> <span class="o">=</span> <span class="n">make_aware</span><span class="p">(</span><span class="n">clocked_time</span><span class="p">)</span>
+    def __init__(self, clocked_time, nowfun=None, app=None):
+        &quot;&quot;&quot;Initialize clocked.&quot;&quot;&quot;
+        from .utils import make_aware
+        self.clocked_time = make_aware(clocked_time)
 
-        <span class="c1"># self.clocked_time = maybe_make_aware(clocked_time)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nowfun</span><span class="o">=</span><span class="n">nowfun</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="n">app</span><span class="p">)</span>
-</code></pre></div>
+        # self.clocked_time = maybe_make_aware(clocked_time)
+        super().__init__(nowfun=nowfun, app=app)</code></pre>
+
 
 <p>问题即可解决</p>
 

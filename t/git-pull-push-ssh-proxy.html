@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -43,27 +43,26 @@
         <h1 id="art-title">Git Pull/Git Push配置SSH代理</h1>
 
         <p>当git pull或push时经常会遇到<code>Could not read from remote repository</code>的报错，尤其是在启用Clash等代理软件后</p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="n">git</span> <span class="n">push</span>
-<span class="n">kex_exchange_identification</span><span class="p">:</span> <span class="k">Connection</span> <span class="n">closed</span> <span class="k">by</span> <span class="n">remote</span> <span class="k">host</span>
-<span class="k">Connection</span> <span class="n">closed</span> <span class="k">by</span> <span class="mi">20</span><span class="p">.</span><span class="mi">205</span><span class="p">.</span><span class="mi">243</span><span class="p">.</span><span class="mi">166</span> <span class="n">port</span> <span class="mi">22</span>
-<span class="n">fatal</span><span class="p">:</span> <span class="n">Could</span> <span class="k">not</span> <span class="k">read</span> <span class="k">from</span> <span class="n">remote</span> <span class="n">repository</span><span class="p">.</span>
+<pre class="codehilite"><code># git push
+kex_exchange_identification: Connection closed by remote host
+Connection closed by 20.205.243.166 port 22
+fatal: Could not read from remote repository.
 
-<span class="n">Please</span> <span class="n">make</span> <span class="n">sure</span> <span class="n">you</span> <span class="n">have</span> <span class="n">the</span> <span class="n">correct</span> <span class="k">access</span> <span class="n">rights</span>
-<span class="k">and</span> <span class="n">the</span> <span class="n">repository</span> <span class="k">exists</span><span class="p">.</span>
-</code></pre></div>
+Please make sure you have the correct access rights
+and the repository exists.</code></pre>
+
 
 <p>此时我们可以通过配置SSH代理来保障网络通畅，添加<code>~/.ssh/config</code>文件，配置如下内容</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># cat ~/.ssh/config</span>
-<span class="err">Host github.com</span>
-<span class="err">    User git</span>
-<span class="err">    Hostname github.com</span>
-<span class="err">    Port 22</span>
-<span class="err">    ProxyCommand nc -v -x localhost:7890 %h %p</span>
-</code></pre></div>
+<pre class="codehilite"><code># cat ~/.ssh/config
+Host github.com
+    User git
+    Hostname github.com
+    Port 22
+    ProxyCommand nc -v -x localhost:7890 %h %p</code></pre>
+
 
 <p>ProxyCommand依赖nc，服务器上需要提前安装nc</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># apt-get install ncat</span>
-</code></pre></div>
+<pre class="codehilite"><code># apt-get install ncat</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

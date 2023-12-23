@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -63,124 +63,124 @@
 <h2 id="for">for循环展示</h2>
 <p>列表页面的展示采用了for循环读取JS数据</p>
 <p>JS里边用一个Blogs变量来记录文章列表页的数据，JS里边定义的变量可以直接在模板渲染时引用</p>
-<div class="codehilite"><pre><span></span><code><span class="err">Page({</span>
-<span class="err">  data: {</span>
-<span class="err">    StatusBar: app.globalData.StatusBar,</span>
-<span class="err">    CustomBar: app.globalData.CustomBar,</span>
-<span class="err">    Blogs: [</span>
-<span class="err">        {</span>
-<span class="err">            &quot;title&quot;: &quot;Django内置权限扩展案例&quot;,</span>
-<span class="err">            &quot;image&quot;: &quot;https://ws1.sinaimg.cn/large/7164c73agy1g0vl4k4veej20zk0f841d.jpg&quot;,</span>
-<span class="err">            &quot;description&quot;: &quot;当Django的内置权限无法满足需求的时候&quot;,</span>
-<span class="err">            &quot;url&quot;: &quot;/s/BZsJnWLtv8ZwwlBYbWSbZQ&quot;,</span>
-<span class="err">            &quot;tag&quot;: &quot;Django&quot;</span>
-<span class="err">        },</span>
-<span class="err">        {</span>
-<span class="err">            &quot;title&quot;: &quot;我们自研的那些Devops工具&quot;,</span>
-<span class="err">            &quot;image&quot;: &quot;https://ws1.sinaimg.cn/large/7164c73agy1g0vl4wtqdfj20zk0k00ve.jpg&quot;,</span>
-<span class="err">            &quot;description&quot;: &quot;随着云技术以及容器技术的崛起，人肉运维的时代结束了&quot;,</span>
-<span class="err">            &quot;url&quot;: &quot;/s/HwOi-ARTvvNjGTWrDmZIkQ&quot;,</span>
-<span class="err">            &quot;tag&quot;: &quot;DevOps&quot;</span>
-<span class="err">        }</span>
-<span class="err">    ]</span>
-<span class="err">  }</span>
-<span class="err">})</span>
-</code></pre></div>
+<pre class="codehilite"><code>Page({
+  data: {
+    StatusBar: app.globalData.StatusBar,
+    CustomBar: app.globalData.CustomBar,
+    Blogs: [
+        {
+            &quot;title&quot;: &quot;Django内置权限扩展案例&quot;,
+            &quot;image&quot;: &quot;https://ws1.sinaimg.cn/large/7164c73agy1g0vl4k4veej20zk0f841d.jpg&quot;,
+            &quot;description&quot;: &quot;当Django的内置权限无法满足需求的时候&quot;,
+            &quot;url&quot;: &quot;/s/BZsJnWLtv8ZwwlBYbWSbZQ&quot;,
+            &quot;tag&quot;: &quot;Django&quot;
+        },
+        {
+            &quot;title&quot;: &quot;我们自研的那些Devops工具&quot;,
+            &quot;image&quot;: &quot;https://ws1.sinaimg.cn/large/7164c73agy1g0vl4wtqdfj20zk0k00ve.jpg&quot;,
+            &quot;description&quot;: &quot;随着云技术以及容器技术的崛起，人肉运维的时代结束了&quot;,
+            &quot;url&quot;: &quot;/s/HwOi-ARTvvNjGTWrDmZIkQ&quot;,
+            &quot;tag&quot;: &quot;DevOps&quot;
+        }
+    ]
+  }
+})</code></pre>
+
 
 <p>模板渲染时用到了循环标签<code>wx:for</code>，可以读取JS变量的列表值，然后通过<code>{{item}}</code>拿到列表中的每个对象，再通过<code>{{item.key}}</code>拿到对象的值</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;view</span> <span class="na">bindtap=</span><span class="s">&quot;toChild&quot;</span> <span class="na">data-blog=</span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">item</span><span class="cp">}}</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;cu-item shadow&quot;</span> <span class="na">wx:for=</span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">Blogs</span><span class="cp">}}</span><span class="s">&quot;</span> <span class="err">wx:key</span><span class="nt">&gt;</span>
-<span class="nt">&lt;view</span> <span class="na">class=</span><span class="s">&quot;title&quot;</span><span class="nt">&gt;</span><span class="cp">{{</span><span class="nv">item.title</span><span class="cp">}}</span><span class="nt">&lt;/view&gt;</span>
-<span class="nt">&lt;view</span> <span class="na">class=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;image</span> <span class="na">src=</span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">item.image</span><span class="cp">}}</span><span class="s">&quot;</span> <span class="na">mode=</span><span class="s">&quot;aspectFill&quot;</span><span class="nt">&gt;&lt;/image&gt;</span>
-  <span class="nt">&lt;view</span> <span class="na">class=</span><span class="s">&quot;desc&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;view</span> <span class="na">class=</span><span class="s">&quot;text-content&quot;</span><span class="nt">&gt;</span> <span class="cp">{{</span><span class="nv">item.description</span><span class="cp">}}</span><span class="nt">&lt;/view&gt;</span>
-    <span class="nt">&lt;view</span> <span class="na">class=</span><span class="s">&quot;flex justify-between&quot;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;text</span> <span class="na">class=</span><span class="s">&quot;text-xs text-gray&quot;</span><span class="nt">&gt;</span>原创：37丫37<span class="nt">&lt;/text&gt;</span>
-      <span class="nt">&lt;view</span> <span class="na">class=</span><span class="s">&quot;bg-right cu-tag bg-green light sm round&quot;</span><span class="nt">&gt;</span><span class="cp">{{</span><span class="nv">item.tag</span><span class="cp">}}</span><span class="nt">&lt;/view&gt;</span>
-    <span class="nt">&lt;/view&gt;</span>
-  <span class="nt">&lt;/view&gt;</span>
-<span class="nt">&lt;/view&gt;</span>
-<span class="nt">&lt;/view&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&lt;view bindtap=&quot;toChild&quot; data-blog=&quot;{{item}}&quot; class=&quot;cu-item shadow&quot; wx:for=&quot;{{Blogs}}&quot; wx:key&gt;
+&lt;view class=&quot;title&quot;&gt;{{item.title}}&lt;/view&gt;
+&lt;view class=&quot;content&quot;&gt;
+  &lt;image src=&quot;{{item.image}}&quot; mode=&quot;aspectFill&quot;&gt;&lt;/image&gt;
+  &lt;view class=&quot;desc&quot;&gt;
+    &lt;view class=&quot;text-content&quot;&gt; {{item.description}}&lt;/view&gt;
+    &lt;view class=&quot;flex justify-between&quot;&gt;
+      &lt;text class=&quot;text-xs text-gray&quot;&gt;原创：37丫37&lt;/text&gt;
+      &lt;view class=&quot;bg-right cu-tag bg-green light sm round&quot;&gt;{{item.tag}}&lt;/view&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/view&gt;
+&lt;/view&gt;</code></pre>
+
 
 <h2 id="_4">后端取数据</h2>
 <p>考虑到文章可能会随时增加，将数据直接写在JS里边并不友好，每次变更还要重新发布审核，所以从后端接口读取数据才是最好的方式，但考虑到成本问题没必要专门写个后端程序来处理，直接将内容存json，提供https访问即可</p>
 <p>在页面加载的时候去后台请求数据，然后给设置成变量Blogs，页面渲染参考上边介绍</p>
-<div class="codehilite"><pre><span></span><code><span class="n">onLoad</span><span class="o">:</span> <span class="kd">function</span> <span class="o">()</span> <span class="o">{</span>
-    <span class="n">var</span> <span class="n">that</span> <span class="o">=</span> <span class="k">this</span><span class="o">;</span>
-    <span class="n">wx</span><span class="o">.</span><span class="na">request</span><span class="o">({</span>
-      <span class="n">url</span><span class="o">:</span> <span class="s1">&#39;https://ops-coffee.cn/blog.json&#39;</span><span class="o">,</span>
-      <span class="n">header</span><span class="o">:</span> <span class="o">{</span>
-        <span class="s1">&#39;content-type&#39;</span><span class="o">:</span> <span class="s1">&#39;application/json&#39;</span>
-      <span class="o">},</span>
-      <span class="c1">//请求后台数据成功</span>
-      <span class="n">success</span><span class="o">:</span> <span class="kd">function</span> <span class="o">(</span><span class="n">res</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">that</span><span class="o">.</span><span class="na">setData</span><span class="o">({</span>
-          <span class="n">Blogs</span><span class="o">:</span> <span class="n">res</span><span class="o">.</span><span class="na">data</span><span class="o">.</span><span class="na">data</span>
-        <span class="o">})</span>
-      <span class="o">}</span>
-    <span class="o">})</span>
-<span class="o">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>onLoad: function () {
+    var that = this;
+    wx.request({
+      url: 'https://ops-coffee.cn/blog.json',
+      header: {
+        'content-type': 'application/json'
+      },
+      //请求后台数据成功
+      success: function (res) {
+        that.setData({
+          Blogs: res.data.data
+        })
+      }
+    })
+}</code></pre>
+
 
 <h2 id="_5">页面跳转</h2>
 <p>点击列表内容跳转到详情页该怎么实现呢？</p>
 <p>我们先来看看跳转，跳转可以直接通过<code>navigator</code>标签实现，<code>open-type</code>指定跳转方式，<code>url</code>指定跳转的页面</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;navigator</span> <span class="na">open-type=</span><span class="s">&quot;navigate&quot;</span> <span class="na">url=</span><span class="s">&quot;/pages/index/detail/detail?data=</span><span class="cp">{{</span><span class="nv">item</span><span class="cp">}}</span><span class="s">&quot;</span> <span class="na">class=</span><span class="s">&quot;cu-item shadow&quot;</span> <span class="na">wx:for=</span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">Blog</span><span class="cp">}}</span><span class="s">&quot;</span> <span class="err">wx:key</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;view</span> <span class="na">class=</span><span class="s">&quot;title&quot;</span><span class="nt">&gt;</span><span class="cp">{{</span><span class="nv">item.title</span><span class="cp">}}</span><span class="nt">&lt;/view&gt;</span>
+<pre class="codehilite"><code>&lt;navigator open-type=&quot;navigate&quot; url=&quot;/pages/index/detail/detail?data={{item}}&quot; class=&quot;cu-item shadow&quot; wx:for=&quot;{{Blog}}&quot; wx:key&gt;
+    &lt;view class=&quot;title&quot;&gt;{{item.title}}&lt;/view&gt;
     ...
-<span class="nt">&lt;/navigator&gt;</span>
-</code></pre></div>
+&lt;/navigator&gt;</code></pre>
+
 
 <p>或者通过<code>bindtap</code>事件触发<code>wx.navigateTo</code>实现跳转，<code>data-blog</code>可以指定bindtap事件参数，从而在JS中获取</p>
-<div class="codehilite"><pre><span></span><code><span class="x">&lt;view bindtap=&quot;toChild&quot; data-blog=&quot;</span><span class="cp">{{</span><span class="nv">item</span><span class="cp">}}</span><span class="x">&quot; class=&quot;cu-item shadow&quot; wx:for=&quot;</span><span class="cp">{{</span><span class="nv">Blogs</span><span class="cp">}}</span><span class="x">&quot; wx:key&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&lt;view bindtap=&quot;toChild&quot; data-blog=&quot;{{item}}&quot; class=&quot;cu-item shadow&quot; wx:for=&quot;{{Blogs}}&quot; wx:key&gt;</code></pre>
 
-<div class="codehilite"><pre><span></span><code><span class="n">toChild</span><span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">var</span> <span class="n">blog</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">currentTarget</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">blog</span><span class="p">;</span>
 
-    <span class="n">wx</span><span class="o">.</span><span class="n">navigateTo</span><span class="p">({</span>
-      <span class="n">url</span><span class="p">:</span> <span class="s1">&#39;/pages/index/blog/blog&#39;</span>
-    <span class="p">})</span>
-<span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>toChild(event) {
+    var blog = event.currentTarget.dataset.blog;
+
+    wx.navigateTo({
+      url: '/pages/index/blog/blog'
+    })
+}</code></pre>
+
 
 <h2 id="_6">本地存储</h2>
 <p>当点击列表内容跳转到详情页，正常的做法应该是去后台请求文章的详情以渲染详情页面，但这里我需要展示的内容列表页已经存在了，无需再次请求就找了个偷懒的做法，在用户点击列表内容时，把这篇文章的详细信息利用<code>wx.setStorageSync</code>存储在本地</p>
-<div class="codehilite"><pre><span></span><code><span class="n">toChild</span><span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">var</span> <span class="n">blog</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">currentTarget</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">blog</span><span class="p">;</span>
+<pre class="codehilite"><code>toChild(event) {
+    var blog = event.currentTarget.dataset.blog;
 
-    <span class="n">wx</span><span class="o">.</span><span class="n">setStorageSync</span><span class="p">(</span>
-      <span class="s1">&#39;blog&#39;</span><span class="p">,</span><span class="n">blog</span>
-    <span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
+    wx.setStorageSync(
+      'blog',blog
+    );
+}</code></pre>
+
 
 <p>然后在详情页加载时利用<code>wx.getStorageSync</code>取出来渲染到页面</p>
-<div class="codehilite"><pre><span></span><code><span class="n">onLoad</span><span class="o">:</span> <span class="kd">function</span> <span class="o">(</span><span class="n">option</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">var</span> <span class="n">blog</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="na">getStorageSync</span><span class="o">(</span><span class="s1">&#39;blog&#39;</span><span class="o">);</span>
+<pre class="codehilite"><code>onLoad: function (option) {
+    var blog = wx.getStorageSync('blog');
 
-    <span class="k">this</span><span class="o">.</span><span class="na">setData</span><span class="o">({</span>
-      <span class="n">blog</span><span class="o">:</span><span class="n">blog</span>
-    <span class="o">})</span>
-<span class="o">},</span>
-</code></pre></div>
+    this.setData({
+      blog:blog
+    })
+},</code></pre>
+
 
 <h2 id="_7">关联公众号</h2>
 <p>小程序提供关联公众号的功能，需要先在小程序后台：设置-&gt;关注公众号中开启公众号关注组件，然后在页面的相应地方添加上如下代码就可以像文章详情页最下边一样出来个关联公众号的组件</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;official-account&gt;&lt;/official-account&gt;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&lt;official-account&gt;&lt;/official-account&gt;</code></pre>
+
 
 <p>但访问时可能会发现打开详情页并没有出现关联公众号的组件，这个主要是因为并非所有的情况下都会展示，只有用对了姿势才能看到，官方文档有更多介绍，目前还没有办法彻底解决看不到的问题</p>
 <h2 id="_8">页面分享</h2>
 <p>小程序上线后我想分享给朋友装逼，确发现没有方便的方式，查官方文档发现可以用<code>onShareAppMessage</code>方法，只需简单的添加到想分享页面的JS中即可，然后在右上角的功能按钮中就会出现转发功能</p>
-<div class="codehilite"><pre><span></span><code><span class="err">onShareAppMessage() {</span>
-<span class="err">    return {</span>
-<span class="err">      title: &#39;运维咖啡吧&#39;,</span>
-<span class="err">      path: &#39;/pages/index/list/list&#39;</span>
-<span class="err">    }</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>onShareAppMessage() {
+    return {
+      title: '运维咖啡吧',
+      path: '/pages/index/list/list'
+    }
+}</code></pre>
+
 
 <h1 id="_9">源码地址</h1>
 <p>长按文末二维码关注微信公众号【运维咖啡吧】回复"03"可获取源码地址，期待你的到来</p>

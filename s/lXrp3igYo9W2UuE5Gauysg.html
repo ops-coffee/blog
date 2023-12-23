@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -56,89 +56,89 @@
 <p>我的异步使用场景为项目上线：前端web上有个上线按钮，点击按钮后发请求给后端，后端执行上线过程要5分钟，后端在接收到请求后把任务放入队列异步执行，同时马上返回给前端一个任务执行中的结果。若果没有异步执行会怎么样呢？同步的情况就是执行过程中前端一直在等后端返回结果，页面转呀转的就转超时了。</p>
 <h2 id="_2">异步任务配置</h2>
 <p>1.安装RabbitMQ，这里我们使用RabbitMQ作为broker，安装完成后默认启动了，也不需要其他任何配置</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># apt-get install rabbitmq-server</span>
-</code></pre></div>
+<pre class="codehilite"><code># apt-get install rabbitmq-server</code></pre>
+
 
 <p>2.安装celery</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># pip3 install celery</span>
-</code></pre></div>
+<pre class="codehilite"><code># pip3 install celery</code></pre>
+
 
 <p>3.celery用在django项目中，django项目目录结构(简化)如下</p>
-<div class="codehilite"><pre><span></span><code><span class="err">website/</span>
-<span class="err">|-- deploy</span>
-<span class="err">|   |-- admin.py</span>
-<span class="err">|   |-- apps.py</span>
-<span class="err">|   |-- __init__.py</span>
-<span class="err">|   |-- models.py</span>
-<span class="err">|   |-- tasks.py</span>
-<span class="err">|   |-- tests.py</span>
-<span class="err">|   |-- urls.py</span>
-<span class="err">|   `-- views.py</span>
-<span class="err">|-- manage.py</span>
-<span class="err">|-- README</span>
-<span class="err">`-- website</span>
-<span class="err">    |-- celery.py</span>
-<span class="err">    |-- __init__.py</span>
-<span class="err">    |-- settings.py</span>
-<span class="err">    |-- urls.py</span>
-<span class="err">    `-- wsgi.py</span>
-</code></pre></div>
+<pre class="codehilite"><code>website/
+|-- deploy
+|   |-- admin.py
+|   |-- apps.py
+|   |-- __init__.py
+|   |-- models.py
+|   |-- tasks.py
+|   |-- tests.py
+|   |-- urls.py
+|   `-- views.py
+|-- manage.py
+|-- README
+`-- website
+    |-- celery.py
+    |-- __init__.py
+    |-- settings.py
+    |-- urls.py
+    `-- wsgi.py</code></pre>
+
 
 <p>4.创建<code>website/celery.py</code>主文件</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">unicode_literals</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">celery</span> <span class="kn">import</span> <span class="n">Celery</span><span class="p">,</span> <span class="n">platforms</span>
+<pre class="codehilite"><code>from __future__ import absolute_import, unicode_literals
+import os
+from celery import Celery, platforms
 
-<span class="c1"># set the default Django settings module for the &#39;celery&#39; program.</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;DJANGO_SETTINGS_MODULE&#39;</span><span class="p">,</span> <span class="s1">&#39;website.settings&#39;</span><span class="p">)</span>
+# set the default Django settings module for the 'celery' program.
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'website.settings')
 
-<span class="n">app</span> <span class="o">=</span> <span class="n">Celery</span><span class="p">(</span><span class="s1">&#39;website&#39;</span><span class="p">)</span>
+app = Celery('website')
 
-<span class="c1"># Using a string here means the worker don&#39;t have to serialize</span>
-<span class="c1"># the configuration object to child processes.</span>
-<span class="c1"># - namespace=&#39;CELERY&#39; means all celery-related configuration keys</span>
-<span class="c1">#   should have a `CELERY_` prefix.</span>
-<span class="n">app</span><span class="o">.</span><span class="n">config_from_object</span><span class="p">(</span><span class="s1">&#39;django.conf:settings&#39;</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s1">&#39;CELERY&#39;</span><span class="p">)</span>
+# Using a string here means the worker don't have to serialize
+# the configuration object to child processes.
+# - namespace='CELERY' means all celery-related configuration keys
+#   should have a `CELERY_` prefix.
+app.config_from_object('django.conf:settings', namespace='CELERY')
 
-<span class="c1"># Load task modules from all registered Django app configs.</span>
-<span class="n">app</span><span class="o">.</span><span class="n">autodiscover_tasks</span><span class="p">()</span>
+# Load task modules from all registered Django app configs.
+app.autodiscover_tasks()
 
-<span class="c1"># 允许root 用户运行celery</span>
-<span class="n">platforms</span><span class="o">.</span><span class="n">C_FORCE_ROOT</span> <span class="o">=</span> <span class="bp">True</span>
+# 允许root 用户运行celery
+platforms.C_FORCE_ROOT = True
 
-<span class="nd">@app.task</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">debug_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Request: {0!r}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">))</span>
-</code></pre></div>
+@app.task(bind=True)
+def debug_task(self):
+    print('Request: {0!r}'.format(self.request))</code></pre>
+
 
 <p>5.在<code>website/__init__.py</code>文件中增加如下内容，确保django启动的时候这个app能够被加载到</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+<pre class="codehilite"><code>from __future__ import absolute_import
 
-<span class="c1"># This will make sure the app is always imported when</span>
-<span class="c1"># Django starts so that shared_task will use this app.</span>
-<span class="kn">from</span> <span class="nn">.celery</span> <span class="kn">import</span> <span class="n">app</span> <span class="k">as</span> <span class="n">celery_app</span>
+# This will make sure the app is always imported when
+# Django starts so that shared_task will use this app.
+from .celery import app as celery_app
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;celery_app&#39;</span><span class="p">]</span>
-</code></pre></div>
+__all__ = ['celery_app']</code></pre>
+
 
 <p>6.各应用创建tasks.py文件，这里为<code>deploy/tasks.py</code></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">celery</span> <span class="kn">import</span> <span class="n">shared_task</span>
+<pre class="codehilite"><code>from __future__ import absolute_import
+from celery import shared_task
 
-<span class="nd">@shared_task</span>
-<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
-</code></pre></div>
+@shared_task
+def add(x, y):
+    return x + y</code></pre>
+
 
 <ul>
 <li><strong>注意tasks.py必须建在各app的根目录下，且只能叫tasks.py，不能随意命名</strong></li>
 </ul>
 <p>7.views.py中引用使用这个tasks异步处理</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">deploy.tasks</span> <span class="kn">import</span> <span class="n">add</span>
+<pre class="codehilite"><code>from deploy.tasks import add
 
-<span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">add</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-</code></pre></div>
+def post(request):
+    result = add.delay(2, 3)</code></pre>
+
 
 <ul>
 <li>使用函数名.delay()即可使函数异步执行</li>
@@ -147,30 +147,30 @@
 <li>如果任务抛出一个异常，使用<code>result.traceback</code>可以获取原始的回溯信息</li>
 </ul>
 <p>8.启动celery</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># celery -A website worker -l info</span>
-</code></pre></div>
+<pre class="codehilite"><code># celery -A website worker -l info</code></pre>
+
 
 <p>9.这样在调用post这个方法时，里边的add就可以异步处理了</p>
 <h1 id="_3">定时任务</h1>
 <p>定时任务的使用场景就很普遍了，比如我需要定时发送报告给老板~</p>
 <h2 id="_4">定时任务配置</h2>
 <p>1.<code>website/celery.py</code>文件添加如下配置以支持定时任务crontab</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">celery.schedules</span> <span class="kn">import</span> <span class="n">crontab</span>
+<pre class="codehilite"><code>from celery.schedules import crontab
 
-<span class="n">app</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-    <span class="n">CELERYBEAT_SCHEDULE</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;sum-task&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;task&#39;</span><span class="p">:</span> <span class="s1">&#39;deploy.tasks.add&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;schedule&#39;</span><span class="p">:</span>  <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">20</span><span class="p">),</span>
-            <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
-        <span class="p">},</span>
-        <span class="s1">&#39;send-report&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;task&#39;</span><span class="p">:</span> <span class="s1">&#39;deploy.tasks.report&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;schedule&#39;</span><span class="p">:</span> <span class="n">crontab</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">day_of_week</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">)</span>
-</code></pre></div>
+app.conf.update(
+    CELERYBEAT_SCHEDULE = {
+        'sum-task': {
+            'task': 'deploy.tasks.add',
+            'schedule':  timedelta(seconds=20),
+            'args': (5, 6)
+        },
+        'send-report': {
+            'task': 'deploy.tasks.report',
+            'schedule': crontab(hour=4, minute=30, day_of_week=1),
+        }
+    }
+)</code></pre>
+
 
 <ul>
 <li>
@@ -203,23 +203,23 @@
 </li>
 </ul>
 <p>2.<code>deploy/tasks.py</code>文件添加report方法：</p>
-<div class="codehilite"><pre><span></span><code><span class="err">@shared_task</span>
-<span class="err">def report():</span>
-<span class="err">    return 5</span>
-</code></pre></div>
+<pre class="codehilite"><code>@shared_task
+def report():
+    return 5</code></pre>
+
 
 <p>3.启动celery beat，celery启动了一个beat进程一直在不断的判断是否有任务需要执行</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># celery -A website beat -l info</span>
-</code></pre></div>
+<pre class="codehilite"><code># celery -A website beat -l info</code></pre>
+
 
 <h1 id="tips">Tips</h1>
 <p>1.如果你同时使用了异步任务和计划任务，有一种更简单的启动方式<code>celery -A website worker -b -l info</code>，可同时启动worker和beat</p>
 <p>2.如果使用的不是rabbitmq做队列那么需要在主配置文件中<code>website/celery.py</code>配置broker和backend，如下：</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># redis做MQ配置</span>
-<span class="err">app = Celery(&#39;website&#39;, backend=&#39;redis&#39;, broker=&#39;redis://localhost&#39;)</span>
-<span class="err"># rabbitmq做MQ配置</span>
-<span class="err">app = Celery(&#39;website&#39;, backend=&#39;amqp&#39;, broker=&#39;amqp://admin:admin@localhost&#39;)</span>
-</code></pre></div>
+<pre class="codehilite"><code># redis做MQ配置
+app = Celery('website', backend='redis', broker='redis://localhost')
+# rabbitmq做MQ配置
+app = Celery('website', backend='amqp', broker='amqp://admin:admin@localhost')</code></pre>
+
 
 <p>3.celery不能用root用户启动的话需要在主配置文件中添加<code>platforms.C_FORCE_ROOT = True</code></p>
 <p>4.celery在长时间运行后可能出现内存泄漏，需要添加配置<code>CELERYD_MAX_TASKS_PER_CHILD = 10</code>，表示每个worker执行了多少个任务就死掉</p>

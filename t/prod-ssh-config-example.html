@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -43,54 +43,53 @@
         <h1 id="art-title">生产环境下的SSH标准配置</h1>
 
         <p>SSH配置直接影响到服务器的安全性，这里列出生产使用的SSH配置以供参考，配置文件路径为<code>/etc/ssh/sshd_config</code></p>
-<div class="codehilite"><pre><span></span><code><span class="o">#</span> <span class="mi">1</span><span class="p">.</span> <span class="n">Basic</span>
-<span class="n">Port</span> <span class="mi">9527</span>
-<span class="n">Protocol</span> <span class="mi">2</span>
-<span class="n">AddressFamily</span> <span class="n">inet</span>
+<pre class="codehilite"><code># 1. Basic
+Port 9527
+Protocol 2
+AddressFamily inet
 
-<span class="o">#</span> <span class="mi">2</span><span class="p">.</span> <span class="n">Authentication</span>
-<span class="n">HostKey</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssh</span><span class="o">/</span><span class="n">ssh_host_rsa_key</span>
-<span class="n">HostKey</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssh</span><span class="o">/</span><span class="n">ssh_host_dsa_key</span>
-<span class="n">AuthorizedKeysFile</span> <span class="p">.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+# 2. Authentication
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
+AuthorizedKeysFile .ssh/authorized_keys
 
-<span class="n">KeyRegenerationInterval</span> <span class="mi">3600</span>
-<span class="n">ServerKeyBits</span> <span class="mi">1024</span>
-<span class="n">UsePrivilegeSeparation</span> <span class="n">yes</span>
-<span class="n">LoginGraceTime</span> <span class="mi">120</span>
+KeyRegenerationInterval 3600
+ServerKeyBits 1024
+UsePrivilegeSeparation yes
+LoginGraceTime 120
 
-<span class="n">PermitRootLogin</span> <span class="k">no</span>
-<span class="n">StrictModes</span> <span class="n">yes</span>
+PermitRootLogin no
+StrictModes yes
 
-<span class="n">RSAAuthentication</span> <span class="n">yes</span>
-<span class="n">PubkeyAuthentication</span> <span class="n">yes</span>
-<span class="n">PermitEmptyPasswords</span> <span class="k">no</span>
-<span class="n">ChallengeResponseAuthentication</span> <span class="k">no</span>
-<span class="n">PasswordAuthentication</span> <span class="k">no</span>
+RSAAuthentication yes
+PubkeyAuthentication yes
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+PasswordAuthentication no
 
-<span class="n">IgnoreRhosts</span> <span class="n">yes</span>
-<span class="n">RhostsRSAAuthentication</span> <span class="k">no</span>
-<span class="n">HostbasedAuthentication</span> <span class="k">no</span>
-
-
-<span class="o">#</span> <span class="mi">3</span><span class="p">.</span> <span class="n">Features</span>
-<span class="n">UseDNS</span> <span class="k">no</span>
-<span class="n">UsePAM</span> <span class="k">no</span>
-<span class="n">X11Forwarding</span> <span class="n">yes</span>
-<span class="n">X11DisplayOffset</span> <span class="mi">10</span>
-<span class="n">PrintMotd</span> <span class="k">no</span>
-<span class="n">PrintLastLog</span> <span class="n">yes</span>
-<span class="n">TCPKeepAlive</span> <span class="n">yes</span>
-<span class="n">AcceptEnv</span> <span class="n">LANG</span> <span class="n">LC_</span><span class="o">*</span>
+IgnoreRhosts yes
+RhostsRSAAuthentication no
+HostbasedAuthentication no
 
 
-<span class="o">#</span> <span class="mi">4</span><span class="p">.</span> <span class="n">Logging</span>
-<span class="n">SyslogFacility</span> <span class="n">AUTH</span>
-<span class="n">LogLevel</span> <span class="n">INFO</span>
+# 3. Features
+UseDNS no
+UsePAM no
+X11Forwarding yes
+X11DisplayOffset 10
+PrintMotd no
+PrintLastLog yes
+TCPKeepAlive yes
+AcceptEnv LANG LC_*
 
 
-<span class="o">#</span> <span class="mi">5</span><span class="p">.</span> <span class="n">x509</span>
-<span class="n">Subsystem</span> <span class="n">sftp</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">sftp</span><span class="o">-</span><span class="n">server</span>
-</code></pre></div>
+# 4. Logging
+SyslogFacility AUTH
+LogLevel INFO
+
+
+# 5. x509
+Subsystem sftp /usr/lib/sftp-server</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -44,23 +44,22 @@
 
         <p>更新源的方式主要有两种</p>
 <h2 id="_1">临时更新</h2>
-<div class="codehilite"><pre><span></span><code><span class="err"># pip3 install -r requirements.txt -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com</span>
-</code></pre></div>
+<pre class="codehilite"><code># pip3 install -r requirements.txt -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com</code></pre>
+
 
 <h2 id="_2">永久更新</h2>
 <p>永久修改，需要修改文件，文件位置<code>~/.pip/pip.conf</code>，内容如下</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[global]</span>
-<span class="na">index-url</span> <span class="o">=</span> <span class="s">http://pypi.douban.com/simple</span>
-<span class="k">[install]</span>
-<span class="na">trusted-host</span><span class="o">=</span><span class="s">pypi.douban.com</span>
-</code></pre></div>
+<pre class="codehilite"><code>[global]
+index-url = http://pypi.douban.com/simple
+[install]
+trusted-host=pypi.douban.com</code></pre>
+
 
 <h3 id="ali">ali源配置</h3>
 <p>如果不想使用豆瓣的源，可以使用阿里的，配置如下</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[global]</span>
-<span class="na">index-url</span> <span class="o">=</span> <span class="s">http://mirrors.aliyun.com/pypi/simple/</span>
-<span class="na">trusted-host</span> <span class="o">=</span> <span class="s">mirrors.aliyun.com</span>
-</code></pre></div>
+<pre class="codehilite"><code>[global]
+index-url = http://mirrors.aliyun.com/pypi/simple/
+trusted-host = mirrors.aliyun.com</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -57,19 +57,19 @@
 <p>asciinema的安装和使用都非常简单，一起来看看吧</p>
 <h2 id="_1">安装</h2>
 <p>asciinema为python开发，可以直接通过<code>apt-get</code>、<code>yum</code>或者<code>pip</code>进行安装</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># apt-get install asciinema</span>
-</code></pre></div>
+<pre class="codehilite"><code># apt-get install asciinema</code></pre>
+
 
 <p>安装完成后查看版本</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># asciinema --version</span>
-<span class="err">asciinema 2.0.2</span>
-</code></pre></div>
+<pre class="codehilite"><code># asciinema --version
+asciinema 2.0.2</code></pre>
+
 
 <p>asciinema有v1和v2两个版本，差异较大，咖啡君使用了v2，以下所有内容也基于v2演示</p>
 <p>asciinema有5个参数，分别为录制：<code>rec</code>，播放：<code>play</code>，以文件形式查看录制内容：<code>cat</code>，上传文件到asciinema.org网站：<code>upload</code>、asciinema.org账号认证：<code>auth</code>，本文主要说明<code>rec</code>和<code>play</code>的使用</p>
 <h2 id="_2">录制</h2>
-<div class="codehilite"><pre><span></span><code><span class="err"># asciinema rec ops-coffee.cast</span>
-</code></pre></div>
+<pre class="codehilite"><code># asciinema rec ops-coffee.cast</code></pre>
+
 
 <p>有几个参数可以使用：</p>
 <p><strong><code>--stdin</code></strong> 表示启用标准输入录制，意思是通常情况下linux输入密码类的信息都不会显示，如果开启了这个选项，可以记录键盘输出的密码，但这个功能官方似乎还没有支持，加了后看不到效果</p>
@@ -84,8 +84,8 @@
 <p><strong><code>-q</code></strong> 静默模式，加了此参数在进入录制或者退出录制时都没有提示</p>
 <p>输入<code>exit</code>或按<code>ctrl+D</code>组合键退出录制</p>
 <h2 id="_3">播放</h2>
-<div class="codehilite"><pre><span></span><code><span class="err"># asciinema play ops-coffee.cast </span>
-</code></pre></div>
+<pre class="codehilite"><code># asciinema play ops-coffee.cast </code></pre>
+
 
 <p>有两个参数可以使用：</p>
 <p><strong><code>-s</code></strong> 后边跟数字，表示用几倍的速度来播放录像</p>
@@ -93,32 +93,32 @@
 <p>在播放的过程中你可以通过空格来控制暂停或播放，也可以通过<code>ctrl+c</code>组合键来退出播放，当你按空格键暂停时，可以通过<code>.</code>号来逐帧显示接下来要播放的内容</p>
 <h2 id="_4">文件</h2>
 <p>asciinema推荐的文件后缀是<code>.cast</code>，当然linux是不关心文件后缀的，你用什么都可以，推荐按规范使用<code>.cast</code>，文件内容大概如下</p>
-<div class="codehilite"><pre><span></span><code><span class="err"># cat ops-coffee.cast</span>
-<span class="err">{&quot;version&quot;: 2, &quot;width&quot;: 237, &quot;height&quot;: 55, &quot;timestamp&quot;: 1572646909, &quot;env&quot;: {&quot;SHELL&quot;: &quot;/bin/bash&quot;, &quot;TERM&quot;: &quot;linux&quot;}, &quot;title&quot;: &quot;ops-coffee&quot;}</span>
-<span class="err">[0.010014, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]</span>
-<span class="err">[1.296458, &quot;o&quot;, &quot;exit&quot;]</span>
-<span class="err">[1.976439, &quot;o&quot;, &quot;\r\n&quot;]</span>
-<span class="err">[1.976532, &quot;o&quot;, &quot;exit\r\n&quot;]</span>
-</code></pre></div>
+<pre class="codehilite"><code># cat ops-coffee.cast
+{&quot;version&quot;: 2, &quot;width&quot;: 237, &quot;height&quot;: 55, &quot;timestamp&quot;: 1572646909, &quot;env&quot;: {&quot;SHELL&quot;: &quot;/bin/bash&quot;, &quot;TERM&quot;: &quot;linux&quot;}, &quot;title&quot;: &quot;ops-coffee&quot;}
+[0.010014, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]
+[1.296458, &quot;o&quot;, &quot;exit&quot;]
+[1.976439, &quot;o&quot;, &quot;\r\n&quot;]
+[1.976532, &quot;o&quot;, &quot;exit\r\n&quot;]</code></pre>
+
 
 <p>cast文件主要有两部分组成，位于第一行的一个字典，这里叫header</p>
-<div class="codehilite"><pre><span></span><code><span class="err">{</span>
-<span class="err">    &quot;version&quot;: 2,</span>
-<span class="err">    &quot;width&quot;: 237,</span>
-<span class="err">    &quot;height&quot;: 55,</span>
-<span class="err">    &quot;timestamp&quot;: 1572646909,</span>
-<span class="err">    &quot;env&quot;: {</span>
-<span class="err">        &quot;SHELL&quot;: &quot;/bin/bash&quot;,</span>
-<span class="err">        &quot;TERM&quot;: &quot;linux&quot;</span>
-<span class="err">    },</span>
-<span class="err">    &quot;title&quot;: &quot;ops-coffee&quot;</span>
-<span class="err">}</span>
-</code></pre></div>
+<pre class="codehilite"><code>{
+    &quot;version&quot;: 2,
+    &quot;width&quot;: 237,
+    &quot;height&quot;: 55,
+    &quot;timestamp&quot;: 1572646909,
+    &quot;env&quot;: {
+        &quot;SHELL&quot;: &quot;/bin/bash&quot;,
+        &quot;TERM&quot;: &quot;linux&quot;
+    },
+    &quot;title&quot;: &quot;ops-coffee&quot;
+}</code></pre>
+
 
 <p>header很简单，字段的意思分别为：version版本，width和height分别表示录制窗口的宽高，timestamp录制开始的时间戳，env录制时指定的<code>-e</code>参数设置，title录制时指定的<code>-t</code>参数设置</p>
 <p>接下来的都是固定格式的内容，实际上就是IO流信息</p>
-<div class="codehilite"><pre><span></span><code><span class="err">[0.010014, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]</span>
-</code></pre></div>
+<pre class="codehilite"><code>[0.010014, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]</code></pre>
+
 
 <p>每一行都是由三部分组成的一个列表</p>
 <p>第一部分为一个浮点数，表示输入输出这一行内容所花的时间</p>
@@ -129,10 +129,10 @@
 <p>如果你有经历过严格的IT审计，或者有用到堡垒机，就会知道操作过程是需要记录并加入审计的，如果你有因为不知道是谁操作了什么导致了数据被删而背锅的经历，就会知道对操作过程的记录有多么的重要，接下来以一个简单的案例来介绍asciinema有什么样的实用价值</p>
 <p>如果希望能够将linux服务器上devuser的所有操作过程都记录下来，以备后续审计使用，该如何实现呢？</p>
 <p>非常简单，只需要在devuser用户的家目录下添加<code>.bash_profile</code>文件即可，内容如下：</p>
-<div class="codehilite"><pre><span></span><code>$ cat ~/.bash_profile 
-<span class="nb">export</span> <span class="nv">LC_ALL</span><span class="o">=</span>en_US.UTF-8
-/usr/local/bin/asciinema rec /tmp/<span class="nv">$USER</span>-<span class="k">$(</span>date +%Y%m%d%H%M%S<span class="k">)</span>.log -q
-</code></pre></div>
+<pre class="codehilite"><code>$ cat ~/.bash_profile 
+export LC_ALL=en_US.UTF-8
+/usr/local/bin/asciinema rec /tmp/$USER-$(date +%Y%m%d%H%M%S).log -q</code></pre>
+
 
 <p>添加<code>export LC_ALL=en_US.UTF-8</code>的原因是有可能系统会报错<code>asciinema needs a UTF-8 native locale to run. Check the output of locale command.</code></p>
 <p><code>rec</code>命令进行录制时添加了<code>-q</code>参数，这样在进入或者退出时都不会有任何关于asciinema的提示，使用简单方便</p>

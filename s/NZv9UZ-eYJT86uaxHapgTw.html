@@ -22,7 +22,7 @@
   <!-- End SEO tag -->
 
   <!-- Umami Cloud -->
-  <script async src="https://analytics.eu.umami.is/script.js" data-website-id="ab5d3b6c-94c8-462f-b610-e8f82200ff72"></script>
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
   <!-- Google Adsense -->
   <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -55,26 +55,26 @@
 <p>Apache开启LDAP相关模块</p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="p">#</span> <span class="n">a2enmod</span> <span class="n">ldap</span>
-<span class="n">Enabling</span> <span class="k">module</span> <span class="nn">ldap.</span>
-<span class="k">To</span> <span class="n">activate</span> <span class="n">the</span> <span class="k">new</span> <span class="n">configuration</span><span class="p">,</span> <span class="n">you</span> <span class="n">need</span> <span class="k">to</span> <span class="n">run</span><span class="p">:</span>
-  <span class="n">service</span> <span class="n">apache2</span> <span class="n">restart</span>
-<span class="p">#</span> <span class="n">a2enmod</span> <span class="n">authnz_ldap</span>
-<span class="n">Considering</span> <span class="n">dependency</span> <span class="n">ldap</span> <span class="k">for</span> <span class="n">authnz_ldap</span><span class="p">:</span>
-<span class="k">Module</span> <span class="nn">ldap</span> <span class="n">already</span> <span class="n">enabled</span>
-<span class="n">Enabling</span> <span class="k">module</span> <span class="nn">authnz_ldap.</span>
-<span class="k">To</span> <span class="n">activate</span> <span class="n">the</span> <span class="k">new</span> <span class="n">configuration</span><span class="p">,</span> <span class="n">you</span> <span class="n">need</span> <span class="k">to</span> <span class="n">run</span><span class="p">:</span>
-  <span class="n">service</span> <span class="n">apache2</span> <span class="n">restart</span>
-</code></pre></div>
+<pre class="codehilite"><code># a2enmod ldap
+Enabling module ldap.
+To activate the new configuration, you need to run:
+  service apache2 restart
+# a2enmod authnz_ldap
+Considering dependency ldap for authnz_ldap:
+Module ldap already enabled
+Enabling module authnz_ldap.
+To activate the new configuration, you need to run:
+  service apache2 restart</code></pre>
+
 
 <ol>
 <li>修改vhost配置文件，添加对ldap的支</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;Virtualhost</span> <span class="err">*:8088</span><span class="nt">&gt;</span>
+<pre class="codehilite"><code>&lt;Virtualhost *:8088&gt;
     DocumentRoot /home/svn/repos/
     ServerName svn.ops-coffee.cn
 
-    <span class="nt">&lt;Location</span> <span class="err">/ne</span><span class="nt">/&gt;</span>
+    &lt;Location /ne/&gt;
         DAV svn
         SVNListParentPath on
         SVNParentPath &quot;/home/svn/repos&quot;
@@ -94,9 +94,9 @@
 
         Require ldap-user
 
-    <span class="nt">&lt;/Location&gt;</span>
-<span class="nt">&lt;/Virtualhost&gt;</span>
-</code></pre></div>
+    &lt;/Location&gt;
+&lt;/Virtualhost&gt;</code></pre>
+
 
 <h2 id="ldap">主要LDAP配置文件详解：</h2>
 <p><strong>AuthType</strong>：验证类型，Basic使用账号密码验证</p>
