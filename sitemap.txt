@@ -1,5 +1,6 @@
 https://blog.ops-coffee.cn/
 https://blog.ops-coffee.cn/friends
+https://blog.ops-coffee.cn/domain
 https://blog.ops-coffee.cn/monitor
 https://blog.ops-coffee.cn/comments
 https://blog.ops-coffee.cn/cloud
