@@ -43,321 +43,709 @@
 
   <div id="content-wrapper">
     <div class="container">
-      <h1 style="position: absolute;top: -9999px;left: -9999px;">DevOps运维自动化工具系统平台</h1>
+      <!DOCTYPE html>
+<html lang="zh-CN">
 
-<p>2022年之后，入职了新公司，开始着手规划新公司的DevOps运维自动化系统，这一时期的文章主要有以下这些：</p>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta name="keywords" content="devops,kubernetes,docker,cmdb,cicd,jenkins,python,django,开源,自动化,运维咖啡吧" />
 
-<div class="nav-cell clearfix">
-	<hr style="margin: 20px 0;height: 12px;border: 0;box-shadow: inset 0 12px 12px -12px rgba(0,0,0,0.5);" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/plugins/sadmin/style.min.css">
+  <script src="https://static.opendevops.cn/static/plugins/sadmin/coreui.bundle.min.js"></script>
 
-	<ul class="nav-list-art">
-	
-      <li>
-		<a class="nav-item" href="/s/2023-devops-service-platform-tools.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">这一年我们上线的运维自动化系统（2023）</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/xrlgoCee9CZwxt5lBdq1oA.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">这一年我们上线的自动化系统（2022）</div>
-		  <p></p>
-		</a>
-	  </li>
-	
+  <!-- Begin SEO tag -->
+  <title>DevOps运维自动化工具系统平台</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="DevOps运维自动化工具系统平台" />
+  <meta property="og:description" content="自主研发以及优秀开源的Devops运维自动化系统汇总分享，助力SRE轻松运维大规模服务器集群" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
 
-	  <li>
-		<a class="nav-item" href="/s/devops-domain-record-certificate.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">运维自动化之域名系统</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/devops-kubernetes-docker-jenkins.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">运维自动化之容器系统分享</div>
-		  <p></p>
-		</a>
-	  </li>
-	
-	  <li>
-		<a class="nav-item" href="/s/fGshXWUaTRv0oHIMBKSn1Q.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">运维自动化之作业系统分享</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/XTXR-1FBKf2olZQQsesNVg.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">多云监控告警系统的优势</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/mml5jzQVDzByf0F3sJN5dg.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">基于多云构建监控告警系统</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/Wtx2utkC4MErDLvC3cbSMg.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">运维自动化之多云系统分享</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/cKkFlBZnpLd_IRaC6i8i6A.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">多云系统之资源管理</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/PL31oUCLMEi3H1_1IMMDRA.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">多云系统之多云配置</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/G4wSM_KxpgypNSpY4lYMhA.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">多云系统之关系管理</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/YjfTypcHD03fTGLV_JsqWw.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">运维自动化之任务系统分享</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/0xee6JzCUcqXao9bY1ULgA.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">权限管理系统设计</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/0Q31jzeYBTeWdrLMufdig.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">任务系统之并行任务</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/Q3BBxBAWBcpUhQhfwO7pgQ.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">任务系统之手动审批</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/devops-task-subtask-jenkins" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">任务系统之Jenkins子任务务</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/cloud.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">CMP多云管理即云上CMDB落地实践</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/task.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">运维自动化之任务系统实现教程</div>
-		  <p></p>
-		</a>
-	  </li>
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
-	</ul>
-</div>
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
-<p>2022年以前在公司A从零开始学习Python和Django，陆陆续续写了一些列的DevOps运维自动化工具，在这期间的主要文章有以下这些：</p>
+</head>
 
-<div class="nav-cell clearfix">
-	<hr style="margin: 20px 0;height: 12px;border: 0;box-shadow: inset 0 12px 12px -12px rgba(0,0,0,0.5);" />
+<body>
+  <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+    <div class="sidebar-brand d-md-flex">
+      <h3 class="sidebar-brand-full"><span class="site-name"><img src="https://static.opendevops.cn/static/images/devops.dashboard.logo.png" height="46"></span></h3>
+      <h3 class="sidebar-brand-narrow"><span class="site-icon">运维</span></h3>
+    </div>
 
-	<ul class="nav-list-art">
-	  <li>
-		<a class="nav-item" href="/s/wAH0fb2I2fHCxu5Gy0oSng.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">再聊我们自研的那些Devops工具</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/HwOi-ARTvvNjGTWrDmZIkQ.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">我们自研的那些Devops工具</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/GATfwNETo_aGsJHZdV5YzQ.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">中小团队基于Docker的devops实践</div>
-		  <p></p>
-		</a>
-	  </li>
+    <ul class="sidebar-nav" data-coreui="navigation" id="menu_0">
+      <li class="nav-item">
+        <div class="nav-link">
+          <div class="sidebar-brand-full" id="id-sidebar-app">工作台</div>
+          <button class="px-0 ms-auto" data-coreui-toggle="offcanvas" data-coreui-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" style="color: var(--cui-header-toggler-color); background-color: var(--cui-header-toggler-bg); border: 0;">
+            <i class="fa fa-exchange"></i>
+          </button>
+        </div>
+      </li>
+      <li class="nav-item"><a class="nav-link active" href="#" target="_self"><i class="fa fa-home nav-icon"></i>我的应用</a></li>
+      <li class="nav-item"><a class="nav-link" href="#project" target="_self"><i class="fa fa-sitemap nav-icon"></i>我的项目</a></li>
+      <li class="nav-item"><a class="nav-link" href="#workflow" target="_self"><i class="fa fa-ticket nav-icon"></i>我的流程</a></li>
+    </ul>
+    <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
+  </div>
+  <div class="wrapper d-flex flex-column min-vh-100 bg-light">
+    <header class="header header-sticky mb-4">
+      <div class="container-fluid">
+        <button class="header-toggler px-0 me-3 d-md-none" type="button" onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()">
+          <i class="fa fa-bars"></i>
+        </button>
 
-	  <li>
-		<a class="nav-item" href="/s/Nxh7mwPJPlbL3R9MdlkO_A.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">Alodi：为了保密我开发了一个系统</div>
-		  <p></p>
-		</a>
-	  </li>
+        <button class="header-toggler px-0 me-3 d-md-none" type="button" data-coreui-toggle="offcanvas" data-coreui-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
+          <i class="fa fa-sitemap"></i>
+        </button>
+        <div class="offcanvas" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel" style="
+              top: var(--cui-header-min-height);
+              left: var(--cui-sidebar-occupy-start);
+              right: var(--cui-header-padding-x);
+              max-height: 100vh;
+              transform: translateX(-100%);
+          ">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">全部产品与服务</h5>
+            <button type="button" class="btn-close btn-close-block" data-coreui-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body bg-light">
+            <div class="row" id="id-global-app">
+              <div class="input-group d-none mb-3">
+                <input class="form-control" type="text" placeholder="请输入服务名" aria-label="Username" aria-describedby="basic-addon1">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/devops.html" target="_blank">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-home"></i> 工作台</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/cloud.html" target="_blank">
 
-	  <li>
-		<a class="nav-item" href="/s/h9k_C7kNB6q1VqxQDVHyiQ.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">Alodi：环境创建从未如此简单</div>
-		  <p></p>
-		</a>
-	  </li>
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-cloud"></i> 多云管理</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/s/devops-kubernetes-docker-jenkins.html" target="_blank">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-cubes"></i> 容器管理</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/s/monitor.html" target="_blank">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-line-chart"></i> 监控告警</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/s/fGshXWUaTRv0oHIMBKSn1Q.html" target="_blank">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-linux"></i> 作业系统</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/s/task.html" target="_blank">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-puzzle-piece"></i> 任务系统</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/s/devops-domain-record-certificate.html" target="_blank">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-globe"></i> 域名管理</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="#" onclick="alert('暂无介绍～')">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-drupal"></i> 安全管理</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="#" onclick="alert('暂无介绍～')">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-cloud-upload"></i> 备份系统</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="#" onclick="alert('暂无介绍～')">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-pie-chart"></i> 数据报告</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="#" onclick="alert('暂无介绍～')">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-database"></i> 数据库服务</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="#" onclick="alert('暂无介绍～')">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-calendar"></i> 审计中心</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/s/xehCT6PMS90dvrf96E-Fzw" target="_blank">
+                    <div onclick="setDefaultApp(197, &quot;/accounts/user/&quot;)" class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-users"></i> 用户管理</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="#" onclick="alert('暂无介绍～')">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-gears"></i> 系统配置</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-	  <li>
-		<a class="nav-item" href="/s/uGUvV4jl4YIvNztuepdC8A.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">中小团队落地配置中心详解</div>
-		  <p></p>
-		</a>
-	  </li>
+        <ul class="header-nav d-md-flex">
+          <li><select class="form-select" id="id-global-project" style="display: block;" onchange="setDefaultProject()">
+              <option value="1">devops</option>
+              <option value="2">支付项目</option>
+            </select></li>
+        </ul>
 
-	  <li>
-		<a class="nav-item" href="/s/QG42UqJ9rnswQDMd41CYUg.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">Kerrigan：配置中心管理UI的实现思路和技术细节</div>
-		  <p></p>
-		</a>
-	  </li>
+        <ul class="header-nav d-sm-flex ms-auto">
+          <li class="nav-item" id="id-global-notify" style="display: block;">
+            <a class="nav-link" href="#" role="button">
+              <span class="d-inline-block my-0 mx-2 position-relative">
+                <i class="fa fa-envelope-open-o"></i>
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle"></span>
+              </span>
+            </a>
+          </li>
+        </ul>
 
-	  <li>
-		<a class="nav-item" href="/s/uxqbm4t11icdznofzydexa.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">Probius：一个功能强大的自定义任务系统</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/U88HPUYiVDar-7yBx3IoIA.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">Probius+Kubernetes任务系统如虎添翼</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/sOlBFC5FsSqVd78eFuxUyQ.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">Probius+Prometheus通过API集成POD监控</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/FV379mGIboVYky73kcoMMQ.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">Proxy：简单小巧又强大好用的代理系统</div>
-		  <p></p>
-		</a>
-	  </li>
+        <ul class="header-nav ms-auto ms-sm-0 me-sm-2">
+          <li class="nav-item dropdown">
+            <a class="nav-link" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-user-o"></i><input type="hidden" id="logged-user-id" value="2"> <span id="logged-user-name">37丫37</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end pt-0">
+              <a class="dropdown-item" href="#">
+                <i class="fa fa-vcard-o"></i> 个人信息</a>
 
-	  <li>
-		<a class="nav-item" href="/s/eM7SNKmtw2tDQtXBsBXyxQ.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">探秘varian：优雅的发布部署程序</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/ZrrLUNRlAXVfVKvA1m0nsg.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">中小团队快速构建SQL自动审核系统</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/dpGqieL4WCmGdQh1AEG4Gw.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">代码中的敏感信息加密方案</div>
-		  <p></p>
-		</a>
-	  </li>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">
+                <i class="fa fa-sign-out"></i> Logout</a>
+            </div>
+          </li>
+        </ul>
 
-	  <li>
-		<a class="nav-item" href="/s/6YAC_Lqw3jB0LZlJTx4A2g.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">Django+Ansible构建任务中心思路</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/xehCT6PMS90dvrf96E-Fzw.html" target="_blank">
-		  <div class="nav-img nav-img-default"></div>
-		  <div class="nav-name">Sadmin：打造私有Django公共库实现代码复用</div>
-		  <p></p>
-		</a>
-	  </li>
-	  
-	  <li>
-		<a class="nav-item" href="/s/eZX5qoJzuCSuLI98gSCtpw.html" target="_blank">
-		  <div class="nav-img" style="background-image: url(http://www.opendevops.cn/images/head_logo.png);"></div>
-		  <div class="nav-name">开源推荐 | CoDo开源一站式DevOps平台</div>
-		  <p></p>
-		</a>
-	  </li>
+        <button class="header-toggler px-md-0" type="button" onclick="coreui.Sidebar.getInstance(document.querySelector('#aside')).show()">
+          <i class="fa fa-globe"></i>
+        </button>
 
-	</ul>
-</div>
+        <div class="sidebar sidebar-light sidebar-lg sidebar-end sidebar-overlaid hide" id="aside">
+          <div class="sidebar-header bg-transparent p-0">
+            <ul class="nav nav-underline nav-underline-primary" role="tablist">
+              <li class="nav-item" role="presentation"><a class="nav-link active" data-coreui-toggle="tab" href="#tab-the-project" role="tab" aria-selected="true">
+                  <i class="fa fa-at"></i></a></li>
+              <li class="nav-item" role="presentation"><a class="nav-link" data-coreui-toggle="tab" href="#tab-all-project" role="tab" aria-selected="false" tabindex="-1">
+                  <i class="fa fa-globe"></i></a></li>
+              <li class="nav-item" role="presentation"><a class="nav-link" data-coreui-toggle="tab" href="#tab-myself" role="tab" aria-selected="false" tabindex="-1">
+                  <i class="fa fa-anchor"></i></a></li>
+            </ul>
+            <button class="sidebar-close" type="button" data-coreui-close="sidebar">
+              <i class="fa fa-close"></i>
+            </button>
+          </div>
+          <!-- Tab panes-->
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab-the-project" role="tabpanel">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <div class="input-group mb-3">
+                    <input type="text" autocomplete="off" class="form-control" name="search" onchange="loadGlobalLinkData('#tab-the-project', this.value)" placeholder="搜索当前项目快捷链接">
+                    <button class="input-group-text"><i class="fa fa-search"></i></button>
+                  </div>
+                </li>
+              </ul>
+              <ul class="list-group list-group-flush" id="id-list-the-project">
+                <li class="list-group-item"><a href="https://baidu.com" target="_blank" class="text-decoration-none">新建一个名字很长很长的名字的快捷链接</a>
+                  <div class="pull-right" data-permission="commons.link_change">
+                    <button class="btn btn-light btn-sm mx-1" type="button" onclick="updateLinkForm(7)">
+                      <i class="fa fa-edit"></i></button>
+                    <button class="btn btn-light btn-sm" type="button" onclick="deleteLinkForm(7)"><i class="fa fa-minus"></i></button>
+                  </div>
+                </li>
+                <li class="list-group-item"><a href="project3" target="_blank" class="text-decoration-none">project3</a>
+                  <div class="pull-right" data-permission="commons.link_change">
+                    <button class="btn btn-light btn-sm mx-1" type="button" onclick="updateLinkForm(23)"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-light btn-sm" type="button" onclick="deleteLinkForm(23)"><i class="fa fa-minus"></i></button>
+                  </div>
+                </li>
+              </ul>
 
-<div>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <!-- footer -->
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-8944257246828217"
-         data-ad-slot="6731434232"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
+            </div>
+            <div class="tab-pane" id="tab-all-project" role="tabpanel">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <div class="input-group mb-3">
+                    <input type="text" autocomplete="off" class="form-control" name="search" onchange="loadGlobalLinkData('#tab-all-project', this.value)" placeholder="搜索全局共享快捷链接">
+                    <button class="input-group-text"><i class="fa fa-search"></i></button>
+                  </div>
+                </li>
+              </ul>
+              <ul class="list-group list-group-flush" id="id-list-all-project">
+                <li class="list-group-item"><a href="https://baidu.com" target="_blank" class="text-decoration-none">新建一个名字很长很长的名字的快捷链接</a>
+                  <div class="pull-right" data-permission="commons.link_change">
+                    <button class="btn btn-light btn-sm mx-1" type="button" onclick="updateLinkForm(7)">
+                      <i class="fa fa-edit"></i></button>
+                    <button class="btn btn-light btn-sm" type="button" onclick="deleteLinkForm(7)"><i class="fa fa-minus"></i></button>
+                  </div>
+                </li>
+                <li class="list-group-item"><a href="project3" target="_blank" class="text-decoration-none">project3</a>
+                  <div class="pull-right" data-permission="commons.link_change">
+                    <button class="btn btn-light btn-sm mx-1" type="button" onclick="updateLinkForm(23)"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-light btn-sm" type="button" onclick="deleteLinkForm(23)"><i class="fa fa-minus"></i></button>
+                  </div>
+                </li>
+              </ul>
+
+            </div>
+            <div class="tab-pane" id="tab-myself" role="tabpanel">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <div class="input-group mb-3">
+                    <input type="text" autocomplete="off" class="form-control" name="search" onchange="loadGlobalLinkData('#tab-myself', this.value)" placeholder="搜索我的私密快捷链接">
+                    <button class="input-group-text"><i class="fa fa-search"></i></button>
+                  </div>
+                </li>
+              </ul>
+              <ul class="list-group list-group-flush" id="id-list-myself">
+                <li class="list-group-item"><a href="https://baidu.com" target="_blank" class="text-decoration-none">新建一个名字很长很长的名字的快捷链接</a>
+                  <div class="pull-right" data-permission="commons.link_change">
+                    <button class="btn btn-light btn-sm mx-1" type="button" onclick="updateLinkForm(7)">
+                      <i class="fa fa-edit"></i></button>
+                    <button class="btn btn-light btn-sm" type="button" onclick="deleteLinkForm(7)"><i class="fa fa-minus"></i></button>
+                  </div>
+                </li>
+                <li class="list-group-item"><a href="project3" target="_blank" class="text-decoration-none">project3</a>
+                  <div class="pull-right" data-permission="commons.link_change">
+                    <button class="btn btn-light btn-sm mx-1" type="button" onclick="updateLinkForm(23)"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-light btn-sm" type="button" onclick="deleteLinkForm(23)"><i class="fa fa-minus"></i></button>
+                  </div>
+                </li>
+              </ul>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+
+    <div class="body flex-grow-1">
+      <div class="container-fluid">
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h4 id="page_header">页面说明</h4>
+                <div class="small text-medium-emphasis">
+                  这并不是DevOps运维自动化系统，而是沉浸式的DevOps文档引导页面
+                </div>
+              </div>
+              <div class="btn-toolbar d-md-block" role="toolbar" aria-label="Toolbar with buttons">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-warning" role="alert"><i class="fa fa-exclamation-triangle"></i>
+          以下内容是当前页面的介绍及使用方法说明，请认真查看或自行探索
+        </div>
+
+
+        <div class="card mb-4">
+          <div class="card-header">
+            <i class="fa fa-info"></i> 页面说明
+          </div>
+          <div class="card-body">
+            <p>
+              这并不是一个DevOps系统，而是为了方便大家理解那些DevOps的那些文章而制作的文档页面，页面参考了DevOps系统平台的布局，基于开源项目CoreUI构建，点击不同的模块会跳转到对应模块的介绍文章，加深对当前模块的理解</p>
+            <p></p>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-header">
+            <i class="fa fa-list"></i> 文章列表
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-md-6"><i class="fa fa-fire"></i> <a class="nav-item text-decoration-none" href="https://blog.ops-coffee.cn/s/2023-devops-service-platform-tools.html" target="_blank">这一年我们上线的运维自动化系统（2023） </a>
+                </div>
+                <div class="col-md-6"><i class="fa fa-link"></i> <a class="nav-item text-decoration-none" href="https://blog.ops-coffee.cn/s/xrlgoCee9CZwxt5lBdq1oA.html" target="_blank">这一年我们上线的自动化系统（2022） </a>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-md-6"><i class="fa fa-link"></i> <a class="nav-item text-decoration-none" href="https://blog.ops-coffee.cn/s/devops-domain-record-certificate.html" target="_blank">运维自动化之域名系统 </a>
+                </div>
+                <div class="col-md-6"><i class="fa fa-link"></i> <a class="nav-item text-decoration-none" href="https://blog.ops-coffee.cn/s/devops-kubernetes-docker-jenkins.html" target="_blank">运维自动化之容器系统 </a>
+                </div>
+              </div>
+            </li>
+
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-md-6"><i class="fa fa-link"></i> <a class="nav-item text-decoration-none" href="https://blog.ops-coffee.cn/s/fGshXWUaTRv0oHIMBKSn1Q.html" target="_blank">运维自动化之作业系统 </a>
+                </div>
+                <div class="col-md-6"><i class="fa fa-link"></i> <a class="nav-item text-decoration-none" href="https://blog.ops-coffee.cn/task.html" target="_blank">
+                    运维自动化之任务系统 </a></div>
+              </div>
+            </li>
+
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-md-6"><i class="fa fa-link"></i> <a class="nav-item text-decoration-none" href="https://blog.ops-coffee.cn/s/mml5jzQVDzByf0F3sJN5dg.html" target="_blank">基于多云构建监控告警系统 </a>
+                </div>
+                <div class="col-md-6"><i class="fa fa-link"></i> <a class="nav-item text-decoration-none" href="https://blog.ops-coffee.cn/cloud.html" target="_blank">运维自动化之多云系统 </a>
+                </div>
+              </div>
+            </li>
+
+
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-md-6"><i class="fa fa-link"></i> <a class="nav-item text-decoration-none" href="https://blog.ops-coffee.cn/s/0xee6JzCUcqXao9bY1ULgA.html" target="_blank">权限管理系统设计 </a>
+                </div>
+                <div class="col-md-6"><i class="fa fa-link"></i> <a class="nav-item text-decoration-none" href="https://blog.ops-coffee.cn/s/xehCT6PMS90dvrf96E-Fzw" target="_blank">
+                    基础框架Sadmin
+                  </a>
+                </div>
+
+              </div>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div>Copyright © <a href="https://blog.ops-coffee.cn" class="text-decoration-none">ops-coffee.cn</a> All rights
+        reserved.
+      </div>
+      <div class="d-none d-md-block ms-auto"><b>Version</b> 3.7</div>
+    </footer>
+  </div>
+
+</body>
+
+</html>
     </div>
   </div>
 
