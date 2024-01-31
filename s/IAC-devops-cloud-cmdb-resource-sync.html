@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="None,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="多云系统之资源同步过程解析" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>多云系统之资源同步过程解析</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="多云系统之资源同步过程解析" />
+  <meta property="og:description" content="多云系统之资源同步过程解析" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">多云系统之资源同步过程解析</h1>
+
+        <p><a href="/s/Wtx2utkC4MErDLvC3cbSMg">多云系统</a>主要是用来统一多云资源实现集中管理，同时基于关联关系来构建资源拓扑，为上层业务提供清晰准确的基础数据。到目前为止已接入国内外十多个主要云厂商下数十种云资源，构建了完整的本地资源数据库。前边写过三篇文章分别介绍了多云系统的三个核心功能：<a href="/s/PL31oUCLMEi3H1_1IMMDRA">多云配置</a>、<a href="/s/cKkFlBZnpLd_IRaC6i8i6A">资源管理</a>和<a href="/s/G4wSM_KxpgypNSpY4lYMhA">关系管理</a>。<a href="https://blog.ops-coffee.cn/s/I-created-a-paid-WeChat-group">微信群</a>里有小伙伴想要更深入的了解下资源同步的处理逻辑，于是便有了这篇文章，记录下我是如何实现多云环境下的资源同步的</p>
+<p>整体逻辑如下：新建云帐号--&gt;触发Signals自动创建周期任务--&gt;周期任务定时触发同步任务<code>sync_resources</code>执行--&gt;<code>sync_resources</code>会循环云帐号下要同步的资源然后调用<code>sync_resource</code>方法逐个资源类型同步--&gt;<code>sync_resource</code>方法调用<code>sync</code>方法同步资源--&gt;<code>sync</code>方法根据传入的资源类型调用不同的资源同步方法--&gt;资源同步方法进行资源同步的操作同时记录同步过程日志</p>
+<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240130.05.png" /></p>
+<p>接下来具体看下每一步都做了啥，为了让大家有更清晰的理解，会以伪代码的方式呈现</p>
+<p>新建云帐号，这一步的主要功能就是接收用户输入的云帐号相关数据，然后插入数据库。云帐号相关数据就包括名称、厂商、AccessID、SecretKey以及同步资源类型和同步时间间隔等，所有的信息为验证账号和同步资源而服务</p>
+<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240130.01.png" /></p>
+<p>当云帐号数据保存后就会触发<code>post_save</code>的signal，这个signal会自动创建一条资源同步的周期性任务</p>
+<pre class="codehilite"><code>@receiver(signals.post_save, sender=CloudAccount)
+def cloud_account_post(instance, created, **kwargs):
+    &quot;&quot;&quot;云资源自动同步函数&quot;&quot;&quot;
+
+    with transaction.atomic():
+        _c, created = IntervalSchedule.objects.get_or_create(
+            every=instance.interval,
+            period=IntervalSchedule.MINUTES,
+        )
+
+        _p = PeriodicTask.objects.update_or_create(
+            name='CloudAccount-{}-自动同步'.format(instance.id),
+            defaults={
+                &quot;task&quot;: 'carrier.tasks.sync_resources',
+                &quot;args&quot;: [1, int(instance.id)],
+                &quot;enabled&quot;: 1 if int(instance.interval) else 0,
+                &quot;interval&quot;: _c
+            }
+        )</code></pre>
+
+
+<p>若想临时关闭同步任务的话可以将自动同步间隔改为0，或者在队列状态页面上选择相应的任务关闭同步，同时在队列状态页面还能查看所有的计划任务以及Celery下Worker的状态，这个我上篇文章<a href="https://blog.ops-coffee.cn/s/python-django-celery-monitor-not-flower">监控Celery不一定非要使用Flower</a>有专程的讲过</p>
+<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240130.02.png" /></p>
+<p>Signals创建的周期任务会根据设置的自动同步时间间隔周期调用<code>sync_resources</code>方法，<code>sync_resources</code>方法接收两个参数用户以及云帐号的主键ID，根据主键找到对应的云帐号，循环云帐号下配置的同步资源类型然后调用<code>sync_resource</code>方法</p>
+<pre class="codehilite"><code>def sync_resources(user, pk):
+    try:
+        instance = CloudAccount.objects.get(id=pk)
+    except CloudAccount.DoesNotExist:
+        return True, '当前要同步的云账号不存在，id：%d' % pk
+
+    for resource in instance.resource.all():
+        sync_resource.delay(user, pk, resource.id)
+
+    return True</code></pre>
+
+
+<p><code>sync_resource</code>方法接收用户、云帐号的主键ID以及云资源类型ID三个参数，根据云帐号的主键ID确定要同步的云帐号，根据资源类型ID确定要同步的资源类型，向<code>CloudSyncLog</code>表写入一条数据作为同步日志，同时初始化同步记录状态为进行中Running，调用<code>SyncResources().sync()</code>进行具体的资源同步，通过<code>CloudSyncLogger</code>来记录同步过程的详情</p>
+<pre class="codehilite"><code>def sync_resource(user, pk, resource_id):
+    try:
+        instance = CloudAccount.objects.get(id=pk)
+    except CloudAccount.DoesNotExist:
+        return True, '当前要同步的云账号不存在，id：%d' % pk
+
+    resource = Resource.objects.get(id=resource_id)
+
+    # 添加同步日志
+    _t = CloudSyncLog.objects.create(
+        create_user_id=user,
+        cloud_account=instance,
+        resource_type=resource,
+        state='Running'
+    )
+
+    CloudSyncLogger(_t.id).add('开始同步 {} \n'.format(resource.name))
+
+    success, data = SyncResources(_t.id).sync(resource.id)
+    CloudSyncLogger(_t.id, 1 if success else 0).add(data + '\n')
+
+    return True, '{} 同步 {}'.format(resource.name, '成功' if success else '失败')</code></pre>
+
+
+<p>这里之所以会将<code>sync_resources</code>和<code>sync_resource</code>方法分开，主要是<code>sync_resources</code>方法只能一次全部同步云帐号下所有配置同步的资源，而在某些情况下用户需要单独同步某个账号下的某个资源类型，例如我们在修改了云上资源后希望立刻看到资源的属性变化，此时需要手动同步某个账号下的某个资源</p>
+<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240130.03.png" /></p>
+<p><code>SyncResources().sync()</code>方法接收资源类型ID，然后根据资源类型ID调用具体类型的资源同步方法执行同步，例如要同步资源ID为5的VPC资源，则调用<code>sync_vpc</code>方法，例如要同步资源ID为15的Redis资源，则调用<code>sync_redis</code>方法</p>
+<pre class="codehilite"><code>class SyncResources:
+    def __init__(self, tid: int):
+        self.tid = tid
+
+        self.sync_log = CloudSyncLog.objects.get(id=self.tid)
+        self.cloud_account = self.sync_log.cloud_account
+
+    def sync(self, resource_type: int):
+        _map = {
+            5: self.sync_vpc,
+            15: self.sync_redis,
+        }
+
+        if resource_type in _map:
+            state, message = _map[resource_type]()
+
+            # 设置长时间未更新资源过期
+            if state:
+                set_expired(resource_type)
+        else:
+            return False, '暂不支持当前资源类型的数据同步'
+
+        return state, message</code></pre>
+
+
+<p>对于云上已经删除的资源，同步时可能并不会更新资源属性及状态，所以在资源同步完成后，需要判断下资源的同步状态，若资源同步成功则调用方法<code>set_expired</code>来修改长时间未更新的资源状态为已过期，保证本地资源状态准确，当然根据你的需要也可以通过<code>set_expired</code>方法直接删除长时间未更新的资源</p>
+<p>而对于资源同步方法<code>sync_vpc</code>，会循环所有Region，然后获取Region下的所有数据，通过<code>update_or_create</code>方法来新建或者修改资源数据，在这个过程中不断的记录同步过程日志，一个简单的示例如下</p>
+<pre class="codehilite"><code>def sync_vpc(self):
+    total_regions = region_total_instances = total_instances = 0
+
+    for region in self.cloud_account.cloud.cloudregion_set.all():
+        if self.cloud_account.cloud.name == '阿里云':
+            CloudSyncLogger(self.tid).add('开始同步可用区 {} 下的资源\n'.format(region))
+            total_regions += 1
+
+            state, code, data = AlibabaCloudVpcApi(
+                self.access_id, self.access_key, region.code
+            ).describe_vpcs()
+
+            for instance in data['Vpcs']['Vpc']:
+                _instance, created = Vpc.objects.update_or_create(
+                    defaults=format_a_vpc_data(instance),
+                    **{'cloud': self.cloud_account.cloud,
+                       'cloud_account': self.cloud_account,
+                       'cloud_region': region,
+                       'instance_id': instance['VpcId']}
+                )
+
+                # 同步完成计数器加1
+                region_total_instances += 1
+                total_instances += 1
+
+            # 当一个可用区循环结束，则记录当前可用区数据
+            CloudSyncLogger(self.tid).add('可用区 {} 下一共有 {} 实例，已同步 {} 实例\n'.format(
+                region, data['TotalCount'], region_total_instances))
+
+            # 同时将可用区下的主机数量置为0
+            region_total_instances = 0
+        if self.cloud_account.cloud.name == '腾讯云':
+            pass
+
+        if self.cloud_account.cloud.name == '华为云':
+            pass
+
+        if self.cloud_account.cloud.name == 'Ucloud':
+            pass
+
+    return True, '本次一共同步了 {} 个区域下的 {} 个实例'.format(total_regions, total_instances)</code></pre>
+
+
+<p>所有资源的所有同步过程都可以通过详细的日志记录来查看，当然因为同步日志也记录了云厂商、资源类型和同步状态，也可以根据这些维度来过滤查看具体厂商具体资源具体状态的同步情况</p>
+<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240130.04.png" /></p>
+<p>至此，整个资源同步的逻辑就相对完善了</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/IAC-devops-cloud-cmdb-resource-sync.html">📅 2024-01-30</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
