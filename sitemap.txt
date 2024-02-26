@@ -44,6 +44,7 @@ https://blog.ops-coffee.cn/tag/Elk
 https://blog.ops-coffee.cn/tag/Python
 https://blog.ops-coffee.cn/tag/Django
 https://blog.ops-coffee.cn/tag/Devops
+https://blog.ops-coffee.cn/s/devops-task-subtask-api-postman-apipost
 https://blog.ops-coffee.cn/r/city-china-henan-luoyang-laojunshan
 https://blog.ops-coffee.cn/s/AIGC-Midjourney -and-WeChat-red-packet
 https://blog.ops-coffee.cn/s/Increase-the-price-of-paid-WeChat-group
