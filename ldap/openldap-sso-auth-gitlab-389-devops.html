@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="LDAP,GitLab,OpenLDAP,SVN,LDAP,Git,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="LDAP落地实战（三）：GitLab集成OpenLDAP认证" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>LDAP落地实战（三）：GitLab集成OpenLDAP认证</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="LDAP落地实战（三）：GitLab集成OpenLDAP认证" />
+  <meta property="og:description" content="LDAP落地实战（三）：GitLab集成OpenLDAP认证" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">LDAP落地实战（三）：GitLab集成OpenLDAP认证</h1>
+
+        <blockquote>
+<p>上一篇文章介绍了SVN集成OpenLDAP认证，版本控制除了SVN外，Git目前也被越来越多的开发者所喜爱，本文将介绍GitLab如何集成OpenLDAP实现账号认证</p>
+</blockquote>
+<h1 id="gitlab">GitLab配置</h1>
+<ol>
+<li>修改配置文件gitlab.yml</li>
+</ol>
+<pre class="codehilite"><code>ldap:
+enabled: true
+servers:
+  main: 
+    label: 'LDAP'
+
+    host: 'ldap.ops-coffee.cn'
+    port: 389
+    uid: 'uid'
+    method: 'plain'
+    bind_dn: 'uid=authz,ou=Public,dc=ops-coffee,dc=cn'
+    password: 'ImNVZODT884'
+
+    timeout: 10
+
+    active_directory: false
+    allow_username_or_email_login: false
+
+    block_auto_created_users: false
+
+    base: 'dc=ops-coffee,dc=cn'
+    user_filter: ''</code></pre>
+
+
+<ol>
+<li>重启GitLab服务，看到页面已经有LDAP的登录选项了 </li>
+</ol>
+<p><img alt="" loading="lazy" src="/static/images/20180701.gitlab.png" /></p>
+<h2 id="_1">重要配置参数解释</h2>
+<p>仔细阅读上一篇svn集成LDAP认证的文章这些参数会更好理解</p>
+<ul>
+<li><strong>host</strong>：LDAP服务器地址</li>
+<li><strong>port</strong>：LDAP服务端口</li>
+<li><strong>uid</strong>：以哪个属性作为验证属性，可以为uid、cn等，我们使用uid</li>
+<li><strong>method</strong>：如果开启了tls或ssl则填写对应的tls或ssl，都没有就填写plain</li>
+<li><strong>bind_dn</strong>：search搜索账号信息的用户完整bind（需要一个有read权限的账号验证通过后搜索用户输入的用户名是否存在）</li>
+<li><strong>password</strong>：bind_dn用户的密码，<code>bind_dn</code>和<code>password</code>两个参数登录LDAP服务器搜索用户</li>
+<li><strong>active_directory</strong>：LDAP服务是否是windows的AD，我们是用的OpenLDAP，这里写false</li>
+<li><strong>allow_username_or_email_login</strong>：是否允许用户名或者邮箱认证，如果是则用户输入用户名或邮箱都可</li>
+<li><strong>base</strong>：从哪个位置搜索用户，例如允许登录GitLab的用户都在ou gitlab里，name这里可以写<code>ou=gitlab,dc=domain,dc=com</code></li>
+<li><strong>filter</strong>：添加过滤属性，例如只过滤employeeType为developer的用户进行认证，可以设置<code>employeeType=developer</code></li>
+</ul>
+<h2 id="_2">报错处理</h2>
+<p>当重启完成后登陆报：<code>Could not authenticate you from Ldapmain because "Invalid credentials"</code></p>
+<p>查日志有如下报错：<code>(LDAP) Error saving user: ["Email is not whitelisted. Email domains valid for registration are: domain.com"]</code></p>
+<p>Email不在白名单？？仔细想了一下原因：</p>
+<ol>
+<li>GitLab之前为了安全配置了 Restricted domains for sign-ups只允许domain.com邮箱的用户注册</li>
+<li>而我OpenLDAP在新建用户的时候邮箱没有填写为空</li>
+</ol>
+<p>或许就是这个问题了，登录lam将用户的邮箱字段补上（需符合白名单规则）重新登录便正常了</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/ldap/openldap-sso-auth-gitlab-389-devops.html">📅 2018-07-01</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/OpenLDAP/">🏷️ OpenLDAP</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
