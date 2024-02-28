@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Logstash,Kafka,HDFS,logstash,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Logstash读取Kafka数据写入HDFS详解" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Logstash读取Kafka数据写入HDFS详解</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Logstash读取Kafka数据写入HDFS详解" />
+  <meta property="og:description" content="Logstash读取Kafka数据写入HDFS详解" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Logstash读取Kafka数据写入HDFS详解</h1>
+
+        <blockquote>
+<p>强大的功能，丰富的插件，让logstash在数据处理的行列中出类拔萃</p>
+</blockquote>
+<p>通常日志数据除了要入ES提供实时展示和简单统计外，还需要写入大数据集群来提供更为深入的逻辑处理，前边几篇ELK的文章介绍过利用logstash将kafka的数据写入到elasticsearch集群，这篇文章将会介绍如何通过logstash将数据写入HDFS</p>
+<p>本文所有演示均基于logstash 6.6.2版本</p>
+<h1 id="_1">数据收集</h1>
+<p>logstash默认不支持数据直接写入HDFS，官方推荐的output插件是<code>webhdfs</code>，webhdfs使用HDFS提供的API将数据写入HDFS集群</p>
+<h2 id="_2">插件安装</h2>
+<p>插件安装比较简单，直接使用内置命令即可</p>
+<pre class="codehilite"><code># cd /home/opt/tools/logstash-6.6.2
+# ./bin/logstash-plugin install logstash-output-webhdfs</code></pre>
+
+
+<h2 id="hosts">配置hosts</h2>
+<p>HDFS集群内通过主机名进行通信所以logstash所在的主机需要配置hadoop集群的hosts信息</p>
+<pre class="codehilite"><code># cat /etc/hosts
+192.168.107.154 master01
+192.168.107.155 slave01
+192.168.107.156 slave02
+192.168.107.157 slave03</code></pre>
+
+
+<p>如果不配置host信息，可能会报下边的错</p>
+<pre class="codehilite"><code>[WARN ][logstash.outputs.webhdfs ] Failed to flush outgoing items</code></pre>
+
+
+<h2 id="logstash">logstash配置</h2>
+<p>kafka里边的源日志格式可以参考这片文章：<a href="/s/CYUls7uczVwGzwptZOX0Dg">ELK日志系统之使用Rsyslog快速方便的收集Nginx日志</a></p>
+<p>logstash的配置如下：</p>
+<pre class="codehilite"><code># cat config/indexer_rsyslog_nginx.conf
+input {
+    kafka {
+        bootstrap_servers =&gt; &quot;10.82.9.202:9092,10.82.9.203:9092,10.82.9.204:9092&quot;
+        topics =&gt; [&quot;rsyslog_nginx&quot;]
+        codec =&gt; &quot;json&quot;
+    }
+}
+
+filter {
+    date {
+        match =&gt; [&quot;time_local&quot;,&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;]
+        target =&gt; &quot;time_local&quot;
+    }
+
+    ruby {
+        code =&gt; &quot;event.set('index.date', event.get('time_local').time.localtime.strftime('%Y%m%d'))&quot;
+    }
+
+    ruby {
+        code =&gt; &quot;event.set('index.hour', event.get('time_local').time.localtime.strftime('%H'))&quot;
+    }
+}
+
+output {
+    webhdfs {
+        host =&gt; &quot;master01&quot;
+        port =&gt; 50070
+        user =&gt; &quot;hadmin&quot;
+        path =&gt; &quot;/logs/nginx/%{index.date}/%{index.hour}.log&quot;
+        codec =&gt; &quot;json&quot;
+    }
+    stdout { codec =&gt; rubydebug }
+}</code></pre>
+
+
+<p>logstash配置文件分为三部分：input、filter、output</p>
+<p><strong>input</strong>指定源在哪里，我们是从kafka取数据，这里就写kafka集群的配置信息，配置解释：
+  - bootstrap_servers：指定kafka集群的地址
+  - topics：需要读取的topic名字
+  - codec：指定下数据的格式，我们写入的时候直接是json格式的，这里也配置json方便后续处理</p>
+<p><strong>filter</strong>可以对input输入的内容进行过滤或处理，例如格式化，添加字段，删除字段等等</p>
+<ul>
+<li>这里我们主要是为了解决生成HDFS文件时因时区不对差8小时导致的文件名不对的问题，后边有详细解释</li>
+</ul>
+<p><strong>output</strong>指定处理过的日志输出到哪里，可以是ES或者是HDFS等等，可以同时配置多个，webhdfs主要配置解释：</p>
+<ul>
+<li>host：为hadoop集群namenode节点名称</li>
+<li>user：为启动hdfs的用户名，不然没有权限写入数据</li>
+<li>path：指定存储到HDFS上的文件路径，这里我们每日创建目录，并按小时存放文件</li>
+<li>stdout：打开主要是方便调试，启动logstash时会在控制台打印详细的日志信息并格式化方便查找问题，正式环境建议关闭</li>
+</ul>
+<p>webhdfs还有一些其他的参数例如<code>compression</code>,<code>flush_size</code>,<code>standby_host</code>,<code>standby_port</code>等可查看<a href="https://www.elastic.co/guide/en/logstash/current/plugins-outputs-webhdfs.html">官方文档</a>了解详细用法</p>
+<h2 id="logstash_1">启动logstash</h2>
+<pre class="codehilite"><code># bin/logstash -f config/indexer_rsyslog_nginx.conf</code></pre>
+
+
+<p>因为logstash配置中开了<code>stdout</code>输出，所以能在控制台看到格式化的数据，如下：</p>
+<pre class="codehilite"><code>{
+               &quot;server_addr&quot; =&gt; &quot;172.18.90.17&quot;,
+           &quot;http_user_agent&quot; =&gt; &quot;Mozilla/5.0 (iPhone; CPU iPhone OS 10_2 like Mac OS X) AppleWebKit/602.3.12 (KHTML, like Gecko) Mobile/14C92 Safari/601.1 wechatdevtools/1.02.1902010 MicroMessenger/6.7.3 Language/zh_CN webview/ token/e7b92168159736c30401a55589317d8c&quot;,
+               &quot;remote_addr&quot; =&gt; &quot;172.18.101.0&quot;,
+                    &quot;status&quot; =&gt; 200,
+              &quot;http_referer&quot; =&gt; &quot;https://ops-coffee.cn/wx02935bb29080a7b4/devtools/page-frame.html&quot;,
+    &quot;upstream_response_time&quot; =&gt; &quot;0.056&quot;,
+                      &quot;host&quot; =&gt; &quot;ops-coffee.cn&quot;,
+               &quot;request_uri&quot; =&gt; &quot;/api/community/v2/news/list&quot;,
+              &quot;request_time&quot; =&gt; 0.059,
+           &quot;upstream_status&quot; =&gt; &quot;200&quot;,
+                  &quot;@version&quot; =&gt; &quot;1&quot;,
+      &quot;http_x_forwarded_for&quot; =&gt; &quot;192.168.106.100&quot;,
+                &quot;time_local&quot; =&gt; 2019-03-18T11:03:45.000Z,
+           &quot;body_bytes_sent&quot; =&gt; 12431,
+                &quot;@timestamp&quot; =&gt; 2019-03-18T11:03:45.984Z,
+                &quot;index.date&quot; =&gt; &quot;20190318&quot;,
+                &quot;index.hour&quot; =&gt; &quot;19&quot;,
+            &quot;request_method&quot; =&gt; &quot;POST&quot;,
+             &quot;upstream_addr&quot; =&gt; &quot;127.0.0.1:8181&quot;
+}</code></pre>
+
+
+<p>查看hdfs发现数据已经按照定义好的路径正常写入</p>
+<pre class="codehilite"><code>$ hadoop fs -ls /logs/nginx/20190318/19.log
+-rw-r--r--   3 hadmin supergroup       7776 2019-03-18 19:07 /logs/nginx/20190318/19.log</code></pre>
+
+
+<p>至此kafka到hdfs数据转储完成</p>
+<h1 id="_3">遇到的坑</h1>
+<h2 id="hdfs">HDFS按小时生成文件名不对</h2>
+<p>logstash在处理数据时会自动生成一个字段<code>@timestamp</code>，默认情况下这个字段存储的是logstash收到消息的时间，使用的是UTC时区，会跟国内的时间差8小时</p>
+<p>我们output到ES或者HDFS时通常会使用类似于<code>rsyslog-nginx-%{+YYYY.MM.dd}</code>这样的变量来动态的设置index或者文件名，方便后续的检索，这里的变量<code>YYYY</code>使用的就是<code>@timestamp</code>中的时间，因为时区的问题生成的index或者文件名就差8小时不是很准确，这个问题在ELK架构中因为全部都是用的UTC时间且最终kibana展示时会自动转换我们无需关心，但这里要生成文件就需要认真对待下了</p>
+<p>这里采用的方案是解析日志中的时间字段<code>time_local</code>，然后根据日志中的时间字段添加两个新字段<code>index.date</code>和<code>index.hour</code>来分别标识日期和小时，在output的时候使用这两个新加的字段做变量来生成文件</p>
+<p>logstash filter配置如下：</p>
+<pre class="codehilite"><code>filter {
+    # 匹配原始日志中的time_local字段并设置为时间字段
+    # time_local字段为本地时间字段，没有8小时的时间差
+    date {
+        match =&gt; [&quot;time_local&quot;,&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;]
+        target =&gt; &quot;time_local&quot;
+    }
+
+    # 添加一个index.date字段，值设置为time_local的日期
+    ruby {
+        code =&gt; &quot;event.set('index.date', event.get('time_local').time.localtime.strftime('%Y%m%d'))&quot;
+    }
+
+    # 添加一个index.hour字段，值设置为time_local的小时
+    ruby {
+        code =&gt; &quot;event.set('index.hour', event.get('time_local').time.localtime.strftime('%H'))&quot;
+    }
+}</code></pre>
+
+
+<p>output的path中配置如下</p>
+<pre class="codehilite"><code>path =&gt; &quot;/logs/nginx/%{index.date}/%{index.hour}.log&quot;</code></pre>
+
+
+<h2 id="hdfshost">HDFS记录多了时间和host字段</h2>
+<p>在没有指定codec的情况下，logstash会给每一条日志添加时间和host字段，例如：</p>
+<p>源日志格式为</p>
+<pre class="codehilite"><code>ops-coffee.cn | 192.168.105.91 | 19/Mar/2019:14:28:07 +0800 | GET / HTTP/1.1 | 304 | 0 | - | 0.000</code></pre>
+
+
+<p>经过logstash处理后多了时间和host字段</p>
+<pre class="codehilite"><code>2019-03-19T06:28:07.510Z %{host}  ops-coffee.cn | 192.168.105.91 | 19/Mar/2019:14:28:07 +0800 | GET / HTTP/1.1 | 304 | 0 | - | 0.000</code></pre>
+
+
+<p>如果不需要我们可以指定最终的format只取message，解决方法为在output中添加如下配置：</p>
+<pre class="codehilite"><code>codec =&gt; line {
+    format =&gt; &quot;%{message}&quot;
+}</code></pre>
+
+
+<h1 id="outputeshdfs">同时output到ES和HDFS</h1>
+<p>在实际应用中我们需要同时将日志数据写入ES和HDFS，那么可以直接用下边的配置来处理</p>
+<pre class="codehilite"><code># cat config/indexer_rsyslog_nginx.conf
+input {
+    kafka {
+        bootstrap_servers =&gt; &quot;localhost:9092&quot;
+        topics =&gt; [&quot;rsyslog_nginx&quot;]
+        codec =&gt; &quot;json&quot;
+    }
+}
+
+filter {
+    date {  
+        match =&gt; [&quot;time_local&quot;,&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;]
+        target =&gt; &quot;@timestamp&quot;
+    }
+
+    ruby {
+        code =&gt; &quot;event.set('index.date', event.get('@timestamp').time.localtime.strftime('%Y%m%d'))&quot;
+    }
+
+    ruby {
+        code =&gt; &quot;event.set('index.hour', event.get('@timestamp').time.localtime.strftime('%H'))&quot;
+    }
+
+
+}
+
+output {
+    elasticsearch {
+        hosts =&gt; [&quot;192.168.106.203:9200&quot;]
+        index =&gt; &quot;rsyslog-nginx-%{+YYYY.MM.dd}&quot;
+    }
+
+    webhdfs {
+        host =&gt; &quot;master01&quot;
+        port =&gt; 50070
+        user =&gt; &quot;hadmin&quot;
+        path =&gt; &quot;/logs/nginx/%{index.date}/%{index.hour}.log&quot;
+        codec =&gt; &quot;json&quot;
+    }
+}</code></pre>
+
+
+<p>这里我使用logstash的date插件将日志中的"time_local"字段直接替换为了@timestamp，这样做有什么好处呢？</p>
+<p>logstash默认生成的@timestamp字段记录的时间是logstash接收到消息的时间，这个时间可能与日志产生的时间不同，而我们往往需要关注的时间是日志产生的时间，且在ELK架构中Kibana日志输出的默认顺序就是按照@timestamp来排序的，所以往往我们需要将默认的@timestamp替换成日志产生的时间，替换方法就用到了date插件，date插件的用法如下</p>
+<pre class="codehilite"><code>date {  
+    match =&gt; [&quot;time_local&quot;,&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;]
+    target =&gt; &quot;@timestamp&quot;
+}</code></pre>
+
+
+<p>match：匹配日志中的时间字段，这里为time_local</p>
+<p>target：将match匹配到的时间戳存储到给定的字段中，默认不指定的话就存到@timestamp字段</p>
+<p>另外还有参数可以配置：<code>timezone</code>,<code>locale</code>,<code>tag_on_failure</code>等，具体可查看<a href="https://www.elastic.co/guide/en/logstash/6.6/plugins-filters-date.html">官方文档</a></p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/elk/elasticsearch-logstash-kafka-webhdfs.html">📅 2019-03-19</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Elk/">🏷️ Elk</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
