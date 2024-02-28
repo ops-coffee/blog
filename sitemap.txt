@@ -10,7 +10,6 @@ https://blog.ops-coffee.cn/task
 https://blog.ops-coffee.cn/resume
 https://blog.ops-coffee.cn/travels
 https://blog.ops-coffee.cn/search
-https://blog.ops-coffee.cn/webssh
 https://blog.ops-coffee.cn/devops
 https://blog.ops-coffee.cn/questions
 https://blog.ops-coffee.cn/index
