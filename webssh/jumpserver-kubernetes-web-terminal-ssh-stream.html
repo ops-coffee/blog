@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,WebSSH,Kubernetes,Pod,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Django实现WebSSH操作Kubernetes Pod" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Django实现WebSSH操作Kubernetes Pod</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django实现WebSSH操作Kubernetes Pod" />
+  <meta property="og:description" content="Django实现WebSSH操作Kubernetes Pod" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django实现WebSSH操作Kubernetes Pod</h1>
+
+        <blockquote>
+<p>优秀的系统都是根据反馈逐渐完善出来的</p>
+</blockquote>
+<p>上篇文章介绍了我们为了应对安全和多分支频繁测试的问题而开发了一套Alodi系统，Alodi可以通过一个按钮快速构建一套测试环境，生成一个临时访问地址，详细信息可以看这一篇文章：<a href="/s/Nxh7mwPJPlbL3R9MdlkO_A">Alodi：为了保密我开发了一个系统</a></p>
+<p>系统上线后，SSH登陆控制台成了一个迫切的需求，Kubernetes的Dashboard控制台虽然有WebSSH的功能，但却没办法跟Alodi系统相结合，决定在Alodi中集成WebSSH的功能，先来看看最后实现的效果吧</p>
+<p><img alt="" loading="lazy" src="/static/images/20191016.gif" /></p>
+<h2 id="_1">涉及技术</h2>
+<ul>
+<li>Kubernetes Stream：接收数据执行，提供实时返回数据流</li>
+<li>Django Channels：维持长连接，接收前端数据转给Kubernetes，同时将Kubernetes返回的数据发送给前端</li>
+<li>xterm.js：一个前端终端组件，用于模拟Terminal的界面显示</li>
+</ul>
+<p>基本的数据流向是：用户 --&gt; xterm.js --&gt; django channels --&gt; kubernetes stream，接下来看看具体的代码实现</p>
+<h2 id="kubernetes-stream">Kubernetes Stream</h2>
+<p>Kubernetes本身提供了stream方法来实现exec的功能，返回的就是一个WebSocket可以使用的数据流，使用起来也非常方便，代码如下：</p>
+<pre class="codehilite"><code>from kubernetes import client, config
+from kubernetes.stream import stream
+
+class KubeApi:
+    def __init__(self, namespace='alodi'):
+        config.load_kube_config(&quot;/ops/coffee/kubeconfig.yaml&quot;)
+
+        self.namespace = namespace
+
+    def pod_exec(self, pod, container=&quot;&quot;):
+        api_instance = client.CoreV1Api()
+
+        exec_command = [
+            &quot;/bin/sh&quot;,
+            &quot;-c&quot;,
+            'TERM=xterm-256color; export TERM; [ -x /bin/bash ] '
+            '&amp;&amp; ([ -x /usr/bin/script ] '
+            '&amp;&amp; /usr/bin/script -q -c &quot;/bin/bash&quot; /dev/null || exec /bin/bash) '
+            '|| exec /bin/sh']
+
+        cont_stream = stream(api_instance.connect_get_namespaced_pod_exec,
+                             name=pod,
+                             namespace=self.namespace,
+                             container=container,
+                             command=exec_command,
+                             stderr=True, stdin=True,
+                             stdout=True, tty=True,
+                             _preload_content=False
+                             )
+
+        return cont_stream</code></pre>
+
+
+<p>这里的pod name可以通过<code>list_namespaced_pod</code>方法获取，代码如下：</p>
+<pre class="codehilite"><code>def get_deployment_pod(self, RAND):
+    api_instance = client.CoreV1Api()
+
+    try:
+        r = api_instance.list_namespaced_pod(
+            namespace=self.namespace,
+            label_selector=&quot;app=%s&quot; % RAND
+        )
+
+        return True, r
+    except Exception as e:
+        return False, 'Get Deployment: ' + str(e)
+
+state, data = self.get_deployment_pod(RAND)
+pod_name = data.items[0].metadata.name</code></pre>
+
+
+<p><code>list_namespaced_pod</code>会列出namespace下所有pod的详细信息，这里传了两个参数，第一个<code>namespace</code>是必须的，表示我们要列出pod的namespace，第二个<code>label_selector</code>非必须，表示可以通过设置的标签过滤namespace下的pod，由于我们在创建的时候给每个deployment都添加了唯一的<code>app=RAND</code>的标签，所以这里可以过滤出来我们项目所对应的pod</p>
+<p>一个deployment可能对应多个pod，获取到的<code>data.items</code>包含了所有的pod信息，为一个list列表，可根据需要取到对应pod的name</p>
+<h2 id="django-channels">Django Channels</h2>
+<p>之前有两篇文章详细介绍过Django Channels，不了解的可以先查看：<a href="/s/hqaPrPS7w3D-9SeegQAB2Q">Django使用Channels实现WebSocket--上篇</a>和<a href="/s/r5SpyTjRl0jJeAuYE4Q_-Q">Django使用Channels实现WebSocket--下篇</a>，最重要的两部分代码如下</p>
+<p>routing代码：</p>
+<pre class="codehilite"><code>from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+
+from django.urls import path, re_path
+from medivh.consumers import SSHConsumer
+
+application = ProtocolTypeRouter({
+    'websocket': AuthMiddlewareStack(
+        URLRouter([
+            re_path(r'^pod/(?P&lt;name&gt;\w+)', SSHConsumer),
+        ])
+    ),
+})</code></pre>
+
+
+<p>正则匹配所有以<code>pod</code>开头的websocket连接，都交由名为<code>SSHConsumer</code>的Consumer处理，Consumer代码如下：</p>
+<pre class="codehilite"><code>from channels.generic.websocket import WebsocketConsumer
+from medivh.backends.kube import KubeApi
+from threading import Thread
+
+class K8SStreamThread(Thread):
+    def __init__(self, websocket, container_stream):
+        Thread.__init__(self)
+        self.websocket = websocket
+        self.stream = container_stream
+
+    def run(self):
+        while self.stream.is_open():
+            if self.stream.peek_stdout():
+                stdout = self.stream.read_stdout()
+                self.websocket.send(stdout)
+
+            if self.stream.peek_stderr():
+                stderr = self.stream.read_stderr()
+                self.websocket.send(stderr)
+        else:
+            self.websocket.close()
+
+
+class SSHConsumer(WebsocketConsumer):
+    def connect(self):
+        self.name = self.scope[&quot;url_route&quot;][&quot;kwargs&quot;][&quot;name&quot;]
+
+        # kube exec
+        self.stream = KubeApi().pod_exec(self.name)
+        kub_stream = K8SStreamThread(self, self.stream)
+        kub_stream.start()
+
+        self.accept()
+
+    def disconnect(self, close_code):
+        self.stream.write_stdin('exit\r')
+
+    def receive(self, text_data):
+        self.stream.write_stdin(text_data)</code></pre>
+
+
+<p>WebSSH可以看作是一个最简单的websocket长连接，每个连接建立后都是独立的，不会跟其他连接共享数据，所以这里不需要用到Group</p>
+<p>当连接建立时通过<code>self.scope</code>获取到url中的name，传给Kubernetes API，同时会新起一个线程不断循环是否有新数据产生，如果有则发送给websocket</p>
+<p>当websocket接收到数据就直接写入Kubernetes API，当websocket关闭则会发送个<code>exit</code>命令给Kubernetes</p>
+<h2 id="_2">前端页面</h2>
+<p>前端主要用到了xterm.js，整体代码也比较简单</p>
+<pre class="codehilite"><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;title&gt;Alodi | Pod Web SSH&lt;/title&gt;
+  &lt;link rel=&quot;Shortcut Icon&quot; href=&quot;/static/img/favicon.ico&quot;&gt;
+
+  &lt;link href=&quot;/static/plugins/xterm/xterm.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/&gt;
+  &lt;link href=&quot;/static/plugins/xterm/addons/fullscreen/fullscreen.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+  &lt;div id=&quot;terminal&quot;&gt;&lt;/div&gt;
+&lt;/body&gt;
+
+&lt;script src=&quot;/static/plugins/xterm/xterm.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;/static/plugins/xterm/addons/fullscreen/fullscreen.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+  var term = new Terminal({cursorBlink: true});
+  term.open(document.getElementById('terminal'));
+
+  // xterm fullscreen config
+  Terminal.applyAddon(fullscreen);
+  term.toggleFullScreen(true);
+
+  var socket = new WebSocket(
+    'ws://' + window.location.host + '/pod/{{ name }}');
+
+  socket.onopen = function () {
+    term.on('data', function (data) {
+        socket.send(data);
+    });
+
+    socket.onerror = function (event) {
+      console.log('error:' + e);
+    };
+
+    socket.onmessage = function (event) {
+      term.write(event.data);
+    };
+
+    socket.onclose = function (event) {
+      term.write('\n\r\x1B[1;3;31msocket is already closed.\x1B[0m');
+      // term.destroy();
+    };
+  };
+&lt;/script&gt;
+&lt;/html&gt;</code></pre>
+
+
+<p><code>term.open</code>初始化一个Terminal</p>
+<p><code>term.on</code>会将输入的内容全部实时的传递给后端</p>
+<p>xterm.js有一个fullscreen的插件，引入之后可以配置fullscreen，否则可能页面只有一部分terminal窗口</p>
+<p>目前仍然遇到一个窗口大小无法调整的问题没有解决，初步判断是后端Kubernetes传回的数据决定的，查询了相关资料，找到<code>kubectl</code>命令可以通过添加<code>COLUMNS</code>和<code>LINES</code>的env来设置</p>
+<pre class="codehilite"><code class="language-sh linenums">#!/bin/sh
+if [ &quot;$1&quot; = &quot;&quot; ]; then
+  echo &quot;Usage: kshell &lt;pod&gt;&quot;
+  exit 1
+fi
+COLUMNS=`tput cols`
+LINES=`tput lines`
+TERM=xterm
+kubectl exec -i -t $1 env COLUMNS=$COLUMNS LINES=$LINES TERM=$TERM bash</code></pre>
+
+
+<p>但Kubernetes Python API的Stream没有找到配置的地方，如果你知道，麻烦告诉我</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/webssh/jumpserver-kubernetes-web-terminal-ssh-stream.html">📅 2019-10-16</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/WebSSH/">🏷️ WebSSH</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
