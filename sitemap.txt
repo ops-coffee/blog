@@ -286,7 +286,7 @@ https://blog.ops-coffee.cn/ldap/openldap-sso-auth-gitlab-389-devops
 https://blog.ops-coffee.cn/ldap/openldap-sso-auth-svn-apache-basic
 https://blog.ops-coffee.cn/ldap/lightweight-directory-access-protocol-sso
 https://blog.ops-coffee.cn/t/git-readme-specification
-https://blog.ops-coffee.cn/elk/elasticsearch-logstash-cat-api
+https://blog.ops-coffee.cn/elk/elasticsearch-cat-api-shards-nodes
 https://blog.ops-coffee.cn/t/django-custom-error-page
 https://blog.ops-coffee.cn/t/remove-github-commit-log
 https://blog.ops-coffee.cn/t/server-ssh-specification
