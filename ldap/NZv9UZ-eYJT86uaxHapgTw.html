@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="LDAP,SVN,OpenLDAP,SVN,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="LDAP落地实战（二）：SVN集成OpenLDAP认证" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>LDAP落地实战（二）：SVN集成OpenLDAP认证</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="LDAP落地实战（二）：SVN集成OpenLDAP认证" />
+  <meta property="og:description" content="LDAP落地实战（二）：SVN集成OpenLDAP认证" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">LDAP落地实战（二）：SVN集成OpenLDAP认证</h1>
+
+        <blockquote>
+<p>上一篇文章我们介绍了LDAP的部署以及管理维护，那么如何接入LDAP实现账号统一认证呢？这篇文章将带你完成SVN的接入验证</p>
+</blockquote>
+<h1 id="svnopenldap">SVN集成OpenLDAP认证</h1>
+<ul>
+<li>系统环境：Debian8.4</li>
+<li>
+<p>svn部署环境：Apache2.4 + Subversion</p>
+</li>
+<li>
+<p>Apache开启LDAP相关模块</p>
+</li>
+</ul>
+<pre class="codehilite"><code># a2enmod ldap
+Enabling module ldap.
+To activate the new configuration, you need to run:
+  service apache2 restart
+# a2enmod authnz_ldap
+Considering dependency ldap for authnz_ldap:
+Module ldap already enabled
+Enabling module authnz_ldap.
+To activate the new configuration, you need to run:
+  service apache2 restart</code></pre>
+
+
+<ol>
+<li>修改vhost配置文件，添加对ldap的支</li>
+</ol>
+<pre class="codehilite"><code>&lt;Virtualhost *:8088&gt;
+    DocumentRoot /home/svn/repos/
+    ServerName svn.ops-coffee.cn
+
+    &lt;Location /ne/&gt;
+        DAV svn
+        SVNListParentPath on
+        SVNParentPath &quot;/home/svn/repos&quot;
+
+        AuthType Basic
+        AuthName &quot;Private Subversion Repository&quot;
+
+        #AuthUserFile &quot;/etc/subversion/dav_svn.passwd&quot;
+        AuthzSVNAccessFile &quot;/etc/subversion/dav_svn.authz&quot;
+
+        # use LDAP auth
+        AuthBasicProvider ldap
+        AuthLDAPBindAuthoritative on
+        AuthLDAPURL &quot;ldap://ldap.ops-coffee.cn/dc=ops-coffee,dc=cn?uid?sub?(objectclass=*)&quot;
+        AuthLDAPBindDN &quot;uid=authz,ou=Public,dc=ops-coffee,dc=cn&quot;
+        AuthLDAPBindPassword &quot;ImNVZODT884&quot;
+
+        Require ldap-user
+
+    &lt;/Location&gt;
+&lt;/Virtualhost&gt;</code></pre>
+
+
+<h2 id="ldap">主要LDAP配置文件详解：</h2>
+<p><strong>AuthType</strong>：验证类型，Basic使用账号密码验证</p>
+<p><strong>AuthName</strong>：提示字符串</p>
+<p><strong>AuthBasicProvider</strong>：使用ldap验证</p>
+<p><strong>AuthLDAPBindAuthoritative</strong>：on表示只要求验证ldap用户，别的不认，off则可以使用svn的账号和ldap混合账号登录</p>
+<ul>
+<li>
+<p>apache2.2中配置是<code>AuthzLDAPAuthoritative</code>，到2.4中改为了<code>AuthLDAPBindAuthoritative</code></p>
+</li>
+<li>
+<p>但在实际应用中发现并么有什么用，设置为off后ldap认证失败也不会去找AuthzSVNAccessFile，或许是我姿势不对，有知道原因的烦请告知</p>
+</li>
+</ul>
+<p><strong>Require</strong>：ldap-user或valid-user</p>
+<p><strong>AuthLDAPURL | AuthLDAPBindDN | AuthLDAPBindPassword</strong>： 用于查找用户的账号密码，一般设置个只读账号即可</p>
+<ul>
+<li>AuthLDAPURL：[协议名称]://[ip地址或者域名]:[端口号]/[baseDN]?[attr]?[scope]?[filter]<ul>
+<li>baseDN：指定开始搜索的节点的名称</li>
+<li>attr：就是用户输入的属性键，默认是“uid”</li>
+<li>scope: one,sub,base，默认是sub</li>
+<li>filter：过滤器，默认是objectclass=*</li>
+</ul>
+</li>
+</ul>
+<h1 id="ldap_1">LDAP服务器认证过程</h1>
+<p>可能只看配置文件不能了解LDAP认证的原理，接下来我们详细讨论下LDAP是如何认证的</p>
+<p>客户端(httpd)使用提供的URL(AuthLDAPURL)进行验证的时候，并不是直接验证输入的账号密码，因为LDAP服务器在验证的时候要使用DN(每个节点用户的唯一标识)和密码来进行登陆验证的，但是DN一般来说比较长，诸如:“cn=xxx,ou=xxx,ou=xxx,dc=xxx,dc=xxx”，这种光输入的时候就烦死了，所以要想使用简短的用户名来登陆的时候，一般的做法是在某个节点用户上添加一个属性，比如mobile(手机号),Email(邮箱),user name或者uid(用户名),然后使用这个属性的值来登陆（大部分情况下都用uid，我们也是这么使用的）。</p>
+<p>当用户输入这个属性值（一般uid）和密码的时候，客户端(httpd服务器)先使用AuthLDAPBindDN和AuthLDAPBindPassword作为用户名和密码登陆，根据AuthLDAPURL指定的查询规则来查找用户输入的属性的值有没有，如果查找的条数为0或者大于1，则返回错误，如果查找的条数等于1，则使用查找到的这个条目的DN和用户输入的密码进行登陆验证，成功则成功，失败则失败。</p>
+<p>总结一下LDAP的认证过程分为两部：</p>
+<ol>
+<li>
+<p>搜索用户是否存在LDAP服务器中：配置文件中配置的AuthLDAPBindDN和AuthLDAPBindPassword两个属性主要目的就是为了登陆LDAP服务器搜索属性(uid)是否只有一条，如果服务器允许匿名访问则这两个配置可以不需要，但一般为了安全性都会关闭LDAP的匿名访问，新建一个只读权限的账号配置到这里即可</p>
+</li>
+<li>
+<p>使用用户输入的属性值（uid）和密码进行登陆验证</p>
+</li>
+</ol>
+<h1 id="_1">参考文档</h1>
+<ul>
+<li><a href="http://httpd.apache.org/docs/2.2/mod/mod_authnz_ldap.html">http://httpd.apache.org/docs/2.2/mod/mod_authnz_ldap.html</a></li>
+<li><a href="https://www.cnblogs.com/livepencil/archive/2010/06/15/1758706.html">https://www.cnblogs.com/livepencil/archive/2010/06/15/1758706.html</a></li>
+</ul>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/ldap/NZv9UZ-eYJT86uaxHapgTw.html">📅 2018-06-30</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/OpenLDAP/">🏷️ OpenLDAP</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
