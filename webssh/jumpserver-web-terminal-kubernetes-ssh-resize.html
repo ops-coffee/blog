@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Kubernetes,WebSSH,Resize,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Kubernetes WebSSH终端窗口自适应Resize" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Kubernetes WebSSH终端窗口自适应Resize</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Kubernetes WebSSH终端窗口自适应Resize" />
+  <meta property="og:description" content="Kubernetes WebSSH终端窗口自适应Resize" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Kubernetes WebSSH终端窗口自适应Resize</h1>
+
+        <blockquote>
+<p>追求完美不服输的我，一直在与各种问题斗争的路上痛并快乐着</p>
+</blockquote>
+<p>上一篇文章<a href="https://blog.ops-coffee.cn/webssh/jumpserver-kubernetes-web-terminal-ssh-stream">Django实现WebSSH操作Kubernetes Pod</a>最后留了个问题没有解决，那就是terminal内容窗口的大小没有办法调整，这会导致的一个问题就是浏览器上可显示内容的区域太小，当查看/编辑文件时非常不便，就像下边这样，红色可视区域并没有被用到</p>
+<p><img alt="" loading="lazy" src="/static/images/20191018.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/20191018.02.png" /></p>
+<h2 id="resize_channel">RESIZE_CHANNEL</h2>
+<p>前文说到<code>kubectl exec</code>有两个参数<code>COLUMNS</code>和<code>LINES</code>可以调整tty内容窗口的大小，命令如下：</p>
+<pre class="codehilite"><code>kubectl exec -i -t $1 env COLUMNS=$COLUMNS LINES=$LINES bash</code></pre>
+
+
+<p>这实际上就是将<code>COLUMNS</code>和<code>LINES</code>两个环境变量传递到了容器内，由于Kubernetes stream底层也是通过<code>kubernetes exec</code>实现的，所以我们在启动容器时也将这两个变量传递进去就可以了，就像这样</p>
+<pre class="codehilite"><code>exec_command = [
+    &quot;/bin/sh&quot;,
+    &quot;-c&quot;,
+    'export LINES=20; export COLUMNS=100; '
+    'TERM=xterm-256color; export TERM; [ -x /bin/bash ] '
+    '&amp;&amp; ([ -x /usr/bin/script ] '
+    '&amp;&amp; /usr/bin/script -q -c &quot;/bin/bash&quot; /dev/null || exec /bin/bash) '
+    '|| exec /bin/sh']</code></pre>
+
+
+<p>添加了<code>export LINES=20; export COLUMNS=100;</code>，可以实现改变tty的输出大小，但这有个问题就是只能在建立链接时指定一次，不能动态的更新，也就是在一次websocket会话的过程中，如果页面大小改变了，后端输出的LINES和COLUMNS是无法随着改变的</p>
+<p>在解决问题的过程中发现官方源码中有个<code>RESIZE_CHANNEL</code>的配置，同样可以控制窗口的大小，使用方法如下：</p>
+<pre class="codehilite"><code>cont_stream = stream(api_instance.connect_get_namespaced_pod_exec,
+                     name=pod_name,
+                     namespace=self.namespace,
+                     container=container,
+                     command=exec_command,
+                     stderr=True, stdin=True,
+                     stdout=True, tty=True,
+                     _preload_content=False
+                     )
+
+cont_stream.write_channel(4, json.dumps({&quot;Height&quot;: int(rows), &quot;Width&quot;: int(cols)}))</code></pre>
+
+
+<p>这样我们就可以修改stream输出的窗口大小了</p>
+<h2 id="xtermjs-fit">xterm.js fit</h2>
+<p>一顿操作后，打开页面，咦？怎么页面不行，原来窗口的调整不仅需要调整stream输出数据的窗口大小，前端页面也要跟着一并调整</p>
+<p>这里用到了xterm.js的另一个组件<strong>fit</strong>，fit可以调整终端大小的<code>cols</code>和<code>rows</code>适配父级元素</p>
+<p>首先调整terminal块的宽度和高度为整个页面可视区域的大小，要让整个可视区域为终端窗口</p>
+<pre class="codehilite"><code>document.getElementById('terminal').style.height = window.innerHeight + 'px';</code></pre>
+
+
+<p>然后引入fit组件，在term初始化之后执行<code>fit</code>操作</p>
+<pre class="codehilite"><code>&lt;script src=&quot;/static/plugins/xterm/xterm.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;/static/plugins/xterm/addons/fit/fit.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+  // 修改terminal的高度为body的高度
+  document.getElementById('terminal').style.height = window.innerHeight + 'px';
+
+  var term = new Terminal({cursorBlink: true});
+  term.open(document.getElementById('terminal'));
+
+  // xterm fullscreen config
+  Terminal.applyAddon(fit);
+  term.fit();
+
+  console.log(term.cols, term.rows);
+&lt;/script&gt;</code></pre>
+
+
+<p>fit之后就可以通过<code>term.cols</code>和<code>term.rows</code>取到xterm.js根据字体大小自动计算过的<code>cols</code>和<code>rows</code>的值了，然后把这两个值传递给kubernetes，kubernetes再根据这两个值输出窗口大小，这样前后端匹配就完美了</p>
+<h2 id="_1">数据传递</h2>
+<p>xterm.js可以通过如下的方法动态的将<code>cols</code>和<code>rows</code>传递给后端</p>
+<pre class="codehilite"><code>term.on('resize', size =&gt; {
+  socket.send('resize', [size.cols, size.rows]);
+})</code></pre>
+
+
+<p>但当窗口由大变小时，之前输出的内容会有样式错乱，我为了方便直接在WebSocket连接建立时采用url传参的方式把<code>cols</code>和<code>rows</code>两个值传递给后端，kubernetes根据这两个值来设置输出内容的窗口大小，这样做的缺点是不会随着前端页面的变化动态的去调整后端stream输出窗口的大小，不过问题不大，如果页面调整大小，刷新下页面重新建立连接就可以啦，具体实现如下</p>
+<p>首先需要修改的就是WebSocket的url地址</p>
+<p>前端增加<code>term.cols</code>和<code>term.rows</code>两个参数的传递</p>
+<pre class="codehilite"><code>var socket = new WebSocket(
+'ws://' + window.location.host + '/pod/{{ name }}/'+term.cols+'/'+term.rows);</code></pre>
+
+
+<p>Routing增加两个参数的解析</p>
+<pre class="codehilite"><code>re_path(r'^pod/(?P&lt;name&gt;\w+)/(?P&lt;cols&gt;\d+)/(?P&lt;rows&gt;\d+)$', SSHConsumer),</code></pre>
+
+
+<p>Consumer解析URL将对应参数传递给Kubernetes stream</p>
+<pre class="codehilite"><code>class SSHConsumer(WebsocketConsumer):
+    def connect(self):
+        self.name = self.scope[&quot;url_route&quot;][&quot;kwargs&quot;][&quot;name&quot;]
+        self.cols = self.scope[&quot;url_route&quot;][&quot;kwargs&quot;][&quot;cols&quot;]
+        self.rows = self.scope[&quot;url_route&quot;][&quot;kwargs&quot;][&quot;rows&quot;]
+
+        # kube exec
+        self.stream = KubeApi().pod_exec(self.name, cols=self.cols, rows=self.rows)
+        kub_stream = K8SStreamThread(self, self.stream)
+        kub_stream.start()
+
+        self.accept()</code></pre>
+
+
+<p>最后Kubernetes stream接收参数并修改窗口大小</p>
+<pre class="codehilite"><code>    def pod_exec(self, RAND, container=&quot;&quot;, rows=24, cols=80):
+        api_instance = client.CoreV1Api()
+
+        exec_command = [
+            &quot;/bin/sh&quot;,
+            &quot;-c&quot;,
+            'TERM=xterm-256color; export TERM; [ -x /bin/bash ] '
+            '&amp;&amp; ([ -x /usr/bin/script ] '
+            '&amp;&amp; /usr/bin/script -q -c &quot;/bin/bash&quot; /dev/null || exec /bin/bash) '
+            '|| exec /bin/sh']
+
+        cont_stream = stream(api_instance.connect_get_namespaced_pod_exec,
+                             name=pod_name,
+                             namespace=self.namespace,
+                             container=container,
+                             command=exec_command,
+                             stderr=True, stdin=True,
+                             stdout=True, tty=True,
+                             _preload_content=False
+                             )
+
+        cont_stream.write_channel(4, json.dumps({&quot;Height&quot;: int(rows), &quot;Width&quot;: int(cols)}))
+
+        return cont_stream</code></pre>
+
+
+<p>至此，每次WebSocket连接建立，前后端就会有一样的输出窗口大小，问题解决~</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/webssh/jumpserver-web-terminal-kubernetes-ssh-resize.html">📅 2019-10-18</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/WebSSH/">🏷️ WebSSH</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
