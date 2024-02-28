@@ -17,6 +17,7 @@ https://blog.ops-coffee.cn/webssh
 https://blog.ops-coffee.cn/devops
 https://blog.ops-coffee.cn/questions
 https://blog.ops-coffee.cn/index
+https://blog.ops-coffee.cn/elk/
 https://blog.ops-coffee.cn/ldap/
 https://blog.ops-coffee.cn/sadmin/
 https://blog.ops-coffee.cn/o/
@@ -237,7 +238,7 @@ https://blog.ops-coffee.cn/t/tar-file-openssl-des3
 https://blog.ops-coffee.cn/s/2w956ln2fA1jzdC-UQ55Vg
 https://blog.ops-coffee.cn/s/3Or2JK7_Wy9B0WqdUYDroA
 https://blog.ops-coffee.cn/s/F-IPkfo6jp6Wkb4ql-jaLg
-https://blog.ops-coffee.cn/s/zLsLSqRrloM-8sFWNWcksg
+https://blog.ops-coffee.cn/elk/zLsLSqRrloM-8sFWNWcksg
 https://blog.ops-coffee.cn/s/xkrxfg4NULauzyU7uZqVwQ
 https://blog.ops-coffee.cn/s/x48wmx_k55hmPfZL0tyBYQ
 https://blog.ops-coffee.cn/t/django-model-field-comment
@@ -246,12 +247,12 @@ https://blog.ops-coffee.cn/s/D6PeQ_lzcaY8pmOLqTY-gQ
 https://blog.ops-coffee.cn/s/eZX5qoJzuCSuLI98gSCtpw
 https://blog.ops-coffee.cn/s/7g2wncQG1lIziOmtBxXwEw
 https://blog.ops-coffee.cn/s/TnvJlcnB51miI-t8N8IkXQ
-https://blog.ops-coffee.cn/s/lvfN0sdRZ2VGKL1rMGaDXw
+https://blog.ops-coffee.cn/elk/ELK-elasticsearch-query-DSL
 https://blog.ops-coffee.cn/s/JyUnN_OtQ2NtXcH0mtCJUg
 https://blog.ops-coffee.cn/s/r5SpyTjRl0jJeAuYE4Q_-Q
 https://blog.ops-coffee.cn/s/hqaPrPS7w3D-9SeegQAB2Q
-https://blog.ops-coffee.cn/s/H5QiZ10KSdUXFW5LdH79wA
-https://blog.ops-coffee.cn/s/qOw1a83pQImXiDRRZ0e9Aw
+https://blog.ops-coffee.cn/elk/H5QiZ10KSdUXFW5LdH79wA
+https://blog.ops-coffee.cn/elk/qOw1a83pQImXiDRRZ0e9Aw
 https://blog.ops-coffee.cn/s/fewb1jDso_FKPqhu9P1uHA
 https://blog.ops-coffee.cn/s/BZsJnWLtv8ZwwlBYbWSbZQ
 https://blog.ops-coffee.cn/s/HwOi-ARTvvNjGTWrDmZIkQ
@@ -267,10 +268,10 @@ https://blog.ops-coffee.cn/s/dpGqieL4WCmGdQh1AEG4Gw
 https://blog.ops-coffee.cn/s/7gPLaCESHAB0dLgq7qZq5Q
 https://blog.ops-coffee.cn/s/sROfvo1y_76fi70nmAs-vg
 https://blog.ops-coffee.cn/s/Dj5t142BkRIONC58xacBoA
-https://blog.ops-coffee.cn/s/7bygZNOr_mdCWpF9PrZcFg
-https://blog.ops-coffee.cn/s/CYUls7uczVwGzwptZOX0Dg
+https://blog.ops-coffee.cn/elk/7bygZNOr_mdCWpF9PrZcFg
+https://blog.ops-coffee.cn/elk/CYUls7uczVwGzwptZOX0Dg
 https://blog.ops-coffee.cn/s/uGUvV4jl4YIvNztuepdC8A
-https://blog.ops-coffee.cn/s/umH7ImZZVhdfgMdZ3Hz5fA
+https://blog.ops-coffee.cn/elk/umH7ImZZVhdfgMdZ3Hz5fA
 https://blog.ops-coffee.cn/s/JVh4UnS2Tql9gUVaBSoGuA
 https://blog.ops-coffee.cn/s/lXrp3igYo9W2UuE5Gauysg
 https://blog.ops-coffee.cn/s/eM7SNKmtw2tDQtXBsBXyxQ
@@ -285,7 +286,7 @@ https://blog.ops-coffee.cn/ldap/yDUHS0HdzZclvbjDH9pdbQ
 https://blog.ops-coffee.cn/ldap/NZv9UZ-eYJT86uaxHapgTw
 https://blog.ops-coffee.cn/ldap/JyH5mqwWFt0N1nGYZqBCBQ
 https://blog.ops-coffee.cn/t/git-readme-specification
-https://blog.ops-coffee.cn/t/elasticsearch-cat-api
+https://blog.ops-coffee.cn/elk/ELK-elasticsearch-cat-api
 https://blog.ops-coffee.cn/t/django-custom-error-page
 https://blog.ops-coffee.cn/t/remove-github-commit-log
 https://blog.ops-coffee.cn/t/server-ssh-specification
