@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Elasticsearch,Cat,None,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="Elasticsearch各Cat命令详解" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>Elasticsearch各Cat命令详解</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Elasticsearch各Cat命令详解" />
+  <meta property="og:description" content="Elasticsearch各Cat命令详解" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Elasticsearch各Cat命令详解</h1>
+
+        <h2 id="cat">cat基础</h2>
+<h3 id="cat_1">查看都有哪些cat指令</h3>
+<pre class="codehilite"><code>GET _cat
+
+=^.^=
+/_cat/allocation
+/_cat/shards
+/_cat/shards/{index}
+/_cat/master
+/_cat/nodes
+/_cat/tasks
+/_cat/indices
+/_cat/indices/{index}
+/_cat/segments
+/_cat/segments/{index}
+/_cat/count
+/_cat/count/{index}
+/_cat/recovery
+/_cat/recovery/{index}
+/_cat/health
+/_cat/pending_tasks
+/_cat/aliases
+/_cat/aliases/{alias}
+/_cat/thread_pool
+/_cat/thread_pool/{thread_pools}
+/_cat/plugins
+/_cat/fielddata
+/_cat/fielddata/{fields}
+/_cat/nodeattrs
+/_cat/repositories
+/_cat/snapshots/{repository}
+/_cat/templates</code></pre>
+
+
+<h3 id="verbose">verbose显示指令的详细信息</h3>
+<pre class="codehilite"><code>GET _cat/health?v</code></pre>
+
+
+<h3 id="help">help显示指令返回参数的说明</h3>
+<pre class="codehilite"><code>GET _cat/health?help</code></pre>
+
+
+<h3 id="header">header选择要显示的列</h3>
+<pre class="codehilite"><code>GET _cat/count?h=timestamp,count</code></pre>
+
+
+<h3 id="formatjsonyamltextsmilecbor">format设置返回内容的格式，支持json,yaml,text,smile,cbor</h3>
+<pre class="codehilite"><code>GET _cat/master?format=json&amp;pretty</code></pre>
+
+
+<h3 id="sort">sort排序</h3>
+<pre class="codehilite"><code>GET _cat/indices?s=store.size:desc</code></pre>
+
+
+<h3 id="_1">可以多个参数一起使用，用&amp;连接</h3>
+<pre class="codehilite"><code>GET _cat/indices?v&amp;s=store.size:desc</code></pre>
+
+
+<h2 id="cat_2">cat指令</h2>
+<h3 id="aliases">aliases</h3>
+<p>显示别名、过滤器、路由信息</p>
+<pre class="codehilite"><code>GET _cat/aliases?v
+
+alias index filter routing.index routing.search</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>alias：</td>
+<td>别名</td>
+</tr>
+<tr>
+<td>index：</td>
+<td>索引别名指向</td>
+</tr>
+<tr>
+<td>filter：</td>
+<td>过滤规则</td>
+</tr>
+<tr>
+<td>routing.index：</td>
+<td>索引路由</td>
+</tr>
+<tr>
+<td>routing.search：</td>
+<td>搜索路由</td>
+</tr>
+</tbody>
+</table>
+<h3 id="allocation">allocation</h3>
+<p>显示每个节点分片数量、占用空间</p>
+<pre class="codehilite"><code>GET _cat/allocation?v
+
+shards disk.indices disk.used disk.avail disk.total disk.percent host        ip          node
+  1073        1.2tb     1.2tb    787.1gb      1.9tb           61 10.82.9.205 10.82.9.205 node01
+  1072        1.2tb     1.2tb      1.2tb      2.4tb           50 10.82.9.207 10.82.9.207 node03
+  1073        1.2tb     1.2tb    787.4gb      1.9tb           61 10.82.9.206 10.82.9.206 node02</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>shards：</td>
+<td>节点承载的分片数量</td>
+</tr>
+<tr>
+<td>disk.indices：</td>
+<td>索引占用的空间大小</td>
+</tr>
+<tr>
+<td>disk.used：</td>
+<td>节点所在机器已使用的磁盘空间大小</td>
+</tr>
+<tr>
+<td>disk.avail：</td>
+<td>节点可用空间大小</td>
+</tr>
+<tr>
+<td>disk.total：</td>
+<td>节点总空间大小</td>
+</tr>
+<tr>
+<td>disk.percent：</td>
+<td>节点磁盘占用百分比</td>
+</tr>
+<tr>
+<td>host：</td>
+<td>节点的host地址</td>
+</tr>
+<tr>
+<td>ip：</td>
+<td>节点的ip地址</td>
+</tr>
+<tr>
+<td>node：</td>
+<td>节点名称</td>
+</tr>
+</tbody>
+</table>
+<h3 id="count">count</h3>
+<p>显示索引文档数量</p>
+<pre class="codehilite"><code>GET _cat/count?v
+
+epoch      timestamp count
+1558059594 10:19:54  7829577019</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>epoch：</td>
+<td>自标准时间（1970-01-01 00:00:00）以来的秒数</td>
+</tr>
+<tr>
+<td>timestamp：</td>
+<td>时间</td>
+</tr>
+<tr>
+<td>count：</td>
+<td>文档总数</td>
+</tr>
+</tbody>
+</table>
+<h3 id="health">health</h3>
+<p>查看集群健康状况</p>
+<pre class="codehilite"><code>GET _cat/health?v
+
+epoch      timestamp cluster   status node.total node.data shards  pri relo init unassign pending_tasks max_task_wait_time active_shards_percent
+1558059496 10:18:16  ops_coffee green           7         5   5362 2681    0    0        0             0                  -                100.0%</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>epoch：</td>
+<td>自标准时间（1970-01-01 00:00:00）以来的秒数</td>
+</tr>
+<tr>
+<td>timestamp：</td>
+<td>时间</td>
+</tr>
+<tr>
+<td>cluster：</td>
+<td>集群名称</td>
+</tr>
+<tr>
+<td>status：</td>
+<td>集群状态</td>
+</tr>
+<tr>
+<td>node.total：</td>
+<td>节点总数</td>
+</tr>
+<tr>
+<td>node.data：</td>
+<td>数据节点总数</td>
+</tr>
+<tr>
+<td>shards：</td>
+<td>分片总数</td>
+</tr>
+<tr>
+<td>pri：</td>
+<td>主分片总数</td>
+</tr>
+<tr>
+<td>repo：</td>
+<td>复制节点的数量</td>
+</tr>
+<tr>
+<td>init：</td>
+<td>初始化节点的数量</td>
+</tr>
+<tr>
+<td>unassign：</td>
+<td>未分配分片的数量</td>
+</tr>
+<tr>
+<td>pending_tasks：</td>
+<td>待定任务数</td>
+</tr>
+<tr>
+<td>max_task_wait_time：</td>
+<td>等待最长任务的等待时间</td>
+</tr>
+<tr>
+<td>active_shards_percent：</td>
+<td>活动分片百分比</td>
+</tr>
+</tbody>
+</table>
+<h3 id="indices">indices</h3>
+<p>查看索引信息</p>
+<pre class="codehilite"><code>GET _cat/indices?v
+
+health status index                                uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   ops-coffee-slowlog-2019.04.08        5ARM1TgqTy-fGO8RlJC_Jg   5   1       7743            0     57.9mb         28.9mb
+green  open   ops-coffee-nginx-2019.04.09          1VdeScHaQda6CF_htRZz_A   5   1   81519329            0       52gb         25.8gb</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>health：</td>
+<td>索引的健康状态</td>
+</tr>
+<tr>
+<td>status：</td>
+<td>索引的开启状态</td>
+</tr>
+<tr>
+<td>index：</td>
+<td>索引名字</td>
+</tr>
+<tr>
+<td>uuid：</td>
+<td>索引的uuid</td>
+</tr>
+<tr>
+<td>pri：</td>
+<td>索引的主分片数量</td>
+</tr>
+<tr>
+<td>rep：</td>
+<td>索引的复制分片数量</td>
+</tr>
+<tr>
+<td>docs.count：</td>
+<td>索引下的文档总数</td>
+</tr>
+<tr>
+<td>docs.deleted：</td>
+<td>索引下删除状态的文档数</td>
+</tr>
+<tr>
+<td>store.size：</td>
+<td>主分片+复制分片的大小</td>
+</tr>
+<tr>
+<td>pri.store.size：</td>
+<td>主分片的大小</td>
+</tr>
+</tbody>
+</table>
+<h3 id="master">master</h3>
+<p>显示master节点信息</p>
+<pre class="codehilite"><code>GET _cat/master?v
+
+id                     host        ip          node
+dkof1ouuT96BTQOR1xyDhQ 10.82.9.205 10.82.9.205 node01</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id：</td>
+<td>节点ID</td>
+</tr>
+<tr>
+<td>host：</td>
+<td>主机名称</td>
+</tr>
+<tr>
+<td>ip：</td>
+<td>主机IP</td>
+</tr>
+<tr>
+<td>node：</td>
+<td>节点名称</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nodeattrs">nodeattrs</h3>
+<p>显示node节点属性</p>
+<pre class="codehilite"><code>GET _cat/nodeattrs?v
+
+node host ip attr value</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>node：</td>
+<td>节点名称</td>
+</tr>
+<tr>
+<td>host：</td>
+<td>主机地址</td>
+</tr>
+<tr>
+<td>ip：</td>
+<td>主机ip</td>
+</tr>
+<tr>
+<td>attr：</td>
+<td>属性描述</td>
+</tr>
+<tr>
+<td>value：</td>
+<td>属性值</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nodes">nodes</h3>
+<p>显示node节点信息</p>
+<pre class="codehilite"><code>GET _cat/nodes?v
+
+ip          heap.percent ram.percent cpu load_1m load_5m load_15m node.role master name
+10.82.9.205           50          99   6    2.32    2.82     3.37 mdi       *      node01
+10.82.9.206           71          99   6    3.24    4.02     4.35 mdi       -      node02
+10.82.9.208           25          94   3    0.40    0.42     0.36 i         -      node04
+10.82.9.132           70          99   7    1.51    2.28     2.57 di        -      node11</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ip：</td>
+<td>node节点的IP</td>
+</tr>
+<tr>
+<td>heap.percent：</td>
+<td>堆内存占用百分比</td>
+</tr>
+<tr>
+<td>ram.percent：</td>
+<td>内存占用百分比</td>
+</tr>
+<tr>
+<td>cpu：</td>
+<td>CPU占用百分比</td>
+</tr>
+<tr>
+<td>load_1m：</td>
+<td>1分钟的系统负载</td>
+</tr>
+<tr>
+<td>load_5m：</td>
+<td>5分钟的系统负载</td>
+</tr>
+<tr>
+<td>load_15m：</td>
+<td>15分钟的系统负载</td>
+</tr>
+<tr>
+<td>node.role：</td>
+<td>node节点的角色</td>
+</tr>
+<tr>
+<td>master：</td>
+<td>是否是master节点</td>
+</tr>
+<tr>
+<td>name：</td>
+<td>节点名称</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pending_tasks">pending_tasks</h3>
+<p>显示正在等待的任务</p>
+<pre class="codehilite"><code>GET _cat/pending_tasks?v
+
+insertOrder timeInQueue priority source</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>insertOrder：</td>
+<td>任务插入顺序</td>
+</tr>
+<tr>
+<td>timeInQueue：</td>
+<td>任务排队了多长时间</td>
+</tr>
+<tr>
+<td>priority：</td>
+<td>任务优先级</td>
+</tr>
+<tr>
+<td>source：</td>
+<td>任务源</td>
+</tr>
+</tbody>
+</table>
+<h3 id="plugins">plugins</h3>
+<p>显示每个运行插件节点的视图</p>
+<pre class="codehilite"><code>GET _cat/plugins?v
+
+name component version</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name：</td>
+<td>节点名称</td>
+</tr>
+<tr>
+<td>component：</td>
+<td>插件名称</td>
+</tr>
+<tr>
+<td>version：</td>
+<td>插件版本</td>
+</tr>
+</tbody>
+</table>
+<h3 id="recovery">recovery</h3>
+<p>显示正在进行和先前完成的索引碎片恢复的视图</p>
+<pre class="codehilite"><code>GET _cat/recovery?v
+
+index                                shard time  type           stage source_host source_node target_host target_node repository snapshot files files_recovered files_percent files_total bytes      bytes_recovered bytes_percent bytes_total translog_ops translog_ops_recovered translog_ops_percent
+filebeat-docker-pay-2019.04.18       0     209ms peer           done  10.82.9.132 node11      10.82.9.207 node03      n/a        n/a      0     0               0.0%          0           0          0               0.0%          0           0            0                      100.0%</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>index：</td>
+<td>索引名称</td>
+</tr>
+<tr>
+<td>shard：</td>
+<td>分片名称</td>
+</tr>
+<tr>
+<td>time：</td>
+<td>恢复时间</td>
+</tr>
+<tr>
+<td>type：</td>
+<td>恢复类型</td>
+</tr>
+<tr>
+<td>stage：</td>
+<td>恢复阶段</td>
+</tr>
+<tr>
+<td>source_host：</td>
+<td>源主机</td>
+</tr>
+<tr>
+<td>source_node：</td>
+<td>源节点名称</td>
+</tr>
+<tr>
+<td>target_host：</td>
+<td>目标主机</td>
+</tr>
+<tr>
+<td>target_node：</td>
+<td>目标节点名称</td>
+</tr>
+<tr>
+<td>repository：</td>
+<td>仓库</td>
+</tr>
+<tr>
+<td>snapshot：</td>
+<td>快照</td>
+</tr>
+<tr>
+<td>files：</td>
+<td>要恢复的文件数</td>
+</tr>
+<tr>
+<td>files_recovered：</td>
+<td>已恢复的文件数</td>
+</tr>
+<tr>
+<td>files_percent：</td>
+<td>恢复文件百分比</td>
+</tr>
+<tr>
+<td>files_total：</td>
+<td>文件总数</td>
+</tr>
+<tr>
+<td>bytes：</td>
+<td>要恢复的字节数</td>
+</tr>
+<tr>
+<td>bytes_recovered：</td>
+<td>已恢复的字节数</td>
+</tr>
+<tr>
+<td>bytes_percent：</td>
+<td>恢复字节百分比</td>
+</tr>
+<tr>
+<td>bytes_total：</td>
+<td>字节总数</td>
+</tr>
+<tr>
+<td>translog_ops：</td>
+<td>要恢复的translog操作数</td>
+</tr>
+<tr>
+<td>translog_ops_recovered：</td>
+<td>已恢复的translog操作数</td>
+</tr>
+<tr>
+<td>translog_ops_percent：</td>
+<td>恢复的translog操作的百分比</td>
+</tr>
+</tbody>
+</table>
+<h3 id="segments">segments</h3>
+<p>显示碎片中的分段信息</p>
+<pre class="codehilite"><code>GET _cat/segments?v
+
+index                                shard prirep ip          segment generation docs.count docs.deleted     size size.memory committed searchable version compound
+filebeat-docker-pay-2019.04.18       0     r      10.82.9.207 _8cu         10830      19470            0   17.7mb       43546 true      true       7.2.1   false</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>index：</td>
+<td>索引名称</td>
+</tr>
+<tr>
+<td>shard：</td>
+<td>分片名称</td>
+</tr>
+<tr>
+<td>prirep：</td>
+<td>主分片还是副本分片</td>
+</tr>
+<tr>
+<td>ip：</td>
+<td>所在节点IP</td>
+</tr>
+<tr>
+<td>segment：</td>
+<td>segments段名</td>
+</tr>
+<tr>
+<td>generation：</td>
+<td>分段生成</td>
+</tr>
+<tr>
+<td>docs.count：</td>
+<td>段中的文档树</td>
+</tr>
+<tr>
+<td>docs.deleted：</td>
+<td>段中删除的文档数</td>
+</tr>
+<tr>
+<td>size：</td>
+<td>段大小，以字节为单位</td>
+</tr>
+<tr>
+<td>size.memory：</td>
+<td>段内存大小，以字节为单位</td>
+</tr>
+<tr>
+<td>committed：</td>
+<td>段是否已提交</td>
+</tr>
+<tr>
+<td>searchable：</td>
+<td>段是否可搜索</td>
+</tr>
+<tr>
+<td>version：</td>
+<td>版本</td>
+</tr>
+<tr>
+<td>compound：</td>
+<td>compound模式</td>
+</tr>
+</tbody>
+</table>
+<h3 id="shards">shards</h3>
+<pre class="codehilite"><code>GET _cat/shards?v
+
+index                                shard prirep state       docs    store ip          node
+mysql-slowlog-2019.03.14             4     r      STARTED     1381    4.6mb 10.82.9.205 node01
+mysql-slowlog-2019.03.14             4     p      STARTED     1381    4.5mb 10.82.9.206 node02</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>index：</td>
+<td>索引名称</td>
+</tr>
+<tr>
+<td>shard：</td>
+<td>分片序号</td>
+</tr>
+<tr>
+<td>prirep：</td>
+<td>分片类型，p表示是主分片，r表示是复制分片</td>
+</tr>
+<tr>
+<td>state：</td>
+<td>分片状态</td>
+</tr>
+<tr>
+<td>docs：</td>
+<td>该分片存放的文档数量</td>
+</tr>
+<tr>
+<td>store：</td>
+<td>该分片占用的存储空间大小</td>
+</tr>
+<tr>
+<td>ip：</td>
+<td>该分片所在的服务器ip</td>
+</tr>
+<tr>
+<td>node：</td>
+<td>该分片所在的节点名称</td>
+</tr>
+</tbody>
+</table>
+<h3 id="thread_pool">thread_pool</h3>
+<p>查看线程池信息</p>
+<pre class="codehilite"><code>GET _cat/thread_pool?v
+
+node_name name                active queue rejected
+node10    bulk                     1     0        4
+node10    fetch_shard_started      0     0        0</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>node_name：</td>
+<td>节点名称</td>
+</tr>
+<tr>
+<td>name：</td>
+<td>线程池名称</td>
+</tr>
+<tr>
+<td>active：</td>
+<td>活跃线程数量</td>
+</tr>
+<tr>
+<td>queue：</td>
+<td>当前队列中的任务数</td>
+</tr>
+<tr>
+<td>rejected：</td>
+<td>被拒绝的任务数</td>
+</tr>
+</tbody>
+</table>
+<p>有深度重实践的ELK相关系列文章推荐阅读：</p>
+<ul>
+<li><a href="/s/umH7ImZZVhdfgMdZ3Hz5fA">ELK构建MySQL慢日志收集平台详解</a></li>
+<li><a href="/s/CYUls7uczVwGzwptZOX0Dg">ELK日志系统之使用Rsyslog快速方便的收集Nginx日志</a></li>
+<li><a href="/s/7bygZNOr_mdCWpF9PrZcFg">ELK日志系统之通用应用程序日志接入方案</a></li>
+<li><a href="/s/qOw1a83pQImXiDRRZ0e9Aw">Logstash读取Kafka数据写入HDFS详解</a></li>
+<li><a href="/s/zLsLSqRrloM-8sFWNWcksg">ELK架构下利用Kafka Group实现Logstash的高可用</a></li>
+<li><a href="/s/H5QiZ10KSdUXFW5LdH79wA">Filebeat的Registry文件解读</a></li>
+<li><a href="/s/lvfN0sdRZ2VGKL1rMGaDXw">Elasticsearch Query DSL查询入门</a></li>
+</ul>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/elk/ELK-elasticsearch-cat-api.html">📅 2019-05-21</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Elk/">🏷️ Elk</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
