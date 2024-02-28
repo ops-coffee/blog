@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="WebSSH,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="堡垒机WebSSH进阶之实时监控和强制下线" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>堡垒机WebSSH进阶之实时监控和强制下线</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="堡垒机WebSSH进阶之实时监控和强制下线" />
+  <meta property="og:description" content="堡垒机WebSSH进阶之实时监控和强制下线" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">堡垒机WebSSH进阶之实时监控和强制下线</h1>
+
+        <blockquote>
+<p>这个功能我可以不用，但你不能没有</p>
+</blockquote>
+<p>前几篇文章实现了对<strong>物理机</strong>、<strong>虚拟机</strong>以及Kubernetes中<strong>Pod</strong>的WebSSH操作，可以方便的在web端对系统进行管理，同时也支持对所有操作进行<strong>全程录像</strong>，以方便后续的查看与审计</p>
+<p>这一篇文章接着实现一个看起来很炫酷，但实际上你可能不会经常使用，又必须要存在的功能：实时监控用户操作，在必要的时候将用户踢下线</p>
+<h2 id="_1">实时查看操作</h2>
+<p>django通过channels实现websocket中有一个非常重要的概念叫layer，layer可以将多个channel合并成一个group，我们可以发送消息给group，那么group里的每个channel都能收到</p>
+<p>关于Channel我有写过两篇文章结合<strong>聊天室</strong>和<strong>web端实现tail-f功能</strong>这两个案例来详细介绍，两篇文章是<a href="/s/hqaPrPS7w3D-9SeegQAB2Q">『Django使用Channels实现WebSocket--上篇』</a>和<a href="/s/r5SpyTjRl0jJeAuYE4Q_-Q">『Django使用Channels实现WebSocket--下篇』</a>，对上边提到的名词一脸懵逼的朋友可以通过这两篇文章来学习</p>
+<p>之前的WebSSH仅是单连接，只需要客户端和服务器建立长连接，然后处理指令就ok了，我们并没有启用channel的layer，实际上也可以看作是单channel，但要实现监控的功能，就需要将操作者和管理员(监控者)的多个channel合并在一起组成一个group，这样操作者的所有操作都可以发送给这个group，同处于这个group内监控者就能实时收到消息了，大概流程变化如下图所示</p>
+<p><img alt="" loading="lazy" src="/static/images/20191128.01.jpg" /></p>
+<p>接下来看下具体实现，以下所有代码均是在这篇文章的基础上进行说明讲解：<a href="https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-ssh-paramiko-stream">『Django实现WebSSH操作物理机或虚拟机』</a></p>
+<p>首先我们要启用layer，这个需要在settings.py中添加如下配置</p>
+<pre class="codehilite"><code>CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            &quot;hosts&quot;: [('ops-coffee.cn', 6379)],
+        },
+    },
+}</code></pre>
+
+
+<p>然后将处理WebSSH连接名为<code>SSHConsumer</code>的Consumer做改造，以使其支持layer，代码如下</p>
+<pre class="codehilite"><code>class SSHConsumer(WebsocketConsumer):
+    def connect(self):
+        # 格式化参数
+        ssh_connect_args = args(self.scope)
+
+        # 新建录像记录
+        self.host = Host.objects.get(host=ssh_connect_args.get('host'))
+        self.group_name = '%s-%s-%d' % (
+            ssh_connect_args.get('host'), ssh_connect_args.get('username'), time.time())
+
+        self.therecord = Record.objects.create(
+            host=self.host,
+            user=self.scope['user'],
+            group=self.group_name,
+            channel=self.channel_name,
+            cols=ssh_connect_args.get('cols'),
+            rows=ssh_connect_args.get('rows'),
+            is_connecting=True
+        )
+
+        async_to_sync(self.channel_layer.group_add)(
+            self.group_name,
+            self.channel_name
+        )
+
+        self.accept()
+
+        # WebSocket连接成功后，连接ssh
+        self.ssh = SSHBridge(self.therecord, websocket=self)
+        self.ssh.connect(**ssh_connect_args)
+
+    def disconnect(self, close_code):
+        # 将连接状态置为False
+        self.therecord.is_connecting = False
+        self.therecord.save()
+
+        async_to_sync(self.channel_layer.group_discard)(
+            self.group_name,
+            self.channel_name
+        )
+
+        self.ssh.close()
+
+    def receive(self, text_data=None):
+        text_data = json.loads(text_data)
+
+        if text_data.get('flag') == 'resize':
+            self.ssh.resize_pty(cols=text_data['cols'], rows=text_data['rows'])
+        else:
+            self.ssh.shell(data=text_data.get('data', ''))
+
+    def ssh_message(self, event):
+        self.send(text_data=json.dumps(
+            event['message']
+        ))</code></pre>
+
+
+<p>在connect连接建立时新建一条记录，存储主机、用户、<code>group_name</code>、<code>channel_name</code>以及初始窗口的<code>cols</code>、<code>rows</code>信息，同时标记<code>is_connecting</code>为True，这里的<code>group_name</code>命名与文章<a href="https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-monitor-asciinema-audit">『堡垒机的核心武器：WebSSH录像实现』</a>中我们定义的录像文件名规则一致，另外将这篇文章中新建录像记录的操作从<code>SSHBridge.record</code>中给转到了连接建立的connect中来，更合理也更方便</p>
+<p>在disconnect连接关闭时，将<code>is_connecting</code>标记为False，这样我们在前端页面上就可以根据这个标记来判断WebSSH是否正在连接，如果连接则展示<strong>监控</strong>和<strong>强制结束</strong>按钮，否则展示<strong>播放</strong>和<strong>命令提取</strong>按钮</p>
+<p>同时添加个ssh_message方法，用来接收发送到组的数据</p>
+<p>到这里，我们已经将WebSSH改造成了支持layer的模式，那么接下来就是要在用户点击监控的时候将用户与服务端建立的连接channel加入到上述group中</p>
+<p>新建一个名为<code>MonitorConsumer</code>的consumer，主要用来处理监控连接</p>
+<pre class="codehilite"><code>class MonitorConsumer(WebsocketConsumer):
+    def connect(self):
+        pk = self.scope['url_route']['kwargs'].get('id')
+        self.group_name = Record.objects.get(id=pk).group
+
+        async_to_sync(self.channel_layer.group_add)(
+            self.group_name,
+            self.channel_name
+        )
+
+        self.accept()
+
+        # 判断用户已经结束了这个webssh连接时就关闭监控
+        self.connecting = Record.objects.get(id=pk).is_connecting
+        if not self.connecting:
+            self.close()
+
+    def disconnect(self, close_code):
+        async_to_sync(self.channel_layer.group_discard)(
+            self.group_name,
+            self.channel_name
+        )
+
+        self.close()
+
+    def receive(self, text_data=None):
+        pass
+
+    def ssh_message(self, event):
+        self.send(text_data=json.dumps(
+            event['message']
+        ))</code></pre>
+
+
+<p>MonitorConsumer与SSHConsumer有两个地方不一样，其一是<code>SSHConsumer</code>中我们直接新生成了个<code>group_name</code>，而<code>MonitorConsumer</code>中需要在connect时获取到要监控的ID，然后通过ID拿到<code>group_name</code>，将monitor连接加入到这个group，其二是监控只能看，不能操作，所以也不需要前端发送数据的<code>term.on</code>和Consumer的<code>receive</code>处理数据</p>
+<p>最后需要修改<code>SSHBridge</code>方法中发送给websocket的指令，从<code>self.websocket.send</code>改为发送到group的模式，如下</p>
+<pre class="codehilite"><code>async_to_sync(self.websocket.channel_layer.group_send)(
+    self.group_name,
+    {
+        'type': 'ssh.message',
+        'message': message
+    }
+)</code></pre>
+
+
+<p>至此，监控功能就算完成了，什么？前端页面怎么弄？参考下之前的WebSSH界面，几乎可以完全复制</p>
+<h2 id="_2">踢用户下线</h2>
+<p>踢用户下线就比较简单了，逻辑是点击页面上的<strong>强制结束</strong>按钮，给后端view发送个请求带上这条记录的ID，view拿到ID后，通过ID找到group_name，然后向group发送<code>disconnect</code>消息，这个group里的所有channel在收到disconnect消息后就会断开连接了</p>
+<pre class="codehilite"><code>from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+
+async_to_sync(get_channel_layer().group_send)(
+    Record.objects.get(id=pk).group,
+    {'type': 'disconnect'}
+)</code></pre>
+
+
+<h2 id="_3">演示与说明</h2>
+<p><img alt="" loading="lazy" src="/static/images/20191128.gif" /></p>
+<p>所有实现环环相扣，单看这一篇文章可能云里雾里，不知所云，但你如果能把这个系列文章都给看下的话，我想实现个简单的堡垒机应该没有问题吧，更重要的是你会对websocket以及django中的Channels有着更加深刻的理解和运用</p>
+<p>原本只是想给我最牛X的<a href="/s/Nxh7mwPJPlbL3R9MdlkO_A">Alodi系统</a>添加个WebSSH，可以方便开发或测试在项目运行过程中出现问题时提供一个快速的调试途径，没想到这竟然写了一个系列，实现了这么多有趣好玩儿的功能</p>
+<p>最后想起了这句成语：有意栽花花不开，无心插柳柳成荫，真是奇妙~</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/webssh/jumpserver-web-terminal-monitor-and-disconnect.html">📅 2019-11-29</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/WebSSH/">🏷️ WebSSH</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
