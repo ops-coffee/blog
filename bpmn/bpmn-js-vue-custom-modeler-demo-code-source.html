@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="bpmn,js,Modeler,bpmn,js,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="最好用的流程编辑器bpmn-js系列之Modeler" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>最好用的流程编辑器bpmn-js系列之Modeler</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="最好用的流程编辑器bpmn-js系列之Modeler" />
+  <meta property="og:description" content="最好用的流程编辑器bpmn-js系列之Modeler" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">最好用的流程编辑器bpmn-js系列之Modeler</h1>
+
+        <blockquote>
+<p>最好用的流程编辑器bpmn-js系列文章</p>
+</blockquote>
+<p>上一篇文章<a href="/s/tI19HV9ktSoRHM4PYLA2hg">『最好用的流程编辑器bpmn-js系列之本地文件』</a>介绍了如何将本地的bpmn文件渲染到流程编辑器以及将编辑器内的流程作为图片或bpmn文件保存到本地，这篇文章将会介绍流程编辑界面的一些优化</p>
+<p>以下演示代码基于上一节搭建好的vue环境，使用bpmn版本为当前最新版7.3.0</p>
+<h2 id="730">7.3.0之后版本的回调写法</h2>
+<p>文章开头先说一下我在写本系列教程中除了阅读部分源码和论坛外，还参考了很多网上的优秀文章，在此感谢这些无私的贡献者，目前网上大多数教程都是基于7.3.0之前的版本写的，在使用<code>importXML</code>等方法时用了如下callback的方式</p>
+<pre class="codehilite"><code>modeler.importXML(xml, (err, warnings) =&gt; {
+  // ...
+});</code></pre>
+
+
+<p>但当将bpmn-js我升级到了7.3.0之后，再使用上边的方式就会出现报错</p>
+<pre class="codehilite"><code>Error: Passing callbacks to importXML is deprecated and will be removed in a future major release.</code></pre>
+
+
+<p>提示这种回调方式不建议使用，并且会在后续版本中移除，推荐如下这样的写法来代替</p>
+<pre class="codehilite"><code>try {
+    const result = await modeler.importXML(xml);
+    const { warnings } = result;
+    console.log(warnings);
+} catch (err) {
+    console.log(err.message, err.warnings);
+}</code></pre>
+
+
+<p>除了<code>importXML</code>方法外，其他需要使用上边这种写法的还有<code>importDefinitions</code>、<code>open</code>、<code>saveXML</code>、<code>saveSVG</code>、<code>createDiagram</code></p>
+<h2 id="_1">撤销恢复</h2>
+<p>在流程编辑的过程中，会出现操作撤销和恢复撤销的需求，bpmn-js提供了<code>redo</code>和<code>undo</code>方法来实现，使用比较简单</p>
+<p>先添加两个按钮</p>
+<pre class="codehilite"><code>&lt;li&gt;
+  &lt;a href=&quot;javascript:&quot; class=&quot;active&quot; @click=&quot;handlerUndo&quot; title=&quot;撤销操作&quot;&gt;撤销&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;
+  &lt;a href=&quot;javascript:&quot; class=&quot;active&quot; @click=&quot;handlerRedo&quot; title=&quot;恢复操作&quot;&gt;恢复&lt;/a&gt;
+&lt;/li&gt;</code></pre>
+
+
+<p>然后编写对应的方法</p>
+<pre class="codehilite"><code>handlerRedo() {
+  this.bpmnModeler.get(&quot;commandStack&quot;).redo();
+},
+handlerUndo() {
+  this.bpmnModeler.get(&quot;commandStack&quot;).undo();
+}</code></pre>
+
+
+<h2 id="_2">放大缩小</h2>
+<p>当流程比较复杂，元素较多的时候，我们需要放大流程，关注于流程的某一块编辑，这时候就需要用到bpmn-js提供的<code>zoom</code>方法来实现流程图的放大缩小</p>
+<p>添加三个按钮，分别为放大、缩小、还原</p>
+<pre class="codehilite"><code>&lt;li&gt;
+  &lt;a href=&quot;javascript:&quot; class=&quot;active&quot; @click=&quot;handlerZoom(0.1)&quot; title=&quot;放大&quot;&gt;放大&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;
+  &lt;a href=&quot;javascript:&quot; class=&quot;active&quot; @click=&quot;handlerZoom(-0.1)&quot; title=&quot;缩小&quot;&gt;缩小&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;
+  &lt;a href=&quot;javascript:&quot; class=&quot;active&quot; @click=&quot;handlerZoom(0)&quot; title=&quot;还原&quot;&gt;还原&lt;/a&gt;
+&lt;/li&gt;</code></pre>
+
+
+<p>然后编写对应的方法<code>handlerZoom</code>来控制放大和缩小，放大缩小实际上是通过<code>zoom</code>方法来实现的，<code>zoom</code>方法接收一个num参数，这个参数为显示的比例，默认为1，放大就是增加这个值，缩小就是减小这个值，还原就是将这个值重置为1</p>
+<pre class="codehilite"><code>handlerZoom(radio) {
+  const newScale = !radio ? 1.0 : this.scale + radio;
+  this.bpmnModeler.get(&quot;canvas&quot;).zoom(newScale);
+
+  this.scale = newScale;
+}</code></pre>
+
+
+<p>需要注意的是这里的<code>this.scale</code>就是默认值1，需要在data中定义这个变量</p>
+<h2 id="_3">快捷键</h2>
+<p>bpmn-js除了提供如上一些方法能方便操作画布元素外，还提供键盘快捷键的操作支持，可通过在创建BpmnModeler时添加<code>keybord</code>配置来实现</p>
+<pre class="codehilite"><code>this.bpmnModeler = new BpmnModeler({
+  container: canvas,
+  keyboard: {
+    bindTo: window
+  }
+});</code></pre>
+
+
+<p>目前bpmn-js支持如下一些快捷键操作</p>
+<ul>
+<li>ctrl + z : 撤销</li>
+<li>ctrl + y : 恢复</li>
+<li>ctrl + c : 复制</li>
+<li>ctrl + v : 粘贴</li>
+<li>ctrl + + : 放大</li>
+<li>ctrl + - : 缩小</li>
+<li>ctrl + 0 : 恢复</li>
+<li>ctrl + del : 删除</li>
+<li>ctrl + 箭头 : 上下左右移动</li>
+</ul>
+<p>除了键盘快捷键外，bpmn-js也支持ctrl+鼠标滚轮来控制放大缩小</p>
+<h2 id="_4">网格背景</h2>
+<p>许多流程图软件的背景都是网格状，bpmn-js如何添加网格背景呢？修改相应class的css即可</p>
+<pre class="codehilite"><code>.containers {
+  background: white;
+  overflow: auto;
+  background-image: linear-gradient(
+      90deg,
+      rgba(220, 220, 220, 0.5) 6%,
+      transparent 0
+    ),
+    linear-gradient(rgba(192, 192, 192, 0.5) 6%, transparent 0);
+  background-size: 12px 12px;
+  width: 100%;
+  height: calc(100vh - 82px);
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}</code></pre>
+
+
+<h2 id="_5">功能禁用</h2>
+<p>如果你想修改或禁用bpmn-js的某些默认功能，例如你不想要左侧的工具栏Palette，则可以通过<code>additionalModules</code>选项来实现，<code>additionalModules</code>允许你使用自定义模块来修改或替换现有功能</p>
+<pre class="codehilite"><code>this.bpmnModeler = new CustomModeler({
+    container: canvas,
+    additionalModules: [
+      {
+         // 禁用滚轮滚动
+        zoomScroll: [&quot;value&quot;, &quot;&quot;],
+        // 禁止拖动线
+        bendpoints: [&quot;value&quot;, &quot;&quot;],
+        // 禁用左侧面板
+        paletteProvider: [&quot;value&quot;, &quot;&quot;],
+        // 禁止点击节点出现contextPad
+        contextPadProvider: [&quot;value&quot;, &quot;&quot;],
+        // 禁止双击节点出现label编辑框
+        labelEditingProvider: [&quot;value&quot;, &quot;&quot;]
+      }
+    ]
+});</code></pre>
+
+
+<p><a href="/s/nIqZtauj16pbq3i05LSUCA">bpmn-js基本使用</a>文章中我们讲到了bpmn-js有两个模式Modeler编辑模式和Vierer预览模式，实际上有很多小伙伴并不使用bpmn-js提供的Viewer模式，而是通过禁用以上这些组件来达到类似Viewer展示的模式</p>
+<h2 id="_6">监听绑定</h2>
+<p>很多时候我们需要监听用户的操作并给予相应的反馈，例如在<a href="/s/tI19HV9ktSoRHM4PYLA2hg">bpmn-js本地文件</a>文章中关于监听变化下载文件的介绍中，我们需要监听到流程的变化，并实时将数据补充到a标签中，用到了如下代码</p>
+<pre class="codehilite"><code>this.bpmnModeler.on(&quot;commandStack.changed&quot;, opscoffee)</code></pre>
+
+
+<p>这里的<code>bpmnModeler.on</code>就是个监听方法，能监听到流程的变化，除此之外bpmn-js还提供了<code>eventBus</code>来帮助我们做事件监听，用法如下</p>
+<pre class="codehilite"><code>export default {
+  ...
+  methods: {
+    init() {
+      const canvas = this.$refs.canvas;
+      this.bpmnModeler = new BpmnModeler({
+        container: canvas
+      });
+
+      this.createNewDiagram();
+    },
+    async createNewDiagram() {
+      try {
+        const result = await this.bpmnModeler.importXML(this.xmlStr);
+        const { warnings } = result;
+        console.log(warnings);
+
+        this.success();
+      } catch (err) {
+        console.log(err.message, err.warnings);
+      }
+    },
+    success() {
+      this.addEventBusListener();
+    },
+    addEventBusListener() {
+      const that = this;
+      const eventBus = this.bpmnModeler.get(&quot;eventBus&quot;);
+
+      eventBus.on(&quot;element.click&quot;, function(e) {
+        console.log(&quot;eventBusListener&quot;, e);
+      });
+    }
+  }
+};
+&lt;/script&gt;</code></pre>
+
+
+<p>在<code>createNewDiagram</code>渲染完成后调用<code>success</code>方法，<code>success</code>中添加了<code>addEventBusListener</code>监听方法，然后通过<code>eventBus.on</code>来实现对事件的监听，例如这里监听了<code>element.click</code>点击事件</p>
+<p>监听到事件后就很方便的进行后续的操作了，例如我想判断如果用户点击了<code>UserTask任务</code>，那么就打印任务id、type、name，则可以这样实现</p>
+<pre class="codehilite"><code>addEventBusListener() {
+  const that = this;
+  const eventBus = this.bpmnModeler.get(&quot;eventBus&quot;);
+
+  eventBus.on(&quot;element.click&quot;, function(e) {
+    that.elementClick(e);
+  });
+},
+elementClick(e) {
+  if (e.element.businessObject.$type === &quot;bpmn:UserTask&quot;) {
+    console.log(
+      &quot;这是一个用户节点&quot;,
+      e.element.businessObject.id,
+      e.element.businessObject.$type,
+      e.element.businessObject.name
+    );
+  }
+}</code></pre>
+
+
+<h2 id="_7">事件列表</h2>
+<p>那么究竟有哪些事件类型呢？我们可以通过<code>bpmnModeler.get("eventBus")</code>方法来获取，常用的有如下这些</p>
+<ul>
+<li>canvas.destroy</li>
+<li>canvas.init</li>
+<li>canvas.viewbox.changed</li>
+<li>canvas.viewbox.changing</li>
+<li>connect.end</li>
+<li>connection.added</li>
+<li>connection.changed</li>
+<li>connection.remove</li>
+<li>connection.removed</li>
+<li>create.end</li>
+<li>diagram.clear</li>
+<li>diagram.destroy</li>
+<li>diagram.init</li>
+<li>element.changed</li>
+<li>element.click</li>
+<li>element.hover</li>
+<li>element.marker.update</li>
+<li>element.out</li>
+<li>elements.changed</li>
+<li>interactionEvents.createHit</li>
+<li>interactionEvents.updateHit</li>
+<li>render.connection</li>
+<li>render.getConnectionPath</li>
+<li>render.getShapePath</li>
+<li>render.shape</li>
+<li>selection.changed</li>
+<li>shape.added</li>
+<li>shape.changed</li>
+<li>shape.move.end</li>
+<li>shape.remove</li>
+<li>shape.removed</li>
+</ul>
+<h2 id="_8">获取节点</h2>
+<p>当我们需要获取流程中的节点时，可以使用如下方法来获取全部节点或检索指定类型的节点</p>
+<h3 id="_9">获取全部节点</h3>
+<pre class="codehilite"><code>bpmnModeler.get(&quot;elementRegistry&quot;).getAll()</code></pre>
+
+
+<h3 id="id">获取指定ID节点</h3>
+<pre class="codehilite"><code>bpmnModeler.get(&quot;elementRegistry&quot;).get(ID)</code></pre>
+
+
+<h2 id="_10">修改节点</h2>
+<p>通过modeling的<code>updateProperties</code>方法可以修改节点属性，例如这里修改节点<code>name</code>为<code>ops-coffee.cn</code></p>
+<pre class="codehilite"><code>const modeling = this.bpmnModeler.get(&quot;modeling&quot;);
+
+const element = this.bpmnModeler
+  .get(&quot;elementRegistry&quot;)
+  .get(&quot;Activity_1w1vj9r&quot;);
+
+modeling.updateProperties(element, {
+  name: &quot;ops-coffee.cn&quot;
+});</code></pre>
+
+
+<h2 id="_11">写在最后</h2>
+<p>接触bpmn-js不久，且第一次用VUE，边学边写，文章难免出错，各位多多包含。想要打造一个好用的适合自己的流程编辑器，需要了解的内容比较多，bpmn-js会分多篇文章来介绍，下一篇介绍bpmn-js的Viewer模式下的节点颜色修改、鼠标拖动等内容，欢迎关注</p>
+<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.cn">https://bpmn.ops-coffee.cn</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/bpmn/bpmn-js-vue-custom-modeler-demo-code-source.html">📅 2020-09-14</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/BPMN/">🏷️ BPMN</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
