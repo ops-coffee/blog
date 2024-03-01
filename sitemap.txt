@@ -153,7 +153,7 @@ https://blog.ops-coffee.cn/s/6YAC_Lqw3jB0LZlJTx4A2g
 https://blog.ops-coffee.cn/s/xehCT6PMS90dvrf96E-Fzw
 https://blog.ops-coffee.cn/s/omDL4c08_M1oyuR_GSjOLw
 https://blog.ops-coffee.cn/s/lJawB7Yb5O11qczx9aeqRQ
-https://blog.ops-coffee.cn/bpmn/bpmn-demo-source-code
+https://blog.ops-coffee.cn/bpmn/bpmn-js-demo-source-code
 https://blog.ops-coffee.cn/s/h3lpkEHJ4-BWEfrHNQsFCQ
 https://blog.ops-coffee.cn/s/V8pEL8ylhUKIA8uQxwks2w
 https://blog.ops-coffee.cn/s/FV379mGIboVYky73kcoMMQ
@@ -164,9 +164,9 @@ https://blog.ops-coffee.cn/t/all-emoji-emoticon
 https://blog.ops-coffee.cn/t/eastmoney-fund-free-open-api
 https://blog.ops-coffee.cn/t/nginx-upstream-github-pages
 https://blog.ops-coffee.cn/t/prod-redis-config-example
-https://blog.ops-coffee.cn/s/U3ROqNtzx6MZvhnu2Iqw2A
+https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-contextpad-demo-code-source
 https://blog.ops-coffee.cn/bpmn/bpmn-js-modeling-api-cn
-https://blog.ops-coffee.cn/s/oa8NZUnjjg-B2g-4gRSJZQ
+https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-palette-demo-code-source
 https://blog.ops-coffee.cn/s/fA9_YUuKAyKSNPwxbGxmkQ
 https://blog.ops-coffee.cn/s/JpnxTf-Z9vkKrwl8nXJljQ
 https://blog.ops-coffee.cn/s/Aq2FiCLTsqIBX-RpARzM_w
@@ -174,10 +174,10 @@ https://blog.ops-coffee.cn/t/python-list-skill
 https://blog.ops-coffee.cn/s/BEC-HtooUNFU9_JakRhjhw
 https://blog.ops-coffee.cn/s/AXOUz0v99OfpHrURdei9vw
 https://blog.ops-coffee.cn/s/3xEgejp6zOswWx92Giqxbg
-https://blog.ops-coffee.cn/s/BTa7iJs_vs-9cHb7Jp7woA
-https://blog.ops-coffee.cn/s/ZYFo4hqxPKlu6QTb-vg4ig
-https://blog.ops-coffee.cn/s/tI19HV9ktSoRHM4PYLA2hg
-https://blog.ops-coffee.cn/s/nIqZtauj16pbq3i05LSUCA
+https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-viewer-demo-code-source
+https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-modeler-demo-code-source
+https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-local-file-demo-code-source
+https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-base-usage-demo-code-source
 https://blog.ops-coffee.cn/s/mzeUx4mnXKYiwZwDwHkBoQ
 https://blog.ops-coffee.cn/t/prod-iptables-config-example
 https://blog.ops-coffee.cn/t/prod-ssh-config-example
