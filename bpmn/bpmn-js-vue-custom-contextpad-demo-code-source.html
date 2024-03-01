@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="bpmn,js,ContextPad,BPMN,bpmn,js,ContextPad,Vue,Store,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="最好用的流程编辑器bpmn-js系列之ContextPad" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>最好用的流程编辑器bpmn-js系列之ContextPad</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="最好用的流程编辑器bpmn-js系列之ContextPad" />
+  <meta property="og:description" content="最好用的流程编辑器bpmn-js系列之ContextPad" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">最好用的流程编辑器bpmn-js系列之ContextPad</h1>
+
+        <blockquote>
+<p>最好用的流程编辑器bpmn-js系列文章</p>
+</blockquote>
+<p>上一篇文章<a href="/s/oa8NZUnjjg-B2g-4gRSJZQ">『最好用的流程编辑器bpmn-js系列之Palette』</a>介绍了modeler模式下如何自定义左侧工具栏Palette，这篇文章将会介绍如果自定义ContextPad</p>
+<p>以下演示代码基于上一节搭建好的vue环境，使用bpmn版本为当前最新版7.3.0</p>
+<h2 id="contextpad">自定义ContextPad</h2>
+<p>自定义ContextPad与自定义Palette一样，有两种方式可以选择，第一种就是基于默认的ContextPad来修改，第二种就是完全写个新的ContextPad来替代默认的ContextPad，同样的这里就下完全自定义ContextPad，因为与自定义Palette高度相似，这里以具体代码为主</p>
+<p>1.在custom目录下新建<code>CustomContextPadProvider.js</code>文件，内容如下</p>
+<pre class="codehilite"><code>import { assign } from &quot;min-dash&quot;;
+
+export default function ContextPadProvider(
+  config,
+  injector,
+  contextPad,
+  modeling,
+  elementFactory,
+  connect,
+  create,
+  translate
+) {
+  this.modeling = modeling;
+  this.elementFactory = elementFactory;
+  this.connect = connect;
+  this.create = create;
+  this.translate = translate;
+  config = config || {};
+
+  if (config.autoPlace !== false) {
+    this.autoPlace = injector.get(&quot;autoPlace&quot;, false);
+  }
+
+  contextPad.registerProvider(this);
+}
+
+ContextPadProvider.$inject = [
+  &quot;config.contextPad&quot;,
+  &quot;injector&quot;,
+  &quot;contextPad&quot;,
+  &quot;modeling&quot;,
+  &quot;elementFactory&quot;,
+  &quot;connect&quot;,
+  &quot;create&quot;,
+  &quot;translate&quot;
+];
+
+ContextPadProvider.prototype.getContextPadEntries = function (element) {
+  const {
+    autoPlace,
+    create,
+    elementFactory,
+    translate,
+    modeling,
+    connect
+  } = this;
+
+  function appendAction(type, className, title, options) {
+    function appendStart(event, element) {
+      var shape = elementFactory.createShape(assign({ type: type }, options));
+      create.start(event, shape, {
+        source: element
+      });
+    }
+
+    var append = autoPlace
+      ? function (event, element) {
+        var shape = elementFactory.createShape(
+          assign({ type: type }, options)
+        );
+        autoPlace.append(element, shape);
+      }
+      : appendStart;
+
+    return {
+      group: &quot;model&quot;,
+      className: className,
+      title: title,
+      action: {
+        dragstart: appendStart,
+        click: append
+      }
+    };
+  }
+
+  function removeElement(e) {
+    modeling.removeElements([element]);
+  }
+
+  var actions = {};
+
+  if (
+    element.type === &quot;bpmn:UserTask&quot; ||
+    element.type === &quot;bpmn:SequenceFlow&quot;
+  ) {
+    assign(actions, {
+      edit: {
+        group: &quot;edit&quot;,
+        className: &quot;bpmn-icon-business-rule&quot;,
+        title: translate(&quot;属性&quot;),
+        action: {}
+      }
+    });
+  }
+
+  assign(actions, {
+    delete: {
+      group: &quot;edit&quot;,
+      className: &quot;bpmn-icon-trash&quot;,
+      title: translate(&quot;Remove&quot;),
+      action: {
+        click: removeElement
+      }
+    }
+  });
+
+  return actions;
+};</code></pre>
+
+
+<p>主要思路依然是构建最终输出的字段数据，可以根据不同类型的shape添加不同的ContextPad，以上代码就是默认所有shape都有删除按钮，然后给<code>UserTask</code>类型的shape和连线都添加了一个名为“属性”的按钮</p>
+<p>同样的这里所需要的shape数据也可以参考上篇文章最后给出的那两个Github源码链接</p>
+<p>2.在<code>custom/index.js</code>文件中添加如下内容将自定义的ContextPad导出</p>
+<pre class="codehilite"><code>import CustomContextPadProvider from &quot;./CustomContextPadProvider&quot;;
+
+export default {
+  __init__: [&quot;contextPadProvider&quot;],
+  contextPadProvider: [&quot;type&quot;, CustomContextPadProvider]
+};</code></pre>
+
+
+<p>这里只有自定义<code>ContextPad</code>的配置，如果你是想在自定义<code>Palette</code>的基础上再自定义<code>ContextPad</code>的话，将以上代码与原本的内容整合即可</p>
+<p>3.在<code>customModeler/index.js</code>文件中编写自定义的<code>CustomModeler</code>类</p>
+<pre class="codehilite"><code>import inherits from &quot;inherits&quot;;
+
+import Viewer from &quot;bpmn-js/lib/Viewer&quot;;
+
+import ZoomScrollModule from &quot;diagram-js/lib/navigation/zoomscroll&quot;;
+import MoveCanvasModule from &quot;diagram-js/lib/navigation/movecanvas&quot;;
+
+function CustomViewer(options) {
+  Viewer.call(this, options);
+}
+
+inherits(CustomViewer, Viewer);
+
+CustomViewer.prototype._modules = [].concat(Viewer.prototype._modules, [
+  ZoomScrollModule,
+  MoveCanvasModule
+]);
+
+export { CustomViewer };</code></pre>
+
+
+<p>同样的如果你想在自定义<code>Palette</code>的基础上再自定义<code>ContextPad</code>，则在之前的代码基础上与以上代码整合</p>
+<p>4.在页面上引用自定义的<code>CustomModeler</code>以替代原本引用的<code>BpmnModeler</code>类，这样就能用到我们自定义的Palette啦</p>
+<pre class="codehilite"><code>import { xmlStr } from &quot;../mock/xmlStrPreview&quot;;
+import { CustomModeler } from &quot;../components/customBpmn&quot;;
+
+export default {
+  ...
+  methods: {
+    init() {
+      const canvas = this.$refs.canvas;
+      this.bpmnModeler = new CustomModeler({
+        container: canvas
+      });
+      this.createNewDiagram();
+    },
+    async createNewDiagram() {
+      try {
+        const result = await this.bpmnModeler.importXML(xmlStr);
+        const { warnings } = result;
+        console.log(warnings);
+      } catch (err) {
+        console.log(err.message, err.warnings);
+      }
+    }
+  }
+};</code></pre>
+
+
+<p>最终效果如下：</p>
+<p><img alt="" loading="lazy" src="/static/images/20201111.01.png" /></p>
+<h2 id="_1">点击处理</h2>
+<p>bpmn.js给节点关联属性是通过右侧面板<code>Properties-panel</code>来实现的，其核心是对xml文件的修改，但我们并没有这样用，而是直接给每个节点关联一个表单，这个节点的所有数据都保存在这个表单里，后台单独存于数据库，这里所说的节点包含图形shape和连线SequenceFlow等流程图里的元素，节点ID与表单数据一一对应</p>
+<p>节点要关联表单数据，就需要用到我们上边添加的名为“属性”的按钮，当点击“属性”按钮时出现表单，因为不同类型的节点需要弹出不同的表单，所以在点击按钮之后主程序也需要知道点击的节点类型等数据，这就涉及到了组件间的数据传递，试了很多方法都不行，最终只能借助于借助于<code>store</code>来实现了，具体代码如下</p>
+<p>1.在store目录下新建modules目录，modules目录下创建模块化文件<code>bpmn.js</code>，目录结构如下</p>
+<p><img alt="" loading="lazy" src="/static/images/20201111.02.png" /></p>
+<p>2.在<code>bpmn.js</code>中编写如下代码</p>
+<pre class="codehilite"><code>const bpmn = {
+  state: {
+    nodeVisible: false,
+    nodeInfo: {}
+  },
+  mutations: {
+    TOGGLENODEVISIBLE: (state, visible) =&gt; {
+      state.nodeVisible = visible;
+    },
+    SETNODEINFO: (state, info) =&gt; {
+      state.nodeInfo = info;
+    }
+  },
+  actions: {}
+};
+
+export default bpmn;</code></pre>
+
+
+<p>想要了解以上代码的意思，我们需要先了解下Vuex的基本思想：当我们在页面上点击了一个按钮，它会触发一个<code>action</code>，<code>action</code>随后会执行一个<code>mutation</code>，<code>mutation</code>会去改变<code>state</code>，当<code>state</code>改变后页面就能根据<code>state</code>来进行相应的处理了</p>
+<p>然后再来看上边的代码，用到了Vuex基本思想里边的<code>state</code>和<code>mutations</code>，其中<code>state</code>为单一状态树，简单理解为我们定义的变量，全局变量，其他组件可以获取的到的变量，而想要修改<code>state</code>里定义的变量就必须通过<code>mutations</code>来实现，<code>mutations</code>就定义了两个事件来对应修改state里的两个变量</p>
+<p><code>state</code>里定义的两个变量分别为用来记录表单展示状态的<code>nodeVisible</code>以及点击节点信息的<code>nodeInfo</code>，默认情况下<code>nodeVisible</code>为false，表示表单为隐藏状态，当点击ContextPad的的“属性”按钮时修改为true，展示表单，同时会把点击的节点信息赋予<code>nodeInfo</code>，这个后边代码会有实现</p>
+<p>想要定义的store生效还需要以下两步进行store挂载及引用</p>
+<p>3.<code>store/index.js</code>中编写如下代码挂载store</p>
+<pre class="codehilite"><code>import Vue from &quot;vue&quot;;
+import Vuex from &quot;vuex&quot;;
+
+import bpmn from &quot;./modules/bpmn&quot;;
+
+Vue.use(Vuex);
+
+export default new Vuex.Store({
+  state: {},
+  mutations: {},
+  actions: {},
+  modules: { bpmn }
+});</code></pre>
+
+
+<p>4.在<code>main.js</code>中引入store</p>
+<pre class="codehilite"><code>import store from &quot;./store&quot;;
+
+new Vue({
+  store
+}).$mount(&quot;#app&quot;);</code></pre>
+
+
+<p>以上就定义好了store，接下来就是使用store了，首先需要处理的是，当点击ContextPad里的“属性”按钮时，修改store里<code>nodeVisible</code>和<code>nodeInfo</code>值</p>
+<p>5.修改<code>CustomContextPadProvider.js</code>文件，给action添加<code>click</code>方法，<code>click</code>方法修改store里定义的state</p>
+<pre class="codehilite"><code>function clickElement(e) {
+  store.commit(&quot;SETNODEINFO&quot;, element);
+  store.commit(&quot;TOGGLENODEVISIBLE&quot;, true);
+}
+
+if (
+  element.type === &quot;bpmn:UserTask&quot; ||
+  element.type === &quot;bpmn:SequenceFlow&quot;
+) {
+  assign(actions, {
+    edit: {
+      group: &quot;edit&quot;,
+      className: &quot;bpmn-icon-business-rule&quot;,
+      title: translate(&quot;属性&quot;),
+      action: {
+        click: clickElement
+      }
+    }
+  });
+}</code></pre>
+
+
+<p>对store的修改只能通过<code>store.commit</code>来实现</p>
+<p>6.最后在页面中就可以借助<code>computed</code>和<code>watch</code>来实现对store里数据的获取以及对页面的处理</p>
+<pre class="codehilite"><code>export default {
+  ...
+  data() {
+    return {
+      userTask: false,
+      scriptTask: false,
+      sequenceFlow: &quot;&quot;,
+      formData: {
+        name: &quot;&quot;,
+        type: &quot;&quot;
+      }
+    };
+  },
+  computed: {
+    task: {
+      get: function() {
+        const that = this;
+        const element = this.$store.state.bpmn.nodeInfo;
+
+        if (element.businessObject) {
+          if (element.businessObject.$type === &quot;bpmn:UserTask&quot;) {
+            that.formData.type = &quot;用户任务&quot;;
+            that.formData.name = element.businessObject.name;
+            that.userTask = this.$store.state.bpmn.nodeVisible;
+          }
+
+          if (element.businessObject.$type === &quot;bpmn:SequenceFlow&quot;) {
+            that.sequenceFlow = element.businessObject.name;
+            that.scriptTask = this.$store.state.bpmn.nodeVisible;
+          }
+        }
+
+        return false;
+      },
+      set: function(val) {
+        this.$store.state.bpmn.nodeVisible = val;
+      }
+    }
+  },
+  watch: {
+    task(val) {}
+  }
+};</code></pre>
+
+
+<p>最终实现的效果如下</p>
+<p><img alt="" loading="lazy" src="/static/images/20201111.03.png" /></p>
+<p>但这里有一个问题，就是当我在表单里修改了节点名称，也就是节点的name属性时不会同步到左侧的流程图节点上，那该如何实现同步呢？也很简单，修改下watch即可</p>
+<pre class="codehilite"><code>watch: {
+  task(val) {},
+  userTask(val) {
+    this.$store.state.bpmn.nodeVisible = val;
+  },
+  sequenceFlow(val) {
+    const element = this.$store.state.bpmn.nodeInfo;
+    const modeling = this.bpmnModeler.get(&quot;modeling&quot;);
+    modeling.updateLabel(element, val);
+  },
+  &quot;formData.name&quot;: {
+    handler(val, old) {
+      const element = this.$store.state.bpmn.nodeInfo;
+      const modeling = this.bpmnModeler.get(&quot;modeling&quot;);
+      modeling.updateLabel(element, val);
+    },
+    deep: true
+  }
+}</code></pre>
+
+
+<p>获取store里的值然后通过<code>modeling.updateLabel</code>方法来更新节点的名称，至此问题完美解决</p>
+<h2 id="_2">写在最后</h2>
+<p>接触bpmn-js不久，且第一次用VUE，边学边写，文章难免出错，各位多多包含。bmpn系列的文章已经写了六篇，至此我们的使用已经基本到此，感谢各位小伙伴的支持。除了这几篇文章外，我还创建了BPMN的主页：<a href="https://blog.ops-coffee.cn/bpmn">https://blog.ops-coffee.cn/bpmn</a>内容更为丰富，包含了一些这系列文章中没有的内容，例如API列表、ICON列表等，欢迎查看</p>
+<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.cn">https://bpmn.ops-coffee.cn</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/bpmn/bpmn-js-vue-custom-contextpad-demo-code-source.html">📅 2020-11-11</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/BPMN/">🏷️ BPMN</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
