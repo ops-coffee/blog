@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="bpmn,js,Viewer,bpmn,js,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="最好用的流程编辑器bpmn-js系列之Viewer" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>最好用的流程编辑器bpmn-js系列之Viewer</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="最好用的流程编辑器bpmn-js系列之Viewer" />
+  <meta property="og:description" content="最好用的流程编辑器bpmn-js系列之Viewer" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">最好用的流程编辑器bpmn-js系列之Viewer</h1>
+
+        <blockquote>
+<p>最好用的流程编辑器bpmn-js系列文章</p>
+</blockquote>
+<p>上一篇文章<a href="/s/ZYFo4hqxPKlu6QTb-vg4ig">『最好用的流程编辑器bpmn-js系列之Modeler』</a>介绍了bpmn-js的modeler模式下的一些开发配置，这篇文章将会介绍Viewer模式的使用</p>
+<p>以下演示代码基于上一节搭建好的vue环境，使用bpmn版本为当前最新版7.3.0</p>
+<h2 id="_1">基本使用</h2>
+<p>Viewer的使用与Modeler并无太大区别，示例代码如下</p>
+<pre class="codehilite"><code>&lt;template&gt;
+  &lt;div class=&quot;containers&quot;&gt;
+    &lt;div class=&quot;canvas&quot; ref=&quot;canvas&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+import BpmnViewer from &quot;bpmn-js/lib/Viewer&quot;;
+import { xmlStr } from &quot;../mock/xmlStr&quot;;
+
+export default {
+  name: &quot;ops-coffee&quot;,
+  mounted() {
+    this.init();
+  },
+  data() {
+    return {
+      bpmnViewer: null,
+      container: null,
+      canvas: null
+    };
+  },
+  methods: {
+    init() {
+      const canvas = this.$refs.canvas;
+      this.bpmnViewer = new BpmnViewer({
+        container: canvas
+      });
+
+      this.createNewDiagram();
+    },
+    async createNewDiagram() {
+      try {
+        const result = await this.bpmnViewer.importXML(xmlStr);
+        const { warnings } = result;
+        console.log(warnings);
+      } catch (err) {
+        console.log(err.message, err.warnings);
+      }
+    }
+  }
+};
+&lt;/script&gt;</code></pre>
+
+
+<h2 id="_2">屏幕自适应</h2>
+<p>流程图渲染完成后可能会出现集中在画布左侧/右侧等情形，导致整体不够美观，通过<code>zoom</code>可以配置自适应画布，保证渲染图位于画布的中间位置</p>
+<pre class="codehilite"><code>const canvas = this.bpmnViewer.get(&quot;canvas&quot;);
+canvas.zoom(&quot;fit-viewport&quot;, &quot;auto&quot;);</code></pre>
+
+
+<h2 id="_3">自定义颜色设置</h2>
+<p>bpmn-js提供了三种修改颜色的方式，如果你想在Modeler（编辑）模式下修改颜色，推荐使用<code>setColor</code>方式，而Viewer（预览）模式则只能通过另外两种<code>overlay</code>和<code>Marker</code>方式来实现，以下为bpmn-js提供的三种修改颜色的方法</p>
+<h3 id="overlay">overlay</h3>
+<p>Viewer模式下可用</p>
+<p>先添加CSS</p>
+<pre class="codehilite"><code>.highlight-overlay {
+    background-color: green;
+    opacity: 0.4;
+    pointer-events: none;
+}</code></pre>
+
+
+<p>然后修改节点颜色</p>
+<pre class="codehilite"><code>var overlays = viewer.get('overlays'),
+    elementRegistry = viewer.get('elementRegistry');
+
+var shape = elementRegistry.get('Activity_0djl6l0');
+
+var $overlayHtml = $('&lt;div class=&quot;highlight-overlay&quot;&gt;')
+                        .css({
+                          width: shape.width,
+                          height: shape.height
+                        });
+
+overlays.add('Activity_0djl6l0', {
+  position: {
+    top: 0,
+    left: 0
+  },
+  html: $overlayHtml
+});</code></pre>
+
+
+<h3 id="marker">Marker +</h3>
+<p>Viewer模式下可用</p>
+<p>先添加CSS</p>
+<pre class="codehilite"><code>.highlight .djs-visual &gt; :nth-child(1) {
+    stroke: green !important;
+    fill: rgba(0, 80, 0, 0.4) !important;
+}</code></pre>
+
+
+<p>然后修改节点颜色</p>
+<pre class="codehilite"><code>var canvas = viewer.get('canvas');
+canvas.addMarker('Activity_0djl6l0', 'highlight');</code></pre>
+
+
+<h3 id="setcolor">setColor</h3>
+<p>Modeler模式下可用</p>
+<pre class="codehilite"><code>bpmnModeler.importXML(diagramXML, function(err) {
+    var elementRegistry = bpmnModeler.get('elementRegistry');
+    var elementToColor = elementRegistry.get('Flow_1xnf3iv');
+
+    var modeling = bpmnModeler.get('modeling');
+    modeling.setColor([ elementToColor ], {
+      stroke: 'green',
+      fill: 'rgba(0, 80, 0, 0.4)'
+    });
+});</code></pre>
+
+
+<h3 id="_4">我们的使用示例</h3>
+<p>Viewer预览模式下，后端传递过来的xml数据里包含了<code>run_state</code>的标记，标识当前节点的状态，需要根据这个状态给节点渲染上对应的颜色</p>
+<p>xml文件大概如下，截取了包含<code>run_state</code>的一段</p>
+<pre class="codehilite"><code>&lt;sequenceFlow id=&quot;Flow_1d9q74f&quot; sourceRef=&quot;Activity_1eq68tk&quot; targetRef=&quot;Activity_0o8b5cf&quot; run_state=&quot;3&quot; /&gt;
+&lt;scriptTask id=&quot;Activity_0o8b5cf&quot; name=&quot;脚本节点&quot; run_state=&quot;5&quot;&gt;
+  &lt;incoming&gt;Flow_1d9q74f&lt;/incoming&gt;
+  &lt;outgoing&gt;Flow_0b23d51&lt;/outgoing&gt;
+&lt;/scriptTask&gt;
+&lt;sequenceFlow id=&quot;Flow_0b23d51&quot; sourceRef=&quot;Activity_0o8b5cf&quot; targetRef=&quot;Event_0idqhms&quot; run_state=&quot;4&quot; /&gt;
+&lt;intermediateCatchEvent id=&quot;Event_0idqhms&quot; name=&quot;定时&quot; run_state=&quot;6&quot;&gt;
+  &lt;incoming&gt;Flow_0b23d51&lt;/incoming&gt;
+  &lt;outgoing&gt;Flow_17tttbw&lt;/outgoing&gt;
+  &lt;timerEventDefinition id=&quot;TimerEventDefinition_1w7apdl&quot; /&gt;
+&lt;/intermediateCatchEvent&gt;
+&lt;sequenceFlow id=&quot;Flow_17tttbw&quot; sourceRef=&quot;Event_0idqhms&quot; targetRef=&quot;Activity_0qkzn5l&quot; run_state=&quot;0&quot; /&gt;
+&lt;manualTask id=&quot;Activity_0qkzn5l&quot; name=&quot;手动节点&quot; run_state=&quot;7&quot;&gt;
+  &lt;incoming&gt;Flow_17tttbw&lt;/incoming&gt;
+  &lt;outgoing&gt;Flow_0h1ee5i&lt;/outgoing&gt;
+&lt;/manualTask&gt;</code></pre>
+
+
+<p>在页面加载完xml后，调用setColor的方法来设置颜色</p>
+<pre class="codehilite"><code>setColor() {
+  // access viewer components
+  const canvas = this.bpmnViewer.get(&quot;canvas&quot;);
+
+  // 获取到全部节点
+  const allShapes = this.bpmnViewer.get(&quot;elementRegistry&quot;).getAll();
+
+  //循环节点添加颜色
+  allShapes.forEach(element =&gt; {
+    const shapeId = element.businessObject.id;
+    const shapeAttrs = element.businessObject.$attrs;
+
+    // add marker
+    if (element.businessObject.$type != &quot;bpmn:Group&quot;) {
+      if (element.businessObject.$type == &quot;bpmn:SequenceFlow&quot;) {
+        canvas.addMarker(shapeId, &quot;highlight-2&quot; + shapeAttrs.run_state);
+      } else {
+        canvas.addMarker(shapeId, &quot;highlight-&quot; + shapeAttrs.run_state);
+      }
+    }
+  });
+}</code></pre>
+
+
+<p>设置颜色实际上就是通过<code>addMarker</code>方法给节点设置CSS，因为连线无需设置fill属性，对于连线有特殊的处理，对应的CSS如下</p>
+<pre class="codehilite"><code>&lt;style&gt;
+.highlight-0 .djs-visual &gt; :nth-child(1) {
+  stroke: black !important;
+}
+.highlight-1 .djs-visual &gt; :nth-child(1) {
+  stroke: black !important;
+  fill: #f8f8f8 !important;
+}
+.highlight-2 .djs-visual &gt; :nth-child(1) {
+  stroke: black !important;
+  fill: #cff5fa !important;
+}
+.highlight-3 .djs-visual &gt; :nth-child(1) {
+  stroke: black !important;
+  fill: #d7f6ce !important;
+}
+
+/* 连线 */
+.highlight-20 .djs-visual &gt; :nth-child(1) {
+  stroke: black !important;
+}
+.highlight-23 .djs-visual &gt; :nth-child(1) {
+  stroke: green !important;
+}
+.highlight-24 .djs-visual &gt; :nth-child(1) {
+  stroke: red !important;
+}
+&lt;/style&gt;</code></pre>
+
+
+<p>最后渲染完成的样子如下，未来我们的<a href="/s/eZX5qoJzuCSuLI98gSCtpw">【开源一站式DevOps平台CODO】</a>的流程图展示或许就长这个样子，期待一下吧</p>
+<p><img alt="" loading="lazy" src="/static/images/20200915.01.png" /></p>
+<h2 id="viewer">Viewer模式下拖动</h2>
+<p>当流程图比较复杂，节点众多的时候，单单有屏幕自适应可能是不够的，我们还希望流程图可以拖动，bpmn-js的Viewer模式默认并不支持此功能，但提供了<code>diagram-js</code>插件来实现</p>
+<p>使用起来稍微复杂，但根据下边的步骤就能轻松搞定</p>
+<p>先在package.json中添加<code>diagram-js</code>，然后运行<code>npm install</code>安装<code>diagram-js</code></p>
+<pre class="codehilite"><code>&quot;dependencies&quot;: {
+    &quot;bpmn-js&quot;: &quot;^7.3.0&quot;,
+    &quot;diagram-js&quot;: &quot;^5.0.0&quot;
+},</code></pre>
+
+
+<p>编写自定义Viewer添加<code>ZoomScrollModule</code>和<code>MoveCanvasModule</code>模块来扩展默认Viewer的功能，自定义Viewer文件位于<code>src/components/customBpmn/index.js</code>下，内容如下</p>
+<pre class="codehilite"><code>import inherits from &quot;inherits&quot;;
+
+import Viewer from &quot;bpmn-js/lib/Viewer&quot;;
+
+import ZoomScrollModule from &quot;diagram-js/lib/navigation/zoomscroll&quot;;
+import MoveCanvasModule from &quot;diagram-js/lib/navigation/movecanvas&quot;;
+
+function CustomViewer(options) {
+  Viewer.call(this, options);
+}
+
+inherits(CustomViewer, Viewer);
+
+CustomViewer.prototype._modules = [].concat(Viewer.prototype._modules, [
+  ZoomScrollModule,
+  MoveCanvasModule
+]);
+
+export { CustomModeler, CustomViewer };</code></pre>
+
+
+<p>最后在页面中引用自定义Viewer</p>
+<pre class="codehilite"><code>import { CustomViewer } from &quot;../components/customBpmn&quot;;</code></pre>
+
+
+<p>并将init初始化方法中的<code>BpmnViewer</code>替换为<code>CustomViewer</code>，然后刷新页面就会发现流程图可以拖动啦</p>
+<h2 id="_5">写在最后</h2>
+<p>接触bpmn-js不久，且第一次用VUE，边学边写，文章难免出错，各位多多包含。想要打造一个好用的适合自己的流程编辑器，需要了解的内容比较多，bpmn-js会分多篇文章来介绍，欢迎关注</p>
+<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.cn">https://bpmn.ops-coffee.cn</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/bpmn/bpmn-js-vue-custom-viewer-demo-code-source.html">📅 2020-09-15</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/BPMN/">🏷️ BPMN</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
