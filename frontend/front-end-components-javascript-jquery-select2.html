@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Select2,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="前端插件之Select2使用" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>前端插件之Select2使用</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="前端插件之Select2使用" />
+  <meta property="og:description" content="前端插件之Select2使用" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">前端插件之Select2使用</h1>
+
+        <blockquote>
+<p>工欲善其事，必先利其器</p>
+</blockquote>
+<p>本系列文章介绍我在运维系统开发过程中用到的那些顺手的前端插件，上一篇文章介绍了<a href="https://blog.ops-coffee.cn/frontend/front-end-components-bootstrap-dual-listbox">bootstrap-duallistbox</a>这个插件的使用，这一篇开始Select2的征服之旅</p>
+<p>Select2是一款基于JQuery的下拉列表插件，主要用来优化select，支持单选和多选，同时也支持分组显示、列表检索、远程获取数据等众多好用的功能</p>
+<p>项目地址：<a href="https://select2.org/">https://select2.org/</a></p>
+<h2 id="_1">基本使用</h2>
+<p>需要用到的JS和CSS文件位于项目代码下的dist目录中，需要将这个目录中的对应文件放入你的项目里，这一步不赘述</p>
+<ol>
+<li>引入CSS/JS文件，由于Select2是基于Jquery的，所以要先引入Jquery，这里我们都直接引入CDN的地址</li>
+</ol>
+<pre class="codehilite"><code>&lt;!-- 加载 Jquery --&gt;
+&lt;script src=&quot;https://code.jquery.com/jquery-3.2.1.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- 加载 Select2 --&gt;
+&lt;link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css&quot; rel=&quot;stylesheet&quot; /&gt;
+&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js&quot;&gt;&lt;/script&gt;</code></pre>
+
+
+<ol>
+<li>初始化Select2</li>
+</ol>
+<pre class="codehilite"><code>&lt;select class=&quot;form-control&quot; id=&quot;id_select2_demo1&quot;&gt;
+    &lt;option value=&quot;&quot;&gt;-----单选-----&lt;/option&gt;
+    &lt;option value=&quot;1&quot;&gt;OPS-COFFEE-A&lt;/option&gt;
+    &lt;option value=&quot;2&quot;&gt;OPS-COFFEE-B&lt;/option&gt;
+    &lt;option value=&quot;3&quot;&gt;OPS-COFFEE-C&lt;/option&gt;
+    &lt;option value=&quot;4&quot;&gt;OPS-COFFEE-D&lt;/option&gt;
+    &lt;option value=&quot;5&quot;&gt;OPS-COFFEE-E&lt;/option&gt;
+    &lt;option value=&quot;6&quot;&gt;OPS-COFFEE-F&lt;/option&gt;
+    &lt;option value=&quot;7&quot;&gt;OPS-COFFEE-G&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;script&gt;
+    var selectorx = $('#id_select2_demo1').select2();
+&lt;/script&gt;</code></pre>
+
+
+<ol>
+<li>完成以上两步可以看到页面效果如下</li>
+</ol>
+<p><img alt="" loading="lazy" src="/static/images/20190725.select2.01.png" /></p>
+<h3 id="placeholder">设置提示语placeholder</h3>
+<pre class="codehilite"><code>$('#id_select2_demo1').select2({
+    placeholder: '请选择'
+});</code></pre>
+
+
+<p><strong>placeholder：</strong> 选择框的提示语，需要注意，要想让这个提示语生效，需要select的option里边有一个value为空的option，例如上边例子中的</p>
+<pre class="codehilite"><code>&lt;option value=&quot;&quot;&gt;-----单选-----&lt;/option&gt;</code></pre>
+
+
+<h3 id="_2">隐藏搜索框</h3>
+<p>与默认的select除了样式上的区别外，最重要的是多了个搜索框，能用来搜索option项，如果你不想显示这个搜索框，可以通过设置项<code>minimumResultsForSearch</code>隐藏</p>
+<pre class="codehilite"><code>var selectorx = $('#id_select2_demo1').select2({
+    minimumResultsForSearch: -1
+});</code></pre>
+
+
+<h3 id="_3">加载本地数据</h3>
+<p>除了实例化已经存在的select之外，也可以通过设置项<code>data</code>加载本地数据</p>
+<pre class="codehilite"><code>var sdata = [
+    {id: 1, text:'OPS-COFFEE-1'},
+    {id: 2, text:'OPS-COFFEE-2'},
+    {id: 3, text:'OPS-COFFEE-3'}
+]
+
+$('#id_select2_demo2').select2({
+    data: sdata
+});</code></pre>
+
+
+<p>select2能够加载的数据格式如上，需要两个数据属性<code>id</code>和<code>text</code>，当然你也可以加载其他的额外属性以在需要时获取</p>
+<h3 id="_4">加载远程数据</h3>
+<p>除了加载本地数据外，也支持ajax异步去后端获取数据，用法如下：</p>
+<pre class="codehilite"><code>$('#id_select2_demo3').select2({
+    placeholder: 'Ajax后端获取数据示例',
+    ajax: {
+      url: &quot;sdata.json&quot;,
+      dataType: 'json',
+      delay: 250,
+      data: function (params) {
+        return {
+          search: params.term,
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: data
+        };
+      },
+      cache: true
+    },
+    minimumInputLength: 2
+});</code></pre>
+
+
+<p><strong>delay: 250：</strong> 配置告诉select2在用户停止输入多少毫秒后开始查询，合理设置可以避免频繁向后端发送请求</p>
+<p><strong>search: params.term：</strong> 定义了要传递给后端的查询参数，<code>search</code>为发送到服务端的参数名，<code>params.term</code>表示输入框中输入的内容，当然这里也可以添加一些自定义的参数，例如：</p>
+<pre class="codehilite"><code>data: function (params) {
+    return {
+      search: params.term,
+      site: &quot;https://ops-coffee.cn&quot;
+    };
+},</code></pre>
+
+
+<p>那么当你输入<code>OPS</code>时，服务端接受到的完整参数就是<code>/sdata.json?search=OPS&amp;site=https://ops-coffee.cn</code></p>
+<p><strong>results: data：</strong> 定义了后台返回的数据，其中<code>data</code>为select2能够识别的格式，如果后端返回的格式不是select2能够识别的格式，例如下边这样</p>
+<pre class="codehilite"><code>{
+    &quot;state&quot;: 1, 
+    &quot;message&quot;:[
+        {&quot;id&quot;: 0, &quot;text&quot;:&quot;-----单选-----&quot;},
+        {&quot;id&quot;: 1, &quot;text&quot;:&quot;OPS-COFFEE-1&quot;},
+        {&quot;id&quot;: 2, &quot;text&quot;:&quot;OPS-COFFEE-2&quot;},
+        {&quot;id&quot;: 3, &quot;text&quot;:&quot;OPS-COFFEE-3&quot;}
+    ]
+}</code></pre>
+
+
+<p>那么你需要先将其处理成select2能够识别的格式，这里我们就需要取出date中的message</p>
+<pre class="codehilite"><code>processResults: function (data) {
+    return {
+      results: data.message
+    };
+},</code></pre>
+
+
+<p><strong>minimumInputLength：</strong> ajax异步请求通常我们会配合配置项<code>minimumInputLength</code>使用，这个配置项的意思是输入指定长度的字符后开始搜索，也就是点击select选择框默认不会去后台请求数据，当你输入指定长度的字符时才会去搜索，这样在你搜索项非常多的时候能更精确的匹配你想要的内容</p>
+<p>如果你想点击即显示所有option，那么你可以将他的值设置为<code>0</code>，或者不配置这个配置</p>
+<p>同时也可以通过<code>maximumInputLength</code>配置项配置输入字符的最大长度</p>
+<h3 id="_5">多选支持</h3>
+<p>select2对多选的支持也非常简单，跟默认的select标签一样只需要在select标签中添加<code>multiple="multiple"</code>即可</p>
+<pre class="codehilite"><code>&lt;select class=&quot;form-control&quot; id=&quot;id_select2_demo4&quot; multiple=&quot;multiple&quot;&gt;
+    &lt;option value=&quot;1&quot;&gt;OPS-COFFEE-A&lt;/option&gt;
+    &lt;option value=&quot;3&quot;&gt;OPS-COFFEE-C&lt;/option&gt;
+    &lt;option value=&quot;4&quot;&gt;OPS-COFFEE-D&lt;/option&gt;
+    &lt;option value=&quot;5&quot;&gt;OPS-COFFEE-E&lt;/option&gt;
+&lt;/select&gt;
+
+var selectory = $('#id_select2_demo4').select2({
+    placeholder: '请选择，最多选择三个',
+    allowClear: true,
+    maximumSelectionLength:3,
+});</code></pre>
+
+
+<p>显示效果如下：</p>
+<p><img alt="" loading="lazy" src="/static/images/20190725.select2.02.png" /></p>
+<p><strong>allowClear：</strong> 是否显示清楚按钮，默认false，如果设置为<code>true</code>，需要同时配置<code>placeholder</code>，否则可能会引起js报错：</p>
+<pre class="codehilite"><code>TypeError: Cannot read property 'id' of undefined</code></pre>
+
+
+<p><strong>maximumSelectionLength：</strong> 配置最多能选择多少项</p>
+<h2 id="_6">配置说明</h2>
+<p>另外还有几个配置上边没有讲到的：</p>
+<p><strong>width：</strong> 宽度，例如<code>100%</code></p>
+<p><strong>multiple：</strong> 是否支持多选，默认false</p>
+<p><strong>closeOnSelect：</strong> 是否选中后关闭选择框，默认true</p>
+<p><strong>tags：</strong> 是否可以动态创建选项</p>
+<p><strong>disabled：</strong> 是否禁用</p>
+<p><strong>debug：</strong> 是否开启debug模式</p>
+<h2 id="_7">使用进阶</h2>
+<p>获取已选择的值，无论是单选还是多选都可以用下边的代码来获取选择的option</p>
+<pre class="codehilite"><code>$('#id_select2_demo4').select2('val')</code></pre>
+
+
+<p>获取已选择的对象</p>
+<pre class="codehilite"><code>$(&quot;#id_select2_demo4&quot;).select2(&quot;data&quot;)</code></pre>
+
+
+<p>如果想要拿到已选择option的text值，可以通过如下方法，以下代码中的<code>[0]</code>用来获取第一个对象，对单选合适，如果是多选的话需要循环获取</p>
+<pre class="codehilite"><code>$(&quot;#id_select2_demo4&quot;).select2(&quot;data&quot;)[0].text</code></pre>
+
+
+<p>selected，初始化值，设置选中项</p>
+<pre class="codehilite"><code># 单选情况下val为数字，这里的selectx为
+$(&quot;#id_select2_demo1&quot;).val(2).trigger(&quot;change&quot;);
+
+# 多选情况下val为列表
+$(&quot;#id_select2_demo4&quot;).val([2,3,5]).trigger(&quot;change&quot;);</code></pre>
+
+
+<p>清空已选择的值，无论是单选还是多选都可以这样清除</p>
+<pre class="codehilite"><code>$(&quot;#id_select2_demo1&quot;).val(null).trigger('change');
+$(&quot;#id_select2_demo4&quot;).val(null).trigger('change');</code></pre>
+
+
+<p>禁用select2</p>
+<pre class="codehilite"><code>$(&quot;#id_select2_demo1&quot;).prop('disabled',true);;
+$(&quot;#id_select2_demo4&quot;).prop('disabled',true);;</code></pre>
+
+
+<p>动态添加select的option</p>
+<pre class="codehilite"><code>$('#add').click(function() {
+    var _html = '&lt;option value=&quot;9&quot; selected&gt;ops-coffee.cn&lt;/option&gt;';
+    $('#id_select2_demo1').append(_html).trigger('change.select2');
+    $('#id_select2_demo1').select2(&quot;open&quot;);
+})</code></pre>
+
+
+<p><strong>change.select2：</strong> 新增select数据后触发select2更新</p>
+<p><strong>.select2("open")：</strong> 打开select，<code>open</code>改为<code>close</code>可动态关闭select，改为<code>destroy</code>可销毁select2，恢复select默认样式</p>
+<h2 id="demo">完整Demo</h2>
+<p>为了方便大家学习，我写了个完整的demo，你可以在线查看效果或下载代码应用到自己的项目中</p>
+<p>在线Demo地址：<a href="https://demo.ops-coffee.cn/select2/">https://demo.ops-coffee.cn/select2/</a></p>
+<p>Github源码地址：<a href="https://github.com/ops-coffee/demo/tree/master/select2">https://github.com/ops-coffee/demo/tree/master/select2</a></p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/frontend/front-end-components-javascript-jquery-select2.html">📅 2019-07-25</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/前端插件/">🏷️ 前端插件</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
