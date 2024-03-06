@@ -77,7 +77,7 @@ https://blog.ops-coffee.cn/s/devops-domain-record-certificate
 https://blog.ops-coffee.cn/s/devops-kubernetes-docker-jenkins
 https://blog.ops-coffee.cn/r/city-china-zhejiang-jiaxing-xitang
 https://blog.ops-coffee.cn/r/city-china-zhejiang-zhoushan-daishan
-https://blog.ops-coffee.cn/s/jS-automatically-generates-letter-avatar
+https://blog.ops-coffee.cn/frontend/jS-automatically-generates-letter-avatar
 https://blog.ops-coffee.cn/s/i-has-settled-down-in-shanghai
 https://blog.ops-coffee.cn/r/city-china-zhejiang-shaoxing-xuehuatan
 https://blog.ops-coffee.cn/s/django-move-model-to-another-app
@@ -205,7 +205,7 @@ https://blog.ops-coffee.cn/s/JRszZcbeic5mJbY7dDkkMQ
 https://blog.ops-coffee.cn/g/laws-theories-principles-patterns
 https://blog.ops-coffee.cn/s/S_FFrP4s1KWSXXMSI4EG0A
 https://blog.ops-coffee.cn/s/UOu6XIoOOj4gP0QuKgFfMg
-https://blog.ops-coffee.cn/s/TcQxURGPPzlOYPGGyAJRhw
+https://blog.ops-coffee.cn/frontend/front-end-components-javascript-jquery-ace-js
 https://blog.ops-coffee.cn/s/DGdtIlyV-Ns5zRRtin-YmQ
 https://blog.ops-coffee.cn/s/h9k_C7kNB6q1VqxQDVHyiQ
 https://blog.ops-coffee.cn/s/dAbyLz6-qrWuJsBnnyar2Q
@@ -235,10 +235,10 @@ https://blog.ops-coffee.cn/s/lUS2mxBjzm1cIYd0OPmHaw
 https://blog.ops-coffee.cn/s/e3m9xHVsvhe36IvG1YKhbA
 https://blog.ops-coffee.cn/t/debian8-jessie-install-java8
 https://blog.ops-coffee.cn/s/NNm-zcIKCmF4150oncDgYA
-https://blog.ops-coffee.cn/s/5dZx6HrPE1Y4rdxqHTYN-g
-https://blog.ops-coffee.cn/s/mx2gjLmO7jHKagGsWF6eJw
+https://blog.ops-coffee.cn/frontend/front-end-components-jquery-datatables-2
+https://blog.ops-coffee.cn/frontend/front-end-components-jquery-datatables-1
 https://blog.ops-coffee.cn/t/tar-file-openssl-des3
-https://blog.ops-coffee.cn/s/2w956ln2fA1jzdC-UQ55Vg
+https://blog.ops-coffee.cn/frontend/front-end-components-javascript-jquery-select2
 https://blog.ops-coffee.cn/frontend/front-end-components-bootstrap-dual-listbox
 https://blog.ops-coffee.cn/s/F-IPkfo6jp6Wkb4ql-jaLg
 https://blog.ops-coffee.cn/elk/elasticsearch-logstash-kafka-group
