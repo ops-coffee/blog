@@ -47,6 +47,7 @@ https://blog.ops-coffee.cn/tag/Elk
 https://blog.ops-coffee.cn/tag/Python
 https://blog.ops-coffee.cn/tag/Django
 https://blog.ops-coffee.cn/tag/Devops
+https://blog.ops-coffee.cn/s/veops-open-source-jumpserver-oneterm
 https://blog.ops-coffee.cn/python/python-simple-and-user-friendly-features-2
 https://blog.ops-coffee.cn/python/python-simple-and-user-friendly-features
 https://blog.ops-coffee.cn/s/devops-task-subtask-api-postman-apipost
