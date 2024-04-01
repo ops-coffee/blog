@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Cloudflare,None,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="构建好用的Cloudflare监控大盘" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>构建好用的Cloudflare监控大盘</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="构建好用的Cloudflare监控大盘" />
+  <meta property="og:description" content="构建好用的Cloudflare监控大盘" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">构建好用的Cloudflare监控大盘</h1>
+
+        <p><a href="https://blog.ops-coffee.cn/s/mml5jzQVDzByf0F3sJN5dg">多云监控系统</a>要接入Cloudflare的监控，当初接入时，看了Cloudflare页面里的图表，都是通过GraphQL查询获取数据展示的，随后去查了Cloudflare的官方文档，发现了graphql-api：</p>
+<p>https://developers.cloudflare.com/analytics/graphql-api/</p>
+<p>根据API文档，获取数据很简单，示例如下：</p>
+<pre class="codehilite"><code>import json
+import requests
+
+
+class CloudFlareAPI:
+    def __init__(self, email: str, token: str):
+        self.session = requests.Session()
+
+        self.session.headers = {
+            &quot;X-Auth-Email&quot;: email,
+            &quot;X-Auth-Key&quot;: token,
+            &quot;Content-Type&quot;: &quot;application/json&quot;
+        }
+
+    def graphql(self, query):
+        _result = self.session.post(
+            &quot;https://api.cloudflare.com/client/v4/graphql&quot;, 
+            data=json.dumps({'query': query})
+        )
+
+        return True, 200, _result.json()</code></pre>
+
+
+<p>可以看出来API很简单，通过email和token认证，认证过之后调用graphql-api，核心就在GraphQL对query语句，GraphQL语句很强大，但同时也很复杂，而我并不熟悉GraphQL语句，于是图方便，就直接拷贝了官方页面请求里对query语句</p>
+<p>在后续的使用中虽然可用，但体验不好，由于对query语句并没有很深的了解，导致一个query语句中返回了并不需要的数据，这会造成两个问题，其一就是数据加载速度变慢，查询语句复杂了，返回数据多了，自然就慢了，很好理解，其二是Cloudflare返回的数据是有limit限制的，最大只能限制为10000，当一个query结果中加载的数据多了之后，同一粒度情况下能同时展示的时间段就会变短。更为关键的是如果想要调整还不是很方便，因为对GraphQL不熟悉</p>
+<p>随着新项目上线对CDN的关注度增加，查询Cloudflare监控越来越频繁，对监控数据的需求也有改变，是时候再来认真的看看Cloudflare的监控了，短时间内想要对GraphQL能有多深的理解不现实，好在有开源工具GraphiQL来帮忙：</p>
+<p>https://github.com/graphql/graphiql</p>
+<p>GraphiQL是个专门用户调试GraphQL语句的工具，使用非常简单，填写Header头用于认证，输入URL和query语句即可执行，能够对query进行自动语法检查及提示，这样我即便是不知道详细的参数名字也能根据提示来修改，很好用</p>
+<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240329.01.png" /></p>
+<p>借助于官方文档一个简单的例子和AI，同时在工具的加持下，再写起来就快多了，例如我们通常需要获取某个域名一段时间内的总请求量和总数据传输量，就可以通过如下query来查询：</p>
+<pre class="codehilite"><code>query{
+  viewer{
+    zones(filter:{zoneTag:&quot;19ebc8************0e8f37&quot;}){
+      servedByEdge:httpRequestsAdaptiveGroups(
+        limit:10000
+        filter:{
+          AND:[
+          {datetime_geq:&quot;2024-03-28T10:00:00Z&quot;, datetime_leq:&quot;2024-03-28T11:00:00Z&quot;},
+          {requestSource:&quot;eyeball&quot;},
+          {clientRequestHTTPHost: &quot;blog.ops-coffee.cn&quot;},
+          ]
+        }
+      )
+      {
+        sum{
+          edgeResponseBytes
+        }
+        count
+      }
+    }
+  }
+}</code></pre>
+
+
+<p>其中<code>zoneTag</code>为域名所在zone的id，filter配置过滤条件，指定开始时间<code>datetime_geq</code>、结束时间<code>datetime_leq</code>以及域名<code>clientRequestHTTPHost</code>，<code>count</code>为请求数，<code>edgeResponseBytes</code>则为数据传输量，而<code>requestSource</code>配置的意思则是要过滤掉Cloudflare的一些操作，例如cachepurge、healthchecks等等，以使数据更准确，贴近用户真实数据</p>
+<p>如果需要生成图表，就需要时间段内每个时间点的数据，添加<code>dimensions</code>即可，同时可以配合<code>orderBy</code>来实现对结果的排序：</p>
+<pre class="codehilite"><code>query{
+  viewer{
+    zones(filter:{zoneTag:&quot;19ebc8************0e8f37&quot;}){
+      servedByEdge:httpRequestsAdaptiveGroups(
+        limit:10000
+        filter:{
+          AND:[
+          {datetime_geq:&quot;2024-03-28T10:00:00Z&quot;, datetime_leq:&quot;2024-03-28T11:00:00Z&quot;},
+          {requestSource:&quot;eyeball&quot;},
+          {clientRequestHTTPHost: &quot;blog.ops-coffee.cn&quot;},
+          ]
+        }
+        orderBy: [datetimeMinute_ASC]
+      )
+      {
+        sum{
+          edgeResponseBytes
+        }
+        count
+        dimensions {
+          datetimeMinute
+        }        
+      }
+    }
+  }
+}</code></pre>
+
+
+<p><code>dimensions</code>来配置颗粒度，颗粒度有1分钟<code>datetimeMinute</code>、5分钟<code>datetimeFiveMinutes</code>、15分钟<code>datetimeFifteenMinutes</code>等几个配置，<code>orderBy</code>也可以选择按请求值、数据传输量、时间等多种指标正序或倒序对结果进行排列输出</p>
+<p>如果想要获取命中数据，则可以在之前的filter过滤基础上添加<code>cacheStatus</code>来获取命中数据</p>
+<pre class="codehilite"><code>query{
+  viewer{
+    zones(filter:{zoneTag:&quot;19ebc8************0e8f37&quot;}){
+      servedByEdge:httpRequestsAdaptiveGroups(
+        limit:10000
+        filter:{
+          AND:[
+          {datetime_geq:&quot;2024-03-28T10:00:00Z&quot;, datetime_leq:&quot;2024-03-28T11:00:00Z&quot;},
+          {requestSource:&quot;eyeball&quot;},
+          {clientRequestHTTPHost: &quot;blog.ops-coffee.cn&quot;},
+          {cacheStatus: &quot;hit&quot;}
+          ]
+        }
+        orderBy: [datetimeMinute_ASC]
+      )
+      {
+        sum{
+          edgeResponseBytes
+        }
+        count
+        dimensions {
+          datetimeMinute
+        }        
+      }
+    }
+  }
+}</code></pre>
+
+
+<p>而对于CDN更为重要的命中率数据通过query没办法直接获取，不过可以通过一个query同时获取到命中数和总数，输出时稍微加工即可获取到命中率，也算简单</p>
+<pre class="codehilite"><code>query{
+  viewer {
+    zones(filter:{zoneTag:&quot;19ebc8************0e8f37&quot;}){
+      hitData: httpRequestsAdaptiveGroups(
+        limit: 10000
+        filter: {
+          AND: [
+          {datetime_geq:&quot;2024-03-28T10:00:00Z&quot;, datetime_leq:&quot;2024-03-28T11:00:00Z&quot;},
+          {requestSource:&quot;eyeball&quot;},
+          {clientRequestHTTPHost: &quot;blog.ops-coffee.cn&quot;},
+          {cacheStatus: &quot;hit&quot;}
+          ]
+        }
+        orderBy: [datetimeMinute_ASC]
+      ) {
+        dimensions {
+          datetimeMinute
+        }
+        count
+      }
+      servedByEdge: httpRequestsAdaptiveGroups(
+        limit: 10000
+        filter: {
+          AND: [
+          {datetime_geq:&quot;2024-03-28T10:00:00Z&quot;, datetime_leq:&quot;2024-03-28T11:00:00Z&quot;},
+          {requestSource:&quot;eyeball&quot;},
+          {clientRequestHTTPHost: &quot;blog.ops-coffee.cn&quot;},
+          ]
+        }
+        orderBy: [datetimeMinute_ASC]
+      ) {
+        dimensions {
+          datetimeMinute
+        }
+        count
+      }
+    }
+  }
+}</code></pre>
+
+
+<p>如果想要获取其他一些数据但不知道参数名字的话，除了借助于GraphiQL工具通过模糊搜索提示猜测参数名字外，还有一个小技巧是设置Cloudflare控制台为英文，然后去页面上查找对应的参数名字。例如未命中，我们在控制台里看到的名字叫<code>Miss</code>，那过滤名字也一样为<code>miss</code>只是需要小写</p>
+<p>有了这些知识，构建一个完善的监控大盘已经足够了，CDN我们主要的关注数据有：总请求量、总数据传输量、总请求命中率、请求量趋势、数据传输量趋势、命中率趋势、请求命中趋势、请求未命中趋势以及2xx、3xx、4xx、5xx状态码趋势了。由此一个好用的监控大盘出现了</p>
+<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240329.02.png" /></p>
+<p>最关心的数据一页全展示，响应速度快，确实好用</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/cloudflare-monitor-dashboard-by-graphql-python-api.html">📅 2024-04-01</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
