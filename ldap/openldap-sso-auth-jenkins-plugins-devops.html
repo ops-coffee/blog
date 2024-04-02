@@ -61,7 +61,7 @@
 <li>优点：一定可以安装成功的</li>
 <li>缺点：麻烦，要去官网找插件并解决依赖</li>
 </ul>
-<p>插件下载地址：<a href="https://updates.jenkins-ci.org/download/plugins/">https://updates.jenkins-ci.org/download/plugins/</a></p>
+<p>插件下载地址：<a href="https://updates.jenkins-ci.org/download/plugins/" target="_blank">https://updates.jenkins-ci.org/download/plugins/</a></p>
 <p>安装方法：官网下载插件 --&gt; 登录Jenkins --&gt; 系统管理 --&gt; 插件管理 --&gt; 高级 --&gt; 上传插件 --&gt; 选择文件 --&gt; 上传 --&gt; 安装完成后重启</p>
 <p><img alt="" loading="lazy" src="/static/images/20180806.07.png" /></p>
 <p>上传插件安装可能会失败，大部分都是提示你当前插件依赖某些插件，只需要下载全部依赖插件，按照顺序上传安装即可，LDAP插件安装完成后，所有依赖的插件如下：</p>
@@ -82,7 +82,7 @@
 <li><strong>Group search base</strong>：参考上边<code>User search base</code>解释</li>
 <li><strong>Group search filter</strong>：这个配置允许你将过滤器限制为所需的objectClass来提高搜索性能，也就是说可以只搜索用户属性中包含某个objectClass的用户，这就要求你对你的LDAP足够了解，一般我们也不配置</li>
 <li><strong>Group membership</strong>：没配置，没有详细研究</li>
-<li><strong>Manager DN</strong>：这个配置在你的LDAP服务器不允许匿名访问的情况下用来做认证（详细的认证过程参考文章<a href="https://www.cnblogs.com/37Y37/p/9321458.html">LDAP落地实战（二）：SVN集成OpenLDAP认证</a>中关于LDAP服务器认证过程的讲解），通常DN为<code>cn=admin,dc=domain,dc=com</code>这样</li>
+<li><strong>Manager DN</strong>：这个配置在你的LDAP服务器不允许匿名访问的情况下用来做认证（详细的认证过程参考文章<a href="https://www.cnblogs.com/37Y37/p/9321458.html" target="_blank">LDAP落地实战（二）：SVN集成OpenLDAP认证</a>中关于LDAP服务器认证过程的讲解），通常DN为<code>cn=admin,dc=domain,dc=com</code>这样</li>
 <li><strong>Manager Password</strong>：上边配置dn的密码</li>
 <li><strong>Display Name LDAP attribute</strong>：配置用户的显示名称，一般为显示名称就配置为uid，如果你想显示其他字段属性也可以这里配置，例如mail</li>
 <li><strong>Email Address LDAP attribute</strong>：配置用户Email对应的字段属性，一般没有修改过的话都是mail，除非你用其他的字段属性来标识用户邮箱，这里可以配置</li>

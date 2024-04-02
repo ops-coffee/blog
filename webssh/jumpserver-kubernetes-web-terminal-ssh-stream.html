@@ -45,7 +45,7 @@
         <blockquote>
 <p>优秀的系统都是根据反馈逐渐完善出来的</p>
 </blockquote>
-<p>上篇文章介绍了我们为了应对安全和多分支频繁测试的问题而开发了一套Alodi系统，Alodi可以通过一个按钮快速构建一套测试环境，生成一个临时访问地址，详细信息可以看这一篇文章：<a href="/s/Nxh7mwPJPlbL3R9MdlkO_A">Alodi：为了保密我开发了一个系统</a></p>
+<p>上篇文章介绍了我们为了应对安全和多分支频繁测试的问题而开发了一套Alodi系统，Alodi可以通过一个按钮快速构建一套测试环境，生成一个临时访问地址，详细信息可以看这一篇文章：<a href="/s/Nxh7mwPJPlbL3R9MdlkO_A" target="_blank">Alodi：为了保密我开发了一个系统</a></p>
 <p>系统上线后，SSH登陆控制台成了一个迫切的需求，Kubernetes的Dashboard控制台虽然有WebSSH的功能，但却没办法跟Alodi系统相结合，决定在Alodi中集成WebSSH的功能，先来看看最后实现的效果吧</p>
 <p><img alt="" loading="lazy" src="/static/images/20191016.gif" /></p>
 <h2 id="_1">涉及技术</h2>
@@ -111,7 +111,7 @@ pod_name = data.items[0].metadata.name</code></pre>
 <p><code>list_namespaced_pod</code>会列出namespace下所有pod的详细信息，这里传了两个参数，第一个<code>namespace</code>是必须的，表示我们要列出pod的namespace，第二个<code>label_selector</code>非必须，表示可以通过设置的标签过滤namespace下的pod，由于我们在创建的时候给每个deployment都添加了唯一的<code>app=RAND</code>的标签，所以这里可以过滤出来我们项目所对应的pod</p>
 <p>一个deployment可能对应多个pod，获取到的<code>data.items</code>包含了所有的pod信息，为一个list列表，可根据需要取到对应pod的name</p>
 <h2 id="django-channels">Django Channels</h2>
-<p>之前有两篇文章详细介绍过Django Channels，不了解的可以先查看：<a href="/s/hqaPrPS7w3D-9SeegQAB2Q">Django使用Channels实现WebSocket--上篇</a>和<a href="/s/r5SpyTjRl0jJeAuYE4Q_-Q">Django使用Channels实现WebSocket--下篇</a>，最重要的两部分代码如下</p>
+<p>之前有两篇文章详细介绍过Django Channels，不了解的可以先查看：<a href="/s/hqaPrPS7w3D-9SeegQAB2Q" target="_blank">Django使用Channels实现WebSocket--上篇</a>和<a href="/s/r5SpyTjRl0jJeAuYE4Q_-Q" target="_blank">Django使用Channels实现WebSocket--下篇</a>，最重要的两部分代码如下</p>
 <p>routing代码：</p>
 <pre class="codehilite"><code>from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter

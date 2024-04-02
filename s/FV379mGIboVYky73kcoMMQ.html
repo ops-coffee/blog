@@ -42,7 +42,7 @@
     <div class="container">
         <h1 id="art-title">Proxy：简单小巧又强大好用的代理系统</h1>
 
-        <p>之前的文章介绍了许多我们在用的DevOps相关的工具系统，例如：<a href="/s/h9k_C7kNB6q1VqxQDVHyiQ">方便创建多套运行环境的Alodi</a>，<a href="/s/QG42UqJ9rnswQDMd41CYUg">对运维友好的配置中心Kerrigan</a>，<a href="/s/uXQbM4t11ICdzNofZyDeXA">强大的自定义任务引擎Probius</a>以及<a href="/s/ZrrLUNRlAXVfVKvA1m0nsg">专注于数据库自动化的overmind</a>等等，这篇文章介绍一个非常简单但却十分好用的系统，Proxy代理管理系统</p>
+        <p>之前的文章介绍了许多我们在用的DevOps相关的工具系统，例如：<a href="/s/h9k_C7kNB6q1VqxQDVHyiQ" target="_blank">方便创建多套运行环境的Alodi</a>，<a href="/s/QG42UqJ9rnswQDMd41CYUg" target="_blank">对运维友好的配置中心Kerrigan</a>，<a href="/s/uXQbM4t11ICdzNofZyDeXA" target="_blank">强大的自定义任务引擎Probius</a>以及<a href="/s/ZrrLUNRlAXVfVKvA1m0nsg" target="_blank">专注于数据库自动化的overmind</a>等等，这篇文章介绍一个非常简单但却十分好用的系统，Proxy代理管理系统</p>
 <p>代理系统类似于Kubernetes里Ingress的角色，位于下层服务与上层用户之间，作用与公有云的负载均衡LB一致，基于Nginx构建，主要使用Upstream模块</p>
 <h2 id="_1">系统由来</h2>
 <p>为什么会需要这么个系统？来讲讲我们的场景和逻辑</p>
@@ -59,7 +59,7 @@
 <p>证书模块可以用来管理所有用到的HTTPS证书，每一个证书都会在服务器上创建对应的crt和key文件，方便在实例中引用，对于证书的更新也只需要更新这一个地方就可以了，更新完成之后会自动reload以保证生效</p>
 <p><img alt="" loading="lazy" src="/static/images/20201203.02.png" /></p>
 <p><img alt="" loading="lazy" src="/static/images/20201203.03.png" /></p>
-<p>黑白名单模块对应与Nginx的ACL设置，通过allow和deny来实现黑名单禁止访问，白名单允许访问，原理与证书管理差不多，都是根据输入内容生成对应的文件保存到服务器上，生成配置文件用到了jinja2，我的博客也是同样的方法生成的，可以看这篇文章来了解：<a href="/s/7g2wncQG1lIziOmtBxXwEw">利用Django徒手写个静态页面生成工具</a>，黑白名单最终在实例里以include的方式引入</p>
+<p>黑白名单模块对应与Nginx的ACL设置，通过allow和deny来实现黑名单禁止访问，白名单允许访问，原理与证书管理差不多，都是根据输入内容生成对应的文件保存到服务器上，生成配置文件用到了jinja2，我的博客也是同样的方法生成的，可以看这篇文章来了解：<a href="/s/7g2wncQG1lIziOmtBxXwEw" target="_blank">利用Django徒手写个静态页面生成工具</a>，黑白名单最终在实例里以include的方式引入</p>
 <p><img alt="" loading="lazy" src="/static/images/20201203.04.png" /></p>
 <p><img alt="" loading="lazy" src="/static/images/20201203.05.png" /></p>
 <p>无论是证书还是黑白名单最终都是为实例也就是Nginx的Server服务的，对于作为代理的Server配置很简单，下方是一个模板</p>
@@ -96,7 +96,7 @@ server {
 <p>根据平时的使用经验，可能有多个域名使用同一个代理，所以提交的数据还有个别名。同时高级配置里还支持用户输入自定义的Nginx配置，这些自定义的Nginx配置会自动填充到Server中，这样就能方便的实现更加复杂的需求，例如修改上传文件大小限制、开启websocket支持、甚至是根据URI的代理等</p>
 <p>对于实例更多的信息可以在实例详情页面查看</p>
 <p><img alt="" loading="lazy" src="/static/images/20201203.09.png" /></p>
-<p>注意右上角有个“日志”按钮，系统还集成了查看日志的功能，通过websocket去监听日志文件，实时的输出到页面上，方便排错，Websocket实时获取日志文件之前写过一篇文章有介绍，<a href="/s/r5SpyTjRl0jJeAuYE4Q_-Q">可以点这个链接查看</a>，不过我在Proxy里使用的有所简化，没有用到Celery，更轻便</p>
+<p>注意右上角有个“日志”按钮，系统还集成了查看日志的功能，通过websocket去监听日志文件，实时的输出到页面上，方便排错，Websocket实时获取日志文件之前写过一篇文章有介绍，<a href="/s/r5SpyTjRl0jJeAuYE4Q_-Q" target="_blank">可以点这个链接查看</a>，不过我在Proxy里使用的有所简化，没有用到Celery，更轻便</p>
 <p><img alt="" loading="lazy" src="/static/images/20201203.10.png" /></p>
 <h2 id="_3">额外收获</h2>
 <p>Proxy原本用来管理需要对外开放访问的项目，但为了统一的管理，逐渐的把所有的代理都迁移进了Proxy，这样做不仅管理起来更为方便，而且无形中还提供了一个查询团队所有域名的入口，团队现在维护了超过100+项目，并不是每个人都能准确的记住每个项目各个环境的域名，而通过Proxy就可以方便的查询</p>

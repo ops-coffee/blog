@@ -45,7 +45,7 @@
         <blockquote>
 <p>安全无小事，安全防范从nginx配置做起</p>
 </blockquote>
-<p>上一篇文章<a href="/s/JyUnN_OtQ2NtXcH0mtCJUg">《Nginx的几个常用配置和技巧》</a>收到了不错的反馈，这里再总结下nginx配置中与安全有关的一些配置</p>
+<p>上一篇文章<a href="/s/JyUnN_OtQ2NtXcH0mtCJUg" target="_blank">《Nginx的几个常用配置和技巧》</a>收到了不错的反馈，这里再总结下nginx配置中与安全有关的一些配置</p>
 <h2 id="_1">隐藏版本号</h2>
 <pre class="codehilite"><code>http {
     server_tokens off;
@@ -103,7 +103,7 @@ if ($allow = false) { return 404; }</code></pre>
 }</code></pre>
 
 
-<p>关于账号认证<a href="/s/JyUnN_OtQ2NtXcH0mtCJUg">《Nginx的几个常用配置和技巧》</a>文章中已有详细介绍，这里不赘述</p>
+<p>关于账号认证<a href="/s/JyUnN_OtQ2NtXcH0mtCJUg" target="_blank">《Nginx的几个常用配置和技巧》</a>文章中已有详细介绍，这里不赘述</p>
 <h2 id="_4">限制请求方法</h2>
 <pre class="codehilite"><code>if ($request_method !~ ^(GET|POST)$ ) {
     return 405;

@@ -69,7 +69,7 @@
 
 
 <h2 id="logstash">logstash配置</h2>
-<p>kafka里边的源日志格式可以参考这片文章：<a href="/elk/elasticsearch-logstash-rsyslog-nginx">ELK日志系统之使用Rsyslog快速方便的收集Nginx日志</a></p>
+<p>kafka里边的源日志格式可以参考这片文章：<a href="/elk/elasticsearch-logstash-rsyslog-nginx" target="_blank">ELK日志系统之使用Rsyslog快速方便的收集Nginx日志</a></p>
 <p>logstash的配置如下：</p>
 <pre class="codehilite"><code># cat config/indexer_rsyslog_nginx.conf
 input {
@@ -123,7 +123,7 @@ output {
 <li>path：指定存储到HDFS上的文件路径，这里我们每日创建目录，并按小时存放文件</li>
 <li>stdout：打开主要是方便调试，启动logstash时会在控制台打印详细的日志信息并格式化方便查找问题，正式环境建议关闭</li>
 </ul>
-<p>webhdfs还有一些其他的参数例如<code>compression</code>,<code>flush_size</code>,<code>standby_host</code>,<code>standby_port</code>等可查看<a href="https://www.elastic.co/guide/en/logstash/current/plugins-outputs-webhdfs.html">官方文档</a>了解详细用法</p>
+<p>webhdfs还有一些其他的参数例如<code>compression</code>,<code>flush_size</code>,<code>standby_host</code>,<code>standby_port</code>等可查看<a href="https://www.elastic.co/guide/en/logstash/current/plugins-outputs-webhdfs.html" target="_blank">官方文档</a>了解详细用法</p>
 <h2 id="logstash_1">启动logstash</h2>
 <pre class="codehilite"><code># bin/logstash -f config/indexer_rsyslog_nginx.conf</code></pre>
 
@@ -258,7 +258,7 @@ output {
 
 <p>match：匹配日志中的时间字段，这里为time_local</p>
 <p>target：将match匹配到的时间戳存储到给定的字段中，默认不指定的话就存到@timestamp字段</p>
-<p>另外还有参数可以配置：<code>timezone</code>,<code>locale</code>,<code>tag_on_failure</code>等，具体可查看<a href="https://www.elastic.co/guide/en/logstash/6.6/plugins-filters-date.html">官方文档</a></p>
+<p>另外还有参数可以配置：<code>timezone</code>,<code>locale</code>,<code>tag_on_failure</code>等，具体可查看<a href="https://www.elastic.co/guide/en/logstash/6.6/plugins-filters-date.html" target="_blank">官方文档</a></p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

@@ -45,7 +45,7 @@
         <blockquote>
 <p>最好用的流程编辑器bpmn-js系列文章</p>
 </blockquote>
-<p>上一篇文章<a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-local-file-demo-code-source">『最好用的流程编辑器bpmn-js系列之本地文件』</a>介绍了如何将本地的bpmn文件渲染到流程编辑器以及将编辑器内的流程作为图片或bpmn文件保存到本地，这篇文章将会介绍流程编辑界面的一些优化</p>
+<p>上一篇文章<a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-local-file-demo-code-source" target="_blank">『最好用的流程编辑器bpmn-js系列之本地文件』</a>介绍了如何将本地的bpmn文件渲染到流程编辑器以及将编辑器内的流程作为图片或bpmn文件保存到本地，这篇文章将会介绍流程编辑界面的一些优化</p>
 <p>以下演示代码基于上一节搭建好的vue环境，使用bpmn版本为当前最新版7.3.0</p>
 <h2 id="730">7.3.0之后版本的回调写法</h2>
 <p>文章开头先说一下我在写本系列教程中除了阅读部分源码和论坛外，还参考了很多网上的优秀文章，在此感谢这些无私的贡献者，目前网上大多数教程都是基于7.3.0之前的版本写的，在使用<code>importXML</code>等方法时用了如下callback的方式</p>
@@ -175,9 +175,9 @@ handlerUndo() {
 });</code></pre>
 
 
-<p><a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-base-usage-demo-code-source">bpmn-js基本使用</a>文章中我们讲到了bpmn-js有两个模式Modeler编辑模式和Vierer预览模式，实际上有很多小伙伴并不使用bpmn-js提供的Viewer模式，而是通过禁用以上这些组件来达到类似Viewer展示的模式</p>
+<p><a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-base-usage-demo-code-source" target="_blank">bpmn-js基本使用</a>文章中我们讲到了bpmn-js有两个模式Modeler编辑模式和Vierer预览模式，实际上有很多小伙伴并不使用bpmn-js提供的Viewer模式，而是通过禁用以上这些组件来达到类似Viewer展示的模式</p>
 <h2 id="_6">监听绑定</h2>
-<p>很多时候我们需要监听用户的操作并给予相应的反馈，例如在<a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-local-file-demo-code-source">bpmn-js本地文件</a>文章中关于监听变化下载文件的介绍中，我们需要监听到流程的变化，并实时将数据补充到a标签中，用到了如下代码</p>
+<p>很多时候我们需要监听用户的操作并给予相应的反馈，例如在<a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-local-file-demo-code-source" target="_blank">bpmn-js本地文件</a>文章中关于监听变化下载文件的介绍中，我们需要监听到流程的变化，并实时将数据补充到a标签中，用到了如下代码</p>
 <pre class="codehilite"><code>this.bpmnModeler.on(&quot;commandStack.changed&quot;, opscoffee)</code></pre>
 
 
@@ -302,7 +302,7 @@ modeling.updateProperties(element, {
 
 <h2 id="_11">写在最后</h2>
 <p>接触bpmn-js不久，且第一次用VUE，边学边写，文章难免出错，各位多多包含。想要打造一个好用的适合自己的流程编辑器，需要了解的内容比较多，bpmn-js会分多篇文章来介绍，下一篇介绍bpmn-js的Viewer模式下的节点颜色修改、鼠标拖动等内容，欢迎关注</p>
-<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.cn">https://bpmn.ops-coffee.cn</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
+<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.cn" target="_blank">https://bpmn.ops-coffee.cn</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

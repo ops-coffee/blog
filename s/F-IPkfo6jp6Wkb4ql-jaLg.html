@@ -48,7 +48,7 @@
 <h2 id="apm">APM</h2>
 <p>APM全称Application Performance Management应用性能管理，目的是通过各种探针采集数据，收集关键指标，同时搭配数据呈现以实现对应用程序性能管理和故障管理的系统化解决方案</p>
 <p>Zabbix、Premetheus、open-falcon等监控系统主要关注服务器硬件指标与系统服务运行状态等，而APM系统则更重视<strong>程序内部执行过程</strong>指标和<strong>服务之间链路调用</strong>情况的监控，APM更有利于深入代码找到请求响应“慢”的根本问题，与Zabbix之类的监控是互补关系</p>
-<p>目前市面上开源的APM系统主要有CAT、Zipkin、Pinpoint、SkyWalking，大都是参考Google的<a href="http://bigbully.github.io/Dapper-translation/">Dapper</a>实现的</p>
+<p>目前市面上开源的APM系统主要有CAT、Zipkin、Pinpoint、SkyWalking，大都是参考Google的<a href="http://bigbully.github.io/Dapper-translation/" target="_blank">Dapper</a>实现的</p>
 <p><strong>CAT：</strong> 是由国内美团点评开源的，基于Java语言开发，目前提供Java、C/C++、Node.js、Python、Go等语言的客户端，监控数据会全量统计，国内很多公司在用，例如美团点评、携程、拼多多等，CAT跟下边要介绍的Zipkin都需要在应用程序中埋点，对代码侵入性强，我们倾向于选择对代码无侵入的产品，所以淘汰了CAT</p>
 <p><strong>Zipkin：</strong> 由Twitter公司开发并开源，Java语言实现，侵入性相对于CAT要低一点，需要对web.xml之类的配置文件做修改，但依然对代码有侵入，也没有选择</p>
 <p><strong>Pinpoint：</strong> 一个韩国团队开源的产品，运用了字节码增强技术，只需要在启动时添加启动参数即可，对代码<strong>无侵入</strong>，目前支持Java和PHP语言，底层采用HBase来存储数据，探针收集的数据粒度非常细，但性能损耗大，因其出现的时间较长，完成度也很高，应用的公司较多</p>

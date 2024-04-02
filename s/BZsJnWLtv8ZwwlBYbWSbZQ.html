@@ -46,7 +46,7 @@
 <p>当Django的内置权限无法满足需求的时候就自己扩展吧~</p>
 </blockquote>
 <h1 id="_1">背景介绍</h1>
-<p><a href="/s/HwOi-ARTvvNjGTWrDmZIkQ">overmind项目</a>使用了Django内置的权限系统，Django内置权限系统基于model层做控制，新的model创建后会默认新建三个权限，分别为：add、change、delete，如果给用户或组赋予delete的权限，那么用户将可以删除这个model下的所有数据。</p>
+<p><a href="/s/HwOi-ARTvvNjGTWrDmZIkQ" target="_blank">overmind项目</a>使用了Django内置的权限系统，Django内置权限系统基于model层做控制，新的model创建后会默认新建三个权限，分别为：add、change、delete，如果给用户或组赋予delete的权限，那么用户将可以删除这个model下的所有数据。</p>
 <p>原本overmind只管理了我们自己部门的数据库，权限设置只针对具体的功能不针对细粒度的数据库实例，例如用户A 有审核的权限，那么用户A 可以审核所有的DB，此时使用内置的权限系统就可以满足需求了，但随着系统的不断完善要接入其他部门的数据库管理，这就要求针对不同用户开放不同DB的权限了，例如A部门的用户只能操作A部门的DB，Django内置基于model的权限无法满足需求了。</p>
 <h1 id="_2">实现过程</h1>
 <p>先来确定下需求：
@@ -135,7 +135,7 @@
 
 <p>实现思路与上边类似，只是多了一步根据项目和环境再进行判断</p>
 <p>需要根据group去反查都有哪些DB实例包含了该组，这里用到了M2M的related_name属性：<code>group.read.all()</code></p>
-<p>更多关于Django ORM查询的内容可以看这篇文章<a href="/s/JVh4UnS2Tql9gUVaBSoGuA">Django model select的各种用法详解</a>有详细的总结</p>
+<p>更多关于Django ORM查询的内容可以看这篇文章<a href="/s/JVh4UnS2Tql9gUVaBSoGuA" target="_blank">Django model select的各种用法详解</a>有详细的总结</p>
 <h2 id="_5">执行操作权限控制</h2>
 <p>除了上边的两个场景之外我们还需要在执行具体的操作之前去判断是否有权限，例如执行审核操作前判断用户是否对此DB有写权限</p>
 <p>有很多地方都需要做这个判断，所以把这个权限判断单独写个方法来处理，代码如下：</p>
