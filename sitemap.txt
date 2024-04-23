@@ -28,6 +28,7 @@ https://blog.ops-coffee.cn/g/
 https://blog.ops-coffee.cn/x/
 https://blog.ops-coffee.cn/t/
 https://blog.ops-coffee.cn/s/
+https://blog.ops-coffee.cn/tag/关于技术
 https://blog.ops-coffee.cn/tag/监控
 https://blog.ops-coffee.cn/tag/开源
 https://blog.ops-coffee.cn/tag/PPT
