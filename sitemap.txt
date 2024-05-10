@@ -51,6 +51,7 @@ https://blog.ops-coffee.cn/tag/Elk
 https://blog.ops-coffee.cn/tag/Python
 https://blog.ops-coffee.cn/tag/Django
 https://blog.ops-coffee.cn/tag/Devops
+https://blog.ops-coffee.cn/r/maxus-V80-RV-unexpected-fuel-efficiency
 https://blog.ops-coffee.cn/r/city-china-zhejiang-ningbo-xiangshan
 https://blog.ops-coffee.cn/r/less-crowded-destinations-for-upcoming-holidays
 https://blog.ops-coffee.cn/s/devops-cloud-cost-financial-billing-finops-resource
