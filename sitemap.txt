@@ -51,7 +51,7 @@ https://blog.ops-coffee.cn/tag/Elk
 https://blog.ops-coffee.cn/tag/Python
 https://blog.ops-coffee.cn/tag/Django
 https://blog.ops-coffee.cn/tag/Devops
-https://blog.ops-coffee.cn/s/devops-task-args-edit-datatables-roweeorder
+https://blog.ops-coffee.cn/s/devops-task-args-edit-datatables-rowreorder
 https://blog.ops-coffee.cn/s/devops-task-subtask-args-json-to-form-table
 https://blog.ops-coffee.cn/r/maxus-the-guide-to-rv-electricity-usage
 https://blog.ops-coffee.cn/s/devops-task-subtask-args-kwargs-jinja-template
