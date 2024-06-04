@@ -14,6 +14,7 @@ https://blog.ops-coffee.cn/search
 https://blog.ops-coffee.cn/devops
 https://blog.ops-coffee.cn/questions
 https://blog.ops-coffee.cn/index
+https://blog.ops-coffee.cn/veops/
 https://blog.ops-coffee.cn/frontend/
 https://blog.ops-coffee.cn/python/
 https://blog.ops-coffee.cn/webssh/
@@ -51,6 +52,7 @@ https://blog.ops-coffee.cn/tag/Elk
 https://blog.ops-coffee.cn/tag/Python
 https://blog.ops-coffee.cn/tag/Django
 https://blog.ops-coffee.cn/tag/Devops
+https://blog.ops-coffee.cn/veops/oneops-cmdb-install-for-centos-linux
 https://blog.ops-coffee.cn/r/city-china-shanghai-tangxiagonglu
 https://blog.ops-coffee.cn/r/maxus-experience-the-guide-to-rv-water-usage
 https://blog.ops-coffee.cn/s/devops-task-args-edit-datatables-rowreorder
