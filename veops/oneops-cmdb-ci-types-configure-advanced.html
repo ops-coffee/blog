@@ -145,7 +145,7 @@
 <h4 id="_8">表达式</h4>
 <p>第一种构建计算属性的方式为<code>表达式</code>，属性的值可以通过模型的其他属性值构建表达式来展示，例如我们有个字段需要展示成<code>项目名｜服务名｜IP</code>的方式，就可以通过如下表达式来构建</p>
 <p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240606.11.png" /></p>
-<p>需要注意的是，表达式可以理解为模型其他属性的<strong>字符拼接</strong>，并不支持计算</p>
+<p>需要注意的是，表达式同样使用了<code>jinja</code>进行渲染，这对于数字类型的属性，表达式支持<strong>加减乘除</strong>之类的计算，而对于文本等其他类型等属性，表达式则可以理解为模型属性的<strong>字符拼接</strong></p>
 <h4 id="_9">代码</h4>
 <p>第二种构建计算属性的方式为<code>代码</code>，属性的值可以通过执行一段代码的结果来展示，代码中可以引用模型其他属性的值，例如模型有两个属性<code>price</code>和<code>discount</code>，分别记录了原价和折扣，我想要实付的金额，就可以添加一个新的属性<code>paid</code>，然后通过如下的代码来计算实付的金额</p>
 <p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240606.12.png" /></p>
