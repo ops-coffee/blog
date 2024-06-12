@@ -61,7 +61,7 @@
         <p>之前介绍过一个<a href="https://blog.ops-coffee.cn/s/veops-open-source-cmdb-devops" target="_blank">灵活多变功能强大的开源CMDB系统</a>，设计精巧，可玩性高，经过一段时间的深度使用，发现了许多可取之处，无论是构建系统内部的资产管理数据库，还是学习它的设计方式都有不少的可取之处，接下来我准备写一系列的文章来系统的介绍一下它，从使用到设计，全面深入了解下</p>
 <p>这个系列第一篇就从部署开始，详细介绍下VECMDB的安装、启动、访问以及系统的详细管理方式和常见错误的处理等</p>
 <h2 id="_1">安装</h2>
-<p>在开始之前你只需要准备一台主机，并安装好linux操作系统即可。以下操作环境基于CentOS7</p>
+<p>在开始之前你只需要准备一台主机，Linux或MacOS系统，只要能安装docker即可。以下操作环境基于CentOS7</p>
 <h3 id="docker">安装Docker</h3>
 <p>1.更新系统包</p>
 <pre class="codehilite"><code>yum update -y</code></pre>
@@ -119,9 +119,7 @@ docker compose up -d</code></pre>
 <p>通过以上内容可以简单方便的部署起来VECMDB服务，但我们不仅要知其然还要知其所以然，以下这部分将会详细的讲解下CMDB的启动方式及各个服务，以及一些简单的排错方法，能更深入的了解VECMDB服务</p>
 <h3 id="docker-compose">Docker Compose</h3>
 <p>Docker-Compose是一个用于定义和运行多容器Docker应用程序的工具。通过一个名为<code>docker-compose.yml</code>的YAML文件，用户可以配置应用程序所需的所有服务。然后，只需一个命令就可以创建并启动这些服务。VECMDB是通过Docker-Compose做服务管理的，那首先我们就需要详细的了解下VECMDB的<code>docker-compose.yml</code>配置文件，配置文件位于仓库的根目录，内容如下：</p>
-<pre class="codehilite"><code>version: '2.19' # 第一部分为版本声明，声明使用docker-compose的版本为2.19
-
-services: # 第二部分为服务定义
+<pre class="codehilite"><code>services: # 第二部分为服务定义
   cmdb-db: # 定义了一个名为cmdb-db的服务
     image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-db:2.3 # 镜像地址，MySQL数据库容器
     container_name: cmdb-db  # 容器名称为cmdb-db
@@ -195,6 +193,11 @@ services: # 第二部分为服务定义
         flask init-import-user-from-acl
         flask init-department
         flask cmdb-counter &gt; counter.log 2&gt;&amp;1 # 执行一系列的flash命令用来初始化系统
+    healthcheck: # 健康检查命令，检查API服务是否启动正常
+      timeout: 3s
+      interval: 5s
+      retries: 10
+      test: &quot;ps aux|grep -v grep|grep -v '1 root'|grep gunicorn || exit 1&quot;        
     networks: # 网络配置，使用名字为new的自定义网络，同时设置别名为cmdb-api
       new:
         aliases:
@@ -204,7 +207,8 @@ services: # 第二部分为服务定义
     image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-ui:2.4.5 # 镜像地址，CMDB UI容器
     container_name: cmdb-ui # 容器名称为cmdb-api
     depends_on: # 定义依赖关系
-      - cmdb-api # 确保cmdb-api服务启动后再启动
+      - cmdb-api # 确保cmdb-api服务启动成功后再启动
+        condition: service_healthy
     environment: # 环境变量配置
       TZ: Asia/Shanghai # 配置时区为Asia/Shanghai
       CMDB_API_HOST: cmdb-api:5000 # CMDB_API_HOST指向到cmdb-api服务的地址
@@ -408,6 +412,10 @@ cmdb-ui      registry.cn-hangzhou.aliyuncs.com/veops/cmdb-ui:2.4.5    &quot;/doc
 
 <p>如果正常则检查API服务容器状态</p>
 <pre class="codehilite"><code># docker compose ps | grep cmdb-api</code></pre>
+
+
+<p>容器状态正常则检查gunicorn服务是否正常</p>
+<pre class="codehilite"><code># docker exec -it cmdb-api /bin/sh -c &quot;ps aux|grep -v grep|grep -v '1 root'|grep gunicorn&quot;</code></pre>
 
 
 <p>最后查看日志是否有报错</p>
