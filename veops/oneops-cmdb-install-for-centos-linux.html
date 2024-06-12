@@ -391,14 +391,26 @@ cmdb-ui      registry.cn-hangzhou.aliyuncs.com/veops/cmdb-ui:2.4.5    &quot;/doc
 
 
 <p>最后就可以正常通过Web访问部署的CMDB服务了</p>
-<h2 id="_8">常见问题</h2>
-<h3 id="_9">数据库连接失败</h3>
+<h2 id="_8">注意事项</h2>
+<p>前文的<code>docker-compose.yml</code>配置文件中有配置从代码根目录下加载<code>.env</code>文件内容作为环境变量，<code>.env</code>文件主要记录了MySQL数据库配置信息，如下：</p>
+<pre class="codehilite"><code> MYSQL_ROOT_PASSWORD='123456'
+ MYSQL_HOST='mysql'
+ MYSQL_PORT=3306
+ MYSQL_USER='cmdb'
+ MYSQL_DATABASE='cmdb'
+ MYSQL_PASSWORD='123456'</code></pre>
+
+
+<p>可以看到默认的账号密码比较简单，如果我们想要修改的话，最好在第一次初始化之前就修改<code>.env</code>文件里的配置，这样的话在系统初始化时就会设置成新设置的账号密码，以提高系统安全性</p>
+<p>若你已经初始化了系统，还想要再修改账号密码的话，那就只能进入MySQL数据库进行修改了，同时修改过之后也要同时修改<code>.env</code>配置文件里的相关配置</p>
+<h2 id="_9">常见问题</h2>
+<h3 id="_10">数据库连接失败</h3>
 <p>数据库的配置记录在<code>.env</code>配置文件中，先检查数据库配置和环境变量是否正确，其次确认数据库服务正常启动并能接受连接</p>
 <pre class="codehilite"><code># docker exec -it cmdb-db mysql -u root -p$MYSQL_ROOT_PASSWORD</code></pre>
 
 
 <p>最后检查自定义网络是否正常，通过之前给的<code>network</code>命令</p>
-<h3 id="_10">缓存连接失败</h3>
+<h3 id="_11">缓存连接失败</h3>
 <p>检查Redis服务是否正常运行并能接受连接</p>
 <pre class="codehilite"><code># docker exec -it cmdb-cache redis-cli ping</code></pre>
 
