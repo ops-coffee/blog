@@ -119,7 +119,7 @@ docker compose up -d</code></pre>
 <p>通过以上内容可以简单方便的部署起来VECMDB服务，但我们不仅要知其然还要知其所以然，以下这部分将会详细的讲解下CMDB的启动方式及各个服务，以及一些简单的排错方法，能更深入的了解VECMDB服务</p>
 <h3 id="docker-compose">Docker Compose</h3>
 <p>Docker-Compose是一个用于定义和运行多容器Docker应用程序的工具。通过一个名为<code>docker-compose.yml</code>的YAML文件，用户可以配置应用程序所需的所有服务。然后，只需一个命令就可以创建并启动这些服务。VECMDB是通过Docker-Compose做服务管理的，那首先我们就需要详细的了解下VECMDB的<code>docker-compose.yml</code>配置文件，配置文件位于仓库的根目录，内容如下：</p>
-<pre class="codehilite"><code>services: # 第二部分为服务定义
+<pre class="codehilite"><code>services: # 第一部分为服务定义
   cmdb-db: # 定义了一个名为cmdb-db的服务
     image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-db:2.3 # 镜像地址，MySQL数据库容器
     container_name: cmdb-db  # 容器名称为cmdb-db
@@ -226,7 +226,7 @@ docker compose up -d</code></pre>
     ports: # 端口配置，将宿主机的8000端口映射到容器的80端口
       - &quot;8000:80&quot;
 
-volumes: # 卷定义
+volumes: # 第二部分为卷定义
   db-data: # 定义一个db-data本地卷，用来持久化MySQL数据，cmdb-db容器使用
     driver: local
     name: cmdb_db-data
@@ -234,7 +234,7 @@ volumes: # 卷定义
     driver: local
     name: cmdb_cache-data
 
-networks: # 网络定义
+networks: # 第三部分为网络定义
   new: # 定义一个new桥接网络，用于各服务之间通信
     driver: bridge
     name: cmdb_network</code></pre>
