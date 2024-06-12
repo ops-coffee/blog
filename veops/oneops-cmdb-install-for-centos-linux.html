@@ -6,18 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="Linux,VECMDB,None,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
-  <meta name="description" content="超详细纯净Linux系统安装部署VECMDB" />
+  <meta name="keywords" content="CMDB,None,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="开源｜维易CMDB详解之安装部署及常见问题处理" />
   <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
   <link rel="shortcut icon" href="/static/images/favicon.ico" />
 
   <!-- Begin SEO tag -->
-  <title>超详细纯净Linux系统安装部署VECMDB</title>
+  <title>开源｜维易CMDB详解之安装部署及常见问题处理</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
   <meta property="og:url" content="https://blog.ops-coffee.cn" />
-  <meta property="og:title" content="超详细纯净Linux系统安装部署VECMDB" />
-  <meta property="og:description" content="超详细纯净Linux系统安装部署VECMDB" />
+  <meta property="og:title" content="开源｜维易CMDB详解之安装部署及常见问题处理" />
+  <meta property="og:description" content="开源｜维易CMDB详解之安装部署及常见问题处理" />
   <link rel="canonical" href="https://blog.ops-coffee.cn" />
   <!-- End SEO tag -->
 
@@ -56,11 +56,13 @@
 
   <div id="content-wrap">
     <div class="container">
-        <h1 id="art-title">超详细纯净Linux系统安装部署VECMDB</h1>
+        <h1 id="art-title">开源｜维易CMDB详解之安装部署及常见问题处理</h1>
 
-        <p>VECMDB是一个功能完善灵活强大的开源的CMDB系统，详细介绍看这里：<a href="https://blog.ops-coffee.cn/s/veops-open-source-cmdb-devops" target="_blank">灵活多变功能强大的CMDB</a>，在开始之前你只需要准备一台主机，并安装好linux操作系统即可</p>
-<p>以下操作环境基于CentOS7</p>
-<h2 id="docker">安装Docker</h2>
+        <p>之前介绍过一个<a href="https://blog.ops-coffee.cn/s/veops-open-source-cmdb-devops" target="_blank">灵活多变功能强大的开源CMDB系统</a>，设计精巧，可玩性高，经过一段时间的深度使用，发现了许多可取之处，无论是构建系统内部的资产管理数据库，还是学习它的设计方式都有不少的可取之处，接下来我准备写一系列的文章来系统的介绍一下它，从使用到设计，全面深入了解下</p>
+<p>这个系列第一篇就从部署开始，详细介绍下VECMDB的安装、启动、访问以及系统的详细管理方式和常见错误的处理等</p>
+<h2 id="_1">安装</h2>
+<p>在开始之前你只需要准备一台主机，并安装好linux操作系统即可。以下操作环境基于CentOS7</p>
+<h3 id="docker">安装Docker</h3>
 <p>1.更新系统包</p>
 <pre class="codehilite"><code>yum update -y</code></pre>
 
@@ -82,7 +84,7 @@
 systemctl enable docker</code></pre>
 
 
-<h2 id="docker-compose-v2">安装 Docker Compose v2</h2>
+<h3 id="docker-compose-v2">安装 Docker Compose v2</h3>
 <p>1.安装 Docker Compose 插件</p>
 <pre class="codehilite"><code>yum install -y docker-compose-plugin</code></pre>
 
@@ -91,11 +93,11 @@ systemctl enable docker</code></pre>
 <pre class="codehilite"><code>docker compose version</code></pre>
 
 
-<h2 id="git">安装GIT</h2>
+<h3 id="git">安装GIT</h3>
 <pre class="codehilite"><code>yum install git</code></pre>
 
 
-<h2 id="_1">启动项目</h2>
+<h2 id="_2">启动</h2>
 <p>1.创建项目目录</p>
 <pre class="codehilite"><code>mkdir /data
 cd /data</code></pre>
@@ -107,12 +109,326 @@ cd cmdb/
 docker compose up -d</code></pre>
 
 
-<h2 id="_2">访问项目</h2>
+<h2 id="_3">访问</h2>
 <p>浏览器打开，输入<code>http://ip:8000</code>访问，默认账号密码分别为：</p>
 <ul>
 <li>User：admin</li>
 <li>Password：123456</li>
 </ul>
+<h2 id="_4">详解</h2>
+<p>通过以上内容可以简单方便的部署起来VECMDB服务，但我们不仅要知其然还要知其所以然，以下这部分将会详细的讲解下CMDB的启动方式及各个服务，以及一些简单的排错方法，能更深入的了解VECMDB服务</p>
+<h3 id="docker-compose">Docker Compose</h3>
+<p>Docker-Compose是一个用于定义和运行多容器Docker应用程序的工具。通过一个名为<code>docker-compose.yml</code>的YAML文件，用户可以配置应用程序所需的所有服务。然后，只需一个命令就可以创建并启动这些服务。VECMDB是通过Docker-Compose做服务管理的，那首先我们就需要详细的了解下VECMDB的<code>docker-compose.yml</code>配置文件，配置文件位于仓库的根目录，内容如下：</p>
+<pre class="codehilite"><code>version: '2.19' # 第一部分为版本声明，声明使用docker-compose的版本为2.19
+
+services: # 第二部分为服务定义
+  cmdb-db: # 定义了一个名为cmdb-db的服务
+    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-db:2.3 # 镜像地址，MySQL数据库容器
+    container_name: cmdb-db  # 容器名称为cmdb-db
+    env_file: # 从当前目录下的.env文件中加载环境变量
+      - .env
+    environment: # 环境变量配置
+      TZ: Asia/Shanghai # 配置时区为Asia/Shanghai
+    volumes: # 挂载三个卷
+      - db-data:/var/lib/mysql # 第一个卷为db-data，用来持久化MySQL数据
+      - ./docs/mysqld.cnf:/etc/mysql/conf.d/mysqld.cnf # 本地配置文件mysqld.cnf挂载到MySQL配置目录
+      - ./docs/cmdb.sql:/docker-entrypoint-initdb.d/cmdb.sql # 初始化SQL文件cmdb.sql挂载到MySQL容器的初始化目录
+    healthcheck: # 健康命令检查，检查MySQL服务是否正常
+      test: [&quot;CMD&quot;, &quot;mysqladmin&quot; ,&quot;ping&quot;, &quot;-h&quot;, &quot;localhost&quot;, &quot;-p$MYSQL_ROOT_PASSWORD&quot;] # 健康检查命令，检查MySQL服务是否正常
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci # 设置MySQL字符集和排序规则
+    networks: # 网络配置，使用名字为new的自定义网络，同时设置别名为mysql
+      new:
+        aliases:
+          - mysql
+    ports: # 端口配置，将宿主机的23306端口映射到容器的3306端口
+      - '23306:3306'
+
+  cmdb-cache: # 定义一个名为cmdb-cache的服务
+    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-cache:2.3 # 镜像地址，Redis缓存容器
+    container_name: cmdb-cache # 容器名称为cmdb-cache
+    environment: # 环境变量配置
+      TZ: Asia/Shanghai # 配置时区为Asia/Shanghai
+    volumes: # 挂载一个卷
+      - cache-data:/data # 卷为cache-data，用来持久化Redis数据
+    healthcheck: # 健康检查命令，检查Redis服务是否正常
+      test: [&quot;CMD&quot;, &quot;redis-cli&quot;, &quot;ping&quot;]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: # 网络配置，使用名字为new的自定义网络，同时设置别名为redis
+      new:
+        aliases:
+          - redis
+
+  cmdb-api: # 定义一个名为cmdb-api的服务
+    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.4.5 # 镜像地址，CMDB API容器
+    container_name: cmdb-api # 容器名称为cmdb-api
+    env_file: # 从当前目录下的.env文件中加载环境变量
+      - .env
+    environment: # 环境变量配置
+      TZ: Asia/Shanghai # 配置时区为Asia/Shanghai
+      WAIT_HOSTS: cmdb-db:3306, cmdb-cache:6379 # 配置WAIT_HOSTS用来等待cmdb-db和cmdb-cache服务健康后再启动
+    depends_on: # 定义依赖关系
+      cmdb-db: # 确保cmdb-db服务启动健康后再启动
+        condition: service_healthy
+      cmdb-cache: # 确保cmdb-cache服务启动健康后再启动
+        condition: service_healthy
+    command: # 多行启动命令
+      - /bin/sh
+      - -c
+      - |
+        sed -i &quot;s#USE_ACL = False#USE_ACL = True#g&quot; settings.py # 修改settings.py中的USE_ACL为True
+        /wait # 使用/wait脚本等待服务依赖启动
+        flask db-setup # 初始化数据库
+        flask common-check-new-columns # 检查数据库新列
+        gunicorn --workers=4 autoapp:app -b 0.0.0.0:5000 -D # 启动gunicorn服务
+
+        celery -A celery_worker.celery worker -E -Q one_cmdb_async --autoscale=4,1 --logfile=one_cmdb_async.log -D # 启动celery服务，队列one_cmdb_async
+        celery -A celery_worker.celery worker -E -Q acl_async --logfile=one_acl_async.log --autoscale=2,1 -D # 启动celery服务，队列acl_async
+
+        nohup flask cmdb-trigger &gt; trigger.log 2&gt;&amp;1 &amp;
+        flask cmdb-init-cache
+        flask cmdb-init-acl
+        flask init-import-user-from-acl
+        flask init-department
+        flask cmdb-counter &gt; counter.log 2&gt;&amp;1 # 执行一系列的flash命令用来初始化系统
+    networks: # 网络配置，使用名字为new的自定义网络，同时设置别名为cmdb-api
+      new:
+        aliases:
+          - cmdb-api
+
+  cmdb-ui: # 定义一个名为cmdb-ui的服务
+    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-ui:2.4.5 # 镜像地址，CMDB UI容器
+    container_name: cmdb-ui # 容器名称为cmdb-api
+    depends_on: # 定义依赖关系
+      - cmdb-api # 确保cmdb-api服务启动后再启动
+    environment: # 环境变量配置
+      TZ: Asia/Shanghai # 配置时区为Asia/Shanghai
+      CMDB_API_HOST: cmdb-api:5000 # CMDB_API_HOST指向到cmdb-api服务的地址
+      NGINX_PORT: 80 # 设置NGINX的端口为80
+    volumes: # 挂载一个卷
+      - ./docs/nginx.cmdb.conf.example:/etc/nginx/conf.d/nginx.cmdb.conf.example # 挂载本地的nginx配置文件
+    command: # 多行启动命令
+      - /bin/sh
+      - -c
+      - |
+        envsubst '$$CMDB_API_HOST  $$NGINX_PORT' &lt; /etc/nginx/conf.d/nginx.cmdb.conf.example &gt; /etc/nginx/conf.d/cmdb.conf # 使用envsubst替换nginx配置文件中的环境变量
+        nginx -g  'daemon off;' # 启动nginx，使用daemon off模式，前台运行
+    networks: # 网络配置，使用名字为new的自定义网络
+      - new
+    ports: # 端口配置，将宿主机的8000端口映射到容器的80端口
+      - &quot;8000:80&quot;
+
+volumes: # 卷定义
+  db-data: # 定义一个db-data本地卷，用来持久化MySQL数据，cmdb-db容器使用
+    driver: local
+    name: cmdb_db-data
+  cache-data: # 定一个cache-data本地卷，用来持久化Redis数据，cmdb-cache容器使用
+    driver: local
+    name: cmdb_cache-data
+
+networks: # 网络定义
+  new: # 定义一个new桥接网络，用于各服务之间通信
+    driver: bridge
+    name: cmdb_network</code></pre>
+
+
+<p>总结以下就是启动了四个容器，分别是MySQL、Reids、后端API和前端UI，后端API启动前需要MySQL和Reids启动成功，而前端UI启动前需要后端API启动成功。定义了一个公共的网络保证四个容器之间可以互相通信，同时还定义了两个本地卷，保证MySQL和Reids数据的持久化，以确保容器在重启之后数据也不会丢失，对系统升级也十分友好</p>
+<h3 id="_5">本地卷</h3>
+<p>数据是持久化在宿主机上的本地卷里，本地卷的查看可以直接执行<code>volume</code>命令，例如查看MySQL的本地卷，就可以用如下命令：</p>
+<pre class="codehilite"><code># docker volume inspect cmdb_db-data
+[
+    {
+        &quot;CreatedAt&quot;: &quot;2024-06-03T17:59:36+08:00&quot;,
+        &quot;Driver&quot;: &quot;local&quot;,
+        &quot;Labels&quot;: {
+            &quot;com.docker.compose.project&quot;: &quot;cmdb&quot;,
+            &quot;com.docker.compose.version&quot;: &quot;2.27.0&quot;,
+            &quot;com.docker.compose.volume&quot;: &quot;db-data&quot;
+        },
+        &quot;Mountpoint&quot;: &quot;/var/lib/docker/volumes/cmdb_db-data/_data&quot;,
+        &quot;Name&quot;: &quot;cmdb_db-data&quot;,
+        &quot;Options&quot;: null,
+        &quot;Scope&quot;: &quot;local&quot;
+    }
+]</code></pre>
+
+
+<p>其中<code>Mountpoint</code>就是数据在宿主机本地的挂载点，可以直接查看其中的数据</p>
+<pre class="codehilite"><code># ls /var/lib/docker/volumes/cmdb_db-data/_data/
+auto.cnf  ca-key.pem  ca.pem  client-cert.pem  client-key.pem  cmdb  ib_buffer_pool  ib_logfile0  ib_logfile1  ibdata1  ibtmp1  mysql  performance_schema  private_key.pem  public_key.pem  server-cert.pem  server-key.pem  sys</code></pre>
+
+
+<p>而Redis持久化在本地的数据也同样可以通过以上的方法查看</p>
+<pre class="codehilite"><code># docker volume inspect cmdb_cache-data
+[
+    {
+        &quot;CreatedAt&quot;: &quot;2024-06-03T17:59:36+08:00&quot;,
+        &quot;Driver&quot;: &quot;local&quot;,
+        &quot;Labels&quot;: {
+            &quot;com.docker.compose.project&quot;: &quot;cmdb&quot;,
+            &quot;com.docker.compose.version&quot;: &quot;2.27.0&quot;,
+            &quot;com.docker.compose.volume&quot;: &quot;cache-data&quot;
+        },
+        &quot;Mountpoint&quot;: &quot;/var/lib/docker/volumes/cmdb_cache-data/_data&quot;,
+        &quot;Name&quot;: &quot;cmdb_cache-data&quot;,
+        &quot;Options&quot;: null,
+        &quot;Scope&quot;: &quot;local&quot;
+    }
+]
+#
+# ls /var/lib/docker/volumes/cmdb_cache-data/_data/
+dump.rdb</code></pre>
+
+
+<p>只有一个rdb数据文件。如果你在部署时遇到数据方面的问题，可以通过以上方法来查看本地的数据，或是直接命令行进入MySQL或者Reids去检查数据，当然更多的时候可能是数据初始化问题，所以更为有效的方法或许是使用如下命令重启docker-compose服务</p>
+<pre class="codehilite"><code># 关闭docker compose服务
+# docker compose down
+
+# 启动docker compose服务
+# docker compose up -d
+
+# 可选：查看docker compose服务状态
+# docker compose ps
+
+# 可选：检查docker compose容器日志
+# docker compose logs</code></pre>
+
+
+<h3 id="_6">自定义网络</h3>
+<p>docker-compose服务启动后，可以通过<code>network</code>命令查看Docker的网络列表</p>
+<pre class="codehilite"><code># docker network ls
+NETWORK ID     NAME           DRIVER    SCOPE
+17ec43fa34f8   bridge         bridge    local
+5dd2f0dd8033   cmdb_network   bridge    local
+75376eee7d8b   host           host      local
+deb75486f151   none           null      local</code></pre>
+
+
+<p>此时能看到一个名为<code>cmdb_network</code>的网络，如果你遇到了网络连通性问题，例如API连不上数据库等等，可以通过<code>network</code>命令查看网络的详细信息</p>
+<pre class="codehilite"><code># docker network inspect cmdb_network
+[
+    {
+        &quot;Name&quot;: &quot;cmdb_network&quot;,
+        &quot;Id&quot;: &quot;5dd2f0dd8033f7c99d4a8e5371356b41e087c71eb9f35c4fdacaccdfa280e3d1&quot;,
+        &quot;Created&quot;: &quot;2024-06-12T13:42:35.923873631+08:00&quot;,
+        &quot;Scope&quot;: &quot;local&quot;,
+        &quot;Driver&quot;: &quot;bridge&quot;,
+        &quot;EnableIPv6&quot;: false,
+        &quot;IPAM&quot;: {
+            &quot;Driver&quot;: &quot;default&quot;,
+            &quot;Options&quot;: null,
+            &quot;Config&quot;: [
+                {
+                    &quot;Subnet&quot;: &quot;172.19.0.0/16&quot;,
+                    &quot;Gateway&quot;: &quot;172.19.0.1&quot;
+                }
+            ]
+        },
+        &quot;Internal&quot;: false,
+        &quot;Attachable&quot;: false,
+        &quot;Ingress&quot;: false,
+        &quot;ConfigFrom&quot;: {
+            &quot;Network&quot;: &quot;&quot;
+        },
+        &quot;ConfigOnly&quot;: false,
+        &quot;Containers&quot;: {
+            &quot;176d8a248ecde36d46205e03ff19879cd2a6c6325e3e8622ca48033ae55a0e5b&quot;: {
+                &quot;Name&quot;: &quot;cmdb-api&quot;,
+                &quot;EndpointID&quot;: &quot;0619481c0a6241b445ea6daead002c39f82aae56ba77390b67d73779d56c7221&quot;,
+                &quot;MacAddress&quot;: &quot;02:42:ac:13:00:04&quot;,
+                &quot;IPv4Address&quot;: &quot;172.19.0.4/16&quot;,
+                &quot;IPv6Address&quot;: &quot;&quot;
+            },
+            &quot;3387071f980e26a399350f8a6fda0587edccb25319ec040945896228671616c4&quot;: {
+                &quot;Name&quot;: &quot;cmdb-db&quot;,
+                &quot;EndpointID&quot;: &quot;234d64c1858fb5933defe84b13aaf071426324959f0331abec4e1dd29c4c1a09&quot;,
+                &quot;MacAddress&quot;: &quot;02:42:ac:13:00:03&quot;,
+                &quot;IPv4Address&quot;: &quot;172.19.0.3/16&quot;,
+                &quot;IPv6Address&quot;: &quot;&quot;
+            },
+            &quot;a2df35da575fa289b4b2cc3dd0d7370c1003a47fe84b894a41751adef4d56dd4&quot;: {
+                &quot;Name&quot;: &quot;cmdb-ui&quot;,
+                &quot;EndpointID&quot;: &quot;a403699251326f92e391b4aa38f9d80cf14153053e4f2307d133b4ff9f167182&quot;,
+                &quot;MacAddress&quot;: &quot;02:42:ac:13:00:05&quot;,
+                &quot;IPv4Address&quot;: &quot;172.19.0.5/16&quot;,
+                &quot;IPv6Address&quot;: &quot;&quot;
+            },
+            &quot;aaf5d23ee24bd9719f9231369649fceac7a1fe8bb1bb9421ca12f35c3faade49&quot;: {
+                &quot;Name&quot;: &quot;cmdb-cache&quot;,
+                &quot;EndpointID&quot;: &quot;efe4eff06148e463a8b9a1af0ef15e81701e0bec39f9cfa25fb9613005b32148&quot;,
+                &quot;MacAddress&quot;: &quot;02:42:ac:13:00:02&quot;,
+                &quot;IPv4Address&quot;: &quot;172.19.0.2/16&quot;,
+                &quot;IPv6Address&quot;: &quot;&quot;
+            }
+        },
+        &quot;Options&quot;: {},
+        &quot;Labels&quot;: {
+            &quot;com.docker.compose.network&quot;: &quot;new&quot;,
+            &quot;com.docker.compose.project&quot;: &quot;cmdb&quot;,
+            &quot;com.docker.compose.version&quot;: &quot;2.27.0&quot;
+        }
+    }
+]</code></pre>
+
+
+<p>这里输出了网络的详细信息，包括网络的配置、连接到该网络到容器等等，其中的<code>Containers</code>字段就记录了所有连接到此网络到容器，正常情况下会有四个，包含<code>cmdb-db</code>、<code>cmdb-cache</code>、<code>cmdb-api</code>和<code>cmdb-ui</code>，它们都被分配了合适的IP地址</p>
+<h3 id="_7">容器</h3>
+<p>如果以上都没有问题，那就可以通过docker命令查看到容器的状态都正常</p>
+<pre class="codehilite"><code># docker compose ps
+NAME         IMAGE                                                    COMMAND                  SERVICE      CREATED          STATUS                    PORTS
+cmdb-api     registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.4.5   &quot;/bin/sh -c 'sed -i …&quot;   cmdb-api     10 minutes ago   Up 10 minutes             
+cmdb-cache   registry.cn-hangzhou.aliyuncs.com/veops/cmdb-cache:2.3   &quot;docker-entrypoint.s…&quot;   cmdb-cache   10 minutes ago   Up 10 minutes (healthy)   6379/tcp
+cmdb-db      registry.cn-hangzhou.aliyuncs.com/veops/cmdb-db:2.3      &quot;docker-entrypoint.s…&quot;   cmdb-db      10 minutes ago   Up 10 minutes (healthy)   33060/tcp, 0.0.0.0:23306-&gt;3306/tcp, :::23306-&gt;3306/tcp
+cmdb-ui      registry.cn-hangzhou.aliyuncs.com/veops/cmdb-ui:2.4.5    &quot;/docker-entrypoint.…&quot;   cmdb-ui      10 minutes ago   Up 10 minutes             0.0.0.0:8000-&gt;80/tcp, :::8000-&gt;80/tcp</code></pre>
+
+
+<p>最后就可以正常通过Web访问部署的CMDB服务了</p>
+<h2 id="_8">常见问题</h2>
+<h3 id="_9">数据库连接失败</h3>
+<p>数据库的配置记录在<code>.env</code>配置文件中，先检查数据库配置和环境变量是否正确，其次确认数据库服务正常启动并能接受连接</p>
+<pre class="codehilite"><code># docker exec -it cmdb-db mysql -u root -p$MYSQL_ROOT_PASSWORD</code></pre>
+
+
+<p>最后检查自定义网络是否正常，通过之前给的<code>network</code>命令</p>
+<h3 id="_10">缓存连接失败</h3>
+<p>检查Redis服务是否正常运行并能接受连接</p>
+<pre class="codehilite"><code># docker exec -it cmdb-cache redis-cli ping</code></pre>
+
+
+<p>其次也是检查自定义网络状态</p>
+<h3 id="api">API服务启动失败</h3>
+<p>先检查以来的MySQL和Reids服务是否正常，然后检查是否能正常连通MySQL和Redis</p>
+<pre class="codehilite"><code># docker exec -it cmdb-api /bin/sh -c &quot;ping cmdb-db&quot;
+# docker exec -it cmdb-api /bin/sh -c &quot;ping cmdb-cache&quot;</code></pre>
+
+
+<p>如果正常则检查API服务容器状态</p>
+<pre class="codehilite"><code># docker compose ps | grep cmdb-api</code></pre>
+
+
+<p>最后查看日志是否有报错</p>
+<pre class="codehilite"><code># docker compose logs cmdb-api</code></pre>
+
+
+<h3 id="ui">UI服务无法访问</h3>
+<p>先确认依赖的API容器状态正常，然后检查依赖的API服务日志无报错，再然后检查是否能正常连通API容器</p>
+<pre class="codehilite"><code># docker exec -it cmdb-ui /bin/sh -c &quot;ping cmdb-api&quot;</code></pre>
+
+
+<p>如果都没有问题，则查看UI服务容器状态</p>
+<pre class="codehilite"><code># docker compose ps | grep cmdb-ui</code></pre>
+
+
+<p>最后查看nginx配置及容器日志是否有报错</p>
+<pre class="codehilite"><code># docker exec -it cmdb-ui /bin/sh -c &quot;cd /etc/init.d &amp;&amp; nginx -t&quot;
+# docker compose logs cmdb-ui</code></pre>
+
+
+<p>对于成熟的开源项目，只要不是刚刚更新的新版本，那大概率都已经经过了许多用户的实际验证，项目本身出现问题的概率较低，如果我们遇到错误先考虑自己的环境及配置，按照以上解决思路，大概率能找到问题并解决。如果不行的话那就重启下docker-compose服务，还不行的话就重装吧</p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
