@@ -6,9 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="运维,运维博客,运维开发,ops,sre,linux,devops,python,django,nginx" />
+  <meta name="keywords" content="运维咖啡吧,友情链接" />
   <meta name="description" content="运维咖啡吧的朋友们" />
   <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="shortcut icon" href="/static/images/favicon.ico" />
 
   <!-- Begin SEO tag -->
@@ -23,6 +24,9 @@
 
   <!-- Umami Cloud -->
   <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 
 <body>
@@ -30,7 +34,7 @@
     <div class="container">
       <nav class="header-site">
         <ul>
-          <li><a href="/">运维咖啡吧</a></li>
+          <li><a href="/">首页</a></li>
           <li><a href="/tag/关于技术/">关于技术</a></li>
           <li><a href="/tag/这是生活/">这是生活</a></li>
           <li><a href="/devops.html">运维平台</a></li>
@@ -41,11 +45,20 @@
       </nav>
     </div>
   </div>
-  <!-- header -->
 
-  <div id="content-wrapper">
+  <header>
     <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
 
+  <div id="content-wrap">
+    <div class="container">
+        
+    <div class="container">
       <div class="nav-cell clearfix">
         <h2>🔥 热门推荐
           <!-- <a class="more" href="">更多</a> -->
@@ -151,9 +164,18 @@
         </ul>
       </div>
     </div>
+
+  <script src="/static/live2d/L2Dwidget.min.js"></script>
+  <script type="text/javascript">
+    L2Dwidget.init({
+      model: { jsonPath: '/static/live2d/tororo/assets/tororo.model.json' }, mobile: { show: false },
+      react: { opacityDefault: 0.85, opacityOnHover: 0.2 }, display: { width: 150, height: 200 }
+    })
+  </script>
+
+    </div>
   </div>
 
-  <!-- footer -->
   <footer class="footer">
     <div class="container clearfix">
       <div class="copy"> © ops-coffee</div>
@@ -165,14 +187,6 @@
       </div>
     </div>
   </footer>
-
-  <script src="/static/live2d/L2Dwidget.min.js"></script>
-  <script type="text/javascript">
-    L2Dwidget.init({
-      model: { jsonPath: '/static/live2d/tororo/assets/tororo.model.json' }, mobile: { show: false },
-      react: { opacityDefault: 0.85, opacityOnHover: 0.2 }, display: { width: 150, height: 200 }
-    })
-  </script>
 </body>
 
 </html>
