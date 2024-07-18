@@ -146,7 +146,7 @@ https://blog.ops-coffee.cn/django/django-url-path-conf
 https://blog.ops-coffee.cn/django/django-model-manytomany-field
 https://blog.ops-coffee.cn/django/django-model-foreignkey
 https://blog.ops-coffee.cn/django/django-model-relationships
-https://blog.ops-coffee.cn/s/HApDTE3c0o4YL5ntx0Aa1Q
+https://blog.ops-coffee.cn/r/city-china-zhejiang-ningbo-yuyao-simingshan
 https://blog.ops-coffee.cn/django/django-model-meta-options
 https://blog.ops-coffee.cn/django/django-model-options
 https://blog.ops-coffee.cn/django/django-model-fields
