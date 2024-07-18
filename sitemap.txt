@@ -26,7 +26,6 @@ https://blog.ops-coffee.cn/o/
 https://blog.ops-coffee.cn/django/
 https://blog.ops-coffee.cn/r/
 https://blog.ops-coffee.cn/g/
-https://blog.ops-coffee.cn/x/
 https://blog.ops-coffee.cn/t/
 https://blog.ops-coffee.cn/s/
 https://blog.ops-coffee.cn/tag/关于技术
@@ -186,7 +185,7 @@ https://blog.ops-coffee.cn/t/harbor-clear-space-python-api
 https://blog.ops-coffee.cn/s/6YAC_Lqw3jB0LZlJTx4A2g
 https://blog.ops-coffee.cn/s/xehCT6PMS90dvrf96E-Fzw
 https://blog.ops-coffee.cn/s/omDL4c08_M1oyuR_GSjOLw
-https://blog.ops-coffee.cn/s/lJawB7Yb5O11qczx9aeqRQ
+https://blog.ops-coffee.cn/r/city-china-zhejiang-hangzhou-chunan-qiandaohu
 https://blog.ops-coffee.cn/bpmn/bpmn-js-demo-source-code
 https://blog.ops-coffee.cn/s/h3lpkEHJ4-BWEfrHNQsFCQ
 https://blog.ops-coffee.cn/s/V8pEL8ylhUKIA8uQxwks2w
