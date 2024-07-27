@@ -78,7 +78,7 @@
 <p>在简单的了解了表设计以及关联关系之后，我们来具体的看一下VECMDB里模型的关联配置</p>
 <h3 id="_4">关系类型</h3>
 <p>第一步是添加模型关系，不过在添加模型关系之前，要先了解一个<code>关联类型</code>的概念，关联类型用来描述配置项之间关联关系的分类，表示不同配置项之间的连接和依赖关系，关联类型通过管理菜单的<code>后台管理</code>-<code>关系类型</code>来管理</p>
-<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240619.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.01.png" /></p>
 <p>关联类型的管理很简单，只能增删改查。这个管理类型实际上<strong>只起到了描述关系的作用，并没有其他的代码逻辑处理</strong>，所以只需要简单了解即可。VECMDB默认就添加了四个关系类型，分别是：<code>contain</code>、<code>deploy</code>、<code>install</code>和<code>connect</code>，这四个关系的解释如下：</p>
 <ul>
 <li>contain：用来描述<strong>包含</strong>关系，例如：服务器包含磁盘</li>
@@ -88,11 +88,11 @@
 </ul>
 <p>默认的这四种关系类型基本就够用了，通常不需要再额外的增加关系类型，只需要在新增模型关联时根据实际情况选择合适的关系类型即可。前文说过关系类型仅仅只是个描述而已，并没有其他的代码逻辑判断，所以即便是选错了，也没有太大的影响</p>
 <p>关系类型存在的最大的意义是为了清晰的描述配置项之间的关联关系分类，主要的体现位置是在菜单<code>后台管理</code>-<code>服务树定义</code>中的服务树上</p>
-<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240619.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.02.png" /></p>
 <p>上图就描述了服务树之间的关系，例如事业部包含（contain）产品、应用部署（deploy）在虚拟机上、物理机包含（contain）网卡以及MySQL安装（install）在docker上。关联类型让关系描述更具体，是包含、部署、安装或是连接，清晰明了，不仅仅只是一个A关联B</p>
 <h3 id="_5">模型关系</h3>
 <p>模型关系配置在模型配置的<code>模型关联</code>页签，在这里可以新建模型关心</p>
-<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240619.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.03.png" /></p>
 <p>新建模型关系主要有几个配置，分别是：源模型、目标模型、关联类型、关系约束和属性关联，详细解释如下：</p>
 <p><strong>源模型：</strong> 指定关联模型的源模型，通常就是当前模型，不能修改</p>
 <p><strong>目标模型：</strong> 选择要建立关联关系的目标模型</p>
@@ -104,16 +104,16 @@
 <p>以上在配置模型新增关系时，其他几个配置都是必须配置的，只有属性关联不是必须配置的，即便没有配置属性关联，依然可以手动添加数据间的关联关系，这主要是因为，系统默认会有一张独立的关系表来记录CI之间的关系，所以即便是你没有配置属性关联，依然可以在不同的模型数据间建立关联关系，属性关联存在的主要意义是为了实现<strong>自动关联</strong></p>
 <p>并不是所有的属性都支持<code>属性关联</code>，有几个类型不支持，例如：密码、JSON和多值属性就<strong>不支持</strong>配置属性关联</p>
 <p>对于已经创建的模型关联关系，在<code>模型关联</code>页面可以进行赋权、删除或双击修改属性关联操作，不能编辑关联类型、关系约束等配置</p>
-<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240619.04.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.04.png" /></p>
 <h3 id="_6">实例关系</h3>
 <p>在创建了模型关系之后，就可以添加实例关系了，添加实例关系有两种方式，分别是手动关联和自动关联</p>
 <h4 id="_7">手动关联</h4>
 <p>在<strong>目标模型</strong>上添加数据时，可以在模型关系表单里选择关联模型的<code>属性名</code>和<code>属性值</code>，这样的话就能在两个模型间建立关联关系，例如我们创建的物理机模型和Docker模型，在新增Dcoekr数据时，可以直接配置所要关联的物理机</p>
-<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240619.05.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.05.png" /></p>
 <p>也可以在<strong>源模型</strong>的资源列表页面，手动添加关系。找到源模型，点击右侧操作的<code>详情</code>或<code>添加关系</code>按钮</p>
-<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240619.06.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.06.png" /></p>
 <p>可以呼出详情，切换到<code>关系</code>选项卡，找到目标模型，点击模型后边的<code>+</code>按钮就能手动添加关系了</p>
-<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240619.07.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.07.png" /></p>
 <h4 id="_8">自动关联</h4>
 <p>虽然系统提供了手动维护关系的方式，不过不建议手动维护，手动维护关系容易出错，那自动创建关系就显得尤为重要了</p>
 <p>只需要配置模型关系的<strong>属性关联</strong>就能做到模型数据间的自动关联了，例如你有两个模型，A和B，A跟B之间一对一关系，A模型里有个name字段，B模型里也有个name字段，你配置了两个name属性关联，当B模型新加一条新数据，新数据name属性如果与A模型里某条数据的name属性相同的话，则系统会自动将B模型新数据与A模型中已存在的name相同的数据做关联</p>
@@ -121,14 +121,14 @@
 <h3 id="_9">关系查看</h3>
 <h4 id="_10">模型关系查看</h4>
 <p>模型构建的关系可以在模型配置的<code>模型关联</code>页签查看，关系是双向的，源模型上是正常的关联关系，而目标模型上则是<code>被</code>关联的关系</p>
-<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240619.08.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.08.png" /></p>
 <h4 id="_11">单实例关系查看</h4>
 <p>实例的关系则可以通过实例的详情查看，在实例详情的<code>关系</code>页签，切换到<code>拓扑</code>，就能看到当前资源的拓扑关系，非常清晰，无论是源模型还是目标模型都能展示当前模型的所有关系</p>
-<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240619.09.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.09.png" /></p>
 <p>如果关系有依赖，则可以一次查看多层关系，例如我这里查看了物理机的关系，不仅展示了物理机与Docker的一对多关系，同时也展示了物理机与应用、应用与产品、产品与事业部的多层关系</p>
 <h4 id="_12">整体关系视图查看</h4>
 <p>除了可以单个实例查看当前实例的关系外，还能从更宏观的角度去查看全局的模型间依赖关系，通过菜单<code>后台管理</code>-<code>服务树定义</code>查看</p>
-<p><img alt="" loading="lazy" src="https://static.opendevops.cn/static/images/20240619.10.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.10.png" /></p>
 <h2 id="_13">使用技巧</h2>
 <p>关于<code>源模型</code>与<code>目标模型</code>的选择，按照字面意思了解就行了，源模型即是关系开始的模型，目标模型即是关系结束的模型，这个比较抽象，下边举几个实际的例子</p>
 <p>例如要在<code>用户</code>和<code>用户详情</code>建立关联关系，一个用户只会有一个用户详情，那他们之间应该建立<strong>一对一</strong>的关联关系，在这个关联关系中的数据依赖是用户详情依赖用户，没有用户也就没有用户详情，数据流向为：用户-&gt;用户详情，则用户为源模型，用户详情为目标模型</p>

@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="关于技术,2FA,MFA,Github,系统运维,TOTP" />
+  <meta name="keywords" content="Github,2FA,系统运维,MFA,TOTP,关于技术" />
   <meta name="description" content="强烈建议所有的网站登录全都启用MFA" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -161,10 +161,10 @@ if __name__ == &quot;__main__&quot;:
 <p>代码很简单，可以直接移植到自己的项目中使用</p>
 <h2 id="github2fa">Github开启2FA</h2>
 <p>Github开启2FA很简单，首先登录到GitHub账户。点击右上角的头像，选择Settings，在设置页面中，找到侧边栏的Password &amp; authentication选项，点击进入，然后，下拉页面到Two-factor authentication部分，单击Enable two-factor authentication按钮，根据提示完成设置即可</p>
-<p><img alt="" loading="lazy" src="/static/images/2024/20240727.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0727.01.png" /></p>
 <h2 id="totp_1">TOTP客户端应用</h2>
 <p>TOTP的算法是公开的，所以生成TOTP验证码也较为简单，国内各大云厂商的APP或是一些小程序也都有提供虚拟MFA的功能，例如腾讯云助手小程序等等，知名的MFA应用主要有谷歌出的Google-Authenticator和微软出的Microsoft-Authenticator，国内使用的话推荐使用微软的Authenticator，各大手机应用商店都能搜得到，当然如果你不想安装单独应用的话，使用一些提供微信小程序也可以，注意小程序的身份及安全性即可</p>
-<p><img alt="" loading="lazy" src="/static/images/2024/20240727.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0727.02.png" /></p>
 <p>MFA一般都带有二维码识别功能，可以通过扫描二维码快速添加TOTP认证，当然如果不方便识别二维码或者二维码识别失败的情况下，也可以通过KEY来手动添加，添加完成，当再续需要二次认证时输入生成的TOTP验证码即可</p>
 
         <div>

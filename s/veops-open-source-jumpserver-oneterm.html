@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="Devops,开源,关于技术,None,OneTerm" />
+  <meta name="keywords" content="OneTerm,Devops,开源,None,关于技术" />
   <meta name="description" content="None" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -60,39 +60,39 @@
 <h2 id="_1">系统介绍</h2>
 <h3 id="_2">资产管理</h3>
 <p>堡垒机主要就是对服务器进行操作，资产管理主要是对服务器的增删改查和授权等管理，是堡垒机的基础。支持基于资产树来管理，支持批量授权，支持批量修改连接协议</p>
-<p><img alt="" loading="lazy" src="/static/images/20240315.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.01.png" /></p>
 <p>接入时间的限制更是十分的灵活，不仅支持指定生效日期，同时也可以按照星期来配置生效时间，还支持选择某一天的某个时间段，非常强大</p>
-<p><img alt="" loading="lazy" src="/static/images/20240315.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.02.png" /></p>
 <p>支持与自家的CMDB联动，可以同步CMDB的数据到堡垒机，这个就很实用了，基础资源数据保存在CMDB，堡垒机作为上层应用只是使用，不仅降低了配置的复杂度，同时也能确保CMDB数据的权威。这个同步操作很贴心</p>
-<p><img alt="" loading="lazy" src="/static/images/20240315.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.03.png" /></p>
 <p>更为贴心的是你在添加资产树节点时设置的连接协议、账号授权、接入限制等配置可以直接作为节点下资源的默认配置，当在节点下新建资产时，会自动继承该节点的授权配置，从而简化添加资产时的配置，这个考虑也是十分人性化</p>
-<p><img alt="" loading="lazy" src="/static/images/20240315.04.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.04.png" /></p>
 <p>可以看得出来开发团队还是用心的，资源添加可以手动添加，也可以与CMDB同步，授权不仅支持单个资源授权，也支持批量授权和默认授权，点赞</p>
 <h3 id="_3">网关</h3>
 <p>OneTerm支持配置网关，网关功能解决了部分环境无法直接连接的问题，连接会将网关作为跳板连接到目标资产，这样可以覆盖一些复杂的网络环境，很有用</p>
-<p><img alt="" loading="lazy" src="/static/images/20240315.05.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.05.png" /></p>
 <h3 id="_4">安全</h3>
 <p>OneTerm支持会话超时时间设置，也支持设置过滤命令，危险命令无法执行，这样提高了终端操作的安全，避免一些无意的或人为的破坏，增加会话安全</p>
-<p><img alt="" loading="lazy" src="/static/images/20240315.06.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.06.png" /></p>
 <h3 id="_5">终端</h3>
 <p>对于堡垒机来说最重要的就是终端操作了，OneTerm已经支持了SSH、VPC和RDP多种协议的终端连接，支持命令行模式连接主机，也支持web终端连接主机，操作比较丝滑，该有的终端命令自动补全等功能也都有，体验就跟其他客户端无异</p>
 <p>终端直接连接</p>
-<p><img alt="" loading="lazy" src="/static/images/20240315.07.gif" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.07.gif" /></p>
 <p>网页Web登陆终端</p>
-<p><img alt="" loading="lazy" src="/static/images/20240315.08.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.08.png" /></p>
 <h3 id="_6">会话审计</h3>
 <p>堡垒机除了能够终端登陆操作外，还有个比较重要等功能，那就是需要支持终端会话审计，包括查看当前在线会话连接，实时监控当前在线会话，以及在发现当前会话有危险和不当操作时对当前在线会话下达强制断开的指令，这些OneTerm也都是支持的</p>
-<p><img alt="" loading="lazy" src="/static/images/20240315.09.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.09.png" /></p>
 <p>同时OneTerm也支持查看历史回话，对历史回话进行回放、下载以及执行命令查看等审计操作</p>
-<p><img alt="" loading="lazy" src="/static/images/20240315.10.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.10.png" /></p>
 <p>命令查看很有用，可以直接对用户对会话操作进行快速检索，不用去看录像了，同时这个命令操作还会判定命令的风险等级，也很实用</p>
-<p><img alt="" loading="lazy" src="/static/images/20240315.11.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.11.png" /></p>
 <h3 id="_7">日志审计</h3>
 <p>资产授权和会话审计保障了主机连接操作的安全，除此之外，OneTerm也提供基础的用户登陆日志记录和完善的后台操作记录，所有操作均有记录，全面保障系统安全</p>
-<p><img alt="" loading="lazy" src="/static/images/20240315.12.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.12.png" /></p>
 <h3 id="_8">大盘</h3>
 <p>除了这些以上这些堡垒机必须的基础的功能外，OneTerm也提供了个Dashboard大盘，可以全面掌握系统情况，包括连接、资产、会话、用户、网关等信息，还是图表好看</p>
-<p><img alt="" loading="lazy" src="/static/images/20240315.13.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.13.png" /></p>
 <h2 id="_9">推荐使用</h2>
 <p>我深入体验了OneTerm，尽管它不是很完美，我也发现了还有一些有待优化提升的地方，但基于以下几点我还是想推荐给你试试</p>
 <ol>

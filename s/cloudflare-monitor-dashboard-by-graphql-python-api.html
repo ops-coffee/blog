@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="Cloudflare,Devops,None,关于技术,监控" />
+  <meta name="keywords" content="监控,Devops,None,Cloudflare,关于技术" />
   <meta name="description" content="None" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -85,7 +85,7 @@ class CloudFlareAPI:
 <p>随着新项目上线对CDN的关注度增加，查询Cloudflare监控越来越频繁，对监控数据的需求也有改变，是时候再来认真的看看Cloudflare的监控了，短时间内想要对GraphQL能有多深的理解不现实，好在有开源工具GraphiQL来帮忙：</p>
 <p>https://github.com/graphql/graphiql</p>
 <p>GraphiQL是个专门用户调试GraphQL语句的工具，使用非常简单，填写Header头用于认证，输入URL和query语句即可执行，能够对query进行自动语法检查及提示，这样我即便是不知道详细的参数名字也能根据提示来修改，很好用</p>
-<p><img alt="" loading="lazy" src="/static/images/20240329.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0329.01.png" /></p>
 <p>借助于官方文档一个简单的例子和AI，同时在工具的加持下，再写起来就快多了，例如我们通常需要获取某个域名一段时间内的总请求量和总数据传输量，就可以通过如下query来查询：</p>
 <pre class="codehilite"><code>query{
   viewer{
@@ -216,7 +216,7 @@ class CloudFlareAPI:
 
 <p>如果想要获取其他一些数据但不知道参数名字的话，除了借助于GraphiQL工具通过模糊搜索提示猜测参数名字外，还有一个小技巧是设置Cloudflare控制台为英文，然后去页面上查找对应的参数名字。例如未命中，我们在控制台里看到的名字叫<code>Miss</code>，那过滤名字也一样为<code>miss</code>只是需要小写</p>
 <p>有了这些知识，构建一个完善的监控大盘已经足够了，CDN我们主要的关注数据有：总请求量、总数据传输量、总请求命中率、请求量趋势、数据传输量趋势、命中率趋势、请求命中趋势、请求未命中趋势以及2xx、3xx、4xx、5xx状态码趋势了。由此一个好用的监控大盘出现了</p>
-<p><img alt="" loading="lazy" src="/static/images/20240329.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0329.02.png" /></p>
 <p>最关心的数据一页全展示，响应速度快，确实好用</p>
 
         <div>
