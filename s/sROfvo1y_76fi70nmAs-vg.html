@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="关于技术,监控,系统运维,Nagios" />
+  <meta name="keywords" content="监控,系统运维,Nagios,关于技术" />
   <meta name="description" content="Nagios这种老古董就应该被淘汰吗？用对地方一样可以发光发热！" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -74,7 +74,7 @@
 <p>业务状态监控，就是要最直观的的反映业务当前是正常还是故障，该怎么监控呢？以web项目为例，首先就是要确定具体URL的返回状态，是200正常还是404未找到等，其次要考虑页面里边的内容是不是正常，我们知道最终反馈给用户内容的是由一些静态资源和后端接口数据共同组成的HTML页面，想知道内容究竟对不对这个比较困难，退而求其次我们默认所有静态资源和后端接口都返回正常状态则表示正常，这个监控就比较容易实现了。</p>
 <p>静态资源可以直接由nginx服务器处理，nginx的并发能力很强，一般不会成为性能的瓶颈，针对静态资源的监控我们可以结合ELK一起来看。后端接口的处理性能就要差很多了，对业务状态的监控也主要是对后端接口状态的监控，那我们是否需要监控所有的接口呢？这个实施起来比较麻烦，我觉得没太大必要，只需要监控几个有代表性的接口就可以了，例如<strong>我们所有的项目中都让开发单独加了一个health check的接口，这个接口的作用是连接项目所有用到的服务进行操作，如接口连接mysql进行数据查询以确定mysql能给正常提供服务，连接redis进行get、set操作以确定redis服务正常，对于这个接口的监控就能覆盖到整个链路的服务情况</strong>。</p>
 <p>对于监控服务器和业务服务器在同一个机房内所导致的问题（上边讲到的第二点问题），我们可以通过在不同的网络环境内部署独立的状态监控来解决，例如办公区部署Nagios，不同网络监控也更接近用户的网络情况，这套状态监控就区别于机房部署的资源占用监控了，主要用来监控业务的状态，也就是我们上边提到的URL和接口状态。</p>
-<p><img alt="" loading="lazy" src="/static/images/20180918.00.jpg" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0918.00.jpg" /></p>
 <p>我们能不能直接将监控部署在机房外的环境来节省一套监控呢？例如公司或者其他的机房部署监控。这样不是个好方案，跨网络的监控性能太差了，首先网络之间的延迟都比同机房内要大的多，其次大量监控项频繁的数据传输对带宽也是不小的压力</p>
 <h1 id="nagios">Nagios监控</h1>
 <p>我们业务状态监控采用了Nagios，Nagios部署简单配置灵活，这种场景下非常适合。</p>
@@ -202,7 +202,7 @@ else {
 
 
 <p>7.浏览器访问服务器IP或域名就可以看到nagios的页面了，默认有本机的监控数据，不需要的话可以在配置文件<code>localhost.cfg</code>中删除
-<img alt="" loading="lazy" src="/static/images/20180918.01.png" /></p>
+<img alt="" loading="lazy" src="/static/images/2018/0918.01.png" /></p>
 <h2 id="nagios_2">Nagios配置</h2>
 <p>Nagios的主配置文件路径为<code>/usr/local/nagios/etc/nagios.cfg</code>，里边默认已经配置了一些配置文件的路径，cfg_file=后边配置的都是配置文件，nagios程序会来这里读取配置，我们可以新添加一个专门用来监控HTTP API的配置文件</p>
 <pre class="codehilite"><code>cfg_file=/usr/local/nagios/etc/objects/check_api.cfg</code></pre>
@@ -315,16 +315,16 @@ define contactgroup{
 <li>sa联系人定义了主机和服务的命令，例如这里我们定义的notify-host-by-email,notify-host-by-sms发邮件和发短信的命令，这个命令的定义位置跟我们check_http的定义都在文件<code>/usr/local/nagios/etc/objects/commands.cfg</code>文件内</li>
 </ul>
 <p>全部配置完成后重启nagios服务，会看到监控已经正常
-<img alt="" loading="lazy" src="/static/images/20180918.02.png" /></p>
+<img alt="" loading="lazy" src="/static/images/2018/0918.02.png" /></p>
 <h2 id="nagstamon">Nagstamon插件</h2>
 <p>介绍一款配合nagios用起来非常棒的插件Nagstamon，Nagstamon是一款nagios的桌面小工具（实际上现在不仅仅能配合nagios使用，还能配合zabbix等使用），启动后常驻系统托盘，当nagios监控状态发生变化时会及时的跳出来并发出声音警告，能够更加及时的获取业务状态。</p>
 <p>配置如下：</p>
-<p><img alt="" loading="lazy" src="/static/images/20180918.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0918.03.png" /></p>
 <ul>
 <li>Update interval能够配置多长时间取一次nagios的状态，我们这里调整为1s</li>
 <li>当出现报警时桌面直接飙红，给你心跳加速的感觉</li>
 </ul>
-<p><img alt="" loading="lazy" src="/static/images/20180918.04.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0918.04.png" /></p>
 <h1 id="_2">写在最后</h1>
 <ol>
 <li>业务状态监控作为Zabbix之类过程监控的补充，并不能替代过程监控系统，在我们过程监控不是很完善的情况下很有用，目前我们有相当一部分的报警都首先发现于这套业务状态监控</li>

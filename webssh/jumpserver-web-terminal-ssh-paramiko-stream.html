@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="xshell,WebSSH,关于技术,Django,crt" />
+  <meta name="keywords" content="crt,WebSSH,Django,xshell,关于技术" />
   <meta name="description" content="我想用它替换掉xshell、crt之类的工具" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -241,7 +241,7 @@ $(window).resize(function () {
 <p>最后通过<code>term.resize</code>来调整xterm渲染的窗口的大小</p>
 <p>这样一个完整的动态调整窗口大小的方案就完成了</p>
 <h2 id="_2">演示与源码</h2>
-<p><img alt="" loading="lazy" src="/static/images/20191101.webssh.gif" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1101.webssh.gif" /></p>
 <p>我写了个简单的Demo来实现上边的功能，Demo写完发现还挺好用，我就扩展了一下添加了内网的物理机和虚拟机，历史原因，有些是账号密码认证，有些是密钥认证，我都给兼容了一下，最终实现的效果如上图所示</p>
 <p>项目里边要记录主机的密码，为了安全这个密码是通过RSA加密存放在数据库的，每次使用的时候进行解密，加解密的实现，可参考这篇文章 <a href="/s/L6Jud6gp5c9bbaUljUkNFA" target="_blank">Django开发密码管理表实例【附源码】</a></p>
 <p>最后，如果你对这个简单的小玩意感兴趣，想要自己实现，却遇到了一些问题，可以通过公众号后台加我微信获取源码</p>

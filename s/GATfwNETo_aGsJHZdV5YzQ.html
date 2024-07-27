@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="关于技术,devops,Devops,Docker" />
+  <meta name="keywords" content="devops,Docker,关于技术,Devops" />
   <meta name="description" content="主流运维工具的融合，devops落地实践的总结，欢迎各位大拿拍砖" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -60,7 +60,7 @@
 </blockquote>
 <h1 id="_1">实现方法</h1>
 <p>先来看下流程图：</p>
-<p><img alt="image" loading="lazy" src="/static/images/20180703.devops.png" /></p>
+<p><img alt="image" loading="lazy" src="/static/images/2018/0703.devops.png" /></p>
 <p>工程师本地开发，开发完成后提交代码到代码仓库，[自动]触发jenkins进行持续集成与部署，部署完成会收到结果邮件。项目运行过程中可通过日志系统查看程序日志，有异常会触发监控系统发送报警。从编码到上线后结果反馈都可以工程师自主完成，形成完整闭环，运维则负责提供完整流程的工具链及协助异常情况的处理，工作量减少了，效率却高了。</p>
 <ul>
 <li>自动触发jenkins部署通过svn和git的hooks来实现，是否自动触发根据项目内部沟通决定，我们目前没有自动触发，原因是QA在测试的过程中不希望被自动触发的部署打断，不过也可以方便的在jenkins上手动触发执行</li>

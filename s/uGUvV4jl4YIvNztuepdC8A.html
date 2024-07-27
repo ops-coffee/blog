@@ -61,7 +61,7 @@
 <p>选型的原则：简单，易落地，不挑平台，不挑语言，尽量少的依赖。</p>
 <p>对比了Disconf、Apollo等方案，最终选择了Etcd+Confd的方案，基本符合上边的原则，且Etcd我们在部署Kubernetes的时候已经有过使用，算是轻车熟路。</p>
 <h2 id="_2">配置中心架构图</h2>
-<p><img alt="" loading="lazy" src="/static/images/20180823.00.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0823.00.png" /></p>
 <ul>
 <li>配置中心整体采用C/S的模式，用Etcd作为服务端来存储数据，Confd作为客户端去Etcd取数据更新</li>
 <li>为了更方便的管理写了WebUI，实际上是一个Etcd服务的WebUI，主要与Etcd服务交互，去Etcd存取数据</li>
@@ -290,17 +290,17 @@ http {
 <h1 id="webui-kerrigan">WebUI Kerrigan</h1>
 <p>总不能所有的配置文件更新都通过命令行的方式吧？为了方便管理，花了三天（真的是三天）写了个WebUI，命名为Kerrigan，能够实现目录树，在线查看配置、修改配置、查看配置更新历史等实用功能</p>
 <p>配置页面，通过这个页面可以配置etcd的连接信息</p>
-<p><img alt="" loading="lazy" src="/static/images/20180823.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0823.01.png" /></p>
 <p>首页，左侧项目列表（项目信息同步CMDB）</p>
-<p><img alt="" loading="lazy" src="/static/images/20180823.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0823.02.png" /></p>
 <p>点击项目列表后，根据对应规则去etcd里边取出目录结构按树状呈现出来</p>
-<p><img alt="" loading="lazy" src="/static/images/20180823.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0823.03.png" /></p>
 <p>点击配置文件，右侧会展示当前配置文件内容</p>
-<p><img alt="" loading="lazy" src="/static/images/20180823.04.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0823.04.png" /></p>
 <p>点击“编辑”按钮可以编辑这个配置，新建页面一样，只是编辑不允许修改路径</p>
-<p><img alt="" loading="lazy" src="/static/images/20180823.05.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0823.05.png" /></p>
 <p>点击“历史”按钮，则跳转到配置文件的历史页面，这个页面展示了这个配置文件所有的修改历史</p>
-<p><img alt="" loading="lazy" src="/static/images/20180823.06.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0823.06.png" /></p>
 <h1 id="_6">写在最后</h1>
 <ol>
 <li>是不是要说这个界面丑爆了！没办法，前端后端测试加上线都我一人干，没有设计细胞，就这么看吧，并且最重要的不是功能好用么</li>

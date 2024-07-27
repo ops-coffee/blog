@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="lrzsz,WebSSH,关于技术" />
+  <meta name="keywords" content="lrzsz,关于技术,WebSSH" />
   <meta name="description" content="本篇文章没有太多的源码，主要讲一下实现思路和技术原理" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -75,7 +75,7 @@
 
 
 <p>配合zmodemjs的前端实现，最终的效果如下</p>
-<p><img alt="" loading="lazy" src="/static/images/20191206.gif" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1206.gif" /></p>
 <p>当我完成了Web上使用rzsz上传下载文件功能后，遇到了一个棘手的问题，无论是监控还是录像，在sz下载时会将下载的文件二进制显示在屏幕上，这主要是因为通过zmodemjs可以解析webssh中的二进制文件流为文件，而监控和录像不行解析，这就需要监控和录像时过滤掉文件二进制流，起初我想通过分析二进制流来判断这段流究竟是文件还是文本，但最后发现无法准确识别，一个稍微靠谱的方法是对binary流进行decode解码，但不能保证100%准确</p>
 <p>又深入研究了zmodem协议是如何实现识别的，发现了zmodem的实现原理</p>
 <p>在服务器上执行sz命令后，会先输出<code>**B00000000000000</code>这样的内容，标识文件下载开始，当文件下载结束后会输出<code>OO</code>，取这两个特殊标记之间的二进制流组合成文件，就是要下载的完整文件</p>

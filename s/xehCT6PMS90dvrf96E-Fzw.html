@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="Sadmin,关于技术,Devops,Django" />
+  <meta name="keywords" content="Sadmin,Django,关于技术,Devops" />
   <meta name="description" content="以优雅的方式实现Django的代码复用" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -62,15 +62,15 @@
 <p>Sadmin具体包含的功能主要有：</p>
 <p>1.集成了基于adminLTE的前端模板，以及常用的前端组件，例如select2、datatables等</p>
 <p>2.网站的标题、Title、主题等可后台配置</p>
-<p><img alt="" loading="lazy" src="/static/images/20210813.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2021/0813.01.png" /></p>
 <p>3.OpenId、LDAP等多种认证方式</p>
-<p><img alt="" loading="lazy" src="/static/images/20210813.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2021/0813.02.png" /></p>
 <p>4.后台配置菜单，并可根据不同权限显示不同菜单</p>
-<p><img alt="" loading="lazy" src="/static/images/20210813.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2021/0813.03.png" /></p>
 <p>5.用户、组、部门管理，用户的登录登出</p>
-<p><img alt="" loading="lazy" src="/static/images/20210813.04.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2021/0813.04.png" /></p>
 <p>6.自动记录操作日志</p>
-<p><img alt="" loading="lazy" src="/static/images/20210813.05.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2021/0813.05.png" /></p>
 <p>7.封装了对于数据库的增删改查</p>
 <p>系统开发中会有大量关于数据库的增删改查操作，Django自带的Admin系统很好的实现了这块的功能，但admin后台不仅丑，对于很多稍微复杂点的需求都不好实现，所以我们直接放弃了自带的admin系统，为了方便的进行CRUD，我参考Django的ViewSet封装了两个方法<code>ListCreateView</code>和<code>RetrieveUpdateDestroyView</code>来处理</p>
 <p>以对<code>Product</code>表的增删改查为例，后端只需要短短的几行代码就行了</p>
@@ -87,7 +87,7 @@ class ProductDetail(RetrieveUpdateDestroyView):
 
 
 <p>几行代码便可以让后端处理对数据库的增删改查，同时返回固定格式的json数据，而对于前端页面就没有太多的规范了，按照喜好怎么设计都可以</p>
-<p><img alt="" loading="lazy" src="/static/images/20210813.06.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2021/0813.06.png" /></p>
 <p>除了以上这些主要功能外，还集成了一些例如全站水印、通知发送、数据校验等等其他小功能</p>
 <h2 id="_3">使用效果</h2>
 <p>有了Sadmin，我们在开发的过程中就不需要再来考虑这些基础的功能，更加专注于业务本身，效率提升明显，内部已有将近10个项目使用了Sadmin，运行稳定</p>

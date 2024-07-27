@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="Template,processors,关于技术,Django,context" />
+  <meta name="keywords" content="context,processors,Django,Template,关于技术" />
   <meta name="description" content="Django Template自定义context processors全局变量" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -55,7 +55,7 @@
         <h1 id="art-title">Django Template 自定义全局变量</h1>
 
         <p>当我在编写一个高度自定义的后台系统时，我希望将网站的一些信息存储在数据库中，用户可以通过页面修改就能生效，就像下图配置一样</p>
-<p><img alt="" loading="lazy" src="/static/images/20201016.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1016.png" /></p>
 <p>通常页面中用到的变量需要在view中回传，但站点名称网站中所有页面都需要用到，难道每一个view都需要回传一遍吗？这让我想到了页面中经常用到的获取用户名方法<code>request.user.username</code>，<code>request</code>变量并没有在每个view中回传，但所有页面都可以调用，他是如何实现的？下文将为你详细介绍，了解之后可以通过编写自定义的全局变量，轻松解决以上问题</p>
 <h2 id="request">request哪里来的</h2>
 <p>在日常开发Django的过程中，如果你有用到默认的template，那么通常会通过<code>request.user.username</code>来获取登陆用户的用户名，你有没有想过这个<code>request</code>是哪来的？即便是后端<code>view</code>里不返回这边变量依然可以使用，怎么会如此神奇</p>

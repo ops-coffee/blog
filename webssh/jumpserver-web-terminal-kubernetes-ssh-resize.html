@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="Resize,WebSSH,Kubernetes,关于技术" />
+  <meta name="keywords" content="Resize,Kubernetes,关于技术,WebSSH" />
   <meta name="description" content="追求完美不服输的我，一直在与各种问题斗争的路上痛并快乐着" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -58,8 +58,8 @@
 <p>追求完美不服输的我，一直在与各种问题斗争的路上痛并快乐着</p>
 </blockquote>
 <p>上一篇文章<a href="https://blog.ops-coffee.cn/webssh/jumpserver-kubernetes-web-terminal-ssh-stream" target="_blank">Django实现WebSSH操作Kubernetes Pod</a>最后留了个问题没有解决，那就是terminal内容窗口的大小没有办法调整，这会导致的一个问题就是浏览器上可显示内容的区域太小，当查看/编辑文件时非常不便，就像下边这样，红色可视区域并没有被用到</p>
-<p><img alt="" loading="lazy" src="/static/images/20191018.01.png" /></p>
-<p><img alt="" loading="lazy" src="/static/images/20191018.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1018.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1018.02.png" /></p>
 <h2 id="resize_channel">RESIZE_CHANNEL</h2>
 <p>前文说到<code>kubectl exec</code>有两个参数<code>COLUMNS</code>和<code>LINES</code>可以调整tty内容窗口的大小，命令如下：</p>
 <pre class="codehilite"><code>kubectl exec -i -t $1 env COLUMNS=$COLUMNS LINES=$LINES bash</code></pre>

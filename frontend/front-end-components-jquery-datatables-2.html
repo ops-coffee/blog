@@ -151,7 +151,7 @@ $(document).ready(function() {
 
 
 <p>ajax接收的数据可以是数组或者对象，注意<code>columns</code>的配置，可以对应参考前文两种格式数据的处理</p>
-<p><img alt="" loading="lazy" src="/static/images/20190807.datatables02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0807.datatables02.png" /></p>
 <h2 id="_5">结果数据处理</h2>
 <p>上边的table可以发现有个site列的内容是一个网址，如果我们想让网址能够点击该如何实现呢？可以利用<code>columns</code>的<code>render</code>属性对展示结果进行更改</p>
 <pre class="codehilite"><code>$(document).ready(function() {
@@ -200,7 +200,7 @@ $(document).ready(function() {
 
 
 <p>最终呈现结果如下图</p>
-<p><img alt="" loading="lazy" src="/static/images/20190807.datatables03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0807.datatables03.png" /></p>
 <h2 id="dom">Dom操作</h2>
 <p>如果我不需要datatables显示左上角的每页显示条数信息，而要换成一个添加按钮改怎么做呢？这里可以借助datatables的dom来实现</p>
 <p>默认情况下表格都会有左上角的每页显示条数、右上角的搜索、左下角的表格信息、右下角的分页、中间的数据加载等待以及表格本身，这些都是datatables的DOM，它们实际上就是一个div包裹起来的select、input之类的html标签，datatables中的每个DOM都与一个字母相对应，他们的对应关系如下：</p>
@@ -238,7 +238,7 @@ $(&quot;#add-btn.toolbar&quot;).html(
 
 
 <p>这样就完美实现了</p>
-<p><img alt="" loading="lazy" src="/static/images/20190807.datatables04.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0807.datatables04.png" /></p>
 <h2 id="_6">服务器端处理</h2>
 <p>Datatables支持使用服务端进行数据处理，当开启服务端数据处理后，Datatables将在页面执行分页、排序、搜索等操作时向服务端发出Ajax请求，Ajax请求会传递许多变量给服务端，服务端接收到请求后根据变量的值对数据进行处理，处理完成按照固定的格式返回给前端页面，页面对返回的数据进行渲染提供给用户查看</p>
 <p>开启服务器模式只需要两个设置项<code>serverSide</code>和<code>ajax</code></p>

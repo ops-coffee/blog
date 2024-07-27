@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="关于技术,Channels,Django,WebSocket" />
+  <meta name="keywords" content="WebSocket,Channels,Django,关于技术" />
   <meta name="description" content="希望通过对这两篇文章的学习，能够对Channels有更加深入的了解，使用起来得心应手游刃有余" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -60,7 +60,7 @@
 <p>通过上一篇<a href="/s/hqaPrPS7w3D-9SeegQAB2Q" target="_blank">《Django使用Channels实现WebSocket--上篇》</a>的学习应该对Channels的各种概念有了清晰的认知，可以顺利的将Channels框架集成到自己的Django项目中实现WebSocket了，本篇文章将以一个Channels+Celery实现web端tailf功能的例子更加深入的介绍Channels</p>
 <p>先说下我们要实现的目标：所有登录的用户可以查看tailf日志页面，在页面上能够选择日志文件进行监听，多个页面终端同时监听任何日志都互不影响，页面同时提供终止监听的按钮能够终止前端的输出以及后台对日志文件的读取</p>
 <p>最终实现的结果见下图</p>
-<p><img alt="" loading="lazy" src="/static/images/20190419.channels.2.gif" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0419.channels.2.gif" /></p>
 <p>接着我们来看下具体的实现过程</p>
 <h1 id="_1">技术实现</h1>
 <p>所有代码均基于以下软件版本：</p>

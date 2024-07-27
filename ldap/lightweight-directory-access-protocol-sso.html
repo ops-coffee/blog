@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="OpenLDAP,LDAP,关于技术" />
+  <meta name="keywords" content="LDAP,关于技术,OpenLDAP" />
   <meta name="description" content="一篇文章助你轻松落地LDAP，笔者真实的实践经验总结" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -74,7 +74,7 @@
 </ul>
 <h2 id="_2">图形示例</h2>
 <p>上边来了一堆的名词解释，看的云里雾里，还不是很明白，怎么跟自己的组织架构对应起来呢？看看下边的图是不是清晰明了</p>
-<p><img alt="" loading="lazy" src="/static/images/20180629.00.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.00.png" /></p>
 <h1 id="openldap">OpenLDAP</h1>
 <p>上边介绍了LDAP只是一个协议，基于这个协议实现服务器端程序有OpenLDAP、Active Directory(微软的域控制器)等等。</p>
 <h2 id="openldap_1">部署OpenLDAP</h2>
@@ -201,23 +201,23 @@ access to *
 <h3 id="_7">配置</h3>
 <p>lam的所有配置都可以在web端配置，不需要去服务器上修改一行代码，这个太好用了。</p>
 <p>1.浏览器访问后进入登录页面，我们点击右上角"LAM configuratrion"来在线编辑配置文件</p>
-<p><img alt="" loading="lazy" src="/static/images/20180629.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.01.png" /></p>
 <p>2.看到如下页面有两个选项："Edit general settings"来编辑通用配置，默认密码lam，进入之后能配置密码策略、日志、管理员密码，最重要的是更新掉管理员密码，这个在后边"Manage server profiles"管理的时候需要提供；"Edit server profiles"来编辑服务器配置，我们先来编辑服务器配置</p>
-<p><img alt="" loading="lazy" src="/static/images/20180629.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.02.png" /></p>
 <p>3.进入如下页面，输入默认密码lam即可编辑配置，这里要说明一下的是红框标注的"Manage server profiles"可以对服务器的配置文件进行配置，例如增加、删除配置文件、配置文件重命名，最重要的是可以设置配置文件密码（也就是我们刚输入的密码lam，但修改密码需要管理员密码，后边配置）</p>
-<p><img alt="" loading="lazy" src="/static/images/20180629.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.03.png" /></p>
 <p>4.输入密码lam后就正式进入服务器配置页，看到第一个标签"General setting"，（可以先改下语言简体中文保存，整站就给汉化啦，英文渣渣看起来就非常方便了），基本配置都看的很清晰了，主要是Tree suffix配置为自己的DC可以了</p>
-<p><img alt="" loading="lazy" src="/static/images/20180629.04.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.04.png" /></p>
 <p>5.接着来看这个页面，"security settings"非常重要，配置以何种方式登录web控制台，默认为Fixed list模式，就是下边列表里配置的dn可以登录，我们LDAP里还没有任何一个账号（当我们创建了账号之后可以选择"LDAP serch"的模式，让普通账号也能登录以修改自己的密码），这里要选择fixed list模式并配置为我们LDAP的rootdn，设置一个密码登录之后创建账号等操作</p>
-<p><img alt="" loading="lazy" src="/static/images/20180629.05.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.05.png" /></p>
 <p>6.接下来就是"Account types"标签页的配置，这里配置我们登录web控制显示的标签，我这里只需要他显示用户，就把Group之类的都删除了，保留了User</p>
-<p><img alt="" loading="lazy" src="/static/images/20180629.06.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.06.png" /></p>
 <p>7."Modules"页面配置上一个具体每个account type显示的模块</p>
-<p><img alt="" loading="lazy" src="/static/images/20180629.07.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.07.png" /></p>
 <p>8."Models setting"页面配置models具体要显示的内容，不得不说配置非常详细</p>
-<p><img alt="" loading="lazy" src="/static/images/20180629.08.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.08.png" /></p>
 <p>9.经过上边的配置就可以进入控制台新建账号了，新建账号之前一个有用的操作是修改用户的默认RDN标致为uid，更高位置在登录web控制台后右上角配置文件编辑器里边</p>
-<p><img alt="" loading="lazy" src="/static/images/20180629.11.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.11.png" /></p>
 <p>10.基本配置完成，可以开始使用了，中文界面比较清晰，无需过多解释啦。</p>
 
         <div>

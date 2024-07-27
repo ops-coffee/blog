@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="Elk,ELK,Logstash,Group,关于技术,Kafka" />
+  <meta name="keywords" content="Logstash,ELK,Elk,Group,Kafka,关于技术" />
   <meta name="description" content="系统运维的过程中，每一个细节都值得我们关注" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -58,12 +58,12 @@
 <p>系统运维的过程中，每一个细节都值得我们关注</p>
 </blockquote>
 <p>下图为我们的基本日志处理架构</p>
-<p><img alt="" loading="lazy" src="/static/images/20190628.elk.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0628.elk.png" /></p>
 <p>所有日志由Rsyslog或者Filebeat收集，然后传输给Kafka，Logstash作为Consumer消费Kafka里边的数据，分别写入Elasticsearch和Hadoop，最后使用Kibana输出到web端供相关人员查看，或者是由Spark接手进入更深层次的分析</p>
 <p>在以上整个架构中，核心的几个组件Kafka、Elasticsearch、Hadoop天生支持高可用，唯独Logstash是不支持的，用单个Logstash去处理日志，不仅存在处理瓶颈更重要的是在整个系统中存在单点的问题，如果Logstash宕机则将会导致整个集群的不可用，后果可想而知</p>
 <p>如何解决Logstash的单点问题呢？我们可以借助Kafka的Consumer Group来实现</p>
 <h2 id="kafka-consumer-group">Kafka Consumer Group</h2>
-<p><img alt="" loading="lazy" src="/static/images/20190628.elk.kafka.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0628.elk.kafka.png" /></p>
 <p>为了便于理解，我么先介绍一下Kafka里边几个重要的角色：</p>
 <p><strong>Broker：</strong> 一台kafka服务器就是一个broker，一个kafka集群由多个broker组成，上图中的kafka集群有3台kafka服务器组成，也就是有3个broker，一个broker上可以有多个topic</p>
 <p><strong>Topic：</strong> 是个逻辑上的概念，用来区分不同的消息类别，类似于数据库中的表，可以将一组相同的数据发送给一个Topic，在日志处理中通常会将不同类型的日志写入不同的Topic，例如nginx日志写入名字为<code>nginx_log</code>的topic，tomcat日志写入名字为<code>tomcat_log</code>的topic，topic上图中没有标出，我们可以理解为图上的三个partition构成了一个topic</p>

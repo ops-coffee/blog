@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="Palette,关于技术,bpmn,BPMN,js,Shape" />
+  <meta name="keywords" content="Shape,js,Palette,bpmn,BPMN,关于技术" />
   <meta name="description" content="BPMN自定义bpmn.js的工具栏Palette，实现隐藏、添加、修改Shape" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -69,7 +69,7 @@
 <p>为了编辑方便，我想在palette上添加一个shape该如何操作呢？这里我们需要自定义Palette，自定义Palette有两种方式可以选择，第一种就是基于默认的Palette来修改，第二种就是完全写个新的Palette来替代默认的Palette，第一种只能在默认的Palette上添加shape，而不能修改或删除，比较鸡肋我们就直接放弃了，来看下完全自定义Palette该如何实现</p>
 <p>以下代码基于我们之前搭建好的代码框架，具体可看文章<a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-base-usage-demo-code-source" target="_blank">『最好用的流程编辑器bpmn-js系列之基本使用』</a>，</p>
 <p>1.在<code>components</code>目录下新建<code>customBpmn</code>目录，在<code>customBpmn</code>目录下新建<code>custom</code>目录，每层目录下都新建<code>index.js</code>文件，最终目录结构如下</p>
-<p><img alt="" loading="lazy" src="/static/images/20201110.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1110.01.png" /></p>
 <p>2.在custom目录下新建<code>CustomPalette.js</code>文件，内容如下</p>
 <pre class="codehilite"><code>import { assign } from &quot;min-dash&quot;;
 
@@ -265,7 +265,7 @@ export default {
 
 
 <p>最终效果如下：</p>
-<p><img alt="" loading="lazy" src="/static/images/20201110.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1110.02.png" /></p>
 <h2 id="shape_2">Shape类型</h2>
 <p>关于Shape总共有哪些类型，以及各自对应的属性都是什么，这个官方没有具体的文档给列出，我在使用的时候通常直接查看源码<a href="https://github.com/bpmn-io/bpmn-js/blob/develop/lib/features/palette/PaletteProvider.js" target="_blank"><code>bpmn-js/lib/features/palette/PaletteProvider.js</code></a>和<a href="https://github.com/bpmn-io/bpmn-js/blob/develop/lib/features/context-pad/ContextPadProvider.js" target="_blank"><code>bpmn-js/lib/features/context-pad/ContextPadProvider.js</code></a>文件获取，对于部分类型，需要添加options选项</p>
 <p>例如中间时间事件<code>IntermediateThrowEvent</code>所对应的属性为：</p>

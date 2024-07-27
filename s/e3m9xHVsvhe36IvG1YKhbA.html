@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="关于技术,Django,zTree" />
+  <meta name="keywords" content="zTree,Django,关于技术" />
   <meta name="description" content="树，因其清晰明了的展现形式而被广泛的使用" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -128,7 +128,7 @@
 
 <p>标准模式数据结构复杂但父子关系清晰，简单模式数据则相反，示例中我们使用了简单数据模式，需要配置simpleData的<code>enable</code>属性为true</p>
 <p>完成以上配置后可以看到页面效果如下</p>
-<p><img alt="" loading="lazy" src="/static/images/20190816.tree01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0816.tree01.png" /></p>
 <h2 id="django">Django</h2>
 <p>既然前端页面已经能够正常展示树了，后端就只需要返回前端对应的数据格式即可，Django中最简单的方式就是使用Foreignkey的自关联，模型设计如下：</p>
 <pre class="codehilite"><code>class Department(models.Model):
@@ -183,7 +183,7 @@ class MyModel(models.Model):
 <p>注意在前端使用时需要用<code>{{data|safe}}</code>的方式，添加<code>|safe</code>主要是因为Django为了安全默认会对HTML、JS等语法标签进行转义，但我们所传给前端的数据不希望转义可以通过添加<code>|safe</code>来实现</p>
 <h2 id="demo">完整Demo</h2>
 <p>文章源码已上传至Github，除了以上基础代码外还包含下拉框加载树等功能，公众号后台回复<strong>06</strong>获取源码地址吧</p>
-<p><img alt="" loading="lazy" src="/static/images/20190816.tree02.gif" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0816.tree02.gif" /></p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

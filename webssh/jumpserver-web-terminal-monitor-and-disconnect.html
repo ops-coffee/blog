@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="WebSSH,监控,关于技术" />
+  <meta name="keywords" content="监控,关于技术,WebSSH" />
   <meta name="description" content="这个功能我可以不用，但你不能没有" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -63,7 +63,7 @@
 <p>django通过channels实现websocket中有一个非常重要的概念叫layer，layer可以将多个channel合并成一个group，我们可以发送消息给group，那么group里的每个channel都能收到</p>
 <p>关于Channel我有写过两篇文章结合<strong>聊天室</strong>和<strong>web端实现tail-f功能</strong>这两个案例来详细介绍，两篇文章是<a href="/s/hqaPrPS7w3D-9SeegQAB2Q" target="_blank">『Django使用Channels实现WebSocket--上篇』</a>和<a href="/s/r5SpyTjRl0jJeAuYE4Q_-Q" target="_blank">『Django使用Channels实现WebSocket--下篇』</a>，对上边提到的名词一脸懵逼的朋友可以通过这两篇文章来学习</p>
 <p>之前的WebSSH仅是单连接，只需要客户端和服务器建立长连接，然后处理指令就ok了，我们并没有启用channel的layer，实际上也可以看作是单channel，但要实现监控的功能，就需要将操作者和管理员(监控者)的多个channel合并在一起组成一个group，这样操作者的所有操作都可以发送给这个group，同处于这个group内监控者就能实时收到消息了，大概流程变化如下图所示</p>
-<p><img alt="" loading="lazy" src="/static/images/20191128.01.jpg" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1128.01.jpg" /></p>
 <p>接下来看下具体实现，以下所有代码均是在这篇文章的基础上进行说明讲解：<a href="https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-ssh-paramiko-stream" target="_blank">『Django实现WebSSH操作物理机或虚拟机』</a></p>
 <p>首先我们要启用layer，这个需要在settings.py中添加如下配置</p>
 <pre class="codehilite"><code>CHANNEL_LAYERS = {
@@ -197,7 +197,7 @@ async_to_sync(get_channel_layer().group_send)(
 
 
 <h2 id="_3">演示与说明</h2>
-<p><img alt="" loading="lazy" src="/static/images/20191128.gif" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1128.gif" /></p>
 <p>所有实现环环相扣，单看这一篇文章可能云里雾里，不知所云，但你如果能把这个系列文章都给看下的话，我想实现个简单的堡垒机应该没有问题吧，更重要的是你会对websocket以及django中的Channels有着更加深刻的理解和运用</p>
 <p>原本只是想给我最牛X的<a href="/s/Nxh7mwPJPlbL3R9MdlkO_A" target="_blank">Alodi系统</a>添加个WebSSH，可以方便开发或测试在项目运行过程中出现问题时提供一个快速的调试途径，没想到这竟然写了一个系列，实现了这么多有趣好玩儿的功能</p>
 <p>最后想起了这句成语：有意栽花花不开，无心插柳柳成荫，真是奇妙~</p>

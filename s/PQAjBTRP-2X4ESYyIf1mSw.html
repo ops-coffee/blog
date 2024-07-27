@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="关于技术,required,Django,login" />
+  <meta name="keywords" content="Django,关于技术,required,login" />
   <meta name="description" content="一个小方法，帮你写出优雅的代码" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -68,7 +68,7 @@ def home(request):
 <p>通常对于一个后台系统来说，每一个页面都需要登陆才能访问，这样我们就需要给每一个view方法添加<code>@login_required</code>装饰器，那么有没有简单优雅一点的方式呢？可以通过Middleware中间件来实现</p>
 <p>中间件位于用户请求和程序响应之间，当用户访问一个url之后并不是直接交给了view去处理，而是先经过中间件处理，然后再到了view，路线是这样的：user--&gt;middleware--&gt;view，所以针对全局所有view的操作就非常适合放在中间件里去处理</p>
 <p>Django的中间件都定义在settings的<code>MIDDLEWARE</code>配置下，默认就添加了诸如auth、csrf之类的中间件</p>
-<p><img alt="" loading="lazy" src="/static/images/20200601.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2020/0601.01.png" /></p>
 <p>需要注意的是Django的中间件是有先后顺序的，对于接收到的请求默认从上到下依次执行，关于Django的中间件这里不过多介绍，查询相关文档即可</p>
 <p>对于优雅处理用户访问view验证登陆的需求，我们就可以通过添加自定义的中间件来处理，方法非常简单</p>
 <p>先来编写中间件类，代码如下：</p>

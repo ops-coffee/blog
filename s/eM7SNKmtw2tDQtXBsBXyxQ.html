@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="关于技术,varian,Devops,Jenkins" />
+  <meta name="keywords" content="Jenkins,varian,关于技术,Devops" />
   <meta name="description" content="项目多了之后配置Jenkins也成了一件麻烦的事情，如何实现优雅的程序部署呢？" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -59,7 +59,7 @@
 </blockquote>
 <h1 id="varian">什么是varian</h1>
 <p>varian是我们基于Python3编写的一套部署程序，处在整个部署系统的中心，与CMDB、Jenkins、SVN/Git、镜像仓库Harbor、Kubernetes API、通知系统等都有交互，负责将源代码经过一系列的处理后打包成Docker镜像，并发布到各个环境，然后通知相关人员。简化后的varian架构如下：</p>
-<p><img alt="varian架构图" loading="lazy" src="/static/images/20180730.varian.png" /></p>
+<p><img alt="varian架构图" loading="lazy" src="/static/images/2018/0730.varian.png" /></p>
 <h1 id="_1">项目环境介绍</h1>
 <ul>
 <li>项目数量：50+</li>
@@ -85,7 +85,7 @@
 <p>说了这么多，那varian究竟是个什么样子呢？</p>
 <h2 id="_2">设计思路</h2>
 <p>Lego积木，就是那种各个不同的小模块能拼装成各种各样的建筑的玩具。设计的思路也主要采用了lego的方式，把所有的功能都拆分成一个一个的python类，部署项目时就组装不同的类，例如一个最简单的纯静态web项目，组装了“拉代码模块”+“JS/CSS合并压缩模块”+“分发API模块”+“邮件通知模块”，如果是一个纯java api项目呢？组装“拉代码模块”+“maven编译模块”+“分发API模块”+“邮件通知模块”即可，从上边的例子可以就可以看出这种组装模块的优势。</p>
-<p><img alt="lego拼装模块" loading="lazy" src="/static/images/20180730.lego.png" /></p>
+<p><img alt="lego拼装模块" loading="lazy" src="/static/images/2018/0730.lego.png" /></p>
 <p>所有模块可复用，来了一个新项目根据项目架构、开发语言等因素去判断目前的模块是否能够满足，如果可以满足就直接组装使用吧，如果确认过眼神，实在满足不了呢？那就新加一个模块，模块编写遵循简单可复用原则，需考虑到后续有类似功能可以直接使用此模块。</p>
 <p>可能会有疑问？那些各个项目不同的配置怎么办？例如代码路径。这里采用了逻辑（模块）跟配置拆分的设计方式，所有处理逻辑不涉及任何一个项目特有的属性，项目特有的属性都单独配置，我们采用CMDB来配置，CMDB里有一张deploy的表，表关联project，记录了项目的特殊属性，例如通知邮件列表等等，逻辑模块会调用CMDB API自动取出所需配置信息。</p>
 <h2 id="_3">实现方法</h2>

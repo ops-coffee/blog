@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="关于技术,Celery,Django" />
+  <meta name="keywords" content="Celery,Django,关于技术" />
   <meta name="description" content="想在Django项目中使用异步处理或计划任务？读这一篇文章就够了" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -63,7 +63,7 @@
 <li>处理任务的消费者workers：broker通知worker队列中有任务，worker去队列中取出任务执行，每一个worker就是一个进程</li>
 <li>存储结果的backend：执行结果存储在backend，默认也会存储在broker使用的MQ队列服务中，也可以单独配置用何种服务做backend</li>
 </ol>
-<p><img alt="图片来自互联网" loading="lazy" src="/static/images/20180714.celery.png" /></p>
+<p><img alt="图片来自互联网" loading="lazy" src="/static/images/2018/0714.celery.png" /></p>
 <h1 id="_1">异步任务</h1>
 <p>我的异步使用场景为项目上线：前端web上有个上线按钮，点击按钮后发请求给后端，后端执行上线过程要5分钟，后端在接收到请求后把任务放入队列异步执行，同时马上返回给前端一个任务执行中的结果。若果没有异步执行会怎么样呢？同步的情况就是执行过程中前端一直在等后端返回结果，页面转呀转的就转超时了。</p>
 <h2 id="_2">异步任务配置</h2>

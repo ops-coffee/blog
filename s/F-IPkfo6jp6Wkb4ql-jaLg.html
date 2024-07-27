@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="关于技术,APM,系统运维,SkyWalking" />
+  <meta name="keywords" content="系统运维,APM,关于技术,SkyWalking" />
   <meta name="description" content="公司最近在构建服务化平台，需要上线APM系统，本篇文章简单的介绍SkyWalking" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -71,7 +71,7 @@
 <p>SkyWalking是分布式系统的应用程序性能监视工具，专为微服务、云原生架构和基于容器（Docker、K8S、Mesos）架构而设计</p>
 <p>SkyWalking是观察性分析平台和应用性能管理系统。提供分布式追踪、服务网格遥测分析、度量聚合和可视化一体化解决方案</p>
 <h3 id="skywalking_1">SkyWalking架构</h3>
-<p><img alt="" loading="lazy" src="/static/images/20190711.skywalking.jpg" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0711.skywalking.jpg" /></p>
 <p>SkyWalking采用组件式开发，易于扩展，主要组件作用如下：</p>
 <p><strong>Skywalking Agent：</strong> 采集<code>tracing</code>（调用链数据）和<code>metric</code>（指标）信息并上报，上报通过HTTP或者gRPC方式发送数据到Skywalking Collector</p>
 <p><strong>Skywalking Collector ：</strong> 链路数据收集器，对agent传过来的<code>tracing</code>和<code>metric</code>数据进行整合分析通过<code>Analysis Core</code>模块处理并落入相关的数据存储中，同时会通过<code>Query Core</code>模块进行二次统计和监控告警</p>
@@ -81,26 +81,26 @@
 <ul>
 <li>仪表盘</li>
 </ul>
-<p><img alt="" loading="lazy" src="/static/images/20190711.apm-skywalking01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0711.apm-skywalking01.png" /></p>
 <p>仪表盘主要包含Service Dashboard和Database Dashboard</p>
 <p>Service Dashboard内分别有Global、Service、Endpoint、Instance面板，展示了全局以及服务、端点、实例的详细信息</p>
 <p>Database Dashboard内可以展示数据库的响应时间、响应时间分布、吞吐量、SLA、慢SQL等详细信息，便于直观展示数据库状态</p>
-<p><img alt="" loading="lazy" src="/static/images/20190711.apm-skywalking02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0711.apm-skywalking02.png" /></p>
 <ul>
 <li>拓扑图</li>
 </ul>
-<p><img alt="" loading="lazy" src="/static/images/20190711.apm-skywalking05.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0711.apm-skywalking05.png" /></p>
 <p>SkyWalking能够根据获取的数据自动绘制服务之间的调用关系图，并能识别常见的服务显示在图标上，例如图上的kafka、H2服务</p>
 <p>每条连线的颜色反应了服务之间的调用延迟情况，可以非常直观的看到服务与服务之间的调用状态，连线中间的点能点击，可显示两个服务之间链路的平均响应时间、吞吐率以及SLA等信息</p>
 <ul>
 <li>追踪面板</li>
 </ul>
-<p><img alt="" loading="lazy" src="/static/images/20190711.apm-skywalking06.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0711.apm-skywalking06.png" /></p>
 <p>能够显示请求的代码内部执行情况，一个完整的请求都经过了哪些服务、执行了哪些代码方法、每个方法的执行时间、执行状态等详细信息，快速定位代码问题</p>
 <ul>
 <li>告警面板</li>
 </ul>
-<p><img alt="" loading="lazy" src="/static/images/20190711.apm-skywalking07.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0711.apm-skywalking07.png" /></p>
 <h2 id="_1">写在最后</h2>
 <p>SkyWalking目前还处在高速发展的阶段，我们在生产环境部署，遇到了一系列的问题，例如数据量过大图像断点，图像显示慢，与elasticsearch版本不兼容等，遇到问题所能查找的资料也有限，还需谨慎上线生产，但从Github上可以看到产品仍在快速更新不断完善，相信未来SkyWalking的发展也会越来越好，感谢开源</p>
 

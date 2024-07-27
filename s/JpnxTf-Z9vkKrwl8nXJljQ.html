@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="20,2,Devops,关于技术,Cache,Django,10,任务系统" />
+  <meta name="keywords" content="Cache,任务系统,Devops,2,Django,20,10,关于技术" />
   <meta name="description" content="20分钟的任务优化到了2分钟" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -55,10 +55,10 @@
         <h1 id="art-title">Django开发中使用Cache缓存提升10倍效率</h1>
 
         <p><a href="https://blog.ops-coffee.cn/s/uXQbM4t11ICdzNofZyDeXA" target="_blank">自定义任务引擎Probius</a>上线运行一段时间后，小伙伴跟我反馈有部分任务执行时间太长，等的花儿都谢了，例如下边这个任务竟然执行了超过24分钟</p>
-<p><img alt="" loading="lazy" src="/static/images/20201026.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1026.01.png" /></p>
 <p>查看每个子任务的执行时间，发现单单消耗在“YARN安装模块”这个子任务的时间就超过20分钟，检查这个子任务的执行逻辑发现并没有发现问题，抛弃Probius，直接在服务器上执行这个子任务惊奇的发现执行时间只有2分钟，由此断定肯定是Probius的问题了</p>
 <p>又一次看了下这个子任务，发现任务的输出日志超过1w条，瞬间就知晓了其中的问题，经过简单修改再次测试，原本执行24分钟的任务执行时间缩短至3分钟以内，效率提升相当明显</p>
-<p><img alt="" loading="lazy" src="/static/images/20201026.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1026.02.png" /></p>
 <p>究竟改了什么拥有如此魔力呢？先来看下下边这段代码</p>
 <pre class="codehilite"><code>class Logger:
     def __init__(self, tid, state=None):
@@ -286,7 +286,7 @@ True</code></pre>
 
 
 <p>根据任务ID创建缓存key，这条任务下的所有Log都会先写入缓存中，当任务结束时再将缓存中的日志一把写入数据库，从而减轻数据库压力，执行效率得到了极大的提升</p>
-<p><img alt="" loading="lazy" src="/static/images/20201026.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1026.03.png" /></p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

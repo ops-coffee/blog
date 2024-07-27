@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="关于技术,Vue,bpmn,ContextPad,Store,BPMN,js" />
+  <meta name="keywords" content="Store,Vue,js,bpmn,BPMN,关于技术,ContextPad" />
   <meta name="description" content="BPMN自定义bpmn.js的ContextPad，实现隐藏、添加、修改按钮、点击按钮编辑属性，以及Vue通过Store在组件间传递数据" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -235,12 +235,12 @@ export default {
 
 
 <p>最终效果如下：</p>
-<p><img alt="" loading="lazy" src="/static/images/20201111.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1111.01.png" /></p>
 <h2 id="_1">点击处理</h2>
 <p>bpmn.js给节点关联属性是通过右侧面板<code>Properties-panel</code>来实现的，其核心是对xml文件的修改，但我们并没有这样用，而是直接给每个节点关联一个表单，这个节点的所有数据都保存在这个表单里，后台单独存于数据库，这里所说的节点包含图形shape和连线SequenceFlow等流程图里的元素，节点ID与表单数据一一对应</p>
 <p>节点要关联表单数据，就需要用到我们上边添加的名为“属性”的按钮，当点击“属性”按钮时出现表单，因为不同类型的节点需要弹出不同的表单，所以在点击按钮之后主程序也需要知道点击的节点类型等数据，这就涉及到了组件间的数据传递，试了很多方法都不行，最终只能借助于借助于<code>store</code>来实现了，具体代码如下</p>
 <p>1.在store目录下新建modules目录，modules目录下创建模块化文件<code>bpmn.js</code>，目录结构如下</p>
-<p><img alt="" loading="lazy" src="/static/images/20201111.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1111.02.png" /></p>
 <p>2.在<code>bpmn.js</code>中编写如下代码</p>
 <pre class="codehilite"><code>const bpmn = {
   state: {
@@ -361,7 +361,7 @@ if (
 
 
 <p>最终实现的效果如下</p>
-<p><img alt="" loading="lazy" src="/static/images/20201111.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1111.03.png" /></p>
 <p>但这里有一个问题，就是当我在表单里修改了节点名称，也就是节点的name属性时不会同步到左侧的流程图节点上，那该如何实现同步呢？也很简单，修改下watch即可</p>
 <pre class="codehilite"><code>watch: {
   task(val) {},

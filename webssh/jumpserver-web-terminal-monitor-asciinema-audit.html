@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="WebSSH,Jumpserver,Django,关于技术" />
+  <meta name="keywords" content="Jumpserver,Django,关于技术,WebSSH" />
   <meta name="description" content="Django WebSSH终端录像的实现终于来了，解密类似Jumpserver录像是如何实现的" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -200,7 +200,7 @@ function play(host,user,time,file) {
 
 <p>asciinema-player标签的详细参数介绍可以看这篇文章<a href="/s/PcstaBodjDS8D15ARwAfzA" target="_blank">『Asciinema文章勘误及Web端使用介绍』</a></p>
 <h2 id="_2">演示与总结</h2>
-<p><img alt="" loading="lazy" src="/static/images/20191119.gif" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1119.gif" /></p>
 <p>在写入文件的方案中，考虑了实时写入和一次性写入，实时写入就像上边这样，所有的操作都会实时写入录像文件，好处是录像不丢失，且能在操作的过程中进行实时的播放，缺点也很明显，就是会频繁的写文件，造成IO开销</p>
 <p>一次性写入可以在用户操作的过程中将录像数据写入内存，在websocket关闭时一次性异步写入到文件中，这种方案在最终写入文件时可能因为种种原因而失败，从而导致录像丢失，还有个缺点是当你WebSSH操作时间过长时，会导致内存的持续增加</p>
 <p>两种方案一种是对磁盘的消耗另一种是对内存的消耗，各有利弊，当然你也可以考虑批量写入，例如每分钟写一次文件，一分钟之内的保存在内存中，平衡内存和磁盘的消耗，期待你的实现</p>
