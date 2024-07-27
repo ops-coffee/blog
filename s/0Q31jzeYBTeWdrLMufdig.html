@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="任务系统,关于技术" />
+  <meta name="keywords" content="关于技术,任务系统" />
   <meta name="description" content="手动审批任务完成之后来聊聊并行任务是如何实现的" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -55,11 +55,11 @@
         <h1 id="art-title">任务系统之并行任务</h1>
 
         <p>上篇文章讲了<a href="/s/Q3BBxBAWBcpUhQhfwO7pgQ" target="_blank">手动审批任务</a>的实现，这篇文章来讲下并行任务，通常情况下一个任务流里的多个子任务都是采用串行执行的，所谓串行就是第一个子任务结束才开始第二个，第二个子任务结束才开始第三个，依次类推，直到所有的子任务执行完成，整个任务流也就算完成了</p>
-<p><img alt="" loading="lazy" src="/static/images/20220227.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0227.01.png" /></p>
 <p>串行任务逻辑清晰，但执行完成整个任务流的时间会比较长，这在某些情况下是完全没有必要的，可以通过并行执行来节约时间，从而提高效率，所谓并行就是第一个子任务执行后可以同步执行第二个第三个子任务，第二第三个子任务都执行完才会进行下一个</p>
-<p><img alt="" loading="lazy" src="/static/images/20220227.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0227.02.png" /></p>
 <p>如何实现并行任务呢？先来回顾下我们任务流是如何实现的，<strong>模板</strong>包含了若干个<strong>子任务</strong>，每个子任务会有一个排序</p>
-<p><img alt="" loading="lazy" src="/static/images/20220227.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0227.03.png" /></p>
 <p>在执行任务时根据任务关联的模板拿到所有子任务，然后按照子任务的执行顺序循环依次执行，这就是串行任务的逻辑，简单的理解就是任务流的子任务存在一个有序的列表里，每次就按顺序去列表去取一个执行，代码实现就是<a href="/s/Q3BBxBAWBcpUhQhfwO7pgQ" target="_blank">上篇文章</a>里的<code>exec_subtask</code>函数</p>
 <pre class="codehilite"><code>def exec_subtask(tasklog, subtasklog=None):
     # 获取所有子任务
@@ -140,7 +140,7 @@
 
 
 <p>想清楚了执行逻辑，对于代码修改并不算复杂，当在模板里把IOS更新和安卓更新两个子任务执行顺序改成一样时再执行就看到他们两个同时开始执行了</p>
-<p><img alt="" loading="lazy" src="/static/images/20220227.04.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0227.04.png" /></p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">

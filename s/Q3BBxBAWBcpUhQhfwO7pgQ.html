@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="任务系统,关于技术" />
+  <meta name="keywords" content="关于技术,任务系统" />
   <meta name="description" content="强大的任务系统又更新用户手动审批任务，任务执行过程中可中断人工手动审批，审批通过继续执行" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -55,17 +55,17 @@
         <h1 id="art-title">任务系统之手动审批</h1>
 
         <p>今日阳光明媚，心情也跟着好了许多，坐在安静的图书馆里任阳光透过窗户照在脸上，暖洋洋很舒服</p>
-<p><img alt="" loading="lazy" src="/static/images/20220226.01.jpg" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0226.01.jpg" /></p>
 <p>入职新公司近两月，到目前为止感觉还不错，重写了整个任务系统并推进了项目接入落地，昨天刚跟团队的小伙伴们吃过饭，也算是给这个阶段性的成果一点奖励。进入新团队我主要负责整个DevOps相关工具的开发及落地，对于开发之前我有过相当丰富的经验非常自信没有问题，但对于落地说实在的我之前还是有点担忧的，毕竟大多数人都习惯于自己的舒适圈不愿改变，见过太多太多DevOps推进失败的例子，但我幸得上苍眷顾，遇到了一群非常靠谱的小伙伴，到目前为止落地还算顺利</p>
 <p>之所以说是重写了任务系统，是因为我上份工作写过<a href="/s/uXQbM4t11ICdzNofZyDeXA" target="_blank">任务系统Probius</a>，到了新公司的第一项工作就是要解决发布部署问题，把原本分散于各个不同开源工具的部署方案给统一，那任务系统首当其冲的要承担重任了，我跟团队内的小伙伴们都逐一聊了聊，了解了当前的项目架构跟日常管理方式，发现曾经写过的任务系统并不能很好的满足当下的需求，所以重新设计，从前端模板到后端逻辑都进行了全新的开发</p>
 <p>全新开发的任务系统加入了诸多非常好用的功能，例如资源隔离、并行任务、数据隔离、定时任务、周期任务，以及这篇文章将要讲到的手动审批等等。这里顺便说一下，我写DevOps相关的文章都倾向于讲思路和方法，少有代码，我觉得思路比代码更重要，况且代码属于公司，除非得到允许，否则不允许也不能够公开分享，所以各位也不要问我有没有源码，肯定没有</p>
-<p><img alt="" loading="lazy" src="/static/images/20220226.02.jpg" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0226.02.jpg" /></p>
 <p>言归正传，接下来讲一下手动审批，在开始之前需要先看下这篇文章了解下任务系统的基本设计：<a href="/s/uXQbM4t11ICdzNofZyDeXA" target="_blank">Probius：一个功能强大的自定义任务系统</a>，虽然我整个重写了，但基本的设计思路没太大变化，只是将命令给改成了子任务，现在全新的任务系统三个核心模块变成了子任务、模板和任务</p>
 <p><strong>子任务：</strong> 任务系统的最小粒度，子任务有多种类型，例如命令、脚本、通知以及审批</p>
 <p><strong>模板：</strong> 一组子任务的集合，也可以理解为任务流，主要对模板下的子任务进行编排</p>
 <p><strong>任务：</strong> 模板+参数=任务，模板是静态的不可执行，而任务是动态的可以执行</p>
 <p>手动审批就是子任务中的审批类型任务，在一个任务执行的过程中，有需要人工确认的地方就用到了审批，拿游戏维护更新为例来说，游戏更新完成后需要QA介入测试，测试通过才能对外开放，那在整个任务流中就需要一个审批任务：QA测试通过，而这在之前的任务系统中是无法实现的</p>
-<p><img alt="" loading="lazy" src="/static/images/20220226.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0226.03.png" /></p>
 <h2 id="celery">单Celery任务</h2>
 <p>任务系统的核心逻辑是：模板包含多个子任务，任务关联模板，执行任务时实际上就是按照编排好的顺序依次执行模板下的子任务</p>
 <p>之所以之前的任务系统无法实现手动审批任务，主要是因为任务流是通过单一Celery任务来处理的，我们看一下之前的代码，用户执行任务，进入<code>taskrun</code>函数，先入库做记录，然后直接调用名为<code>run_task</code>的Celery异步任务执行</p>
@@ -202,7 +202,7 @@ def run_subtask(tid):
 
 
 <p>此时有审批权限的用户会收到审批通知，在页面上可以对任务进行审批</p>
-<p><img alt="" loading="lazy" src="/static/images/20220226.05.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0226.05.png" /></p>
 <p>审批请求会发送给<code>SubTasklogApprove</code>类，<code>SubTasklogApprove</code>记录用户审批结果，如果审批通过则继续调用<code>exec_subtask</code>执行接下来的流程，若审批拒绝就直接结束整个流程了</p>
 <pre class="codehilite"><code>class SubTasklogApprove(RetrieveUpdateDestroyView):
     model = SubTaskLog

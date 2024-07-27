@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="JS,关于技术,None,前端插件,Just-For-Fun" />
+  <meta name="keywords" content="Just-For-Fun,JS,None,前端插件,关于技术" />
   <meta name="description" content="None" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
@@ -56,7 +56,7 @@
 
         <p>这是一篇简单的关于LetterAvatar的使用文章，如果你是专业的前端或者已经了解这个了，可以关闭退出了无需再看接下来的内容。本文仅是做个简单的记录当做给自己看的笔记</p>
 <p>平常遇到有意思的网站或者好用的在线工具我都会放进收藏夹收藏下来，为了方便管理这些收藏的网站，我写了个简单的<a href="https://nav.ops-coffee.cn/" target="_blank">导航站</a></p>
-<p><img alt="" loading="lazy" src="/static/images/20230801.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0801.01.png" /></p>
 <p>每个收藏的网站都是由一个图标、一个名字加上一段简单的介绍组成，名字和简介都是文字处理起来比较简单，图标就想对麻烦一点了，刚开始我都是找到网站的ICON地址直接使用这个链接，时间长了部分网站的ICON地址改变了，就导致页面加载不到了，这不仅拖累了页面的整体加载时间，并且图标不显示还比较丑</p>
 <p>一个简单的处理方式是每次都把图标给下载下来保存到本地或者云存储上，这样依然比较麻烦，并且还占用存储空间，由于这个导航站还是托管在Github上，大量的图标加载同样会拖慢页面的速度，于是我在想能不能自动生成每个站点的图标，就像钉钉会为每个用户自动生成一个文字头像一样。于是很容易的在Github上找到了<a href="https://github.com/daolavi/LetterAvatar" target="_blank">这个叫LetterAvatar的项目</a></p>
 <p>这个项目非常简单，核心就是下边的这段JS</p>
@@ -160,7 +160,7 @@
 
 <p>其中<code>width</code>和<code>height</code>都是img标签原本就有的属性，代表图片的宽度和高度，而<code>avatar</code>和<code>color</code>为LetterAvatar特有的属性，<code>avatar</code>用来配置显示的文字，支持字母和汉字，显示每个单词的首字母，若有多个单词则会显示每个单词首字母，<code>color</code>用来配置文字的底色。如果想要圆角图标设置<code>class</code>为<code>round</code>即可</p>
 <p>有了这个插件，那自动生成网站的图标就容易多了，直接把原本图标的img用以上特殊的img标签替换即可，替换后的效果是这样的</p>
-<p><img alt="" loading="lazy" src="/static/images/20230801.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0801.02.png" /></p>
 <p>代码不算难，使用更是简单，但就是这么几行代码帮我解决了大问题</p>
 
         <div>
