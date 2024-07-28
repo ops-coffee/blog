@@ -58,13 +58,13 @@
 <p><img alt="" loading="lazy" src="/static/images/2023/1229.01.png" /></p>
 <h2 id="_1">软件系统</h2>
 <p><a href="https://blog.ops-coffee.cn/s/zecCwjr0TyxqufOSkp_ndA" target="_blank">软件系统</a>主要是为了实现公司内部软件的管理，包含订单管理、软件分配等等功能。公司内部购买了许多软件，这些软件的订单及分配情况、过期时间等等基础信息一直都是通过Excel来管理的，久而久之难免混乱。入职新公司之后，领导给了个额外的任务，希望我能带领下团队内做传统运维的小伙伴学习运维自动化开发技能，于是软件系统应运而生，大家伙以此为实战项目，边学边做，顺利完成</p>
-<p><img alt="" loading="lazy" src="/static/images/20230304.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0304.01.png" /></p>
 <p>软件系统本身并不复杂，但它却为伙伴们打开了应用开发的大门，当系统上线真的投入生产使用，它的意义已经远超软件管理本身。这也为8月我们硬件系统的上线打下了坚实的基础</p>
 <h2 id="_2">容器系统</h2>
 <p><a href="https://blog.ops-coffee.cn/s/devops-kubernetes-docker-jenkins" target="_blank">容器系统</a>容器主要用来集中管理Kubernetes集群，实现自建以及云上容器的统一管理。可以完成容器的创建、伸缩、删除、监控、日志查看、终端登录等全生命周期管理。通过云平台API实现了Kubernetes集群的统一管理，包括监控查看，节点扩容等，通过Kubernetes集群API实现了集群资源的统一管理，包括资源创建、副本伸缩等，通过WebSocket打通了容器的SSH协议，实现容器登录，可以网页端在线操作容器</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/1229.05.png" /></p>
 <p>同时扩展了任务系统，集成Jenkins，支持原本基于Jenkins发布部署的容器项目低成本迁移至我们的任务系统，实现完善且高效的发布部署任务流。文章<a href="https://blog.ops-coffee.cn/s/devops-task-subtask-jenkins" target="_blank">任务系统之Jenkins子任务</a>就介绍了这一部分的技术实现及渊源，我们不可能设计出完美的系统，但可以在不断的使用中使系统变得逐渐完善，这就是一个实际的例子，这一年对于已经上线的系统像这样的更新还有很多很多</p>
-<p><img alt="" loading="lazy" src="/static/images/20230428.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0428.01.png" /></p>
 <h2 id="_3">多云安全</h2>
 <p>多云安全主要实现了云上安全的统一管理，包括基线安全、漏洞管理、文件查杀、异常登陆、密码破解等，支持用户自助发起检测。多云安全与我们基础资源数据打通，可以快速找到受影响资源所属项目及业务，从而及时通知资源owner进行后续处理</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/1229.07.png" /></p>
@@ -76,14 +76,14 @@
 <p>硬件系统的上线完全替代了原本低效的Excel管理模式，同时也弥补了资源流转过程缺失的问题，使得资产管理更专业和高效。同时也是团队小伙伴的另一个里程碑</p>
 <h2 id="_5">域名系统</h2>
 <p><a href="https://blog.ops-coffee.cn/s/devops-domain-record-certificate" target="_blank">域名系统</a>主要用来实现域名从申请到变更再到下线的全生命周期管理，域名系统整体上包含三个部分，分别是查询、变更、巡检，除了最基本的域名变更操作外，我们还收集了域名的全部基础数据例如注册厂商、注册时间、到期时间、解析记录等等，以及有效关联信息例如指向资源、资源类型、资源状态、申请用户等等，从而构建了完整的域名基础数据库，这个数据库不仅能支持完善的域名信息查询，还能基于此做很多的自动化巡检工作，例如域名临期提醒、域名解析绑定资源下线提醒、域名证书扫描及临期提醒等，完善了整个域名管理体系</p>
-<p><img alt="" loading="lazy" src="/static/images/20231020.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1020.01.png" /></p>
 <p>在基础数据较为完善的前提下，还做了<a href="https://blog.ops-coffee.cn/s/domain-entry-full-network-trace-link" target="_blank">全链路自动化拓扑</a>方向的探索，充分发挥数据的价值，让数据不再枯燥，使资源更加立体，也为后续基于架构/拓扑的可观测平台提供基础支撑</p>
-<p><img alt="" loading="lazy" src="/static/images/20231201.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1201.png" /></p>
 <h2 id="_6">优化升级</h2>
 <p>这一年除了上线了几个新系统之外，还对整个基础架构做了诸多的优化升级，其中最重要的就是平台化的改造。当系统功能不断增加，菜单也随之增多，大量的菜单带来了使用的不便，尽管可以通过多级菜单来优化，但仍不够清晰明了，参考各大公有云平台，做了平台化的改造，将每个不同功能的服务也就是我们前文所提到的这些不同的系统进行了平台内的相对独立，不同服务拥有独立的菜单，不同服务之间可以便捷的切换</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/1229.10.png" /></p>
 <p>优化了权限管理，综合考虑授权粒度和授权方式，完善了<a href="https://blog.ops-coffee.cn/s/django-tenant-rbac-auth-permission" target="_blank">多租户隔离授权</a>，权限下放，租户owner可以自助分配租户成员的权限，不需要再通过系统管理员，使得权限管理更加灵活和高效</p>
-<p><img alt="" loading="lazy" src="/static/images/20231202.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1202.03.png" /></p>
 <p>完善了审计功能，除了所有操作通过中间件自动记录日志外，还单独添加了登陆/变更等核心操作的二次审计记录。引入了流程管理，重要操作进行审批确认，确保操作前有审批，操作后有记录。增加审计报表，系统使用情况十分清晰</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/1229.12.png" /></p>
 <p>除此之外还有其他的一些优化更新，例如通过<a href="https://blog.ops-coffee.cn/s/django-celery-beat-queues-priority" target="_blank">Celery多队列解决任务优先级问题</a>、通过<a href="https://blog.ops-coffee.cn/s/django-move-model-to-another-app" target="_blank">迁移不同APP之间Model</a>使Model组织更合理等等</p>
