@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,Model" />
+  <meta name="description" content="详细介绍Django Model的字段类型" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Django Model字段类型</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django Model字段类型" />
+  <meta property="og:description" content="详细介绍Django Model的字段类型" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django Model字段类型</h1>
+
+        <h3 id="charfield">CharField</h3>
+<p>字符串字段</p>
+<ul>
+<li>CharField.max_length</li>
+</ul>
+<p>必选参数，用于定义字段长度</p>
+<h3 id="integerfield">IntegerField</h3>
+<p>整数字段，记录值的范围从-2147483648到2147483647</p>
+<h3 id="smallintegerfield">SmallIntegerField</h3>
+<p>就像IntegerField，但其取值范围为-32768到32767</p>
+<h3 id="bigintegerfield">BigIntegerField</h3>
+<p>就像IntegerField，但其取值范围为-9223372036854775808到9223372036854775807</p>
+<h3 id="booleanfield">BooleanField</h3>
+<p>一个true/false字段，例如<code>is_superuser</code>之类的字段，判断是否是超级管理员的就非常适合用BooleanField</p>
+<h3 id="datefield">DateField</h3>
+<p>日期，在 Python 中用一个 datetime.date 实例表示</p>
+<ul>
+<li>DateField.auto_now</li>
+</ul>
+<p>每次保存时，都将字段值设置为当前时间，通常用于保存数据的更新日期</p>
+<p>只有在调用<code>Model.save()</code>时该字段才会自动更新。当以其他方式对其他字段进行更新时，如<code>QuerySet.update()</code>该字段不会被更新</p>
+<ul>
+<li>DateField.auto_now_add</li>
+</ul>
+<p>当第一次创建对象时，自动将该字段设置为现在，通常用于保存数据的创建日期</p>
+<h3 id="datetimefield">DateTimeField</h3>
+<p>日期和时间，在 Python 中用一个 datetime.datetime 实例表示。与 DateField 一样，使用相同的额外参数</p>
+<h3 id="textfield">TextField</h3>
+<p>一个大的文本字段，最大可以存储4G的数据</p>
+<h3 id="timefield">TimeField</h3>
+<p>一个时间字段，在 Python 中用 datetime.time 实例表示。接受与 DateField 相同的自动填充选项</p>
+<h3 id="urlfield">URLField</h3>
+<p>一个URL存储字段，像所有的CharField子类一样，URLField接受可选的<code>max_length</code>参数。如果你没有指定<code>max_length</code>参数，默认为200</p>
+<h3 id="uuidfield">UUIDField</h3>
+<p>一个用于存储通用唯一标识符的字段。使用Python的UUID类</p>
+<pre class="codehilite"><code>import uuid
+from django.db import models
+
+class MyUUIDModel(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)</code></pre>
+
+
+<h3 id="emailfield">EmailField</h3>
+<p>一个CharField类型的字段，仅在数据校验时会检验存储的数据是否符合电子邮件格式</p>
+<h3 id="genericipaddressfield">GenericIPAddressField</h3>
+<p>IPv4或IPv6地址，仅在数据校验是会校验存储的数据是否符合IP地址格式</p>
+<h3 id="jsonfield">JSONField</h3>
+<p>一个用于存储JSON编码数据的字段，需要后端数据库支持JSON存储</p>
+<h3 id="decimalfield">DecimalField</h3>
+<p>一个固定精度的十进制数，在 Python 中用一个 Decimal 实例来表示</p>
+<ul>
+<li>DecimalField.max_digits</li>
+</ul>
+<p>数字中允许的最大位数。请注意，这个数字必须大于或等于 decimal_places</p>
+<ul>
+<li>DecimalField.decimal_places</li>
+</ul>
+<p>与数字一起存储的小数位数</p>
+<h3 id="floatfield">FloatField</h3>
+<p>一个float实例表示的浮点数</p>
+<p>FloatField类有时会与DecimaField类混淆，虽然它们都表示实数，但他们表示的方式不同。FloatField内部使用Python的float类型，而DecimalField则使用Python的Decimal类型</p>
+<h3 id="durationfield">DurationField</h3>
+<p>一个用户存储时间段的字段，在Python中用timedelta建模，不常用</p>
+<h3 id="slugfield">SlugField</h3>
+<p>一个用户存储slug的字段，Slug是一个简单的标签，只包含字母、数字、下划线或连接符，一般用在URL中</p>
+<ul>
+<li>max_length</li>
+</ul>
+<p>可以指定<code>max_length</code>，如果没有指定，则默认长度为50</p>
+<ul>
+<li>allow_unicode</li>
+</ul>
+<p>如果为True，该字段除了接受ASCII字母外，还接受Unicode字母，默认为False</p>
+<h3 id="filefield">FileField</h3>
+<p>一个文件上传字段</p>
+<h3 id="imagefield">ImageField</h3>
+<p>继承FileField的所有属性和方法，但也验证上传的对象是有效的图像</p>
+<h3 id="filepathfield">FilePathField</h3>
+<p>用户存储文件路径，本质上还是一个CharField，但其选择仅限于文件系统中某个目录下的文件名</p>
+<h3 id="autofield">AutoField</h3>
+<p>一个IntegerField，根据可用ID自动递增，默认主键ID使用AutoField类型，范围从</p>
+<h3 id="smallautofield">SmallAutoField</h3>
+<p>就像AutoField，但其取值范围为1到32767</p>
+<h3 id="bigautofield">BigAutoField</h3>
+<p>就像AutoField，但其取值范围从1到9223372036854775807</p>
+<h3 id="positiveintegerfield">PositiveIntegerField</h3>
+<p>就像IntegerField一样，但必须是正值或零，记录值的范围从0到2147483647</p>
+<h3 id="positivebigintegerfield">PositiveBigIntegerField</h3>
+<p>就像PositiveIntegerField一样，但记录值的范围值从0到9223372036854775807 </p>
+<h3 id="positivesmallintegerfield">PositiveSmallIntegerField</h3>
+<p>就像PositiveIntegerField一样，但记录值的范围是从0到32767</p>
+<h3 id="binaryfield">BinaryField</h3>
+<p>一个用于存储原始二进制数据的字段，很少用，二进制数据也不建议存储在数据库中</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/django/django-model-fields.html">📅 2022-08-02</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

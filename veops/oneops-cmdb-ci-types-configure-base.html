@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="None,CMDB" />
+  <meta name="description" content="None" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>开源｜维易CMDB详解之模型基础配置</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="开源｜维易CMDB详解之模型基础配置" />
+  <meta property="og:description" content="None" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">开源｜维易CMDB详解之模型基础配置</h1>
+
+        <p>上一篇文章<a href="https://blog.ops-coffee.cn/veops/oneops-cmdb-install-for-centos-linux" target="_blank">「维易CMDB详解之安装部署及常见问题处理」</a>详细介绍了VECMDB的安装部署、管理方式、注意事项以及常见问题的排查过程和解决方法，根据这些内容可以轻松的部署一套自己的CMDB系统。部署完成后如何使用，接下来的文章就详细的介绍下，首先就是动态模型</p>
+<p>VECMDB的一大特色是动态模型，模型可以简单的理解为数据库中的表，那动态模型也就能简单的理解为支持动态配置的数据库表。如果把模型简单的理解为数据库表，那数据库字段对应的就是模型属性。动态模型不仅可以动态的添加/修改数据库表，还能动态的添加/修改表字段，以及动态的配置表字段的属性，例如是否必须、是否唯一、是否添加索引、是否可排序等等，非常强大。正是因为动态模型的存在，才让VECMDB有了广泛的应用场景，适应各种各样不同类型资源的管理，无论是硬件设备、软件服务还是虚拟组织都能轻松应对管理自如</p>
+<p>由于模型配置太过强大，一篇文章无法全部展现，我会分几篇文章来详细介绍模型的使用，这是第一篇基础部分介绍，通过这一篇文章你能基本掌握模型的创建及管理，包括模型分组、模型属性分组、添加及修改模型属性以及模型属性的基础配置等内容</p>
+<h2 id="_1">模型配置</h2>
+<p>左侧菜单栏的<code>配置</code>中有个<code>模型配置</code>菜单，系统初始化带了一些常用的模型，例如虚拟机、物理机、交换机、路由器等等，这些常用的模型按照不同的类型分布在不同的<strong>分组</strong>下</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0604.02.png" /></p>
+<h3 id="_2">模型分组</h3>
+<p>点击模型分组左上方的新建分组按钮可以添加分组，分组只有一个名称属性比较简单</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0604.03.png" /></p>
+<p>鼠标移动到模型分组上，模型分组名称左侧可以拖动进行分组排序，同时分组名称右侧修改按钮可以修改分组的名称，删除按钮则能删除掉分组，需要注意的是删除分组前需要保证分组下无模型，否则会删除失败</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0604.04.png" /></p>
+<p>这个分组除了让模型归类整洁，看起来舒服外，在<code>我的订阅</code>菜单中也有使用，方便用户根据不同归类快速找到想要订阅的模型，同时还在<code>资源数据</code>菜单中有使用，资源数据根据模型分组来展示，清晰明了，一目了然</p>
+<h3 id="_3">模型</h3>
+<p>模型上方的搜索框里可以输入模型名称搜索模型，如果模型不存在，则可以点击模型分组，点击模型分组右侧的添加按钮或者右侧的新增CI模型按钮来添加模型</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0604.05.png" /></p>
+<p>新增CI模型有几个配置，模型英文名称、别名、是否继承、图标以及唯一标识</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0604.06.png" /></p>
+<p><strong>模型名（英文）：</strong> 模型的英文名称，要保证全局唯一</p>
+<p><strong>别名：</strong> 模型的别名，别名也是全局唯一不能重复，我们在系统中的其他地方看到的模型名字几乎全部都是模型的别名，所以别名取名应清晰易懂</p>
+<p><strong>是否继承：</strong> 是否继承来配置当前模型是否从其他的模型继承模型属性，简单理解为表字段是否来自于其他表，例如我们新建名为Redis的模型，Redis里的应用配置就继承自应用模型，则这里可以选择继承，并在继承模型中选择应用模型</p>
+<p><strong>继承模型：</strong> 当上边的是否继承选择了是之后，则会显示继承模型表单，需要在继承模型表单里选择要继承的模型，可以一次继承多个模型，例如同时继承事业部、产品、应用三个模型。模型继承需要特别注意到是，继承的模型如果模型属性有变化的话同样会影响到当前模型</p>
+<p>模型继承的使用场景通常是多个模型有公共属性，那可以将这些<strong>公共属性给拆分成单独模型</strong>然后继承，例如前边继承的事业部，几乎所有的资源都隶属于事业部，那就很适合把事业部作为单独的模型给其他的资源模型去继承</p>
+<p><strong>图标：</strong> 选择应用的图标，系统内置了许多的图标，如果都不满意的话还可以上传图片作为自定义图标</p>
+<p><strong>唯一标识：</strong> 唯一标识是模型最重要的属性，每个模型都<strong>必须</strong>要有一个唯一标识字段，唯一标识可以确保每条数据在表中的唯一性，通常唯一标识都使用数据的唯一主键，例如自增ID或是UUID</p>
+<p>唯一标识对数据对查找、更新和跟踪十分重要，就是依靠这个属性来找到数据表中某条确定的数据，<strong>通常在数据导入中出现导入数据量与原始数据量不一致的情况，绝大部分都是因为数据的唯一标识重复造成的</strong>，唯一标识重复，导致原本应该新增的数据变成了更新</p>
+<p>模型与模型分组类似，鼠标移动到模型上，模型名称左侧可以拖动进行模型排序，模型排序不仅可以在当前模型分组下排序，还能拖动到其他模型分组下，模型名称右侧则可以对模型进行授权、编辑、下载或删除模型</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0604.07.png" /></p>
+<p><code>授权</code>比较详细，后边再介绍</p>
+<p><code>编辑模型</code>可以对之前的创建的模型进行变更，除此之外模型编辑还有两个在新建模型时没有的配置：默认排序和展示属性，这两个配置十分重要，后文单独介绍</p>
+<p><code>下载模型</code>可以将当前的模型下载到本地，然后通过模型导入功能再将模型导入到系统中，这个通常用在需要<strong>不同系统之间迁移模型</strong>的场景，参考后文的模型导入导出部分。需要注意的是如果当前模型有继承其他模型，那当前模型不支持单独下载</p>
+<p><code>删除模型</code>可以将当前的模型删除，需要注意删除模型前先删除模型里的全部数据，否则不能直接删除模型</p>
+<h3 id="_4">默认排序</h3>
+<p>在<code>编辑模型</code>中有一个十分重要的配置：<strong>默认排序</strong>，默认排序可以配置模型数据在展示时的排序方式，例如在<code>资源数据</code>的表格中看到的数据排序，可以选择根据模型的某个属性进行正序或倒序排列</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0604.08.jpg" /></p>
+<p>一个模型只能配置一个模型属性进行默认排序</p>
+<h3 id="_5">展示属性</h3>
+<p><code>编辑模型</code>中的另一个十分重要的配置是：<strong>展示属性</strong>，展示属性可以配置资源在系统中默认展示的属性，例如在<code>拓扑视图</code>或是<code>服务树</code>中有展示模型数据的地方，通常我们都会选择资源容易识别的属性，例如<strong>资源名称</strong>/<strong>IP地址</strong>等容易标识具体资源的属性</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0604.09.png" /></p>
+<p>同样的一个模型也只能配置一个模型属性为展示属性</p>
+<h3 id="_6">导入导出</h3>
+<p>VECMDB动态模型的强大之处还体现在模型的导入导出上，模型的导入导出功能为动态模型提供了更大的灵活性，例如先在测试环境创建模型并测试，测试通过没有问题之后再把模型下载下来导入到正式环境，或者是其他同样用VECMDB的用户那里已经创建好了模型，而你正好需要此模型，再或者是VECMDB的模型市场里已经存在的模型你要用，都可以通过模型的导入导出功能来实现快速创建模型</p>
+<p>模型导出可以通过模型后边的<code>下载模型</code>按钮导出当前模型，或者是通过属性库右侧的<code>导出</code>按钮导出全部模型</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0604.10.png" /></p>
+<p>通过这里的<code>导入</code>按钮则可以将下载的模型文件导入进系统</p>
+<h3 id="_7">模型属性</h3>
+<p>模型创建完成之后就可以给模型添加属性了，前文提到模型可以简单的理解为数据库表，模型属性则可简单理解为表字段，添加属性也就能简单的理解为给表添加字段，模型属性界面有<code>新增属性</code>按钮，点击即可新增属性</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0604.11.png" /></p>
+<p>新增模型属性有几个配置，属性的英文名称、别名、数据类型、默认值、是否必须、是否唯一等等，十分丰富</p>
+<p><strong>属性名（英文）：</strong> 属性的英文名称，英文名称要保证全局唯一</p>
+<p><strong>别名：</strong> 模型的别名，属性的别名与模型的别名不同，不要求全局唯一，可以重复，但通常同一个模型下的属性别名最好不要重复，避免引起歧义，同样的别名是属性的展示名称，也应做到见名知意清晰易懂</p>
+<p><strong>数据类型：</strong> 支持整数、浮点数、文本、日期时间、日期、时间、JSON、密码、链接九种数据类型。不同数据类型对默认值的渲染是不一样的，例如当选择日期时间类型后，默认值输入框则渲染为日期时间控件，可以选择日期时间，选择JSON类型后，默认值将渲染为JSON输入框。同时不同数据类型所对应的配置也是不一样的，例如选择密码类型后，则不会有是否唯一、是否索引、是否可排序以及是否可以多值的配置。所以在配置模型属性时应选择合适的数据类型</p>
+<p>这些数据类型中最为特殊的当属<code>密码</code>类型，默认情况下，模型数据在数据库中都是明文存储的，但如果配置模型属性的数据类型为密码时，那当前属性的值将会加密存储在数据库中，保证数据安全</p>
+<p><strong>默认值：</strong> 配置属性的默认值，例如我们要加一个SSH连接端口的属性，则可以数据类型选择<code>整数</code>，默认值填上22，这样我们在添加数据时，SSH连接端口这个字段将默认填充22</p>
+<p>对于属性的默认值，有几个比较特殊，当选择数据类型为<code>整数</code>，默认值会有一个<code>自增ID</code>可供选择，当选择了自增ID作为默认值之后，添加数据时同样这个属性不需要提交数据，会在<strong>当前已经存在的数据最大自增ID的基础上加1</strong>作为新数据的默认值。这个<code>自增ID</code>非常适合作为模型的<code>唯一标识</code>配置</p>
+<p>另一个比较特殊的默认值是，当数据类型选择<code>日期时间</code>时，默认值除了可以选择<code>自定义时间</code>外，还能选择<code>创建时间</code>或<code>更新时间</code>作为默认值，这样在添加数据时这个属性同样不需要填写，会用数据的创建时间或者是更新时间自动填充，也是十分好用</p>
+<p><strong>必须：</strong> 配置当前属性是否必填，当选择必填时则添加数据时这个属性必须有值，若没有则不能提交</p>
+<p><strong>唯一：</strong> 配置当前属性是否唯一，当选择唯一时则表示当前属性值在模型中不能重复，若添加了重复的属性值则不能提交</p>
+<p><strong>索引：</strong> 当数据类型为<code>文本</code>时可配置当前属性是否作为索引，配置索引属性可被用于全文检索，加速查询。实际上除了JSON和文本类型之外的其他数据类型默认都直接添加了索引，而对于文本类型会有索引和非索引之分，用户可以通过索引配置来配置当前属性是否索引</p>
+<p>所有配置了<code>索引</code>的属性都可以被全文检索，全文检索的意思是查询时不需要提供属性名，会返回了所有符合的数据，主要的用途是在资源数据列表的模糊查询处使用，直接输入一个值，会自动去匹配所有索引属性的值。而对于非索引的属性字段，也可以检索，只是需要通过属性名去进行条件检索</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0604.14.png" /></p>
+<p><strong>默认显示：</strong> 配置资源数据表格是否默认展示此字段，选中则会在资源展示表格中展示，否则的话默认不展示在表格中</p>
+<p><strong>可排序：</strong> 配置资源数据表格中是否可以根据当前属性值进行排序，选中则可以根据当前属性排序，表格的头部属性名后会有<strong>排序按钮</strong>，否则的话不能排序也表头也没有排序按钮</p>
+<p><strong>多值：</strong> 当配置多值时，可以通过逗号分隔多个值，数据返回是个list，这个属性仅在API中有使用，UI界面上看不出来区别</p>
+<p>其他的一些高级配置正则表达式、预定义值以及计算属性，使用稍微复杂，同时也十分强大，后续单独写使用示例说明</p>
+<h3 id="_8">属性引用</h3>
+<p>添加属性时会遇到错误提示：重复的属性名。这主要是因为<strong>英文属性名全局唯一</strong>导致的，当前模型想要添加的英文属性名在其他的模型中已经添加过，不能重复的添加相同英文属性名的属性，当遇到这种情况时的处理方式是通过<code>已有属性</code>进行添加</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0604.12.png" /></p>
+<p>可以一次添加多个<code>已有属性</code>，需要注意的是，<strong>添加的已有属性是属性引用而非属性复制</strong>，这也就是说继承的属性会默认继承属性的所有配置，对继承的已有属性的修改，同样会应用到其他继承了这个属性的模型，所以对于已有属性应<strong>谨慎修改</strong>，不过有两个例外的属性配置：<code>必须</code>和<code>默认显示</code>，这两个配置不仅跟属性有关，也会跟模型有关联，可以在新的模型中修改，而不影响到其他到模型</p>
+<h3 id="_9">属性分组</h3>
+<p>当一个模型下的属性数量很多或是想要在添加数据时按照自己的习惯来排列字段时，可以用到属性的分组和排序功能</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0604.13.png" /></p>
+<p>属性的分组和排序与新增模型数据的表单有直接的关系，属性分组可以通过右侧的上下移动按钮移动分组的位置，属性的话也可以通过按着属性的图标处进行属性拖动排序，不仅可以在当前分组拖动，还能拖动到其他分组</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/veops/oneops-cmdb-ci-types-configure-base.html">📅 2024-06-05</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="None,CMDB" />
+  <meta name="description" content="None" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>开源｜维易CMDB详解之模型高级配置</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="开源｜维易CMDB详解之模型高级配置" />
+  <meta property="og:description" content="None" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">开源｜维易CMDB详解之模型高级配置</h1>
+
+        <p>上一篇文章<a href="https://blog.ops-coffee.cn/veops/oneops-cmdb-ci-types-configure-base" target="_blank">维易CMDB详解之模型基础配置</a>介绍了VECMDB动态模型的基本配置，仅仅是这些基础的配置已经能够感受到动态模型的强大，但不仅仅止于这些基础，高级配置则更为强大。高级配置中的几个配置分别对应了属性值的校验、展示、定义和计算四个方面，灵活性很高。大概的配置作用如下</p>
+<ul>
+<li>
+<p><code>正则校验</code>是对用户输入内容的审核，最大程度的避免错误或无效数据写入</p>
+</li>
+<li>
+<p><code>字体</code>可以定义属性值展示时的样式，个别属性特殊展示，重要数据一目了然</p>
+</li>
+<li>
+<p><code>预定义值</code>定义属性值的可选范围，支持多种预定义值的方式，兼顾灵活和准确</p>
+</li>
+<li>
+<p><code>计算属性</code>通过表达式或代码的方式来动态计算属性值，默认值的一种，但比默认值更灵活</p>
+</li>
+</ul>
+<p>接下来我们一个一个的来详细看看这些配置的具体用法</p>
+<h3 id="_1">正则校验</h3>
+<p>模型属性基础配置中有个<code>数据类型</code>的配置，可以对录入的数据做一些简单限制，例如选择整数类型，则录入数据只能为整数，选择时间类型，则录入数据只能为时间，这些只能从数据类型方面做限制，如果我们想要限制用户输入的内容必须以<code>@ops-coffee.cn</code>结尾，这该如何处理呢？</p>
+<p>此时就用到了高级模型配置<code>正则校验</code>，正则校验可以为模型属性配置正则校验规则，用户在录入数据时会先去校验是否匹配正则规则，如果匹配才能成功录入，否则录入失败。正则校验可以确保用户录入的数据符合特定的格式要求，提高数据准确性，十分有用</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0606.01.png" /></p>
+<p>VECMDB的正则校验很贴心的内置了一些常用的校验规则，例如手机号码、身份证号、IP地址、邮箱等，如果你想要限制的数据格式是内置的这些，那只需要选择对应的规则即可，如果你的格式要求内置的规则无法满足，也可以选择自定义的方式，自己写正则表达式来校验，例如我上边的需求内容必须以<code>@ops-coffee.cn</code>结尾，就可以通过写自定义正则表达式<code>.+@ops-coffee.cn</code>来满足。这里还贴心的给了测试表单，方便测试正则表达式是否与预期一致，提高正则表达式的准确性</p>
+<p>严格的数据校验能够确保录入数据符合预期，降低数据错误或无效的概率，这个特别重要，尤其是对于CMDB这种基础数据，要为上层业务服务，数据错误直接影响上层业务，所以要尽可能保证CMDB基础数据的完整并准确</p>
+<h3 id="_2">字体</h3>
+<p>VECMDB可以配置属性数据展示时的字体和颜色，主要包括是否加粗、是否斜体、是否加下划线以及显示颜色</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0606.02.png" /></p>
+<p>如果你想让某个属性在资源数据表格中重点展示，则可以通过给属性设置字体或颜色的方式来实现，例如对于Redis资源我们通常会关注Redis的内存信息，那么就可以给Reids的内存属性加粗展示</p>
+<h3 id="_3">预定义值</h3>
+<p>VECMDB支持给属性增加预定义值，预定义值在录入数据时会以Select下拉框的方式呈现，让用户在固定的几个数据中选择，同样可以增加数据准确性，提升使用便利性。预定义值有四种方式，分别是定义、Webhook、其他模型属性和代码，接下来分别介绍这四种方式的使用方法和使用场景</p>
+<h4 id="_4">定义</h4>
+<p>定义的使用场景最为广泛，一般只要是确定的几个配置都可以通过定义来处理，例如资源的在线状态，有在线和下线两种，那就可以通过定义来添加两个值在线和下线</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0606.03.png" /></p>
+<p>在添加定义的值时，同时也能给定义值添加图标、字体、颜色等配置，十分灵活，这样在录入数据时就能通过下来框来选择定义的值，在录入数据之后进行展示时也同样会以定义好的样式来展示</p>
+<h4 id="webhook">Webhook</h4>
+<p>如果你需要从其他的API获取数据作为录入数据时的可选属性值，那就需要用到<code>预定义值</code>里的<code>Webhook</code>类型。Webhook可以在录入数据时去API取数据，并填充到Select下拉框以供选择。例如我们需要获取的应用信息需要请求URL：<code>https://api.ops-coffee.cn/commons/info/</code>来获取，就可以配置如下Webhook</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0606.05.png" /></p>
+<p>Webhook的使用需要了解一点API请求的知识，首先是选择请求方法，目前支持GET、PUT、POST和DELETE方法，其实是填写请求的URL，再次是填写请求所需的Parameters/Body/Header，如果请求地址有认证也可以选择Authorization配置，支持Basic/Bearer/APIKey/OAuth2.0四种认证方式</p>
+<p>预定义值为列表格式，所以API返回的结果最好直接为列表，例如：<code>{"data": ['value1', 'value2', 'value3']}</code>，那就在过滤规则中填写<code>data</code>即可，如果返回的结果与这个格式不符，有多层嵌套的情况，那还能够用<code>##</code>分隔嵌套来格式化结果为列表，例如解析规则为：<code>k1##k2</code>，则能够解析API请求返回的结果格式为：<code>{k1: [{k2: 1}, {k2: 2}]}</code>, 最终解析结果为：<code>[1, 2]</code></p>
+<p>例如我的返回结果是</p>
+<pre class="codehilite"><code>{
+    &quot;state&quot;: 1,
+    &quot;message&quot;: &quot;获取成功!&quot;,
+    &quot;apps&quot;: [
+        {
+            &quot;id&quot;: 308,
+            &quot;name&quot;: &quot;费用中心&quot;,
+            &quot;parent&quot;: 0,
+            &quot;icon&quot;: &quot;fa fa-credit-card&quot;,
+            &quot;href&quot;: &quot;/billing/project/&quot;,
+            &quot;target&quot;: &quot;_self&quot;
+        },
+        {
+            &quot;id&quot;: 267,
+            &quot;name&quot;: &quot;审计中心&quot;,
+            &quot;parent&quot;: 0,
+            &quot;icon&quot;: &quot;fa fa-calendar&quot;,
+            &quot;href&quot;: &quot;/commons/logging/&quot;,
+            &quot;target&quot;: &quot;_self&quot;
+        },
+        {
+            &quot;id&quot;: 197,
+            &quot;name&quot;: &quot;用户管理&quot;,
+            &quot;parent&quot;: 0,
+            &quot;icon&quot;: &quot;fa fa-users&quot;,
+            &quot;href&quot;: &quot;/accounts/user/&quot;,
+            &quot;target&quot;: &quot;_self&quot;
+        }
+    ]
+}</code></pre>
+
+
+<p>那就可以在过滤条件中填写<code>apps##name</code>，最终的解析结果就是：<code>['费用中心', '审计中', '用户管理']</code>。然后在数据录入时就能从这三个值中选择合适的</p>
+<h4 id="_5">其他模型属性</h4>
+<p>有些情况下，我们需要的属性值来自其他模型的某个字段，例如我们要记录资源所属产品的名称，这个产品名就位于产品模型中，此时我们就可以用<code>预定义值</code>中的<code>其他模型属性</code>，选择模型及模型属性，这样我们在录入数据时就能自动从产品模型中获取模型名称并填充到Select表单中以供选择了</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0606.06.png" /></p>
+<p>某些情况下我们可能只需要其他模型属性值中的一部分，那VECMDB还提供了丰富的筛选过滤功能，例如等于、包含、范围等等，同时的话不仅能根据已选择模型属性进行过滤，还能针对选择模型的其他属性过滤，例如过滤所有产品负责人包含张三或李四，或者是产品线应用运维为王五的产品，可以进行如下的配置</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0606.07.png" /></p>
+<p>可以添加多个过滤条件，多个过滤条件之间可以选择<code>或</code>or<code>与</code>的关系，但条件可以选择要匹配的属性、匹配方式和匹配值</p>
+<h4 id="_6">代码</h4>
+<p>如果以上几种预定义值的方式都不符合需求，那还可以通过写代码的方式来处理，比较简单，只需要返回一个列表即可，例如我们需要根据星期返回不同的联系人时，就可以用如下这样的代码来实现</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0606.08.png" /></p>
+<p>而通过代码来预定义值更加常用的场景应该是需要获取API返回的结果作为属性的预定义值，但API返回的结果太过复杂，Webhook没办法进行格式化，又或者是API的认证比较特殊，不在Webhook支持的几种认证方式内需要单独写认证方法的情况下。总之通过代码来定义预定义值的灵活性更高，应用场景也会更广泛</p>
+<h3 id="_7">计算属性</h3>
+<p>计算属性可以通过构建<code>表达式</code>或者是编写<code>代码</code>的方式来定义属性的结果值，同时<code>表达式</code>或是<code>代码</code>中还能使用模型的其他属性值，这就为属性结果展示提供了更大的灵活性</p>
+<p>无论是表达式还是代码，都支持引用模型的其他属性值，引用方法为：<code>{{ 属性名 }}</code></p>
+<h4 id="_8">表达式</h4>
+<p>第一种构建计算属性的方式为<code>表达式</code>，属性的值可以通过模型的其他属性值构建表达式来展示，例如我们有个字段需要展示成<code>项目名｜服务名｜IP</code>的方式，就可以通过如下表达式来构建</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0606.11.png" /></p>
+<p>需要注意的是，表达式同样使用了<code>jinja</code>进行渲染，这对于数字类型的属性，表达式支持<strong>加减乘除</strong>之类的计算，而对于文本等其他类型等属性，表达式则可以理解为模型属性的<strong>字符拼接</strong></p>
+<h4 id="_9">代码</h4>
+<p>第二种构建计算属性的方式为<code>代码</code>，属性的值可以通过执行一段代码的结果来展示，代码中可以引用模型其他属性的值，例如模型有两个属性<code>price</code>和<code>discount</code>，分别记录了原价和折扣，我想要实付的金额，就可以添加一个新的属性<code>paid</code>，然后通过如下的代码来计算实付的金额</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0606.12.png" /></p>
+<p>再例如模型记录了任务执行的开始时间<code>start_time</code>和结束时间<code>end_time</code>，要获取任务执行了多少秒，那就可以通过如下的代码来计算</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0606.13.png" /></p>
+<p>之所以代码里可以引用属性，是因为在代码执行前进行了一次渲染，将属性名字替换成了对应的属性值，使用了<code>jinja</code>的模版渲染功能，所以你如果熟悉<code>jinja</code>的话那就会在编写代码时更加的得心应手。计算属性会在新增或者是修改数据时触发重新计算，不影响展示时的响应速度，所以通过计算属性来丰富模型结果展示，特别好用</p>
+<p>通过编写代码来构建计算属性需要特别注意的是<strong>代码要确保没有格式和语法错误</strong>，最好在其他地方编辑好代码测试过没有问题，再拷贝进来，以避免出错。目前无论是通过代码来预定义值还是计算属性，都不太容易进行测试，如果发现预期不符，最好的方式就是去翻看<code>error</code>日志，如果官方给加一个类似于<code>正则校验</code>一样的测试框可以测试的话那就相当完美了</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/veops/oneops-cmdb-ci-types-configure-advanced.html">📅 2024-06-11</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

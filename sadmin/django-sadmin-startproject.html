@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="sadmin" />
+  <meta name="description" content="在项目中使用sadmin" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>在项目中使用sadmin</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="在项目中使用sadmin" />
+  <meta property="og:description" content="在项目中使用sadmin" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">在项目中使用sadmin</h1>
+
+        <p>1.Add "sadmin" to your INSTALLED_APPS setting like this:</p>
+<pre class="codehilite"><code>INSTALLED_APPS = [
+    ...
+    'sadmin.commons',
+    'sadmin.accounts',
+    'sadmin.project',
+]</code></pre>
+
+
+<p>2.Add custom MIDDLEWARE for operatrion log</p>
+<pre class="codehilite"><code>MIDDLEWARE = [
+    ...
+    'sadmin.commons.middleware.log.OperationLogMiddleware',
+    'sadmin.commons.middleware.token.AuthTokenMiddleware',
+]</code></pre>
+
+
+<p>3.Add "AUTH_USER_MODEL" to your setting.py</p>
+<pre class="codehilite"><code>AUTH_USER_MODEL = 'accounts.User'</code></pre>
+
+
+<p>4.Include the accounts URLconf in your project urls.py like this::</p>
+<pre class="codehilite"><code>from django.urls import path, include
+from django.views.generic.base import TemplateView
+from django.contrib.auth.decorators import login_required
+
+urlpatterns = [
+    path('', login_required(TemplateView.as_view(template_name='index.html')), name='index-url'),
+    path('commons/', include('sadmin.commons.urls')),
+    path('accounts/', include('sadmin.accounts.urls')),
+    path('project/', include('sadmin.project.urls')),
+]</code></pre>
+
+
+<p>5.Run <code>python manage.py migrate</code> to create the models.</p>
+<p>6.Run <code>python manage.py createsuperuser</code> to create superusers</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/sadmin/django-sadmin-startproject.html">📅 2023-03-28</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

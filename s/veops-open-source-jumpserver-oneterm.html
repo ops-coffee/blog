@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="OneTerm,None,开源,关于技术,Devops" />
+  <meta name="description" content="None" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>开源推荐 | 简洁且强大的开源堡垒机OneTerm</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="开源推荐 | 简洁且强大的开源堡垒机OneTerm" />
+  <meta property="og:description" content="None" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">开源推荐 | 简洁且强大的开源堡垒机OneTerm</h1>
+
+        <p>在运维的日常工作中，登陆服务器操作不可避免，为了更安全的管控服务器，但凡有点规模的公司都会上线堡垒机系统，堡垒机能够做到事前授权、事中监控、事后审计，同时也可以满足等保合规要求。提到堡垒机，大伙第一时间能够想到的可能是JumpServer，JumpServer经过了多年的发展已经十分的稳定和成熟，是非常优秀的开源项目，被大家广泛所熟知，所以我今天就不写JumpServer了，介绍另一个最近体验到的亮点颇多的开源堡垒机：OneTerm</p>
+<p>OneTerm基于4A理念，即认证(Authen)、授权(Authorize)、账号(Account)、审计(Audit)设计开发，是维易科技开源的第二款运维自动化产品，之前开源的CMDB系统就广受好评，我也深入体验了，收获颇多，在我自己收获的同时也专门写了篇文章<a href="https://blog.ops-coffee.cn/s/veops-open-source-cmdb-devops" target="_blank">「灵活多变功能强大的CMDB」</a>介绍分享，以回馈开源社区。这一次看维易又开源了堡垒机系统OneTerm，我也体验了一下，虽然项目开源不久，有一些不尽完善的地方，但整体完整度很高，无论是生产使用还是自己学习都比较合适</p>
+<p>关于堡垒机，我之前也有开发过，还写过<a href="https://blog.ops-coffee.cn/webssh/" target="_blank">一系列的文章</a>来介绍堡垒机的实现方式和技术要点，这篇文章就结合我之前的堡垒机开发和使用经验，来介绍下这个开源的堡垒机系统</p>
+<h2 id="_1">系统介绍</h2>
+<h3 id="_2">资产管理</h3>
+<p>堡垒机主要就是对服务器进行操作，资产管理主要是对服务器的增删改查和授权等管理，是堡垒机的基础。支持基于资产树来管理，支持批量授权，支持批量修改连接协议</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.01.png" /></p>
+<p>接入时间的限制更是十分的灵活，不仅支持指定生效日期，同时也可以按照星期来配置生效时间，还支持选择某一天的某个时间段，非常强大</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.02.png" /></p>
+<p>支持与自家的CMDB联动，可以同步CMDB的数据到堡垒机，这个就很实用了，基础资源数据保存在CMDB，堡垒机作为上层应用只是使用，不仅降低了配置的复杂度，同时也能确保CMDB数据的权威。这个同步操作很贴心</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.03.png" /></p>
+<p>更为贴心的是你在添加资产树节点时设置的连接协议、账号授权、接入限制等配置可以直接作为节点下资源的默认配置，当在节点下新建资产时，会自动继承该节点的授权配置，从而简化添加资产时的配置，这个考虑也是十分人性化</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.04.png" /></p>
+<p>可以看得出来开发团队还是用心的，资源添加可以手动添加，也可以与CMDB同步，授权不仅支持单个资源授权，也支持批量授权和默认授权，点赞</p>
+<h3 id="_3">网关</h3>
+<p>OneTerm支持配置网关，网关功能解决了部分环境无法直接连接的问题，连接会将网关作为跳板连接到目标资产，这样可以覆盖一些复杂的网络环境，很有用</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.05.png" /></p>
+<h3 id="_4">安全</h3>
+<p>OneTerm支持会话超时时间设置，也支持设置过滤命令，危险命令无法执行，这样提高了终端操作的安全，避免一些无意的或人为的破坏，增加会话安全</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.06.png" /></p>
+<h3 id="_5">终端</h3>
+<p>对于堡垒机来说最重要的就是终端操作了，OneTerm已经支持了SSH、VPC和RDP多种协议的终端连接，支持命令行模式连接主机，也支持web终端连接主机，操作比较丝滑，该有的终端命令自动补全等功能也都有，体验就跟其他客户端无异</p>
+<p>终端直接连接</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.07.gif" /></p>
+<p>网页Web登陆终端</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.08.png" /></p>
+<h3 id="_6">会话审计</h3>
+<p>堡垒机除了能够终端登陆操作外，还有个比较重要等功能，那就是需要支持终端会话审计，包括查看当前在线会话连接，实时监控当前在线会话，以及在发现当前会话有危险和不当操作时对当前在线会话下达强制断开的指令，这些OneTerm也都是支持的</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.09.png" /></p>
+<p>同时OneTerm也支持查看历史回话，对历史回话进行回放、下载以及执行命令查看等审计操作</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.10.png" /></p>
+<p>命令查看很有用，可以直接对用户对会话操作进行快速检索，不用去看录像了，同时这个命令操作还会判定命令的风险等级，也很实用</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.11.png" /></p>
+<h3 id="_7">日志审计</h3>
+<p>资产授权和会话审计保障了主机连接操作的安全，除此之外，OneTerm也提供基础的用户登陆日志记录和完善的后台操作记录，所有操作均有记录，全面保障系统安全</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.12.png" /></p>
+<h3 id="_8">大盘</h3>
+<p>除了这些以上这些堡垒机必须的基础的功能外，OneTerm也提供了个Dashboard大盘，可以全面掌握系统情况，包括连接、资产、会话、用户、网关等信息，还是图表好看</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0315.13.png" /></p>
+<h2 id="_9">推荐使用</h2>
+<p>我深入体验了OneTerm，尽管它不是很完美，我也发现了还有一些有待优化提升的地方，但基于以下几点我还是想推荐给你试试</p>
+<ol>
+<li>
+<p>简洁且完善，专注堡垒机，堡垒机该有的都有，例如终端登陆，会话录像、实时监控、强制断开、网关、危险命令阻断等都是堡垒机必要等核心功能，没有其他乱七八糟跟堡垒机无关的功能，小巧易用</p>
+</li>
+<li>
+<p>GO语言开发，代码简单易懂，项目初期的代码是宝藏，功能不是很复杂，代码编写也都按照规范严格执行，结构和质量都比较高，没有太多的技术债，比较适合想要学习GO或者是想要了解堡垒机是如何实现的伙伴去读源码</p>
+</li>
+<li>
+<p>社区比较活跃，尤其是微信群几乎是有问必答，项目发版节奏也比较固定，几乎每周都有优化更新或新功能上线，注重用户体验，微信群里大伙提到的问题官方基本都有安排实现</p>
+</li>
+<li>
+<p>与CMDB数据互通，统一平台，打破数据孤岛，一份数据多个系统使用，确保CMDB数据的权威，同时也简化了堡垒机的配置和应用。项目维护主题为公司，相对来说比个人开发者更可靠和稳定</p>
+</li>
+<li>
+<p>开源，这个无需多说，向开源致敬</p>
+</li>
+</ol>
+<h2 id="_10">在线体验</h2>
+<p>最后附上项目Github地址：<a href="https://github.com/veops/oneterm" target="_blank">https://github.com/veops/oneterm</a></p>
+<p>官方还提供有在线Demo可以体验，README有地址和账号密码，如果想要进社区微信群也可以直接私信我或者加README里的微信</p>
+<p>觉得不错的话请不要吝惜star，好项目值得被更多的人发现，同样的希望维易OneTerm发展的越来越好，造福更多的运维同行</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/veops-open-source-jumpserver-oneterm.html">📅 2024-03-18</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/开源/">🏷️ 开源</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

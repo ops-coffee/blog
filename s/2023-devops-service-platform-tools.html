@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="None,Devops,关于技术" />
+  <meta name="description" content="None" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>这一年我们上线的运维自动化系统</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="这一年我们上线的运维自动化系统" />
+  <meta property="og:description" content="None" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">这一年我们上线的运维自动化系统</h1>
+
+        <p>上篇文章<a href="https://blog.ops-coffee.cn/r/2023-rv-travel-camping-and-vanlife" target="_blank">使用房车这一年</a>总结了过去一年并不平淡的生活，然而，这一年的时光不仅有生活，工作也占去了大半，那这篇文章就来聊聊这稳中有进的工作，总结下这一年我们上线的那些新的自动化运维系统，也回顾下去年上线的那些系统有了怎样的改变，这也算是对去年同名文章<a href="https://blog.ops-coffee.cn/s/xrlgoCee9CZwxt5lBdq1oA" target="_blank">这一年我们上线的自动化系统</a>的递进和补充了</p>
+<p>上一年我们已经上线了<a href="https://blog.ops-coffee.cn/s/YjfTypcHD03fTGLV_JsqWw" target="_blank">任务系统</a>、<a href="https://blog.ops-coffee.cn/s/Wtx2utkC4MErDLvC3cbSMg" target="_blank">多云系统</a>、<a href="https://blog.ops-coffee.cn/s/mml5jzQVDzByf0F3sJN5dg" target="_blank">监控系统</a>和<a href="https://blog.ops-coffee.cn/s/fGshXWUaTRv0oHIMBKSn1Q" target="_blank">作业系统</a>，构建了一个相对完善的自动化运维平台，也切切实实的提升了小伙伴们的工作效率，尤其是移动端的全面兼容，更是赞不绝口，我深受鼓舞，感谢这群靠谱的伙伴。2023这一年在去年的基础之上，于2月上线了<a href="https://blog.ops-coffee.cn/s/zecCwjr0TyxqufOSkp_ndA" target="_blank">软件系统</a>，3月上线了<a href="https://blog.ops-coffee.cn/s/devops-kubernetes-docker-jenkins" target="_blank">容器系统</a>，6月上线了多云安全，8月上了硬件系统，9月上线了<a href="https://blog.ops-coffee.cn/s/devops-domain-record-certificate" target="_blank">域名系统</a>，同时于今年结束前完成了大量的系统底层优化，做了平台化改造，同时也完善了系统报表，提供了全面的审计支持</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1229.01.png" /></p>
+<h2 id="_1">软件系统</h2>
+<p><a href="https://blog.ops-coffee.cn/s/zecCwjr0TyxqufOSkp_ndA" target="_blank">软件系统</a>主要是为了实现公司内部软件的管理，包含订单管理、软件分配等等功能。公司内部购买了许多软件，这些软件的订单及分配情况、过期时间等等基础信息一直都是通过Excel来管理的，久而久之难免混乱。入职新公司之后，领导给了个额外的任务，希望我能带领下团队内做传统运维的小伙伴学习运维自动化开发技能，于是软件系统应运而生，大家伙以此为实战项目，边学边做，顺利完成</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0304.01.png" /></p>
+<p>软件系统本身并不复杂，但它却为伙伴们打开了应用开发的大门，当系统上线真的投入生产使用，它的意义已经远超软件管理本身。这也为8月我们硬件系统的上线打下了坚实的基础</p>
+<h2 id="_2">容器系统</h2>
+<p><a href="https://blog.ops-coffee.cn/s/devops-kubernetes-docker-jenkins" target="_blank">容器系统</a>容器主要用来集中管理Kubernetes集群，实现自建以及云上容器的统一管理。可以完成容器的创建、伸缩、删除、监控、日志查看、终端登录等全生命周期管理。通过云平台API实现了Kubernetes集群的统一管理，包括监控查看，节点扩容等，通过Kubernetes集群API实现了集群资源的统一管理，包括资源创建、副本伸缩等，通过WebSocket打通了容器的SSH协议，实现容器登录，可以网页端在线操作容器</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1229.05.png" /></p>
+<p>同时扩展了任务系统，集成Jenkins，支持原本基于Jenkins发布部署的容器项目低成本迁移至我们的任务系统，实现完善且高效的发布部署任务流。文章<a href="https://blog.ops-coffee.cn/s/devops-task-subtask-jenkins" target="_blank">任务系统之Jenkins子任务</a>就介绍了这一部分的技术实现及渊源，我们不可能设计出完美的系统，但可以在不断的使用中使系统变得逐渐完善，这就是一个实际的例子，这一年对于已经上线的系统像这样的更新还有很多很多</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0428.01.png" /></p>
+<h2 id="_3">多云安全</h2>
+<p>多云安全主要实现了云上安全的统一管理，包括基线安全、漏洞管理、文件查杀、异常登陆、密码破解等，支持用户自助发起检测。多云安全与我们基础资源数据打通，可以快速找到受影响资源所属项目及业务，从而及时通知资源owner进行后续处理</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1229.07.png" /></p>
+<p>对于基线和漏洞，还会有相应的检测项说明以及修复方法参考，实现从检测到修复的全面支持</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1229.08.png" /></p>
+<h2 id="_4">硬件系统</h2>
+<p>硬件系统是为了实现公司内部IT硬件资产从采购到分配到回收最后报废等过程全生命周期的管理，包括台式电脑、笔记本、显示器、手绘板、投影仪、打印机等等IT硬件资产。硬件系统是继软件系统之后，团队小伙伴的又一个实践项目，我们完成了从需求收集开始、到技术设计、再到编写代码、最后测试上线的整个流程</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1229.09.png" /></p>
+<p>硬件系统的上线完全替代了原本低效的Excel管理模式，同时也弥补了资源流转过程缺失的问题，使得资产管理更专业和高效。同时也是团队小伙伴的另一个里程碑</p>
+<h2 id="_5">域名系统</h2>
+<p><a href="https://blog.ops-coffee.cn/s/devops-domain-record-certificate" target="_blank">域名系统</a>主要用来实现域名从申请到变更再到下线的全生命周期管理，域名系统整体上包含三个部分，分别是查询、变更、巡检，除了最基本的域名变更操作外，我们还收集了域名的全部基础数据例如注册厂商、注册时间、到期时间、解析记录等等，以及有效关联信息例如指向资源、资源类型、资源状态、申请用户等等，从而构建了完整的域名基础数据库，这个数据库不仅能支持完善的域名信息查询，还能基于此做很多的自动化巡检工作，例如域名临期提醒、域名解析绑定资源下线提醒、域名证书扫描及临期提醒等，完善了整个域名管理体系</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1020.01.png" /></p>
+<p>在基础数据较为完善的前提下，还做了<a href="https://blog.ops-coffee.cn/s/domain-entry-full-network-trace-link" target="_blank">全链路自动化拓扑</a>方向的探索，充分发挥数据的价值，让数据不再枯燥，使资源更加立体，也为后续基于架构/拓扑的可观测平台提供基础支撑</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1201.png" /></p>
+<h2 id="_6">优化升级</h2>
+<p>这一年除了上线了几个新系统之外，还对整个基础架构做了诸多的优化升级，其中最重要的就是平台化的改造。当系统功能不断增加，菜单也随之增多，大量的菜单带来了使用的不便，尽管可以通过多级菜单来优化，但仍不够清晰明了，参考各大公有云平台，做了平台化的改造，将每个不同功能的服务也就是我们前文所提到的这些不同的系统进行了平台内的相对独立，不同服务拥有独立的菜单，不同服务之间可以便捷的切换</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1229.10.png" /></p>
+<p>优化了权限管理，综合考虑授权粒度和授权方式，完善了<a href="https://blog.ops-coffee.cn/s/django-tenant-rbac-auth-permission" target="_blank">多租户隔离授权</a>，权限下放，租户owner可以自助分配租户成员的权限，不需要再通过系统管理员，使得权限管理更加灵活和高效</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1202.03.png" /></p>
+<p>完善了审计功能，除了所有操作通过中间件自动记录日志外，还单独添加了登陆/变更等核心操作的二次审计记录。引入了流程管理，重要操作进行审批确认，确保操作前有审批，操作后有记录。增加审计报表，系统使用情况十分清晰</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1229.12.png" /></p>
+<p>除此之外还有其他的一些优化更新，例如通过<a href="https://blog.ops-coffee.cn/s/django-celery-beat-queues-priority" target="_blank">Celery多队列解决任务优先级问题</a>、通过<a href="https://blog.ops-coffee.cn/s/django-move-model-to-another-app" target="_blank">迁移不同APP之间Model</a>使Model组织更合理等等</p>
+<h2 id="_7">系统更新</h2>
+<p>除了新的系统以及底层优化外，过去一年还对2022年已经上线的系统做了诸多的升级，多云和监控系统支持了更多厂商更多类型的资源，实现了更加全面的统一管理和监控，目前已经纳管了超过10个云厂商的30多个服务，几乎涵盖了公司项目用到的所有服务类型</p>
+<p>作业系统支持了动态参数，脚本管理等。任务系统也支持了更多类型的子任务，例如监控类型的子任务可以实现上线过程中监控的自动启停，前文说过的<a href="https://blog.ops-coffee.cn/s/devops-task-subtask-jenkins" target="_blank">Jenkins类型子任务</a>可以直接接入Jenkins，同时也将作业系统作为新的子任务类型接入了任务系统，这样可以让任务系统批量操作目标终端，实现更广泛的应用场景</p>
+<h2 id="_8">一点思考</h2>
+<p>两年前<a href="https://blog.ops-coffee.cn/s/RAJa_YaRCvuubdWgy-AIhg" target="_blank">从工作了十年的公司离职</a>来到这里，一个重要的理由就是想要试试换个场景落地之前几年沉淀的devops工具和方法，转眼已经两年，有过欣喜也有过气馁，整体上的落地效果至少我个人还是认可的，也并没有因此而后悔。但这两年也深刻的意识到，技术飞速发展，尤其是今年AI大模型的横空出世，更是给我自己带来了不小的震撼，这是之前几次VR/AR/元宇宙等技术革新所完全没有的</p>
+<p>时代发展太快，之前认知的一些壁垒似乎也没有那么坚固，想到的事情要尽快去做，关注落地</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/2023-devops-service-platform-tools.html">📅 2023-12-30</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

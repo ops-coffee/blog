@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="bpmn,js,Modeling,API,bpmn,js,API,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="bpmn.js Modeling API 列表" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>bpmn.js Modeling API 列表</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="bpmn.js Modeling API 列表" />
+  <meta property="og:description" content="bpmn.js Modeling API 列表" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">bpmn.js Modeling API 列表</h1>
+
+        <p>原内容位于官方<a href="https://github.com/bpmn-io/bpmn-js-examples/tree/master/modeling-api">github的examples</a>下，这里给整理出来并部分进行了中文翻译以方便查看，可以借助浏览器的搜索功能进行快速检索，Chrome下搜索快捷键<code>ctrl+F</code>，Mac下搜索快捷键<code>Command+F</code></p>
+<h2 id="introduction-">Introduction - 介绍</h2>
+<pre class="codehilite"><code>/**
+ * After creating a new instance of bpmn-js you can access any module of bpmn-js using
+ * modeler#get.
+ *
+ * The modules used in this example are:
+ *
+ * * ElementFactory: Creates new shapes and connections.
+ * * ElementRegistry: A registry of all shapes and connections of the diagram.
+ * * Modeling: The main module for modeling.
+ *
+ * We will use these modules to create a new shape, add it to the diagram, and
+ * connect it to an existing shape.
+ */
+
+// (1) 获取modules
+const elementFactory = modeler.get('elementFactory'),
+      elementRegistry = modeler.get('elementRegistry'),
+      modeling = modeler.get('modeling');
+
+// (2) 根据ID获取Process和shape
+const process = elementRegistry.get('Process_1'),
+      startEvent = elementRegistry.get('StartEvent_1');
+
+// (3) 新建Shape
+const task = elementFactory.createShape({ type: 'bpmn:Task' });
+
+// (4) 添加新的shape到当前流程图
+modeling.createShape(task, { x: 400, y: 100 }, process);
+
+// You can now access the new task through the element registry
+console.log(elementRegistry.get(task.id)); // Shape { &quot;type&quot;: &quot;bpmn:Task&quot;, ... }
+
+// (5) 创建连线
+modeling.connect(startEvent, task);</code></pre>
+
+
+<h2 id="business-objects-">Business Objects - 业务对象</h2>
+<pre class="codehilite"><code>/**
+ * Business objects are the model objects that hold all the BPMN-related properties of a shape or
+ * connection. They can be accessed through an element's `businessObject` property. Not all model
+ * objects are visible as shapes or connections. An event definition for example is a model object
+ * that is part of an event shape's business object.
+ *
+ * The entire BPMN model can be found here: https://github.com/bpmn-io/bpmn-moddle/blob/master/resources/bpmn/json/bpmn.json
+ *
+ * The modules used in this example are:
+ *
+ * * BpmnFactory: Creates new business objects.
+ * * ElementFactory: Creates new shapes and connections.
+ * * ElementRegistry: A registry of all shapes and connections of the diagram.
+ * * Modeling: The main module for modeling.
+ *
+ * We will use these modules to create a new business object representing a shape,
+ * add it to the diagram, and connect it to an existing shape.
+ */
+
+// (1) 获取modules
+const bpmnFactory = modeler.get('bpmnFactory'),
+      elementFactory = modeler.get('elementFactory'),
+      elementRegistry = modeler.get('elementRegistry'),
+      modeling = modeler.get('modeling');
+
+// (2) 根据ID获取Process和shape
+const process = elementRegistry.get('Process_1'),
+      startEvent = elementRegistry.get('StartEvent_1');
+
+// You can access the start event's business object
+console.log(startEvent.businessObject); // { &quot;$type&quot;: &quot;bpmn:StartEvent&quot;, ... }
+
+// (3) 通过BPMN factory的方式来创建对象
+const taskBusinessObject = bpmnFactory.create('bpmn:Task', { id: 'Task_1', name: 'Task' });
+
+// (4) 使用刚刚创建的业务对象创建一个新的shape
+const task = elementFactory.createShape({ type: 'bpmn:Task', businessObject: taskBusinessObject });
+
+// (5) 添加新的shape到当前流程图
+modeling.createShape(task, { x: 400, y: 100 }, process);
+
+// Using the `id` property we specified you can now access the new task through the element registry
+console.log(elementRegistry.get('Task_1')); // Shape { &quot;type&quot;: &quot;bpmn:Task&quot;, ... }</code></pre>
+
+
+<h2 id="creating-shapes-">Creating Shapes - 创建形状</h2>
+<pre class="codehilite"><code>/**
+ * Now that we have created our first shapes let's create some more complex shapes.
+ *
+ * The modules used in this example are:
+ *
+ * * BpmnFactory: Creates new business objects.
+ * * ElementFactory: Creates new shapes and connections.
+ * * ElementRegistry: A registry of all shapes and connections of the diagram.
+ * * Modeling: The main module for modeling.
+ *
+ * We will use these modules to create some more shapes including a BoundaryEvent and
+ * a SubProcess.
+ */
+
+// (1) 获取modules
+const bpmnFactory = modeler.get('bpmnFactory'),
+      elementFactory = modeler.get('elementFactory'),
+      elementRegistry = modeler.get('elementRegistry'),
+      modeling = modeler.get('modeling');
+
+// (2) 根据ID获取Process和shape
+const process = elementRegistry.get('Process_1'),
+      startEvent = elementRegistry.get('StartEvent_1');
+
+// (3) 创建一个service task类型的shape
+const serviceTask = elementFactory.createShape({ type: 'bpmn:ServiceTask' });
+
+// (4) 使用appendShape将新的service task类型的shape添加到现有流程图中
+modeling.appendShape(startEvent, serviceTask, { x: 400, y: 100 }, process);
+
+// (5) 创建一个boundary event边界事件类型的shape
+const boundaryEvent = elementFactory.createShape({ type: 'bpmn:BoundaryEvent' });
+
+// (6) 将新边界事件添加到流程图中，并将其附加到serviceTask
+modeling.createShape(boundaryEvent, { x: 400, y: 140 }, serviceTask, { attach: true });
+
+// (7) 创建sub process子流程类型的对象
+const eventSubProcessBusinessObject = bpmnFactory.create('bpmn:SubProcess', {
+  triggeredByEvent: true,
+  isExpanded: true
+});
+
+// (8) 创建SubProcess子流程shape，并进行属性设置
+const eventSubProcess = elementFactory.createShape({
+  type: 'bpmn:SubProcess',
+  businessObject: eventSubProcessBusinessObject,
+  isExpanded: true
+});
+
+// (9) 将sub process子流程添加到流程中
+modeling.createShape(eventSubProcess, { x: 300, y: 400 }, process);
+
+// (10) 创建eventDefinitionType的计时器启动事件
+const timerStartEvent = elementFactory.createShape({
+  type: 'bpmn:StartEvent',
+  eventDefinitionType: 'bpmn:TimerEventDefinition'
+});
+
+// (11) 添加新的timerStartEvent事件到当前流程的子流程中
+modeling.createShape(timerStartEvent, { x: 200, y: 400 }, eventSubProcess);
+
+// (12) 创建新的group shape，并指定宽和高
+const group = elementFactory.createShape({ type: 'bpmn:Group', width: 400, height: 200 });
+
+// (13) 将group shape添加到现有的流程中
+modeling.createShape(group, { x: 325, y: 100 }, process);
+
+// (14) 创建两个shape，并指定坐标
+// coordinates, not absolute
+const messageStartEvent = elementFactory.createShape({
+  type: 'bpmn:StartEvent',
+  eventDefinitionType: 'bpmn:MessageEventDefinition',
+  x: 0,
+  y: 22
+});
+
+const userTask = elementFactory.createShape({
+  type: 'bpmn:UserTask',
+  x: 100,
+  y: 0
+});
+
+// (15) 一次向流程图中添加多个shape
+modeling.createElements([ messageStartEvent, userTask ], { x: 300, y: 600 }, process);</code></pre>
+
+
+<h2 id="connecting-shapes-">Connecting Shapes - 连线形状</h2>
+<pre class="codehilite"><code>/**
+ * Now let's look at the different ways of connecting shapes to each other.
+ *
+ * The modules used in this example are:
+ *
+ * * ElementFactory: Creates new shapes and connections.
+ * * ElementRegistry: A registry of all shapes and connections of the diagram.
+ * * Modeling: The main module for modeling.
+ *
+ * We will use these modules to create shapes and connect them on two different ways.
+ */
+
+// (1) 获取modules
+const elementFactory = modeler.get('elementFactory'),
+      elementRegistry = modeler.get('elementRegistry'),
+      modeling = modeler.get('modeling');
+
+// (2) 根据ID获取Process和shape
+const process = elementRegistry.get('Process_1'),
+      startEvent = elementRegistry.get('StartEvent_1');
+
+// (3) 创建一个shape
+const task = elementFactory.createShape({ type: 'bpmn:Task' });
+
+// (4) 添加新的shape到流程图
+modeling.createShape(task, { x: 400, y: 100 }, process);
+
+// (5) 用connect连接startEvent到新添加的shape
+modeling.connect(startEvent, task);
+
+// (6) 创建一个end event类型的shape
+const endEvent = elementFactory.createShape({ type: 'bpmn:EndEvent' });
+
+// (7) 添加新的endEvent类型的shape添加到流程图中
+modeling.createShape(endEvent, { x: 600, y: 100 }, process);
+
+// (8) 创建一条新的连线连接task shape到endEvent事件
+modeling.createConnection(task, endEvent, { type: 'bpmn:SequenceFlow' }, process);</code></pre>
+
+
+<h2 id="collaborations-">Collaborations - 合作开发</h2>
+<pre class="codehilite"><code>/**
+ * So far we've worked with processes. Let's have a look at collaborations.
+ *
+ * The modules used in this example are:
+ *
+ * * ElementFactory: Creates new shapes and connections.
+ * * ElementRegistry: A registry of all shapes and connections of the diagram.
+ * * Modeling: The main module for modeling.
+ *
+ * We will use these modules to create Participants, add them to the diagram (thereby
+ * turning the process into a collaboration), create lanes and connect participants
+ * using Message Flows.
+ */
+
+// (1) 获取modules
+const elementFactory = modeler.get('elementFactory'),
+      elementRegistry = modeler.get('elementRegistry'),
+      modeling = modeler.get('modeling');
+
+// (2) 根据ID获取Process和shape
+const process = elementRegistry.get('Process_1'),
+      startEvent = elementRegistry.get('StartEvent_1');
+
+// (3) 使用createParticipantShape创建一个新的Participant类型是shape
+const participant = elementFactory.createParticipantShape({ type: 'bpmn:Participant' });
+
+// (4) 将新参与者添加到流程图中，从而将流程转变为协作流程
+modeling.createShape(participant, { x: 400, y: 100 }, process);
+
+// The existing start event is now a child of the participant
+console.log(startEvent.parent); // Shape { &quot;type&quot;: &quot;bpmn:Participant&quot;, ... }
+
+// (5) 创建泳道
+const lane = modeling.addLane(participant, 'bottom');
+
+// (6) 创建两个镶嵌的泳道
+modeling.splitLane(lane, 2);
+
+// (7) 创建另一个participant类型的shape
+const collapsedParticipant = elementFactory
+  .createParticipantShape({ type: 'bpmn:Participant', isExpanded: false });
+
+// (8) 添加participant到流程图中
+modeling.createShape(collapsedParticipant, { x: 300, y: 500 }, process);
+
+// (9) 通过message消息连接两个participant
+modeling.connect(collapsedParticipant, participant);</code></pre>
+
+
+<h2 id="editing-elements-">Editing Elements - 编辑元素</h2>
+<pre class="codehilite"><code>/**
+ * Now, let's have a look at how you can edit existing elements.
+ *
+ * The modules used in this example are:
+ *
+ * * BpmnFactory: Creates new business objects.
+ * * ElementRegistry: A registry of all shapes and connections of the diagram.
+ * * Modeling: The main module for modeling.
+ *
+ * We will use these modules to update the properties of two existing shapes.
+ */
+
+// (1) 获取modules
+const bpmnFactory = modeler.get('bpmnFactory'),
+      elementRegistry = modeler.get('elementRegistry'),
+      modeling = modeler.get('modeling');
+
+// (2) 获取shapes
+const startEvent = elementRegistry.get('StartEvent_1'),
+      exclusiveGateway = elementRegistry.get('ExclusiveGateway_1'),
+      sequenceFlow = elementRegistry.get('SequenceFlow_3'),
+      task = elementRegistry.get('Task_1');
+
+// (3) 通过updateProperties来更改start event的name属性
+modeling.updateProperties(startEvent, { name: 'Foo' });
+
+// (4) 更改网关的defaultFlow属性
+modeling.updateProperties(exclusiveGateway, {
+  default: sequenceFlow.businessObject
+});
+
+// (5) 将任务更改为multi-instance
+const multiInstanceLoopCharacteristics = bpmnFactory.create('bpmn:MultiInstanceLoopCharacteristics');
+
+modeling.updateProperties(task, {
+  loopCharacteristics: multiInstanceLoopCharacteristics
+});</code></pre>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/t/bpmn-js-modeling-api-cn.html">📅 2020-11-11</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/BPMN/">🏷️ BPMN</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

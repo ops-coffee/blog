@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,Model" />
+  <meta name="description" content="介绍Django Model的全部字段选项" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Django Model字段选项</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django Model字段选项" />
+  <meta property="og:description" content="介绍Django Model的全部字段选项" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django Model字段选项</h1>
+
+        <p>这里只说一些通用的字段选项，对所有字段类型都有效，且是可选的</p>
+<h3 id="null">null</h3>
+<p>用来配置字段是否允许为空，如果是True，则字段允许为空，数据库中存储空值为NULL，否则字段不允许为空，默认为False</p>
+<p>避免在基于字符串的字段上使用null，如<code>CharField</code>和<code>TextField</code>，如果一个基于字符串的字段有<code>null=True</code>，这意味着它有两种可能的无数据值，分别是NULL和空字符串。如果要设置字符串允许为空，可以通过设置<code>default=''</code>来实现</p>
+<h3 id="blank">blank</h3>
+<p>如果是True，则允许为空，默认为False</p>
+<p>blank与null不同的是，blank是纯验证相关的，并不会影响到数据库，而null则是与数据库相关的，如果设置了<code>null=True</code>，则在数据库字段上会有<code>NOT NULL</code>的限制，而设置了<code>blank=True</code>则不会修改数据库，仅仅是在Django验证表单时允许为空</p>
+<h3 id="choices">choices</h3>
+<p>当字段的内容比较固定时，Choices非常有用，例如性别字段，只会有固定的几个，这时候我们可以通过CHOICES来处理</p>
+<pre class="codehilite"><code>SEX_CHOICES = (
+    (1, '男'),
+    (2, '女'),
+    (3, '保密'),
+)
+
+class User(models.Model):
+    sex = models.SmallIntegerField(choices=SEX_CHOICES, verbose_name='性别')
+
+    def to_dict(self):
+        return {
+            &quot;id&quot;: self.id,
+            &quot;sex&quot;: self.get_sex_display(),
+        }</code></pre>
+
+
+<p>通常CHOICES选项的类型为元组，元组内有嵌套了元组，嵌套的元组定义数据，嵌套元组包含了两个数据，第一个数据为值，值会记录进数据库，第二个数据为可读的选项名称，可读的选项名称不会记录进数据库</p>
+<p>对于每一个设置了choices的模型字段，Django会添加一个方法来检索字段当前值的可读名称，用法是：<code>get_sex_display()</code>，其中<code>sex</code>为字段名称</p>
+<h3 id="default">default</h3>
+<p>配置字段的默认值，当添加新的模型实例且没有为该字段提供值时，使用默认值</p>
+<p>default可以是一个值或者是个可调用的对象，如果是个可调用对象，每次实例化模型时都会调用该对象</p>
+<pre class="codehilite"><code>def contact_default():
+    return {&quot;email&quot;: &quot;to1@example.com&quot;}
+
+class User(models.Model):
+    age = models.SmallIntegerField(default=18, verbose_name='年龄')
+    contact_info = JSONField(&quot;ContactInfo&quot;, default=contact_default)</code></pre>
+
+
+<p>对于像ForeignKey这样映射到模型实例的字段，默认应该是它们引用的字段的值，而不是模型实例，ForeignKey引用字段的值默认是pk，如果设置过<code>to_field</code>，那引用字段字段的值将会变成<code>to_field</code>设置的字段值</p>
+<h3 id="unique">unique</h3>
+<p>如果设置为True，这个字段必须在整张表中保持值唯一</p>
+<p>当<code>unique=True</code>时，不仅在模型验证时会执行唯一性验证，更会在数据库级别强制执行，如果在unique字段中保存重复的值，将会引发一个<code>django.db.IntegrityError</code>错误</p>
+<p>当<code>unique=True</code>时，无需为字段创建索引，因为unique意味着创建一个索引</p>
+<h3 id="unique_for_date">unique_for_date</h3>
+<p>将其设置为DateField或DateTimeField的名称，要求该字段的日期字段值是唯一的</p>
+<pre class="codehilite"><code>def Article(models.Model):
+    pub_date = models.DateField(auto_now_add=True, verbose_name='发布时间')
+    title = models.CharField(max_length=32, unique_for_date=pub_date, verbose_name='标题')</code></pre>
+
+
+<p>例如字段title有<code>unique_for_date=pub_date</code>配置，那么Django就不允许输入两条相同title和pub_date的记录</p>
+<h3 id="unique_for_month">unique_for_month</h3>
+<p>与<code>unique_for_date</code>类似，只是要求字段对月份是唯一的</p>
+<h3 id="unique_for_year">unique_for_year</h3>
+<p>与<code>unique_for_year</code>类似，只是要求字段对年是唯一的</p>
+<h3 id="verbose_name">verbose_name</h3>
+<p>设置字段的可读名称</p>
+<h3 id="primary_key">primary_key</h3>
+<p>如果设置为True，则会将该字段设置为模型的主键，一个模型只允许有一个主键</p>
+<p>默认情况下Django会添加一个ID字段来作为主键，当你有为模型下的某个字段设置<code>primary_key=True</code>时，则不会生成ID主键字段。通常情况下我们就使用默认的ID作为主键就好了，无需修改主键字段</p>
+<h3 id="db_column">db_column</h3>
+<p>配置数据库列的名称，如果没有配置<code>db_column</code>，则默认使用字段名作为数据库列名</p>
+<h3 id="db_index">db_index</h3>
+<p>如果为True，则为该字段创建数据库索引</p>
+<h3 id="db_tablespace">db_tablespace</h3>
+<p>如果字段有索引，则可以通过<code>db_tablespace</code>来配置索引使用的数据库表空间名称，前提是数据库支持索引表空间</p>
+<h3 id="validators">validators</h3>
+<p>要为该字段运行的验证器列表</p>
+<h3 id="editable">editable</h3>
+<p>如果设置为False，则该字段将不会在admin或任何其他ModelForm中显示，在模型验证中也会跳过，默认为True</p>
+<h3 id="error_message">error_message</h3>
+<p>当字段出错时，可以通过<code>error_message</code>来覆盖默认引发的错误信息</p>
+<h3 id="help_text">help_text</h3>
+<p>字段额外的帮助文本，会随着表单空间一同展示，前提是使用了ModelForm来构建表单</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/django/django-model-options.html">📅 2022-08-02</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

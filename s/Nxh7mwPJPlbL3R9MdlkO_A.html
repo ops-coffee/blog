@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Alodi,Devops,关于技术" />
+  <meta name="description" content="每天都在愉快的造轮子，这次可以一键创建测试环境" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Alodi：为了保密我开发了一个系统</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Alodi：为了保密我开发了一个系统" />
+  <meta property="og:description" content="每天都在愉快的造轮子，这次可以一键创建测试环境" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Alodi：为了保密我开发了一个系统</h1>
+
+        <blockquote>
+<p>每天都在愉快的造轮子，这次可以一键创建测试环境</p>
+</blockquote>
+<p>咖啡君维护了几十个不同类型项目，其中有相当一部分项目是对保密性有很高要求的，也就是说下个版本要上线的内容是不能提前泄露的，就像苹果新产品的介绍网站决不允许在产品发布之前流出一样，这种保密内容除了在制度上加以约束外，还需要一些技术手段来保障</p>
+<p>本次要介绍的Aloid系统就对保密有着一定的作用，这个系统的主要作用是快速生成临时环境，这个临时环境会有一定的有效期，过期自动清除，当然你也可以手动清除，同时这个环境会有唯一的<strong>随机</strong>访问地址，只有知道这个随机地址的人才能访问</p>
+<h2 id="_1">涉及技术</h2>
+<p>整个项目基于Django构建，前后端<strong>框架代码</strong>可以通过<a href="/s/L6Jud6gp5c9bbaUljUkNFA" target="_blank">这篇文章</a>获取，通过框架代码可以快速构建项目，添加自己需要的功能，需要说明的是框架代码并非这个项目源码</p>
+<h3 id="subprocess">subprocess</h3>
+<p>编译部署难免要跟系统命令打交道，在调研了几种python执行系统命令的方法后选择了<code>subprocess</code>，subprocess作为<code>os.system</code>和<code>os.popen</code>的替代模块，功能更为强大，且为python自带模块，不需额外安装，使用方便</p>
+<p>在需要频繁执行系统命令的情况下，可以写一个类似下边这样的方法封装命令执行和返回输出，使代码简洁易读</p>
+<pre class="codehilite"><code>import shlex, subprocess
+
+def runCmd(tid, msg, cmd):
+    try:
+        p = subprocess.Popen(shlex.split(cmd), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        while p.poll() == None:
+            out = p.stdout.readline().strip()
+            if out:
+                print('----&gt;' + out.decode())
+
+        res = ' 失败 ~_~' if p.returncode else ' 完成 ^_^'
+        print('----&gt;' + msg + res)
+
+        return p.returncode
+    except Exception as e:
+        print('----&gt;Shell Exec Error：%s' % str(e))
+        return 999</code></pre>
+
+
+<h3 id="kubernetes-api">kubernetes-api</h3>
+<p>所有环境跑在kubernetes之上，创建或销毁临时环境都需要与kubernetes做交互，我选择了使用kubernetes python sdk来完成</p>
+<pre class="codehilite"><code>from kubernetes import client, config
+
+class KubeApi:
+    def __init__(self, namespace='alodi'):
+        config.load_kube_config(&quot;/ops/coffee/kubeconfig.yaml&quot;)
+        self.namespace = namespace
+
+    def create_deployment(self, RAND, PROJ, ENVT):
+        api_instance = client.AppsV1Api()
+        body = client.V1Deployment(
+            api_version=&quot;apps/v1&quot;,
+            kind=&quot;Deployment&quot;,
+            metadata=client.V1ObjectMeta(name=RAND),
+            spec=client.V1DeploymentSpec(
+                replicas=1,
+                selector={'matchLabels': {'app': RAND}},
+                template=client.V1PodTemplateSpec(
+                    metadata=client.V1ObjectMeta(labels={&quot;app&quot;: RAND}),
+                    spec=client.V1PodSpec(
+                        containers=[client.V1Container(
+                            name=RAND,
+                            image=&quot;k8s-harbor.ops-coffee.cn/alodi/&quot; + RAND,
+                            env=[{&quot;name&quot;: &quot;ENVT&quot;, &quot;value&quot;: ENVT}, {&quot;name&quot;: &quot;PROJ&quot;, &quot;value&quot;: PROJ}],
+                            ports=[client.V1ContainerPort(container_port=80)],
+                        )]
+                    )
+                ),
+            )
+        )
+
+        try:
+            r = api_instance.create_namespaced_deployment(
+                namespace=self.namespace, body=body
+            )
+
+            return True, &quot;Deployment created: %s&quot; % r
+        except Exception as e:
+            return False, 'Deployment created: ' + str(e)
+
+    def delete_deployment(self, RAND):
+        api_instance = client.AppsV1Api()
+        body = client.V1DeleteOptions(
+            propagation_policy='Foreground',
+            grace_period_seconds=5)
+
+        try:
+            r = api_instance.delete_namespaced_deployment(
+                namespace=self.namespace,
+                name=RAND,
+                body=body
+            )
+
+            return True, &quot;Deployment deleted. %s&quot; % r
+        except Exception as e:
+            return False, 'Deployment deleted: ' + str(e)</code></pre>
+
+
+<p><code>load_kube_config</code>加载的配置文件为kubernetes主服务器上的<code>~/.kube/config</code>文件，这个文件内包含了集群相关信息，通过这个配置文件可以免认证操作集群修改资源，要妥善保管这个配置文件，当然也可以通过token的方式自己实现认证</p>
+<p>另外需要特别注意的是sdk的版本与kubernetes的版本有对应关系，且不同资源的操作对kubernetes的api版本要求也不同，使用时多参考官方文档</p>
+<p>介于篇幅原因这里只贴了两个deployment的操作示例，其他更多示例可以单独找我获取</p>
+<h2 id="_2">界面展示</h2>
+<p>整个项目除了用户管理之类的常规页面外，主要有三个页面构成，由这三个页面完成了主要流程的执行和展示</p>
+<p>项目管理页：在这个页面内可以新建、编辑和删除项目</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0912.01.png" /></p>
+<p>同时也可以在项目管理页创建临时环境，这里主要选择使用的数据环境和代码TAG</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0912.02.png" /></p>
+<p>当填写相关信息点击<code>Build &amp; Deploy</code>按钮后会跳转到任务详情页，这个页面<strong>实时展示</strong>部署过程的日志输出，右上角有个爬虫的按钮，可以终止部署</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0912.03.png" /></p>
+<p>部署列表页：可以在部署列表页查看到部署历史记录，当这个环境正在运行时可以点击销毁按钮来销毁项目，清除kubernetes的资源占用</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0912.04.png" /></p>
+<h2 id="_3">写在最后</h2>
+<ol>
+<li>我们写了很多项目，也造了很多轮子，目的都是为了让我们的工作更轻松，达到“一杯咖啡、轻松运维”的愿景</li>
+<li>项目代码暂不开源，但项目里边用到的技术大都有专门的文章介绍，文章都附带有代码，有些甚至提供有Demo，完全可以快速搞定自己的需求</li>
+<li>如果有任何问题欢迎与我联系，一起沟通交流，共同成长，期待加我好友~</li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/Nxh7mwPJPlbL3R9MdlkO_A.html">📅 2019-09-12</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

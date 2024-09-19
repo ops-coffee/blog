@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Sadmin" />
+  <meta name="description" content="Sadmin功能列表" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Sadmin功能列表</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Sadmin功能列表" />
+  <meta property="og:description" content="Sadmin功能列表" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Sadmin功能列表</h1>
+
+        <p>Sadmin是Django的一个基础库，集成了前端模板，用户系统，权限系统，通知系统等基础SAAS服务，同时也深度封装了一系列的基础组件和库以提升开发效率，更多的介绍可以看这里：<a href="https://blog.ops-coffee.cn/s/xehCT6PMS90dvrf96E-Fzw" target="_blank">Sadmin：打造私有Django公共库实现代码复用</a></p>
+<h2 id="saas">SAAS服务</h2>
+<p>这一部分无须开发，只需要简单的配置即可，开箱即用，主要包含用户系统、项目管理和公共服务三部分</p>
+<h3 id="_1">用户系统</h3>
+<ol>
+<li>登录验证，支持本地用户登录和企业微信用户登录验证</li>
+<li>用户管理，支持用户的新建、修改和删除，支持修改用户密码</li>
+<li>角色管理，支持新建、修改、删除角色，给用户分配角色，给角色配置权限</li>
+<li>部门管理，支持新建、修改、删除部门，支持查看部门下的用户</li>
+</ol>
+<h3 id="_2">项目管理</h3>
+<ol>
+<li>项目管理，支持新建、编辑、删除项目，支持用户自助申请新项目、申请加入项目以及退出项目</li>
+<li>项目成员管理，支持给项目添加、删除成员，修改项目成员角色</li>
+<li>项目角色管理，支持新建项目角色，为项目成员分配项目角色</li>
+</ol>
+<h3 id="_3">公共服务</h3>
+<ol>
+<li>后台配置，支持配置网站的名称、Title、域名等信息</li>
+<li>密码配置，支持配置密码的复杂度要求</li>
+<li>菜单管理，支持动态配置系统菜单，为菜单分配权限</li>
+<li>审计日志，用户所有操作自动记录到审计日志</li>
+<li>邮件通知，支持配置邮件通知</li>
+<li>企业微信通知，支持配置企业微信通知</li>
+<li>自定义配置，支持添加自定义配置</li>
+</ol>
+<h2 id="_4">开发支持</h2>
+<p>如果你想基于sadmin开发新的系统项目，那sadmin封装的基础类库将很有帮助，主要包含对django的view层及model层的封装</p>
+<h3 id="view">view层封装</h3>
+<p>view层的封装主要是<code>ListCreateView</code>和<code>RetrieveUpdateDestroyView</code>两个基类，详细用法看这里：<a href="/sadmin/django-sadmin-view" target="_blank">sadmin view基类</a></p>
+<h3 id="model">model层封装</h3>
+<p>model层的封装主要是一些保留字段和保留方法，具体用法看这里：<a href="/sadmin/django-sadmin-model" target="_blank">sadmin model保留字段和方法</a></p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/sadmin/django-sadmin-list-of-software-functions.html">📅 2023-03-20</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

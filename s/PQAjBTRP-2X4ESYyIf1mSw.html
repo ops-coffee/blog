@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,login,required,关于技术" />
+  <meta name="description" content="一个小方法，帮你写出优雅的代码" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Django全局启用登陆验证login_required</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django全局启用登陆验证login_required" />
+  <meta property="og:description" content="一个小方法，帮你写出优雅的代码" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django全局启用登陆验证login_required</h1>
+
+        <p>Django在做后台系统过程中，我们通常都会为view函数添加<code>@login_required</code>装饰器，这个装饰器的主要作用就是在用户访问这个方法时，检查用户是否已经成功登陆，如果没有则重定向到登陆页面</p>
+<p>登陆页面地址是通过<code>settings.LOGIN_URL</code>来获取的，默认为<code>/accounts/login/</code>页面，当然你也可以在settings配置文件中通过添加<code>LOGIN_URL</code>配置来改掉他，同时<code>@login_required</code>也接收参数<code>login_url</code>来指定登陆页面</p>
+<pre class="codehilite"><code>from django.contrib.auth.decorators import login_required
+
+
+@login_required(login_url='/login/')
+def home(request):
+    return JsonResponse({data': 'ops-coffee.cn'})</code></pre>
+
+
+<h2 id="middleware">Middleware</h2>
+<p>通常对于一个后台系统来说，每一个页面都需要登陆才能访问，这样我们就需要给每一个view方法添加<code>@login_required</code>装饰器，那么有没有简单优雅一点的方式呢？可以通过Middleware中间件来实现</p>
+<p>中间件位于用户请求和程序响应之间，当用户访问一个url之后并不是直接交给了view去处理，而是先经过中间件处理，然后再到了view，路线是这样的：user--&gt;middleware--&gt;view，所以针对全局所有view的操作就非常适合放在中间件里去处理</p>
+<p>Django的中间件都定义在settings的<code>MIDDLEWARE</code>配置下，默认就添加了诸如auth、csrf之类的中间件</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/0601.01.png" /></p>
+<p>需要注意的是Django的中间件是有先后顺序的，对于接收到的请求默认从上到下依次执行，关于Django的中间件这里不过多介绍，查询相关文档即可</p>
+<p>对于优雅处理用户访问view验证登陆的需求，我们就可以通过添加自定义的中间件来处理，方法非常简单</p>
+<p>先来编写中间件类，代码如下：</p>
+<pre class="codehilite"><code>from django.shortcuts import redirect
+from django.conf import settings
+
+
+class LoginRequiredMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+        self.login_url = settings.LOGIN_URL
+        self.open_urls = [self.login_url] + getattr(settings, 'OPEN_URLS', [])
+
+    def __call__(self, request):
+        if not request.user.is_authenticated and request.path_info not in self.open_urls:
+            return redirect(self.login_url + '?next=' + request.path)
+
+        return self.get_response(request)</code></pre>
+
+
+<p><code>__init__</code>和<code>__call__</code>为middleware的固定格式</p>
+<p><code>__init__</code>函数，初始化了几个变量。需要注意的是定义了一个变量<code>open_urls</code>，这是一个list，包含所有不需要验证登陆的页面，提供了更强的灵活性，在这个列表里的url都不会验证是否登陆，默认将<code>login_url</code>添加到了<code>open_urls</code>列表中</p>
+<p><code>__call__</code>函数会判断当用户没有登陆且请求的URL不在<code>open_urls</code>列表中时，就直接给重定向到登陆页面</p>
+<p>代码比较简单，这里不做过多解释</p>
+<p>然后在setting配置文件的MIDDLEWARE中添加上边这个中间件的方法就可以了</p>
+<pre class="codehilite"><code>MIDDLEWARE = [
+    'coffee.middleware.loginrequired.LoginRequiredMiddleware',
+]</code></pre>
+
+
+<p><code>LoginRequiredMiddleware</code>中间件放在最后一行即可，前边为中间件类的路径，<code>coffee</code>作为一个app，需要包含在<code>INSTALLED_APPS</code>内，目录结构大概如下：</p>
+<pre class="codehilite"><code>webapp 
+    - coffee
+        - middleware
+            - __init__.py
+            - loginrequired.py
+        - views.py
+    - webapp
+        - __init__.py
+        - settings.py
+        - urls.py
+    - manage.py</code></pre>
+
+
+<p>当我们有需要排除，不用检查是否登陆的URL时，只需要在settings配置文件中添加<code>OPEN_URLS</code>配置即可</p>
+<pre class="codehilite"><code>OPEN_URLS = ['/devops/', '/webssh/']</code></pre>
+
+
+<p>至此，完美解决了所有view都需要添加<code>@login_required</code>的问题</p>
+<p>中间件的合理运用，能帮助我们简化很多操作，编写优雅的代码，例如记录系统审计日志就可以通过中间件来方便的实现，试想一下，还有哪些地方可以用到呢？</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/PQAjBTRP-2X4ESYyIf1mSw.html">📅 2020-06-01</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

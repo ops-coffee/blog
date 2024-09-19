@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,关于技术,LDAP,ldap,auth,OpenLDAP,django" />
+  <meta name="description" content="本文详细介绍了django-auth-ldap的使用方法，参数含义，并提供了示例代码" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>LDAP落地实战（五）：Django集成OpenLDAP认证</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="LDAP落地实战（五）：Django集成OpenLDAP认证" />
+  <meta property="og:description" content="本文详细介绍了django-auth-ldap的使用方法，参数含义，并提供了示例代码" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">LDAP落地实战（五）：Django集成OpenLDAP认证</h1>
+
+        <blockquote>
+<p>本文详细介绍了django-auth-ldap的使用方法，参数含义，并提供了示例代码</p>
+</blockquote>
+<h2 id="_1">版本说明</h2>
+<ul>
+<li>Django==2.2</li>
+<li>django-auth-ldap==1.7.0</li>
+</ul>
+<h2 id="_2">集成过程</h2>
+<p>Django集成LDAP认证有现成的<code>django-auth-ldap</code>模块可以使用，本文也主要以这个模块的使用为主，先安装模块</p>
+<pre class="codehilite"><code>pip install django-auth-ldap</code></pre>
+
+
+<p>然后在setting.py全局配置文件中添加如下内容就可以正常使用了：</p>
+<pre class="codehilite"><code>import ldap
+from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
+
+# Baseline configuration.
+AUTH_LDAP_SERVER_URI = 'ldap://ldap.ops-coffee.cn'
+
+AUTH_LDAP_BIND_DN = 'uid=authz,ou=Public,dc=ops-coffee,dc=cn'
+AUTH_LDAP_BIND_PASSWORD = 'CzfdX629K7'
+
+AUTH_LDAP_USER_SEARCH = LDAPSearch(
+    'ou=People,dc=ops-coffee,dc=cn',
+    ldap.SCOPE_SUBTREE,
+    '(uid=%(user)s)',
+)
+# Or:
+# AUTH_LDAP_USER_DN_TEMPLATE = 'uid=%(user)s,ou=People,dc=ops-coffee,dc=cn'
+
+AUTH_LDAP_USER_ATTR_MAP = {
+    'first_name': 'cn',
+    'last_name': 'sn',
+    'email': 'mail',
+}
+
+AUTHENTICATION_BACKENDS = (
+    'django_auth_ldap.backend.LDAPBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)</code></pre>
+
+
+<p>这里详细解释下上边配置的含义：</p>
+<p><strong>AUTH_LDAP_SERVER_URI：</strong> LDAP服务器的地址</p>
+<p><strong>AUTH_LDAP_BIND_DN：</strong> 一个完整的用户DN，用来登录LDAP服务器验证用户输入的账号密码信息是否正确</p>
+<p><strong>AUTH_LDAP_BIND_PASSWORD：</strong> BIND_DN用户的密码，这里我们简单说明下LDAP的认证逻辑以便更好的理解为啥需要这两个配置</p>
+<p>Django使用<code>AUTH_LDAP_BIND_DN</code>和<code>AUTH_LDAP_BIND_PASSWORD</code>作为用户名和密码登陆LDAP服务器，根据<code>AUTH_LDAP_USER_SEARCH</code>指定的查询规则来查找用户输入的属性（即username）的值有没有，如果查找的条数为0或者大于1，则返回错误，如果查找的条数等于1，则使用查找到的这个条目的DN和用户输入的密码进行匹配验证，成功则返回成功允许登录，失败则不允许登录</p>
+<p><strong>AUTH_LDAP_USER_SEARCH：</strong> 可通过LDAP登录的用户的范围，如上配置会去<code>ou=People,dc=ops-coffee,dc=cn</code>下搜索用户是否存在</p>
+<p>其中<code>(uid=%(user)s)'</code>指明了作为Django的username所对应的LDAP的属性，这里为LDAP用户的<code>uid</code>属性作为Django的username</p>
+<p>以上配置是在一个OU下查找用户，当需要在多个OU下搜索用户时用如下配置：</p>
+<pre class="codehilite"><code>from django_auth_ldap.config import LDAPSearch, LDAPSearchUnion
+
+AUTH_LDAP_USER_SEARCH = LDAPSearchUnion(
+    LDAPSearch(
+        'ou=Public,dc=ops-coffee,dc=cn',
+        ldap.SCOPE_SUBTREE,
+        '(uid=%(user)s)'
+    ),
+    LDAPSearch(
+        'ou=PeoPle,dc=ops-coffee,dc=cn',
+        ldap.SCOPE_SUBTREE,
+        '(uid=%(user)s)'
+    ),
+)</code></pre>
+
+
+<p><strong>AUTH_LDAP_USER_ATTR_MAP：</strong> LDAP中的用户属性跟Django后台用户属性的对应关系，当用户第一次登录且验证成功后会将LDAP中对应的用户属性写入到Django的User表中</p>
+<p><strong>AUTHENTICATION_BACKENDS：</strong> 配置Django的后端认证列表</p>
+<p>当Django调用auth.authenticate方法进行验证时，Django将尝试<code>AUTHENTICATION_BACKENDS</code>元组中指定的所有认证后端。如果第一个认证方法失败了，Django将会继续尝试下一个，直到所有认证方式都尝试完成</p>
+<p>Django默认的认证后端是<code>django.contrib.auth.backends.ModelBackend</code>，如上配置我们添加了ldap的认证到<code>AUTHENTICATION_BACKENDS</code>中，那么Django在登录的时候就会先去LDAP服务器验证用户，验证失败后再去查询本地数据库的User表进行验证，如果只希望Django验证LDAP不验证本地数据库的话去掉<code>AUTHENTICATION_BACKENDS</code>中的ModelBackend配置即可</p>
+<p>其他几个django-auth-ldap的全局配置参数解释如下：</p>
+<p><strong>AUTH_LDAP_ALWAYS_UPDATE_USER：</strong> 是否同步LDAP的修改，默认为True，即当LDAP中用户的属性修改后用户通过LDAP系统认证时自动同步更新到Django的User表中，如果设置为False则不自动更新</p>
+<p><strong>AUTH_LDAP_CACHE_TIMEOUT：</strong> 设置LDAP认证缓存的时间</p>
+<h2 id="_3">登录验证</h2>
+<p>上边的配置没有问题后就可以通过LDAP系统账号进行登录操作了，默认登陆逻辑及前端登录代码均无需修改</p>
+<p>如果你在调试过程中遇到问题，我准备了一份demo源码可供参考，公众号后台回复<strong>09</strong>获取地址</p>
+<h2 id="_4">高级配置</h2>
+<p>所谓高级配置这里主要是说明下<code>django-auth-ldap</code>中组相关的配置，这需要对LDAP的组有一定的概念，为了方便理解，接下来我们以实际的例子来说明</p>
+<p>假如我们有三个组overmind、kerrigan、admin，配置如下：</p>
+<pre class="codehilite"><code># ldapsearch -LLL -x -D &quot;uid=authz,ou=Public,dc=ops-coffee,dc=cn&quot; -w &quot;CzfdX629K7&quot; -b cn=overmind,ou=Group,dc=ops-coffee,dc=cn 
+dn: cn=overmind,ou=Group,dc=ops-coffee,dc=cn
+cn: overmind
+member: uid=sre,ou=People,dc=ops-coffee,dc=cn
+objectClass: groupOfNames
+objectClass: top</code></pre>
+
+
+<pre class="codehilite"><code># ldapsearch -LLL -x -D &quot;uid=authz,ou=Public,dc=ops-coffee,dc=cn&quot; -w &quot;CzfdX629K7&quot; -b cn=kerrigan,ou=Group,dc=ops-coffee,dc=cn 
+dn: cn=kerrigan,ou=Group,dc=ops-coffee,dc=cn
+cn: kerrigan
+objectClass: groupOfNames
+objectClass: top
+member: uid=u1,ou=Public,dc=ops-coffee,dc=cn
+member: uid=u2,ou=People,dc=ops-coffee,dc=cn</code></pre>
+
+
+<pre class="codehilite"><code># ldapsearch -LLL -x -D &quot;uid=authz,ou=Public,dc=ops-coffee,dc=cn&quot; -w &quot;CzfdX629K7&quot; -b cn=admin,ou=Group,dc=ops-coffee,dc=cn 
+dn: cn=admin,ou=Group,dc=ops-coffee,dc=cn
+cn: admin
+member: uid=u3,ou=Admin,dc=ops-coffee,dc=cn
+objectClass: groupOfNames
+objectClass: top</code></pre>
+
+
+<p>我们需要实现Django集成LDAP认证，且不允许隶属于kerrigan分组的用户登录系统，如果用户隶属于admin分组，则需要在登录Django时给设置为管理员，接下来的配置将会解释如何实现该需求</p>
+<p>django-auth-ldap中与group有关的配置：</p>
+<pre class="codehilite"><code>AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+    'ou=Group,dc=ops-coffee,dc=cn',
+    ldap.SCOPE_SUBTREE,
+    '(objectClass=groupOfNames)',
+)
+AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr='cn')
+
+# Simple group restrictions
+# AUTH_LDAP_REQUIRE_GROUP = 'cn=overmind,ou=Group,dc=ops-coffee,dc=cn'
+AUTH_LDAP_DENY_GROUP = 'cn=kerrigan,ou=Group,dc=ops-coffee,dc=cn'
+
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+    'is_superuser': 'cn=admin,ou=Group,dc=ops-coffee,dc=cn',
+}</code></pre>
+
+
+<p>以上配置的详细解释如下：</p>
+<p><strong>AUTH_LDAP_GROUP_SEARCH：</strong> 搜索某个ou下的信息，与<code>AUTH_LDAP_USER_SEARCH</code>参数类似，这里的ou一般指group，例如<code>ou=Group,dc=ops-coffee,dc=cn</code>的组目录</p>
+<p><strong>AUTH_LDAP_GROUP_TYPE：</strong> 返回的组的类型，组DN的第一个属性值，例如组DN<code>cn=overmind,ou=Group,dc=ops-coffee,dc=cn</code>,那么这里为<code>cn</code></p>
+<p><strong>AUTH_LDAP_REQUIRE_GROUP：</strong> 设置允许哪些组成员登录，如果我们只允许overmind组的成员可以登录系统的话这里可以设置</p>
+<pre class="codehilite"><code>AUTH_LDAP_REQUIRE_GROUP = 'cn=overmind,ou=Group,dc=ops-coffee,dc=cn'</code></pre>
+
+
+<p><strong>AUTH_LDAP_DENY_GROUP：</strong> 设置拒绝哪些组成员登录，如果我们不允许kerrigan组的成员可以登录系统的话这里可以设置</p>
+<pre class="codehilite"><code>AUTH_LDAP_DENY_GROUP = 'cn=kerrigan,ou=Group,dc=ops-coffee,dc=cn'</code></pre>
+
+
+<p>当我们同时设置了用户既属于overmind组又属于kerrigan组，也就是这个用户即设置了允许登录，又设置了拒绝登录，那么以拒绝登录为准，用户无法登录</p>
+<p><strong>AUTH_LDAP_USER_FLAGS_BY_GROUP：</strong> 根据LDAP的group设置Django用户的额外属性，例如我们想要设置LDAP中admin组具有Django中超级管理员的权限，除了在Django中手动设置外，还可以直接在setting中配置<code>AUTH_LDAP_USER_FLAGS_BY_GROUP</code></p>
+<pre class="codehilite"><code>AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+    'is_superuser': 'cn=admin,ou=Group,dc=ops-coffee,dc=cn',
+}</code></pre>
+
+
+<p>当admin组用户登录的时候就会自动给用户的<code>is_superuser</code>属性设置为True</p>
+<p>至此我们对django-auth-ldap有了一个全面的了解，在实际项目集成中可以做到游刃有余，如有问题可以参考我github的代码</p>
+<h2 id="_5">踩坑记录</h2>
+<p>windowns 10下安装<code>python-ldap</code>即<code>django-auth-ldap</code>报错：</p>
+<pre class="codehilite"><code>c:\users\ops-coffee\appdata\local\temp\pip-install-sec1o036\python-ldap\modules\constants.h(7): fatal error C1083: Cannot open include file: 'lber.h': No such file or directory
+    error: command 'C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\BIN\\x86_amd64\\cl.exe' failed with exit status 2</code></pre>
+
+
+<p>这个报错需要手动安装下whl文件，具体方法为：</p>
+<p>先在这个网站<a href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#python-ldap" target="_blank">https://www.lfd.uci.edu/~gohlke/pythonlibs/#python-ldap</a>下载对应版本的python-ldap的whl文件</p>
+<p>然后使用pip命令安装whl，注意文件路径要正确</p>
+<pre class="codehilite"><code>D:\demo\openldap&gt;python -m pip install python_ldap-3.2.0-cp36-cp36m-win_amd64.whl
+Processing d:\demo\openldap\python_ldap-3.2.0-cp36-cp36m-win_amd64.whl
+Requirement already satisfied: pyasn1&gt;=0.3.7 in c:\python36\lib\site-packages (from python-ldap==3.2.0) (0.4.2)
+Requirement already satisfied: pyasn1-modules&gt;=0.1.5 in c:\python36\lib\site-packages (from python-ldap==3.2.0) (0.2.4)
+Installing collected packages: python-ldap
+Successfully installed python-ldap-3.2.0</code></pre>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/ldap/openldap-sso-python-django-auth-ldap.html">📅 2019-04-04</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/OpenLDAP/">🏷️ OpenLDAP</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

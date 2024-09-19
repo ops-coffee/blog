@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="None,Devops,关于技术" />
+  <meta name="description" content="None" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>从入口域名开始探索全链路自动化拓扑</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="从入口域名开始探索全链路自动化拓扑" />
+  <meta property="og:description" content="None" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">从入口域名开始探索全链路自动化拓扑</h1>
+
+        <p><a href="https://blog.ops-coffee.cn/s/devops-domain-record-certificate" target="_blank">运维自动化之域名系统</a>的文章发出去之后，有小伙伴问既然拿到了域名及所有基础资源数据，那能不能从入口域名开始实现全链路自动化的系统拓扑构建？全链路的系统拓扑构建需要知道链路上所有节点之间的数据流转关系，之前在落地APM监控时有接触过，APM通过代码埋点拿到链路节点之间的数据流转关系，而流转关系仅通过基础资源是没有办法获取的，除非人工维护，人工往往不靠谱，代码埋点成本又太高，还是要从这些基础资源数据出发，寻求简洁点自动化解决方案。今天刚好有空就简单想了下这个问题，初步实现，效果如下</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1201.png" /></p>
+<p>这篇文章就简单介绍一下我的实现方案，并不完美，甚至还有很多问题，欢迎探讨。这里有个前提就是无法通过埋点拿数据</p>
+<p>域名可能指向到负载均衡、服务器、CDN、高防或者是CNAME到其他的域名，有一部分数据流转关系我们是确定的，那就是域名到服务器这一段，以上图域名指向负载均衡为例，域名到负载均衡的解析是固定的，然后可以通过负载均衡拿到监听器的数据，再通过监听器就能获取监听器下挂的服务器。再往下服务器究竟使用了哪些中间件我们就没办法获取了，如何知道接下来的数据链路呢？这里提供几个思路</p>
+<h2 id="_1">子网</h2>
+<p>我们通常会拿不同的子网来做网络隔离，如果你的网络规划非常标准，一个项目/服务位于同一个子网下，不同项目/服务之间子网隔离，那就可以考虑使用这种方式</p>
+<p>服务器数据已经拿到了，那服务器的子网也就是确定的了，就可以很容易的获取同一子网下的其他资源数据，例如数据库、缓存等等</p>
+<p>这种方式的准确率取决于网络的规范程度</p>
+<h2 id="_2">名称</h2>
+<p>如果子网划分不规范，存在多个项目/服务使用同一子网的情况，那上边的方法就不奏效了。此时如果你的资源命名都是规范的，也可以通过规范的资源名称来获取下一层的数据</p>
+<p>例如如下命名：project-environment-service-name。同一项目同一环境同一服务不同资源的命名仅有最后一部分不同，那就可以遍历资源，获取到相同命名规则的资源，也能继续进行下一级的自动拓扑</p>
+<p>这种方式的准确率取决于命名的规范程度</p>
+<h2 id="_3">关系树</h2>
+<p>如果以上两种都没有，那还可以通过服务树来获取，我们在构建<a href="https://blog.ops-coffee.cn/s/Wtx2utkC4MErDLvC3cbSMg" target="_blank">多云系统</a>时确定，所有资源都隶属于服务树上的某个节点，服务树往往是规范的，那获取与服务器同一服务树节点下的其他资源也是属于同一个业务，之间的数据流向几乎也是确定的</p>
+<p>这种方式的话就要求你的服务树是规范的</p>
+<p>很明显，虽然可以通过以上几种方式来获取最后一段的关系数据，但都不够准确，尤其是在业务逻辑比较复杂的情况下，仅是做个参考而已。几个小时的时间从思考到编码实现，有很多不完善的地方，此文也就抛砖引玉</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/domain-entry-full-network-trace-link.html">📅 2023-12-01</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

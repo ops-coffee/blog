@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="None,Devops,关于技术,API" />
+  <meta name="description" content="None" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>任务系统之API子任务</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="任务系统之API子任务" />
+  <meta property="og:description" content="None" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">任务系统之API子任务</h1>
+
+        <p>日常运维工作中有许多的任务要执行，例如项目发布/数据备份/定时巡检/证书更新/漏洞修复等等，大部分的任务都会有多个步骤共同完成，例如一个发布任务会有拉代码、编译、分发、通知等等步骤，而不同的任务可能还包含相同或相似的步骤，例如对于相同语言相同架构的不同项目来说，他们的发布任务步骤可能是相同的，仅仅是几个参数不同而已，为此我们上线了<a href="https://blog.ops-coffee.cn/task" target="_blank">任务系统</a>，任务系统可以像乐高搭积木一样组合不同的步骤（也就是子任务）为一个模板，然后基于模板配合参数来创建任务并执行，灵活且高效</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0223.01.png" /></p>
+<p>其中子任务的类型越丰富则上层模板的组合方式就会越多样，从而最终的任务覆盖场景就能越全面，目前任务系统子任务的类型已经支持了命令、脚本、作业、Jenkins、审批、通知、API、告警策略和事件规则，之前有篇文章<a href="https://blog.ops-coffee.cn/s/devops-task-subtask-jenkins" target="_blank">任务系统之Jenkins子任务</a>介绍过Jenkins类型子任务的实现，那这篇文章来介绍下另一个很重要的子任务类型：API</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0223.02.png" /></p>
+<p>API的使用场景非常之广，在现代的Web系统中绝大部分的操作都可以由API来完成，任务系统对API类型子任务的支持不仅使得任务系统的覆盖场景更加的全面，同时也使得API的调用更加的方便和安全。在未支持API类型子任务之前，任务系统都是通过脚本类型子任务由用户自己编写脚本来实现API调用的，这种方式虽然可用但存在问题，其一是因为写脚本对用户有一定的能力要求，同时增加了复杂度，其二也更为关键的是不安全，API往往需要验证，验证内容写在脚本中，脚本明文存储在数据库中，增加了安全风险，集成API类型子任务可以完美解决这两个问题</p>
+<p>API类型子任务的使用方式很简单，只需要三步，第一步新建API，第二步新建API类型的子任务，这里选择第一步创建的API，第三步在任务模板中添加第二步创建的子任务，然后就可以新建任务执行了。其中第二第三步是任务系统的通用流程，这里重点说下第一步关于API的创建，API与Jenkins一样是作为一个插件存在于系统中的，由独立的API管理页面</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0223.03.jpg" /></p>
+<p>点击右上角添加按钮之后就可以添加新的API了，创建表单主要包含名称、请求、参数和成功条件四块内容</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0223.04.png" /></p>
+<p>名称就是个输入框，标识这个API的名称，清晰易理解就好</p>
+<p>请求和参数用来配置这个API的主要属性，包含了Method、URL、Parameters、Body、Headers、Cookies和Authentication认证方式配置，页面参考了Postman的设计。其中认证方式的话支持Basic、BearerToken和APIKey，后续也可以根据需要新增更多的认证方式，甚至直接接入多云的认证，实现云上API的便捷使用，以弥补多云系统的不足</p>
+<p>前后端通过JSON格式实现数据交互，前端根据输入的请求和参数组装成JSON格式提交给后端，后端则根据认证方式加密对应的密码或Token字段并保存到数据库，当任务请求发起时从数据库获取JSON数据并解密，解析解密后的JSON数据调用Requests模块请求并获取结果</p>
+<p>最后一块是判断API是否请求成功的规则集，默认情况下会判断API的返回状态码，如果状态码为2xx或者3xx都认为是成功的，当然用户也可以根据状态码或是响应体自定义成功的规则，例如某些情况下你可能仅需要API返回200表示成功，或者是响应体里的state字段为1算成功，都可以通过自定义灵活的配置。判断API是否请求成功很重要，在一个任务流中，某个步骤的成功与失败直接影响后续步骤的执行，API也不例外，当API任务执行失败时则终止任务流程的执行</p>
+<p>前端组装好的JSON格式参考如下</p>
+<pre class="codehilite"><code>{
+  &quot;name&quot;: &quot;获取Github仓库blog的branches&quot;,
+  &quot;api&quot;: {
+    &quot;method&quot;: &quot;GET&quot;,
+    &quot;url&quot;: &quot;https://api.github.com/repos/ops-coffee/blog/branches&quot;,
+    &quot;parameters&quot;: [],
+    &quot;body&quot;: &quot;&quot;,
+    &quot;headers&quot;: [{&quot;name&quot;: &quot;Content-Type&quot;, &quot;note&quot;: &quot;&quot;, &quot;type&quot;: &quot;string&quot;, &quot;value&quot;: &quot;application/json&quot;}],
+    &quot;cookies&quot;: [],
+    &quot;authorization&quot;: {
+      &quot;type&quot;: &quot;Bearer&quot;,
+      &quot;bearer_token&quot;: &quot;ghp_3dtK****************IIcN&quot;,
+    }
+  },
+  &quot;success&quot;: [
+    {&quot;key&quot;: &quot;status_code&quot;, &quot;type&quot;: &quot;状态码&quot;, &quot;value&quot;: [&quot;200&quot;], &quot;operator&quot;: &quot;匹配&quot;}, 
+    {&quot;key&quot;: &quot;name&quot;, &quot;type&quot;: &quot;响应体&quot;, &quot;value&quot;: &quot;main&quot;, &quot;operator&quot;: &quot;等于&quot;}
+  ]
+}</code></pre>
+
+
+<p>后端加解密的方法可以参考文章<a href="https://blog.ops-coffee.cn/s/pCIwRbWH-HaGAwBji8vDeQ" target="_blank">Model字段加密的优雅实现</a>，Request请求则比较简单</p>
+<pre class="codehilite"><code># 不同的认证类型使用不同的请求方式
+if authorization.get(&quot;type&quot;, &quot;&quot;).lower() == &quot;basic&quot;:
+    auth = (authorization.get(&quot;basic_username&quot;, &quot;&quot;), authorization.get(&quot;basic_password&quot;, &quot;&quot;))
+    response = requests.request(method, url, params=parameters, headers=headers, cookies=cookies, auth=auth,
+                                data=body)
+
+else:
+    if authorization.get(&quot;type&quot;, &quot;&quot;).lower() == &quot;bearer&quot;:
+        headers[&quot;Authorization&quot;] = &quot;Bearer &quot; + authorization.get(&quot;bearer_token&quot;, &quot;&quot;)
+
+    elif authorization.get(&quot;type&quot;, &quot;&quot;).lower() == &quot;apikey&quot;:
+        headers[authorization.get(&quot;api_key_key&quot;)] = authorization.get(&quot;api_key_value&quot;, &quot;&quot;)
+
+    response = requests.request(method, url, params=parameters, headers=headers, cookies=cookies, data=body)
+
+# 解析Response结果判断是否成功
+......</code></pre>
+
+
+<p>API创建完成后就可以添加子任务，添加了子任务就可以将子任务添加到模板，最后创建任务并执行了，执行结果实时输出</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0223.05.png" /></p>
+<p>至此API类型子任务介绍完成，API类型子任务快速打通了任务系统与三方的链接，为任务系统增加了无限可能，期待它在业务中的表现</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/devops-task-subtask-api-postman-apipost.html">📅 2024-02-26</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

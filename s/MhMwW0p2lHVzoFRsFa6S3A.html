@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,Guardian,guardian,Object,关于技术,Permission" />
+  <meta name="description" content="Guardian详细用法介绍，助你玩转各种场景下的Django权限管理" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Django Object Permission之Django-guardian使用详解</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django Object Permission之Django-guardian使用详解" />
+  <meta property="og:description" content="Guardian详细用法介绍，助你玩转各种场景下的Django权限管理" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django Object Permission之Django-guardian使用详解</h1>
+
+        <blockquote>
+<p>Guardian详细用法介绍，助你玩转各种场景下的Django权限管理</p>
+</blockquote>
+<p><a href="/s/Fe7O4LIxe-L2otNguaQyqg" target="_blank">Django默认权限机制介绍及实践</a>文章中讲到Django默认的权限分配最小粒度是<strong>表</strong>，也就是说一旦我们给了用户这个表的修改权限，那么用户就可以修改表里的所有数据，这在某些情况下是无法满足需求的，例如对于一个Article文章表来说，我们规定用户只能修改自己的文章，而不能修改别人的文章，Django的默认权限机制就无法做到</p>
+<p>那该如何实现上述需求呢？<a href="/s/BZsJnWLtv8ZwwlBYbWSbZQ" target="_blank">Django内置权限扩展案例</a>文章就给了实现的方法，在Article表新加字段来标识谁有修改的权限即可，试想如果我们有很多表都需要类似的权限控制呢？就需要不断的来添加字段标识权限，这种方案的弊端马上显现，那么有没有一种更为优雅的方案来解决呢？</p>
+<p>基于对象的权限控制就是很好的方法，他的权限控制粒度为表中的<strong>对象</strong>，可以给每一个对象赋予权限，<code>Django-guardian</code>便是基于Django的原生逻辑扩展出来的对象权限控制方案，他扩展了Django的默认权限方案，从而使Django的权限控制机制更加完善</p>
+<h2 id="_1">安装配置</h2>
+<p><code>django-guardian</code>当前的最新版本是v2.2.0，支持django2.1以上版本，包括django3.0，依赖python版本3.5+，以下演示代码均基于django3.0.2</p>
+<p>可以直接通过pip来安装<code>django-guardian</code></p>
+<pre class="codehilite"><code>pip install django-guardian</code></pre>
+
+
+<p>安装完成后，需要将guardian以独立app的方式安装进django</p>
+<p>修改django配置文件settings.py，在INSTALLED_APPS配置中添加<code>guardian</code></p>
+<pre class="codehilite"><code>INSTALLED_APPS = [
+    'guardian',
+]</code></pre>
+
+
+<p>然后将guardian作为额外的授权BACKEND添加进配置文件settings.py</p>
+<pre class="codehilite"><code>AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
+)</code></pre>
+
+
+<p>django默认通过<code>django.contrib.auth.backends.ModelBackend</code>进行用户验证授权，我们这里添加了<code>guardian.backends.ObjectPermissionBackend</code>作为默认验证授权的扩展</p>
+<p>最后创建guardian的数据库表</p>
+<pre class="codehilite"><code>python manage.py migrate</code></pre>
+
+
+<p>创建完成后，会发现数据库里多了两张表<code>guardian_groupobjectpermission</code>和<code>guardian_userobjectpermission</code>，两个表分别记录了用户/组与model以及model内的具体object的权限对应关系，以<code>guardian_groupobjectpermission</code>表为例，说下各字段的含义</p>
+<ul>
+<li><code>id</code>：默认主键</li>
+<li><code>object_pk</code>：object的id，标识具体是哪个对象需要授权，对应的是具体的某一条数据</li>
+<li><code>content_type_id</code>：记录具体哪个表的id，对应的是django系统表<code>django_content_type</code>内的某条数据，django所有注册的model都会在这个表里记录</li>
+<li><code>group_id</code>：group的id，记录是那个组的用户会有权限，对应的是<code>auth_group</code>表里的某条记录</li>
+<li><code>permission_id</code>：permission的id，记录具体的某个权限，对应的是<code>auth_permission</code>表里的某条记录</li>
+</ul>
+<p>从这几个字段就可以清晰的表示出某个组里的用户是否对某个表里的某条数据具有具体的某权限，<code>guardian_userobjectpermission</code>表类似，只是将group换成了user而已</p>
+<h2 id="_2">权限分配</h2>
+<p>启用guardian对象权限之后，可以通过<code>guardian.shortcuts.assign_perm()</code>方法来为用户/组分配权限</p>
+<p>假如我们有<code>CommonTask</code>表如下</p>
+<pre class="codehilite"><code>class CommonTask(models.Model):
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, db_constraint=False)
+    name = models.CharField(max_length=128, unique=True, verbose_name='任务名称')
+
+    template = models.ForeignKey(Template, on_delete=models.PROTECT, db_constraint=False)
+    args = models.CharField(max_length=255, null=True, verbose_name='参数')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        default_permissions = ()
+
+        permissions = (
+            (&quot;commontask_select&quot;, &quot;常用任务查看权限&quot;),
+            (&quot;commontask_change&quot;, &quot;常用任务修改权限&quot;),
+            (&quot;commontask_run&quot;, &quot;执行常用任务&quot;),
+        )</code></pre>
+
+
+<p>如果想把name为<code>dev-ops-coffee-build</code>的CommonTask赋权给name为<code>dev@ops-coffee.cn</code>的用户，可以这样处理</p>
+<pre class="codehilite"><code># 获取任务对象
+&gt;&gt;&gt; from engine.models import CommonTask
+&gt;&gt;&gt; task = CommonTask.objects.get(name='dev-ops-coffee-build')
+
+# 获取用户对象
+&gt;&gt;&gt; from accounts.models import User
+&gt;&gt;&gt; user = User.objects.get(username='dev@ops-coffee.cn')
+
+# 确认用户dev@ops-coffee.cn对任务dev-ops-coffee-build无权限
+&gt;&gt;&gt; user.has_perm('engine.commontask_run', task)
+False
+
+# 给用户赋权
+&gt;&gt;&gt; from guardian.shortcuts import assign_perm
+&gt;&gt;&gt; assign_perm('commontask_run', user, task)
+&lt;UserObjectPermission: dev-ops-coffee-build | dev@ops-coffee.cn | commontask_run&gt;</code></pre>
+
+
+<p>通过<code>assign_perm</code>可以给用户赋权，<code>assign_perm</code>接收三个参数，分别为<code>perm</code>、<code>user_or_group</code>以及<code>object</code></p>
+<ul>
+<li><code>perm</code>：权限，可以是字符串或者instance实例，当填写字符串时格式为<code>app_label.codename</code>，虽然在object不为Node的情况下可以只写<code>codename</code>但不推荐</li>
+<li><code>user_or_group</code>：用户或组的实例，也可以是用户或组的QuerySet集合</li>
+<li><code>object</code>：对象实例，可以为None，当为None时表示给整个model赋予权限，也可以为对象的QuerySet集合</li>
+</ul>
+<p>通过<code>has_perm</code>可以检查用户是否具有权限，has_perm接收两个参数，第一个参数为权限，第二个参数为具体的对象，其中第二个参数为可选参数，如果没有则跟django默认权限机制一样会去检查用户对model是否具有权限，如果有则检查用户对model下的object是否有权限</p>
+<p>赋权过后就可以再次查看用户是否有此对象的对应权限了</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; user.has_perm('engine.commontask_run', task)
+True</code></pre>
+
+
+<p>对于group组授权，操作类似</p>
+<pre class="codehilite"><code># 获取用户对象
+&gt;&gt;&gt; user = User.objects.get(username='qa@ops-coffee.cn')
+
+# 获取组对象
+&gt;&gt;&gt; from django.contrib.auth.models import Group
+&gt;&gt;&gt; group = Group.objects.get(name='测试组')
+
+# 给用户加入组
+&gt;&gt;&gt; user.groups.add(group)
+
+# 先确认下用户qa@ops-coffee.cn对任务dev-ops-coffee.cn无权限
+&gt;&gt;&gt; user.has_perm('engine.commontask_run', task)
+False
+
+# 给组赋权
+&gt;&gt;&gt; assign_perm('commontask_run', group, task)
+&lt;GroupObjectPermission: dev-ops-coffee-build | 测试组 | commontask_run&gt;</code></pre>
+
+
+<p><code>assign_perm</code>同样可以给组赋权，只需要把第二个参数替换为组对象即可，赋权过后查看组内用户就有权限了</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; user.has_perm('engine.commontask_run', task)
+True</code></pre>
+
+
+<p>由于只赋予了用户组对某个具体对象的权限，并没有赋予用户组对整个model的权限，所以<code>has_perm</code>检查用户对model的权限时会返回False</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; user.has_perm('engine.commontask_run')
+False</code></pre>
+
+
+<h2 id="_3">去除权限</h2>
+<p>当我们需要去除权限时，可以使用<code>remove_perm</code>方法，<code>remove_perm</code>方法与<code>assign_perm</code>方法类似，同样接收三个参数，参数类型也类似，唯一不同的是<code>assign_perm</code>的第二个参数可以是QuerySet，而<code>remove_perm</code>的第二个参数必须是instance</p>
+<p>就像这样<code>assign_perm</code>可以同时给多个用户赋权</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; task =  CommonTask.objects.get(name='dev-ops-coffee-build')
+&gt;&gt;&gt; assign_perm('engine.commontask_run', User.objects.filter(id__in=[3,4]), task)
+[&lt;UserObjectPermission: dev-ops-coffee-build | test@ops-coffee.cn | commontask_run&gt;, &lt;UserObjectPermission: dev-ops-coffee-build | dev@ops-coffee.cn | commontask_run&gt;]</code></pre>
+
+
+<p>却不能同时去除多个用户的权限，以下用法会报错</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; remove_perm('engine.commontask_run', User.objects.filter(id__in=[3,4]), task)
+Traceback (most recent call last):
+    ...
+    'The QuerySet value for an exact lookup must be limited to '
+ValueError: The QuerySet value for an exact lookup must be limited to one result using slicing.</code></pre>
+
+
+<p>一个清除权限的例子如下，以下例子会清除用户<code>dev@ops-coffee.cn</code>对CommonTask表下所有对象<code>engine.commontask_run</code>的权限</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; from guardian.shortcuts import remove_perm
+&gt;&gt;&gt;
+&gt;&gt;&gt; remove_perm('engine.commontask_run', User.objects.get(username='dev@ops-coffee.cn'), CommonTask.objects.all())
+(3, {'guardian.UserObjectPermission': 3})</code></pre>
+
+
+<p>当然第三个参数object是可以不用写的，意思也是清除整个model的权限，与以下用法效果一样</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; remove_perm('engine.commontask_run', User.objects.get(username='dev@ops-coffee.cn'))</code></pre>
+
+
+<h2 id="_4">根据用户和对象获取权限</h2>
+<p><code>get_perms</code>方法可以根据用户或组以及对象来获取权限，接收两个参数<code>user_or_group</code>实例以及对象实例</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; from guardian.shortcuts import get_perms
+
+&gt;&gt;&gt; get_perms(User.objects.get(username='dev@ops-coffee.cn'), task)
+['commontask_run']</code></pre>
+
+
+<h2 id="_5">根据对象和权限获取用户</h2>
+<p>当我们需要获取某个对象哪些用户有权限时，可以通过<code>get_users_with_perms</code>方法来处理，例子如下</p>
+<p>先来准备数据</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; task =  CommonTask.objects.get(name='dev-ops-coffee-build')
+&gt;&gt;&gt;
+&gt;&gt;&gt; u1 = User.objects.get(username='dev@ops-coffee.cn')
+&gt;&gt;&gt; u2 = User.objects.get(username='qa@ops-coffee.cn')
+&gt;&gt;&gt;
+&gt;&gt;&gt; group = Group.objects.get(id=1)
+&gt;&gt;&gt;
+# 赋予用户u1对task对象有commontask_run的权限
+&gt;&gt;&gt; assign_perm('commontask_run', u1, task)
+&lt;UserObjectPermission: dev-ops-coffee-build | dev@ops-coffee.cn | commontask_run&gt;
+
+# 赋予用户u2对task对象有commontask_change的权限
+&gt;&gt;&gt; assign_perm('commontask_change', u2, task)
+&lt;UserObjectPermission: dev-ops-coffee-build | qa@ops-coffee.cn | commontask_change&gt;
+&gt;&gt;&gt;
+
+# 把用户test@ops-coffee.cn加入到组group
+&gt;&gt;&gt; User.objects.get(username='test@ops-coffee.cn').groups.add(group)
+
+# 赋予组group对task对象有commontask_select的权限
+&gt;&gt;&gt; assign_perm('commontask_select', group, task)
+&lt;GroupObjectPermission: dev-ops-coffee-build | 开发组 | commontask_select&gt;
+&gt;&gt;&gt;</code></pre>
+
+
+<p>通过<code>get_users_whth_perms</code>方法获取对象的所有权限</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; from guardian.shortcuts import get_users_with_perms
+&gt;&gt;&gt;
+&gt;&gt;&gt; get_users_with_perms(task)
+&lt;QuerySet [&lt;User: dev@ops-coffee.cn&gt;, &lt;User: qa@ops-coffee.cn&gt;, &lt;User: test@ops-coffee.cn&gt;]&gt;</code></pre>
+
+
+<p>这里发现superuser用户并没有在最终的用户列表里，如果我们想让superuser用户也包含在内，可以设置参数<code>with_superusers=True</code></p>
+<pre class="codehilite"><code>&gt;&gt;&gt; get_users_with_perms(task, with_superusers=True)
+&lt;QuerySet [&lt;User: admin@163.com&gt;, &lt;User: dev@ops-coffee.cn&gt;, &lt;User: qa@ops-coffee.cn&gt;, &lt;User: test@ops-coffee.cn&gt;]&gt;</code></pre>
+
+
+<p>以上输出结果展示了所有具有权限的用户，如果我们想要查看用户具有的权限，可以设置参数<code>attach_perms=True</code>，返回的结构是以用户为key权限为value的一个字典，看起来清晰明了</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; get_users_with_perms(task, with_superusers=True, attach_perms=True)
+{&lt;User: admin@163.com&gt;: ['commontask_change', 'commontask_run', 'commontask_select'], &lt;User: dev@ops-coffee.cn&gt;: ['commontask_run',
+ 'commontask_select'], &lt;User: qa@ops-coffee.cn&gt;: ['commontask_change', 'commontask_run'], &lt;User: test@ops-coffee.cn&gt;: ['commontask_select']}</code></pre>
+
+
+<p>如果我们仅想查看具有某个权限的用户，可以设置<code>only_with_perms_in</code>参数，例如我们只想查看对象所有具有<code>commontask_change</code>权限的用户</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; get_users_with_perms(task, with_superusers=True, only_with_perms_in=['commontask_change'])
+&lt;QuerySet [&lt;User: admin@163.com&gt;, &lt;User: qa@ops-coffee.cn&gt;]&gt;</code></pre>
+
+
+<p>默认情况下用户所数组如果具有权限的话也会返回，例如上边的我们把用户<code>test@ops-coffee.cn</code>加入到了group，然后给group赋予了权限，那么用户也就具有了相应的权限，如果我们只想查看直接赋予用户的权限，而并非间接通过group取得的权限用户列表，我们可以设置参数<code>with_group_users=False</code>，此参数默认为True</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; get_users_with_perms(task, with_superusers=True, with_group_users=False)
+&lt;QuerySet [&lt;User: admin@163.com&gt;, &lt;User: dev@ops-coffee.cn&gt;, &lt;User: qa@ops-coffee.cn&gt;]&gt;</code></pre>
+
+
+<p>与<code>get_users_with_perms</code>方法相类似的是<code>get_groups_with_perms</code>方法，但<code>get_groups_with_perms</code>要简单许多，只能接收两个参数<code>object</code>和<code>attach_perms</code></p>
+<h2 id="_6">根据用户和权限获取对象</h2>
+<p>当我们给对象赋予权限后，很多时候我们都需要根据用户和权限来获取对象列表，此时可以通过<code>get_objects_for_user</code>方法来实现</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; from guardian.shortcuts import get_objects_for_user
+&gt;&gt;&gt; user = User.objects.get(username='dev@ops-coffee.cn')
+&gt;&gt;&gt; 
+&gt;&gt;&gt; get_objects_for_user(user, 'engine.commontask_run')
+&lt;QuerySet [&lt;CommonTask: Dev-Coffee-Web-发布&gt;, &lt;CommonTask: Qa-Coffee-Web-发布&gt;, &lt;CommonTask: dev-ops-coffee-build&gt;]&gt;</code></pre>
+
+
+<p><code>get_objects_for_user</code>接收两个参数，第一个参数为用户对象，第二个参数为权限，同时第二个参数也可以写成列表的方式，表示<strong>同时满足</strong>列表中的权限</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; get_objects_for_user(user, ['engine.commontask_run', 'engine.commontask_change'])
+&lt;QuerySet [&lt;CommonTask: Dev-Coffee-Web-发布&gt;]&gt;</code></pre>
+
+
+<p>如果想要仅满足列表中的<strong>任意一个</strong>权限，可以添加第三个参数<code>any_perm=True</code></p>
+<pre class="codehilite"><code>&gt;&gt;&gt; get_objects_for_user(user, ['engine.commontask_run', 'engine.commontask_change'], any_perm=True)
+&lt;QuerySet [&lt;CommonTask: Dev-Coffee-Web-发布&gt;, &lt;CommonTask: Qa-Coffee-Web-发布&gt;, &lt;CommonTask: dev-ops-coffee-build&gt;]&gt;</code></pre>
+
+
+<p>与<code>get_objects_for_user</code>类似的方法还有<code>get_objects_for_group</code>，可以根据group和权限来获取对象列表，使用方法参考<code>get_objects_for_user</code>即可</p>
+<h2 id="_7">装饰器的使用</h2>
+<p>django默认权限机制就提供了一个<code>permission_required</code>的装饰器，以方便在view中对用户权限的检查，在guardian中对<code>permission_required</code>装饰器做了扩展，不仅能够检查全局权限，还能对对象权限做校验</p>
+<p>使用方式兼容django默认的<code>permission_required</code>装饰器</p>
+<pre class="codehilite"><code>from guardian.decorators import permission_required
+
+@permission_required('engine.commontask_change')
+def commontask_update_view(request):
+    return HttpResponse('Hello')</code></pre>
+
+
+<p>当仅有一个权限参数时，则与django默认的<code>permission_required</code>装饰器无疑，表示用户是否具有整个model的<code>commontask_change</code>权限</p>
+<p>但在guardian的<code>permission_required</code>装饰器还支持第二个参数，参数类型为一个元组，类似这样<code>(CommonTask, 'id', 'pk')</code>，用来指定具体的对象，其中<code>CommonTask</code>为model，<code>id</code>为model的字段，<code>pk</code>为view中用户传入的具体参数，<code>id</code>与<code>pk</code>为对应关系，大概的查询逻辑就是<code>CommonTask.objects.get(id=pk)</code>，判断用户对此对象是否有CommonTask的权限，示例代码如下</p>
+<pre class="codehilite"><code>@permission_required('engine.commontask_change', (CommonTask, 'id', 'pk'))
+def commontask_delete_view(request, pk):
+    if request.method == 'POST':
+        try:
+            _data = CommonTask.objects.get(id=int(pk))
+            _data.delete()
+
+            return JsonResponse({'state': 1, 'message': '删除成功!'})
+        except Exception as e:
+            return JsonResponse({'state': 0, 'message': 'Error: ' + str(e)})
+    else:
+        return JsonResponse({&quot;state&quot;: 0, &quot;message&quot;: &quot;Request method '%s' not supported&quot; % request.method.upper()})</code></pre>
+
+
+<p><code>permission_required</code>还接收以下几个参数：<code>login_url</code>、<code>redirect_field_name</code>、<code>return_403</code>、<code>return_404</code>、<code>accept_global_perms</code>，其中<code>accept_global_perms</code>参数表示是否检查用户的全局权限，如果指定了特定对象，且设置了<code>accept_global_perms=False</code>则只检查对象权限，不检查全局权限，<code>accept_global_perms</code>默认为False</p>
+<h2 id="_8">模板中使用</h2>
+<p>guardian提供了模板标签，以方便在模板中对用户进行对象权限的校验，使用起来也比较简单</p>
+<p>先加载标签</p>
+<pre class="codehilite"><code>{% load guardian_tags %}</code></pre>
+
+
+<p>然后就可以使用<code>get_obj_perms</code>来获取用户或组关于对象的权限列表了</p>
+<pre class="codehilite"><code>{% get_obj_perms user/group for obj as &quot;context_var&quot; %}</code></pre>
+
+
+<p>一个简单的例子如下，如果当前登陆的用户对<code>task</code>对象有<code>commontask_change</code>权限，则能看到删除按钮</p>
+<pre class="codehilite"><code>{% get_obj_perms request.user for task as &quot;task_perms&quot; %}
+
+{% if &quot;commontask_change&quot; in task_perms %}
+    &lt;button&gt;删除&lt;/button&gt;
+{% endif %}</code></pre>
+
+
+<p>至此，你了解了guardian的所有基础知识，可以通过guardian搞定几乎所有的权限问题了，开启愉快的使用旅程吧~</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/MhMwW0p2lHVzoFRsFa6S3A.html">📅 2020-05-06</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="None,Devops,关于技术" />
+  <meta name="description" content="None" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>运维自动化之域名系统</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="运维自动化之域名系统" />
+  <meta property="og:description" content="None" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">运维自动化之域名系统</h1>
+
+        <p>某天安全工程师反馈我们的某个网站里包含违规内容，需要立即处理，否则整个主域名有被封禁的风险，主域名下有上千个子域名，涉及业务非常广，真要封禁非同小可，我们不敢怠慢，立即处理。初步排查，域名确实指向了某个违规的网站，但网站不是我们的，应该是项目下线，主机销毁IP释放，但域名并没有及时删除，新的用户被分配了同样的IP，然后这个IP指向了违规的网站，间接的域名也就指向了违规的网站。删除域名解析，问题解决，但隐藏在这个问题背后的是我们对域名管理的失控，鉴于此，域名管理系统势在必行，这篇文章就来介绍下我们域名管理系统是如何设计的，究竟做了哪些个事情</p>
+<p>域名管理系统整体上包含三个部分，分别是查询、变更、巡检，接下来分别介绍下这三个部分的内容</p>
+<h2 id="_1">查询</h2>
+<p>首先是查询，我们要有完善的域名数据库，包含所有的域名信息，能清晰的知道我们有哪些域名，这些域名在哪里注册、在哪里管理、当前状态如何、什么时间过期，以及每个域名下的记录数量等等域名基础数据</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1020.01.png" /></p>
+<p>除了域名的数据也要能够获取全量的解析记录数据，包含域名记录、类型、线路、记录值、状态、TTL时间等解析记录相关的基础数据。这些数据我们可以通过域名提供商的API获取到，难度不大</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1020.02.png" /></p>
+<p>当有了这些基础域名解析数据后，就可以通过<a href="https://blog.ops-coffee.cn/cloud.html" target="_blank">多云系统</a>获取到域名解析所对应的基础资源，可能是云主机、可能是负载均衡、可能是CDN、可能是DDOS、也可能是WAF，但无论是什么，我们都可以通过详尽的基础资源数据库来匹配。这一点对于我们做域名盘点非常有用，如果能匹配到资源且资源的状态正常的话那大概率域名依然在使用，如果匹配不到资源或者是匹配到资源已非正常使用状态，那么域名也大概率不在使用了</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1020.03.png" /></p>
+<p>当然这里可以展示所有域名解析相关的数据，而不仅仅是域名解析关联的资源，例如后边会提到的域名变更记录数据、域名标记情况或是域名解析HTTPS数据等等，丰富域名解析关联数据，让域名解析不再孤立</p>
+<h2 id="_2">变更</h2>
+<p>查询没有问题了，那我们接下来把域名的整个生命周期管理也给纳入了进来，域名作为系统的入口，其重要性不言而喻，域名的错误变更将会直接导致服务的中断或故障，所以所有域名的变更都要有二次确认的机制，在这个过程中我们引入了工单，所有变更都从工单开始</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1020.05.png" /></p>
+<p>新建/启用/停止/编辑/删除操作直接触发工单流程，用户提交，域名管理员二次确认，没有问题审批通过，则自动触发域名变更的操作。当然在确认的过程中一样可以展示域名关联的信息，例如关联资源、标记状态，给管理者充足的信息来帮助确认是否应该给与申请通过</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1020.06.png" /></p>
+<p>当然对于一些测试之类非核心域名也支持跳过审批自动处理，或者是根据具体的动作来选择跳过审批过程，例如默认新建域名无需审批，这个要根据具体的域名来配置了，充分考虑安全性和灵活性</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1020.09.png" /></p>
+<p>前文多次提到标记和盘点，所谓盘点就是对我们所有使用的域名做一次全面的梳理，确定哪些域名记录有在使用，而哪些域名记录已经不用了，这里通过系统判断加人工确认的方式来实现，例如之前说的，如果域名解析没有绑定资源或是域名绑定资源已过期，那多半域名解析已经不在使用了，这时候可以标记域名解析状态为已下线，等待后续确认删除</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1020.07.png" /></p>
+<p>域名变更管理流程上线后也可以跟域名记录标记关联起来做自动标记，用户新申请域名解析申请通过创建成功后，则直接标记域名记录为域名解析的申请用户即可，这样域名盘点工作量将大大降低</p>
+<h2 id="_3">巡检</h2>
+<p>域名全量数据有了，能做饭便捷的查询使用，同时也做到了从申请到删除的全生命周期管理，除此之外关于域名还有一部分工作就是日常的巡检，巡检包含域名临期提醒、域名解析绑定资源下线提醒、域名证书扫描及临期提醒等</p>
+<p>域名临期提醒，根据域名的到期时间提前提醒域名管理员续费，保证域名可用</p>
+<p>域名解析绑定资源下线提醒，域名绑定资源下线大概率域名解析也要随之下线的，文章开头的案例就是因为域名解析未及时下线引发的问题，在域名绑定资源下线时及时提醒域名解析所有者暂停或删除域名解析能有效防止此类问题的发生</p>
+<p>域名证书扫描及临期提醒，域名解析数据有了，我们就可以自动扫描域名解析是否有开启HTTPS，以及所使用的证书和证书到期时间等，无需任何配置即可对相关数据进行自动扫描，遇到问题及时提醒，最大程度保证域名及证书安全</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1020.08.png" /></p>
+<p>基础数据完善之后，自动化的巡检能帮我们发现问题及风险，我们可以及时处理和修复。域名系统虽无复杂的功能，但却是非常的实用，切实的帮助我们解决问题，堵住风险，谁能说这不是有一个好的系统呢</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/devops-domain-record-certificate.html">📅 2023-10-20</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

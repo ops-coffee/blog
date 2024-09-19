@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Shape,js,关于技术,BPMN,bpmn,Palette" />
+  <meta name="description" content="BPMN自定义bpmn.js的工具栏Palette，实现隐藏、添加、修改Shape" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>最好用的流程编辑器bpmn-js系列之Palette</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="最好用的流程编辑器bpmn-js系列之Palette" />
+  <meta property="og:description" content="BPMN自定义bpmn.js的工具栏Palette，实现隐藏、添加、修改Shape" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">最好用的流程编辑器bpmn-js系列之Palette</h1>
+
+        <blockquote>
+<p>最好用的流程编辑器bpmn-js系列文章</p>
+</blockquote>
+<p>前边写了四篇文章介绍了bpmn.js的基本使用，最近陆续有小伙伴加我催更，感谢对我这个半吊子前端的信任，接着更新bpmn.js的一些高级用法，本篇介绍对左侧工具栏Palette的隐藏和自定义修改</p>
+<h2 id="shape">隐藏shape</h2>
+<p>左侧工具栏Palette有些图标我用不到，那该如何隐藏呢？最简单的方法就是直接找到对应的class，通过css隐藏，例如我不需要创建数据存储，可以通过下边的代码隐藏</p>
+<pre class="codehilite"><code>.bpmn-icon-data-store {
+  display: none;
+}</code></pre>
+
+
+<h2 id="shape_1">自定义shape</h2>
+<p>为了编辑方便，我想在palette上添加一个shape该如何操作呢？这里我们需要自定义Palette，自定义Palette有两种方式可以选择，第一种就是基于默认的Palette来修改，第二种就是完全写个新的Palette来替代默认的Palette，第一种只能在默认的Palette上添加shape，而不能修改或删除，比较鸡肋我们就直接放弃了，来看下完全自定义Palette该如何实现</p>
+<p>以下代码基于我们之前搭建好的代码框架，具体可看文章<a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-base-usage-demo-code-source" target="_blank">『最好用的流程编辑器bpmn-js系列之基本使用』</a>，</p>
+<p>1.在<code>components</code>目录下新建<code>customBpmn</code>目录，在<code>customBpmn</code>目录下新建<code>custom</code>目录，每层目录下都新建<code>index.js</code>文件，最终目录结构如下</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1110.01.png" /></p>
+<p>2.在custom目录下新建<code>CustomPalette.js</code>文件，内容如下</p>
+<pre class="codehilite"><code>import { assign } from &quot;min-dash&quot;;
+
+export default function PaletteProvider(
+  palette,
+  create,
+  elementFactory,
+  handTool,
+  lassoTool,
+  spaceTool,
+  globalConnect,
+  translate
+) {
+  this.create = create;
+  this.elementFactory = elementFactory;
+  this.handTool = handTool;
+  this.lassoTool = lassoTool;
+  this.spaceTool = spaceTool;
+  this.globalConnect = globalConnect;
+  this.translate = translate;
+
+  palette.registerProvider(this);
+}
+
+PaletteProvider.$inject = [
+  &quot;palette&quot;,
+  &quot;create&quot;,
+  &quot;elementFactory&quot;,
+  &quot;handTool&quot;,
+  &quot;lassoTool&quot;,
+  &quot;spaceTool&quot;,
+  &quot;globalConnect&quot;,
+  &quot;translate&quot;
+];
+
+PaletteProvider.prototype.getPaletteEntries = function (element) {
+  const {
+    create,
+    elementFactory,
+    handTool,
+    lassoTool,
+    spaceTool,
+    globalConnect,
+    translate
+  } = this;
+
+  function createAction(type, group, className, title, options) {
+    function createListener(event) {
+      var shape = elementFactory.createShape(assign({ type: type }, options));
+
+      if (options) {
+        shape.businessObject.di.isExpanded = options.isExpanded;
+      }
+
+      create.start(event, shape);
+    }
+
+    var shortType = type.replace(/^bpmn:/, &quot;&quot;);
+
+    return {
+      group: group,
+      className: className,
+      title: title || translate(&quot;Create {type}&quot;, { type: shortType }),
+      action: {
+        dragstart: createListener,
+        click: createListener
+      }
+    };
+  }
+
+  return {
+    &quot;lasso-tool&quot;: {
+      group: &quot;tools&quot;,
+      className: &quot;bpmn-icon-lasso-tool&quot;,
+      title: &quot;Activate the lasso tool&quot;,
+      action: {
+        click: function (event) {
+          lassoTool.activateSelection(event);
+        }
+      }
+    },
+
+    &quot;tool-separator&quot;: {
+      group: &quot;tools&quot;,
+      separator: true
+    },
+
+    &quot;create.start-event&quot;: createAction(
+      &quot;bpmn:StartEvent&quot;,
+      &quot;event&quot;,
+      &quot;bpmn-icon-start-event-none&quot;,
+      &quot;创建开始节点&quot;
+    ),
+    &quot;create.end-event&quot;: createAction(
+      &quot;bpmn:EndEvent&quot;,
+      &quot;event&quot;,
+      &quot;bpmn-icon-end-event-none&quot;,
+      &quot;创建结束节点&quot;
+    ),
+    &quot;create.user-task&quot;: createAction(
+      &quot;bpmn:UserTask&quot;,
+      &quot;activity&quot;,
+      &quot;bpmn-icon-user-task&quot;,
+      &quot;创建用户任务&quot;
+    ),
+    &quot;create.exclusive-gateway&quot;: createAction(
+      &quot;bpmn:ExclusiveGateway&quot;,
+      &quot;gateway&quot;,
+      &quot;bpmn-icon-gateway-xor&quot;,
+      &quot;创建排他网关&quot;
+    )
+  };
+};</code></pre>
+
+
+<p>这段代码的意思相信各位前端的大佬比我理解的要深刻，就不过多介绍了，Platte展示的shape就是最后return输出的那个字典数据定义的，一个shape对应的数据格式如下：</p>
+<pre class="codehilite"><code>&quot;lasso-tool&quot;: {
+  group: &quot;tools&quot;,
+  className: &quot;bpmn-icon-lasso-tool&quot;,
+  title: &quot;Activate the lasso tool&quot;,
+  action: {
+    click: function (event) {
+      lassoTool.activateSelection(event);
+    }
+  }
+}</code></pre>
+
+
+<p>其中key为这个shape的名称，value为这个shape定义的一些属性，主要有四个：</p>
+<ul>
+<li><strong>group：</strong> 定义这个shape属于哪个组，主要有tools、event、gateway和activity可以选择</li>
+<li><strong>className：</strong> 定义这个shape的chass名称，可以通过这个class给shape指定具体的样式</li>
+<li><strong>title：</strong> 定义这个shape的title，也就是鼠标移动到shape上的提示</li>
+<li><strong>action：</strong> 用户操作时触发的事件</li>
+</ul>
+<p>通过这个数据我们就可以随意添加、删除或者修改Palette的shape了，改位置该样式轻松自如</p>
+<p>3.在<code>custom/index.js</code>文件中添加如下内容将自定义的Palette导出</p>
+<pre class="codehilite"><code>import CustomPalette from &quot;./CustomPalette&quot;;
+
+export default {
+  __init__: [&quot;paletteProvider&quot;],
+  paletteProvider: [&quot;type&quot;, CustomPalette],
+};</code></pre>
+
+
+<p>4.在<code>customModeler/index.js</code>文件中编写自定义的<code>CustomModeler</code>类</p>
+<pre class="codehilite"><code>import inherits from &quot;inherits&quot;;
+
+import Modeler from &quot;bpmn-js/lib/Modeler&quot;;
+
+import CustomModule from &quot;./custom&quot;;
+
+function CustomModeler(options) {
+  Modeler.call(this, options);
+
+  this._customElements = [];
+}
+
+inherits(CustomModeler, Modeler);
+
+CustomModeler.prototype._modules = [].concat(CustomModeler.prototype._modules, [
+  CustomModule
+]);
+
+export { CustomModeler };</code></pre>
+
+
+<p>5.在页面上引用自定义的<code>CustomModeler</code>以替代原本引用的<code>BpmnModeler</code>类，这样就能用到我们自定义的Palette啦</p>
+<pre class="codehilite"><code>import { xmlStr } from &quot;../mock/xmlStrPreview&quot;;
+import { CustomModeler } from &quot;../components/customBpmn&quot;;
+
+export default {
+  ...
+  methods: {
+    init() {
+      const canvas = this.$refs.canvas;
+      this.bpmnModeler = new CustomModeler({
+        container: canvas
+      });
+      this.createNewDiagram();
+    },
+    async createNewDiagram() {
+      try {
+        const result = await this.bpmnModeler.importXML(xmlStr);
+        const { warnings } = result;
+        console.log(warnings);
+      } catch (err) {
+        console.log(err.message, err.warnings);
+      }
+    }
+  }
+};</code></pre>
+
+
+<p>最终效果如下：</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1110.02.png" /></p>
+<h2 id="shape_2">Shape类型</h2>
+<p>关于Shape总共有哪些类型，以及各自对应的属性都是什么，这个官方没有具体的文档给列出，我在使用的时候通常直接查看源码<a href="https://github.com/bpmn-io/bpmn-js/blob/develop/lib/features/palette/PaletteProvider.js" target="_blank"><code>bpmn-js/lib/features/palette/PaletteProvider.js</code></a>和<a href="https://github.com/bpmn-io/bpmn-js/blob/develop/lib/features/context-pad/ContextPadProvider.js" target="_blank"><code>bpmn-js/lib/features/context-pad/ContextPadProvider.js</code></a>文件获取，对于部分类型，需要添加options选项</p>
+<p>例如中间时间事件<code>IntermediateThrowEvent</code>所对应的属性为：</p>
+<pre class="codehilite"><code>return {
+  &quot;create.timer-intermediate-event&quot;: createAction(
+    &quot;bpmn:IntermediateThrowEvent&quot;,
+    &quot;event&quot;,
+    &quot;bpmn-icon-intermediate-event-catch-timer&quot;,
+    &quot;Create IntermediateThrowEvent&quot;,
+    { eventDefinitionType: &quot;bpmn:TimerEventDefinition&quot; }
+  )
+};</code></pre>
+
+
+<h2 id="_1">写在最后</h2>
+<p>接触bpmn-js不久，且第一次用VUE，边学边写，文章难免出错，各位多多包含。想要打造一个好用的适合自己的流程编辑器，需要了解的内容比较多，bpmn-js会分多篇文章来介绍，欢迎关注</p>
+<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.cn" target="_blank">https://bpmn.ops-coffee.cn</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/bpmn/bpmn-js-vue-custom-palette-demo-code-source.html">📅 2020-11-10</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/BPMN/">🏷️ BPMN</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

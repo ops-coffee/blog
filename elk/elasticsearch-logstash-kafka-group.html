@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="ELK,Kafka,关于技术,Logstash,Group,Elk" />
+  <meta name="description" content="系统运维的过程中，每一个细节都值得我们关注" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>ELK架构下利用Kafka Group实现Logstash的高可用</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="ELK架构下利用Kafka Group实现Logstash的高可用" />
+  <meta property="og:description" content="系统运维的过程中，每一个细节都值得我们关注" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">ELK架构下利用Kafka Group实现Logstash的高可用</h1>
+
+        <blockquote>
+<p>系统运维的过程中，每一个细节都值得我们关注</p>
+</blockquote>
+<p>下图为我们的基本日志处理架构</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0628.elk.png" /></p>
+<p>所有日志由Rsyslog或者Filebeat收集，然后传输给Kafka，Logstash作为Consumer消费Kafka里边的数据，分别写入Elasticsearch和Hadoop，最后使用Kibana输出到web端供相关人员查看，或者是由Spark接手进入更深层次的分析</p>
+<p>在以上整个架构中，核心的几个组件Kafka、Elasticsearch、Hadoop天生支持高可用，唯独Logstash是不支持的，用单个Logstash去处理日志，不仅存在处理瓶颈更重要的是在整个系统中存在单点的问题，如果Logstash宕机则将会导致整个集群的不可用，后果可想而知</p>
+<p>如何解决Logstash的单点问题呢？我们可以借助Kafka的Consumer Group来实现</p>
+<h2 id="kafka-consumer-group">Kafka Consumer Group</h2>
+<p><img alt="" loading="lazy" src="/static/images/2019/0628.elk.kafka.png" /></p>
+<p>为了便于理解，我么先介绍一下Kafka里边几个重要的角色：</p>
+<p><strong>Broker：</strong> 一台kafka服务器就是一个broker，一个kafka集群由多个broker组成，上图中的kafka集群有3台kafka服务器组成，也就是有3个broker，一个broker上可以有多个topic</p>
+<p><strong>Topic：</strong> 是个逻辑上的概念，用来区分不同的消息类别，类似于数据库中的表，可以将一组相同的数据发送给一个Topic，在日志处理中通常会将不同类型的日志写入不同的Topic，例如nginx日志写入名字为<code>nginx_log</code>的topic，tomcat日志写入名字为<code>tomcat_log</code>的topic，topic上图中没有标出，我们可以理解为图上的三个partition构成了一个topic</p>
+<p><strong>Partition：</strong> 是kafka数据存储的基本物理单元，同一个Topic的数据可以被存储在一个或多个partition中，例如上图中的一个topic数据被存储在了partition1，partition2，partition3中，通常我们设置一个topic下partition的数量为broker的整数倍，这样一来数据能够均匀分布，二来可以同时利用集群下的所有服务器资源</p>
+<p><strong>Producer：</strong> 生产者，向kafka写数据的服务，例如filebeat</p>
+<p><strong>Consumer：</strong> 消费者，去kafka取数据的服务，例如logstash</p>
+<p><strong>Consumer Group：</strong> 也是个逻辑上的概念，为一组consumer的集合，同一个topic的数据会广播给不同的group，同一个group中只有一个consumer能拿到这个数据</p>
+<p>也就是说对于同一个topic，<strong>每个group都可以拿到同样的所有数据，但是数据进入group后只能被其中的一个consumer消费</strong>，基于这一点我们只需要启动多个logstsh，并将这些logstash分配在同一个组里边就可以实现logstash的高可用了</p>
+<pre class="codehilite"><code>input {
+    kafka {
+        bootstrap_servers =&gt; &quot;10.8.9.2:9092,10.8.9.3:9092,10.8.9.4:9092&quot;
+        topics =&gt; [&quot;ops_coffee_cn&quot;]
+        group_id =&gt; &quot;groupA&quot;
+        codec =&gt; &quot;json&quot;
+    }
+}</code></pre>
+
+
+<p>以上为logstash消费kafka集群的配置，其中加入了<code>group_id</code>参数，<code>group_id</code>是一个的字符串，唯一标识一个group，具有相同<code>group_id</code>的consumer构成了一个consumer group，这样启动多个logstash进程，只需要保证<code>group_id</code>一致就能达到logstash高可用的目的，一个logstash挂掉同一Group内的logstash可以继续消费</p>
+<p>除了高可用外同一Group内的多个Logstash可以同时消费kafka内topic的数据，从而提高logstash的处理能力，但需要注意的是消费kafka数据时，每个consumer最多只能使用一个partition，当一个Group内consumer的数量大于partition的数量时，<strong>只有等于partition个数的consumer能同时消费</strong>，其他的consumer处于等待状态</p>
+<p>例如一个topic下有3个partition，那么在一个有5个consumer的group中只有3个consumer在同时消费topic的数据，而另外两个consumer处于等待状态，所以想要增加logstash的消费性能，可以适当的增加topic的partition数量，但kafka中partition数量过多也会导致kafka集群故障恢复时间过长，消耗更多的文件句柄与客户端内存等问题，也并不是partition配置越多越好，需要在使用中找到一个平衡</p>
+<h2 id="kafka-partition">kafka partition</h2>
+<p>kafka中partition数量可以在创建topic时指定：</p>
+<pre class="codehilite"><code># bin/kafka-topics.sh --zookeeper 127.0.0.1:2181 --create --topic ops_coffee --partitions 3
+Created topic &quot;ops_coffee&quot;.</code></pre>
+
+
+<p><strong>--partitions：</strong> 指定分区数，如果不指定默认会使用配置文件中<code>num.partitions</code>配置的数量</p>
+<p>也可以手动修改partition的数量：</p>
+<pre class="codehilite"><code># bin/kafka-topics.sh --alter --zookeeper 127.0.0.1:2181 --partitions 5 --topic ops_coffee
+Adding partitions succeeded!</code></pre>
+
+
+<p>注意partition的数量只能增加不能减少</p>
+<p>如果想要知道topic的partition信息，可以通过以下命令查看topic详情：</p>
+<pre class="codehilite"><code># bin/kafka-topics.sh --zookeeper 127.0.0.1:2181 --describe --topic ops_coffee
+Topic:ops_coffee    PartitionCount:3    ReplicationFactor:2 Configs:
+    Topic: ops_coffee   Partition: 0    Leader: 1   Replicas: 1,2   Isr: 1,2
+    Topic: ops_coffee   Partition: 1    Leader: 2   Replicas: 2,3   Isr: 2,3
+    Topic: ops_coffee   Partition: 2    Leader: 3   Replicas: 3,1   Isr: 3,1</code></pre>
+
+
+<p>至此对kafka consumer group有了更深入的了解，可以在具体的使用中游刃有余</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/elk/elasticsearch-logstash-kafka-group.html">📅 2019-06-29</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Elk/">🏷️ Elk</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

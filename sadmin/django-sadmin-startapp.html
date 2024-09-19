@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Sadmin,APP" />
+  <meta name="description" content="基于Sadmin新建APP" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>基于Sadmin新建APP</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="基于Sadmin新建APP" />
+  <meta property="og:description" content="基于Sadmin新建APP" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">基于Sadmin新建APP</h1>
+
+        <p>1.Start APP, Create a new app named coffee</p>
+<pre class="codehilite"><code>python manage.py startapp coffee</code></pre>
+
+
+<p>2.Installed APP, Edit <code>settings.py</code>，insert <code>coffee</code> to <code>INSTALLED_APPS</code></p>
+<pre class="codehilite"><code>INSTALLED_APPS = [
+    ...
+    'sadmin.commons',
+    'sadmin.accounts',
+    'sadmin.project',
+    'coffee',
+]</code></pre>
+
+
+<p>3.Add Model, Add <code>Production</code> model to  coffee/models.py file</p>
+<pre class="codehilite"><code>from django.db import models
+
+from sadmin.commons.backends.modles import UserBaseModel
+
+class Production(UserBaseModel):
+    name = models.CharField(max_length=32, unique=True, verbose_name='名称')
+    code = models.CharField(max_length=16, unique=True, verbose_name='代码')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        permissions = (
+            (&quot;production_select&quot;, &quot;产品查看权限&quot;),
+            (&quot;production_change&quot;, &quot;产品修改权限&quot;),
+        )</code></pre>
+
+
+<p>4.Add View, Add <code>ProductionList</code> and <code>ProductionDetail</code> class to coffee/views.py file</p>
+<pre class="codehilite"><code>from sadmin.commons.options import ListCreateView, RetrieveUpdateDestroyView
+
+class ProductionList(ListCreateView):
+    model = Tag
+    template = 'coffee/production.index.html'
+    permission = {'get': 'coffee.production_select', 'post': 'coffee.production_change'}
+
+
+class ProductionDetail(RetrieveUpdateDestroyView):
+    model = Tag
+    permission = {'get': 'coffee.production_select', 'put': 'coffee.production_change', 'delete': 'coffee.production_change'}</code></pre>
+
+
+<p>5.Add Template, edit coffee/templates/coffee/production.index.html file</p>
+<pre class="codehilite"><code>{% extends &quot;base.html&quot; %}
+
+{% block css %}
+&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/plugins/DataTables/datatables.min.css&quot;&gt;
+{% endblock %}
+
+{% block breadcrumb %}
+{% if perms.coffee.production_change %}
+&lt;button class=&quot;btn btn-success&quot; type=&quot;button&quot; onclick=&quot;createForm()&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; 新建&lt;/button&gt;
+{% endif %}
+{% endblock %}
+
+{% block content %}
+&lt;div class=&quot;card mb-4&quot;&gt;
+  &lt;div class=&quot;card-body&quot;&gt;
+    &lt;table class=&quot;table table-striped&quot; id=&quot;id_table&quot; style=&quot;width:100%&quot;&gt;
+      &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;ID&lt;/th&gt;
+        &lt;th&gt;名称&lt;/th&gt;
+        {% if perms.coffee.production_change %}
+        &lt;th&gt;操作&lt;/th&gt;
+        {% endif %}
+      &lt;/tr&gt;
+      &lt;/thead&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;modal fade&quot; id=&quot;modalForm&quot; tabindex=&quot;-1&quot; role=&quot;dialog&quot; aria-hidden=&quot;true&quot;&gt;
+  &lt;div class=&quot;modal-dialog modal-xl&quot;&gt;
+    &lt;div class=&quot;modal-content&quot;&gt;
+      &lt;div class=&quot;modal-header&quot;&gt;
+        &lt;h5 class=&quot;modal-title&quot; id=&quot;modalForm_title&quot;&gt;&lt;/h5&gt;
+        &lt;button class=&quot;btn-close&quot; type=&quot;button&quot; data-coreui-dismiss=&quot;modal&quot; aria-label=&quot;Close&quot;&gt;&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;modal-body&quot;&gt;
+        &lt;div class=&quot;tab-content&quot;&gt;
+          &lt;form class=&quot;form-horizontal&quot; id=&quot;modalForm_Content&quot; method=&quot;post&quot; action=&quot;&quot;&gt;{% csrf_token %}
+            &lt;input type=&quot;text&quot; autocomplete=&quot;off&quot; id=&quot;form_id&quot; value=&quot;0&quot; hidden&gt;
+
+            &lt;div class=&quot;row mb-3&quot;&gt;
+              &lt;label class=&quot;col-2 col-form-label text-end&quot;&gt;* 名称&lt;/label&gt;
+              &lt;div class=&quot;col-9&quot;&gt;
+                &lt;input type=&quot;text&quot; autocomplete=&quot;off&quot; class=&quot;form-control&quot; id=&quot;form_name&quot; name=&quot;name&quot; required
+                       placeholder=&quot;请输入名称，命名应见名知意&quot;&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;modal-footer&quot;&gt;
+              &lt;button type=&quot;button&quot; class=&quot;btn btn-secondary&quot; data-coreui-dismiss=&quot;modal&quot;&gt;Close&lt;/button&gt;
+              &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;Save Changes&lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/form&gt;
+        &lt;/div&gt;
+
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+{% endblock %}
+
+
+{% block js %}
+&lt;script type=&quot;text/javascript&quot; src=&quot;/static/plugins/DataTables/datatables.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;script&gt;
+  $('#page_header').text('Production管理');
+  $('#page_header_descript').text('');
+
+  // 加载表格
+  var table = $('#id_table').DataTable({
+    &quot;ajax&quot;: {
+      &quot;url&quot;: window.location.pathname,
+      &quot;data&quot;: function (d) {
+        // 去掉columns开头的参数
+        for(var key in d){
+          if (key.indexOf(&quot;columns&quot;)==0||key.indexOf(&quot;order&quot;)==0) {
+            delete d[key];
+          }
+        }
+      }
+    },
+    &quot;columns&quot;: [
+      {&quot;data&quot;: &quot;id&quot;},
+      {&quot;data&quot;: &quot;name&quot;},
+      {% if perms.coffee.production_change %}
+      {
+        &quot;data&quot;: &quot;id&quot;,
+        &quot;render&quot;: function (data, type, row) {
+          return '&lt;button class=&quot;btn btn-warning btn-sm&quot; onclick=&quot;updateForm('+row.id+')&quot;&gt;&lt;i class=&quot;fa fa-pencil-square-o&quot;&gt;&lt;/i&gt; 编辑&lt;/button&gt;&amp;nbsp;' +
+                 '&lt;button class=&quot;btn btn-danger btn-sm&quot; onclick=&quot;deleteForm(&amp;quot;'+ window.location.pathname +'&amp;quot;, '+row.id+')&quot;&gt;&lt;i class=&quot;fa fa-trash&quot;&gt;&lt;/i&gt; 删除&lt;/button&gt;'
+        }
+      }
+      {% endif %}
+    ]
+  });
+
+  // 点击创建时的表单信息
+  function createForm() {
+    $('#modalForm_title').text('添加Production');
+    $('#modalForm_Content').trigger(&quot;reset&quot;);
+
+    $('#modalForm').modal('show');
+  }
+
+  // 点击编辑时的表单信息
+  function updateForm(id) {
+    $('#modalForm_title').text('修改Production');
+    $('#modalForm_Content').trigger(&quot;reset&quot;);
+
+    var data = {
+      &quot;format&quot;: &quot;json&quot;,
+    }
+
+    $.get(window.location.pathname + id + &quot;/&quot;, data, function(data) {
+      if (data.state) {
+        $.each(data.data, function (k, v) {
+          $('#form_' + k).val(v);
+        });
+
+        $('#modalForm').modal('show');
+      } else {
+        toastr.error(data.message);
+      }
+    });
+  }
+
+  // 使用ajax submit提交表单数据
+  $('#modalForm_Content').submit(function (event) {
+    event.preventDefault();
+
+    if (confirm(&quot;确认提交这些数据吗？&quot;)) {
+      var formid = $('#form_id').val();
+      var params = $('#modalForm_Content').serializeJson();
+
+      if (formid == &quot;0&quot;) {
+        $.post(window.location.pathname, JSON.stringify(params), function(data, status){
+          if (data.state) {
+            table.draw(false);
+            toastr.success(data.message);
+            $('#modalForm').modal('hide');
+          } else {
+            toastr.error(data.message)
+          }
+        });
+      } else {
+        params.id = formid;
+        $.put(window.location.pathname + formid + &quot;/&quot;, JSON.stringify(params), function(data, status){
+          if (data.state) {
+            table.draw(false);
+            toastr.success(data.message);
+            $('#modalForm').modal('hide');
+          } else {
+            toastr.error(data.message)
+          }
+        });
+      }
+    }
+  });
+&lt;/script&gt;
+{% endblock %}</code></pre>
+
+
+<p>6.Add URL, Add <code>production/</code> and <code>production/&lt;int:pk&gt;/</code> URL to coffee/views.py file</p>
+<pre class="codehilite"><code>from . import views
+from django.urls import path
+
+urlpatterns = [
+    path('production/', views.ProductionInstanceList.as_view(), name='production-list-url'),
+    path('production/&lt;int:pk&gt;/', views.ProductionInstanceDetail.as_view(), name='production-detail-url'),
+]</code></pre>
+
+
+<p>Insert coffee path to webapp/urls.py file</p>
+<pre class="codehilite"><code>from django.urls import path, include, re_path
+
+urlpatterns = [
+    ...
+    path('coffee/', include('coffee.urls')),
+]</code></pre>
+
+
+<p>7.Makemigrations &amp; Migrate</p>
+<pre class="codehilite"><code>python manage.py makemigrations
+python manage.py migrate</code></pre>
+
+
+<p>8.Runserver</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/sadmin/django-sadmin-startapp.html">📅 2023-03-28</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

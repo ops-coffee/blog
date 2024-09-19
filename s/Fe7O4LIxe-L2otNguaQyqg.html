@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,关于技术" />
+  <meta name="description" content="Django默认权限介绍，为你的项目加把锁" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Django默认权限机制介绍及实践</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django默认权限机制介绍及实践" />
+  <meta property="og:description" content="Django默认权限介绍，为你的项目加把锁" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django默认权限机制介绍及实践</h1>
+
+        <blockquote>
+<p>演示Django版本为当前最新版本v2.2</p>
+</blockquote>
+<p>当Django配置文件中的<code>INSTALL_APPS</code>包含了<code>django.contrib.auth</code>时，就默认启用了一个简单的权限系统，提供了为用户或组分配权限的方法</p>
+<p>之所以说简单呢？主要是因为：</p>
+<p>1.默认的权限系统是基于表的控制，权限最小粒度是表</p>
+<p>也就是说，假如有一个Blog表，我们可以赋予用户或组对Blog表有delete的权限，那么用户或组成员就可以删除全部Blog，是不能控制用户只能删除自己创建的blog的</p>
+<p>如果希望用户只能删除自己创建的Blog，不能删除别人创建的Blog，这种需求Django默认的权限管理就无法实现了，需要用到<code>object permission</code>对象权限，有第三方模块实现了对象权限，如<a href="https://github.com/django-guardian/django-guardian" target="_blank">django-guardian</a>，你可以直接使用，或者也可以自己实现对象权限，具体思路可参考这篇文章：<a href="/s/BZsJnWLtv8ZwwlBYbWSbZQ" target="_blank">Django内置权限扩展案例</a></p>
+<p>2.每个Model模型默认只有四个权限，分别是添加<code>add_</code>、修改<code>change_</code>、删除<code>delete_</code>、查看<code>view_</code>，这些权限记录在Permission表中，表数据如下：</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0926.01.png" /></p>
+<p>默认权限的创建是通过Django的信号signals实现的，使用了<code>post_migrate</code>信号，在每次执行migrate操作时都会为新的Model模型创建默认权限，关于Django的信号Signals介绍和使用可以查看这篇文章：<a href="/s/cMxdAfsTno56ixurmD4KXA" target="_blank">Django使用Signals监测model字段变化发送通知</a>，</p>
+<h3 id="_1">自定义权限</h3>
+<p>默认的权限名字和描述都是英文的，且只有四个，如果你不想用默认的几个权限，想要自定义的话，可以这样做：</p>
+<pre class="codehilite"><code>class Blog(models.Model):
+    title = models.CharField(max_length=256, verbose_name='标题')
+    content = models.TextField(blank=True, null=True, verbose_name='内容')
+
+    class Meta:
+        default_permissions = ()
+
+        permissions = (
+            (&quot;change_blog&quot;, &quot;修改博客&quot;),
+            (&quot;delete_blog&quot;, &quot;查看博客&quot;),
+            (&quot;publish_blog&quot;, &quot;发布博客&quot;),
+        )</code></pre>
+
+
+<p><strong>default_permissions：</strong> 清空默认的权限</p>
+<p><strong>permissions：</strong> 设置权限，内容是一个嵌套的列表，列表第一个字段是<code>codename</code>，第二个字段为<code>name</code></p>
+<p>注意：如果你使用了django默认的admin的话，建议保留4个默认权限，可以添加新权限</p>
+<h3 id="_2">权限修改</h3>
+<p>如果你用了Django自带的admin，在migrate之后就能在admin的user和group两个表中看到新添加的权限了</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0926.02.png" /></p>
+<p>当然你也可以在程序中来添加或修改权限</p>
+<h4 id="_3">用户权限修改方法：</h4>
+<pre class="codehilite"><code>ops = User.objects.get(id=2)
+
+ops.user_permissions.add(25, 26)
+ops.user_permissions.set([26, 27])
+ops.user_permissions.remove(26, 27)
+ops.user_permissions.clear()</code></pre>
+
+
+<h4 id="_4">组权限修改方法：</h4>
+<pre class="codehilite"><code>coffee = Group.objects.get(id=1)
+
+coffee.permissions.add(25)
+coffee.permissions.set([26,27])
+coffee.permissions.remove(25)
+coffee.permissions.clear()</code></pre>
+
+
+<p>其中<code>add</code>为添加，<code>set</code>为设置，<code>remove</code>为移除，<code>clear</code>为清空，<code>add</code>跟<code>set</code>的区别是<code>add</code>会在原有权限的基础上加新权限，而<code>set</code>会清空原有权限设置成新的权限，后边的参数25,26,27可以为Permission的ID或者是Permission对象，例如这样也是可以的：</p>
+<pre class="codehilite"><code>p = Permission.objects.get(id=25)
+coffee.permissions.add(p)</code></pre>
+
+
+<p>给组赋予权限，组内的所有用户会自动的拥有该组的权限，例如用户<code>ops-coffee</code>隶属于组<code>SRE</code>，<code>SRE</code>组对Blog表有修改权限，那么即便是没有单独给<code>ops-coffee</code>用户分配任何权限，他也会有对Blog表的修改权限</p>
+<h3 id="_5">权限查看</h3>
+<p><code>get_all_permissions()</code>列出用户的所有权限：</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; User.objects.get(username='ops-coffee').get_all_permissions()
+{'blog.publish_blog', 'blog.delete_blog', 'auth.add_group', 'blog.change_blog'}</code></pre>
+
+
+<p><code>get_group_permissions()</code>列出用户所属组的权限：</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; User.objects.get(username='ops-coffee').get_group_permissions()
+{'blog.publish_blog', 'blog.change_blog', 'blog.delete_blog'}</code></pre>
+
+
+<h3 id="_6">权限校验</h3>
+<p>用户对象可以通过<code>has_perm</code>方法来判断用户是否拥有某个权限：</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; User.objects.get(username='ops-coffee').has_perm('blog.change_blog')
+True
+&gt;&gt;&gt; User.objects.get(username='ops-coffee').has_perm('blog.delete_blog')
+True</code></pre>
+
+
+<p><strong>has_perm</strong> 的参数由<code>&lt;app label&gt;.&lt;permission codename&gt;</code>两部分组成，例如<code>blog.delete_blog</code>表示的就是名字为<code>blog</code>的APP下的<code>delete_blog</code>权限</p>
+<h3 id="view">后端View校验权限</h3>
+<p>可以直接在view中通过if判断用户权限，例如：</p>
+<pre class="codehilite"><code>def ops_coffee_view(request):
+    if not request.user.has_perm('blog.change_blog')
+        return HttpResponse('403 Forbidden')</code></pre>
+
+
+<p>为了方便，Django还提供了一个<code>permission_required()</code>的装饰器，可以快速的来校验用户是否拥有特定的权限，用法如下：</p>
+<pre class="codehilite"><code>@permission_required(perm, login_url=None, raise_exception=False)</code></pre>
+
+
+<p>三个参数的意思分别是：</p>
+<p><strong>perm：</strong> 必须有，权限名称，同<code>has_perm</code>一样</p>
+<p><strong>login_url：</strong> 非必须，登陆的url地址，当你没有权限时自动跳转到登陆页，这里可以设置登陆地址的url</p>
+<p><strong>reise_exception：</strong> 非必须，当为True时，如果用户没有权限，则不会跳转到登陆页，而是引发<code>PermissionDenied</code>错误，返回<code>403 Forbidden</code></p>
+<p>如下例子，判断用户是否有<code>blog</code>的APP的<code>change_blog</code>权限，如果没有则返回403错误</p>
+<pre class="codehilite"><code>@permission_required('blog.change_blog', raise_exception=True)
+def ops_coffee_view(request):
+    ...</code></pre>
+
+
+<h3 id="template">前端Template中校验权限</h3>
+<p>当前登陆用户的权限保存在模版变量<code>{{ perms }}</code>中，可以在模版中通过if判断用户是否拥有相应的权限而开放对应的内容，例如对于侧边栏菜单只显示用户有权限访问的，就可以这么写：</p>
+<pre class="codehilite"><code>{% if perms.cmdb.view_project %}
+    &lt;li&gt;&lt;a href=&quot;{% url 'project-list-url' %}&quot;&gt;&lt;/i&gt; 项目列表&lt;/a&gt;&lt;/li&gt;
+{% endif %}
+
+{% if perms.cmdb.view_service %}
+    &lt;li&gt;&lt;a href=&quot;{% url 'service-list-url' %}&quot;&gt;&lt;/i&gt; 服务列表&lt;/a&gt;&lt;/li&gt;
+{% endif %}
+
+{% if perms.cmdb.view_environment %}
+    &lt;li&gt;&lt;a href=&quot;{% url 'environment-list-url' %}&quot;&gt;&lt;/i&gt; 环境列表&lt;/a&gt;&lt;/li&gt;
+{% endif %}</code></pre>
+
+
+<p>至此，Django的默认权限系统介绍完成，默认权限在小型项目中能满足大部分的需求，如果对权限控制有更高的要求可以关注前文中介绍的<code>django-guardian</code>项目或自己实现</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/Fe7O4LIxe-L2otNguaQyqg.html">📅 2019-09-27</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,Just-For-Fun,任务系统,开源,监控,关于技术,博客,Devops,系统运维" />
+  <meta name="description" content="关于技术 分类合集，高度相关的同类文章" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>运维咖啡吧 - 关于技术</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="运维咖啡吧 - 关于技术" />
+  <meta property="og:description" content="关于技术 分类合集，高度相关的同类文章" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h3>2024</h3>
+
+        <ul>
+          <li>07/27&nbsp;
+            <a href="/s/multi-factor-authentication-github-2fa-totp.html" target="_blank">
+              Github建议启用的2FA是什么？科普MFA与TOTP
+            </a>
+          </li>
+          <li>07/19&nbsp;
+            <a href="/s/python-django-blog-admin-dashboard-tools.html" target="_blank">
+              6年过去，当初的静态博客生成工具如今怎样了
+            </a>
+          </li>
+          <li>05/24&nbsp;
+            <a href="/s/devops-task-args-edit-datatables-rowreorder.html" target="_blank">
+              简洁表单替代复杂JSON，完成开始完美结束
+            </a>
+          </li>
+          <li>05/21&nbsp;
+            <a href="/s/devops-task-subtask-args-json-to-form-table.html" target="_blank">
+              简洁表单替代复杂JSON，配置直观又简单
+            </a>
+          </li>
+          <li>05/14&nbsp;
+            <a href="/s/devops-task-subtask-args-kwargs-jinja-template.html" target="_blank">
+              任务系统之结果传递
+            </a>
+          </li>
+          <li>04/19&nbsp;
+            <a href="/s/devops-cloud-cost-financial-billing-finops-resource.html" target="_blank">
+              找出隐藏在账单里的秘密
+            </a>
+          </li>
+          <li>04/16&nbsp;
+            <a href="/s/devops-cloud-cost-financial-billing-finops.html" target="_blank">
+              运维自动化之账单系统
+            </a>
+          </li>
+          <li>04/01&nbsp;
+            <a href="/s/cloudflare-monitor-dashboard-by-graphql-python-api.html" target="_blank">
+              构建好用的Cloudflare监控大盘
+            </a>
+          </li>
+          <li>03/23&nbsp;
+            <a href="/s/suggestion-for-open-source-jumpserver-oneterm.html" target="_blank">
+              用了两周开源堡垒机OneTerm，我有一些建议
+            </a>
+          </li>
+          <li>03/18&nbsp;
+            <a href="/s/veops-open-source-jumpserver-oneterm.html" target="_blank">
+              开源推荐 | 简洁且强大的开源堡垒机OneTerm
+            </a>
+          </li>
+          <li>03/06&nbsp;
+            <a href="/python/python-simple-and-user-friendly-features-2.html" target="_blank">
+              继续总结Python中那些简单好用的用法
+            </a>
+          </li>
+          <li>03/05&nbsp;
+            <a href="/python/python-simple-and-user-friendly-features.html" target="_blank">
+              Python中那些简单又好用的特性和用法
+            </a>
+          </li>
+          <li>02/26&nbsp;
+            <a href="/s/devops-task-subtask-api-postman-apipost.html" target="_blank">
+              任务系统之API子任务
+            </a>
+          </li>
+          <li>01/30&nbsp;
+            <a href="/s/IAC-devops-cloud-cmdb-resource-sync.html" target="_blank">
+              多云系统之资源同步过程解析
+            </a>
+          </li>
+          <li>01/26&nbsp;
+            <a href="/s/python-django-celery-monitor-not-flower.html" target="_blank">
+              监控Celery不一定非要使用Flower
+            </a>
+          </li>
+          <li>01/11&nbsp;
+            <a href="/s/interactive-and-interesting-devops-page.html" target="_blank">
+              一个十分有趣的文档页面
+            </a>
+          </li>
+        </ul>
+        <h3>2023</h3>
+
+        <ul>
+          <li>12/30&nbsp;
+            <a href="/s/2023-devops-service-platform-tools.html" target="_blank">
+              这一年我们上线的运维自动化系统
+            </a>
+          </li>
+          <li>12/06&nbsp;
+            <a href="/s/ansi-up-js-to-xterm-js-performance.html" target="_blank">
+              从ansi_up到xterm提升了几十倍性能
+            </a>
+          </li>
+          <li>12/03&nbsp;
+            <a href="/s/django-tenant-rbac-auth-permission.html" target="_blank">
+              权限管理之多租户隔离授权
+            </a>
+          </li>
+          <li>12/01&nbsp;
+            <a href="/s/domain-entry-full-network-trace-link.html" target="_blank">
+              从入口域名开始探索全链路自动化拓扑
+            </a>
+          </li>
+          <li>11/29&nbsp;
+            <a href="/s/programmer-search-engine-devv-ai.html" target="_blank">
+              神器推荐 | 最懂程序员的新一代AI搜索引擎
+            </a>
+          </li>
+          <li>11/22&nbsp;
+            <a href="/s/veops-open-source-cmdb-devops.html" target="_blank">
+              开源推荐｜灵活多变功能强大的CMDB
+            </a>
+          </li>
+          <li>11/20&nbsp;
+            <a href="/s/django-celery-beat-queues-priority.html" target="_blank">
+              Celery多队列解决生产环境下的任务优先级问题
+            </a>
+          </li>
+          <li>10/20&nbsp;
+            <a href="/s/devops-domain-record-certificate.html" target="_blank">
+              运维自动化之域名系统
+            </a>
+          </li>
+          <li>09/23&nbsp;
+            <a href="/s/devops-kubernetes-docker-jenkins.html" target="_blank">
+              运维自动化之容器系统分享
+            </a>
+          </li>
+          <li>08/02&nbsp;
+            <a href="/frontend/jS-automatically-generates-letter-avatar.html" target="_blank">
+              使用JS自动生成文字头像
+            </a>
+          </li>
+          <li>07/12&nbsp;
+            <a href="/s/django-move-model-to-another-app.html" target="_blank">
+              Django生产环境不同APP之间Model迁移
+            </a>
+          </li>
+          <li>06/08&nbsp;
+            <a href="/s/python-markdown-extend-loading-lazy.html" target="_blank">
+              个人博客优化之图片懒加载探索
+            </a>
+          </li>
+          <li>05/07&nbsp;
+            <a href="/t/git-pull-push-ssh-proxy.html" target="_blank">
+              Git Pull/Git Push配置SSH代理
+            </a>
+          </li>
+          <li>04/28&nbsp;
+            <a href="/s/devops-task-subtask-jenkins.html" target="_blank">
+              任务系统之Jenkins子任务
+            </a>
+          </li>
+          <li>03/04&nbsp;
+            <a href="/s/zecCwjr0TyxqufOSkp_ndA.html" target="_blank">
+              带一群伙伴写一款软件
+            </a>
+          </li>
+          <li>01/20&nbsp;
+            <a href="/s/xrlgoCee9CZwxt5lBdq1oA.html" target="_blank">
+              这一年我们上线的自动化系统
+            </a>
+          </li>
+          <li>01/17&nbsp;
+            <a href="/s/fGshXWUaTRv0oHIMBKSn1Q.html" target="_blank">
+              运维自动化之作业系统分享
+            </a>
+          </li>
+          <li>01/13&nbsp;
+            <a href="/s/U0yPjGAhKnfqYqVWQd6ZSQ.html" target="_blank">
+              使用Django Cache引发的Bug处理
+            </a>
+          </li>
+        </ul>
+        <h3>2022</h3>
+
+        <ul>
+          <li>11/12&nbsp;
+            <a href="/s/XTXR-1FBKf2olZQQsesNVg.html" target="_blank">
+              多云监控告警系统的优势
+            </a>
+          </li>
+          <li>11/09&nbsp;
+            <a href="/t/js-dict.html" target="_blank">
+              JS字典Dict使用
+            </a>
+          </li>
+          <li>10/21&nbsp;
+            <a href="/s/mml5jzQVDzByf0F3sJN5dg.html" target="_blank">
+              基于多云构建监控告警系统
+            </a>
+          </li>
+          <li>09/09&nbsp;
+            <a href="/t/django-celery-beat-clocked-utc-timezone.html" target="_blank">
+              django-celery-beat clocked使用UTC时区问题
+            </a>
+          </li>
+          <li>08/16&nbsp;
+            <a href="/t/echarts-options-config.html" target="_blank">
+              Echarts常见问题处理
+            </a>
+          </li>
+          <li>07/30&nbsp;
+            <a href="/s/Wtx2utkC4MErDLvC3cbSMg.html" target="_blank">
+              运维自动化之多云系统分享
+            </a>
+          </li>
+          <li>06/20&nbsp;
+            <a href="/g/python-code-style-pep8.html" target="_blank">
+              PEP 8 -- Python 代码风格指南
+            </a>
+          </li>
+          <li>06/10&nbsp;
+            <a href="/s/cKkFlBZnpLd_IRaC6i8i6A.html" target="_blank">
+              多云系统之资源管理
+            </a>
+          </li>
+          <li>05/26&nbsp;
+            <a href="/s/PL31oUCLMEi3H1_1IMMDRA.html" target="_blank">
+              多云系统之多云配置
+            </a>
+          </li>
+          <li>05/21&nbsp;
+            <a href="/s/G4wSM_KxpgypNSpY4lYMhA.html" target="_blank">
+              多云系统之关系管理
+            </a>
+          </li>
+          <li>05/13&nbsp;
+            <a href="/s/YjfTypcHD03fTGLV_JsqWw.html" target="_blank">
+              运维自动化之任务系统分享
+            </a>
+          </li>
+          <li>04/01&nbsp;
+            <a href="/s/zpVZw8vdpTLgGOR6GvpiqA.html" target="_blank">
+              疫情在家帮老婆提升下工作效率
+            </a>
+          </li>
+          <li>03/09&nbsp;
+            <a href="/s/0xee6JzCUcqXao9bY1ULgA.html" target="_blank">
+              权限管理系统设计
+            </a>
+          </li>
+          <li>02/27&nbsp;
+            <a href="/s/0Q31jzeYBTeWdrLMufdig.html" target="_blank">
+              任务系统之并行任务
+            </a>
+          </li>
+          <li>02/26&nbsp;
+            <a href="/s/Q3BBxBAWBcpUhQhfwO7pgQ.html" target="_blank">
+              任务系统之手动审批
+            </a>
+          </li>
+          <li>02/20&nbsp;
+            <a href="/s/Drt44kkzaeAeSjhshSb0Vg.html" target="_blank">
+              简洁的脚本编写规范
+            </a>
+          </li>
+        </ul>
+        <h3>2021</h3>
+
+        <ul>
+          <li>11/30&nbsp;
+            <a href="/s/wAH0fb2I2fHCxu5Gy0oSng.html" target="_blank">
+              再聊我们自研的那些Devops工具
+            </a>
+          </li>
+          <li>11/25&nbsp;
+            <a href="/s/k0rAVHLALYTxCR5ggMg-ag.html" target="_blank">
+              面向老板的需求管理系统
+            </a>
+          </li>
+          <li>10/21&nbsp;
+            <a href="/s/pCIwRbWH-HaGAwBji8vDeQ.html" target="_blank">
+              Django Model字段加密的优雅实现
+            </a>
+          </li>
+          <li>10/14&nbsp;
+            <a href="/s/sOlBFC5FsSqVd78eFuxUyQ.html" target="_blank">
+              Probius+Prometheus通过API集成POD监控
+            </a>
+          </li>
+          <li>09/25&nbsp;
+            <a href="/s/U88HPUYiVDar-7yBx3IoIA.html" target="_blank">
+              Probius+Kubernetes任务系统如虎添翼
+            </a>
+          </li>
+          <li>08/29&nbsp;
+            <a href="/s/6YAC_Lqw3jB0LZlJTx4A2g.html" target="_blank">
+              Django+Ansible构建任务中心思路
+            </a>
+          </li>
+          <li>08/13&nbsp;
+            <a href="/s/xehCT6PMS90dvrf96E-Fzw.html" target="_blank">
+              Sadmin：打造私有Django公共库实现代码复用
+            </a>
+          </li>
+        </ul>
+        <h3>2020</h3>
+
+        <ul>
+          <li>12/29&nbsp;
+            <a href="/s/h3lpkEHJ4-BWEfrHNQsFCQ.html" target="_blank">
+              Django动态添加定时任务之django-celery的使用
+            </a>
+          </li>
+          <li>12/03&nbsp;
+            <a href="/s/FV379mGIboVYky73kcoMMQ.html" target="_blank">
+              Proxy：简单小巧又强大好用的代理系统
+            </a>
+          </li>
+          <li>11/27&nbsp;
+            <a href="/s/AG9dc0G7mRaTPZ-3QQgX9Q.html" target="_blank">
+              插件推荐 | 如果你在关注基金，一定要看看这个开源的插件
+            </a>
+          </li>
+          <li>11/23&nbsp;
+            <a href="/bpmn/bpmn-js-minimap.html" target="_blank">
+              最好用的流程编辑器bpmn-js系列之minimap
+            </a>
+          </li>
+          <li>11/11&nbsp;
+            <a href="/bpmn/bpmn-js-vue-custom-contextpad-demo-code-source.html" target="_blank">
+              最好用的流程编辑器bpmn-js系列之ContextPad
+            </a>
+          </li>
+          <li>11/11&nbsp;
+            <a href="/bpmn/bpmn-js-modeling-api-cn.html" target="_blank">
+              bpmn.js Modeling API 列表
+            </a>
+          </li>
+          <li>11/10&nbsp;
+            <a href="/bpmn/bpmn-js-vue-custom-palette-demo-code-source.html" target="_blank">
+              最好用的流程编辑器bpmn-js系列之Palette
+            </a>
+          </li>
+          <li>10/26&nbsp;
+            <a href="/s/JpnxTf-Z9vkKrwl8nXJljQ.html" target="_blank">
+              Django开发中使用Cache缓存提升10倍效率
+            </a>
+          </li>
+          <li>10/23&nbsp;
+            <a href="/python/Aq2FiCLTsqIBX-RpARzM_w.html" target="_blank">
+              证书监控 | 为什么我获取到的证书有效期是错的
+            </a>
+          </li>
+          <li>10/22&nbsp;
+            <a href="/t/python-list-skill.html" target="_blank">
+              python list 列表操作总结
+            </a>
+          </li>
+          <li>10/16&nbsp;
+            <a href="/s/BEC-HtooUNFU9_JakRhjhw.html" target="_blank">
+              Django Template 自定义全局变量
+            </a>
+          </li>
+          <li>09/30&nbsp;
+            <a href="/python/AXOUz0v99OfpHrURdei9vw.html" target="_blank">
+              Python实现HTTPS网站证书过期监控及更新
+            </a>
+          </li>
+          <li>09/15&nbsp;
+            <a href="/bpmn/bpmn-js-vue-custom-viewer-demo-code-source.html" target="_blank">
+              最好用的流程编辑器bpmn-js系列之Viewer
+            </a>
+          </li>
+          <li>09/14&nbsp;
+            <a href="/bpmn/bpmn-js-vue-custom-modeler-demo-code-source.html" target="_blank">
+              最好用的流程编辑器bpmn-js系列之Modeler
+            </a>
+          </li>
+          <li>09/10&nbsp;
+            <a href="/bpmn/bpmn-js-vue-local-file-demo-code-source.html" target="_blank">
+              最好用的流程编辑器bpmn-js系列之本地文件
+            </a>
+          </li>
+          <li>09/08&nbsp;
+            <a href="/bpmn/bpmn-js-vue-base-usage-demo-code-source.html" target="_blank">
+              最好用的流程编辑器bpmn-js系列之基本使用
+            </a>
+          </li>
+          <li>08/07&nbsp;
+            <a href="/s/uKPmc39C2Ysi_8J9ADUoUg.html" target="_blank">
+              Django ORM中原生JSONField的使用方法
+            </a>
+          </li>
+          <li>06/12&nbsp;
+            <a href="/t/django-debug-false-static-500.html" target="_blank">
+              Django DEBUG = False导致静态文件加载失败500问题处理
+            </a>
+          </li>
+          <li>06/09&nbsp;
+            <a href="/python/GXBrzg9wxUy1Y4XKazb67Q.html" target="_blank">
+              用Python写个Linux系统命令
+            </a>
+          </li>
+          <li>06/01&nbsp;
+            <a href="/s/PQAjBTRP-2X4ESYyIf1mSw.html" target="_blank">
+              Django全局启用登陆验证login_required
+            </a>
+          </li>
+          <li>05/29&nbsp;
+            <a href="/s/uXQbM4t11ICdzNofZyDeXA.html" target="_blank">
+              Probius：一个功能强大的自定义任务系统
+            </a>
+          </li>
+          <li>05/06&nbsp;
+            <a href="/s/MhMwW0p2lHVzoFRsFa6S3A.html" target="_blank">
+              Django Object Permission之Django-guardian使用详解
+            </a>
+          </li>
+          <li>04/23&nbsp;
+            <a href="/s/fKDyRxjMr0XmXJGCAv6Ghw.html" target="_blank">
+              Django model重写save方法及update踩坑记录
+            </a>
+          </li>
+          <li>04/16&nbsp;
+            <a href="/python/4S0L78-YOT50VT6nMAhqfg.html" target="_blank">
+              python函数eval与ast.literal_eval的区别
+            </a>
+          </li>
+          <li>03/23&nbsp;
+            <a href="/s/DInxgNE2HHnPJ_MfxQ3_yA.html" target="_blank">
+              从知乎宕机说起，闲聊设计原则与优化方法
+            </a>
+          </li>
+          <li>03/14&nbsp;
+            <a href="/s/11-yHYohTdSBl9FfNvCs6w.html" target="_blank">
+              Github Pages访问太慢？通过Netlify免费加速
+            </a>
+          </li>
+          <li>03/04&nbsp;
+            <a href="/s/vbdJ4fAPOrgLAUipoCCXBA.html" target="_blank">
+              关于编码你必须知道的知识和技巧
+            </a>
+          </li>
+          <li>02/21&nbsp;
+            <a href="/s/JRszZcbeic5mJbY7dDkkMQ.html" target="_blank">
+              源码给你，零基础搭建一个免费的网址导航站
+            </a>
+          </li>
+          <li>01/18&nbsp;
+            <a href="/frontend/front-end-components-javascript-jquery-ace-js.html" target="_blank">
+              最好用的web端代码文本编辑器ACE
+            </a>
+          </li>
+          <li>01/09&nbsp;
+            <a href="/s/googole-search-analytics-adsense-blog-site-seo.html" target="_blank">
+              Google搜索成最大入口，简单谈下个人博客的SEO
+            </a>
+          </li>
+          <li>01/06&nbsp;
+            <a href="/s/h9k_C7kNB6q1VqxQDVHyiQ.html" target="_blank">
+              Alodi：环境创建从未如此简单
+            </a>
+          </li>
+        </ul>
+        <h3>2019</h3>
+
+        <ul>
+          <li>12/26&nbsp;
+            <a href="/s/dAbyLz6-qrWuJsBnnyar2Q.html" target="_blank">
+              告诉你如何关闭腾讯广告定向投放
+            </a>
+          </li>
+          <li>12/23&nbsp;
+            <a href="/s/QG42UqJ9rnswQDMd41CYUg.html" target="_blank">
+              Kerrigan：配置中心管理UI的实现思路和技术细节
+            </a>
+          </li>
+          <li>12/13&nbsp;
+            <a href="/s/sNObdSPZAYl9ozUEkhCMyA.html" target="_blank">
+              神器推荐 | 我的第一个视频是如何诞生的
+            </a>
+          </li>
+          <li>12/06&nbsp;
+            <a href="/webssh/jumpserver-web-terminal-lrzsz-file-scp-zmodem.html" target="_blank">
+              WebSSH画龙点睛之lrzsz上传下载文件
+            </a>
+          </li>
+          <li>12/02&nbsp;
+            <a href="/t/debian8-jessie-install-python3.html" target="_blank">
+              Debian 8 Jessie安装python3.6
+            </a>
+          </li>
+          <li>11/29&nbsp;
+            <a href="/webssh/jumpserver-web-terminal-monitor-and-disconnect.html" target="_blank">
+              堡垒机WebSSH进阶之实时监控和强制下线
+            </a>
+          </li>
+          <li>11/25&nbsp;
+            <a href="/t/change-pip-source.html" target="_blank">
+              更新pip源让python包下载更畅快
+            </a>
+          </li>
+          <li>11/20&nbsp;
+            <a href="/webssh/jumpserver-web-terminal-monitor-asciinema-audit.html" target="_blank">
+              堡垒机的核心武器：WebSSH录像实现
+            </a>
+          </li>
+          <li>11/18&nbsp;
+            <a href="/s/PcstaBodjDS8D15ARwAfzA.html" target="_blank">
+              Asciinema文章勘误及Web端使用介绍
+            </a>
+          </li>
+          <li>11/06&nbsp;
+            <a href="/s/oqZqGiQ3uNrNuT-nGrh9lg.html" target="_blank">
+              Asciinema：你的所有操作都将被录制
+            </a>
+          </li>
+          <li>11/01&nbsp;
+            <a href="/webssh/jumpserver-web-terminal-ssh-paramiko-stream.html" target="_blank">
+              Django实现WebSSH操作物理机或虚拟机
+            </a>
+          </li>
+          <li>10/21&nbsp;
+            <a href="/s/lVVe6OtX7U-USAHn4j5XZQ.html" target="_blank">
+              码云域名被阿里云停止解析，如果是你维护的域名该怎么办？
+            </a>
+          </li>
+          <li>10/18&nbsp;
+            <a href="/webssh/jumpserver-web-terminal-kubernetes-ssh-resize.html" target="_blank">
+              Kubernetes WebSSH终端窗口自适应Resize
+            </a>
+          </li>
+          <li>10/16&nbsp;
+            <a href="/webssh/jumpserver-kubernetes-web-terminal-ssh-stream.html" target="_blank">
+              Django实现WebSSH操作Kubernetes Pod
+            </a>
+          </li>
+          <li>09/27&nbsp;
+            <a href="/s/Fe7O4LIxe-L2otNguaQyqg.html" target="_blank">
+              Django默认权限机制介绍及实践
+            </a>
+          </li>
+          <li>09/20&nbsp;
+            <a href="/s/zfR5kn1tejVSiH-mireT3A.html" target="_blank">
+              建议收藏 | 专业的MySQL开发规范
+            </a>
+          </li>
+          <li>09/19&nbsp;
+            <a href="/t/Kubernetes-Python-API-Demo.html" target="_blank">
+              Kubernetes Python API中文使用说明
+            </a>
+          </li>
+          <li>09/12&nbsp;
+            <a href="/s/Nxh7mwPJPlbL3R9MdlkO_A.html" target="_blank">
+              Alodi：为了保密我开发了一个系统
+            </a>
+          </li>
+          <li>09/02&nbsp;
+            <a href="/s/p5UKuh1yY3P4zrOzVBmY1w.html" target="_blank">
+              MySQL EXPLAIN结果集分析 - 附带大量案例
+            </a>
+          </li>
+          <li>08/22&nbsp;
+            <a href="/s/lUS2mxBjzm1cIYd0OPmHaw.html" target="_blank">
+              插件推荐 | 这个浏览器插件能让你躺着赚钱
+            </a>
+          </li>
+          <li>08/17&nbsp;
+            <a href="/s/e3m9xHVsvhe36IvG1YKhbA.html" target="_blank">
+              Django+zTree构建组织架构树
+            </a>
+          </li>
+          <li>08/08&nbsp;
+            <a href="/frontend/front-end-components-jquery-datatables-2.html" target="_blank">
+              前端插件之Datatables使用--下篇
+            </a>
+          </li>
+          <li>08/05&nbsp;
+            <a href="/frontend/front-end-components-jquery-datatables-1.html" target="_blank">
+              前端插件之Datatables使用--上篇
+            </a>
+          </li>
+          <li>07/25&nbsp;
+            <a href="/frontend/front-end-components-javascript-jquery-select2.html" target="_blank">
+              前端插件之Select2使用
+            </a>
+          </li>
+          <li>07/19&nbsp;
+            <a href="/frontend/front-end-components-bootstrap-dual-listbox.html" target="_blank">
+              前端插件之Bootstrap Dual Listbox使用
+            </a>
+          </li>
+          <li>07/12&nbsp;
+            <a href="/s/F-IPkfo6jp6Wkb4ql-jaLg.html" target="_blank">
+              APM系统SkyWalking介绍
+            </a>
+          </li>
+          <li>06/29&nbsp;
+            <a href="/elk/elasticsearch-logstash-kafka-group.html" target="_blank">
+              ELK架构下利用Kafka Group实现Logstash的高可用
+            </a>
+          </li>
+          <li>06/19&nbsp;
+            <a href="/s/xkrxfg4NULauzyU7uZqVwQ.html" target="_blank">
+              几行代码养只猫，心情瞬间好多了
+            </a>
+          </li>
+          <li>06/16&nbsp;
+            <a href="/s/x48wmx_k55hmPfZL0tyBYQ.html" target="_blank">
+              Redis删除特定前缀key的优雅实现
+            </a>
+          </li>
+          <li>06/12&nbsp;
+            <a href="/t/django-model-field-comment.html" target="_blank">
+              django model字段添加备注Comment
+            </a>
+          </li>
+          <li>06/11&nbsp;
+            <a href="/t/python-pass-by-reference.html" target="_blank">
+              python中的引用传递
+            </a>
+          </li>
+          <li>06/05&nbsp;
+            <a href="/s/D6PeQ_lzcaY8pmOLqTY-gQ.html" target="_blank">
+              Nginx与安全有关的几个配置
+            </a>
+          </li>
+          <li>05/30&nbsp;
+            <a href="/s/open-source-devops-system-tools-cloud-opendevops.html" target="_blank">
+              开源推荐 - CoDo开源一站式DevOps平台
+            </a>
+          </li>
+          <li>05/27&nbsp;
+            <a href="/s/7g2wncQG1lIziOmtBxXwEw.html" target="_blank">
+              利用Django徒手写个静态页面生成工具
+            </a>
+          </li>
+          <li>05/15&nbsp;
+            <a href="/elk/elasticsearch-select-query-DSL-api.html" target="_blank">
+              Elasticsearch Query DSL查询入门
+            </a>
+          </li>
+          <li>04/29&nbsp;
+            <a href="/s/JyUnN_OtQ2NtXcH0mtCJUg.html" target="_blank">
+              Nginx的几个常用配置和技巧
+            </a>
+          </li>
+          <li>04/19&nbsp;
+            <a href="/s/r5SpyTjRl0jJeAuYE4Q_-Q.html" target="_blank">
+              Django使用Channels实现WebSocket--下篇
+            </a>
+          </li>
+          <li>04/16&nbsp;
+            <a href="/s/hqaPrPS7w3D-9SeegQAB2Q.html" target="_blank">
+              Django使用Channels实现WebSocket--上篇
+            </a>
+          </li>
+          <li>03/28&nbsp;
+            <a href="/elk/elasticsearch-logstash-filebeat-registry.html" target="_blank">
+              Filebeat的Registry文件解读
+            </a>
+          </li>
+          <li>03/19&nbsp;
+            <a href="/elk/elasticsearch-logstash-kafka-webhdfs.html" target="_blank">
+              Logstash读取Kafka数据写入HDFS详解
+            </a>
+          </li>
+          <li>03/08&nbsp;
+            <a href="/s/fewb1jDso_FKPqhu9P1uHA.html" target="_blank">
+              没有基础也能写个小程序
+            </a>
+          </li>
+          <li>02/28&nbsp;
+            <a href="/s/BZsJnWLtv8ZwwlBYbWSbZQ.html" target="_blank">
+              Django内置权限扩展案例
+            </a>
+          </li>
+          <li>01/31&nbsp;
+            <a href="/s/HwOi-ARTvvNjGTWrDmZIkQ.html" target="_blank">
+              我们自研的那些Devops工具
+            </a>
+          </li>
+          <li>01/24&nbsp;
+            <a href="/s/XchAJWiMN3DNpKGj_yMdcA.html" target="_blank">
+              Django集成Markdown编辑器【附源码】
+            </a>
+          </li>
+          <li>01/22&nbsp;
+            <a href="/s/Kgj_5ydnT2W4Gt0vrw7gtw.html" target="_blank">
+              Django+JWT实现Token认证
+            </a>
+          </li>
+          <li>01/07&nbsp;
+            <a href="/s/xnBehfSlZ3J02xb0GFuGDw.html" target="_blank">
+              Docker环境的持续部署优化实践
+            </a>
+          </li>
+          <li>04/04&nbsp;
+            <a href="/ldap/openldap-sso-python-django-auth-ldap.html" target="_blank">
+              LDAP落地实战（五）：Django集成OpenLDAP认证
+            </a>
+          </li>
+          <li>05/21&nbsp;
+            <a href="/elk/elasticsearch-cat-api-shards-nodes.html" target="_blank">
+              Elasticsearch各Cat命令详解
+            </a>
+          </li>
+          <li>05/21&nbsp;
+            <a href="/t/django-custom-error-page.html" target="_blank">
+              Django自定义错误页面配置
+            </a>
+          </li>
+          <li>05/21&nbsp;
+            <a href="/t/remove-github-commit-log.html" target="_blank">
+              清除github所有历史提交记录的方法
+            </a>
+          </li>
+          <li>05/21&nbsp;
+            <a href="/t/server-ssh-specification.html" target="_blank">
+              服务器SSH密钥管理规范
+            </a>
+          </li>
+        </ul>
+        <h3>2018</h3>
+
+        <ul>
+          <li>12/27&nbsp;
+            <a href="/s/XJloJMj9gTbfGnpWN_YU2A.html" target="_blank">
+              SVN Hooks的介绍及使用
+            </a>
+          </li>
+          <li>12/06&nbsp;
+            <a href="/s/L6Jud6gp5c9bbaUljUkNFA.html" target="_blank">
+              Django开发密码管理表实例【附源码】
+            </a>
+          </li>
+          <li>11/26&nbsp;
+            <a href="/s/A6GPJlAxvEopUsimWaNcqA.html" target="_blank">
+              Django+Echarts画图实例
+            </a>
+          </li>
+          <li>11/19&nbsp;
+            <a href="/s/cMxdAfsTno56ixurmD4KXA.html" target="_blank">
+              Django使用Signals监测model字段变化发送通知
+            </a>
+          </li>
+          <li>11/10&nbsp;
+            <a href="/s/6ztLq8Q591KnlQY33-YFdQ.html" target="_blank">
+              运维效率之数据迁移自动化
+            </a>
+          </li>
+          <li>10/30&nbsp;
+            <a href="/s/dpGqieL4WCmGdQh1AEG4Gw.html" target="_blank">
+              代码中的敏感信息加密方案
+            </a>
+          </li>
+          <li>10/13&nbsp;
+            <a href="/s/7gPLaCESHAB0dLgq7qZq5Q.html" target="_blank">
+              Django model转字典的几种方法
+            </a>
+          </li>
+          <li>09/19&nbsp;
+            <a href="/s/sROfvo1y_76fi70nmAs-vg.html" target="_blank">
+              使用Nagios打造专业的业务状态监控
+            </a>
+          </li>
+          <li>09/12&nbsp;
+            <a href="/s/Dj5t142BkRIONC58xacBoA.html" target="_blank">
+              Etcd安全配置之Basic Auth认证
+            </a>
+          </li>
+          <li>09/06&nbsp;
+            <a href="/elk/common-system-project-java-log-collect.html" target="_blank">
+              ELK日志系统之通用应用程序日志接入方案
+            </a>
+          </li>
+          <li>08/30&nbsp;
+            <a href="/elk/elasticsearch-logstash-rsyslog-nginx.html" target="_blank">
+              ELK日志系统之使用Rsyslog快速方便的收集Nginx日志
+            </a>
+          </li>
+          <li>08/23&nbsp;
+            <a href="/s/uGUvV4jl4YIvNztuepdC8A.html" target="_blank">
+              中小团队落地配置中心详解
+            </a>
+          </li>
+          <li>08/16&nbsp;
+            <a href="/elk/elasticsearch-logstash-mysql-slowlog.html" target="_blank">
+              ELK构建MySQL慢日志收集平台详解
+            </a>
+          </li>
+          <li>08/13&nbsp;
+            <a href="/s/JVh4UnS2Tql9gUVaBSoGuA.html" target="_blank">
+              Django model select的各种用法详解
+            </a>
+          </li>
+          <li>08/11&nbsp;
+            <a href="/s/lXrp3igYo9W2UuE5Gauysg.html" target="_blank">
+              Django配置Celery执行异步任务和定时任务
+            </a>
+          </li>
+          <li>07/31&nbsp;
+            <a href="/s/eM7SNKmtw2tDQtXBsBXyxQ.html" target="_blank">
+              探秘varian：优雅的发布部署程序
+            </a>
+          </li>
+          <li>07/25&nbsp;
+            <a href="/s/fl3OiX7xg9GVrj9G--a5-g.html" target="_blank">
+              记一次诡异的故障排查经历
+            </a>
+          </li>
+          <li>07/20&nbsp;
+            <a href="/s/ZrrLUNRlAXVfVKvA1m0nsg.html" target="_blank">
+              中小团队快速构建SQL自动审核系统
+            </a>
+          </li>
+          <li>07/10&nbsp;
+            <a href="/s/B_aNB8Y8snbSVLURONZ4Qg.html" target="_blank">
+              Django model update的各种用法介绍
+            </a>
+          </li>
+          <li>07/06&nbsp;
+            <a href="/python/YhKyJ16yuI0bPpygKV_d1w.html" target="_blank">
+              python如何帮我在投资中获取更高收益
+            </a>
+          </li>
+          <li>07/03&nbsp;
+            <a href="/s/GATfwNETo_aGsJHZdV5YzQ.html" target="_blank">
+              中小团队基于Docker的devops实践
+            </a>
+          </li>
+          <li>08/10&nbsp;
+            <a href="/ldap/openldap-sso-auth-jenkins-plugins-devops.html" target="_blank">
+              LDAP落地实战（四）：Jenkins集成OpenLDAP认证
+            </a>
+          </li>
+          <li>07/01&nbsp;
+            <a href="/ldap/openldap-sso-auth-gitlab-389-devops.html" target="_blank">
+              LDAP落地实战（三）：GitLab集成OpenLDAP认证
+            </a>
+          </li>
+          <li>06/30&nbsp;
+            <a href="/ldap/openldap-sso-auth-svn-apache-basic.html" target="_blank">
+              LDAP落地实战（二）：SVN集成OpenLDAP认证
+            </a>
+          </li>
+          <li>06/29&nbsp;
+            <a href="/ldap/lightweight-directory-access-protocol-sso.html" target="_blank">
+              LDAP落地实战（一）：OpenLDAP部署及管理维护
+            </a>
+          </li>
+        </ul>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

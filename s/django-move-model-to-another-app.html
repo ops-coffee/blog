@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,App,关于技术,Model,APP" />
+  <meta name="description" content="本文介绍Django项目生产环境下如何迁移一个App下的Model到另一个APP" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Django生产环境不同APP之间Model迁移</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django生产环境不同APP之间Model迁移" />
+  <meta property="og:description" content="本文介绍Django项目生产环境下如何迁移一个App下的Model到另一个APP" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django生产环境不同APP之间Model迁移</h1>
+
+        <p>在Django中，APP是应用程序Application的缩写。一个Django项目可以由多个APP组成，每个APP代表一个特定的功能模块或组件。合理的APP组织能够提高代码的可维护性和可复用性，随着项目的不断壮大，APP也不断的增多，难免会发现之前的Model组织不是十分合理，因此有了在不同APP之间迁移Model的需求。这篇文章就介绍下生产环境下如何在不同APP之间迁移Model</p>
+<p>Django在不同APP之间迁移Model官方没有提供特别简单的方法，我们就采用最基础的方式：复制原APP下的Model到目标APP-&gt;修改所有Model引用-&gt;将原表里的数据同步至目标表-&gt;删除原Model</p>
+<h2 id="_1">前期准备</h2>
+<p>在线上拉取代码执行变更操作之前的步骤都算是前期准备，前期准备最重要的事情就是修改代码，以下操作会在开发者本地执行</p>
+<ol>
+<li>复制原APP下的Model到目标APP</li>
+</ol>
+<p>在这一步中我们尽量保证Model内的所有字段一致，复制到新的Model后执行<code>makemigrations</code>和<code>migrate</code>应用变更，如果无报错再进行下一步，有报错先解决报错，大多数报错可能都是因为外键引用<code>Foreignkey</code>引起的，例如我遇到的报错<code>HINT: Add or change a related_name argument to the definition for 'carrier.OpsCoffee.content_type' or 'cruiser.OpsCoffee.content_type'</code>，为Foreignkey字段<code>content_type</code>添加<code>related_name</code>参数可解决</p>
+<p>复制原APP下的Model到目标APP之后，建议删除原APP下Model中关于权限permissions的配置，这样可以在后续测试中保证不会再用到旧的Model，同时也为后续权限变更提供方便</p>
+<ol>
+<li>修改所有Model引用</li>
+</ol>
+<p>所有引用原APP下Model的地方都要改成从新的APP内引用，这一步较为繁琐，但如果用到一些IDE有提示Model引用位置的话会简单很多，例如我用的Pycharm会在Class上显示当前Class的引用次数，通过这里能很轻松的找到并修改所有引用原APP下Model的位置</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0712.01.png" /></p>
+<p>除了model引用之外，如果有用到Django默认的权限系统，那么model对应的权限也要跟着修改，主要是view和template里的权限配置需要修改所对应的APP</p>
+<ol>
+<li>迁移数据测试</li>
+</ol>
+<p>迁移数据直接将原表数据导出，然后再新的表里导入即可，如果使用MySQL作为数据库，可以通过以下语句将原表<code>src_ops_coffee</code>内地数据迁移至目标表<code>dst_ops_coffee</code></p>
+<pre class="codehilite"><code>insert into dst_ops_coffee select * from src_ops_coffee;</code></pre>
+
+
+<p>以上语句有个前提是原表<code>src_ops_coffee</code>和目标表<code>dst_ops_coffee</code>字段要一模一样，包括字段位置，当字段不同时，可以通过如下语句操作</p>
+<pre class="codehilite"><code>insert into dst_ops_coffee (id, create_time, update_time, instance_id, instance_name, instance_state) select id, create_time, update_time, instance_id, instance_name, instance_state from src_ops_coffee;</code></pre>
+
+
+<p>数据迁移完成就可以本地测试了，测试无异常就可以合并代码到更新到线上</p>
+<h2 id="_2">在线迁移</h2>
+<p>迁移过程需要数据同步等操作，所以应在系统维护的时间段进行，先停止项目，然后开始正式的数据迁移操作</p>
+<ol>
+<li>
+<p>开始之前务必先<strong>备份数据库</strong>！<strong>备份数据库</strong>！<strong>备份数据库</strong>！</p>
+</li>
+<li>
+<p>拉取更新代码</p>
+</li>
+<li>
+<p>应用数据库变更</p>
+</li>
+</ol>
+<pre class="codehilite"><code>python3 manage.py makemigrations
+python3 manage.py migrate</code></pre>
+
+
+<p>这一步会有大量的数据库变更，属于正常情况。如果有Foreignkey外键依赖，可能会有<code>foreign key constraint fails</code>的报错，主要是因为新表里没有数据导致的，此时我们只需要进行下一步迁移数据即可，等迁移数据完成，再来执行<code>migrate</code>即可顺利完成</p>
+<ol>
+<li>迁移数据库数据</li>
+</ol>
+<p>在前期准备中的迁移数据测试阶段已经迁移过数据，同样的SQL在生产环境再次执行即可</p>
+<ol>
+<li>调整权限</li>
+</ol>
+<p>Django里的权限配置是跟APP相关的，例如模板权限<code>perms.carrier.ops_coffee_change</code>中的<code>carrier</code>就是APP名称，用到Django默认的权限系统的话，在迁移完成后需要做相应的权限调整</p>
+<p>即便是你在原始的Model里删除了权限配置，Django的<code>migrate</code>也不会同步删除权限表<code>auth_permission</code>的对应的数据，所以此时需要手动删除，一般是以<code>codename</code>为条件过滤，删除ID较小的那个即可，如果不放心则可以拿<code>content_type_id</code>去Model记录表<code>django_content_type</code>确认Model</p>
+<ol>
+<li>启动项目</li>
+</ol>
+<p>以上工作做完后，就可以正常启动项目，测试并交付使用了</p>
+<h2 id="_3">后续操作</h2>
+<p>以上操作完成可以正常使用，但此时原Model还未删除，原数据库表也还存在，可以保持这个状态运行一段时间，若无异常则可以删除原Model，同步至线上应用数据库更新，彻底删掉原数据库表，至此一个完整的Model迁移工作结束</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/django-move-model-to-another-app.html">📅 2023-07-12</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

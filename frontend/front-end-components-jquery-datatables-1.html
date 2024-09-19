@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Datatables,关于技术,前端插件" />
+  <meta name="description" content="工欲善其事，必先利其器" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>前端插件之Datatables使用--上篇</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="前端插件之Datatables使用--上篇" />
+  <meta property="og:description" content="工欲善其事，必先利其器" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">前端插件之Datatables使用--上篇</h1>
+
+        <blockquote>
+<p>工欲善其事，必先利其器</p>
+</blockquote>
+<p>本系列文章介绍我在运维系统开发过程中用到的那些顺手的前端插件，前边两篇分别介绍了<a href="https://blog.ops-coffee.cn/frontend/front-end-components-bootstrap-dual-listbox" target="_blank">Duallistbox插件</a>和<a href="https://blog.ops-coffee.cn/frontend/front-end-components-javascript-jquery-select2" target="_blank">Select2插件</a>的使用，这一篇开始Databases的征服之旅</p>
+<p>Databases是一款基于JQuery的表格插件，主要用来优化table，支持表格分页、搜索、排序、显示条数、异步加载等众多好用的功能</p>
+<p>项目地址：<a href="https://datatables.net/" target="_blank">https://datatables.net/</a></p>
+<h2 id="_1">基本使用</h2>
+<p>需要用到的JS和CSS文件位于项目代码下的media目录中，需要将这个目录中的对应文件放入你的项目里，这一步不赘述</p>
+<ol>
+<li>引入CSS/JS文件，由于Datatables是基于Jquery的，所以要先引入Jquery，这里我们都直接引入CDN的地址</li>
+</ol>
+<pre class="codehilite"><code>&lt;!-- 加载 Jquery --&gt;
+&lt;script src=&quot;https://code.jquery.com/jquery-3.2.1.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- 加载 Datatables --&gt;
+&lt;link href=&quot;https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css&quot; rel=&quot;stylesheet&quot; /&gt;
+&lt;script src=&quot;https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js&quot;&gt;&lt;/script&gt;</code></pre>
+
+
+<ol>
+<li>初始化Datatables</li>
+</ol>
+<pre class="codehilite"><code>&lt;table id=&quot;myTable&quot; class=&quot;display&quot; style=&quot;width:100%&quot;&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Name&lt;/th&gt;
+            &lt;th&gt;Position&lt;/th&gt;
+            &lt;th&gt;Office&lt;/th&gt;
+            &lt;th&gt;Age&lt;/th&gt;
+            &lt;th&gt;Start date&lt;/th&gt;
+            &lt;th&gt;Salary&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;Ops Coffee&lt;/td&gt;
+            &lt;td&gt;System Architect&lt;/td&gt;
+            &lt;td&gt;Edinburgh&lt;/td&gt;
+            &lt;td&gt;18&lt;/td&gt;
+            &lt;td&gt;2011/04/25&lt;/td&gt;
+            &lt;td&gt;$320,800&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;!-- 中间省略一些tr数据 --&gt;
+        &lt;tr&gt;
+            &lt;td&gt;Donna Snider&lt;/td&gt;
+            &lt;td&gt;Customer Support&lt;/td&gt;
+            &lt;td&gt;New York&lt;/td&gt;
+            &lt;td&gt;27&lt;/td&gt;
+            &lt;td&gt;2011/01/25&lt;/td&gt;
+            &lt;td&gt;$112,000&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+    &lt;tfoot&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Name&lt;/th&gt;
+            &lt;th&gt;Position&lt;/th&gt;
+            &lt;th&gt;Office&lt;/th&gt;
+            &lt;th&gt;Age&lt;/th&gt;
+            &lt;th&gt;Start date&lt;/th&gt;
+            &lt;th&gt;Salary&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/tfoot&gt;
+&lt;/table&gt;
+
+$(document).ready( function () {
+    $('#myTable').DataTable();
+});</code></pre>
+
+
+<ol>
+<li>完成以上两步可以看到页面效果如下</li>
+</ol>
+<p><img alt="" loading="lazy" src="/static/images/2019/0805.datatables01.png" /></p>
+<h2 id="_2">功能开启/关闭</h2>
+<p>默认界面下除了原始的table外，还为table额外增加了搜索、列排序、分页及信息显示这些内容，如果不需要其中一个或多个可以通过以下设置隐藏</p>
+<pre class="codehilite"><code>$('#myTable').DataTable({
+    &quot;paging&quot;: false,
+    &quot;ordering&quot;: false,
+    &quot;info&quot;: false,
+    &quot;searching&quot;: false,
+});</code></pre>
+
+
+<p><strong>paging：</strong> 控制分页是否开启，默认开启，开启后会显示表格左上角的每页行数选择和右下角的页码跳转</p>
+<p><strong>ordering：</strong> 控制是否进行排序，默认开启，且默认会对第一列数据进行排序</p>
+<p><strong>info：</strong> 控制是否显示表格左下角的信息，默认开启</p>
+<p><strong>searching：</strong> 控制是否显示表格右上角的搜索，默认开启</p>
+<h2 id="_3">排序配置</h2>
+<h4 id="_4">单列排序</h4>
+<p>可以通过<code>order</code>来设置初始排序的列以及排序方向</p>
+<pre class="codehilite"><code>&quot;order&quot;: [[ 3, &quot;desc&quot; ]],</code></pre>
+
+
+<p>列号默认<strong>从0开始</strong>算起，这里的3实际上对应的是第4列，这点要注意，以下所有用到列号的地方都是从0开始</p>
+<p>注意：开启<code>stateSave</code>之后会导致<code>columnDefs</code>失效，两个参数尽量不要同时设置</p>
+<h4 id="_5">多列排序</h4>
+<p>当然也可以在order里边配置同时按多列排序</p>
+<pre class="codehilite"><code>&quot;order&quot;: [[ 3, &quot;desc&quot; ], [ 0, &quot;desc&quot; ]],</code></pre>
+
+
+<p>如上配置的意思是先按照3列进行排序，如果3列相同，则再按照0列进行排序</p>
+<h2 id="_6">隐藏列</h2>
+<p>可以通过<code>columnDefs</code>来设置列属性</p>
+<pre class="codehilite"><code>&quot;columnDefs&quot;: [
+    {
+        &quot;targets&quot;: [ 2 ],
+        &quot;visible&quot;: false,
+        &quot;searchable&quot;: false
+    },
+    {
+        &quot;targets&quot;: [ 3 ],
+        &quot;visible&quot;: false,
+    }
+]</code></pre>
+
+
+<p><strong>targets：</strong> 指定列</p>
+<p><strong>visible：</strong> 是否可显示</p>
+<p><strong>searchable：</strong> 是否可搜索，当仅设置<code>visable</code>为<code>false</code>，但<code>searchable</code>不设置时这一列仍然可以被搜索</p>
+<p>注意：开启<code>stateSave</code>之后会导致<code>columnDefs</code>失效，两个参数尽量不要同时设置</p>
+<h2 id="_7">语言配置</h2>
+<p>默认提示语都是英文，可以通过<code>language</code>来设置为中文</p>
+<pre class="codehilite"><code>&quot;language&quot;: {
+    &quot;decimal&quot;: &quot;&quot;,
+    &quot;emptyTable&quot;: &quot;表中数据为空&quot;,
+    &quot;info&quot;: &quot;显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项&quot;,
+    &quot;infoEmpty&quot;: &quot;显示第 0 至 0 项结果，共 0 项&quot;,
+    &quot;infoFiltered&quot;: &quot;(由 _MAX_ 项结果过滤)&quot;,
+    &quot;InfoPostFix&quot;: &quot;&quot;,
+    &quot;thousands&quot;: &quot;,&quot;,
+    &quot;lengthMenu&quot;: &quot;显示 _MENU_ 项结果&quot;,
+    &quot;loadingRecords&quot;: &quot;载入中...&quot;,
+    &quot;processing&quot;: &quot;处理中...&quot;,
+    &quot;search&quot;: &quot;搜索:&quot;,
+    &quot;zeroRecords&quot;: &quot;没有匹配结果&quot;,
+    &quot;Paginate&quot;: {
+        &quot;sFirst&quot;: &quot;首页&quot;,
+        &quot;sPrevious&quot;: &quot;上一页&quot;,
+        &quot;sNext&quot;: &quot;下一页&quot;,
+        &quot;sLast&quot;: &quot;尾页&quot;
+    },
+    &quot;Aria&quot;: {
+        &quot;sSortAscending&quot;: &quot;: 以升序排列此列&quot;,
+        &quot;sSortDescending&quot;: &quot;: 以降序排列此列&quot;
+    }
+}</code></pre>
+
+
+<h2 id="_8">状态保持</h2>
+<p>可以通过<code>stateSave</code>来设置是否保持状态，<code>stateSave</code>会调用HTML5的<code>localStorage</code>和<code>sessionStorage</code>APIs将页面状态数据保存在浏览器本地，当你刷新页面时会自动加载这些状态信息，这些状态可以是你的排序信息、当前页码以及已输入的搜索数据等</p>
+<pre class="codehilite"><code>&quot;stateSave&quot;: true,</code></pre>
+
+
+<h2 id="_9">分页类型</h2>
+<p>可以通过<code>pagingType</code>来设置分页类型</p>
+<pre class="codehilite"><code>&quot;pagingType&quot;: &quot;simple_numbers&quot;,</code></pre>
+
+
+<p><strong>simple_numbers：</strong> 类型会显示上一页、下一页按钮和页码，这也是默认的分页类型</p>
+<p>其他几种分页类型如下：</p>
+<p><strong>numbers：</strong> 仅显示页码</p>
+<p><strong>simple：</strong> 仅显示上一页、下一页按钮</p>
+<p><strong>full：</strong> 仅显示首页、尾页、上一页和下一页按钮</p>
+<p><strong>full_numbers：</strong> 显示首页、尾页、上一页、下一页按钮和页码</p>
+<p><strong>first_last_numbers：</strong> 显示首页、尾页按钮和页码</p>
+<h2 id="_10">滚动配置</h2>
+<p>当table的宽、高超过页面设置大小时，可以通过以下配置来添加滚动条</p>
+<pre class="codehilite"><code>&quot;scrollX&quot;: &quot;true&quot;,
+&quot;scrollY&quot;: &quot;200px&quot;,
+&quot;scrollCollapse&quot;: true,</code></pre>
+
+
+<p><strong>scrollX：</strong> 允许水平滚动条</p>
+<p><strong>scrollY：</strong> 设置垂直body的高度，当超过这个这个高度时出现垂直滚动条</p>
+<p><strong>scrollCollapse：</strong> 设置当数据占用高度小于<code>scrollY</code>设置的高度时自动收缩body高度</p>
+<h2 id="demo">完整Demo</h2>
+<p>为了方便大家学习，我写了个完整的demo，你可以在线查看效果或下载代码应用到自己的项目中</p>
+<p>在线Demo地址：<a href="https://demo.ops-coffee.cn/datatables/" target="_blank">https://demo.ops-coffee.cn/datatables/</a></p>
+<p>Github源码地址：<a href="https://github.com/ops-coffee/demo/tree/master/datatables" target="_blank">https://github.com/ops-coffee/demo/tree/master/datatables</a></p>
+<h2 id="_11">其他说明</h2>
+<p>由于Datatables的内容较多，且使用广泛，更高级的用法会在下篇文章中说明，例如数据异步加载，添加编辑、删除按钮，调整页面功能显示等</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/frontend/front-end-components-jquery-datatables-1.html">📅 2019-08-05</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/前端插件/">🏷️ 前端插件</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

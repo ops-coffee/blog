@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="ELK,MySQL,SQL,MySQL,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="ELK构建MySQL慢日志收集平台详解" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>ELK构建MySQL慢日志收集平台详解</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="ELK构建MySQL慢日志收集平台详解" />
+  <meta property="og:description" content="ELK构建MySQL慢日志收集平台详解" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">ELK构建MySQL慢日志收集平台详解</h1>
+
+        <blockquote>
+<p>上篇文章<a href="/s/ZrrLUNRlAXVfVKvA1m0nsg">《中小团队快速构建SQL自动审核系统》</a>我们完成了SQL的自动审核与执行，不仅提高了效率还受到了同事的肯定，心里美滋滋。但关于慢查询的收集及处理也耗费了我们太多的时间和精力，如何在这一块也能提升效率呢？且看本文讲解如何利用ELK做慢日志收集</p>
+</blockquote>
+<h1 id="elk">ELK介绍</h1>
+<p>ELK最早是Elasticsearch（以下简称ES）、Logstash、Kibana三款开源软件的简称，三款软件后来被同一公司收购，并加入了Xpark、Beats等组件，改名为Elastic Stack，成为现在最流行的开源日志解决方案，虽然有了新名字但大家依然喜欢叫她ELK，现在所说的ELK就指的是基于这些开源软件构建的日志系统。</p>
+<p>我们收集mysql慢日志的方案如下：</p>
+<p><img alt="" loading="lazy" src="/static/images/20180810.elk.png" /></p>
+<ul>
+<li>mysql服务器安装Filebeat作为agent收集slowLog</li>
+<li>Filebeat读取mysql慢日志文件做简单过滤传给Kafka集群</li>
+<li>Logstash读取Kafka集群数据并按字段拆分后转成JSON格式存入ES集群</li>
+<li>Kibana读取ES集群数据展示到web页面上</li>
+</ul>
+<h1 id="_1">慢日志分类</h1>
+<p>目前主要使用的mysql版本有5.5、5.6和5.7，经过仔细对比发现每个版本的慢查询日志都稍有不同，如下：</p>
+<p>5.5版本慢查询日志</p>
+<pre class="codehilite"><code># Time: 180810  8:45:12
+# User@Host: select[select] @  [10.63.253.59]
+# Query_time: 1.064555  Lock_time: 0.000054 Rows_sent: 1  Rows_examined: 319707
+SET timestamp=1533861912;
+SELECT COUNT(*) FROM hs_forum_thread t  WHERE t.`fid`='50' AND t.`displayorder`&gt;='0';</code></pre>
+
+
+<p>5.6版本慢查询日志</p>
+<pre class="codehilite"><code># Time: 160928 18:36:08
+# User@Host: root[root] @ localhost []  Id:  4922
+# Query_time: 5.207662  Lock_time: 0.000085 Rows_sent: 1  Rows_examined: 526068
+use db_name;
+SET timestamp=1475058968;
+select count(*) from redeem_item_consume where id&lt;=526083;</code></pre>
+
+
+<p>5.7版本慢查询日志</p>
+<pre class="codehilite"><code># Time: 2018-07-09T10:04:14.666231Z
+# User@Host: bbs_code[bbs_code] @  [10.82.9.220]  Id: 9304381
+# Query_time: 5.274805  Lock_time: 0.000052 Rows_sent: 0  Rows_examined: 2
+SET timestamp=1531130654;
+SELECT * FROM pre_common_session WHERE  sid='Ba1cSC'  OR lastactivity&lt;1531129749;</code></pre>
+
+
+<p>慢查询日志异同点：</p>
+<ol>
+<li>每个版本的Time字段格式都不一样</li>
+<li>相较于5.6、5.7版本，5.5版本少了Id字段</li>
+<li><code>use db</code>语句不是每条慢日志都有的</li>
+<li>可能会出现像下边这样的情况，慢查询块<code># Time：</code>下可能跟了多个慢查询语句</li>
+</ol>
+<pre class="codehilite"><code># Time: 160918  2:00:03
+# User@Host: dba_monitor[dba_monitor] @  [10.63.144.82]  Id:   968
+# Query_time: 0.007479  Lock_time: 0.000181 Rows_sent: 172  Rows_examined: 344
+SET timestamp=1474135203;
+SELECT table_schema as 'DB',table_name as 'TABLE',CONCAT(ROUND(( data_length + index_length ) / ( 1024 * 1024 *1024 ), 2), '') as 'TOTAL',TABLE_COMMENT  FROM information_schema.TABLES ORDER BY data_length + index_length DESC;
+# User@Host: dba_monitor[dba_monitor] @  [10.63.144.82]  Id:   969
+# Query_time: 0.003303  Lock_time: 0.000395 Rows_sent: 233  Rows_examined: 233
+SET timestamp=1474135203;
+select TABLE_SCHEMA,TABLE_NAME,COLUMN_NAME,ORDINAL_POSITION,COLUMN_TYPE,ifnull(COLUMN_COMMENT,0) from COLUMNS where table_schema not in ('mysql','information_schema','performance_schema','test');</code></pre>
+
+
+<h1 id="_2">处理思路</h1>
+<p>上边我们已经分析了各个版本慢查询语句的构成，接下来我们就要开始收集这些数据了，究竟应该怎么收集呢？</p>
+<ol>
+<li>拼装日志行：mysql的慢查询日志<strong>多行</strong>构成了一条完整的日志，日志收集时要把这些行拼装成一条日志传输与存储。</li>
+<li>Time行处理：<code># Time:</code>开头的行可能不存在，且我们可以通过<code>SET timestamp</code>这个值来确定SQL执行时间，所以选择过滤丢弃Time行</li>
+<li>一条完整的日志：最终将以<code># User@Host:</code>开始的行，和以SQL语句结尾的行合并为一条完整的慢日志语句</li>
+<li>确定SQL对应的DB：<code>use db</code>这一行不是所有慢日志SQL都存在的，所以不能通过这个来确定SQL对应的DB，慢日志中也没有字段记录DB，所以这里建议<strong>为DB创建账号时添加db name标识</strong>，例如我们的账号命名方式为：<code>projectName_dbName</code>，这样看到账号名就知道是哪个DB了</li>
+<li>确定SQL对应的主机：我想通过日志知道这条SQL对应的是哪台数据库服务器怎么办？慢日志中同样没有字段记录主机，可以通过filebeat注入字段来解决，例如我们给filebeat的name字段设置为服务器IP，这样最终通过<code>beat.name</code>这个字段就可以确定SQL对应的主机了</li>
+</ol>
+<h1 id="filebeat">Filebeat配置</h1>
+<p>filebeat完整的配置文件如下：</p>
+<pre class="codehilite"><code>filebeat.prospectors:
+
+- input_type: log
+  paths:
+    - /home/opt/data/slow/mysql_slow.log
+
+  exclude_lines: ['^\# Time']
+
+  multiline.pattern: '^\# Time|^\# User'
+  multiline.negate: true
+  multiline.match: after
+
+  tail_files: true
+
+name: 10.82.9.89
+
+output.kafka:
+  hosts: [&quot;10.82.9.202:9092&quot;,&quot;10.82.9.203:9092&quot;,&quot;10.82.9.204:9092&quot;]
+  topic: mysql_slowlog_v2</code></pre>
+
+
+<h3 id="_3">重要参数解释：</h3>
+<ul>
+<li><strong>input_type</strong>：指定输入的类型是log或者是stdin</li>
+<li><strong>paths</strong>：慢日志路径，支持正则比如/data/*.log</li>
+<li><strong>exclude_lines</strong>：过滤掉<code># Time</code>开头的行</li>
+<li><strong>multiline.pattern</strong>：匹配多行时指定正则表达式，这里匹配以<code># Time</code>或者<code># User</code>开头的行，Time行要先匹配再过滤</li>
+<li><strong>multiline.negate</strong>：定义上边pattern匹配到的行是否用于多行合并，也就是定义是不是作为日志的一部分</li>
+<li><strong>multiline.match</strong>：定义如何将皮排行组合成时间，在之前或者之后</li>
+<li><strong>tail_files</strong>：定义是从文件开头读取日志还是结尾，这里定义为true，从现在开始收集，之前已存在的不管</li>
+<li><strong>name</strong>：设置filebeat的名字，如果为空则为服务器的主机名，这里我们定义为服务器IP</li>
+<li><strong>output.kafka</strong>：配置要接收日志的kafka集群地址可topic名称</li>
+</ul>
+<h3 id="kafka">Kafka接收到的日志格式：</h3>
+<pre class="codehilite"><code>{&quot;@timestamp&quot;:&quot;2018-08-07T09:36:00.140Z&quot;,&quot;beat&quot;:{&quot;hostname&quot;:&quot;db-7eb166d3&quot;,&quot;name&quot;:&quot;10.63.144.71&quot;,&quot;version&quot;:&quot;5.4.0&quot;},&quot;input_type&quot;:&quot;log&quot;,&quot;message&quot;:&quot;# User@Host: select[select] @  [10.63.144.16]  Id: 23460596\n# Query_time: 0.155956  Lock_time: 0.000079 Rows_sent: 112  Rows_examined: 366458\nSET timestamp=1533634557;\nSELECT DISTINCT(uid) FROM common_member WHERE hideforum=-1 AND uid != 0;&quot;,&quot;offset&quot;:1753219021,&quot;source&quot;:&quot;/data/slow/mysql_slow.log&quot;,&quot;type&quot;:&quot;log&quot;}</code></pre>
+
+
+<h1 id="logstash">Logstash配置</h1>
+<p>logstash完整的配置文件如下：</p>
+<pre class="codehilite"><code>input {
+    kafka {
+        bootstrap_servers =&gt; &quot;10.82.9.202:9092,10.82.9.203:9092,10.82.9.204:9092&quot;
+        topics =&gt; [&quot;mysql_slowlog_v2&quot;]
+    }
+}
+
+filter {
+    json {
+        source =&gt; &quot;message&quot;
+    }
+
+    grok {
+        # 有ID有use
+        match =&gt; [ &quot;message&quot;, &quot;(?m)^# User@Host: %{USER:user}\[[^\]]+\] @ (?:(?&lt;clienthost&gt;\S*) )?\[(?:%{IP:clientip})?\]\s+Id:\s%{NUMBER:id:int}\n# Query_time: %{NUMBER:query_time:float}\s+Lock_time: %{NUMBER:lock_time:float}\s+Rows_sent: %{NUMBER:rows_sent:int}\s+Rows_examined: %{NUMBER:rows_examined:int}\nuse\s(?&lt;dbname&gt;\w+);\nSET\s+timestamp=%{NUMBER:timestamp_mysql:int};\n(?&lt;query&gt;.*)&quot; ]
+
+        # 有ID无use
+        match =&gt; [ &quot;message&quot;, &quot;(?m)^# User@Host: %{USER:user}\[[^\]]+\] @ (?:(?&lt;clienthost&gt;\S*) )?\[(?:%{IP:clientip})?\]\s+Id:\s%{NUMBER:id:int}\n# Query_time: %{NUMBER:query_time:float}\s+Lock_time: %{NUMBER:lock_time:float}\s+Rows_sent: %{NUMBER:rows_sent:int}\s+Rows_examined: %{NUMBER:rows_examined:int}\nSET\s+timestamp=%{NUMBER:timestamp_mysql:int};\n(?&lt;query&gt;.*)&quot; ]
+
+        # 无ID有use
+        match =&gt; [ &quot;message&quot;, &quot;(?m)^# User@Host: %{USER:user}\[[^\]]+\] @ (?:(?&lt;clienthost&gt;\S*) )?\[(?:%{IP:clientip})?\]\n# Query_time: %{NUMBER:query_time:float}\s+Lock_time: %{NUMBER:lock_time:float}\s+Rows_sent: %{NUMBER:rows_sent:int}\s+Rows_examined: %{NUMBER:rows_examined:int}\nuse\s(?&lt;dbname&gt;\w+);\nSET\s+timestamp=%{NUMBER:timestamp_mysql:int};\n(?&lt;query&gt;.*)&quot; ]
+
+        # 无ID无use
+        match =&gt; [ &quot;message&quot;, &quot;(?m)^# User@Host: %{USER:user}\[[^\]]+\] @ (?:(?&lt;clienthost&gt;\S*) )?\[(?:%{IP:clientip})?\]\n# Query_time: %{NUMBER:query_time:float}\s+Lock_time: %{NUMBER:lock_time:float}\s+Rows_sent: %{NUMBER:rows_sent:int}\s+Rows_examined: %{NUMBER:rows_examined:int}\nSET\s+timestamp=%{NUMBER:timestamp_mysql:int};\n(?&lt;query&gt;.*)&quot; ]
+    }
+
+    date {
+        match =&gt; [&quot;timestamp_mysql&quot;,&quot;UNIX&quot;]
+        target =&gt; &quot;@timestamp&quot;
+    }
+
+}
+
+output {
+    elasticsearch {
+        hosts =&gt; [&quot;10.82.9.208:9200&quot;,&quot;10.82.9.217:9200&quot;]
+        index =&gt; &quot;mysql-slowlog-%{+YYYY.MM.dd}&quot;
+    }
+}</code></pre>
+
+
+<h3 id="_4">重要参数解释：</h3>
+<ul>
+<li><strong>input</strong>：配置kafka的集群地址和topic名字</li>
+<li><strong>filter</strong>：过滤日志文件，主要是对message信息（看前文kafka接收到的日志格式）进行拆分，拆分成一个一个易读的字段，例如<code>User</code>、<code>Host</code>、<code>Query_time</code>、<code>Lock_time</code>、<code>timestamp</code>等。grok段根据我们前文对mysql慢日志的分类分别写不通的正则表达式去匹配，当有多条正则表达式存在时，logstash会从上到下依次匹配，匹配到一条后边的则不再匹配。date字段定义了让SQL中的timestamp_mysql字段作为这条日志的时间字段，kibana上看到的实践排序的数据依赖的就是这个时间</li>
+<li><strong>output</strong>：配置ES服务器集群的地址和index，index自动按天分割</li>
+</ul>
+<h1 id="kibana">kibana查询展示</h1>
+<ul>
+<li>打开Kibana添加<code>mysql-slowlog-*</code>的Index，并选择timestamp，创建Index Pattern</li>
+</ul>
+<p><img alt="" loading="lazy" src="/static/images/20180810.00.png" /></p>
+<ul>
+<li>进入Discover页面，可以很直观的看到各个时间点慢日志的数量变化，可以根据左侧Field实现简单过滤，搜索框也方便搜索慢日志，例如我要找查询时间大于2s的慢日志，直接在搜索框输入<code>query_time: &gt; 2</code>回车即可</li>
+</ul>
+<p><img alt="" loading="lazy" src="/static/images/20180810.01.png" /></p>
+<ul>
+<li>点击每一条日志起边的很色箭头能查看具体某一条日志的详情</li>
+</ul>
+<p><img alt="" loading="lazy" src="/static/images/20180810.02.png" /></p>
+<ul>
+<li>如果你想做个大盘统计慢日志的整体情况，例如top 10 SQL等，也可以很方便的通过web界面配置</li>
+</ul>
+<p><img alt="" loading="lazy" src="/static/images/20180810.03.png" /></p>
+<h1 id="_5">总结</h1>
+<ol>
+<li>不要望而却步，当你开始去做已经成功一半了</li>
+<li>本篇文章详细介绍了关于mysql慢日志的收集，收集之后的处理呢？我们目前是DBA每天花时间去Kibana上查看分析，有优化的空间就跟开发一起沟通优化，后边达成默契之后考虑做成自动报警或处理</li>
+<li>关于报警ELK生态的xpark已经提供，且最新版本也开源了，感兴趣的可以先研究起来，欢迎一起交流</li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/elk/ELK-elasticsearch-logstash-mysql-slowlog.html">📅 2018-08-16</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Elk/">🏷️ Elk</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

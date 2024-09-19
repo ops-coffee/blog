@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Jenkins,任务系统,关于技术,Devops,API" />
+  <meta name="description" content="任务系统集成Jenkins究竟有多爽，Jenkins API的实战使用" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>任务系统之Jenkins子任务</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="任务系统之Jenkins子任务" />
+  <meta property="og:description" content="任务系统集成Jenkins究竟有多爽，Jenkins API的实战使用" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">任务系统之Jenkins子任务</h1>
+
+        <p>今天下班即开启五一假期，早上临时定了行程去山东日照，原本计划下班就出发，但下班看了看导航，这一路红得发黑，于是决定还是晚点再走，现在有时间了，写篇简单的技术文章来提升下Blog逐渐降低的技术内容含量吧</p>
+<p>之前有<a href="/task" target="_blank">一系列的文章</a>来介绍我们的任务系统，随着任务系统在项目间的推广，以及项目使用的深入，任务系统又增加了非常多实用又好用的功能，今天这篇文章就来介绍其中的一个：Jenkins子任务</p>
+<p>任务系统通过组合各种不同类型的子任务来完成复杂的任务流程，之前的子任务支持命令和脚本，支持审批和通知，能覆盖绝大部分的发布部署场景，但仍然有一部分项目因为各种各样的原因依然使用了Jenkins来发布部署，想让项目owner抛弃Jenkins而迁移到任务系统动力不足困难不小，于是我将Jenkins作为一个子任务类型给集成进了任务系统，原本Jenkins里的Job完全不用动就可以简单的集成进任务系统</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0428.01.png" /></p>
+<p>Jenkins集成进任务系统，不仅仅是可以通过任务系统来执行Job而达到项目管理的统一，更重要的是可以借助于任务系统的审批/通知/并行/告警/定时/周期等等强大的功能来实现完整的发布部署任务流，同时由于我们任务系统完全兼容手机端，那对于发布部署任务将可以随时随地掏出手机来执行，运维的假期再也不用到哪都背着电脑了，多了一份逍遥与自在</p>
+<p>以一个模拟的Coffee项目更新流程为例，执行Jenkins的Job只是整个完整发布流程中的一步而已，通过任务系统可以将整个发布流程完美闭环，省去了很多沟通和认为操作过程</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0428.02.png" /></p>
+<p>以上介绍了我们为什么需要将Jenkins集成进任务系统，同时也简单说明了将Jenkins的Job集成进任务系统通过任务系统执行的优势，那么接下来讲讲我们是如何将Jenkins集成进任务系统的，其实也很简单，借助于Jenkins完善的API</p>
+<p>Jenkins没有统一的API入口，而是采用了<code>{url}/api</code>的API样式，其中<code>{url}</code>代表Jenkins资源的URL，常见的Jenkins资源包括：站点、Job和Build，可以通过不同级别的URL地址查看到当前级别的API信息，例如：</p>
+<ul>
+<li>节点管理: https://jenkins.ops-coffee.cn/computer/api/</li>
+<li>认证管理: https://jenkins.ops-coffee.cn/credentials/api/</li>
+<li>插件管理: https://jenkins.ops-coffee.cn/pluginManager/api/</li>
+</ul>
+<p>结果支持两种返回格式，分别是JSON和XML，通过加不同的URL后缀来实现，例如：<code>https://jenkins.ops-coffee.cn/computer/api/json</code>返回json格式的数据，<code>https://jenkins.ops-coffee.cn/computer/api/xml</code>则返回xml格式的数据</p>
+<p>接入Jenkins子任务需要用到如下几个API：</p>
+<ol>
+<li>获取Job列表</li>
+</ol>
+<p>获取Job列表使用GET方法</p>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/api/json</code></pre>
+
+
+<ol>
+<li>获取Job详情</li>
+</ol>
+<p>获取Job详情使用Get方法</p>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/api/json</code></pre>
+
+
+<p>同时Job详情页面同时也能获取到Job所需要的参数</p>
+<ol>
+<li>执行Job</li>
+</ol>
+<p>执行Job通过POST方法，分为带参数和不带参数两个API，其中不带参数使用</p>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/build</code></pre>
+
+
+<p>带参数使用</p>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/buildWithParameters?namespace=dev&amp;branch=master</code></pre>
+
+
+<p>执行完Job后，需要获取到Job的BuildID，<strong>BuildID可以通过从返回结果header</strong>的<code>Location</code>里获取</p>
+<ol>
+<li>获取Build输出</li>
+</ol>
+<p>获取Build的Console输出使用GET方法，通过Build的Console输出我们可以实时获取Job的执行情况</p>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/{build-id}/logText/progressiveText</code></pre>
+
+
+<ol>
+<li>获取Build详情</li>
+</ol>
+<p>获取Build的详情使用GET方法，通过Build详情里的<code>result</code>能知道Job的执行状态及结果</p>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/{build-id}/api/json</code></pre>
+
+
+<ol>
+<li>停止Job执行</li>
+</ol>
+<p>停止Job执行使用POST方法，当Job执行的过程中不及我们预期需要紧急停止Job执行时需要借助此API来完成</p>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/{build-id}/stop</code></pre>
+
+
+<p>整个Jenkins子任务的集成我们主要用到了这几个API，关于Jenkins的API认证用到了最基本的AuthBase方式，一个完整的获取JobList的例子如下</p>
+<pre class="codehilite"><code>class JenkinsAPI:
+    def __init__(self, domain, username, password, verify=True):
+        self.domain = domain
+
+        self.session = requests.Session()
+        self.session.auth = (username, password)
+        self.session.verify = verify
+
+    def job_list(self):
+        try:
+            r = self.session.get(self.domain + '/api/json')
+
+            return True, r.status_code, r.json()
+        except Exception as e:
+            return False, 500, '获取Job List失败：' + str(e)</code></pre>
+
+
+<p>有了这些API我们就能轻松的将Jenkins集成进任务系统了，在任务系统中执行Jenkins的Job也是非常的简单和方便，实时日志输出，以及随时可以终止执行，体验与Jenkins无异了</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0428.03.png" /></p>
+<p>好了，文章就写到这里，看了下导航，拥堵稍稍缓解，但依然严重，洗个澡睡个觉，凌晨起床出发</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/devops-task-subtask-jenkins.html">📅 2023-04-28</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/任务系统/">🏷️ 任务系统</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

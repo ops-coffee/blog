@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="SVN,Jenkins,关于技术,LDAP,Git,OpenLDAP" />
+  <meta name="description" content="SVN、Git已经顺利接入了LDAP，今天我们再下一城接入Jenkins" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>LDAP落地实战（四）：Jenkins集成OpenLDAP认证</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="LDAP落地实战（四）：Jenkins集成OpenLDAP认证" />
+  <meta property="og:description" content="SVN、Git已经顺利接入了LDAP，今天我们再下一城接入Jenkins" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">LDAP落地实战（四）：Jenkins集成OpenLDAP认证</h1>
+
+        <blockquote>
+<p>前几篇分文章分别介绍了OpenLDAP的部署管理和维护以及SVN、Git的接入，今天我们再下一城接入Jenkins。</p>
+</blockquote>
+<h1 id="ldap">安装LDAP插件</h1>
+<p>使用LDAP认证需要安装LDAP插件，安装插件有两种方法：</p>
+<h3 id="_1">方法一：后台插件管理里直接安装</h3>
+<ul>
+<li>优点：简单方便，不需要考虑插件依赖问题</li>
+<li>缺点：因为网络等各种问题安装不成功</li>
+</ul>
+<p>安装方法：登录Jenkins --&gt; 系统管理 --&gt; 插件管理 --&gt; 可选插件 --&gt; 搜索LDAP --&gt; 选中 --&gt; 直接安装 --&gt; 安装完成重启</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0806.06.png" /></p>
+<p>因我们已经安装过了LDAP插件，所有这里搜索不到LDAP插件，只有LDAP Email插件</p>
+<p>如果安装失败，网上也有说在插件管理 --&gt; 高级 --&gt; 升级站点里替换URL为<code>https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json</code>的，但是我替换了之后依然没有成功，最后还是使用方法二安装成功的</p>
+<h3 id="_2">方法二：官网下载安装文件后台上传</h3>
+<ul>
+<li>优点：一定可以安装成功的</li>
+<li>缺点：麻烦，要去官网找插件并解决依赖</li>
+</ul>
+<p>插件下载地址：<a href="https://updates.jenkins-ci.org/download/plugins/" target="_blank">https://updates.jenkins-ci.org/download/plugins/</a></p>
+<p>安装方法：官网下载插件 --&gt; 登录Jenkins --&gt; 系统管理 --&gt; 插件管理 --&gt; 高级 --&gt; 上传插件 --&gt; 选择文件 --&gt; 上传 --&gt; 安装完成后重启</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0806.07.png" /></p>
+<p>上传插件安装可能会失败，大部分都是提示你当前插件依赖某些插件，只需要下载全部依赖插件，按照顺序上传安装即可，LDAP插件安装完成后，所有依赖的插件如下：</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0806.08.png" /></p>
+<h1 id="ldap_1">配置LDAP认证</h1>
+<p>登录Jenkins --&gt; 系统管理 --&gt; 全局安全配置</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0806.01.png" /></p>
+<p>访问控制选择“LDAP”，Server输入LDAP服务器地址，有其他配置可以点击“Advanced Server Configuration...”</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0806.02.png" /></p>
+<ul>
+<li><strong>Server</strong>：服务器地址，可以直接填写LDAP服务器的主机名或IP，例如<code>ldap.domain.com</code>（默认端口389），或者<code>ldap.domain.com:1389</code>，如果用了SSL，可以填写<code>ldaps://ldap.domain.com</code>（默认端口636），或者<code>ldaps://ldap.domain.com:1636</code></li>
+</ul>
+<p><img alt="" loading="lazy" src="/static/images/2018/0806.03.png" /></p>
+<ul>
+<li><strong>root DN</strong>：这里的root DN只是指搜索的根，并非LDAP服务器的root dn。由于LDAP数据库的数据组织结构类似一颗大树，而搜索是递归执行的，理论上，我们如果从子节点（而不是根节点）开始搜索，因为缩小了搜索范围那么就可以获得更高的性能。这里的root DN指的就是这个子节点的DN，当然也可以不填，表示从LDAP的根节点开始搜索</li>
+<li><strong>User search base</strong>：这个配置也是为了缩小LDAP搜索的范围，例如Jenkins系统只允许ou为Admin下的用户才能登陆，那么你这里可以填写<code>ou=Admin</code>，这是一个相对的值，相对于上边的root DN，例如你上边的root DN填写的是<code>dc=domain,dc=com</code>，那么user search base这里填写了<code>ou=Admin</code>，那么登陆用户去LDAP搜索时就只会搜索<code>ou=Admin,dc=domain,dc=com</code>下的用户了</li>
+<li><strong>User search filter</strong>：这个配置定义登陆的“用户名”对应LDAP中的哪个字段，如果你想用LDAP中的uid作为用户名来登录，那么这里可以配置为<code>uid={0}</code>（{0}会自动的替换为用户提交的用户名），如果你想用LDAP中的mail作为用户名来登录，那么这里就需要改为<code>mail={0}</code>。在测试的时候如果提示你<code>user xxx does not exist</code>，而你确定密码输入正确时，就要考虑下输入的用户名是不是这里定义的这个值了</li>
+<li><strong>Group search base</strong>：参考上边<code>User search base</code>解释</li>
+<li><strong>Group search filter</strong>：这个配置允许你将过滤器限制为所需的objectClass来提高搜索性能，也就是说可以只搜索用户属性中包含某个objectClass的用户，这就要求你对你的LDAP足够了解，一般我们也不配置</li>
+<li><strong>Group membership</strong>：没配置，没有详细研究</li>
+<li><strong>Manager DN</strong>：这个配置在你的LDAP服务器不允许匿名访问的情况下用来做认证（详细的认证过程参考文章<a href="https://www.cnblogs.com/37Y37/p/9321458.html" target="_blank">LDAP落地实战（二）：SVN集成OpenLDAP认证</a>中关于LDAP服务器认证过程的讲解），通常DN为<code>cn=admin,dc=domain,dc=com</code>这样</li>
+<li><strong>Manager Password</strong>：上边配置dn的密码</li>
+<li><strong>Display Name LDAP attribute</strong>：配置用户的显示名称，一般为显示名称就配置为uid，如果你想显示其他字段属性也可以这里配置，例如mail</li>
+<li><strong>Email Address LDAP attribute</strong>：配置用户Email对应的字段属性，一般没有修改过的话都是mail，除非你用其他的字段属性来标识用户邮箱，这里可以配置</li>
+</ul>
+<p>下边还有一些配置如：环境变量Environment Properties、servlet容器代理等，很少用就不多解释了。有一个配置<code>Enable cache</code>可能会用得到，当你的LDAP数据量很大或者LDAP服务器性能较差时，可以开启缓存，配置缓存条数和过期时间，那么在过期时间内新请求优先查找本地缓存认证，认证通过则不会去LDAP服务器请求，以减轻LDAP服务器的压力</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0806.04.png" /></p>
+<ul>
+<li>配置完成后可以点击下方的“Test LDAP sttings”来测试配置的准确性</li>
+</ul>
+<p><img alt="" loading="lazy" src="/static/images/2018/0806.05.png" /></p>
+<ul>
+<li>这里输入的用户名就是你上边配置的<code>User search filter</code>里定义的LDAP中的属性，密码就是LDAP的密码</li>
+</ul>
+<h1 id="_3">登录</h1>
+<p>配置完成并测试通过后就可以用LDAP直接登录了，注意：启用了LDAP登录后将无法再用之前的登录方式（例如本地认证）登录</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0806.09.png" /></p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/ldap/openldap-sso-auth-jenkins-plugins-devops.html">📅 2018-08-10</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/OpenLDAP/">🏷️ OpenLDAP</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

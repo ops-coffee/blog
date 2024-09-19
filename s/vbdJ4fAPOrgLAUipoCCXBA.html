@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="关于技术,系统运维" />
+  <meta name="description" content="知其然，知其所以然，彻底搞懂编码，搞定乱码" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>关于编码你必须知道的知识和技巧</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="关于编码你必须知道的知识和技巧" />
+  <meta property="og:description" content="知其然，知其所以然，彻底搞懂编码，搞定乱码" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">关于编码你必须知道的知识和技巧</h1>
+
+        <blockquote>
+<p>知其然，知其所以然，彻底搞懂编码，搞定乱码</p>
+</blockquote>
+<p>乱码问题是所有运维职业生涯中都会遇到的问题，本篇文章带你探究背后的原理以及解决的技巧</p>
+<h2 id="_1">字符编码</h2>
+<p>我们知道计算机只认识二进制数据，其他格式的数据都需要转换成二进制才能被计算机处理，也就是说我们在计算机上看到的文本、视频、可执行程序等格式的文件，最终都会转换成二进制数据交给计算机处理</p>
+<p>计算机中最小的数据单位是bit，也叫二进制位，每一个bit都有0和1两种状态，最早的计算机在设计时采用了8个bit作为一个字节byte，所以一个字节能表示的最大整数就是二进制的<code>11111111</code>，等于十进制的<code>255</code>，想要表示更大的整数就必须要用多个字节，例如两个字节可以表示最大的整数就是二进制的<code>1111111111111111</code>，等于十进制的<code>65535</code></p>
+<p>由于计算机是由美国人发明的，在1967年美国人制订了一套字符编码规范，规定了包含大小写字母、数字和一些符号共计128个字符与二进制数字的对应关系，例如回车Enter是二进制是<code>00001101</code>，等于十进制的13，大写字母A是二进制<code>01000001</code>，等于十进制的65，这一套字符编码被称为<strong>ASCII</strong>码，一直沿用至今</p>
+<p>英文比较简单，用128个符号编码就够了，但是用来表示中文就不够了，单单汉字就有超过8万个，所以就有了针对中文的编码标准出现，例如我们经常见到的<code>GB2312</code>，使用两个字节表示一个汉字，理论上最多可以表示65535个</p>
+<p>世界上有上百种语言，每种语言都有自己的编码标准，例如韩文编码<code>EUC_KR</code>，日文编码<code>Shift_JIS</code>，俄文编码<code>KOI8-R</code>，为了促进互联网的发展，<strong>Unicode</strong>编码应运而生，Unicode编码又称万国码、国际码，它对世界上大部分的文字系统进行了整理，使每一个文字符号都有独一无二的编码表示，当前Unicode最新的版本为2019年5月公布的<code>12.1.0</code>，已经收录超过13万个字符，很明显2个字节已经无法保证所有字符都独一无二了，实际上最新的Unicode规定可以占用4字节来表示一个字符，理论上最多能表示2的31次方共计2147483648个字符</p>
+<p>Unicode虽然能够解决不同编码出现的问题，使得电脑可以用更为简单的方式来呈现和处理文字，但同时存在着浪费存储和带宽的问题，例如大写字母A，用ASCII码表示是<code>01000001</code>，只需要占一个字节，如果转换成2个字节的Unicode编码就变成了<code>0000000001000001</code>，这就极大的浪费了存储空间，同时对于网络传输消耗也相应增大</p>
+<p>为了解决Unicode的问题，<strong>UTF-8</strong>编码方式出现了，UTF-8是一种可变长的编码方式，它通过前缀码的方式使Unicode编码变成了可变长度，关于UTF-8的具体前缀规则简单总结为2点如下：</p>
+<ol>
+<li>单字节的字符，字节的第一位设为0，后边7位为Unicode码。对于英语字母，UTF-8编码和ASCII码完全相同</li>
+<li>n个字节的字符(n&gt;1)，第一个字节的前n位设为1，第n+1位设为0，后面字节的前两位都设为10，这n个字节的其余空位填充该字符unicode码，不足用0补足</li>
+</ol>
+<p>那就形成了如下的UTF-8编码规则，其中的<code>x</code>表示的就是要用Unicode填充可用的编码位</p>
+<table>
+<thead>
+<tr>
+<th>Unicode符号范围（16进制）</th>
+<th>UTF-8编码方式（2进制）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0000 0000 - 0000 007F</td>
+<td>0xxxxxxx</td>
+</tr>
+<tr>
+<td>0000 0080 - 0000 07FF</td>
+<td>110xxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>0000 0800 - 0000 FFFF</td>
+<td>1110xxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>0001 0000 - 0010 FFFF</td>
+<td>11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+</tbody>
+</table>
+<p>对于运维咖啡吧的<code>咖</code>字，其Unicode编码为<code>U+5496</code>，<code>5496</code>在上边的第三行<code>0000 0800 - 0000 FFFF</code>的范围内，因此带入公式计算如下</p>
+<pre class="codehilite"><code>    0101   010010   010110 (最前边的0便是unicode不足，用0代替)
+1110xxxx 10xxxxxx 10xxxxxx (模板，由于3字节，所以是上边第三行)
+------------------------------------------------------------------
+11100101 10010010 10010110 (结果，UTF-8的二进制值)</code></pre>
+
+
+<p>根据上边的计算结果得出运维咖啡吧的<code>咖</code>字UTF-8编码是<code>111001011001001010010110</code>，转换为16进制为<code>E59296</code></p>
+<p>这便是Unicode与UTF-8的区别，UTF-8可变长就是这么可变长的，对于英文字母来说UTF-8只占一个字节，而对于汉字来说他可能就占了3个字节</p>
+<h2 id="_2">终端乱码</h2>
+<p>从上边的编码介绍中我们已经知道了不同编码的存在，那么想要查看一个文件，就必须知道他的编码方式，用错误的编码方式打开文件就会出现乱码。</p>
+<p>linux下可以通过<code>file</code>命令查看文件的编码方式</p>
+<pre class="codehilite"><code># file ops-coffee.cn 
+ops-coffee.cn: UTF-8 Unicode text</code></pre>
+
+
+<p>工作中我们在XSHELL之类的终端中查看文件时出现的乱码就是系统或文件保存的中文编码与终端设置的编码不一致，从而导致解码错误。这里涉及到三方编码：</p>
+<ol>
+<li>文件内容或文件名</li>
+<li>SHELL环境的语言编码</li>
+<li>XSHELL之类的终端编码</li>
+</ol>
+<p>需要保持三方编码统一，才不会有乱码的出现，其中SHELL环境的语言编码指的是登陆服务器的SHELL环境时指定的语言编码，例如<code>LANG</code>、<code>LC_*</code>这些变量设置的编码，XSHELL之类终端编码就是这类终端软件设置的编码</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/0304.01.png" /></p>
+<p>所有遇到的乱码问题都仔细检查以上<strong>三方编码</strong>是否一致，就可以顺利解决了，同时也建议在工作中制定相应的规范，减少乱码的发生</p>
+<h2 id="_3">处理技巧</h2>
+<p>1.临时切换命令输出语言</p>
+<p>正常情况下命令的输出结果都遵循系统设置的语言编码，例如</p>
+<pre class="codehilite"><code>root@ops-coffee:~# echo $LANG
+zh_CN.UTF-8
+root@ops-coffee:~# date
+2020年 03月 04日 星期三 19:00:55 HKT
+root@ops-coffee:~# 
+root@ops-coffee:~# 
+root@ops-coffee:~# export LANG=en_US.UTF-8
+root@ops-coffee:~# echo $LANG
+en_US.UTF-8
+root@ops-coffee:~# date
+Wed Mar  4 19:01:21 HKT 2020</code></pre>
+
+
+<p>运维脚本中，我们希望所有系统执行相同命令的时候输出的结果一致，不要因为字符集不同而产生不同的结果，那么如可处理呢？在命令前添加<code>LC_ALL=C</code></p>
+<pre class="codehilite"><code>root@ops-coffee:~# date
+2020年 03月 04日 星期三 19:05:58 HKT
+root@ops-coffee:~# 
+root@ops-coffee:~# LC_ALL=C date
+Wed Mar  4 19:06:05 HKT 2020</code></pre>
+
+
+<p>这里之所以用<code>LC_ALL</code>是因为在LOCALE标准中，<code>LC_ALL</code>优先级最高：<code>LC_ALL&gt;LC_*&gt;LANG</code></p>
+<p>2.批量转换文件名编码</p>
+<p>有时候我们会遇到文件名或者目录名乱码的问题，尤其是在不同类型系统之间传输时，可以借助<code>rsync</code>实现批量转换文件名或目录名的编码</p>
+<pre class="codehilite"><code>rsync -av --iconv=GBK,UTF8 /www/ /nav/</code></pre>
+
+
+<p>iconv模块在rsync的3.0以后版本中才支持，用法为<code>--iconv=&lt;LOCAL&gt;,&lt;REMOTE&gt;</code>，需要注意的是，本地两个目录之间同步时LOCAL表示的是源目录的文件名编码，通过网络同步时LOCAL表示本地编码</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/vbdJ4fAPOrgLAUipoCCXBA.html">📅 2020-03-04</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/系统运维/">🏷️ 系统运维</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

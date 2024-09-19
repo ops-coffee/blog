@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Devops,关于技术" />
+  <meta name="description" content="多云资源管理系统的核心是多云资源元数据和资源之间的关联关系管理，探讨一下有哪些关系能覆盖所有需求" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>多云系统之关系管理</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="多云系统之关系管理" />
+  <meta property="og:description" content="多云资源管理系统的核心是多云资源元数据和资源之间的关联关系管理，探讨一下有哪些关系能覆盖所有需求" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">多云系统之关系管理</h1>
+
+        <p>继<a href="/s/YjfTypcHD03fTGLV_JsqWw" target="_blank">任务系统落地</a>之后，接着又开始了多云系统的设计与开发，目前初期版本已完成，这篇文章来聊下关于多云系统的关系管理设计</p>
+<p>首先说说多云管理，什么是多云管理？随着云技术的发展，现在绝大多数的主机/数据库等基础资源已经全都跑在了云上，无论是阿里云、腾讯云之类的公有云，还是基于openstack、Kubernetes等构建的私有云，抑或是多个不同云环境融合下的混合云，对于云本身及云上资源的管理统称为多云管理，这里的多云指的是多云环境多云厂商多云账号多云区域多云资源</p>
+<p>多云系统的主要工作就是统一多云资源实现集中管理，同时基于关联关系来构建清晰的资源拓扑，为上层业务提供准确的基础数据。这里的核心功能主要有三个，分别是多云配置、资源管理和关系管理，其他两个功能后续再聊这里先聊下至关重要的关系管理</p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0521.01.png" /></p>
+<p>资源本身是独立的，但我们在使用的过程中通常会附加各种关系处理，例如一个常见的使用场景是更新X项目正式环境下的Y服务，这个时候就需要找到所有隶属于X项目正式环境Y服务下的主机。另一个常见场景是Y服务被爆安全漏洞需要全部升级，这个时候我们就需要找出来所有安装了Y服务的主机。这些主机本身都是独立的，可能分散在多个云环境多个云厂商的多个云账号下，不同的云之间相互隔离，没有办法很方便的去构建这种关系，而多云系统就可以方便的构建这种关系</p>
+<p>在多云管理系统中共设计了三种关系，分别是基于位置的关系、基于业务的关系、基于标签的关系</p>
+<h3 id="_1">位置关系</h3>
+<p>位置关系比较好理解，就是资源所在的位置，例如阿里云（厂商）-&gt;阿里云游戏（账号）-&gt;上海（区域）-&gt;可用区F（可用区），位置关系一般是固定的，伴随资产创建而产生，不需要我们额外去管理，只需记录方便检索即可，例如找到所有位于上海的LB</p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0521.02.png" /></p>
+<h3 id="_2">业务关系</h3>
+<p>日常工作中用的最多的就是业务关系，多数情况下我们都需要基于业务去检索资源，例如上边的例子更新X项目正式环境下的Y服务，有些CMDB系统有服务树的概念，而业务关系就与其类似，业务关系通常是树状的，推荐基于项目-&gt;环境-&gt;集群-&gt;模块来构建业务关系</p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0521.03.png" /></p>
+<p>构建得当的业务关系能满足我们绝大多数情况下对于资源检索的需求</p>
+<h3 id="_3">标签关系</h3>
+<p>虽然业务关系很有用，但依然有其局限性，例如上边例子中的Y服务有安全漏洞需要全部升级的情况，安装Y服务的主机可能分布在不同的业务下，这种情况就需要跨业务检索主机，于是标签关系应运而生</p>
+<p>标签是全局的，不受业务限制，可以给所有类型的资源打标签，例如基于系统添加标签：centos6，centos7，linux，windows等等，基于服务添加标签：nginx，tomcat，php，jdk，nodejs等等，这样就可以通过获取所有包含linux标签的资源，从而执行检查22端口是否开放的任务</p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0521.04.png" /></p>
+<p>大多的云厂商也是基于标签来做资源关系关联的，实际上业务关系也算是标签的一种，但单纯的标签不太好做多级树状管理，业务关系又是我们日常工作中最常使用的关系类型，所以这里我将业务关系独立在了标签关系之外，作为单独的一类关系来处理</p>
+<p>清晰的关系构建能有助于我们多云的使用和落地，通过以上三种关系应该能够覆盖我们所有的使用场景了，究竟效果如何只能等大伙使用之后再来平价了</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/G4wSM_KxpgypNSpY4lYMhA.html">📅 2022-05-21</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

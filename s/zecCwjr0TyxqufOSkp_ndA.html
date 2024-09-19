@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Devops,关于技术" />
+  <meta name="description" content="如何带着一群没有开发经验的小伙伴完成软件系统的开发" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>带一群伙伴写一款软件</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="带一群伙伴写一款软件" />
+  <meta property="og:description" content="如何带着一群没有开发经验的小伙伴完成软件系统的开发" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">带一群伙伴写一款软件</h1>
+
+        <p>去年入职新公司后，负责公司运维自动化的建设，除此之外领导还给了个任务，希望我能带领下团队内做传统运维的小伙伴学习运维自动化开发技能，我欣然接受，如果有人愿意学习我乐意倾囊相授。原本以为这会是一项比较顺利的工作，但过程却并不容易，花了很多时间和精力，好在结局美好，小伙伴们一起协同开发的实践项目软件管理系统已经开发完成顺利上线并交付使用</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0304.01.png" /></p>
+<p>这篇文章记录下这个过程，顺便也分享下运维开发所需要的知识及学习路线，希望对想学习的小伙伴有用</p>
+<p>去年4月21日，当时我们已经居家办公了一个月，原本是想等恢复线下办公之后再开始开展相关的培训分享，但此时上海疫情紧张，没有明确的解封时间，所以我们开启了第一次的线上分享。分享了我们运维自动化系统的整体架构，用到的前后端技术，以及参与自动化开发所需要的前后端知识</p>
+<p>我们前端主要采用了基于Bootstrap的CoreUI模板，所以除了基础的HTML/JS/CSS知识外还需要了解Bootstrap，但仅限于了解就好，不需要很深入，大概掌握的程度也有跟小伙伴们讲</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0304.02.png" /></p>
+<p>后端用了Python的Web框架Django，这一部分是重点，需要先熟悉Python，之后再熟悉Django，如果仅是达到我预期第一阶段开发简单后台的能力，学习内容也不是特别多</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0304.03.png" /></p>
+<p>我开发的知识大体也是按照上边的内容是自学的，这是一条比较适合我的学习路径，我把我的学习路径介绍给伙伴们，希望他们也能按照这个路线把文档给看一遍，跟着做些简单的练习，这对于之后我们的分享培训会很有帮助，但从实际来看很困难。之后大约每隔2-3周会有一次分享培训，主要围绕Django展开，每次分享结束都会有个小练习，即便部分人能把练习给完成，但实际上除了练习之外的内容很难实现</p>
+<p>我不是专业的开发培训老师，也没有做过系统的培训课程，所以并不十分清楚该如何让大家也能学会相关的内容，能做的大概就是把我的经验分享给大家，我这么做了但实际效果并不好，那一定是哪里做错了。仔细想了想，学习的过程十分枯燥，对于软件开发只是看文档缺少了动手实践，难以提起兴趣，成就感不足，软件开发也是一个熟能生巧的过程，一定要多写多练才能慢慢提高，用代码来解决切实的需求能获得成就感，那最好的方式应该就是真的参与到项目中去，在项目中学习成长</p>
+<p>于是从8月起我们改变了下分享方式，引入了软件管理系统作为实战项目，同时培训分享的频率也改成了每天，大家每天抽出一小时坐在一起，以项目为主线边分享边学习，我只把握方向，做知识的讲解和流程规范的建立，不参与任何的代码开发，所有的功能都由大伙自己完成。从需求分析开始，到确定技术设计，然后分享相关知识，之后分工开发，开发完成提交代码，大家再一起Review，经过不断的调整优化，N多次推倒重来，最终在经历了漫长7个月之后，软件管理系统终于发布上线了</p>
+<p>虽然过程并不容易，但事实证明这是一个很好的方式，大家坐在一起可以相互督促，也有一个专门的时间可以拿来学习。7个月的时间共有7位伙伴共进行了283次代码Commit，提了137个Merge Request，其中有116次执行了合并，还有25次进行了关闭，每一个Merged我们都离胜利近了一点点，每一个Closed我们都学到了知识和经验</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0304.05.png" /></p>
+<p>软件系统上线之后，在给小伙伴们分享时整理了软件系统的功能列表，连我自己都没有意识到不知不觉中我们开发了这么多功能，从运维开发的培训，到软件系统的开发，大家边学习边实践，软件系统经历了从无到有，从粗糙到完善的过程，虽然期间经历了N多次的推倒重来优化改进，但如今趋于完善顺利上线，这是对伙伴们学习效果最有力的证明</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0304.04.png" /></p>
+<p>万事开头难，坚持做下去更难，在7个月的时间里每天一小时，我不曾放弃，伙伴们也没有放弃，在这个过程中，我告诉大家学习并不会顺顺利利，软件也不能一次尽善尽美，这是一个持续的过程，从完成到完美，我们应该先考虑完成，再不断的做到完美，只要坚持去做结果不会差，我们坚持了，我们做到了</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/zecCwjr0TyxqufOSkp_ndA.html">📅 2023-03-04</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

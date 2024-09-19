@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="这是生活,Just-For-Fun" />
+  <meta name="description" content="照片是记忆的载体，它记录着我们的成长、旅行、欢笑与感动，是生命中最宝贵的财富之一，我们都应该珍惜" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>简单可靠还免费的家庭照片备份方案</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="简单可靠还免费的家庭照片备份方案" />
+  <meta property="og:description" content="照片是记忆的载体，它记录着我们的成长、旅行、欢笑与感动，是生命中最宝贵的财富之一，我们都应该珍惜" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">简单可靠还免费的家庭照片备份方案</h1>
+
+        <p>这个周末非常充实，周六在家花了几个小时从想法到落地<a href="https://blog.ops-coffee.cn/s/simple-and-beautiful-homepage-easy-build" target="_blank">上线了个人主页</a>，十分满意，简约的风格，丰富的内容，越看越喜欢。而今天则整理了近几月的照片，分类归档，云端保存，释放手机本地空间，又可以开始新的生活瞬间定格记录了</p>
+<p>早前，拍照是摄影师的专属，普通人很难接触，而随着智能手机的普及，人人都成了摄影师，拍照更加方便，拿起手机随手就是一张，这些照片或记录美丽的风景，或记录有趣的生活，每一张对我们自己都很有意义，那这些有意义的照片该如何保存呢？大多数的普通人没有系统备份照片的意识和习惯，或许因为手机有限的空间，在不断的删除过去的照片，也可能随着手机的迁移或损坏，照片在某个时间突然全部丢失，这显然不是我想看到的</p>
+<p>作为一个技术人，尤其是作为一个工作中时刻要保证数据完整与安全的运维工程师，对数据备份十分敏感，实时备份、定时备份、全量备份、增量备份、本地备份、异地备份等等各种备份策略了然于心。照片作为生活及人生中的重要数据，备份自然是不可缺少的，我的这套备份策略几乎零成本，相对简单，同时也很可靠，数据不会丢失。我就用这套策略备份了我从2010年开始到现在近15年的所有照片，一张都没丢失过。这篇文章就详细的讲讲我是如何做到的</p>
+<h2 id="_1">备份策略</h2>
+<p>不定时增量备份：目前绝大部分云盘的客户端，甚至是手机系统本身都有照片备份的功能，当你拍了照片，系统会自动的上传到系统的云盘，例如我用的小米手机，会自动把照片上传到小米云盘，只是通常系统自带的云盘免费空间较小，存放不了太多的照片。此时就可以借助于三方云盘，例如百度云盘和阿里云盘，我就用了百度云盘，手机上安装了百度云盘客户端，不定时的打开客户端，让他增量同步手机照片至云端。此时已经实现了本地+云端双副本异地备份，数据安全性有一定的保障，不担心手机损坏数据丢失</p>
+<p>定时多副本备份：每隔几个月（视手机存储可用空间大小而定）定时整理下云端照片，分门别类归档存储，然后下载到电脑本地硬盘，再从电脑本地硬盘上传到第二个云盘归档存储，实现了异地多副本备份，确保数据万无一失。此时若是手机存储空间不够，就可以清理手机上的照片释放手机存储空间了。这里我的第二个云盘选择了阿里云盘，这两个云盘都是背靠大厂，免费空间足，可靠性较高</p>
+<p>最终数据会完整的保留在百度和阿里两个云盘以及电脑本地硬盘上，一共三份完整数据，即便电脑硬盘损坏也不怕，云端还有，即便是突然有一天百度或阿里云盘同时关闭下线，那电脑本地硬盘上依然会有一份完整的数据可以使用，基本是万无一失</p>
+<h2 id="_2">照片整理</h2>
+<p>单单备份是不够的，备份的目的是为了在想用时能够快速的检索，那这就要求在备份之前做好照片的分类存储。我的存储策略是按时间和事件，用下来体验很好，基本能够快速找到想要的照片。具体的做法也很简单，云盘根目录和磁盘本地都有一个名为「岁月留痕」的文件夹，所有照片都保存在这里</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0901.01.png" /></p>
+<p>再往下一级是按年创建的文件夹，不同年份的照片放在对应的年份文件夹里，年份文件夹不会特别多，我保存了15年的照片，也就15个，这一生的话恐怕也不会超过80个，通常我想要检索一张过去的照片的话都会想想是哪一年，或者是哪几年，有了年份就大大缩小了检索的范围了</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0901.02.png" /></p>
+<p>年份文件夹再往下一级，基本上会按照时间+时间创建文件夹，例如2023年5月我们全家去了山东日照旅行，在那几天里拍摄了一些照片，这个照片都跟日照有关，那就建一个<code>202305-日照</code>的文件夹，存放日照旅行的照片，我们对于时间跟地点的记忆最为深刻，那就根据时间和地点来归类照片，这样检索起来就十分方便</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0901.03.png" /></p>
+<h2 id="_3">记忆载体</h2>
+<p>通过这套备份与整理策略，保证了照片的安全与完整，同时也极大地提升了检索效率。照片是记忆的载体，它记录着我们的成长、旅行、欢笑与感动，是生命中最宝贵的财富之一，我们都应该珍惜</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/simple-reliable-and-free-home-photo-backup-solution.html">📅 2024-09-01</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/这是生活/">🏷️ 这是生活</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Just-For-Fun/">🏷️ Just-For-Fun</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

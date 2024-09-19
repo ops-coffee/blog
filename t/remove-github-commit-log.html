@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="github,None,关于技术,日常技术" />
+  <meta name="description" content="None" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>清除github所有历史提交记录的方法</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="清除github所有历史提交记录的方法" />
+  <meta property="og:description" content="None" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">清除github所有历史提交记录的方法</h1>
+
+        <blockquote>
+<p>注意：是删除所有提交历史！操作前请自行备份数据</p>
+</blockquote>
+<h2 id="_1">方法一</h2>
+<p>1.切换到新分支</p>
+<pre class="codehilite"><code>git checkout --orphan latest</code></pre>
+
+
+<p>2.缓存所有文件</p>
+<pre class="codehilite"><code>git add -A</code></pre>
+
+
+<p>3.提交跟踪过的文件</p>
+<pre class="codehilite"><code>git commit -m ops-coffee.cn</code></pre>
+
+
+<p>4.删除master分支</p>
+<pre class="codehilite"><code>git branch -D master</code></pre>
+
+
+<p>5.重命名当前分支为master</p>
+<pre class="codehilite"><code>git branch -m master</code></pre>
+
+
+<p>6.提交到远程master分支</p>
+<pre class="codehilite"><code>git push -f origin master</code></pre>
+
+
+<p>PS：可配合删除github/gitee仓库，然后创建同名仓库的方式来清楚其他痕迹</p>
+<h2 id="_2">方法二</h2>
+<p>1.进入本地存放代码的目录删除<code>.git</code>隐藏目录</p>
+<p>2.windows+R输入<code>cmd</code>进入windows命令行</p>
+<p>3.切换到操作目录</p>
+<pre class="codehilite"><code>&gt;cd /d D:\=githubs\ops-coffee.cn</code></pre>
+
+
+<p>4.执行<code>git init</code>命令初始化本地目录为一个git仓库</p>
+<pre class="codehilite"><code>&gt;git init
+Initialized empty Git repository in D:/=githubs/ops-coffee.cn/.git/</code></pre>
+
+
+<p>5.执行<code>git add -A</code>命令添加本地代码到仓库</p>
+<pre class="codehilite"><code>&gt;git add -A</code></pre>
+
+
+<p>6.执行<code>git commit</code>命令提交本地代码到仓库</p>
+<pre class="codehilite"><code>&gt;git commit -m ops-coffee
+[master (root-commit) b660ede] 'ops-coffee'
+ 10 files changed, 729 insertions(+)
+ create mode 100644 CNAME
+ create mode 100644 blog.json
+ create mode 100644 css/style.min.css</code></pre>
+
+
+<p>7.执行<code>git push -f</code>命令强制提交到远程仓库</p>
+<pre class="codehilite"><code>git push -f https://github.com/ops-coffee/ops-coffee.github.com.git  master</code></pre>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/t/remove-github-commit-log.html">📅 2019-05-21</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/日常技术/">🏷️ 日常技术</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

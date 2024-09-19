@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,任务系统,关于技术,Ansible,Devops" />
+  <meta name="description" content="当接到一个新需求时我是如何思考的" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Django+Ansible构建任务中心思路</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django+Ansible构建任务中心思路" />
+  <meta property="og:description" content="当接到一个新需求时我是如何思考的" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django+Ansible构建任务中心思路</h1>
+
+        <p>Ansible作为老牌的自动化运维工具，由Python开发，应用广泛，但其默认只提供了命令行下的使用方式，好在提供有完善的API支持二次开发，可以很方便的集成到我们的自动化运维系统中</p>
+<p>最近一个朋友跳槽到了新公司转做DevOps开发，接到的第一个需求就是基于Ansible研发简单的任务中心，而他欠缺相关经验就找我帮忙，我就花了两天时间从熟悉Ansible开始写了个项目，由于我们的任务都是通过自研的一套<a href="/s/uXQbM4t11ICdzNofZyDeXA" target="_blank">自定义任务引擎Probius</a>来实现的，之前从未正式用过Ansible，趁此机会也算是熟悉了</p>
+<p>本篇文章只有思路没有代码，主要帮助新手了解流程整理思路，从而更好的理解代码</p>
+<h2 id="_1">思路整理</h2>
+<p>可以通过Web运行Ansible的Module和Playbook这是我们的目标，要实现这个目标我们要做哪些功能呢？我大概画了个脑图帮助整理思路</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/0829.06.png" /></p>
+<h3 id="_2">前端页面</h3>
+<p>根据上边的思路，我们来想一下都需要编写哪些页面，首先需要一个任务执行页面，在这个页面里需要选择是本次任务是运行module还是Playbook，如果是需要运行module，则需要用户选择具体的module和输入参数，如果需要运行playbook，则需要用户选择具体的playbook和输入参数，无论是运行module还是playbook，都需要确定在哪些主机上运行</p>
+<p>通常情况下我们的主机信息都是通过CMDB系统维护的，而对于任务的执行，大多也是针对项目或服务，所以对主机的选择就转换成了对项目或服务的选择，选择了项目服务就确定了运行主机，由此一个完整的任务执行页面就确定了</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/0829.01.gif" /></p>
+<p>上边的页面有两个下拉选择框，其一是项目的选择，我们通过选择项目来确定运行的主机，这些数据需要去CMDB获取，这就需要CMDB提供2个API，一个用来获取项目服务的列表，供页面上选择，另外还需要一个根据项目服务查询项目服务下主机列表的API，以确定任务要运行的主机列表</p>
+<p>另外一个下拉框是playbook的选择，这就需要另外一个playbook管理的页面，管理playbook就需要进行增删改查，一个简单的页面如下</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/0829.02.gif" /></p>
+<p>任务执行过程中需要一个实时展示日志的页面，可以及时的观察任务执行过程中遇到的问题，点击运行按钮直接跳转到任务执行日志页面，观察任务执行日志</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/0829.03.gif" /></p>
+<p>任务执行完成后还需要一个历史任务的列表页面，可以查看所有历史执行的任务，以及可以根据条件方便的过滤任务</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/0829.04.gif" /></p>
+<p>简单的几个页面就将整个流程清晰的展示了出来</p>
+<h3 id="_3">后端逻辑</h3>
+<p>上边讲了前端页面的设计思路，而后端的逻辑又是怎样的，我们同样从这几个页面入手思考</p>
+<p>ansible执行页面，当用户点击提交按钮的同时会将所选项目、所选模块/playbook，以及参数传给后端，后端根据所选的项目获取到项目下的主机，然后将主机、module/playbook、参数，以及任务创建时间、创建用户等信息写入数据库，同时调用AnsibleAPI异步执行，最后跳转到任务详情页面</p>
+<p>AnsibleAPI执行过程中将日志实时写入缓存，同时可以通过websocket推给任务详情页面，任务详情页面接受到数据之后展示，如果觉得使用websocket没必要也可以像我一样直接在任务详情页启动一个循环，每秒请求日志将更新追加到页面上，在任务执行完成后，将缓存数据写入数据库，这样的好处是可以减少对数据库的读写，提高效率，整个流程大概如下</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/0829.05.png" /></p>
+<p>以上是运行和任务详情页面的后端逻辑，而对于playbook和任务历史两个页面就比较简单了，就是普通的增删改查而已，不过多介绍</p>
+<h2 id="_4">后记</h2>
+<p>一个新项目在开始编写代码之前就需要对这个项目有相对清晰的认识，在脑海里过一下基本逻辑，这一步也可以借助思维导图来完成，然后搭框架填内容水到渠成</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/6YAC_Lqw3jB0LZlJTx4A2g.html">📅 2021-08-29</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/任务系统/">🏷️ 任务系统</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

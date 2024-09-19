@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="None,Devops,关于技术" />
+  <meta name="description" content="None" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>权限管理之多租户隔离授权</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="权限管理之多租户隔离授权" />
+  <meta property="og:description" content="None" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">权限管理之多租户隔离授权</h1>
+
+        <p>想要做好权限管理，并不是一件容易的事情，既要考虑授权的粒度保证安全，也要考虑授权的方式足够便捷。之前有篇文章<a href="https://blog.ops-coffee.cn/s/0xee6JzCUcqXao9bY1ULgA" target="_blank">权限管理系统设计</a>介绍过我们的权限设计，整体上是采用RBAC+资源隔离的方式，仅对小部分非常敏感的数据再通过对象授权的方式做管控。在实际的使用中也验证了这样的授权方式非常有效，尤其是多租户模式-基于项目的资源隔离，授权方式足够便捷，同时也有一定的粒度控制，毕竟大多数的情况下我们都是基于项目在管理资源，那基于项目去授权资源就很合适了</p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0309.05.png" /></p>
+<p>这样的授权方案没有问题，但是在授权方式上不够完善，不完善的地方主要是在RBAC的授权上，由于后端采用Django框架，RBAC的授权就使用了Django的Auth模块来实现，只是把Group替换成了Role的概念，这样就是User属于Group/Role，Group拥有权限，从而用户也就有了相应的权限。但这里有一个问题，默认的Group没有资源隔离的Project标识，这就导致了授权是全局的，例如我给用户A授予了主机查看的权限，他加入项目A就能查看项目A下的主机，此时加入项目B同样就会拥有项目B下资源查看的权限，这显然是不合适的，需要能做到按项目的授权</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1202.01.png" /></p>
+<p>举一个实际的例子：用户A是压测中心的员工，会通过压测系统对其他项目进行压测，我们建个压测的项目A，他是压测项目A的owner，对压测项目A拥有所有的权限，例如资源查看、发布不熟等等。项目B有压测的需求，用户A就通过压测系统对项目B进行压测，此时用户A需要查看项目B被压资源的监控数据，用户A加入项目B，由于全局权限的存在，用户A对项目B也就有了所有的权限，这就是非常危险不可接受的，如何做到用户A对压测项目A拥有所有的权限，而对被压项目B仅有监控查看的权限呢？需要做到按项目去授权</p>
+<p>道理都懂，如何实现？直接抛弃Django的Auth权限认证系统自己实现，当然可以，不过改动太大，费时费力，当初使用Django就是看中了这些开箱即用的好功能。既然要结合项目去授权，那首先想到的实现方式跟我们做资源隔离一样，默认的Group表加一个project字段来标识项目，然后重写权限校验的<code>has_perm</code>方法，翻了下源码，扩展Group表不太好做，改动较大，同时也不是特别的合理。还是要抛弃空想，从实际出发看下系统和代码，仔细看了看，并不是所有的授权都适合与项目绑定，例如用户系统相关的用户管理权限、多云系统的多云账号管理权限，这个本身就是全局的，跟项目没有什么关系，那加个项目标识就没有必要了，只有那些按项目做隔离的资源权限适合与项目绑定，例如备份系统的备份任务权限、多云系统的资源管理权限等</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1202.02.png" /></p>
+<p>除此之外，在实际使用中还会有全局授权的需求，例如部门经理对所有项目有所有权限、监控工程师对所有项目有查看监控的权限。想清楚了这些使用场景，那就考虑，默认对权限系统保持不变，作为全局授权，同时扩展一个新的针对项目的权限系统，作为项目授权，最终的权限校验会同时校验全局权限和项目权限，只要有其中之一为True，则就有权限，实现起来也较为简单</p>
+<p>参考Django默认的Auth模块授权机制：User-&gt;Group-&gt;Permission，对于项目来说也是一样的，项目成员表Member，Member关联User表，项目角色表Role，Role也只是比Group表多了project字段用来记录所属项目，权限依然复用了Django默认Auth下的Permission表，此时的项目授权就是项目成员拥有项目角色，项目角色拥有相应权限，这样就能根据数据关系列出项目用户拥有的项目权限了</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1202.03.png" /></p>
+<p>项目owner是一种特殊的角色，他拥有项目下的所有权限，同时他也可以创建角色，为项目下的其他用户赋权。这样同时也做到了项目权限管理的自助化，项目成员的权限由项目owner负责，不需要再麻烦系统管理员，一个完整的用户加入系统及授权流程如下</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1202.04.png" /></p>
+<p>至此，RBAC+资源隔离，全局授权+项目授权的机制趋于完善</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/django-tenant-rbac-auth-permission.html">📅 2023-12-03</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

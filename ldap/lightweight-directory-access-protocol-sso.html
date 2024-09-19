@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="LDAP,OpenLDAP,关于技术" />
+  <meta name="description" content="一篇文章助你轻松落地LDAP，笔者真实的实践经验总结" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>LDAP落地实战（一）：OpenLDAP部署及管理维护</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="LDAP落地实战（一）：OpenLDAP部署及管理维护" />
+  <meta property="og:description" content="一篇文章助你轻松落地LDAP，笔者真实的实践经验总结" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">LDAP落地实战（一）：OpenLDAP部署及管理维护</h1>
+
+        <blockquote>
+<p>公司内部会有许多第三方系统或服务，例如SVN、Git、VPN、Jira、Jenkins等等，每个系统都需要维护一份账号密码以支持用户认证，当然公司也会有许多的主机或服务器，需要开放登录权限给用户登录使用，每台主机需要添加登录的账号密码，这些操作不仅繁琐且不方便管理，密码记错或遗忘的情况时有发生。</p>
+<p>引入一套支持各系统、服务、主机单点认证的服务就显得尤其迫切和重要。LDAP服务正是为此而生，且经过长时间市场检验，安全稳定，文档也比较丰富，方便上手。</p>
+</blockquote>
+<h1 id="ldap">LDAP</h1>
+<p>可以通过以下三句话快速的认识一下LDAP：</p>
+<ol>
+<li>LDAP：Lightweight Directory Access Protocol，轻量目录访问协议。</li>
+<li>LDAP服务是一个为只读（查询、浏览、搜索）访问而优化的非关系型数据库，呈树状结构组织数据。</li>
+<li>LDAP主要用做用户信息查询（如邮箱、电话等）或对各种服务访问做后台认证以及用户数据权限管控。</li>
+</ol>
+<h2 id="_1">名词解释</h2>
+<ul>
+<li>DC：domain component一般为公司名，例如：dc=163,dc=com</li>
+<li>OU：organization unit为组织单元，最多可以有四级，每级最长32个字符，可以为中文</li>
+<li>CN：common name为用户名或者服务器名，最长可以到80个字符，可以为中文</li>
+<li>DN：distinguished name为一条LDAP记录项的名字，有唯一性，例如：dc:"cn=admin,ou=developer,dc=163,dc=com"</li>
+</ul>
+<h2 id="_2">图形示例</h2>
+<p>上边来了一堆的名词解释，看的云里雾里，还不是很明白，怎么跟自己的组织架构对应起来呢？看看下边的图是不是清晰明了</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.00.png" /></p>
+<h1 id="openldap">OpenLDAP</h1>
+<p>上边介绍了LDAP只是一个协议，基于这个协议实现服务器端程序有OpenLDAP、Active Directory(微软的域控制器)等等。</p>
+<h2 id="openldap_1">部署OpenLDAP</h2>
+<p>部署环境：Debian 8.4</p>
+<p>1.安装OpenLDAP,OpenLDAP服务端程序叫slapd</p>
+<pre class="codehilite"><code># apt-get install -y slapd</code></pre>
+
+
+<p>2.安装完成之后，会自动生成一个OpenLDAP的系统账号</p>
+<pre class="codehilite"><code># cat /etc/passwd
+openldap:x:110:115:OpenLDAP Server Account,,,:/var/lib/ldap:/bin/false</code></pre>
+
+
+<p>3.生成OpenLDAP管理员账号的密码（后边修改配置文件需要使用）</p>
+<pre class="codehilite"><code># slappasswd
+New password: 
+Re-enter new password: 
+{SSHA}TpWoSebaT5gKy2Y3EHmZh+Wc0hJaFp7y</code></pre>
+
+
+<p>4.新建OpenLDAP配置文件</p>
+<pre class="codehilite"><code># cp /usr/share/slapd/slapd.conf /etc/ldap/
+# 配置文件中有很多@xxx@的配置替换为真实配置
+
+# slaptest -f /etc/ldap/slapd.conf 
+5ad9b19d /etc/ldap/slapd.conf: line 105: rootdn is always granted unlimited privileges.
+5ad9b19d /etc/ldap/slapd.conf: line 122: rootdn is always granted unlimited privileges.
+config file testing succeeded</code></pre>
+
+
+<p>配置文件重要参数说明（需要自己修改的，其他未提到的可以不修改）：</p>
+<ul>
+<li><code>database bdb</code>：定义使用的后端数据存储格式，数据库默认采用了berkeley db，其后可以跟的值有bdb、ldbm、passwd、shell。bdb指使用Berkley DB 4数据库</li>
+<li><code>suffix "dc=163,dc=com"</code>：suffix是"LDAP基准名"，它是LDAP名字空间在这里的根。设置想要创建的子树的根DN</li>
+<li><code>rootdn "cn=admin,dc=163,dc=com"</code>：设置管理LDAP目录的超级用户的DN。这个用户名不要出现在/etc/passwd文件里</li>
+<li><code>rootpw {SSHA}TpWoSebaT5gKy2Y3EHmZh+Wc0hJaFp7y</code>：设置这个数据库的超级用户的口令验证方式。也就是上边rootdn设置的用户的密码。一定要用加密的口令存储，可以使用的加密方式有：CRYPT、MD5、SMD5、SHA和SSHA，<strong>就是我们第三步生成的密码</strong></li>
+<li><code>directory /var/lib/ldap</code>：设置LDAP数据库和索引文件所在的目录</li>
+<li><code>access to</code>：权限配置下边详细说明</li>
+</ul>
+<p>5.删除原配置，生成新配置</p>
+<pre class="codehilite"><code># rm -rf /etc/ldap/slapd.d/*
+# slaptest -f /etc/ldap/slapd.conf -F /etc/ldap/slapd.d/
+
+# 给新生成的配置文件赋予OpenLdap的权限
+# chown -R openldap.openldap /etc/ldap/slapd.d/</code></pre>
+
+
+<p>6.重启OpenLdap</p>
+<pre class="codehilite"><code># /etc/init.d/slapd restart</code></pre>
+
+
+<h2 id="acl">ACL权限控制</h2>
+<p>ACL访问指令的格式：</p>
+<pre class="codehilite"><code>access to [what]
+    by [who] [control]</code></pre>
+
+
+<p>简单解释：通过access to约束我们访问的范围（what），通过by设定哪个用户（who）有什么权限（control）</p>
+<p>ACL的详细配置还是比较复杂的，可以看下下边参考文档的第三篇，写的比较详细，这里都不再赘述。</p>
+<h3 id="acl_1">线上ACL控制配置解析</h3>
+<p>为了用户能够自主修改密码，部署了lam给用户使用（见下文lam介绍）。希望能达到的效果是：</p>
+<ol>
+<li>管理员能够有全部权限，包含新建用户，修改用户属性，充值用户密码等</li>
+<li>普通用户只能修改自己的密码，别的权限都没有</li>
+</ol>
+<p>配置如下：</p>
+<pre class="codehilite"><code># access to attrs=userPassword通过属性找到访问范围密码,
+# 超级管理员也就是我们ldap配置文件里写的rootdn：&quot;cn=admin,dc=163,dc=com&quot;有写(write)权限；
+# 由于管理员可能不止一个，我创建了个管理员组&quot;ou=Admin,dc=163,dc=com&quot;把管理员统一都放到这个组下，管理员组下的所有用户（dn.children）有写权限；
+# 匿名用户(anonymous)要通过验证(auth);
+# 自己(self)有对自己密码的写（write）权限，其他人(*)都没有权限(none).
+access to attrs=userPassword,shadowLastChange
+        by dn=&quot;cn=admin,dc=163,dc=com&quot; write
+        by dn.children=&quot;ou=Admin,dc=163,dc=com&quot; write
+        by anonymous auth
+        by self write
+        by * none
+
+# access to * 所有其他属性，
+# 超级管理员rootdn：&quot;cn=admin,dc=163,dc=com&quot;有写(write)权限；
+# 管理员&quot;ou=Admin,dc=163,dc=com&quot;成员有写(write)权限；
+# 其他人(*)只有读(read)权限
+access to *
+        by dn=&quot;cn=admin,dc=163,dc=com&quot; write
+        by dn.children=&quot;ou=Admin,dc=163,dc=com&quot; write
+        by * read</code></pre>
+
+
+<h2 id="_3">备份和还原</h2>
+<h3 id="_4">备份</h3>
+<pre class="codehilite"><code># ldapsearch -x -b &quot;dc=163,dc=com&quot; -D &quot;uid=authz,ou=Public,dc=163,dc=com&quot; -w &quot;AzdfD863M4&quot; &gt; ldap.20180626.ldif</code></pre>
+
+
+<p>参数说明：</p>
+<ul>
+<li><code>-x</code>：进行简单的验证</li>
+<li><code>-D</code>：用来绑定服务器的DN</li>
+<li><code>-w</code>：绑定DN的密码</li>
+<li><code>-b</code>：要查询的根节点</li>
+</ul>
+<p>authz账号要有<code>"dc=163,dc=com"</code>的查询权限</p>
+<h3 id="_5">还原</h3>
+<pre class="codehilite"><code># ldapadd -x -c -D &quot;cn=admin,dc=163,dc=com&quot; -w &quot;smile&quot; -f ldap.20180626.ldif</code></pre>
+
+
+<p>参数说明：</p>
+<ul>
+<li><code>-c</code>：出错后继续执行程序不终止，默认出错即停止</li>
+<li><code>-f</code>：从文件内读取信息还原，而不是标准输入</li>
+</ul>
+<p>还原的DN最好为管理员账号，至少也要有要LDAP的写入权限</p>
+<h1 id="web">web管理工具</h1>
+<p>用了phpldapadmin和ldap-account-management(简称lam)两款web管理工具，强烈推荐lam，所以这里就不介绍其他的了</p>
+<h2 id="ldap-account-manager">ldap-account-manager</h2>
+<h3 id="_6">安装</h3>
+<p>1.安装ldap-account-management</p>
+<pre class="codehilite"><code># apt-get install ldap-account-manager</code></pre>
+
+
+<p>2.浏览器访问</p>
+<pre class="codehilite"><code>http://ip/lam</code></pre>
+
+
+<h3 id="_7">配置</h3>
+<p>lam的所有配置都可以在web端配置，不需要去服务器上修改一行代码，这个太好用了。</p>
+<p>1.浏览器访问后进入登录页面，我们点击右上角"LAM configuratrion"来在线编辑配置文件</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.01.png" /></p>
+<p>2.看到如下页面有两个选项："Edit general settings"来编辑通用配置，默认密码lam，进入之后能配置密码策略、日志、管理员密码，最重要的是更新掉管理员密码，这个在后边"Manage server profiles"管理的时候需要提供；"Edit server profiles"来编辑服务器配置，我们先来编辑服务器配置</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.02.png" /></p>
+<p>3.进入如下页面，输入默认密码lam即可编辑配置，这里要说明一下的是红框标注的"Manage server profiles"可以对服务器的配置文件进行配置，例如增加、删除配置文件、配置文件重命名，最重要的是可以设置配置文件密码（也就是我们刚输入的密码lam，但修改密码需要管理员密码，后边配置）</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.03.png" /></p>
+<p>4.输入密码lam后就正式进入服务器配置页，看到第一个标签"General setting"，（可以先改下语言简体中文保存，整站就给汉化啦，英文渣渣看起来就非常方便了），基本配置都看的很清晰了，主要是Tree suffix配置为自己的DC可以了</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.04.png" /></p>
+<p>5.接着来看这个页面，"security settings"非常重要，配置以何种方式登录web控制台，默认为Fixed list模式，就是下边列表里配置的dn可以登录，我们LDAP里还没有任何一个账号（当我们创建了账号之后可以选择"LDAP serch"的模式，让普通账号也能登录以修改自己的密码），这里要选择fixed list模式并配置为我们LDAP的rootdn，设置一个密码登录之后创建账号等操作</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.05.png" /></p>
+<p>6.接下来就是"Account types"标签页的配置，这里配置我们登录web控制显示的标签，我这里只需要他显示用户，就把Group之类的都删除了，保留了User</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.06.png" /></p>
+<p>7."Modules"页面配置上一个具体每个account type显示的模块</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.07.png" /></p>
+<p>8."Models setting"页面配置models具体要显示的内容，不得不说配置非常详细</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.08.png" /></p>
+<p>9.经过上边的配置就可以进入控制台新建账号了，新建账号之前一个有用的操作是修改用户的默认RDN标致为uid，更高位置在登录web控制台后右上角配置文件编辑器里边</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0629.11.png" /></p>
+<p>10.基本配置完成，可以开始使用了，中文界面比较清晰，无需过多解释啦。</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/ldap/lightweight-directory-access-protocol-sso.html">📅 2018-06-29</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/OpenLDAP/">🏷️ OpenLDAP</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

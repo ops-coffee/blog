@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Proxy,Devops,关于技术,400" />
+  <meta name="description" content="我们是怎么管理400+代理的" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Proxy：简单小巧又强大好用的代理系统</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Proxy：简单小巧又强大好用的代理系统" />
+  <meta property="og:description" content="我们是怎么管理400+代理的" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Proxy：简单小巧又强大好用的代理系统</h1>
+
+        <p>之前的文章介绍了许多我们在用的DevOps相关的工具系统，例如：<a href="/s/h9k_C7kNB6q1VqxQDVHyiQ" target="_blank">方便创建多套运行环境的Alodi</a>，<a href="/s/QG42UqJ9rnswQDMd41CYUg" target="_blank">对运维友好的配置中心Kerrigan</a>，<a href="/s/uXQbM4t11ICdzNofZyDeXA" target="_blank">强大的自定义任务引擎Probius</a>以及<a href="/s/ZrrLUNRlAXVfVKvA1m0nsg" target="_blank">专注于数据库自动化的overmind</a>等等，这篇文章介绍一个非常简单但却十分好用的系统，Proxy代理管理系统</p>
+<p>代理系统类似于Kubernetes里Ingress的角色，位于下层服务与上层用户之间，作用与公有云的负载均衡LB一致，基于Nginx构建，主要使用Upstream模块</p>
+<h2 id="_1">系统由来</h2>
+<p>为什么会需要这么个系统？来讲讲我们的场景和逻辑</p>
+<p>每个项目都需要开发测试环境，这些环境都部署在公司内网，而很多项目因为各种原因都需要外网能访问的到，例如小程序/公众号/支付相关的项目都需要接收微信支付宝的回调，这种需求通常有两种方式来实现</p>
+<ol>
+<li>直接给开发测试环境所在的主机配置个公网IP，域名指向这个公网IP</li>
+<li>搭建一个代理服务器，所有的请求都先到这个代理服务器，然后根据域名转发到不同的项目环境</li>
+</ol>
+<p>对于方案1，优点在于实现简单，但缺点更为明显，首先公网IP资源有限，其次管理也不方便，只适合一些项目不多的小团队。方案2则更为常用，只需要一个公网IP，将所有需要外网访问的项目入口集中在一起，管理起来也更为方便</p>
+<p>我们刚开始就是找了台服务器部署Nginx做代理，如果需要代理服务就去修改Nginx配置文件，但随着项目越来越多，修改Nginx配置文件也成了麻烦事，效率低下、修改冲突、不可追踪成了急需问题，于是便开发了这个Proxy代理系统，到目前为止稳定运行3年，管理了400+代理</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1203.01.png" /></p>
+<h2 id="_2">系统介绍</h2>
+<p>系统的核心功能就是要通过web去提交配置然后自动生成Nginx配置文件，除了用户管理这种通用模块外主要分三大块的内容：实例管理，证书管理和黑白名单，每一个实例都指的是一个代理服务，对应Nginx中的一个Server，实例关联证书和黑白名单，这里先介绍一下证书和黑白名单模块</p>
+<p>证书模块可以用来管理所有用到的HTTPS证书，每一个证书都会在服务器上创建对应的crt和key文件，方便在实例中引用，对于证书的更新也只需要更新这一个地方就可以了，更新完成之后会自动reload以保证生效</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1203.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1203.03.png" /></p>
+<p>黑白名单模块对应与Nginx的ACL设置，通过allow和deny来实现黑名单禁止访问，白名单允许访问，原理与证书管理差不多，都是根据输入内容生成对应的文件保存到服务器上，生成配置文件用到了jinja2，我的博客也是同样的方法生成的，可以看这篇文章来了解：<a href="/s/7g2wncQG1lIziOmtBxXwEw" target="_blank">利用Django徒手写个静态页面生成工具</a>，黑白名单最终在实例里以include的方式引入</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1203.04.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1203.05.png" /></p>
+<p>无论是证书还是黑白名单最终都是为实例也就是Nginx的Server服务的，对于作为代理的Server配置很简单，下方是一个模板</p>
+<pre class="codehilite"><code>upstream 11 {
+    server 192.168.106.110:80;
+}
+
+server {
+    listen       443;
+    server_name  blog.ops-coffee.cn ;
+
+    ssl                  on;
+    ssl_certificate      ssl/1.crt;
+    ssl_certificate_key  ssl/1.key;
+
+    include acl/1.conf;
+    include acl/3.conf;
+    deny all;
+
+    auth_basic &quot;please input user&amp;passwd&quot;;
+    auth_basic_user_file key/11.key;
+
+    location / {
+        proxy_pass http://11;
+    }
+
+    access_log  /home/logs/nginx/11.log  main;
+}</code></pre>
+
+
+<p>从这个模板里可以看出，我们大概需要如下一些信息，域名<code>server_name</code>、开放端口<code>listen</code>、是否开启<code>ssl</code>以及SSL的证书和密钥、是否有<code>acl</code>白名单以及白名单的地址、是否需要<code>auth_base</code>认证以及账号密码这几类信息，于是对于新建实例我们就需要如下这些信息</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1203.07.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1203.08.png" /></p>
+<p>根据平时的使用经验，可能有多个域名使用同一个代理，所以提交的数据还有个别名。同时高级配置里还支持用户输入自定义的Nginx配置，这些自定义的Nginx配置会自动填充到Server中，这样就能方便的实现更加复杂的需求，例如修改上传文件大小限制、开启websocket支持、甚至是根据URI的代理等</p>
+<p>对于实例更多的信息可以在实例详情页面查看</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1203.09.png" /></p>
+<p>注意右上角有个“日志”按钮，系统还集成了查看日志的功能，通过websocket去监听日志文件，实时的输出到页面上，方便排错，Websocket实时获取日志文件之前写过一篇文章有介绍，<a href="/s/r5SpyTjRl0jJeAuYE4Q_-Q" target="_blank">可以点这个链接查看</a>，不过我在Proxy里使用的有所简化，没有用到Celery，更轻便</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1203.10.png" /></p>
+<h2 id="_3">额外收获</h2>
+<p>Proxy原本用来管理需要对外开放访问的项目，但为了统一的管理，逐渐的把所有的代理都迁移进了Proxy，这样做不仅管理起来更为方便，而且无形中还提供了一个查询团队所有域名的入口，团队现在维护了超过100+项目，并不是每个人都能准确的记住每个项目各个环境的域名，而通过Proxy就可以方便的查询</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1203.06.png" /></p>
+<p>在Proxy应用后，对于域名的管理也简单了不少，原本DNS上有几百条xxx.ops-coffee.cn的域名分别指向了不同的IP，现在也简单多了，只需要创建一条*.ops-coffee.cn的泛域名解析指向到Proxy的地址即可</p>
+<p>Proxy虽然是个非常简单的小工具，但带来的便利却并不简单~</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/FV379mGIboVYky73kcoMMQ.html">📅 2020-12-03</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

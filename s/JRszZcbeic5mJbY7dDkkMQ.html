@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Just-For-Fun,关于技术,这是生活" />
+  <meta name="description" content="大疫当前，不出去添乱是最起码的素养，如果再能有所收获就很完美" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>源码给你，零基础搭建一个免费的网址导航站</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="源码给你，零基础搭建一个免费的网址导航站" />
+  <meta property="og:description" content="大疫当前，不出去添乱是最起码的素养，如果再能有所收获就很完美" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">源码给你，零基础搭建一个免费的网址导航站</h1>
+
+        <blockquote>
+<p>大疫当前，不出去添乱是最起码的素养，如果再能有所收获就很完美了</p>
+</blockquote>
+<p>宅在家里就想着把自己之前未完成的想法一个一个都给实现了，也算是给这个漫长的假期一个交代</p>
+<p>网址导航便是其中完成的一个，话不多说直接看效果</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/0221.01.png" /></p>
+<p>导航地址：<a href="https://nav.ops-coffee.cn" target="_blank">https://nav.ops-coffee.cn</a>，全站自适应兼容移动端</p>
+<p>这个导航站汇聚了咖啡君多年的收藏，除了一些耳熟能详的站点外，还收藏了许多非常有趣的网站，例如：<strong>中国妖怪百集</strong>，其收藏了大量古人文献中的妖怪，非常详细的记录了各个妖怪的出处，描述甚至图片等，让你对中国妖怪文化有一个整体的了解，茶余饭后消遣一下很有意思，类似的网站还有，期待你的探索</p>
+<p>导航站的另一个特色是收藏了大量的咖啡君平时用到的非常好用的工具软件，大部分都是在线的，无需下载安装，包含了文档协作、共享，图片、音频、视频处理，格式转换，文件传输，各网站视频下载等等，兼职就是一个工具百宝箱</p>
+<p>如果你觉得网站这些与你的使用习惯不符，或者想添加一些自己收藏的网站，那么源码给你，只需要简单的修改就可以变成符合自己使用习惯的独一无二的导航</p>
+<h2 id="_1">如何修改</h2>
+<p>导航站采用纯静态构建，下载源代码后只需要修改html文件中的<code>li</code>代码块即可，<code>li</code>代码块结构如下：</p>
+<pre class="codehilite"><code>&lt;li&gt;
+  &lt;a class=&quot;nav-item clearfix&quot; href=&quot;https://music.163.com/&quot; target=&quot;_blank&quot;&gt;
+    &lt;div class=&quot;nav-img&quot;
+      style=&quot;margin-bottom:40px;background-image: url(/images/icon/m163.png);&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;nav-name&quot;&gt;网易云音乐&lt;/div&gt;
+    &lt;p&gt;音乐社区，不止是播放器&lt;/p&gt;
+  &lt;/a&gt;
+&lt;/li&gt;</code></pre>
+
+
+<p>仅需修改四个地方，分别对应了网站的四个关键信息：</p>
+<p>修改<code>https://music.163.com</code>为对应网站的<strong>URL</strong>地址</p>
+<p>修改<code>/images/icon/m163.png</code>为对应网站的<strong>Logo</strong>地址</p>
+<p>修改<code>网易云音乐</code>为对应网站的<strong>名称</strong></p>
+<p>修改<code>音乐社区，不止是播放器</code>为对应网站的<strong>描述</strong></p>
+<h2 id="_2">如何发布</h2>
+<p>借助Github Pages即可实现免费发布网站，随时随地使用导航，具体方法如下：</p>
+<p>新建一个github仓库，仓库名称为<code>xxx.github.io</code>，xxx为你的github用户名</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/0221.02.png" /></p>
+<p>将已经修改好的导航站代码上传至新建的仓库中，然后你就可以通过<code>xxx.github.io</code>来访问导航站了 </p>
+<p>如果不确定访问的域名可以点击仓库的<code>Settings</code>，拉到<code>GitHub Pages</code>段查看</p>
+<p><code>Your Site Published at</code>后边跟的便是你的域名</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/0221.03.png" /></p>
+<p>当然在这里你也可以绑定自己的域名，例如咖啡君就绑定了<code>nav.ops-coffee.cn</code>，同时可以强制启用HTTPS协议，无需单独申请证书，且也不用担心证书过期问题，这一些Github都帮你做了，并且还是免费的</p>
+<p>Github Pages免费好用还稳定，唯一的缺点是访问稍慢</p>
+<h2 id="_3">源码地址</h2>
+<p>https://github.com/ops-coffee/nav</p>
+<p>导航站刚刚上线，资源还在持续更新中，如果你有什么酷站推荐或者意见建议欢迎给我留言</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/JRszZcbeic5mJbY7dDkkMQ.html">📅 2020-02-21</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/这是生活/">🏷️ 这是生活</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Just-For-Fun/">🏷️ Just-For-Fun</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Devops,关于技术" />
+  <meta name="description" content="介绍多云系统中同步下来的云上资源如何管理，资源与关系如何建立联接" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>多云系统之资源管理</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="多云系统之资源管理" />
+  <meta property="og:description" content="介绍多云系统中同步下来的云上资源如何管理，资源与关系如何建立联接" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">多云系统之资源管理</h1>
+
+        <p>前边两篇文章分别讲了我们多云管理系统中的<a href="/s/G4wSM_KxpgypNSpY4lYMhA" target="_blank">关系管理</a>和<a href="/s/PL31oUCLMEi3H1_1IMMDRA" target="_blank">多云配置</a>，这篇文章来讲下多云管理系统中的另一个核心功能：资源管理，在多云系统中资源管理主要负责资源的查询展示以及资源与关系的管理</p>
+<p>在上篇文章<a href="/s/PL31oUCLMEi3H1_1IMMDRA" target="_blank">多云配置</a>中有讲到所有云上同步下来的资源都位于资源池，资源池实际上就是个虚拟的池子，资源池内的资源是没有任何关系属性，由于我们所有资源都是基于项目去隔离的，也就是说用户只能查看自己所属项目下的资源，不是自己的项目无法查看使用，所以默认情况下资源池内的资源是查不到的，仅能在全局搜索、动态规则和资源列表的添加资源里查得到</p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0525.03.png" /></p>
+<p>下面就围绕全局搜索、资源列表和动态规则来聊下资源管理</p>
+<h2 id="_1">全局搜索</h2>
+<p>全局搜索这个很好理解，就是可以根据关键词去所有的资源中检索出来匹配的，我们时常需要查询某个IP属于哪个项目谁在维护部署的什么服务之类的信息，当资源少团队简单运维人员稳定时，或许可以凭记忆判断IP归属，但当资源多团队复杂时快速定位并不是一件简单的事情，在这个时候全局搜索就非常有用了</p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0610.01.png" /></p>
+<h2 id="_2">资源列表</h2>
+<p>多云系统旨在提供清晰、准确、易用的资源数据，通过关联关系可以构建清晰的资源数据，而资源列表就为这种清晰的资源关系提供了界面展示</p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0610.02.png" /></p>
+<p>在<a href="/s/G4wSM_KxpgypNSpY4lYMhA" target="_blank">关系管理</a>文章中提到了多云的三种关联关系，资源列表是基于我们最常使用的业务关系来展示的，左侧为业务关系树，右侧为具体的资源，默认展示业务下的所有资源，点击关系树节点可以查看对应节点下的资源，同时也提供了分类及模糊搜索以快速检索资源数据</p>
+<p>节点下资源的添加提供了两种方式，其一是资源列表页面右上角的添加按钮，可以添加所需的资源并给资源打标签，通过这种方式一次只能添加一条资源，另一种资源的添加方式是借助于接下来要讲的动态规则来实现资源的批量添加</p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0610.03.png" /></p>
+<p>在资源列表里也可以对资源进行编辑和删除，由于资源属性都是固定从云上同步的，所以不提供修改，仅能编辑资源的业务属性及TAG，资源下线资源列表里并不会直接删除，会标记过期，需要用户手动删除，这也是为了保证资源列表内的所有资源都是经过确认的，为资源的准确提供保障</p>
+<h2 id="_3">动态规则</h2>
+<p>资源本身是独立的，但我们在使用的过程中通常会附加各种关系处理，如何给资源附加关系，除了在资源列表添加/编辑资源外，还可以通过动态规则来处理，这也是我们日常在资源管理维护中主要使用的方式，动态规则主要用来给资源池内的资源批量添加标签或者业务关系，关系匹配的流程大概如下</p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0610.04.png" /></p>
+<p>动态规则主要根据定义的规则去资源池内匹配相应的资源，然后给这些资源打标签或者添加业务关系，构成动态规则的三个要素分别是资源池、规则和操作</p>
+<p><strong>资源池：</strong> 资源池内的资源无业务关系，如果资源一旦隶属于业务那他将被踢出资源池，动态规则仅匹配没有业务关系的资源，这主要是为了保障资源关系的准确，避免出现用户A确认过的资源又被B的动态规则给覆盖的情况</p>
+<p><strong>规则：</strong> 规则也就是去资源池里匹配资源的条件，主要包含要匹配的资源类型、要匹配资源的字段、匹配的运算符以及匹配的内容体几部分。资源类型主要有云主机、MySQL等，当然也可以一条规则匹配所有类型的资源。匹配字段默认就是资源名称，根据资源名称去匹配，所以这要求大家在命名资源时一定要规范，否则这个动态规则就没办法批量匹配了。运算符主要支持五种，分别是包含、等于、以...开始、以...结尾和正则匹配，命名规范简单可以通过包含之类的运算符去匹配，而正则能实现更加复杂的匹配</p>
+<p><strong>操作：</strong> 操作主要有两种，分别是给资源打标签，以及给资源添加业务关系</p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0610.05.png" /></p>
+<p>动态规则添加完成后并不是立即生效的，你总要先知道你的规则会匹配到哪些资源，是否与自己的预期一致，如果你的资源命名不够规范的话，那所写规则匹配到不符合预期的资源就很正常了，所以规范的资源命名是动态规则的前提</p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0610.06.png" /></p>
+<p>在规则列表页面有刷新按钮，刷新按钮就是来应用规则的，当点击刷新之后并不会立即应用规则，而是会先去检索匹配到的资源，如果你确定匹配到的这些资源符合预期，那就可以确定应用了</p>
+<p><img alt="" loading="lazy" src="/static/images/2022/0610.07.png" /></p>
+<p>至此关于资源管理的逻辑已经基本清晰了，这篇文章就先写到这里</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/cKkFlBZnpLd_IRaC6i8i6A.html">📅 2022-06-10</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

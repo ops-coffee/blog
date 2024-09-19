@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="JS,None,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="使用JS自动生成文字头像" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>使用JS自动生成文字头像</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="使用JS自动生成文字头像" />
+  <meta property="og:description" content="使用JS自动生成文字头像" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">使用JS自动生成文字头像</h1>
+
+        <p>这是一篇简单的关于LetterAvatar的使用文章，如果你是专业的前端或者已经了解这个了，可以关闭退出了无需再看接下来的内容。本文仅是做个简单的记录当做给自己看的笔记</p>
+<p>平常遇到有意思的网站或者好用的在线工具我都会放进收藏夹收藏下来，为了方便管理这些收藏的网站，我写了个简单的<a href="https://nav.ops-coffee.cn/">导航站</a></p>
+<p><img alt="" loading="lazy" src="/static/images/20230801.01.png" /></p>
+<p>每个收藏的网站都是由一个图标、一个名字加上一段简单的介绍组成，名字和简介都是文字处理起来比较简单，图标就想对麻烦一点了，刚开始我都是找到网站的ICON地址直接使用这个链接，时间长了部分网站的ICON地址改变了，就导致页面加载不到了，这不仅拖累了页面的整体加载时间，并且图标不显示还比较丑</p>
+<p>一个简单的处理方式是每次都把图标给下载下来保存到本地或者云存储上，这样依然比较麻烦，并且还占用存储空间，由于这个导航站还是托管在Github上，大量的图标加载同样会拖慢页面的速度，于是我在想能不能自动生成每个站点的图标，就像钉钉会为每个用户自动生成一个文字头像一样。于是很容易的在Github上找到了<a href="https://github.com/daolavi/LetterAvatar">这个叫LetterAvatar的项目</a></p>
+<p>这个项目非常简单，核心就是下边的这段JS</p>
+<pre class="codehilite"><code>&lt;script&gt;
+    /*
+     * LetterAvatar
+     * 
+     * Artur Heinze
+     * Create Letter avatar based on Initials
+     * based on https://gist.github.com/leecrossley/6027780
+     */
+    (function(w, d){
+        function LetterAvatar (name, size, color) {
+
+            name  = name || '';
+            size  = size || 60;
+
+            var colours = [
+                    &quot;#1abc9c&quot;, &quot;#2ecc71&quot;, &quot;#3498db&quot;, &quot;#9b59b6&quot;, &quot;#34495e&quot;, &quot;#16a085&quot;, &quot;#27ae60&quot;, &quot;#2980b9&quot;, &quot;#8e44ad&quot;, &quot;#2c3e50&quot;, 
+                    &quot;#f1c40f&quot;, &quot;#e67e22&quot;, &quot;#e74c3c&quot;, &quot;#ecf0f1&quot;, &quot;#95a5a6&quot;, &quot;#f39c12&quot;, &quot;#d35400&quot;, &quot;#c0392b&quot;, &quot;#bdc3c7&quot;, &quot;#7f8c8d&quot;
+                ],
+
+                nameSplit = String(name).split(' '),
+                initials, charIndex, colourIndex, canvas, context, dataURI;
+
+
+            if (nameSplit.length == 1) {
+                initials = nameSplit[0] ? nameSplit[0].charAt(0):'?';
+            } else {
+                initials = nameSplit[0].charAt(0) + nameSplit[1].charAt(0);
+            }
+
+            if (w.devicePixelRatio) {
+                size = (size * w.devicePixelRatio);
+            }
+
+            charIndex     = (initials == '?' ? 72 : initials.charCodeAt(0)) - 64;
+            colourIndex   = charIndex % 20;
+            canvas        = d.createElement('canvas');
+            canvas.width  = size;
+            canvas.height = size;
+            context       = canvas.getContext(&quot;2d&quot;);
+
+            context.fillStyle = color ? color : colours[colourIndex - 1];
+            context.fillRect (0, 0, canvas.width, canvas.height);
+            context.font = Math.round(canvas.width/2)+&quot;px Arial&quot;;
+            context.textAlign = &quot;center&quot;;
+            context.fillStyle = &quot;#FFF&quot;;
+            context.fillText(initials, size / 2, size / 1.5);
+
+            dataURI = canvas.toDataURL();
+            canvas  = null;
+
+            return dataURI;
+        }
+
+        LetterAvatar.transform = function() {
+
+            Array.prototype.forEach.call(d.querySelectorAll('img[avatar]'), function(img, name, color) {
+                name = img.getAttribute('avatar');
+                color = img.getAttribute('color');
+                img.src = LetterAvatar(name, img.getAttribute('width'), color);
+                img.removeAttribute('avatar');
+                img.setAttribute('alt', name);
+            });
+        };
+
+
+        // AMD support
+        if (typeof define === 'function' &amp;&amp; define.amd) {
+
+            define(function () { return LetterAvatar; });
+
+        // CommonJS and Node.js module support.
+        } else if (typeof exports !== 'undefined') {
+
+            // Support Node.js specific `module.exports` (which can be a function)
+            if (typeof module != 'undefined' &amp;&amp; module.exports) {
+                exports = module.exports = LetterAvatar;
+            }
+
+            // But always support CommonJS module 1.1.1 spec (`exports` cannot be a function)
+            exports.LetterAvatar = LetterAvatar;
+
+        } else {
+
+            window.LetterAvatar = LetterAvatar;
+
+            d.addEventListener('DOMContentLoaded', function(event) {
+                LetterAvatar.transform();
+            });
+        }
+    })(window, document);
+&lt;/script&gt;</code></pre>
+
+
+<p>LetterAvatar的使用也是非常的简单，主要就是替换img标签，具体可参考下边的用法</p>
+<pre class="codehilite"><code>&lt;img width=&quot;256&quot; height=&quot;256&quot; avatar=&quot;decentralized Market&quot; color=&quot;#0D8ABC&quot;&gt;
+&lt;img class=&quot;round&quot; width=&quot;256&quot; height=&quot;256&quot; avatar=&quot;decentralized Market&quot; color=&quot;#0D8ABC&quot;&gt;</code></pre>
+
+
+<p>其中<code>width</code>和<code>height</code>都是img标签原本就有的属性，代表图片的宽度和高度，而<code>avatar</code>和<code>color</code>为LetterAvatar特有的属性，<code>avatar</code>用来配置显示的文字，支持字母和汉字，显示每个单词的首字母，若有多个单词则会显示每个单词首字母，<code>color</code>用来配置文字的底色。如果想要圆角图标设置<code>class</code>为<code>round</code>即可</p>
+<p>有了这个插件，那自动生成网站的图标就容易多了，直接把原本图标的img用以上特殊的img标签替换即可，替换后的效果是这样的</p>
+<p><img alt="" loading="lazy" src="/static/images/20230801.02.png" /></p>
+<p>代码不算难，使用更是简单，但就是这么几行代码帮我解决了大问题</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/jS-automatically-generates-letter-avatar.html">📅 2023-08-02</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/前端插件/">🏷️ 前端插件</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Just-For-Fun/">🏷️ Just-For-Fun</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

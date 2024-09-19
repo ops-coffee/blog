@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="pyopenssl,SNI,运维,运维博客,运维开发,自动化,云计算,ops,sre,linux,devops,cloud" />
+  <meta name="description" content="证书监控 | 为什么我获取到的证书有效期是错的" />
+  <link rel="stylesheet" href="https://static.opendevops.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="shortcut icon" href="/static/images/favicon.ico" />
+
+  <!-- Begin SEO tag -->
+  <title>证书监控 | 为什么我获取到的证书有效期是错的</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="证书监控 | 为什么我获取到的证书有效期是错的" />
+  <meta property="og:description" content="证书监控 | 为什么我获取到的证书有效期是错的" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <a href="https://blog.ops-coffee.cn">
+        <h1>运维咖啡吧</h1>
+      </a>
+      <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">证书监控 | 为什么我获取到的证书有效期是错的</h1>
+
+        <p>今天咖啡吧的一个小伙伴在实践<a href="/s/AXOUz0v99OfpHrURdei9vw">『Python实现HTTPS网站证书过期监控及更新』</a>后反馈，通过文章内的代码获取到的证书过期时间是错的</p>
+<p><img alt="" loading="lazy" src="/static/images/20201023.01.png" /></p>
+<p>看到这个消息，第一反应就是他的网络或环境可能有问题导致获取到了错误的证书，因为其一我所有文章里的代码都是亲自跑过的，应该不会有明显的BUG，其二获取证书过期时间是通过<code>pyOpenSSL</code>模块来实现的，底层使用的<code>openssl</code>成熟且稳定。但本着对技术严谨的态度，还是询问小伙伴是否可以提供域名我来亲自测试下</p>
+<p>小伙伴很快把域名发了过来（为了保护隐私，小伙伴的域名我统一用blog.ops-coffee.cn来代替），我打开浏览器查看域名有效期时间，从2020年10月22日到2021年10月22日</p>
+<p><img alt="" loading="lazy" src="/static/images/20201023.02.png" /></p>
+<p>通过如下代码，也就是文章<a href="/s/AXOUz0v99OfpHrURdei9vw">『Python实现HTTPS网站证书过期监控及更新』</a>里提供的获取域名过期时间的代码，拿到的过期时间是2021年8月29日</p>
+<pre class="codehilite"><code>from _datetime import datetime
+from urllib3.contrib import pyopenssl
+
+def get_expire(domain):
+    try:
+        certificate = pyopenssl.ssl.get_server_certificate((domain, 443))
+        data = pyopenssl.OpenSSL.crypto.load_certificate(pyopenssl.OpenSSL.crypto.FILETYPE_PEM, certificate)
+
+        expire_time = datetime.strptime(data.get_notAfter().decode()[0:-1], '%Y%m%d%H%M%S')
+        expire_days = (expire_time - datetime.now()).days
+
+        return True, 200, {'expire_time': str(expire_time), 'expire_days': expire_days}
+    except Exception as e:
+        return False, 500, str(e)
+
+if __name__ == '__main__':
+    print(get_expire('blog.ops-coffee.cn'))</code></pre>
+
+
+<pre class="codehilite"><code>root@ops-coffee.cn:~# python ops-coffee.py
+(True, 200, {'expire_time': '2021-08-29 12:00:00', 'expire_days': 309})</code></pre>
+
+
+<p>咦？还真的是我错了！代码很简单，应该不会有逻辑BUG，那就可能是<code>openssl</code>获取到的数据就有问题，于是直接通过<code>openssl</code>命令来验证，果然是，命令返回与代码返回过期时间一致，都是2021年8月29日</p>
+<pre class="codehilite"><code>root@ops-coffee.cn:~# echo | openssl s_client -connect &quot;blog.ops-coffee.cn&quot;:443 2&gt;/dev/null | openssl x509 -noout -dates
+notBefore=Aug 28 00:00:00 2020 GMT
+notAfter=Aug 29 12:00:00 2021 GMT</code></pre>
+
+
+<p>看来真的是我错了，啪啪打脸，究竟会是哪里的问题？这时我想到了SNI，那么什么是SNI，SNI又有什么作用呢</p>
+<p>SNI：Server Name Indication，服务名称标识，是一项用于改善SSL/TLS的技术，在SSLv3/TLSv1中被启用。它允许客户端在发起SSL握手请求时提交请求的Host信息，使得服务器能够切换到正确的域并返回相应的证书</p>
+<p>这有什么用处呢？在早期是SSLv2设计中，默认认为一台服务器或者一个IP地址只会部署一个web服务，客户端与服务器通信时也不需要关心客户端请求的是哪个域名的证书（因为默认服务器上只部署了一个证书），随着虚拟主机技术的发展，在一台服务器上部署多个web服务变得非常普遍，但SSL协议又没有请求hostname的记录，这就导致了服务器不知道要发送哪个证书给客户端，默认就返回服务器上配置的<strong>第一个可用证书</strong>给客户端</p>
+<p>也就是说当客户端没有发送SNI信息，且请求的服务器上部署了多个HTTPS服务时，得到的证书信息可能就是错误的，为了验证猜想，我在<code>openssl</code>命令中添加了<code>servername</code>选项，再次查看返回的结果，过期时间2021年10月22日</p>
+<pre class="codehilite"><code>root@ops-coffee.cn:~# echo | openssl s_client -servername blog.ops-coffee.cn -connect &quot;blog.ops-coffee.cn&quot;:443 2&gt;/dev/null | openssl x509 -noout -dates
+notBefore=Oct 23 00:00:00 2020 GMT
+notAfter=Oct 22 23:59:59 2021 GMT</code></pre>
+
+
+<p>又跟小伙伴确认了一下，确认了以上的猜想，确实是SNI的问题，破案了</p>
+<p><img alt="" loading="lazy" src="/static/images/20201023.03.png" /></p>
+<p>知道了问题所在，那就改下代码修复问题吧，修复后更为强壮的代码如下</p>
+<pre class="codehilite"><code>from _datetime import datetime
+from urllib3.contrib import pyopenssl
+
+def get_expire(domain):
+    try:
+        conn = pyopenssl.ssl.create_connection((domain, 443))
+        sock = pyopenssl.ssl.SSLContext(pyopenssl.ssl.PROTOCOL_SSLv23).wrap_socket(conn, server_hostname=domain)
+
+        certificate = pyopenssl.ssl.DER_cert_to_PEM_cert(sock.getpeercert(True))
+        data = pyopenssl.OpenSSL.crypto.load_certificate(pyopenssl.OpenSSL.crypto.FILETYPE_PEM, certificate)
+
+        expire_time = datetime.strptime(data.get_notAfter().decode()[0:-1], '%Y%m%d%H%M%S')
+        expire_days = (expire_time - datetime.now()).days
+
+        return True, 200, {'expire_time': str(expire_time), 'expire_days': expire_days}
+    except Exception as e:
+        return False, 500, str(e)
+
+if __name__ == '__main__':
+    print(get_expire('blog.ops-coffee.cn'))</code></pre>
+
+
+<p>重要的是<code>server_hostname</code>参数，在请求时带上hostname标识，就能得到正确的结果啦</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/Aq2FiCLTsqIBX-RpARzM_w.html">📅 2020-10-23</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Python/">🏷️ Python</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog"
+                    data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements"
+                    data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/" target="_blank">关于本站</a>
+        <a href="/" target="_blank">回到首页</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

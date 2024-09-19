@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,save,关于技术,update,model" />
+  <meta name="description" content="一个非常实用的小方法" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Django model重写save方法及update踩坑记录</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django model重写save方法及update踩坑记录" />
+  <meta property="og:description" content="一个非常实用的小方法" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Django model重写save方法及update踩坑记录</h1>
+
+        <blockquote>
+<p>一个非常实用的小方法</p>
+</blockquote>
+<p>试想一下，Django中如果我们想对保存进数据库的数据做校验，有哪些实现的方法？</p>
+<p>我们可以在view中去处理，每当view接收请求，就对提交的数据做校验，校验不通过直接返回错误，不写数据库，校验通过再调用<code>create</code>或<code>update</code>方法写入数据库</p>
+<p>以上方式比较简单，容易理解，但随之又带来了麻烦，我们需在所有接收数据的地方都要去校验，那么有没有更加优雅的方式呢？如果你看过我之前的文章<a href="/s/cMxdAfsTno56ixurmD4KXA" target="_blank">『Django使用Signals监测model字段变化发送通知』</a>]就能想到可以通过signals信号来处理，添加一个<code>pre_save</code>的信号，每当数据库数据变更前都会触发<code>pre_save</code>方法，可以在这里进行校验，免去了view中多个地方校验的麻烦</p>
+<p>而今天要说的并不是signals，而是另一种比较常用的做法：<strong>重写model的save方法</strong></p>
+<h2 id="save">重写save方法</h2>
+<p>save方法的主要作用就是将一个对象保存到数据库。如果我们想在数据入库之前做一些处理，除了上边提到的<code>signals</code>之外，还可以通过重写save方法来实现。具体实现方式看下面这个例子</p>
+<p>假如我们定义了model如下：</p>
+<pre class="codehilite"><code>class TempTask(models.Model):
+    ...
+
+    exechost = models.CharField(max_length=64, default='localhost', verbose_name='执行主机')
+    execuser = models.ForeignKey(ExecUser, null=True, on_delete=models.PROTECT, db_constraint=False)</code></pre>
+
+
+<p>exechost默认为Localhost，execuser默认为空，现有需求：当exechost不为localhost时，他必须符合<code>ip:port</code>的格式，且execuser不能为空。这是一个比较复杂的校验方式，我们可以通过重写save方法来处理</p>
+<pre class="codehilite"><code>class TempTask(models.Model):
+    ...
+
+    def save(self, *args, **kwargs):
+        if self.exechost and (self.exechost.strip() != 'localhost'):
+            if len(self.exechost.split(':')) != 2:
+                raise ValidationError('执行主机格式错误，应为ip:port格式')
+
+            if not self.execuser:
+                raise ValidationError('当执行主机存在时执行用户不能为空')
+
+        super().save(*args, **kwargs)</code></pre>
+
+
+<p>我们可以在save函数内执行各种自定义逻辑，但需要注意的是，最后必须要调用<code>super().save()</code>方法来保证执行了父类的<code>save()</code>，这样才能保证数据写入了数据库。</p>
+<p>这样在当我们执行create语句插入数据的时候就会先去执行save中的校验方法进行校验了</p>
+<pre class="codehilite"><code>TempTask.objects.create(**postdata)</code></pre>
+
+
+<h2 id="update">update踩坑</h2>
+<p>就当我以为一切都要结束准备起身冲杯咖啡的时候，我发现新加数据可以正常进行校验，但更新数据却不行，更新的代码如下：</p>
+<pre class="codehilite"><code>TempTask.objects.filter(id=pk).update(**postdata)</code></pre>
+
+
+<p>经过一番查找发现了问题所在，官方文档中有这么一句话</p>
+<pre class="codehilite"><code>Unfortunately, there isn’t a workaround when creating or updating objects in bulk, since none of save(), pre_save, and post_save are called.</code></pre>
+
+
+<p>也就是说，<strong>当使用查询集批量更新对象时，将不会为每个对象调用save()方法</strong>，连<code>pre_save</code>和<code>post_save</code>也不会被调用。与<code>save()</code>类似的还有model的<code>delete()</code>方法，当批量删除的时候，同样不会调用model的<code>delete()</code>方法，但delete是可以使用<code>pre_delete</code>或<code>post_delete</code>信号的</p>
+<p>解决这个问题的方法很简单，那就是将更新的代码换成下边这种，保证调用到save方法</p>
+<pre class="codehilite"><code>_t = TempTask.objects.get(id=pk)
+_t.__dict__.update(**postdata)
+_t.save()</code></pre>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/fKDyRxjMr0XmXJGCAv6Ghw.html">📅 2020-04-23</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

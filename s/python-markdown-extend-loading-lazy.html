@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Just-For-Fun,loading,markdown,关于技术,img,html,lazy,博客,这是生活,python" />
+  <meta name="description" content="通过配置img标签的loading属性为lazy来实现图片懒加载，以及自定义扩展python-markdown插件在生成html文件时自动添加loading属性" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>个人博客优化之图片懒加载探索</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="个人博客优化之图片懒加载探索" />
+  <meta property="og:description" content="通过配置img标签的loading属性为lazy来实现图片懒加载，以及自定义扩展python-markdown插件在生成html文件时自动添加loading属性" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">个人博客优化之图片懒加载探索</h1>
+
+        <p>之前有<a href="https://blog.ops-coffee.cn/tag/%E5%8D%9A%E5%AE%A2/" target="_blank">几篇文章</a>介绍过我的博客是通过Markdown直接生成HTML并自动上传到Github然后通过Netlify免费加速对外提供访问的，博客页面构成很简单，就HTML主体内容和一个CSS文件，连JS都很少，除了谷歌Analytics和Adsense必须依赖的JS再无其它，要的就是一个简单，尽可能的减少JS的渲染和资源的请求，能够获得更快的页面加载速度，从而为阅读者带来更好的体验</p>
+<p>之前的文章技术为主，文章内图片很少，而最近写的游记多了，游记内又放了大量的照片，加载起来就很慢，不仅是加载慢，如果用户在等待加载的过程中关闭了网页或者仅仅是看了文章开头发现不感兴趣关闭了，那一大部分图片已经加载并没有使用，这就造成了流量的浪费。今天花了点时间优化了这个问题，核心就是图片懒加载</p>
+<h2 id="lazy-loading">Lazy loading</h2>
+<p>在页面中有很多图片的时候，图片加载就需要很多时间，不仅影响渲染速度还会浪费带宽，为了解决这个问题，提高用户体验，就出现了懒加载这种方式来减轻服务器的压力，优先加载用户当前可视区域的图片，其他不在可视区域内的图片会在进入用户可视区域或即将进入用户可视区域时再加载</p>
+<p>图片懒加载的实现方式有很多种，我选择了通过HTML元素延迟加载属性loading来实现，主打一个简单，从2019年的Chrome浏览器76版本开始，IMG图片和IFRAME框架已经支持原生懒加载特性，使用<code>loading="lazy"</code>语法，用法如下</p>
+<pre class="codehilite"><code>&lt;img alt=&quot;ops-coffee&quot; loading=&quot;lazy&quot; src=&quot;https://blog.ops-coffee.cn/static/images/wx.sou1.png&quot; /&gt;</code></pre>
+
+
+<p>在img标签内添加<code>loading="lazy"</code>无需其他额外操作，浏览器就会自动的判断先加载哪些图片，哪些图片延迟加载。loading除了<code>lazy</code>配置是懒加载之外，还有两个配置<code>eager</code>无视一切进行加载和<code>auto</code>基于浏览器自己的策略进行加载，其中Auto是默认值，如果没有显式地设置loading属性或者loading属性设置错误，则都被当作<code>auto</code>来处理</p>
+<h2 id="python-markdown">python-markdown自定义扩展</h2>
+<p>此时我们知道修改HTML的IMG标签添加<code>loading="lazy"</code>即可实现图片懒加载，我的HTML文件都是通过<code>python-markdown</code>这个工具生成的，使用起来很简单</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; from markdown import markdown
+&gt;&gt;&gt;
+&gt;&gt;&gt; a = '![](https://blog.ops-coffee.cn/static/images/wx.sou1.png)'
+&gt;&gt;&gt; markdown(a)
+'&lt;p&gt;&lt;img alt=&quot;&quot; src=&quot;https://blog.ops-coffee.cn/static/images/wx.sou1.png&quot; /&gt;&lt;/p&gt;'</code></pre>
+
+
+<p>默认生成的IMG标签没有loading属性，怎么能让markdown工具在生成HTML文件时添加loading属性呢？<code>python-markdown</code>工具提供了内置的扩展来实现给元素添加属性，用法如下：</p>
+<pre class="codehilite"><code>{: #someid .someclass somekey='some value' }</code></pre>
+
+
+<p>用<code>#</code>开头的是元素id，用<code>.</code>开始的是分配给元素的class的列表，后面的键值等式，将被赋到元素上。借助扩展我们就可以给IMG添加loading属性了</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; a = '![](https://blog.ops-coffee.cn/static/images/wx.sou1.png){: #ops-coffee-id .ops-coffee-class loading=&quot;lazy&quot; }'
+&gt;&gt;&gt;
+&gt;&gt;&gt; markdown(a, extensions=['extra'])
+'&lt;p&gt;&lt;img alt=&quot;&quot; class=&quot;ops-coffee-class&quot; id=&quot;ops-coffee-id&quot; loading=&quot;lazy&quot; src=&quot;https://blog.ops-coffee.cn/static/images/wx.sou1.png&quot; /&gt;&lt;/p&gt;'
+&gt;&gt;&gt;</code></pre>
+
+
+<p>但这有一个问题，那么多历史文章，那么多文章配图，如果都想实现懒加载，就要通过修改markdown给图片加上这一段特殊的标记才能实现，一来麻烦，二来也降低了markdown的通用性，我若要markdown贴到其他地方还要手动去除这段标记，有没有更好的办法呢？此时我注意到<code>python-markdown</code>工具支持自定义扩展</p>
+<pre class="codehilite"><code>from markdown import markdown
+from markdown.extensions import Extension
+from markdown.treeprocessors import Treeprocessor
+
+
+class CustomTreeprocessor(Treeprocessor):
+
+    def run(self, root):
+        for elem in root.iter():
+            if elem.tag == 'img':
+                elem.set(&quot;loading&quot;, &quot;lazy&quot;)
+
+        return root
+
+
+class CustomExtension(Extension):
+
+    def extendMarkdown(self, md):
+        md.treeprocessors.register(CustomTreeprocessor(md), 'ops-coffee-img', 1)
+
+
+if __name__ == '__main__':
+    c = '![](https://blog.ops-coffee.cn/static/images/wx.sou1.png)'
+    print(markdown(c, extensions=['extra', CustomExtension()]))</code></pre>
+
+
+<p>编写<code>CustomExtension</code>自定义扩展类，然后在生成HTML文件时引用扩展类，就可以不需要修改markdown内容，自动在IMG标签上添加loading属性了，问题完美解决</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/python-markdown-extend-loading-lazy.html">📅 2023-06-08</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/这是生活/">🏷️ 这是生活</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Just-For-Fun/">🏷️ Just-For-Fun</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/博客/">🏷️ 博客</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

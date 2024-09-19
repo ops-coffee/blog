@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="None,开源,关于技术,Devops,CMDB" />
+  <meta name="description" content="None" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>开源推荐｜灵活多变功能强大的CMDB</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="开源推荐｜灵活多变功能强大的CMDB" />
+  <meta property="og:description" content="None" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">开源推荐｜灵活多变功能强大的CMDB</h1>
+
+        <p>一个完善的基础资源数据库是我们构建运维自动化上层应用的基础，所以构建CMDB系统成了有想法在DevOps运维自动化领域有所发展的企业离不开的重要一环，但受制于每家企业不同的内外部环境、资源配置以及管理方式各不相同，开发一套相对通用的CMDB系统就变得非常困难，这也是为什么现在市面上开源的CMDB系统很多，但使用都不是很广泛的主要原因</p>
+<p>近段时间偶然发现了一款开源的CMDB系统，构建足够灵活，功能相对完善，使用体验也不错，于是深入研究，了解了其设计思路，更是受益颇多。我们自己也有构建基础资源数据库，目前已成功管理了生产环境所有的资源，更是成为团队小伙伴每天必用的趁手工具，落地效果还不错，这篇文章我就结合自己构建CMDB的经验来介绍下这个开源的CMDB系统：维易CMDB，同时推荐给大家</p>
+<h2 id="_1">系统介绍</h2>
+<h3 id="_2">模型</h3>
+<p>一个完善的CMDB需要管理企业内的所有资源，不仅是服务器，不仅是数据库，而是所有对我们重要的资源，不仅有硬件，还包括软件，这些资源每个企业可能都不一样，那么要构建相对通用的CMDB，支持自定义资源模型就成了必须的</p>
+<p>维易CMDB支持自定义资源分组，例如服务器、数据库等等，支持自定义资源类型，例如物理机、MySQL等等，支持自定义资源属性，例如服务器名称、内网IP等等，支持自定义资源模型与模型之间的关联，例如网卡关联到服务器、服务器关联到应用、应用关联到产品等等，支持为模型添加自定义的触发器，例如模型数据变化自动通知、自动调用WebHook实现更灵活的控制等等，支持属性的自动发现采集更新，例如云上资源自动同步、自定义发现插件等等，支持关系的自动发现更新，例如网卡自动与主机关联关系、nginx直接与服务器关联关系等等。这一段我连续说了好几个支持、自定义，足以看出它的灵活以及强大</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1123.01.png" /></p>
+<h3 id="_3">关系</h3>
+<p>模型与模型之间的关联关系可以自定义，模型与模型之间的关系还能自动发现自动关联。同时维易CMDB还会根据模型的关联关系自动生成业务关系拓扑，业务关系、资源关联清晰明了</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1123.02.png" /></p>
+<p>根据业务关系拓扑用户也可以根据自己的业务需要或查询习惯自定义服务树，根据服务树来查询资源或许更符合我们的使用习惯</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1123.03.png" /></p>
+<h3 id="_4">查询</h3>
+<p>足够灵活的配置让我们能够管理所有你想要管理的资源。当然资源管理只是构建CMDB的第一步，更为重要的是要CMDB为我们提供准确的数据，为上层业务服务，这就对于数据的查询和应用显得尤为重要，维易CMDB的查询语法非常灵活，支持多种资源多种属性多种关系的组合查询，可以清晰准确的定位目标资源，同时也有完善的API提供，方便与其他系统集成</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1123.04.png" /></p>
+<h3 id="_5">权限</h3>
+<p>除了灵活的模型定义，清晰的资源关系，强大的数据查询，数据的权限控制也非常的重要，维易CMDB的权限控制也非常灵活，权限控制点很多，所有能看到点菜单，所有自定义的模型都有权限控制，权限控制粒度比较细，控制到了对象级别，甚至还能针对模型的字段来进行权限控制</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1123.05.png" /></p>
+<p>比较有意思的是还支持通过触发器来实现动态授权，支持对资源进行批量授权和权限回收</p>
+<h3 id="_6">审计</h3>
+<p>仅仅有授权还不够，配合上操作审计才完整，维易CMDB有着非常完善的审计机制，所有的数据变化都能在审计日志中记录，权限最小化，操作有记录，全面保障系统安全</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1123.06.png" /></p>
+<h3 id="_7">大盘</h3>
+<p>Dashboard不仅能够全面的反映当前资源的使用情况，老板也是非常的喜欢，维易CMDB不仅有大盘，还支持自定义，自定义图表类型，自定义图表样式，根据自定义条件实时计算展示的数据，不仅能够做到好看，更能做到有用</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1123.07.png" /></p>
+<h2 id="_8">个人看法</h2>
+<p>通过我自己简单的试用和潜伏社区对开发团队的了解，分享一点我自己不成熟的看法，一家之言，各位看个热闹就好</p>
+<p>优势：</p>
+<ol>
+<li>
+<p>系统很强大，设计很巧妙，如果使用得当应该能满足很多企业的基本使用需求</p>
+</li>
+<li>
+<p>系统有很多值得借鉴的地方，例如自定义模型、强大的查询语法和权限设计等等，值得认真推敲学习</p>
+</li>
+<li>
+<p>社区比较活跃，尤其是微信群几乎是有问必答，虽然公众号文章阅读量跟我一样少的可怜，但文章内容质量不错</p>
+</li>
+<li>
+<p>开源，这个无需多说，向开源致敬</p>
+</li>
+</ol>
+<p>提升：</p>
+<ol>
+<li>
+<p>配置较为复杂，想要做通用，适应更多的场景，复杂似乎是没有办法的事情，但这对新手和非技术人员很不友好，其实大部分企业对资源都是一样的，如果能内置更多的模型或者有模型市场之类的可以直接使用，那就会简单很多</p>
+</li>
+<li>
+<p>体验可以更好，配置太复杂了，能否可以从使用体验上做减法，例如添加默认角色，降低授权难度，例如优化服务树，基于服务树进行授权管理等等</p>
+</li>
+</ol>
+<p>总结一下就是系统很棒，值得好好学习，如果你是专业的技术人员，那这个系统使用起来应该难度不大，同时也能真的解决问题，如果你非技术那使用起来就有一定难度了，不过好在社区活跃，支持到位，多问问问题不大</p>
+<h2 id="_9">在线体验</h2>
+<p>最后附上项目Github地址：<a href="https://github.com/veops/cmdb" target="_blank">https://github.com/veops/cmdb</a></p>
+<p>官方还提供有在线Demo可以体验，README有地址和账号密码，如果想要进社区微信群也可以直接私信我</p>
+<p>觉得不错的话请不要吝惜star，好项目值得被更多的人发现，真诚的希望维易CMDB发展的越来越好，造福更多的运维同行</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/veops-open-source-cmdb-devops.html">📅 2023-11-22</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/开源/">🏷️ 开源</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

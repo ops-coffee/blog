@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="CMDB" />
+  <meta name="description" content="为什么需要拆分表？逻辑表之间都有哪些关联关系？究竟何时该使用哪种关联关系？" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>开源｜维易CMDB详解之模型关联关系</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="开源｜维易CMDB详解之模型关联关系" />
+  <meta property="og:description" content="为什么需要拆分表？逻辑表之间都有哪些关联关系？究竟何时该使用哪种关联关系？" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">开源｜维易CMDB详解之模型关联关系</h1>
+
+        <p>维易CMDB是一套灵活性非常高的开源CMDB系统，动态模型是这套系统的核心和亮点，支持的配置十分丰富，可玩儿性很高，之前的两篇文章详细介绍了VECMDB的核心功能动态模型的配置，包括满足基本使用的模型<a href="https://blog.ops-coffee.cn/veops/oneops-cmdb-ci-types-configure-base" target="_blank">基础配置</a>和扩展能力很强的模型<a href="https://blog.ops-coffee.cn/veops/oneops-cmdb-ci-types-configure-advanced" target="_blank">高级配置</a>，除了属性配置外，VECMDB的模型还支持各种关联关系配置，构建合理的关联关系不仅能让资源数据看上去更加清晰，更为重要的是在为上层业务提供数据时更加简单且灵活，这篇文章将详细的介绍下VECMDB模型的关联配置</p>
+<p>在开始介绍关联配置之前我们需要先理清楚为什么要将数据分表，以及基本的表设计原则，同时的话还要知道逻辑表之间有哪些常见的关联关系，以及哪种情况下适合使用哪种关联关系</p>
+<h2 id="_1">表设计</h2>
+<p>将所有数据存储在一张表中虽然在某些情况下看似简便，但在实践中会带来许多问题，例如：</p>
+<p><strong>数据冗余：</strong> 首先是数据冗余，如果将所有数据放在一张表中，许多数据会重复存储，导致数据冗余。例如，在一个包含项目和资源信息的表中，每个资源都需要重复存储项目信息</p>
+<p><strong>数据更新异常：</strong> 数据冗余会导致更新异常，例如，需要更新项目信息时，必须更新所有相关记录，增加了操作的复杂性和错误的风险</p>
+<p><strong>数据一致性问题：</strong> 冗余数据可能导致数据不一致，例如，如果某些记录未能正确更新，可能会出现不同记录中同一项目的信息不一致的情况</p>
+<p><strong>性能问题：</strong> 单表存储大量数据会导致查询性能下降，特别是当表中包含大量非相关列时，查询操作需要扫描更多数据，影响效率</p>
+<p><strong>维护困难：</strong> 大表的结构复杂且冗长，维护起来困难，增加或修改列会影响整个表的性能和数据完整性</p>
+<p>鉴于以上这些问题，数据表拆分势在必行。那该如何拆分数据表，有哪些规范和原则？个人觉得主要有以下这些：</p>
+<p><strong>业务逻辑划分：</strong> 根据业务逻辑，将不同类型的数据存储在不同的表中。例如，项目信息和资源信息分别存储在不同的表中</p>
+<p><strong>关系模型：</strong> 根据业务需求和实体关系模型，将数据拆分成不同的实体表，并定义它们之间的关系，例如一对多，一对一和多对多</p>
+<p><strong>性能优化：</strong> 拆分表时，考虑查询和操作的性能，避免过于频繁的表连接操作，合理设计索引，例如对于资源表，我们经常需要根据name查询资源信息，那就可以给name字段添加索引，需要根据项目去获取项目下的所有资源，那就可以分别建立项目表和资源表，并在项目表和资源表之间建立关联关系</p>
+<p>合理设计数据库表和关联关系能够提高数据库的性能、可维护性和数据一致性。通过业务逻辑划分和性能优化等原则，将数据合理拆分到多个表中，并设计适当的<strong>关联关系</strong>，可以确保数据库系统高效、稳定和易于扩展，这里有一个核心的关注点：关联关系</p>
+<h2 id="_2">关联关系</h2>
+<p>数据库设计中的关联关系是为了反映和管理现实世界中的数据关系，通过合理设计，可以提高数据存储的规范性、完整性、一致性、查询效率和灵活性，从而更好地满足业务需求。关联关系主要是为了在数据库中的不同表之间建立逻辑连接，确保数据模型准确反映业务逻辑</p>
+<p>数据库中的关联关系主要有三种：一对一（One-to-One），一对多（One-to-Many），多对多（Many-to-Many），这三种关系的区别和使用场景如下：</p>
+<p><strong>一对一：</strong> 一个实体中的一条记录仅关联到另一个实体中的一条记录，反之亦然。例如用户和用户详情：每个用户都有且只有一个用户详情，每个用户详情也只能对应一个用户。这个实际的应用场景不是很多，一般是在当前表不方便添加字段或是表字段太多需要拆分表的情况下使用</p>
+<p><strong>一对多：</strong> 一个实体中的一条记录可以关联到另一个实体中的多条记录，反之，一个实体中的一条记录只能关联到另一个实体中的一条记录。例如服务器和网卡：一个服务器可以有多个网卡，但一个网卡只能属于一个服务器</p>
+<p><strong>多对多：</strong> 一个实体中的多条记录可以关联到另一个实体中的多条记录，反之亦然。例如资源和标签，一个资源可以有多个标签，一个标签也可以被多个资源使用</p>
+<h2 id="_3">关联配置</h2>
+<p>在简单的了解了表设计以及关联关系之后，我们来具体的看一下VECMDB里模型的关联配置</p>
+<h3 id="_4">关系类型</h3>
+<p>第一步是添加模型关系，不过在添加模型关系之前，要先了解一个<code>关联类型</code>的概念，关联类型用来描述配置项之间关联关系的分类，表示不同配置项之间的连接和依赖关系，关联类型通过管理菜单的<code>后台管理</code>-<code>关系类型</code>来管理</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.01.png" /></p>
+<p>关联类型的管理很简单，只能增删改查。这个管理类型实际上<strong>只起到了描述关系的作用，并没有其他的代码逻辑处理</strong>，所以只需要简单了解即可。VECMDB默认就添加了四个关系类型，分别是：<code>contain</code>、<code>deploy</code>、<code>install</code>和<code>connect</code>，这四个关系的解释如下：</p>
+<ul>
+<li>contain：用来描述<strong>包含</strong>关系，例如：服务器包含磁盘</li>
+<li>deploy：用来描述<strong>部署</strong>关系，例如：应用部署在虚拟机</li>
+<li>install：用来描述<strong>安装</strong>关系，例如：MySQL安装在物理机</li>
+<li>connect：用来描述<strong>连接</strong>关系，例如：交换机连接路由器</li>
+</ul>
+<p>默认的这四种关系类型基本就够用了，通常不需要再额外的增加关系类型，只需要在新增模型关联时根据实际情况选择合适的关系类型即可。前文说过关系类型仅仅只是个描述而已，并没有其他的代码逻辑判断，所以即便是选错了，也没有太大的影响</p>
+<p>关系类型存在的最大的意义是为了清晰的描述配置项之间的关联关系分类，主要的体现位置是在菜单<code>后台管理</code>-<code>服务树定义</code>中的服务树上</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.02.png" /></p>
+<p>上图就描述了服务树之间的关系，例如事业部包含（contain）产品、应用部署（deploy）在虚拟机上、物理机包含（contain）网卡以及MySQL安装（install）在docker上。关联类型让关系描述更具体，是包含、部署、安装或是连接，清晰明了，不仅仅只是一个A关联B</p>
+<h3 id="_5">模型关系</h3>
+<p>模型关系配置在模型配置的<code>模型关联</code>页签，在这里可以新建模型关心</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.03.png" /></p>
+<p>新建模型关系主要有几个配置，分别是：源模型、目标模型、关联类型、关系约束和属性关联，详细解释如下：</p>
+<p><strong>源模型：</strong> 指定关联模型的源模型，通常就是当前模型，不能修改</p>
+<p><strong>目标模型：</strong> 选择要建立关联关系的目标模型</p>
+<p>例如我们想要在物理机与Docker容器间建立一对多的关联关系，那就在物理机模型的模型关联页签，点击<code>新增关系</code>按钮添加关联关系，源模型就是<code>物理机</code>模型，目标模型就选择<code>Docker</code></p>
+<p><strong>关联类型：</strong> 参考前文介绍过的<code>关系类型</code>，根据模型之间的关系选择合适的关联类型就好，例如我们要建立物理机跟Docker容器的关联关系，一个物理机上可以跑多个Docker容器，Docker是包含在物理机上的，那这里的关联类型就可以选择<code>contain</code>，表示包含的意思，源模型<code>物理机</code>包含目标模型<code>Docker</code></p>
+<p><strong>关系约束：</strong> 选择一种合适的关系约束即可，VECMDB支持一对多、一对一和多对多的关联关系，这三种关联关系前文也都有详细介绍过，根据实际情况选择合适的关联关系，例如这里我们要建立物理机和Docker容器的关联关系，一个物理机上可以包含多个Docker容器，每个Docker容器只能属于一个物理机，那这个关联关系就是很标准的<code>一对多</code>，这里也选择<code>一对多</code>即可</p>
+<p><strong>属性关联：</strong> 配置属性关联，可以通过两个模型相同的属性值自动建立关联，例如物理机模型中有个<code>内网IP</code>属性，Docker模型中有个<code>宿主机IP</code>属性，当Docker的<code>宿主机IP</code>与物理机的<code>内网IP</code>相同时，则自动在两者之间建立关联关系，此时新增的属性关联配置就是：<code>内网IP</code>=&gt;<code>宿主机IP</code></p>
+<p>支持一次配置多个属性关联，当配置多个属性关联时，多个属性要全部匹配才自动关联，多属性间是<code>与</code>的关系</p>
+<p>以上在配置模型新增关系时，其他几个配置都是必须配置的，只有属性关联不是必须配置的，即便没有配置属性关联，依然可以手动添加数据间的关联关系，这主要是因为，系统默认会有一张独立的关系表来记录CI之间的关系，所以即便是你没有配置属性关联，依然可以在不同的模型数据间建立关联关系，属性关联存在的主要意义是为了实现<strong>自动关联</strong></p>
+<p>并不是所有的属性都支持<code>属性关联</code>，有几个类型不支持，例如：密码、JSON和多值属性就<strong>不支持</strong>配置属性关联</p>
+<p>对于已经创建的模型关联关系，在<code>模型关联</code>页面可以进行赋权、删除或双击修改属性关联操作，不能编辑关联类型、关系约束等配置</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.04.png" /></p>
+<h3 id="_6">实例关系</h3>
+<p>在创建了模型关系之后，就可以添加实例关系了，添加实例关系有两种方式，分别是手动关联和自动关联</p>
+<h4 id="_7">手动关联</h4>
+<p>在<strong>目标模型</strong>上添加数据时，可以在模型关系表单里选择关联模型的<code>属性名</code>和<code>属性值</code>，这样的话就能在两个模型间建立关联关系，例如我们创建的物理机模型和Docker模型，在新增Dcoekr数据时，可以直接配置所要关联的物理机</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.05.png" /></p>
+<p>也可以在<strong>源模型</strong>的资源列表页面，手动添加关系。找到源模型，点击右侧操作的<code>详情</code>或<code>添加关系</code>按钮</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.06.png" /></p>
+<p>可以呼出详情，切换到<code>关系</code>选项卡，找到目标模型，点击模型后边的<code>+</code>按钮就能手动添加关系了</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.07.png" /></p>
+<h4 id="_8">自动关联</h4>
+<p>虽然系统提供了手动维护关系的方式，不过不建议手动维护，手动维护关系容易出错，那自动创建关系就显得尤为重要了</p>
+<p>只需要配置模型关系的<strong>属性关联</strong>就能做到模型数据间的自动关联了，例如你有两个模型，A和B，A跟B之间一对一关系，A模型里有个name字段，B模型里也有个name字段，你配置了两个name属性关联，当B模型新加一条新数据，新数据name属性如果与A模型里某条数据的name属性相同的话，则系统会自动将B模型新数据与A模型中已存在的name相同的数据做关联</p>
+<p>自动关联在每次新增和修改CI时都会触发关系的建立，关系只增不删</p>
+<h3 id="_9">关系查看</h3>
+<h4 id="_10">模型关系查看</h4>
+<p>模型构建的关系可以在模型配置的<code>模型关联</code>页签查看，关系是双向的，源模型上是正常的关联关系，而目标模型上则是<code>被</code>关联的关系</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.08.png" /></p>
+<h4 id="_11">单实例关系查看</h4>
+<p>实例的关系则可以通过实例的详情查看，在实例详情的<code>关系</code>页签，切换到<code>拓扑</code>，就能看到当前资源的拓扑关系，非常清晰，无论是源模型还是目标模型都能展示当前模型的所有关系</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.09.png" /></p>
+<p>如果关系有依赖，则可以一次查看多层关系，例如我这里查看了物理机的关系，不仅展示了物理机与Docker的一对多关系，同时也展示了物理机与应用、应用与产品、产品与事业部的多层关系</p>
+<h4 id="_12">整体关系视图查看</h4>
+<p>除了可以单个实例查看当前实例的关系外，还能从更宏观的角度去查看全局的模型间依赖关系，通过菜单<code>后台管理</code>-<code>服务树定义</code>查看</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0619.10.png" /></p>
+<h2 id="_13">使用技巧</h2>
+<p>关于<code>源模型</code>与<code>目标模型</code>的选择，按照字面意思了解就行了，源模型即是关系开始的模型，目标模型即是关系结束的模型，这个比较抽象，下边举几个实际的例子</p>
+<p>例如要在<code>用户</code>和<code>用户详情</code>建立关联关系，一个用户只会有一个用户详情，那他们之间应该建立<strong>一对一</strong>的关联关系，在这个关联关系中的数据依赖是用户详情依赖用户，没有用户也就没有用户详情，数据流向为：用户-&gt;用户详情，则用户为源模型，用户详情为目标模型</p>
+<p>例如要在<code>服务器</code>和<code>故障记录</code>间建立关联关系，一台服务器会有多条故障记录，而一条故障记录则只对应一台服务器，那他们之间应该建立<strong>一对多</strong>的关联关系，在这个关联关系中故障记录依赖服务器，没有服务器则不存在故障记录，数据流向为：服务器-&gt;故障记录，则服务器为源模型，故障记录为目标模型</p>
+<p>而对于多对多的关系，源模型和目标模型就没有什么区别了，数据流向是双向的，例如要在<code>MySQL</code>和<code>项目</code>间建立关联关系，一个MySQL可以给多个项目使用，一个项目也可以使用多个MySQL，那他们之间应该建立<strong>多对多</strong>的关联关系，在这个关系中，数据流向是双向的，所以无论是MySQL还是项目作为源模型均可</p>
+<h2 id="_14">注意事项</h2>
+<p>在通过<code>属性关联</code>自动建立关联关系时，对于属性的选择最好是通过双方模型上的<strong>唯一属性</strong>来自动建立，唯一属性更容易把控，不容易出错，例如配置了一对一的关联关系，若选择的<code>属性关联</code>在一个模型中匹配到了多条数据，那么这个关联关系将会创建失败</p>
+<p>对于关系的自动建立，更好的方式是通过官方提供的Agent来实现，其次是通过<code>属性关联</code>来自动建立，最后才是手动建立关联关系</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/veops/oneops-cmdb-ci-types-configure-relationship.html">📅 2024-06-21</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

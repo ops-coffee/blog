@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="OneTerm,开源,关于技术,None" />
+  <meta name="description" content="None" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>用了两周开源堡垒机OneTerm，我有一些建议</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="用了两周开源堡垒机OneTerm，我有一些建议" />
+  <meta property="og:description" content="None" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">用了两周开源堡垒机OneTerm，我有一些建议</h1>
+
+        <p>上一篇文章分享了一款<a href="https://blog.ops-coffee.cn/s/veops-open-source-jumpserver-oneterm" target="_blank">简洁且强大的开源堡垒机OneTerm</a>，功能完善，代码简单，GO语言开发，用来学习很合适，拿来自用也没问题。堡垒机该有的核心功能基本都有了，方便与自有系统集成，我使用了两周，功能上没有什么大问题，但仍然发现了一些有待提升的地方，这篇文章从我个人使用的角度来写下我自己觉得有哪些是可以优化的，仅一家之言，官方觉得有道理可以采纳，也算回馈社区，觉得说错了也不必较真哈，毕竟我个人认知有限</p>
+<h2 id="web">Web终端</h2>
+<p>我们平常使用堡垒机最多的功能应该就是登陆系统控制台，OneTerm支持Linux终端使用，也能通过配置在客户端上使用，不过这些都比较麻烦，我们平常用的最多的还是Web控制台，那Web控制台的使用体验就十分重要了，OneTerm的Web终端连接在工作台页面</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0323.01.png" /></p>
+<p>这个页面上点内容比较多，有我的资产、最近回话和个人信息，我个人觉得Web连接是个十分重要点功能，连接资产点页面应该简洁，只包含我的资产这块的内容即可，左侧目录树，右侧主机，点击连接直接打开web终端，还有就是突出最重要的「连接」按钮，而弱化是否可连接的状态显示，这里总感觉那个绿色的「连接」状态是可以点击的</p>
+<p>堡垒机可以支持多个不同的账号登陆连接，这个比我之前设计的好多了，我之前写的堡垒机没考虑过多账号登陆的问题，支持多账号登陆显然更好，不过当一个主机只配置了一个登陆账号时就没必要弹出账号选择框了，直接连接即可，只在主机配置多个登陆账号时弹框让用户选择登陆账号，简化使用逻辑</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0323.02.png" /></p>
+<p>OneTerm的Web终端是新开一个浏览器标签显示的，最大化了内容区域，不过似乎有些小bug，例如不会随着浏览器窗口的改变自动调整终端的展示大小，就是自动resize操作，我之前自己写WebSSH的时候处理过<a href="https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-kubernetes-ssh-resize" target="_blank">终端窗口自适应Resize</a>的问题，应该是类似的，终端窗口除了这个bug外，还有一些可以优化的地方，例如新的Tab页面Title最好改成主机的IP或名称，这样让我明确的知道打开的这个窗口是哪个主机的，不然一次连接的主机多了很容易出错</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0323.03.png" /></p>
+<p>其实更好的处理方式我觉得是一个页面多标签的形式，而非开多个页面，多页面间频繁切换还是非常麻烦的。这个页面可以参考Xshell或是MobaXterm之类成熟的SSH客户端，左侧目录树，显示所有目录及主机信息，右侧多标签显示操作窗口，使用体验比较好，并且也符合大众的操作习惯</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0323.04.png" /></p>
+<h2 id="_1">数据互通</h2>
+<p>OneTerm支持与自家的CMDB联动，可以同步CMDB的数据到堡垒机，这个非常棒，打破不同系统间的数据壁垒，做到数据统一，基础数据只有一份保证CMDB数据权威。这跟我之前的理念一致，CMDB要想数据准确，靠制度和规范是不行的，必须要通过技术的手段来保证。上层应用强依赖是个很好的方式，CMDB作为唯一数据来源，如果数据不准确，直接影响到上层应用的正常服务，所以要想上层应用正常，会倒逼CMDB数据准确</p>
+<p>不过Oneterm的问题在于，目前只能同步了主机资源，而没有目录，一个项目多个不同环境和版本，创建十几个甚至几十个目录树都很正常，如果不能按目录树来同步的话，那要想堡垒机的目录树跟CMDB的目录树保持一致，就要创建十几个甚至几十个目录和同步规则，确实麻烦，如果能选择目录树同步，那将大大降低使用成本，同时也能保证CMDB目录树与OneTerm完全一致，个人觉得更加符合使用习惯</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0323.05.png" /></p>
+<h2 id="_2">页面统一</h2>
+<p>用过一些国外的产品，像CDN领域最为知名的两家厂商CloudFlare和Akamai，发现他们的产品几乎每个页面都不一样，而我们国内的产品做到了页面及操作的统一，这个并不是说哪个好哪个不好，或许是文化差异导致习惯不同而已，不过我个人更喜欢国内这种统一的，页面统一，操作统一，虽然可能看上去没什么花样和新意，但却降低来使用成本，看到一个页面大概就知道什么信息在哪里，该如何操作，而不用学习每个页面的使用</p>
+<p>OneTerm在某些地方没有统一，例如添加资产时的授权账号是从账号列表里选择的，而创建网关时的账号是单独的，要输入账号密码信息，是否也可以从账号列表里选择，这样维护上比较统一，账号只保存在一个地方</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0323.06.jpg" /></p>
+<p>例如资产管理下网关列表、账号列表、安全设置右上角都有个「创建」按钮，但资产列表右上角没有，要点击目录树节点才显示，这里可以理解点了目录树节点显示「创建」按钮之后默认填充节点至表单，不过似乎也不影响在未选中任何节点时「创建」资产</p>
+<p>当然这些都不是啥大问题，仅仅是不够统一而已</p>
+<h2 id="_3">后记</h2>
+<ol>
+<li>
+<p>这些仅仅是与我个人使用习惯不完全相符而已，也并不一定都是问题，或许我觉得是bug，只是使用姿势不对的feature而已</p>
+</li>
+<li>
+<p>我们总是很容易发现别人的问题，却很难发现自己的问题。发现问题相对容易，但真的要改正问题就很难，不一定难在改正的方法，更多的时候可能是我们直面问题的勇气</p>
+</li>
+<li>
+<p>没有设计完美的产品，所有的好产品都是在使用中不断打磨出来的，一款产品如果真的重视用户使用体验，愿意持续不断的去优化，那距离它成为真的好用的产品差的只是时间而已</p>
+</li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/suggestion-for-open-source-jumpserver-oneterm.html">📅 2024-03-23</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/开源/">🏷️ 开源</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

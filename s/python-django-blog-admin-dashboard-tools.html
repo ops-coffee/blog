@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django,Just-For-Fun,关于技术,博客,6" />
+  <meta name="description" content="还在维护吗？有赚到钱吗？" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>6年过去，当初的静态博客生成工具如今怎样了</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="6年过去，当初的静态博客生成工具如今怎样了" />
+  <meta property="og:description" content="还在维护吗？有赚到钱吗？" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">6年过去，当初的静态博客生成工具如今怎样了</h1>
+
+        <p>2018年6月开始写文章，最早选择的发布平台是微信公众号，之所以选择微信公众号，我在文章<a href="https://blog.ops-coffee.cn/s/3xEgejp6zOswWx92Giqxbg" target="_blank">「公众号是否是优秀的写作平台？我在这里赚了多少钱？」</a>里有介绍过，微信公众号主要有版权保护、个人品牌传播、自带流量且容易变现三大优势，但同时也有许多明显的缺点，例如生态封闭搜索引擎无法检索、文章一旦发布修改困难、不能添加外部链接、历史文章阅读不方便、PC端不友好等等，于是就基于Github免费的Pages服务构建了个人博客，为了便于博客管理，还<a href="https://blog.ops-coffee.cn/s/7g2wncQG1lIziOmtBxXwEw" target="_blank">徒手写个静态页面生成工具</a>，实现了从文章编辑到静态页面生成再到自动发布提供访问的全链路能力，如今6年过去了，这个工具还在使用吗？变成了什么样？这篇文章就来详细的介绍下</p>
+<p>可以确定的是，依然在用，6年时间从未间断过，并且还陆陆续续添加了分类管理、标签管理、页面管理、资源管理、友联管理、站点配置、统计大盘、数据备份、RSS订阅等等好用且实用的功能</p>
+<h2 id="_1">分类</h2>
+<p>早期觉得公众号还是应该写的专业或是系统，保证内容质量，所以在发布公众号文章时都有经过仔细的探究，但当有一些日常没有那么专业或系统的内容想要记录时，发公众号就不是那么的合适，写在博客里不主动推送就没什么问题，基于此考虑，给博客增加了分类功能，不同的分类记录不同类型的内容</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0718.01.png" /></p>
+<p>不同的分类通过URL前缀区分，这跟微信公众号也有一定的关系，早期博客只是同步微信公众号上的文章，所以博客文章的URL路径就跟微信文章的URL保持了一致，都是以<code>/s/</code>开头，当想要增加其他内容时很自然的就想到了通过不同URL前缀来区分不同类型的内容，例如现在所有介绍veops的文章都放在veops分类下，URL以<code>/veops/</code>开头</p>
+<p>不同分类都会有个分类首页，直接访问分类下的index.html就能访问，例如<a href="https://blog.ops-coffee.cn/s/index.html" target="_blank"><code>/s/index.html</code></a>，这个分类首页默认展示分类下的文章列表，当然分类首页也能通过自定义的方式展示一些你想要的内容，例如<a href="https://blog.ops-coffee.cn/r/index.html" target="_blank"><code>/r/index.html</code></a>分类首页就个性化的展示了所有房车相关的内容。分类除了内容类型和URL方面的区别外，在博客后台管理页面，也会自动按照分类来组织博客列表，方便在后台查看不同分类的博客</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0718.09.png" /></p>
+<h2 id="_2">标签</h2>
+<p>当文章逐渐写多了之后，想要在文章末尾添加相关文章的功能，给读者推荐相似的文章，一来可以让读者对相关内容有更多的了解，二来也可以增加博客的阅读量，刚开始相关内容就通过分类来做，但发现分类不够仔细，就拿公众号文章所在分类<code>/s/</code>来说，分类下的文章又多又杂，推荐的相关性不高，为了提高推荐内容的质量，于是增加了标签的功能</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0718.02.png" /></p>
+<p>给所有文章打标签，通过标签来定义关联，这样自由度就高了许多，例如有一系列的文章都与开源有关，那就可以定义一个<code>开源</code>的标签，把所有开源的内容都关联在一起，用户通过这个<code>开源</code>的标签就能找到所有开源的内容。每篇文章结尾都会加上文章的标签，读者读完一篇后如果对这个文章相关的内容感兴趣，就可以点击文章末尾的标签查看相关的文章</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0718.10.png" /></p>
+<p>标签页面以<code>/tag/{name}/</code>开头，内容就是所有具有这个标签的文章列表，自动生成，不能修改</p>
+<h2 id="_3">页面</h2>
+<p>我写了许许多多运维自动化系统相关的文章，想要有一个生动的页面展示在博客上，直接发布博客文章显得比较生硬，于是写了个页面的功能，借助这个功能可以发布一些个性的页面，例如提问页面、搜索页面、个人简历等等，甚至博客首页也是通过页面这个功能实现的，只是添加了一个名为<code>index</code>的页面，页面内容高度定制化，就当博客首页使用了</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0718.03.png" /></p>
+<p>页面比较灵活，可以选择默认的模版，例如<a href="https://blog.ops-coffee.cn/travels" target="_blank">travels</a>页面，风格比较统一，也可以创建完全空白的html页面，例如<a href="https://blog.ops-coffee.cn/devops.html" target="_blank">devops</a>页面，自由度则会更高。页面功能主打灵活，只要你懂一点前端知识，那就可以通过页面功能发布各种不同功能风格的页面，创作个性化内容</p>
+<h2 id="_4">友情链接</h2>
+<p>通过博客也交到了一些朋友，大家都喜欢写文章，同时也都有输出优质的内容，遇到这种，那加个友情链接是必不可少的，为此也专门写了个友情链接页面，来添加同样喜欢写作，写高质量内容的朋友。不过我的友情链接页面不仅仅展示页面，也希望同时展示一些我的其他作品，例如我常使用的咖啡吧导航以及我们开源的CODO系统</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0718.04.png" /></p>
+<h2 id="_5">资源管理</h2>
+<p>博文里难免要贴一些图片，三方免费的图床不放心，同时也不想多花钱，早期用了又拍云存储，现在用了Cloudflare的云存储产品R2，10G的免费空间妥妥够用。如果想要上传图片到云存储，要么登录控制台，要么使用一些三方客户端，都比较麻烦。懒是第一生产力，于是把资源查看／上传／刷新等管理功能也给直接集成在了博客后台里，写个博客，只用这一个工具就可以了，相当方便</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0718.05.png" /></p>
+<p>博客域名通过Cloudflare代理访问，默认加了Cloudflare的CDN，这个CDN也免费，赛博菩萨，名不虚传</p>
+<h2 id="_6">站点配置</h2>
+<p>博客后台原本只有我一个人使用，所以很多配置都是写死在模板或是配置文件中的，好友也想写点内容，看中了我的博客，为了让它更加的通用和易用，把所有的配置项都给提取了出来，通过页面进行配置，能够做到不用改代码，仅通过配置来创建一个新博客</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0718.06.png" /></p>
+<h2 id="_7">数据展示</h2>
+<p>写作进入第七年，过去的这些年写了很多的文章，想要更直观的去看一下历史写作的数据，于是做了这个可视化的数据展示大盘。那耀眼的数字，那起伏的柱线，还有那多彩的圆饼，这些年所有的时间都逐渐变得具体</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0718.07.png" /></p>
+<h2 id="_8">其他变化</h2>
+<p>SEO优化：既然写了博客，就想让更多的人能够看到并阅读，于是看了下SEO相关的知识，学了一些浅薄的技巧，对博客进行了简单的SEO优化，还是有一定效果的，现在每天搜索引擎带来的流量在所有流量来源中排名靠前，感兴趣的看看这个<a href="https://blog.ops-coffee.cn/s/googole-search-analytics-adsense-blog-site-seo" target="_blank">「Google搜索成最大入口，简单谈下个人博客的SEO」</a></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0718.08.png" /></p>
+<p>RSS订阅：有许多读者朋友希望博客能增加订阅功能，这样就能通过RSS工具及时发现新的博客内容，这可是对博客极大的认可，必须满足，于是去查了RSS订阅的实现，订阅地址其实就是一个特定格式的XML文件，于是写了个功能，每次发布博客就自动更新XML内容</p>
+<p>谷歌广告：在博客内容丰富了之后，申请了谷歌广告，希望能负担博客的成本支出，虽然博客的成本并不高，后台跑在本地，没额外花钱买资源，内容托管在免费的Github-Pages，图床用了免费的Cloudflare-R2，CDN用了免费的Cloudflare代理，只有域名要钱，39元/年，总体成本很低，谷歌广告收入虽然不多，但负担这点支出也是绰绰有余，所以博客广告加的很少，不影响文章阅读。前段时间刚刚<a href="https://blog.ops-coffee.cn/s/google-adsense-payment-china-merchants-bank" target="_blank">提现了一笔谷歌广告收入167美元</a>，能给域名续费30年，所以大伙放心，30年内不会关站</p>
+<p><img alt="" loading="lazy" src="/static/images/20240610.04.jpg" /></p>
+<p>数据备份：博客最重要的还是数据，我不想写的这些文字突然有一天因为什么问题就没了，所以数据备份显得尤为重要，采用Github-Pages托管的一大好处就是可靠，Github作为全球最大的代码托管网站，应该不会说关就关，所有内容放在它上边较为安心，同时也有版本控制机制，即便是本地不小心删除也不用担心找不到。作为专业运维，数据只放在Github一个地方也不是很妥当，在设计之初就考虑了这个问题，博客后台用了sqlite数据库，优势很明显，单文件数据库，可以作为附件发到邮箱里，于是每次数据变更就会自动发邮件到邮箱，核心数据又多了一层保障</p>
+<h2 id="_9">写在最后</h2>
+<p>博客从上线到现在几年过去了，整体的发布流程没变，托管平台没变，甚至连页面风格都没变，但有不断的调整优化一些小细节，目标只有一个就是让它变得更好。一个静态页面生成工具，也就我自己在用，也没有因此而懈怠和妥协，不是能用就行，而是追求完美，虽然没有专门花时间和精力来做这个，但却是在使用中不断的优化更新，逐渐变得完善</p>
+<p>某天晚上下班，走在回家的路上，天气虽然闷热，但有风吹在脸颊上，带来丝丝清凉，昏暗的灯光下车来车往，我突然想到是否可以基于它来做个小项目，提供一些常用的模板，生成个人博客/个人简历/产品介绍页面等等，全自动的给托管到免费的Cloudflare上，做的简单好用，降低使用成本，那会不会有市场</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/python-django-blog-admin-dashboard-tools.html">📅 2024-07-19</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Just-For-Fun/">🏷️ Just-For-Fun</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/博客/">🏷️ 博客</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

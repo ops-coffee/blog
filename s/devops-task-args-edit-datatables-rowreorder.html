@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="任务系统,Devops,关于技术,JSON" />
+  <meta name="description" content="完成只是开始，洞悉用户需求，提升使用体验，完成开始完美结束" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>简洁表单替代复杂JSON，完成开始完美结束</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="简洁表单替代复杂JSON，完成开始完美结束" />
+  <meta property="og:description" content="完成只是开始，洞悉用户需求，提升使用体验，完成开始完美结束" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">简洁表单替代复杂JSON，完成开始完美结束</h1>
+
+        <p>上篇文章<a href="https://blog.ops-coffee.cn/s/devops-task-subtask-args-json-to-form-table" target="_blank">「简洁表单替代复杂JSON，配置直观又简单」</a>讲了我们将任务参数由定义并修改JSON的方式升级为了表格+表单的方式，理解更加简单，上手难度降低，对用户也更为友好，使用成本明显降低</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0521.04.png" /></p>
+<p>通常情况下一个新功能开发完成，做到能用就快速上线了，往往体验并不十分完美，后续会进行持续的优化，以提升使用体验。这个功能也不例外，上线前都知道一些体验有待提升的地方，例如：</p>
+<p>1.对于一些参数，会存在默认值，并且这些默认值同一任务是不变的，例如基于Java项目部署模板创建了A、B、C三个任务流，模板中有一个Project的参数，对应项目名字，对于特定的任务流项目名字固定，不需要修改，此时我们会给任务流的Project参数一个固定的默认值，并且在后续点击任务流执行时也不需要显示Project参数的填写或选择。此时的话我们就需要一个隐藏属性以标识参数是否需要在任务流执行时渲染</p>
+<p>2.参数因为各种各样的原因需要修改属性，而我们只提供了参数删除功能，并不能修改参数属性，那还需要加个参数属性修改的功能，以满足参数属性的修改需要</p>
+<p>3.不仅参数属性需要修改，参数位置也有修改的需求，我们会根据参数位置来渲染最终执行时的展示顺序，例如一个任务流有B、C、D三个参数，我们习惯于在执行任务时B在前C次之D最后，这样我们在新建参数时只需要先建B再建C最后建D即可，如果此时要添加个新参数A，默认新加的参数A在最后，而习惯于在任务执行时A渲染在第一个参数位置，此时我们就需要修改参数位置了</p>
+<p>对于这几个问题，该如何处理</p>
+<h2 id="_1">参数隐藏</h2>
+<p>参数隐藏这个最简单，给参数加个<code>hidden</code>属性即可，我们在执行渲染时判断参数是否有<code>hidden</code>属性，如果有则不渲染，此时的数据结构将变为：</p>
+<pre class="codehilite"><code>[
+    {
+        &quot;name&quot;: &quot;branch&quot;,
+        &quot;type&quot;: &quot;string&quot;,
+        &quot;value&quot;: &quot;main&quot;,
+        &quot;helper&quot;: &quot;git仓库的分支，例如main&quot;,
+        &quot;hidden&quot;: true
+    },
+    {
+        &quot;name&quot;: &quot;environment&quot;,
+        &quot;type&quot;: &quot;list&quot;,
+        &quot;value&quot;: &quot;dev,test,prod&quot;,
+        &quot;helper&quot;: &quot;&quot;,
+        &quot;hidden&quot;: false
+    }
+],</code></pre>
+
+
+<p>而对于前端代码的渲染则多加个<code>object.hidden</code>的判断即可</p>
+<h2 id="_2">属性修改</h2>
+<p>参数展示的Table我们通过Datatables插件渲染，foot里添加了个form表单，默认就从这里新建</p>
+<pre class="codehilite"><code>&lt;table class=&quot;table table-bordered&quot; id=&quot;id_table_params&quot; style=&quot;width: 100%; border-collapse: collapse !important;&quot;&gt;
+  &lt;thead class=&quot;table-light&quot;&gt;
+  &lt;tr&gt;
+    &lt;th&gt;参数名称&lt;/th&gt;
+    &lt;th&gt;参数类型&lt;/th&gt;
+    &lt;th&gt;参数值&lt;/th&gt;
+    &lt;th&gt;帮助信息&lt;/th&gt;
+    &lt;th&gt;隐藏&lt;/th&gt;
+    &lt;th&gt;操作&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tfoot&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;input type=&quot;text&quot; autocomplete=&quot;off&quot; class=&quot;form-control&quot; id=&quot;param-name&quot; placeholder=&quot;参数名&quot;&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;select class=&quot;form-select col-auto&quot; id=&quot;param-type&quot;&gt;
+      &lt;option value=&quot;string&quot;&gt;string&lt;/option&gt;
+      &lt;option value=&quot;integer&quot;&gt;integer&lt;/option&gt;
+      &lt;option value=&quot;list&quot;&gt;list&lt;/option&gt;
+    &lt;/select&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;input type=&quot;text&quot; autocomplete=&quot;off&quot; class=&quot;form-control&quot; id=&quot;param-value&quot; placeholder=&quot;参数值，默认为空&quot;&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;input type=&quot;text&quot; autocomplete=&quot;off&quot; class=&quot;form-control&quot; id=&quot;param-helper&quot; placeholder=&quot;帮助说明&quot;&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;select class=&quot;form-select col-auto&quot; id=&quot;param-hidden&quot;&gt;
+      &lt;option value=&quot;是&quot;&gt;是&lt;/option&gt;
+      &lt;option value=&quot;否&quot;&gt;否&lt;/option&gt;
+    &lt;/select&gt;&lt;/td&gt;
+    &lt;td id=&quot;id-args-button&quot;&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info btn-sm&quot; onclick=&quot;addParam()&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; 添加&lt;/button&gt;&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;</code></pre>
+
+
+<p>当点击修改按钮时，则触发<code>editParam</code>函数将这行数据直接给填充进form表单，同时获取这行数据在datatables里的index，最后将原本的添加按钮给替换成保存</p>
+<pre class="codehilite"><code>function editParam(btn) {
+  var data = table_params.row($(btn).closest('tr')).data();
+
+  $('#param-name').val(data[1]);
+  $('#param-type').val(data[2]);
+  $('#param-value').val(data[3]);
+  $('#param-helper').val(data[4]);
+  $('#param-hidden').val(data[5]);
+
+  //获取btn所在的tr的rowIndex
+  var rowIndex = table_params.row($(btn).closest('tr')).index();
+
+  $('#id-args-button').html('&lt;button type=&quot;button&quot; class=&quot;btn btn-warning btn-sm&quot; onclick=&quot;addParam('+ rowIndex +')&quot;&gt;&lt;i class=&quot;fa fa-save&quot;&gt;&lt;/i&gt; 保存&lt;/button&gt;');
+}</code></pre>
+
+
+<p>点击保存按钮则触发与新建同样的<code>addParam</code>函数，获取到form的数据，更新到表格中</p>
+<pre class="codehilite"><code>function addParam(rowIndex=null) {
+  if (! $('#param-name').val() ) {
+    toastr.error(&quot;参数名不能为空&quot;);
+  } else if (table_params.column(0).data().toArray().includes($('#param-name').val()) &amp;&amp; rowIndex == null) {
+    toastr.error(&quot;参数名不能相同&quot;);
+  } else {
+    tr_data = [
+      rowIndex == null ? (table_params.rows().count() + 1) : (rowIndex + 1),
+      $('#param-name').val(),
+      $('#param-type').val(),
+      $('#param-value').val(),
+      $('#param-helper').val(),
+      $('#param-hidden').val(),
+      '&lt;div class=&quot;btn-group&quot; role=&quot;group&quot; aria-label=&quot;Basic mixed styles example&quot;&gt;' +
+        '&lt;button type=&quot;button&quot; class=&quot;btn btn-warning btn-sm&quot; onclick=&quot;editParam(this)&quot;&gt;&lt;i class=&quot;fa fa-edit&quot;&gt;&lt;/i&gt;&lt;/button&gt;' +
+        '&lt;button type=&quot;button&quot; class=&quot;btn btn-danger btn-sm&quot; onclick=&quot;deleteParam(this)&quot;&gt;&lt;i class=&quot;fa fa-trash&quot;&gt;&lt;/i&gt;&lt;/button&gt;' +
+      '&lt;/div&gt;'
+    ]
+
+    if (rowIndex === null) {
+      table_params.row.add(tr_data).draw(false);
+    } else {
+      // 根据rowIndex更新tr
+      table_params.row(rowIndex).data(tr_data).draw(false);
+    }
+
+    $(&quot;#param-name, #param-value, #param-helper&quot;).val(&quot;&quot;);
+    $('#id-args-button').html('&lt;button type=&quot;button&quot; class=&quot;btn btn-info btn-sm&quot; onclick=&quot;addParam()&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; 添加&lt;/button&gt;');
+  }
+}</code></pre>
+
+
+<p>参数修改也顺利完成</p>
+<h2 id="_3">位置拖动</h2>
+<p>最后就是参数位置的修改了，对于参数位置修改，我想过加一个sort属性，通过修改sort来实现排序，但感觉比较麻烦，要用户自己来修改属性数据，并且数据结构还复杂了。并且列表本身就是有顺序的，加个sort必要性不大，后边搜了下datatables有一个RowReorder扩展，可以实现行级别的拖动排序</p>
+<p>RowReorder用法看官方非常简单，就JS/CSS引入之后增加一个<code>rowReorder:true</code>的配置即可，但实际用下来却发现了不少问题，例如：</p>
+<p>1.拖动仅能拖动一个单元格数据，而与单元格同行的数据位置不变</p>
+<p>2.虽然能整行拖动了，但保存之后位置并没有更新</p>
+<p>因此差点放弃，但总感觉不能拖动体验不完美，于是查了<code>rowReorder</code>的各种参数、文档以及datatables的论坛，终于发现了其中的奥秘，datatables使用<code>rowReorder</code>的前提是<strong>必须启用</strong><code>ordering</code>排序，且第一列要是<strong>顺序数字编号</strong>，官方原话是：</p>
+<p>The data point in the row that is modified is defined by the rowReorder.dataSrc. Normally you will want this to be a sequential number! The data reorder can potentially confuse end users otherwise!</p>
+<p>英文不好或者理解不到的就会遇到上边提到的奇怪问题。知道了这两个前提，那在渲染数据时Table的第一列自动填充为行号Index，问题就顺利解决，可以随意拖动了</p>
+<pre class="codehilite"><code>$.each(v, function (index, obj) {
+  table_params.row.add([
+      index + 1,
+      obj.name.trim(),
+      obj.type.trim(),
+      obj.value.trim(),
+      obj.helper.trim(),
+      obj.hidden ? obj.hidden : '否',
+      '&lt;div class=&quot;btn-group&quot; role=&quot;group&quot; aria-label=&quot;Basic mixed styles example&quot;&gt;' +
+        '&lt;button type=&quot;button&quot; class=&quot;btn btn-warning btn-sm&quot; onclick=&quot;editParam(this)&quot;&gt;&lt;i class=&quot;fa fa-edit&quot;&gt;&lt;/i&gt;&lt;/button&gt;' +
+        '&lt;button type=&quot;button&quot; class=&quot;btn btn-danger btn-sm&quot; onclick=&quot;deleteParam(this)&quot;&gt;&lt;i class=&quot;fa fa-trash&quot;&gt;&lt;/i&gt;&lt;/button&gt;' +
+      '&lt;/div&gt;'
+  ]).draw(false);
+})</code></pre>
+
+
+<p>最终的效果就是参数增加了隐藏属性同时也可以修改属性或者拖动位置重新排序了</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0524.01.png" /></p>
+<p>几个都是使用体验方面的小问题，不阻塞功能使用，但体验不佳。影响用户体验是大问题，这将直接导致用户的使用情绪，体验好能增加信任，促进系统的使用，反之则可能影响到系统的落地。反复说过，这些功能或是系统本身没有什么意义，落地使用对大伙有帮助才是真的有意义</p>
+<p>这么简单的内容为啥还要记录，第一是我自己需要整理，写出来能加深记忆，第二则是万一你就恰好需要呢</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/devops-task-args-edit-datatables-rowreorder.html">📅 2024-05-24</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/任务系统/">🏷️ 任务系统</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

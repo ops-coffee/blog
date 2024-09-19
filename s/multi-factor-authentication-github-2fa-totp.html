@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="关于技术,Github,TOTP,MFA,2FA,系统运维" />
+  <meta name="description" content="强烈建议所有的网站登录全都启用MFA" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Github建议启用的2FA是什么？科普MFA与TOTP</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Github建议启用的2FA是什么？科普MFA与TOTP" />
+  <meta property="og:description" content="强烈建议所有的网站登录全都启用MFA" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Github建议启用的2FA是什么？科普MFA与TOTP</h1>
+
+        <p>最近搭建了一个运维自动化系统，开放给部分朋友测试使用，由于系统添加了基于TOTP的MFA多因子认证，就这个东西拦住了很多人，这让我意识到即便都是搞技术的，也同样有很多人不了解甚至完全没有使用过基于TOTP的多因子认证。其实自去年开始Gtihub已经强制要求部分用户启用2FA双因子身份验证，Github同时也建议将基于时间的一次性密码TOTP设为主要的2FA方法，这篇文章就简单的介绍下多因子认证和基于TOTP的多因子认证</p>
+<h2 id="_1">多因子认证</h2>
+<p>多因子认证：Multi-factor Authentication，简称MFA。在现代网络安全领域，多因子认证已成为保护用户账户安全的重要手段，它要求用户提供两个或更多独立的认证因子，例如常见的账号密码+短信验证码、账号密码+邮箱验证码、账号密码+TOTP验证码等等，当然对于Gtihub要求的2FA，指的是Two-Factor Authentication双因子认证，与MFA的主要区别是认证因子的数量，从更广义的层面来看，2FA可以看作是MFA的一种特殊情况，即MFA的一个子集</p>
+<p>MFA的主要目的是增强安全性。相比于单一的用户名和密码认证，MFA增加了额外的验证方式，从而显著降低了账户被入侵的风险。即便攻击者获得了账号的用户名和密码，仍需要其他认证因子才能访问账户，极大地提高了账户的安全性</p>
+<p>常见的多因子认证方式有：</p>
+<ol>
+<li>
+<p>短信验证码：这种验证方式非常广泛，在用户在登录时，系统会发送一个一次性验证码到用户的手机上，用户则需要在登录页面输入这个验证码来完成身份验证，这种认证方式的优点是简单方便，用户无需额外的设备或应用就能完成二次验证，缺点则主要是会产生短信费用，同时也可能会受到SIM卡交换攻击或短信拦截</p>
+</li>
+<li>
+<p>邮件验证码：系统发送一次性验证码到用户的电子邮箱，用户需要在登录页面输入该验证码完成验证，邮箱验证码使用也较为广泛，这种认证方式优点是易于实现和使用，用户无需额外设备，只要有邮箱即可，缺点则主要是邮件响应速度较慢，用户体验不佳，同时安全性较低，邮箱可能被黑客入侵</p>
+</li>
+<li>
+<p>生物识别认证：使用指纹、面部识别或声纹等生物特征进行身份验证，常用于高安全性需求场景，如解锁智能手机或访问敏感系统。这种认证方式优点是安全性极高，唯一性强、用户体验也好，快速便捷，缺点主要是设备要求高，需要设备支持指纹、面部解锁等，其次一些场景无法支持，例如WEB端，同时也有隐私问题需考虑</p>
+</li>
+<li>
+<p>硬件令牌：这种常见于财务系统，使用独立的硬件设备生成一次性密码或进行物理验证，用户将硬件令牌插入计算机或使用NFC读取器完成验证。优点是极高的安全性，同时也能防止网络攻击，因为它不依赖移动设备或互联网连接，缺点也比较明显，依赖硬件，成本比较高，使用不方便</p>
+</li>
+<li>
+<p>基于时间的一次性密码（TOTP）：基于时间生成的一次性密码，有标准的算法，通过标准算法来生成验证码，有许多免费的应用或小程序都能生成，用户需要输入应用生成的验证码来完成身份验证。这种认证方式的主要优点是安全性高，不依赖网络传输，多数MFA应用免费提供，缺点则主要是用户需要额外安装并配置应用</p>
+</li>
+<li>
+<p>基于事件的一次性密码（HOTP）：基于事件计数生成的一次性密码，类似于TOTP，但使用事件计数而非时间。适用于硬件令牌。这种认证方式的优点是不依赖时间同步，适用于硬件设备，缺点则主要是使用体验不如TOTP方便</p>
+</li>
+<li>
+<p>推送通知：通过认证应用发送推送通知到用户的设备，用户只需点击“批准”或“拒绝”即可完成身份验证，例如之前遇到过的Google账号认证，会发送消息到你登录Google账号的可信手机上，点击确定就能登录。这种认证方式的优点是：用户体验好，方便快捷、更加安全，防止中间人攻击，缺点则是需要互联网连接、依赖移动设备，也不是所有设备都支持</p>
+</li>
+<li>
+<p>安全问题：用户设置一系列安全问题，登录时需回答这些问题进行验证。这种认证方式的优点是实施简单，无需额外设备，缺点则主要是安全性较低，容易被猜测或社交工程攻击，长时间不使用还容易遗忘，例如我小时候申请的QQ号密保问题是：你的梦想是什么？现在已经完全想不起来答案了</p>
+</li>
+</ol>
+<p>其中，基于时间的一次性密码TOTP是一种非常流行且标准化的多因子认证方式，尤其是在Web系统中，例如阿里云、腾讯云、Github、Google等等诸多知名网站都支持TOTP多因子认证，另外一些应用较广的运维相关开源软件也都加入了对TOTP二次认证的支持，例如CODO、Jumpserver等等，甚至出现了多因子认证约等于TOTP的现象</p>
+<h2 id="totp">TOTP</h2>
+<p>TOTP，即Time-Based One-Time Password，是一种根据预共享密钥与当前时间计算一次性密码的算法。它已被互联网工程任务组接纳为RFC6238标准，成为开放授权和身份认证的基石，并被广泛应用于多因素认证系统中</p>
+<p>TOTP算法的核心在于通过预共享密钥和当前时间戳生成一个一次性密码。这个密码通常是一个6位或8位的数字，每30秒（或设定的时间步长）更新一次。用户需要在验证过程中输入这个密码，以完成多因素认证</p>
+<p>TOTP之所以会被广泛应用，主要原因有：</p>
+<ol>
+<li>
+<p>标准化与兼容性：TOTP算法已被互联网工程任务组接纳为RFC6238标准，这确保了其广泛的兼容性和标准化实施。许多应用程序和服务都支持TOTP协议，使得用户可以在不同平台和服务之间轻松使用相同的认证方式</p>
+</li>
+<li>
+<p>易用性：TOTP通常通过智能手机上的应用程序实现，用户只需在手机上安装一个支持TOTP的应用程序，并通过扫描二维码或手动输入的方式将共享密钥与账户关联，即可在需要时生成一次性密码。这种方式简单快捷，用户无需携带额外的硬件令牌</p>
+</li>
+<li>
+<p>安全性：TOTP基于时间和预共享的密钥生成一次性密码，每次生成的密码都是唯一的，并且只能使用一次。这种机制有效防止了密码重用和暴力破解攻击，提高了账户的安全性</p>
+</li>
+<li>
+<p>灵活性：TOTP算法的应用解决了传统MFA验证过程中物理设备需要与服务端进行交互的问题。只要客户端和服务端保持时钟一致，并且预先设置好共享密钥，它们就可以独立计算出一次性密码，而无需进行额外的通信。这种灵活性使得TOTP可以应用于多种场景和环境中</p>
+</li>
+<li>
+<p>成本效益：相比硬件令牌等其他MFA方式，TOTP的成本更低。用户只需在手机上安装一个免费的应用程序即可实现多因子认证，而无需购买额外的硬件设备。对于企业而言，这降低了部署MFA的成本和复杂性</p>
+</li>
+<li>
+<p>广泛支持：随着网络犯罪手段日益复杂化，传统的单因素身份验证已经显得力不从心。因此，许多企业和组织都倾向于采用MFA来提高账户的安全性。而TOTP作为应用最广泛的MFA方式之一，得到了广泛的支持和应用</p>
+</li>
+</ol>
+<h2 id="python">Python中使用</h2>
+<p>Python有个<code>pyotp</code>的可以用来生成TOTP验证码及校验验证码的合法性，十分好用，用法也很简单，以下是全部的代码，通过代码可以更加清晰的了解整个TOTP校验的过程</p>
+<pre class="codehilite"><code>import pyotp
+import time
+
+def generate_totp_secret():
+    &quot;&quot;&quot;生成一个新的TOTP密钥&quot;&quot;&quot;
+    return pyotp.random_base32()
+
+def create_totp(secret):
+    &quot;&quot;&quot;根据密钥创建TOTP对象&quot;&quot;&quot;
+    return pyotp.TOTP(secret)
+
+def get_totp_token(totp_obj):
+    &quot;&quot;&quot;获取当前的TOTP验证码&quot;&quot;&quot;
+    return totp_obj.now()
+
+def verify_totp_token(totp_obj, token):
+    &quot;&quot;&quot;校验TOTP验证码是否正确&quot;&quot;&quot;
+    return totp_obj.verify(token)
+
+# 示例使用
+if __name__ == &quot;__main__&quot;:
+    # 生成密钥
+    secret = generate_totp_secret()
+    print(&quot;Secret:&quot;, secret)
+
+    # 创建TOTP对象
+    totp = create_totp(secret)
+
+    # 获取当前TOTP验证码
+    token = get_totp_token(totp)
+    print(&quot;Current TOTP Token:&quot;, token)
+
+    # 校验TOTP验证码
+    # 注意：为了演示，我们立即校验刚刚生成的验证码
+    # 在实际应用中，你会等待用户输入验证码
+    if verify_totp_token(totp, token):
+        print(&quot;TOTP Token verified successfully!&quot;)
+    else:
+        print(&quot;TOTP Token verification failed!&quot;)
+
+    # 等待几秒钟，然后尝试再次验证相同的token（应该失败）
+    time.sleep(31)  # 等待超过TOTP的时间步（默认30秒）
+    if not verify_totp_token(totp, token):
+        print(&quot;Same TOTP Token verification failed as expected (expired).&quot;)</code></pre>
+
+
+<p>代码很简单，可以直接移植到自己的项目中使用</p>
+<h2 id="github2fa">Github开启2FA</h2>
+<p>Github开启2FA很简单，首先登录到GitHub账户。点击右上角的头像，选择Settings，在设置页面中，找到侧边栏的Password &amp; authentication选项，点击进入，然后，下拉页面到Two-factor authentication部分，单击Enable two-factor authentication按钮，根据提示完成设置即可</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0727.01.png" /></p>
+<h2 id="totp_1">TOTP客户端应用</h2>
+<p>TOTP的算法是公开的，所以生成TOTP验证码也较为简单，国内各大云厂商的APP或是一些小程序也都有提供虚拟MFA的功能，例如腾讯云助手小程序等等，知名的MFA应用主要有谷歌出的Google-Authenticator和微软出的Microsoft-Authenticator，国内使用的话推荐使用微软的Authenticator，各大手机应用商店都能搜得到，当然如果你不想安装单独应用的话，使用一些提供微信小程序也可以，注意小程序的身份及安全性即可</p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0727.02.png" /></p>
+<p>MFA一般都带有二维码识别功能，可以通过扫描二维码快速添加TOTP认证，当然如果不方便识别二维码或者二维码识别失败的情况下，也可以通过KEY来手动添加，添加完成，当再续需要二次认证时输入生成的TOTP验证码即可</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/multi-factor-authentication-github-2fa-totp.html">📅 2024-07-27</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/系统运维/">🏷️ 系统运维</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

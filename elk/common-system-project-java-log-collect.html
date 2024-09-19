@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Elk,关于技术,ELK" />
+  <meta name="description" content="形形色色各种不同的应用程序日志你们都是怎么收集的？" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>ELK日志系统之通用应用程序日志接入方案</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="ELK日志系统之通用应用程序日志接入方案" />
+  <meta property="og:description" content="形形色色各种不同的应用程序日志你们都是怎么收集的？" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">ELK日志系统之通用应用程序日志接入方案</h1>
+
+        <blockquote>
+<p>前边有两篇ELK的文章分别介绍了<a href="/elk/elasticsearch-logstash-mysql-slowlog" target="_blank">MySQL慢日志收集</a>和<a href="/elk/elasticsearch-logstash-rsyslog-nginx" target="_blank">Nginx访问日志收集</a>，那么各种不同类型应用程序的日志该如何方便的进行收集呢？且看本文我们是如何高效处理这个问题的</p>
+</blockquote>
+<h1 id="_1">日志规范</h1>
+<p>规范的日志存放路径和输出格式将为我们后续的收集和分析带来极大的方便，无需考虑各种不同路径、格式的兼容问题，只需要针对固定几类日志做适配就可以了，具体的规范如下：</p>
+<p><strong>日志存放路径规范</strong></p>
+<ol>
+<li>项目日志只能输出到固定的位置，例如<code>/data/logs/</code>目录下</li>
+<li>同一类型（例如java web）的日志文件名保持统一，例如都叫<code>application.log</code></li>
+<li>一个类型的项目可以记录多个不同的日志文件，例如<code>exception.log</code>和<code>business.log</code></li>
+</ol>
+<p><strong>日志输出格式规范</strong></p>
+<ol>
+<li>日志输出必须为JSON格式，这个很重要</li>
+<li>同一类型的项目应采用统一的日志输出标准，尽量将日志输出模块化，所有项目引用同一模块</li>
+<li>输出日志中必须包含标准时间（timestamp）、应用名称（appname）、级别（level）字段，日志内容记录清晰易懂</li>
+</ol>
+<p><strong>日志信息级别规范</strong></p>
+<table>
+<thead>
+<tr>
+<th>日志级别</th>
+<th>说明</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>debug</td>
+<td>调试日志，日志信息量最多</td>
+<td>7</td>
+</tr>
+<tr>
+<td>info</td>
+<td>一般信息日志，最常用的级别</td>
+<td>6</td>
+</tr>
+<tr>
+<td>notice</td>
+<td>最具有重要性的普通条件信息</td>
+<td>5</td>
+</tr>
+<tr>
+<td>warning</td>
+<td>警告级别</td>
+<td>4</td>
+</tr>
+<tr>
+<td>error</td>
+<td>错误级别，某个功能不能正常工作</td>
+<td>3</td>
+</tr>
+<tr>
+<td>critical</td>
+<td>严重级别，整个系统不能正常工作</td>
+<td>2</td>
+</tr>
+<tr>
+<td>alert</td>
+<td>需要立刻修改的日志</td>
+<td>1</td>
+</tr>
+<tr>
+<td>emerg</td>
+<td>内核崩溃等严重信息</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>从上到下级别依次从低到高，日志量从多到少，正确选择日志级别帮助后期快速排查问题</p>
+<h2 id="_2">我们为什么要制定这样的规范？</h2>
+<p><img alt="" loading="lazy" src="/static/images/2018/0905.00.png" /></p>
+<ol>
+<li>我们的项目都跑在Docker里，Docker镜像由基础镜像+项目代码组成</li>
+<li>基础镜像打包了运行项目的基础环境，例如spring cloud微服务项目，则打包了jre服务</li>
+<li>规范了日志存放及输出后，我们可以把作为日志收集agent的filebeat一并打包进基础镜像，因为同一类型项目的日志路径、格式都是一致的，filebeat配置文件可以通用</li>
+<li>这样我们在后续的部署过程中就不需要关心日志相关的内容，只要项目镜像引用了这个基础镜像就能自动接入了我们的日志服务，实现日志的收集、处理、存储与展示</li>
+</ol>
+<h1 id="_3">日志采集</h1>
+<p>我们通用日志采集方案如下图：</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0905.00.jpg" /></p>
+<ol>
+<li>程序跑在容器里，容器内自带Filebeat程序收集日志</li>
+<li>收集完成后传给kafka集群，logstash读取kafka集群数据写入elasticsearch集群</li>
+<li>kibana读取elasticsearch集群数据展示在web上，开发、运维等需要查看日志的用户登录kibana查看</li>
+</ol>
+<p><strong>Client端Filebeat配置</strong></p>
+<pre class="codehilite"><code>filebeat.prospectors:
+
+- input_type: log
+  paths:
+    - /home/logs/app/business.log
+    - /home/logs/app/exception.log
+
+  json.message_key: log
+  json.keys_under_root: true
+
+output.kafka:
+  hosts: [&quot;10.82.9.202:9092&quot;,&quot;10.82.9.203:9092&quot;,&quot;10.82.9.204:9092&quot;]
+  topic: filebeat_docker_java</code></pre>
+
+
+<p><strong>Kafka接收到的数据格式</strong></p>
+<pre class="codehilite"><code>{&quot;@timestamp&quot;:&quot;2018-09-05T13:17:46.051Z&quot;,&quot;appname&quot;:&quot;app01&quot;,&quot;beat&quot;:{&quot;hostname&quot;:&quot;52fc9bef4575&quot;,&quot;name&quot;:&quot;52fc9bef4575&quot;,&quot;version&quot;:&quot;5.4.0&quot;},&quot;classname&quot;:&quot;com.domain.pay.service.ApiService&quot;,&quot;date&quot;:&quot;2018-09-05 21:17:45.953+0800&quot;,&quot;filename&quot;:&quot;ApiService.java&quot;,&quot;hostname&quot;:&quot;172.17.0.2&quot;,&quot;level&quot;:&quot;INFO&quot;,&quot;linenumber&quot;:285,&quot;message&quot;:&quot;param[{\&quot;email\&quot;:\&quot;TEST@163.COM\&quot;,\&quot;claimeeIP\&quot;:\&quot;123.191.2.75\&quot;,\&quot;AccountName\&quot;:\&quot;\&quot;}]&quot;,&quot;source&quot;:&quot;/home/logs/business.log&quot;,&quot;thread&quot;:&quot;Thread-11&quot;,&quot;timestamp&quot;:1536153465953,&quot;type&quot;:&quot;log&quot;}</code></pre>
+
+
+<p><strong>Server端Logstash配置</strong></p>
+<pre class="codehilite"><code>input {
+    kafka {
+        bootstrap_servers =&gt; &quot;10.82.9.202:9092,10.82.9.203:9092,10.82.9.204:9092&quot;
+        topics =&gt; [&quot;filebeat_docker_java&quot;]
+    }
+}
+
+filter {
+    json {
+        source =&gt; &quot;message&quot;
+    }
+
+    date {
+        match =&gt; [&quot;timestamp&quot;,&quot;UNIX_MS&quot;]
+        target =&gt; &quot;@timestamp&quot;
+    }
+}
+
+output {
+    elasticsearch {
+        hosts =&gt; [&quot;10.82.9.205&quot;, &quot;10.82.9.206&quot;, &quot;10.82.9.207&quot;]
+        index =&gt; &quot;filebeat-docker-java-%{+YYYY.MM.dd}&quot;
+    }
+}</code></pre>
+
+
+<p>都是基础配置很简单，不做过多解释，通过以上简单的配置就能实现任何应用程序的日志收集</p>
+<h1 id="_4">日志展示</h1>
+<p>收集日志到elasticsearch之后，就可以通过kibana配置展示应用程序的日志了，方便开发及时发现问题，在线定位问题</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0905.02.png" /></p>
+<h1 id="_5">写在最后</h1>
+<ol>
+<li>通用的基础与前提是规范，规范做好了事半功倍</li>
+<li>日志打印Json格式不方便本地查看？这个可以把日志输出格式当做配置写在配置文件中，不同环境加载不同配置，就跟开发环境加载开发数据库一样</li>
+<li>日志系统上线到现在稳定运行接近2年，除了刚开始有点不适应以为，都是越用越好用，现在他们已经离不开ELK日志系统了，大大提高了工作的效率</li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/elk/common-system-project-java-log-collect.html">📅 2018-09-06</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Elk/">🏷️ Elk</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

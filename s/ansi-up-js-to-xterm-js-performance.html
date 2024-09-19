@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="None,xterm,ansi,up,关于技术" />
+  <meta name="description" content="None" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>从ansi_up到xterm提升了几十倍性能</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="从ansi_up到xterm提升了几十倍性能" />
+  <meta property="og:description" content="None" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">从ansi_up到xterm提升了几十倍性能</h1>
+
+        <p>无论是<a href="/s/YjfTypcHD03fTGLV_JsqWw" target="_blank">任务系统</a>还是<a href="/s/fGshXWUaTRv0oHIMBKSn1Q" target="_blank">作业系统</a>都会去执行linux命令或脚本，命令或脚本的输出也会实时展示在Web页面上，在终端中执行命令或脚本可以输出颜色，主要是因为这些有颜色的文字周围包含了颜色相关的ANSI码，例如：<code>\033[31m运维咖啡吧\033[0m</code></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1206.01.png" /></p>
+<p>如何在Web页面上输出时同样展示颜色呢，这里我用到了<code>ansi_up.js</code>，ansi_up是一个简单易用的Javascript库，可将包含ANSI颜色转义码的文本转换为HTML。纯前端插件使用起来确实简单，只依赖一个js文件，示例代码如下：</p>
+<pre class="codehilite"><code>&lt;script src=&quot;../ansi_up.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  var ansi_up = new AnsiUp;
+
+  var string  = &quot;\033[35m 运维咖啡吧 \033[0m&quot;
+  var html = ansi_up.ansi_to_html(string);
+
+  $('#J_details').append(html);
+&lt;/script&gt;</code></pre>
+
+
+<p>这么使用一直没有问题，直到刚刚，小伙伴跟我说，执行了一个作业，日志输出到一半开始报错，之后前端页面直接卡死无法使用，简单排查就定位到了问题，这个作业是去一组主机上过滤日志文件输出错误日志，错误日志太多执行结果较大，不过也就2MB，<code>ansi_up</code>性能有限已经无法渲染，问题定位到了，如何解决</p>
+<p>我先是查了<code>ansi_up</code>的文档，没有找到解决的方案，然后问了<a href="/s/programmer-search-engine-devv-ai" target="_blank">最懂程序员的AI搜索引擎</a>，他给了我答案</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1206.02.png" /></p>
+<p>修复<code>ansi_up.js</code>这个难度太大，<code>Jupyter</code>这个也不懂，但是<code>xterm.js</code>我熟啊，之前在做webssh项目时就是通过<code>xterm.js</code>来实现前后端的实时交互的。xterm是一个专业的前端终端组件，可以直接在浏览器中实现一个命令行终端应用，功能强大、配置复杂，但基本使用较为简单，示例代码如下：</p>
+<pre class="codehilite"><code>&lt;html&gt;
+  &lt;head&gt;
+    &lt;link href=&quot;/static/plugins/xterm/xterm.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id=&quot;terminal&quot;&gt;&lt;/div&gt;
+
+    &lt;script src=&quot;/static/plugins/xterm/xterm.js&quot;&gt;&lt;/script&gt;
+    &lt;script&gt;
+      var term = new Terminal();
+      term.open(document.getElementById('terminal'));
+      term.write('Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ')
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+
+<p>通过<code>term.write</code>写数据，实际测试下来，一次性60MB的数据也能正常渲染，几十倍的性能提升，是真的强大。虽然这个问题解决了，渲染恢复了正常，但发现了更为严重的问题，作业执行过程中日志是先写入缓存的，日志输出太大会导致缓存被占满从而进程OOM，同时日志展示也不会分页，一次请求占用几十上百MB的内存，很快就导致系统OOM</p>
+<p>日志输出太多实际上就失去了意义，根本也看不过来，由于大量的数据传输，前端体验也会变差，还提升了系统OOM的风险，限制日志输出大小似乎成了最好的解决方式，说干就干，代码比较简单</p>
+<pre class="codehilite"><code># 输出日志超过2M则强制结束
+if len(old_log) &gt; 2 * 1024 * 1024 or len(new_log) &gt; 2 * 1024 * 1024:
+    details = '输出日志超大，当前作业已被系统强制结束'</code></pre>
+
+
+<p>判断下当前的日志记录大小以及新产生的日志大小是否超过2MB，如果超过则直接终止作业，同时提示用户调整</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/1206.03.png" /></p>
+<p>至此问题才算完全解决。我不禁在想，我们都喜欢自由，不设限制，但有些时候受限才是为了更自由</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/ansi-up-js-to-xterm-js-performance.html">📅 2023-12-06</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

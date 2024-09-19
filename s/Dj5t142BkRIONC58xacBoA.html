@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Auth,关于技术,Basic,Etcd,系统运维" />
+  <meta name="description" content="本文介绍我们使用Etcd权限认证的设计过程及详细配置" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Etcd安全配置之Basic Auth认证</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Etcd安全配置之Basic Auth认证" />
+  <meta property="og:description" content="本文介绍我们使用Etcd权限认证的设计过程及详细配置" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Etcd安全配置之Basic Auth认证</h1>
+
+        <blockquote>
+<p><a href="/s/uGUvV4jl4YIvNztuepdC8A" target="_blank">《中小团队落地配置中心详解》</a>文章中我们介绍了如何基于Etcd+Confd构建配置中心，最后提到Etcd的安全问题时说了可以使用账号密码认证以达到安全访问的目的，究竟该如何开启认证以及怎么设计权限访问呢？本文将为你详细解读</p>
+</blockquote>
+<h1 id="_1">认证说明</h1>
+<ol>
+<li>Etcd v2以上的版本才支持权限认证，且仅支持Basic Auth</li>
+<li>Etcd通过用户(user)-角色(role)-权限的方式来控制访问，用户关联角色，角色拥有权限，从而用户也就拥有了相应的权限</li>
+<li>Etcd默认没有启用认证机制，只要能连接etcd服务就拥有所有的权限，还是非常危险的，另一种安全的访问方式是开启ssl，只有使用受信任的证书才能访问数据</li>
+<li>Etcd开启Basic Auth之后，默认会启用两个角色root和guest，root角色拥有所有权限，guest拥有只读权限，这两个角色都<strong>不要删除</strong>，否则你可能会遇到意想不到的Bug</li>
+<li>Etcd的权限分为只读、只写、可读写，可以对etcd的详细key进行授权，例如：/conf/project/dev/nginx.conf，也可以授权key前缀（目录），例如：/conf/project/，授权规则应以最小满足需求为准则</li>
+</ol>
+<h1 id="_2">权限设计</h1>
+<p>权限设计应先考虑我们对权限的需求，从需求出发设计权限</p>
+<ul>
+<li>
+<p>需求</p>
+</li>
+<li>
+<p>为了方便后续管理，规定配置中心所有key都应已/conf/开头</p>
+</li>
+<li>
+<p>需要两个账号，一个账号用在Kerrigan(WebUI)拥有读取、写入、修改、删除key的权限，一个账号用在confd，只有只读的权限，能够读取配置就可以了</p>
+</li>
+<li>
+<p>设计</p>
+</li>
+<li>
+<p>需求很简单，我们需要建立两个账号，分别对应两个角色，两个角色都是对/conf/开头的Key进行控制，一个读写权限，一个只读权限</p>
+</li>
+<li>定义只读账号名为readx，只读角色名为readConf，定义读写权限账号名为authz，读写权限为rootConf，可操作的key都为/conf/开头</li>
+</ul>
+<h1 id="_3">详细步骤</h1>
+<p>1.添加root用户</p>
+<pre class="codehilite"><code># etcdctl user add root
+New password: 12345
+User root created</code></pre>
+
+
+<p>2.创建root账号后，root默认有root角色，对所有KV有读写权限</p>
+<pre class="codehilite"><code># etcdctl user get root
+User: root
+Roles:  root
+
+# etcdctl role get root
+Role: root
+KV Read:
+    /*
+KV Write:
+    /*</code></pre>
+
+
+<p>3.开启auth认证</p>
+<pre class="codehilite"><code># etcdctl auth enable
+Authentication Enabled
+
+开启权限认证后默认会多一个guest的角色
+# etcdctl --username root:12345 role list
+guest
+root</code></pre>
+
+
+<p>4.添加非root账号，一个authz的账号，一个readx的账号</p>
+<pre class="codehilite"><code># etcdctl --username root:12345 user add authz
+New password: 
+User authz created
+
+# etcdctl --username root:12345 user add readx
+New password: 
+User readx created</code></pre>
+
+
+<p>5.添加角色，一个rootConf的角色，一个readConf的角色</p>
+<pre class="codehilite"><code># etcdctl --username root:12345 role add rootConf
+Role rootConf created
+
+# etcdctl --username root:12345 role add readConf
+Role readConf created</code></pre>
+
+
+<p>6.为角色授权，readConf角色对/conf有只读权限，rootConf角色对/conf有读写权限</p>
+<pre class="codehilite"><code># etcdctl --username root:12345 role grant --read --path /conf/* readConf
+Role readConf updated
+
+# etcdctl --username root:12345 role grant --readwrite --path /conf/* rootConf
+Role rootConf updated</code></pre>
+
+
+<p>7.给用户分配角色，authz账号分配rootConf角色，readx账号分配readConf角色</p>
+<pre class="codehilite"><code># etcdctl --username root:12345 user grant --roles rootConf authz
+User authz updated
+
+# etcdctl --username root:12345 user grant --roles readConf readx
+User readx updated</code></pre>
+
+
+<p>8.查看用户所拥有的角色</p>
+<pre class="codehilite"><code># etcdctl --username root:12345 user get authz
+User: authz
+Roles:  rootConf
+
+# etcdctl --username root:12345 user get readx
+User: readx
+Roles:  readConf</code></pre>
+
+
+<p>这样readx账号就对/conf下的所有文件有了只读权限，authz对/conf下的所有文件有了读写权限</p>
+<h1 id="_4">常用命令</h1>
+<p>有一些命令上边没有介绍到，会用得到的如下：</p>
+<p>1.关闭认证</p>
+<pre class="codehilite"><code># etcdctl --username root:12345 auth disable</code></pre>
+
+
+<p>2.删除用户</p>
+<pre class="codehilite"><code># etcdctl --username root:12345 user remove userx</code></pre>
+
+
+<p>3.用户撤销角色</p>
+<pre class="codehilite"><code># etcdctl --username root:12345 user revoke rolex</code></pre>
+
+
+<p>4.修改用户密码</p>
+<pre class="codehilite"><code># etcdctl --username root:12345 user passwd</code></pre>
+
+
+<p>同时还有删除角色、撤销角色权限可参看上边用户相关操作</p>
+<h1 id="_5">踩坑记录</h1>
+<p>在开启认证后发现系统默认给添加了guest角色，觉得guest角色没用就给删除了，于是再连接etcd集群时就报如下错误：</p>
+<p>报错：<code>The request requires user authentication (Insufficient credentials)</code></p>
+<p>解决：重新添加guest角色</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/Dj5t142BkRIONC58xacBoA.html">📅 2018-09-12</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/系统运维/">🏷️ 系统运维</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

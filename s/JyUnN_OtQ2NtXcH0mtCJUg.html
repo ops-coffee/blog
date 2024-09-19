@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Nginx,关于技术,系统运维" />
+  <meta name="description" content="文章列举了几个Nginx常见的，实用的，有趣的配置，希望看过之后能说一句：学到了！" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Nginx的几个常用配置和技巧</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Nginx的几个常用配置和技巧" />
+  <meta property="og:description" content="文章列举了几个Nginx常见的，实用的，有趣的配置，希望看过之后能说一句：学到了！" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">Nginx的几个常用配置和技巧</h1>
+
+        <blockquote>
+<p>文章列举了几个Nginx常见的，实用的，有趣的配置，希望看过之后能说一句：学到了！</p>
+</blockquote>
+<h2 id="_1">一个站点配置多个域名</h2>
+<pre class="codehilite"><code>server {
+    listen       80;
+    server_name  ops-coffee.cn b.ops-coffee.cn;
+}</code></pre>
+
+
+<p><strong>server_name</strong> 后跟多个域名即可，多个域名之间用空格分隔</p>
+<h2 id="_2">一个服务配置多个站点</h2>
+<pre class="codehilite"><code>server {
+    listen       80;
+    server_name  a.ops-coffee.cn;
+
+    location / {
+        root /home/project/pa;
+        index index.html;
+    }
+}
+
+server {
+    listen       80;
+    server_name  ops-coffee.cn b.ops-coffee.cn;
+
+    location / {
+        root /home/project/pb;
+        index index.html;
+    }
+}
+
+server {
+    listen       80;
+    server_name  c.ops-coffee.cn;
+
+    location / {
+        root /home/project/pc;
+        index index.html;
+    }
+}</code></pre>
+
+
+<p>基于Nginx虚拟主机配置实现，Nginx有三种类型的虚拟主机</p>
+<p><strong>基于IP的虚拟主机：</strong> 需要你的服务器上有多个地址，每个站点对应不同的地址，这种方式使用的比较少</p>
+<p><strong>基于端口的虚拟主机：</strong> 每个站点对应不同的端口，访问的时候使用ip:port的方式访问，可以修改listen的端口来使用</p>
+<p><strong>基于域名的虚拟主机：</strong> 使用最广的方式，上边例子中就是用了基于域名的虚拟主机，前提条件是你有多个域名分别对应每个站点，server_name填写不同的域名即可</p>
+<h2 id="nginx">nginx添加账号密码验证</h2>
+<pre class="codehilite"><code>server {
+    location / {
+        auth_basic &quot;please input user&amp;passwd&quot;;
+        auth_basic_user_file key/auth.key;
+    }
+}</code></pre>
+
+
+<p>有很多服务通过nginx访问，但本身没有提供账号认证的功能，就可以通过nginx提供的authbase账号密码认证来实现，可以用以下脚本来生成账号的密码</p>
+<pre class="codehilite"><code># cat pwd.pl 
+#!/usr/bin/perl
+use strict;
+
+my $pw=$ARGV[0] ;
+print crypt($pw,$pw).&quot;\n&quot;;</code></pre>
+
+
+<p>使用方法：</p>
+<pre class="codehilite"><code># perl pwd.pl ops-coffee.cn
+opf8BImqCAXww
+# echo &quot;admin:opf8BImqCAXww&quot; &gt; key/auth.key</code></pre>
+
+
+<h2 id="nginx_1">nginx开启列目录</h2>
+<p>当你想让nginx作为文件下载服务器存在时，需要开启nginx列目录</p>
+<pre class="codehilite"><code>server {
+    location download {
+        autoindex on;
+
+        autoindex_exact_size off;
+        autoindex_localtime on;
+    }
+}</code></pre>
+
+
+<p><strong>autoindex_exact_size：</strong> 为on(默认)时显示文件的确切大小，单位是byte；改为off显示文件大概大小，单位KB或MB或GB</p>
+<p><strong>autoindex_localtime：</strong> 为off(默认)时显示的文件时间为GMT时间；改为on后，显示的文件时间为服务器时间</p>
+<p>默认当访问列出的txt等文件时会在浏览器上显示文件的内容，如果你先让浏览器直接下载，加上下边的配置</p>
+<pre class="codehilite"><code>if ($request_filename ~* ^.*?\.(txt|pdf|jpg|png)$) {
+    add_header Content-Disposition 'attachment';
+}</code></pre>
+
+
+<h2 id="_3">配置默认站点</h2>
+<pre class="codehilite"><code>server {
+    listen 80 default;
+}</code></pre>
+
+
+<p>当一个nginx服务上创建了多个虚拟主机时默认会<strong>从上到下</strong>查找，如果匹配不到虚拟主机则会返回<strong>第一个</strong>虚拟主机的内容，如果你想指定一个默认站点时，可以将这个站点的虚拟主机放在配置文件中第一个虚拟主机的位置，或者在这个站点的虚拟主机上配置listen default</p>
+<h2 id="ip">不允许通过IP访问</h2>
+<pre class="codehilite"><code>server {
+    listen       80 default;
+    server_name  _;
+
+    return      404;
+}</code></pre>
+
+
+<p>可能有一些未备案的域名或者你不希望的域名将服务器地址指向了你的服务器，这时候就会对你的站点造成一定的影响，需要禁止IP或未配置的域名访问，我们利用上边所说的default规则，将默认流量都转到404去</p>
+<p>上边这个方法比较粗暴，当然你也可以配置下所有未配置的地址访问时直接301重定向到你的网站去，也能为你的网站带来一定的流量</p>
+<pre class="codehilite"><code>server {
+    rewrite ^/(.*)$ https://ops-coffee.cn/$1    permanent;
+}</code></pre>
+
+
+<h2 id="_4">直接返回验证文件</h2>
+<pre class="codehilite"><code>location = /XDFyle6tNA.txt {
+    default_type text/plain;
+    return 200 'd6296a84657eb275c05c31b10924f6ea';
+}</code></pre>
+
+
+<p>很多时候微信等程序都需要我们放一个txt的文件到项目里以验证项目归属，我们可以直接通过上边这种方式修改nginx即可，无需真正的把文件给放到服务器上</p>
+<h2 id="nginxupstream">nginx配置upstream反向代理</h2>
+<pre class="codehilite"><code>http {
+    ...
+    upstream tomcats {
+        server 192.168.106.176 weight=1;
+        server 192.168.106.177 weight=1;
+    }
+
+    server {
+        location /ops-coffee/ { 
+            proxy_pass http://tomcats; 
+
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+
+}</code></pre>
+
+
+<p>稍不注意可能会落入一个<code>proxy_pass</code>加杠不加杠的陷阱，这里详细说下<code>proxy_pass http://tomcats</code>与<code>proxy_pass http://tomcats/</code>的区别：</p>
+<p>虽然只是一个/的区别但结果确千差万别。分为以下两种情况：</p>
+<p>1.目标地址中不带uri（<code>proxy_pass http://tomcats</code>）。此时新的目标url中，匹配的uri部分不做修改，原来是什么就是什么。</p>
+<pre class="codehilite"><code>location /ops-coffee/ {
+    proxy_pass  http://192.168.106.135:8181;
+}
+
+http://domain/ops-coffee/   --&gt;     http://192.168.106.135:8181/ops-coffee/
+http://domain/ops-coffee/action/abc   --&gt;     http://192.168.106.135:8181/ops-coffee/action/abc</code></pre>
+
+
+<p>2.目标地址中带uri（<code>proxy_pass http://tomcats/</code>，/也是uri）,此时新的目标url中，匹配的uri部分将会被修改为该参数中的uri。</p>
+<pre class="codehilite"><code>location /ops-coffee/ {
+    proxy_pass  http://192.168.106.135:8181/;
+}
+
+http://domain/ops-coffee/   --&gt;     http://192.168.106.135:8181
+http://domain/ops-coffee/action/abc   --&gt;     http://192.168.106.135:8181/action/abc</code></pre>
+
+
+<h2 id="nginx-upstreamkeepalive">nginx upstream开启keepalive</h2>
+<pre class="codehilite"><code>upstream tomcat {
+    server ops-coffee.cn:8080;
+    keepalive 1024;
+}
+
+server {
+    location / {
+        proxy_http_version 1.1;
+        proxy_set_header Connection &quot;&quot;;
+
+        proxy_pass http://tomcat;
+    }
+}</code></pre>
+
+
+<p>nginx在项目中大多数情况下会作为反向代理使用，例如nginx后接tomcat，nginx后接php等，这时我们开启nginx和后端服务之间的keepalive能够减少频繁创建TCP连接造成的资源消耗，配置如上</p>
+<p><strong>keepalive：</strong> 指定每个nginxworker可以保持的最大连接数量为1024，默认不设置，即nginx作为client时keepalive未生效</p>
+<p><strong>proxy_http_version 1.1：</strong> 开启keepalive要求HTTP协议版本为HTTP 1.1</p>
+<p><strong>proxy_set_header Connection ""：</strong> 为了兼容老的协议以及防止http头中有<code>Connection close</code>导致的keepalive失效，这里需要及时清掉HTTP头部的Connection</p>
+<h2 id="404">404自动跳转到首页</h2>
+<pre class="codehilite"><code>server {
+    location / {
+       error_page 404 =  @ops-coffee;
+    }
+
+    location @ops-coffee {
+       rewrite  .*  / permanent;
+    }
+}</code></pre>
+
+
+<p>网站出现404页面不是特别友好，我们可以通过上边的配置在出现404之后给自动跳转到首页去</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/JyUnN_OtQ2NtXcH0mtCJUg.html">📅 2019-04-29</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/系统运维/">🏷️ 系统运维</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Dual,Listbox,关于技术,前端插件,Bootstrap" />
+  <meta name="description" content="工欲善其事，必先利其器" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>前端插件之Bootstrap Dual Listbox使用</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="前端插件之Bootstrap Dual Listbox使用" />
+  <meta property="og:description" content="工欲善其事，必先利其器" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">前端插件之Bootstrap Dual Listbox使用</h1>
+
+        <blockquote>
+<p>工欲善其事，必先利其器</p>
+</blockquote>
+<p>对于很多非专业前端开发来说写页面是非常痛苦的，借助框架或插件往往能够达到事半功倍的效果，本系列文章会介绍我在运维系统开发过程中用到的那些顺手的前端插件，如果你是想写XX管理系统的学生、或是需要独自做Dashboard的后端工程师、亦或是像我这样半吊子的开发加运维，那么这个系列的文章你一定不要错过</p>
+<p>Bootstrap Dual Listbox是一款基于Bootstrap的双向select选择框控件，作为对multiple select的扩展，使用起来非常简单，功能也更强大</p>
+<p>项目Github地址：<a href="https://github.com/istvan-ujjmeszaros/bootstrap-duallistbox" target="_blank">https://github.com/istvan-ujjmeszaros/bootstrap-duallistbox</a></p>
+<h2 id="_1">基本使用</h2>
+<p>需要用到的JS和CSS文件位于项目代码下的dist目录中，需要将这个目录中的对应文件放入你的项目里，这一步不赘述</p>
+<ol>
+<li>引入CSS/JS文件，由于bootstrap-duallistbox是基于bootstrap的，所以要先引入bootstrap相关的css和js</li>
+</ol>
+<pre class="codehilite"><code>&lt;!-- 加载bootstrap --&gt;
+&lt;script src=&quot;https://code.jquery.com/jquery-3.2.1.slim.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css&quot;&gt;
+
+&lt;!-- 加载bootstrap-dualllistbox --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;static/bootstrap-duallistbox/bootstrap-duallistbox.css&quot;&gt;
+&lt;script src=&quot;static/bootstrap-duallistbox/jquery.bootstrap-duallistbox.js&quot;&gt;&lt;/script&gt;</code></pre>
+
+
+<ol>
+<li>加载duallistbox插件</li>
+</ol>
+<pre class="codehilite"><code>&lt;select class=&quot;form-control&quot; multiple=&quot;multiple&quot; name=&quot;groups&quot; size=&quot;10&quot;&gt;
+    &lt;option value=&quot;1&quot;&gt;GroupA&lt;/option&gt;
+    &lt;option selected value=&quot;2&quot;&gt;GroupB&lt;/option&gt;
+    &lt;option value=&quot;3&quot;&gt;GroupC&lt;/option&gt;
+    &lt;option value=&quot;4&quot;&gt;GroupD&lt;/option&gt;
+    &lt;option selected value=&quot;5&quot;&gt;GroupE&lt;/option&gt;
+    &lt;option value=&quot;6&quot;&gt;GroupF&lt;/option&gt;
+    &lt;option value=&quot;7&quot;&gt;GroupG&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;script&gt;
+    var selectorx = $('select[name=&quot;groups&quot;]').bootstrapDualListbox();
+&lt;/script&gt;</code></pre>
+
+
+<ol>
+<li>完成以上两步可以看到页面效果如下</li>
+</ol>
+<p><img alt="" loading="lazy" src="/static/images/2019/0718.duallistbox0.png" /></p>
+<p>非常简单，到这里已经可以正常使用这个控件了，更多的花样接着往下看</p>
+<h2 id="_2">配置说明</h2>
+<p>整个界面为英文显示，有默认提示，如果你想将提示改为中文或添加自定义的提示内容，那么可以通过如下配置</p>
+<pre class="codehilite"><code>var selectorx = $('select[name=&quot;groups&quot;]').bootstrapDualListbox({
+    nonSelectedListLabel: '未选择的组',
+    selectedListLabel: '已选择的组',
+    filterTextClear: '展示所有',
+    filterPlaceHolder: '过滤搜索',
+    moveSelectedLabel: &quot;添加&quot;,
+    moveAllLabel: '添加所有',
+    removeSelectedLabel: &quot;移除&quot;,
+    removeAllLabel: '移除所有',
+    infoText: '共{0}个组',
+    infoTextFiltered: '搜索到{0}个组 ,共{1}个组',
+    infoTextEmpty: '列表为空',
+});</code></pre>
+
+
+<p>以上配置都比较简单，对照中文就能知晓意思，不做过多解释，另外有几个支持的参数说明如下：</p>
+<p><strong>infoText：</strong> 除了设置字符串外还可设置为<code>false</code>，当设置为<code>false</code>时可隐藏这段信息</p>
+<p><strong>showFilterInputs：</strong> 默认为true，是否显示filter过滤框</p>
+<p><strong>moveOnSelect：</strong> 默认为true，点击便会变更选项到对应的选择框内，如果设置为false则会在出现<code>moveSelected</code>的箭头需要点击箭头或者双击选项后才能变更选项到对应的选择框</p>
+<p><strong>nonSelectedFilter：</strong> 未选中的默认过滤规则，可以配置为<code>OPS-COFFEE-A</code>则未选中的框内只会显示<code>OPS-COFFEE-A</code></p>
+<p><strong>selectedFilter：</strong> 已选中的默认规则，与<code>noSelectedFilter</code>类似</p>
+<h2 id="_3">使用进阶</h2>
+<p>获取已选择的值</p>
+<pre class="codehilite"><code>selectorx.val()</code></pre>
+
+
+<p>获取select插件对象</p>
+<pre class="codehilite"><code>selectorx.bootstrapDualListbox('getContainer')</code></pre>
+
+
+<p>刷新插件元素用户界面</p>
+<pre class="codehilite"><code>selectorx.bootstrapDualListbox('refresh');</code></pre>
+
+
+<p>删除bootstrap-duallistbox插件，恢复select原样</p>
+<pre class="codehilite"><code>selectorx.bootstrapDualListbox('destroy');</code></pre>
+
+
+<p>动态添加select的option</p>
+<pre class="codehilite"><code>selectorx.append('&lt;option value=&quot;9&quot; selected&gt;ops-coffee.cn&lt;/option&gt;');
+selectorx.bootstrapDualListbox('refresh');</code></pre>
+
+
+<p>注意：<strong>上文中的所有selectorx都为加载duallistbox时实例化的select对象</strong></p>
+<h2 id="demo">完整Demo</h2>
+<p>为了方便大家学习，我写了个完整的demo，你可以在线查看效果或下载代码应用到自己的项目中</p>
+<p>在线Demo地址：<a href="https://demo.ops-coffee.cn/duallistbox/" target="_blank">https://demo.ops-coffee.cn/duallistbox/</a></p>
+<p>Github源码地址：<a href="https://github.com/ops-coffee/demo/tree/master/duallistbox" target="_blank">https://github.com/ops-coffee/demo/tree/master/duallistbox</a></p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/frontend/front-end-components-bootstrap-dual-listbox.html">📅 2019-07-19</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/前端插件/">🏷️ 前端插件</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

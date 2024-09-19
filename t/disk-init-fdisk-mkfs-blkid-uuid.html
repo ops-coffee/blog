@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Linux" />
+  <meta name="description" content="Linux新添加一块磁盘之后接下来该怎么处理" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>磁盘初始化分区及挂载</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="磁盘初始化分区及挂载" />
+  <meta property="og:description" content="Linux新添加一块磁盘之后接下来该怎么处理" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">磁盘初始化分区及挂载</h1>
+
+        <h2 id="linux">linux 磁盘分区</h2>
+<h3 id="_1">背景</h3>
+<p>新加一块硬盘做备份分区使用</p>
+<h3 id="_2">操作</h3>
+<ol>
+<li>
+<p>添加硬盘，开机进入系统</p>
+</li>
+<li>
+<p>执行<code>fdisk -l</code>命令查看新加的硬盘是否正常添加，记住盘号例如<code>/dev/sdb</code></p>
+</li>
+<li>
+<p>执行<code>fdisk</code>命令进行分区：<code>fdisk /dev/sdb</code></p>
+<ul>
+<li>n：新建一个分区</li>
+<li>p：新建一个主分区<ul>
+<li>填上起始磁盘位置，如果整个磁盘不分区直接回车即可</li>
+</ul>
+</li>
+<li>w：保存</li>
+</ul>
+</li>
+<li>
+<p>执行<code>mkfs</code>命令格式化分区：<code>mkfs.ext4 -c /dev/sdb1</code></p>
+<ul>
+<li>如果要格式为xfs格式，可以执行命令：<code>mkfs.xfs -f /dev/vdd1</code></li>
+</ul>
+</li>
+<li>
+<p>新建挂载目录：<code>mkdir /data</code></p>
+</li>
+<li>
+<p>执行<code>mount</code>命令挂载：<code>mount /dev/sdb1 /data</code></p>
+</li>
+<li>
+<p>修改<code>/etc/fstab</code>文件，使其开机自动挂载</p>
+</li>
+</ol>
+<pre class="codehilite"><code>UUID=09761a1c-c938-44e7-8e7d-dda5489971cf /data ext4 defaults 1 2</code></pre>
+
+
+<h2 id="uuid">查看磁盘UUID值</h2>
+<pre class="codehilite"><code># blkid</code></pre>
+
+
+<h2 id="_3">格式化磁盘报错处理</h2>
+<p>报错：</p>
+<pre class="codehilite"><code># mkfs -t ext4 -c /dev/sdb1
+mke2fs 1.41.12 (17-May-2010)
+/dev/sdb1 is apparently in use by the system; will not make a filesystem here!</code></pre>
+
+
+<p>处理：</p>
+<pre class="codehilite"><code># dmsetup status
+ddf1_4c5349202020202080862682000000004711471100001e78: 0 1462890496 linear
+ddf1_4c5349202020202080862682000000004711471100001e78p1: 0 1462878837 linear
+# dmsetup remove_all
+# mkfs -t ext4 -c /dev/sdb1</code></pre>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/t/disk-init-fdisk-mkfs-blkid-uuid.html">📅 2022-03-30</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="任务系统，任务流，人工审批，脚本管理，标准运维，作业平台，子任务，模板，任务，并行，串行，CI，CD，Jenkins" />
+  <meta name="description" content="运维自动化的核心功能任务系统的系列实现教程，标准运维与作业平台的整合，包含子任务、模板、任务三个核心模块，命令、脚本、审核、通知四种子任务类型，同时支持并行、串行两种执行方式，实时查看执行过程日志，可以手动终止任务" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>运维自动化之任务系统实现教程</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="运维自动化之任务系统实现教程" />
+  <meta property="og:description" content="运维自动化的核心功能任务系统的系列实现教程，标准运维与作业平台的整合，包含子任务、模板、任务三个核心模块，命令、脚本、审核、通知四种子任务类型，同时支持并行、串行两种执行方式，实时查看执行过程日志，可以手动终止任务" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+      <p>任务系统主要用来执行手动任务、自动任务或定时任务，由子任务、模板、任务3个核心子模块构成，同时依赖基础的项目、用户、角色、权限、通知等模块，支持任务的串行或并行执行，能够实时查看任务执行过程中的日志，同时也能手动终止执行中的任务</p>
+
+<p style="text-align:center"><img src="/static/images/2022/0310.png" alt="" loading="lazy"></p>
+
+<p>以下系列文章主要分享我在开发任务系统中的一些想法和具体的实现方式，希望让你对任务系统有更多的了解</p>
+
+<h1 style="position: absolute;top: -9999px;left: -9999px;">运维自动化之任务系统实现教程</h1>
+
+<div class="nav-cell clearfix">
+	<hr style="margin: 20px 0;height: 12px;border: 0;box-shadow: inset 0 12px 12px -12px rgba(0,0,0,0.5);" />
+
+	<ul class="nav-list-art">
+	  
+	  <li>
+		<a class="nav-item" href="/s/YjfTypcHD03fTGLV_JsqWw" target="_blank">
+		  <div class="nav-img nav-img-default"></div>
+		  <div class="nav-name">运维自动化之任务系统分享</div>
+		  <p></p>
+		</a>
+	  </li>
+	  
+	  <li>
+		<a class="nav-item" href="/s/0Q31jzeYBTeWdrLMufdig" target="_blank">
+		  <div class="nav-img nav-img-default"></div>
+		  <div class="nav-name">任务系统之并行任务</div>
+		  <p></p>
+		</a>
+	  </li>
+
+	  <li>
+		<a class="nav-item" href="/s/Q3BBxBAWBcpUhQhfwO7pgQ" target="_blank">
+		  <div class="nav-img nav-img-default"></div>
+		  <div class="nav-name">任务系统之手动审批</div>
+		  <p></p>
+		</a>
+	  </li>
+	  
+	  <li>
+		<a class="nav-item" href="/s/devops-task-subtask-jenkins" target="_blank">
+		  <div class="nav-img nav-img-default"></div>
+		  <div class="nav-name">任务系统之Jenkins子任务务</div>
+		  <p></p>
+		</a>
+	  </li>
+
+	  <li>
+		<a class="nav-item" href="/s/devops-task-subtask-api-postman-apipost" target="_blank">
+		  <div class="nav-img nav-img-default"></div>
+		  <div class="nav-name">任务系统之API子任务</div>
+		  <p></p>
+		</a>
+	  </li>
+
+	  <li>
+		<a class="nav-item" href="/s/devops-task-subtask-args-kwargs-jinja-template" target="_blank">
+		  <div class="nav-img nav-img-default"></div>
+		  <div class="nav-name">任务系统之结果传递</div>
+		  <p></p>
+		</a>
+	  </li>
+
+	  <li>
+		<a class="nav-item" href="/s/devops-task-subtask-args-json-to-form-table" target="_blank">
+		  <div class="nav-img nav-img-default"></div>
+		  <div class="nav-name">简洁表单替代复杂JSON，配置直观又简单</div>
+		  <p></p>
+		</a>
+	  </li>
+	</ul>
+</div>
+
+
+<h1 style="position: absolute;top: -9999px;left: -9999px;">运维自动化之任务系统实现教程</h1>
+
+<div class="nav-cell clearfix">
+	<hr style="margin: 20px 0;height: 12px;border: 0;box-shadow: inset 0 12px 12px -12px rgba(0,0,0,0.5);" />
+
+	<ul class="nav-list-art">
+
+	  <li>
+		<a class="nav-item" href="/s/uXQbM4t11ICdzNofZyDeXA" target="_blank">
+		  <div class="nav-img nav-img-default"></div>
+		  <div class="nav-name">Probius：一个功能强大的自定义任务系统</div>
+		  <p></p>
+		</a>
+	  </li>
+
+	  <li>
+		<a class="nav-item" href="/s/U88HPUYiVDar-7yBx3IoIA" target="_blank">
+		  <div class="nav-img nav-img-default"></div>
+		  <div class="nav-name">Probius+Kubernetes任务系统如虎添翼</div>
+		  <p></p>
+		</a>
+	  </li>
+
+	  <li>
+		<a class="nav-item" href="/s/sOlBFC5FsSqVd78eFuxUyQ" target="_blank">
+		  <div class="nav-img nav-img-default"></div>
+		  <div class="nav-name">Probius+Prometheus通过API集成POD监控</div>
+		  <p></p>
+		</a>
+	  </li>
+
+	  <li>
+		<a class="nav-item" href="/s/JpnxTf-Z9vkKrwl8nXJljQ" target="_blank">
+		  <div class="nav-img nav-img-default"></div>
+		  <div class="nav-name">Probius使用Cache缓存提升10倍效率</div>
+		  <p></p>
+		</a>
+	  </li>
+
+	</ul>
+</div>
+
+<div>
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!-- footer -->
+	<ins class="adsbygoogle"
+		 style="display:block"
+		 data-ad-client="ca-pub-8944257246828217"
+		 data-ad-slot="6731434232"
+		 data-ad-format="auto"
+		 data-full-width-responsive="true"></ins>
+	<script>
+		 (adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
+</div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>

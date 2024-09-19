@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="任务系统,Devops,关于技术" />
+  <meta name="description" content="一个团队究竟需要哪些Devops工具系统来支撑" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>再聊我们自研的那些Devops工具</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="再聊我们自研的那些Devops工具" />
+  <meta property="og:description" content="一个团队究竟需要哪些Devops工具系统来支撑" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">再聊我们自研的那些Devops工具</h1>
+
+        <p>两年前我写了篇文章<a href="/s/HwOi-ARTvvNjGTWrDmZIkQ" target="_blank">『我们自研的那些Devops工具』</a>介绍了我们自研的一些DevOps工具系统，两年过去了这些工具究竟还有没有在发光发热，又有哪些新的变化呢，我将通过这篇文章来回顾一下这两年的发展与变化</p>
+<h2 id="cmdb">CMDB</h2>
+<p>CMDB配置管理数据库，作为整个运维体系构建的基础，几乎其他所有的运维工具系统都要依赖他提供的基础数据，所以保证稳定非常重要，这里的稳定不仅指的是系统运行状态的稳定，还有数据结构、功能的稳定，其数据结构一旦改变上游系统可能都要跟着修改，所以在规划CMDB的迭代更新时，首先要考虑兼容性，已有功能不做过多修改，仅进行新功能的添加</p>
+<p>基于以上考量，CMDB在这两年来整体功能没有太大变化，功能上仅是将主机监控给集成进来，可以在cmdb里直接搜索对应主机查看监控，而无需再去监控系统检索，同时在易用性上有了提升，例如去掉了目录树，丰富了展示信息，优化了检索功能</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/1130.01.png" /></p>
+<h2 id="nova">nova</h2>
+<p>nova系统主要用来做生产环境的持续部署，之前的文章里也有介绍，由于我们的环境比较复杂，公有云、私有云、云主机、物理机、Kubernetes等都有使用，并且分布在不同地区的机房，为了方便维护，我们专门抽离了生产环境的部署功能做了nova系统</p>
+<p>持续集成原本是通过<a href="/s/eM7SNKmtw2tDQtXBsBXyxQ" target="_blank">varian系统</a>来实现的，但现在我们已经彻底废弃了varian，用更为强大的<a href="/s/uXQbM4t11ICdzNofZyDeXA" target="_blank">自定义任务引擎Probius</a>来代替了，Probius下边介绍</p>
+<p>现在将回滚功能也集成进了nova，回滚基于Docker镜像来实现，选择要回滚环境，会根据环境拉对应项目和环境去Dockerhub拉取相应的镜像列表，选择镜像进行回滚，可以快速回滚到之前的任何一个版本</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/1130.02.png" /></p>
+<p>还为nova增加了批量任务执行的功能，主要基于Ansible来实现，详细介绍可以看之前的文章：<a href="/s/6YAC_Lqw3jB0LZlJTx4A2g" target="_blank">Django+Ansible构建任务中心思路</a>，借助于批量任务可以方便的进行多节点异常排查，以及非部署类的任务处理</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/1130.03.png" /></p>
+<h2 id="kerrigan">kerrigan</h2>
+<p>作为对运维非常友好的配置管理工具，Kerrigan在整个项目运行中起着至关重要的作用，目前已经管理了数百个不同类型的配置文件，保障了上万次的配置修改得以正常执行，近两年来也对其进行了优化升级，主要有2个方面</p>
+<p>confd该为watch模式，配置修改立即生效。这个主要是针对nginx配置文件的管理，在之前的模式中，配置修改之后需要重新部署项目或者重启confd服务配置才能生效，这个过程较为繁琐，于是我们将confd改为了watch模式，配置一旦修改就会立即更新，这个模式有一个风险在于如果配置改错了怎么办？配置改错分两种情况，语法错误与规则错误，首先confd在更新配置文件前会检查配置文件是否有语法错误，如果没有才会更新，这样就避免了因为语法错误导致的更新失败，其次对于规则本身写错的问题，这个只能在更新前认真检查了，即便不是watch模式自动更新也会有这种问题存在，为此kerrigan做了几个方面的优化来尽量保证不改错以及改错后能快速修正，具体的可以看这篇文章：<a href="/s/QG42UqJ9rnswQDMd41CYUg" target="_blank">Kerrigan：配置中心管理UI的实现思路和技术细节</a>，包括配置对比、快速回滚等</p>
+<p>提供了完善的API。kerrigan除了管理了nginx之类的服务配置外，同时还管理了Dockerfile之类的文件，在持续集成的过程中需要用到Dockerfile，所以为Kerrigan提供了API来支持通过http的方式来获取配置文件，以便在Probius系统中使用配置文件，为此还用Python专门写了个获取配置文件的系统命令，只需要一个命令即可获取kerrigan里的配置文件，具体的实现方式可以看这里：<a href="/s/GXBrzg9wxUy1Y4XKazb67Q" target="_blank">用Python写个Linux系统命令</a></p>
+<p><img alt="" loading="lazy" src="/static/images/2021/1130.04.png" /></p>
+<h2 id="overmind">overmind</h2>
+<p>最开始写overmind系统仅仅是一个SQL审核平台，做到现在已经成了一站式DB管理系统，从工单开始，到DB信息添加，密码管理、权限管理，DB查询与审计，DB执行审核等一系列数据库相关的操作均可借助于overmind系统来完成</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/1130.05.png" /></p>
+<h2 id="proxy">proxy</h2>
+<p>proxy代理系统在易用性上有了不小的提升，首先是创建实例时选择协议，如果想要一个实例同时支持http和https两种协议，则在之前的版本需要创建两个实例，而现在则可以选择HTTP和HTTPS都支持，创建的实例将同时支持http和https协议访问，同时还可以配置是两个协议都可以同时访问还是http强制跳转至https，操作简单了许多</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/1130.07.png" /></p>
+<p>另一个修改是，可以编辑是否开启日志，如果开启的话还能在页面上实时监听日志，这对于某些排错的场景非常好用，实时监听日志就是模拟了tailf的功能，感兴趣的可以查看这篇文章：<a href="/s/r5SpyTjRl0jJeAuYE4Q_-Q" target="_blank">Django使用Channels实现WebSocket</a></p>
+<p><img alt="" loading="lazy" src="/static/images/2021/1130.08.png" /></p>
+<p>关于proxy的详细介绍可以查看这篇文章：<a href="/s/FV379mGIboVYky73kcoMMQ" target="_blank">Proxy：简单小巧又强大好用的代理系统</a></p>
+<h2 id="wiki">wiki</h2>
+<p>wiki整体功能没有太大的变化，只是强化了搜索功能，首页依然是个目录树，内页则只有内容，聚焦重点，没有花里胡哨的功能，不过随着目录的越来越多，后边若是重构则会考虑增加空间的概念，团队与团队，板块与板块之间做个区分还是很有必要的</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/1130.09.png" /></p>
+<p><a href="/s/HwOi-ARTvvNjGTWrDmZIkQ" target="_blank">我们自研的那些Devops工具</a>这篇文章里介绍过的工具除了varian已经完全废弃了之外，其他的各个系统都有在正常使用和迭代更新，生命力依然顽强。除了以上这些系统外，近两年还开发了一些新的工具系统</p>
+<h2 id="alodi">alodi</h2>
+<p>alodi系统主要用来快速生成临时环境，并实现对临时环境整个生命周期的一站式管理，主要应用在同一项目多版本同时开发测试或是保密项目不能通过常规测试环境测试的情况下使用，通过alodi可以快速的创建一个项目运行环境，通过生成的随机临时域名访问</p>
+<p>alodi基于Kubernetes实现，部署过程日志、容器终端日志、进入容器终端查看都可以在alodi系统中实现，无需跳转到其他系统，同时为了应对某些特殊的测试环境，还允许绑定自定义域名，使用完成之后一个按钮即可销毁所有创建的资源</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/1130.11.png" /></p>
+<p>更多alodi的介绍可以查看这篇文章：<a href="/s/h9k_C7kNB6q1VqxQDVHyiQ" target="_blank">Alodi：环境创建从未如此简单</a></p>
+<h2 id="webssh">webssh</h2>
+<p>通过webssh实现堡垒机功能，通过webssh连接远程主机，可以记录会话信息，对操作进行录像，后续还可进行审计，同时也可以实时查看其他用户的操作过程，提取操作命令等，为了方便使用，还通过目录树增加了分组功能</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/1130.12.png" /></p>
+<h2 id="probius">probius</h2>
+<p>自定义任务引擎probius是这两年实现的最重要的一个系统，具有强大且灵活的任务编排能力，最初只是想取代varian，但现在不仅做到了完美的取代，而且在易用性功能性上有了很大的提升，现在每天都有数十上百个持续集成任务通过probius来完成，同时还把kubernetes以及prometheus都集成了probius系统</p>
+<p>probius的三个核心概念是命令、模板和任务，命令是系统中的最小粒度，可以是一个具体的linux命令或是一个可以执行的脚本，模板是一组命令的组合，任务包含了模板和参数，同一个模板对应不同的参数就会是多个不同的任务，基于这种思想probius可以实现任何的功能，无论是日常巡检还是发布上线，都可轻松应对</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/1130.13.png" /></p>
+<p>probius跑了所有开发测试环境的部署任务，而开发测试环境依赖的底层资源是Kubernetes，所以为了方便使用，Probius也集成进了Kubernetes和Prometheus，Kubernetes和Prometheus是作为插件的形式集成进来的，可以不用，对probius本身影响不大</p>
+<h2 id="sadmin">sadmin</h2>
+<p>Sadmin是一个Django的基础公共库，这个公共库集成了许多基础的功能，例如后台配置网站标题、Title以及主题，动态配置菜单，自动的审计日志记录，多种认方式等等，同时也对最常用到的CRUD进行了封装，使用起来得心应手</p>
+<p>目前以上这些系统几乎全都使用了Sadmin公共库进行了重构，保证了统一，也方便后续维护，sadmin公共库的更多介绍看这里：<a href="/s/xehCT6PMS90dvrf96E-Fzw" target="_blank">Sadmin：打造私有Django公共库实现代码复用</a></p>
+<h2 id="_1">最后</h2>
+<p><a href="/s/HwOi-ARTvvNjGTWrDmZIkQ" target="_blank">我们自研的那些Devops工具</a>的文章里写未来一年的计划，将那些相对分散的系统给串联起来，现在未来已成过去，我们借助于probius实现了对多个系统的串联，实现了更高程度的自动化，那下一阶段要怎么发展？真的需要再停下来认真思考一下了</p>
+<p>除了以上这些DevOps相关工具系统外，我还协助开发了一些业务相关的系统，例如前两天介绍的<a href="/s/k0rAVHLALYTxCR5ggMg-ag" target="_blank">需求管理系统</a>，关于以上这些工具系统，我写过很多相关文章来介绍，感兴趣的可以前往运维咖啡吧同名公众号或是<a href="https://blog.ops-coffee.cn" target="_blank">博客</a>查看，如有想法可以一起交流</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/wAH0fb2I2fHCxu5Gy0oSng.html">📅 2021-11-30</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/任务系统/">🏷️ 任务系统</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
