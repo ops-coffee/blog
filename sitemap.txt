@@ -28,7 +28,6 @@ https://blog.ops-coffee.cn/r/
 https://blog.ops-coffee.cn/g/
 https://blog.ops-coffee.cn/t/
 https://blog.ops-coffee.cn/s/
-https://blog.ops-coffee.cn/tag/人生轨迹
 https://blog.ops-coffee.cn/tag/副业赚钱
 https://blog.ops-coffee.cn/tag/关于技术
 https://blog.ops-coffee.cn/tag/监控
@@ -53,12 +52,6 @@ https://blog.ops-coffee.cn/tag/Elk
 https://blog.ops-coffee.cn/tag/Python
 https://blog.ops-coffee.cn/tag/Django
 https://blog.ops-coffee.cn/tag/Devops
-https://blog.ops-coffee.cn/bpmn/bpmn-js-all-event-list
-https://blog.ops-coffee.cn/s/simple-reliable-and-free-home-photo-backup-solution
-https://blog.ops-coffee.cn/s/simple-and-beautiful-homepage-easy-build
-https://blog.ops-coffee.cn/r/city-china-zhejiang-huzhou-changxing-baduka
-https://blog.ops-coffee.cn/r/the-important-consideration-when-buying-an-rv
-https://blog.ops-coffee.cn/r/china-travel-shanghai-hangzhou-parents-together
 https://blog.ops-coffee.cn/s/multi-factor-authentication-github-2fa-totp
 https://blog.ops-coffee.cn/s/financial-independence-retire-early-mbd-code
 https://blog.ops-coffee.cn/s/python-django-blog-admin-dashboard-tools
