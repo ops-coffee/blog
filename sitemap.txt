@@ -54,6 +54,7 @@ https://blog.ops-coffee.cn/tag/Elk
 https://blog.ops-coffee.cn/tag/Python
 https://blog.ops-coffee.cn/tag/Django
 https://blog.ops-coffee.cn/tag/Devops
+https://blog.ops-coffee.cn/r/china-travel-layoff-trip-day11-xiuning-zuyuan
 https://blog.ops-coffee.cn/r/china-travel-layoff-trip-day10-xiuning-qiyunshan
 https://blog.ops-coffee.cn/r/china-travel-layoff-trip-day9-yixian-xiuning
 https://blog.ops-coffee.cn/r/china-travel-layoff-trip-day8-yixian-tachuan
