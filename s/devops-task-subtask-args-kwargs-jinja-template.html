@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="任务系统,Devops,关于技术" />
+  <meta name="keywords" content="Devops,任务系统,关于技术" />
   <meta name="description" content="在一个高度自由的任务流系统中，如何将当前子任务的结果输出，作为后续子任务的参数输入" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>任务系统之结果传递</title>
@@ -54,7 +54,7 @@
         <h1 id="art-title">任务系统之结果传递</h1>
 
         <p><a href="https://blog.ops-coffee.cn/task" target="_blank">任务系统</a>可以像乐高搭积木一样组合不同的子任务为一个模板，然后基于模板配合参数来创建任务流并执行，以此来满足各种各样的日常运维场景，例如项目打包、持续集成&amp;部署、数据备份、定时巡检、漏洞修复等等，十分的好用</p>
-<p><img alt="" loading="lazy" src="/static/images/20230428.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0428.02.png" /></p>
 <p>任务系统支持的子任务类型非常丰富，例如命令、脚本、Ansible作业、JenkinsJob甚至是审批、通知等等。这些子任务在保持相对独立的同时，也会有一定的数据交互需求，例如一个项目发布的任务流中会包含打包和更新两个步骤，需要将打包执行步骤执行完成后生成的版本号传递给更新步骤去使用，诸如类似的情况，都需要用到结果数据的传递。也就是将当前子任务的执行结果，作为后续子任务的参数去使用，实现子任务结果数据的传递，从而完成子任务之间的数据交互</p>
 <p>想一下，这个功能该如何实现呢？</p>
 <h2 id="_1">参数定义</h2>
