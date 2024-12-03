@@ -54,6 +54,7 @@ https://blog.ops-coffee.cn/tag/Elk
 https://blog.ops-coffee.cn/tag/Python
 https://blog.ops-coffee.cn/tag/Django
 https://blog.ops-coffee.cn/tag/Devops
+https://blog.ops-coffee.cn/s/devops-workflow-task-flow-bpmn-js
 https://blog.ops-coffee.cn/r/jiangsu-nantong-rugao-travel-notes-comment
 https://blog.ops-coffee.cn/r/city-china-jiangsu-nantong-rugao
 https://blog.ops-coffee.cn/s/devops-cmdb-resource-auto-manage-sync-agent
