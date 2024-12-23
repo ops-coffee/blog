@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="None" />
+  <meta name="description" content="None" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>游戏运维管理规范</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="游戏运维管理规范" />
+  <meta property="og:description" content="None" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">游戏运维管理规范</h1>
+
+        <div class="toc">
+<ul>
+<li><a href="#_1" target="_blank">游戏运维管理规范</a><ul>
+<li><a href="#1" target="_blank">1. 沟通</a></li>
+<li><a href="#2" target="_blank">2. 部门职责</a><ul>
+<li><a href="#_2" target="_blank">运维</a></li>
+<li><a href="#_3" target="_blank">虚拟运维小组</a></li>
+</ul>
+</li>
+<li><a href="#3" target="_blank">3. 基本准则</a></li>
+<li><a href="#4" target="_blank">4. 安全</a></li>
+<li><a href="#5" target="_blank">5. 监控</a></li>
+<li><a href="#6" target="_blank">6. 备份</a></li>
+<li><a href="#7" target="_blank">7. 性能调优</a></li>
+<li><a href="#8" target="_blank">8. 文档化图标化</a></li>
+<li><a href="#9" target="_blank">9. 容量规划</a></li>
+<li><a href="#10" target="_blank">10. 巡查制度</a></li>
+<li><a href="#11" target="_blank">11. 故障处理和应急机制</a><ul>
+<li><a href="#_4" target="_blank">故障升级流程</a></li>
+</ul>
+</li>
+<li><a href="#12" target="_blank">12. 日志</a></li>
+<li><a href="#13" target="_blank">13. 架构</a><ul>
+<li><a href="#_5" target="_blank">游戏项目架构合格标准</a></li>
+</ul>
+</li>
+<li><a href="#14-cdn" target="_blank">14. CDN</a></li>
+<li><a href="#15" target="_blank">15. 项目审核会</a></li>
+<li><a href="#16-cbtobtcheck" target="_blank">16. 上线前检查（每个CBT、OBT阶段都需要check）</a></li>
+<li><a href="#17" target="_blank">17. 项目下线流程和注意事项</a></li>
+<li><a href="#18" target="_blank">18. 云主机注意事项</a><ul>
+<li><a href="#_6" target="_blank">腾讯云装机流程</a></li>
+<li><a href="#_7" target="_blank">腾讯云制作镜像注意事项</a></li>
+<li><a href="#aws" target="_blank">AWS</a></li>
+<li><a href="#_8" target="_blank">腾讯云注意事项</a></li>
+</ul>
+</li>
+<li><a href="#19" target="_blank">19. 停服维护</a></li>
+<li><a href="#20" target="_blank">20. 台账相关</a></li>
+<li><a href="#21" target="_blank">21. 数据库操作规范</a></li>
+<li><a href="#22" target="_blank">22. 项目交接规范</a></li>
+<li><a href="#23-ssl" target="_blank">23. 域名及SSL证书管理规范</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="_1">游戏运维管理规范</h1>
+<h2 id="1">1. 沟通</h2>
+<ol>
+<li>
+<p>团队成员电话7*24小时必须保持畅通，必须做到随时可以联系到人；特殊情况，如：人在国外等情况，必须wechat或QQ可以随时联络</p>
+</li>
+<li>
+<p>高效反馈和沟通，遇到任何的问题、BUG或自己无法决策的事项，要及时向上一级反馈、沟通和交流，任何项目中涉及到的关键信息一定要及时同步</p>
+</li>
+<li>
+<p>发邮件请求同事帮忙或处理一些工作事项，请CC对方团队的邮件组和上一级领导，尤其是发信给外部同事，要有组织感</p>
+</li>
+<li>
+<p>外出和远行时，要带好笔记本和上网卡，随时随地可上网是运维人员最基本的要求</p>
+</li>
+</ol>
+<h2 id="2">2. 部门职责</h2>
+<h3 id="_2">运维</h3>
+<ul>
+<li>
+<p>保障公司所有产品应用、系统、底层硬件、网络等的7*24不间断稳定运行</p>
+</li>
+<li>
+<p>平台的稳定运行和技术支撑</p>
+</li>
+<li>
+<p>所有项目的技术支撑</p>
+</li>
+<li>
+<p>保障IDC、云平台的网络环境稳定运行</p>
+</li>
+<li>
+<p>网络或信息化相关安全事件应急响应和处理</p>
+</li>
+<li>
+<p>所有网络或项目或业务模块的故障应急处理</p>
+</li>
+<li>
+<p>业务面、系统面和IT基础设施的监控管理</p>
+</li>
+<li>
+<p>源码、数据库、日志等重要数据的备份、还原管理</p>
+</li>
+<li>
+<p>系统、应用程序、代码补丁的更新、升级和管理工作</p>
+</li>
+<li>
+<p>项目的成本评估和成本控制</p>
+</li>
+<li>
+<p>项目架构的审核和建议</p>
+</li>
+</ul>
+<h3 id="_3">虚拟运维小组</h3>
+<p>虚拟运维小组由信息系统部运维团队抽调的核心运维成员组成，通过明确分工执行上线前check和上线后持续性监控工作，目标是确保项目可以稳定上线运行</p>
+<h2 id="3">3. 基本准则</h2>
+<ol>
+<li>
+<p>KISS原则 Keep It Simple, Stupid.</p>
+<ul>
+<li>借用slackware linudx发行版的口号，保持简单，化繁为简</li>
+<li>人太聪明，复杂化的背后，带来的是维护和排障时间成本的提升</li>
+</ul>
+</li>
+<li>
+<p>杜绝在生产环境里做测试操作，一个小小的失误都有可能导致整套环境的雪崩</p>
+</li>
+<li>
+<p>生产环境的任何修改或删除类操作均需要提前向上一级同步消息，由上一级决策执行</p>
+</li>
+<li>
+<p>所有项目在上线前压测结束后不允许做任何环境或配置的变更(禁止任何服务器端内容的修改操作)，如需变更均需请示上一级决策</p>
+</li>
+<li>
+<p>所有项目的生产环境和开发、测试环境之间的网络一定要隔离</p>
+</li>
+<li>
+<p>涉及到所有业务注册或账号注册类使用的邮箱、用户名、电话请统一为：部门Leader姓名、部门Leader电话</p>
+</li>
+<li>
+<p>任何server name 中需带有明确的项目代号
+    统一规则：项目-国别-应用-Num   如</p>
+<ul>
+<li>国别：(cn、tw、kr、sea、us)<ul>
+<li>g37-tw-cache-001</li>
+</ul>
+</li>
+<li>项目代码：<ul>
+<li>dmp   大数据处理平台</li>
+<li>ofw   官网</li>
+<li>inf   infra基础架构（例如监控、日志）</li>
+<li>cs    CS部门所用机器</li>
+<li>qa    QA部门所用机器</li>
+</ul>
+</li>
+<li>环境代码：<ul>
+<li>prod  生产</li>
+<li>sand  沙箱</li>
+<li>test  测试</li>
+<li>dev   开发</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>尽可能的了解并熟悉自己负责的游戏，传统运维的短板在业务面，想第一时间了解游戏问题具体在哪里，我们就需要足够的了解自己的产品及相应的架构</p>
+</li>
+<li>
+<p>系统初始化完再check一下ulimit、selinux和iptables，selinux和iptables必须关闭</p>
+</li>
+<li>
+<p>项目里面域名、IP、hostname、port、主机密码等变更都提前通知项目组</p>
+</li>
+<li>
+<p>crontab定时任务设置后，记得check并检查时钟是否准确，很多时候，定时了，并不一定真的能执行成功（shell下运行正常，放到cron里不执行的情况比较常见）</p>
+</li>
+<li>
+<p>腾讯云、阿里云、Ucloud每个项目请使用共享带宽包，精确限制每台服务器的带宽上限，否则很有可能出现单台服务器月带宽费用极高的情况</p>
+</li>
+<li>
+<p>云平台都需要域名和IP的备案</p>
+</li>
+<li>
+<p>DNS</p>
+<ol>
+<li>添加或修改记录，不要忘记变更序列号（数值只能增加）</li>
+<li>IDC : <code>/etc/resolv.conf</code><ul>
+<li>nameserver 10.96.29.122</li>
+<li>nameserver 10.96.29.148</li>
+<li>nameserver 119.15.138.47</li>
+<li>nameserver 54.223.76.83</li>
+<li>nameserver 114.114.114.114</li>
+<li>nameserver 119.29.29.29</li>
+</ul>
+</li>
+<li>云计算平台：/etc/resolv.conf<ul>
+<li>用云计算平台默认提供的DNS server</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>当执行重要服务的重启操作时，一定记得check一下服务是否真的起来了</p>
+</li>
+<li>
+<p>任何配置文件的修改，修改前需备份一下，修改后再diff进行一次check</p>
+</li>
+<li>
+<p>批量推送重要配置或文件时，推送完了后记得md5sum进行批量check</p>
+</li>
+<li>
+<p>对于重要的项目，在重要的阶段（环境准备、发布、更新），比如CBT、OBT阶段，一定要提前列出所有操作步骤，尽可能做好自我check，这一非常重要的工序（S级及A级产品，需有一名监督人员现场check相应的执行流程）</p>
+</li>
+<li>
+<p>不允许使用任何非Linux平台的产品，包括OS和Service</p>
+</li>
+<li>
+<p>所有运营或研发拉的企点、QQ、微信、企业微信等等即时通讯群组，均需要加入运维leader、运维经理、信息系统部门长，以避免出现单兵作战产生的方向性问题或重大项目事件核心环节把握不到位问题（尤其是一些红线、底线或原则性问题）</p>
+</li>
+<li>
+<p>运维权责分工（涉及第2方CP的开发模式），参看<a href="" target="_blank">权责分工对外版本</a></p>
+</li>
+</ol>
+<h2 id="4">4. 安全</h2>
+<ol>
+<li>
+<p>密码复杂性要求</p>
+<ul>
+<li>一切需要密码的地方，都需要符合密码复杂性要求规范<ul>
+<li>超过18位</li>
+<li>含有大小写字母</li>
+<li>含有数字</li>
+<li>含有特殊符号</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>云平台portal密码，尽量使用MFA(Multi-factor authentication)多因子认证</p>
+</li>
+<li>
+<p>所有项目本身的服务器密码或密钥只允许运维owner以及运维管理层拥有（包括备份服和测试服）</p>
+</li>
+<li>
+<p>所有ssh访问限制来源，均设置为跳板机访问跳转模式，默认防火墙规则限制为from admin group.（含第二方，第三方公司，精确限制/32的from source，哪怕是浮动IP）</p>
+</li>
+<li>
+<p>研发人员只开跳板机帐号和公司的SSLVPN,不开放openvpn，需要对公司测试的URL，可以通过统一的nginx反向代理去实现</p>
+</li>
+<li>
+<p>客户端程序连接服务器上的测试数据库开发调试，启用iptables端口转发规则实现</p>
+</li>
+<li>
+<p>密码三个月变更一次(jumpserver每三个月会强制要求变更密码)(包含云平台类工具链、项目服务器、平台服务器、官网服务器)，ssh尽可能使用KEY认证优先</p>
+</li>
+<li>
+<p>不允许root权限开放给运维之外的人员，可以给予普通用户并拥有sudo权限，生产环境只允许给研发人员查看日志的权限</p>
+</li>
+<li>
+<p>所有项目OPE类工具，只能对内访问，如果情况特殊，也需精确限制访问来源</p>
+</li>
+<li>
+<p>不论什么项目，开通域名，默认规则<code>dev-ops-coffee.cn</code>对内访问，<code>ops-coffee.cn</code>对外访问</p>
+</li>
+<li>
+<p>安全第一，开放任何端口时，除非不得不完全公开的，否则尽量一切对内</p>
+</li>
+<li>
+<p>Memcache、Redis、Mysql、MongoDB缓存和数据库类的端口绝不允许对外开放(哪怕限制来源可访问，也需要单独申请审批)</p>
+</li>
+<li>
+<p>邮件或聊天记录中不允许同时出现用户名和密码，需要单独分开发送</p>
+</li>
+<li>
+<p>任何业务，开通非常规端口，均需提前向上一级申请</p>
+</li>
+<li>
+<p>git游戏、平台等源码管理使用白名单控制IP源+KEY认证访问</p>
+</li>
+<li>
+<p>帐号清理</p>
+<ul>
+<li>git权限三个月主动清理一次，负责人：xxx</li>
+<li>svn权限三个月主动清理一次，负责人：xxx</li>
+<li>ssh跳板机账号三个月主动清理一次，负责人：xxx</li>
+<li>sslvpn账号三个月主动清理一次，负责人：xxx</li>
+</ul>
+</li>
+</ol>
+<h2 id="5">5. 监控</h2>
+<ol>
+<li>
+<p>监控一切，运维的第三只眼。尤其硬盘空间监控必须做好，并定期扫描check，确保不会出现硬盘满的低级故障</p>
+</li>
+<li>
+<p>MySQL Mongodb慢查询监控要做到每分钟粒度的监控告警</p>
+</li>
+<li>
+<p>所有服务的Error LOG 也需要做到每分钟粒度的监控告警，例如：apache nginx</p>
+</li>
+<li>
+<p>重要业务LOG的关键字捕获时实告警监控</p>
+</li>
+<li>
+<p>重要服务的API响应延时必须至少做到分钟级粒度的监控</p>
+</li>
+<li>
+<p>数据库的连接数和表空间使用情况都要监控</p>
+</li>
+</ol>
+<h2 id="6">6. 备份</h2>
+<ol>
+<li>
+<p>数据优先，特别是数据库和源码，数据库做好全量和增量备份，防止天灾人祸</p>
+<ul>
+<li>数据丢失不是任何一个公司所能承担的风险--这是举世所知的真理。数据丢失造成的损失远远大于保持数据不丢失所花的成本</li>
+<li>数据库备份，每个月检查一次，是否真的正常</li>
+</ul>
+</li>
+<li>
+<p>所有数据库类的，每天全量备份一次</p>
+</li>
+<li>
+<p>项目下线时，一定做好数据库和程序的备份工作，数据库在最后一刻，一定保证一个完整的备份存在，程序需要确认git里有最终的源码</p>
+</li>
+<li>
+<p>项目下线时，数据库统一归档到 <code>ops-coffee:/backup/</code></p>
+</li>
+<li>
+<p>项目中保留半年的LOG统一归档到 <code>ops-coffee:/backup/</code></p>
+</li>
+</ol>
+<h2 id="7">7. 性能调优</h2>
+<ol>
+<li>
+<p>内核参数调优</p>
+<ul>
+<li>net.ipv4.tcp_syncookies = 1</li>
+<li>net.ipv4.tcp_tw_reuse = 1</li>
+<li>net.ipv4.tcp_tw_recycle = 0            <strong>//绝不允许打开</strong></li>
+</ul>
+</li>
+<li>
+<p>nginx 调优</p>
+<ul>
+<li><a href="" target="_blank">Nginx优化指南</a></li>
+</ul>
+</li>
+<li>
+<p>apache 调优</p>
+<ul>
+<li><a href="" target="_blank">Apache优化指南</a></li>
+</ul>
+</li>
+<li>
+<p>mysql 调优</p>
+<ul>
+<li><a href="" target="_blank">MySQL优化指南</a></li>
+</ul>
+</li>
+<li>
+<p>mongodb 调优</p>
+<ul>
+<li><a href="" target="_blank">MongoDB优化指南</a></li>
+</ul>
+</li>
+<li>
+<p>nodejs 调优</p>
+<ul>
+<li><a href="" target="_blank">NodeJS优化指南</a></li>
+</ul>
+</li>
+<li>
+<p>memcached 调优</p>
+<ul>
+<li><a href="" target="_blank">Memcached优化指南</a></li>
+</ul>
+</li>
+<li>
+<p>redis 调优</p>
+<ul>
+<li><a href="" target="_blank">Redis优化指南</a></li>
+</ul>
+</li>
+</ol>
+<h2 id="8">8. 文档化图标化</h2>
+<ol>
+<li>
+<p>文档化。尽可能把所有东西都写成文档。项目交结时可以保持较全的文档，期望能够做到，新接手人看了文档便可以完全接手项目</p>
+</li>
+<li>
+<p>文档管理，规范类文件用wiki，项目文档一率使用git</p>
+</li>
+<li>
+<p>部署图，一张图纵览全局，绘制出自己负责产品的架构图，尽可能的细化到服务器和业务面</p>
+</li>
+<li>
+<p>部署图样例</p>
+</li>
+</ol>
+<p><img alt="" loading="lazy" src="" /></p>
+<h2 id="9">9. 容量规划</h2>
+<ol>
+<li>
+<p>提前合理做好容量规划，例如，数据库不适合用硬盘小的机器类型</p>
+</li>
+<li>
+<p>安装操作系统，除非特殊业务，否则至少准备系统盘+数据盘，数据盘文件系统必须基于LVM</p>
+</li>
+<li>
+<p>IDC</p>
+<ol>
+<li>web、login、game等服务器角色，CPU不低于8核，内存不低于8G，硬盘不低于128G</li>
+<li>Cache类等纯缓存类服务器角色，CPU不低于8核，内存不低于16G（建议32G或64G），硬盘不低于128G</li>
+<li>DB类服务器角色，CPU不低于16核（建议32核），内存不低于32G（建议64G或128G），硬盘不低于500G（建议1T以上）</li>
+</ol>
+</li>
+<li>
+<p>云主机</p>
+<ol>
+<li>web、login、game等服务器角色，CPU不低于2核（建议4核），内存不低于4G（建议8G），硬盘不低于100G</li>
+<li>Cache类等纯缓存类服务器角色，CPU不低于4核，内存不低于8G（建议16G或32G），硬盘不低于100G</li>
+<li>DB类服务器角色，CPU不低于4核（建议8核或16核），内存不低于16G（建议32G或64G），硬盘不低于500G（建议1T以上）</li>
+</ol>
+</li>
+<li>
+<p>上述2和3均指生产环境，sandbox和测试环境等可以依照实际情况，自行定夺</p>
+</li>
+<li>
+<p>日志和数据库备份类机器，硬盘规格不得低于1T硬盘（建议2T以上）</p>
+</li>
+</ol>
+<h2 id="10">10. 巡查制度</h2>
+<ol>
+<li>
+<p>办公室网络和服务器设备工作日每天早上巡查一次，责任人：网络工程师</p>
+</li>
+<li>
+<p>IDC网络和服务器等设备每周巡查一次，责任人：现委托IDC值班人员检查</p>
+</li>
+<li>
+<p>所有项目的所有服务器硬盘空间利用率每周二、四上午10点巡查一次</p>
+</li>
+<li>
+<p>所有服务器的核心指标（包含IDC、云计算平台）每天巡查一次</p>
+</li>
+</ol>
+<h2 id="11">11. 故障处理和应急机制</h2>
+<h3 id="_4">故障升级流程</h3>
+<p><img alt="" loading="lazy" src="" /></p>
+<ol>
+<li>
+<p>发现服务器相关故障影响到游戏的，都需要第一时间通知运营，让其判断是否准备停服或公告</p>
+</li>
+<li>
+<p>在线生产环境等重要业务故障时（如支付相关），优先恢复故障，事后再考虑详细调查根本原因</p>
+<ul>
+<li>很多时候，在不丢失重要数据的情况下，判断可以通过重启服务解决问题的，不要犹豫不决，快速恢复故障优先.自己把握不了的情况，立即电话向上级反馈</li>
+</ul>
+</li>
+<li>
+<p>出现任何运营事故，需要回滚数据库的时候，需第一时间向上汇报</p>
+</li>
+<li>
+<p>游戏服和登陆服等重要进程必须使用upstart或daemontool守护启动，确保在进程down掉后，可以自行恢复</p>
+</li>
+<li>
+<p>游戏故障后的排障思路</p>
+<ul>
+<li>重点：优先缩小故障范围，比如，先判断平台是否正常，然后判断是否是IDC、AWS、腾讯云、阿里云等故障，最后再判断是否是单款游戏故障（甚至是否是某个游戏的某个区服故障）；目的先把故障定位到一个较小的单元内部，然后再执行下面的排障流程</li>
+<li>先判断网络是否正常，顺序先外网后内网</li>
+<li>再判断域名解析是否正常（如果游戏服有使用域名的话）</li>
+<li>判断login服务器是否活着，进程和log是否正常（用户无法登陆时需重要排 查此步）</li>
+<li>判断资源服务器是否异常，CDN是否正常（CDN异常会导致资源无法加载而无法登入游戏）</li>
+<li>判断故障区对应的游戏服务器是否活着，游戏进程和游戏log是否正常（需要提前备有逻辑区服和游戏物理服务器的对应列表）</li>
+<li>数据库服务器是否活着，数据库服务和数据库LOG是否正常，是否有慢查询</li>
+<li>查看涉及到的服务器是否硬盘满，CPU和内存占用情况</li>
+<li>上述仍然解决不了，立即请求研发支持，并向上一级进行故障升级</li>
+</ul>
+</li>
+<li>
+<p>凡是我们已经知道的故障，哪怕不属于我们自身导致的，也需要组内共享出一个故障报告； 一方面有利于运维同学更了解自身的业务，可能对后期排障速度有所帮助；另一方面也有利于团队成员做个了解，可能会对后面别的项目防范同类问题起到一定的作用</p>
+</li>
+<li>
+<p>客服类等运维故障邮件，看到第一时间回复一下“正在处理中，请稍等...”，让别人第一时间知道有人在应对，提高服务意识；处理完问题后，也请和大家说清楚具体的原因是什么，不要仅仅回复已处理完毕，尽可能解释清楚原因，不要担心解释的太专业别人看不懂，我们从自身角度尽可能去提高自身的专业素养</p>
+</li>
+<li>
+<p>故障报告模版</p>
+<ul>
+<li>详细参考：<a href="" target="_blank">故障报告模板</a><ol>
+<li>故障描述 //描述具体的故障现象</li>
+<li>故障时长</li>
+<li>影响范围 //描述影响的项目或业务点以及损失情况</li>
+<li>原因分析 //重点描述问题分析和排障思路</li>
+<li>解决方法 //说明最终如何解决</li>
+<li>责任归属</li>
+<li>后期防范 //重点梳理总结规避措施</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>
+<p>每次故障后，请详细记录并分析一下故障详情（故障报告模版请参见上8）</p>
+</li>
+</ol>
+<h2 id="12">12. 日志</h2>
+<p>《网络安全法》第二十一条规定：采取监测、记录网络运行状态、网络安全事件的技术措施，并按照规定留存相关的网络日志不少于六个月；</p>
+<p>日志类型解读如下：</p>
+<ol>
+<li>
+<p>游戏玩家的登陆日志</p>
+</li>
+<li>
+<p>游戏玩家涉及到与钱相关的支付和消费相关日志</p>
+</li>
+<li>
+<p>游戏服的常规日志、访问日志和错误日志</p>
+</li>
+<li>
+<p>系统日志，包括如管理登录尝试、系统事件、网络事件、错误信息等，以centos系统为例：message、secure、btmp、wtmp等</p>
+</li>
+<li>
+<p>服务常规、访问及相关错误日志，如apache、nginx、mysql的access.log 、error.log、mysqld.log等.</p>
+</li>
+</ol>
+<p>具体实施细则：</p>
+<ol>
+<li>
+<p>所有系统(message、secure、btmp、wtmp、lastlog)和服务的访问LOG保留6个月,本机做好logrotate工作，默认本机保存7天tar.gz的log压缩包,7天前的统一转储到glacier</p>
+</li>
+<li>
+<p>游戏平台所有日志均需要保留1年</p>
+</li>
+<li>
+<p>游戏登陆日志需保留1年</p>
+</li>
+<li>
+<p>游戏日志保留1年</p>
+</li>
+<li>
+<p>项目CBT、OBT等时段，都要确保DMP接入正常</p>
+</li>
+<li>
+<p>DMP LOG集中收集监控，避免出现几天日志未收集断掉的情况</p>
+</li>
+<li>
+<p>项目中的服务器存储空间不足时，优先把老备份转储到<code>dmpnfs:/dmp/</code>；dmpnfs空间不足时，再把老备份转储至amazon S3；S3上超过一年期的重要数据，请转储至amazon Glacier.</p>
+</li>
+</ol>
+<h2 id="13">13. 架构</h2>
+<ol>
+<li>
+<p>项目架构不合理时，请勇敢地say no，我们需要的不是委屈专业原则以求全，而是professionalism</p>
+</li>
+<li>
+<p>项目架构一定要规避SPOF(Single Points Of Failure)单点故障，否则将来受累的是自己</p>
+</li>
+</ol>
+<h3 id="_5">游戏项目架构合格标准</h3>
+<ul>
+<li>
+<p>系统具有架构图、部署图</p>
+</li>
+<li>
+<p>系统架构健壮，无单点故障点（game server,db,cache）</p>
+</li>
+<li>
+<p>具有良好的伸缩性，可轻易的扩展或者收缩，满足开服合服的业务需求，并包含完善的物理合服代码或脚本</p>
+</li>
+<li>
+<p>系统的承载能力，单个游戏服（配置标准4核心8G）至少可以支撑5000人同时在线</p>
+</li>
+<li>
+<p>OPE工具功能完善，理论上运营人员可以通过OPE进行所有运营操作，获取所需的一切数据，包括但不限于（开服、逻辑合服、配置活动、发奖、查看运营数据）</p>
+</li>
+<li>
+<p>日志接入符合数据组要求</p>
+</li>
+</ul>
+<h2 id="14-cdn">14. CDN</h2>
+<ol>
+<li>
+<p>所有项目的CDN必须使用https协议去加速，防范运营商域名劫持</p>
+</li>
+<li>
+<p>CDN刚开始设计更新流程时尽量避免同名文件更新模式，推建不同目录的形式去实现CDN更新</p>
+</li>
+<li>
+<p>游戏项目的CDN必需同时使用二个不同厂商的CDN，在第一个CDN无效时，自动请求第二个CDN，目的地保障游戏项目CDN的高可用性</p>
+<ul>
+<li>暂定国内二个CDN厂商为：阿里(优先)、腾讯</li>
+<li>暂定海外二个CDN厂商为：akamai、cloudflare</li>
+</ul>
+</li>
+<li>
+<p>CDN更新流程</p>
+<ol>
+<li>运营和研发确认好资源更新需求</li>
+<li>研发提供资源保存位置（一般放网关机，临时中转）</li>
+<li>运维把资源拷贝到CDN源机</li>
+<li>运维全网刷新或全网预热CDN资源（不要忘记，刷新或预热二个CDN，每个项目配置二个CDN）</li>
+<li>脚本或程序调度CDN-API接口（目的是确认资源预热到所有的CDN节点均是生效的），确认资源在全国分布式CDN节点的生效情况-重要</li>
+<li>运维修改涉及到的CDN资源配置版本（由研发提供相应版本号信息），此修改操作的过程需推动研发在GMTOOL里实现；如遇特殊情况，GMTOOL没有实现的情况下，则由运维写脚本等程序去自动修改CDN资源版本配置文件</li>
+<li>完成资源更新工作，同时邮件和即时通讯系统通知到运营和研发</li>
+</ol>
+</li>
+<li>
+<p>游戏项目重要的上线时间段（CBT、OBT），必须额外安排一人关注CDN的监控指标（包含CDN指标以及CDN源机指标），额外的人选会在虚拟运维小组中抽调</p>
+</li>
+</ol>
+<h2 id="15">15. 项目审核会</h2>
+<p>游戏项目从立项到OBT正式公测，会有几个生命周期，标准的过程大致是{tt-&gt;CBT1-&gt;CBT2-&gt;CBT3-&gt;OBT}（实操过程中有可能会根据各种不同的情况进行微调）；原则上每轮测试前几天公司内都会由运营或HO发起开一个项目审核会，用以确认各个部门为了本轮测试所做的准备情况；如若有没有准备好等异常情况，需要在审核会上详细说明情况，比如：QA测试重大BUG太多无法上线，运维环境没有准备好等等。下面是运维在每轮审核会前需要拿到的相关资料、必须要准备好的环境以及相关注意事项等</p>
+<ol>
+<li>
+<p>原则上，运维需在每轮测试前7-10天完成本轮测试的环境部署，因为还需要预留时间给到QA测试</p>
+</li>
+<li>
+<p>从运营处获取本轮测试的导量需求（非常重要，对合理判断服务器数量和规格至关重要）</p>
+</li>
+<li>
+<p>从QA处获取上轮测试的压测结果，重点关注是否有重大异常情况：比如，CPU很高，IO很高，，数据库负荷过重，业务或日志LOG过大，内存泄漏等情况（第一轮测试除外，第一轮测试应该是先搭建环境后QA才会测试）</p>
+</li>
+<li>
+<p>从研发处获取本轮测试的架构图（如果几轮测试架构层面无变化，可以以第一轮测试架构图为准），判断是否合理</p>
+</li>
+<li>
+<p>运维结合2、3、4的导量需求以及架构图，合理规划本轮测试的服务器数量和规格</p>
+</li>
+<li>
+<p>按上述5准备的最终环境进行QA测试，重复3的过程，运维、QA和研发一起不断的对发现的异常指标进行持续性调整，直至达到QA可以通过测试的状态</p>
+</li>
+<li>
+<p>确认CDN是否采用https协议</p>
+</li>
+<li>
+<p>确认DMP是否接入完毕</p>
+</li>
+<li>
+<p>本轮测试，当前服务器成本情况大概说明</p>
+</li>
+<li>
+<p>是否有其它重大事件需要提前说明（如果有OBT需要最终在审核会上说明）</p>
+</li>
+<li>
+<p>以上如若都无问题，运维即判断运维审核结果为：PASS</p>
+</li>
+</ol>
+<h2 id="16-cbtobtcheck">16. 上线前检查（每个CBT、OBT阶段都需要check）</h2>
+<ol>
+<li>
+<p>是否校对好系统时钟时区</p>
+</li>
+<li>
+<p>是否关闭iptables</p>
+</li>
+<li>
+<p>是否关闭selinux</p>
+</li>
+<li>
+<p>是否优化好ulimit</p>
+</li>
+<li>
+<p>是否接入好dmp log 以及快照log；fluentd是否有异常告警</p>
+</li>
+<li>
+<p>是否建全数据库索引，推动研发一起check</p>
+</li>
+<li>
+<p>是否做好分钟级的error log告警</p>
+</li>
+<li>
+<p>是否做好数据库慢查询和errorlog告警</p>
+</li>
+<li>
+<p>监控系统是否正常，包含基础监控和服务监控</p>
+</li>
+<li>
+<p>是否掌握开服计划，能够精准把握区服达到多少人后，通知运营开第二个服，依次类推（前提是需要精确的知道自己项目的一个区服可扛的最大同时在线人数）</p>
+</li>
+<li>
+<p>是否拥有运营和研发人员的手机号码，紧急情况时可以第一时间电话沟通</p>
+</li>
+<li>
+<p>OBT的时候，是否多准备好二个服的服务器和环境，用以防止人数激增和突发事件</p>
+</li>
+<li>
+<p>CBT、OBT上线后的第一小时，请时实关注数据库的性能状态</p>
+</li>
+<li>
+<p>推进检查OPE后台工具是否正常，不能因为OPE的异常而影响开服、合服、发奖等</p>
+</li>
+<li>
+<p>顺带检查一下官网的下载链接是否可以正常下载，以及官网视频图片等资源是否走CDN</p>
+</li>
+<li>
+<p>亲和性检测（服务器创建时使用置放群组，每个物理机上不能超过3个云主机）</p>
+</li>
+</ol>
+<h2 id="17">17. 项目下线流程和注意事项</h2>
+<ol>
+<li>
+<p>备份完数据库：非RDS先关机一周，防止运营仍然有抽数据需求，一周后再彻底删除;RDS可在做完final snapshot后删除RDS</p>
+</li>
+<li>
+<p>检查项目服务器端git源码是否完整</p>
+</li>
+<li>
+<p>检查客户端代码和资源在SVN服务器上是否完整</p>
+</li>
+<li>
+<p>备份图片等静态资源（可以请求项目组或美术协助）</p>
+</li>
+<li>
+<p>数据库统一归档到:</p>
+<ul>
+<li>简体：<code>oss:/backup/end_backup</code></li>
+<li>海外：<code>s3://ops-coffee-archive/final-backup/${project}/${projectCode.sql.gz}</code></li>
+</ul>
+</li>
+<li>
+<p>如果需要备份日志，备份到:</p>
+<ul>
+<li>简体：<code>oss://</code></li>
+<li>海外：<code>s3://ap-archive/logs/${project}/logs/</code></li>
+</ul>
+</li>
+<li>
+<p>清除云资源</p>
+<ul>
+<li>EC2（服务器），安全组，子网，密钥对，LB,快照，镜像</li>
+<li>RDS（做好final snapshot），RDS安全组，RDS快照，parameter group,option group</li>
+<li>云托管的SSL证书</li>
+<li>SNS</li>
+</ul>
+</li>
+<li>
+<p>清除项目的CDN</p>
+</li>
+<li>
+<p>清理DNS（即删除下线项目相关域名，同时做好备份）</p>
+</li>
+<li>
+<p>清理防火墙该项目配置(10天后)</p>
+</li>
+<li>
+<p>清理td-agent配置</p>
+</li>
+</ol>
+<h2 id="18">18. 云主机注意事项</h2>
+<h3 id="_6">腾讯云装机流程</h3>
+<ol>
+<li>
+<p>遇到新项目时，在腾讯云账户下项目管理内新建新项目，命名对应项目名</p>
+</li>
+<li>
+<p>新项目需创建自己的私有网络，选择云产品，私有网络选项，创建私有网络，地区选择上海，网络段不要和已存在的私有网络重复，命名对应项目名</p>
+</li>
+<li>
+<p>新建云主机时，有包月和按量2种情况。服务器使用不满一个月的情况选择按量收费，按量关机情况下也收费，需要销毁服务器才会停止扣费。长期使用，选择包月</p>
+</li>
+<li>
+<p>SSH登录方式选择密钥，非特殊情况不允许使用密码</p>
+</li>
+<li>
+<p>地区上海，根据需求依次选择可用区，系列，机型，镜像</p>
+</li>
+<li>
+<p>系统盘选择云硬盘，本地硬盘不能弹性伸缩。数据库的磁盘类型，选择ssd云硬盘</p>
+</li>
+<li>
+<p>网络类型选择私有网络，选择对应项目的私有网络,带宽选择2M。需要公网ip的勾上免费公网ip，不需要就去掉勾</p>
+</li>
+</ol>
+<h3 id="_7">腾讯云制作镜像注意事项</h3>
+<ol>
+<li>
+<p>云主机界面，选中服务器，更多，选择制作镜像，镜像制作过程中，服务器会关机，一般10分钟左右。制作镜像时，要提前和研发沟通确认</p>
+</li>
+<li>
+<p>腾讯云服务器制作镜像，只会对系统盘做镜像，碰到有数据盘的，和研发沟通，如果数据盘也需要，可以对磁盘做快照，腾讯云内，外挂的数据盘只能做快照，以快照形式保留</p>
+</li>
+<li>
+<p>镜像制作完毕后，在装机过程中，选择自定义镜像</p>
+</li>
+<li>
+<p>磁盘快照，选择用快照创建磁盘</p>
+</li>
+</ol>
+<h3 id="aws">AWS</h3>
+<ol>
+<li>AWS EC2 启用时需要勾选auto recovery选项，这个选项的功能是机器故障后可以自动把有故障的机器漂移到别的母机上去，默认此功能未开启</li>
+</ol>
+<h3 id="_8">腾讯云注意事项</h3>
+<ol>
+<li>
+<p>避免出现机器到期没有自动续费导致业务停止的情况；反过来，也要防止项目已经下线或QA测式用的机器（计划限时使用测试场景）等一直自动续费，导致成本的浪费</p>
+</li>
+<li>
+<p>所有云主机都要做好带宽上限限制（包含使用共享带宽包的情况）；尤其使用腾讯云主机作为CDN的资源服务器时，必须做好带宽限制，推荐设置为上限2M，可以避免出现带宽费用一个月几万十几万的浪费情况</p>
+</li>
+</ol>
+<h2 id="19">19. 停服维护</h2>
+<p>原则：任何对游戏产生影响的行为，特别是影响玩家登陆、游戏、充值的行为，均需提前通知运营和项目组进行停服维护</p>
+<ol>
+<li>
+<p>需停服的事件，要提前三天通知运营和项目组</p>
+</li>
+<li>
+<p>自己判断不了是否需要停服的情况下，需向上一级升级请示</p>
+</li>
+<li>
+<p>数据库添加索引的情况，是否停服，需向上一级请示</p>
+</li>
+<li>
+<p>游戏服数据库扩容、降配、维护等均需停服，且提前游戏内通告∂</p>
+</li>
+<li>
+<p>游戏服数据库涉及主从切换需提前通知运营和项目组进行游戏内通告维护</p>
+</li>
+<li>
+<p>游戏服扩容、降配、维护等均需通知项目组和运营进行停服，且提前游戏内通告</p>
+</li>
+<li>
+<p>任何数据库的回档均需要向上一级升级讨论后再确定是否执行</p>
+</li>
+</ol>
+<h2 id="20">20. 台账相关</h2>
+<ol>
+<li>
+<p>故障应急和数据恢复演练</p>
+</li>
+<li>
+<p>恶意行为和恶意软件检测与处理</p>
+</li>
+<li>
+<p>全员邮件审核规范</p>
+</li>
+<li>
+<p>安全员培训</p>
+</li>
+<li>
+<p>固定资产管理</p>
+</li>
+<li>
+<p>员工AD账号管理</p>
+</li>
+</ol>
+<h2 id="21">21. 数据库操作规范</h2>
+<ol>
+<li>mysql参数优化：<code>sync_binlog=0</code></li>
+</ol>
+<h2 id="22">22. 项目交接规范</h2>
+<p>交接内容必须涵盖如下内容</p>
+<ol>
+<li>
+<p>项目的架构图和部署图</p>
+</li>
+<li>
+<p>项目所有的机器列表和登录方式，接手人须逐个验证登录方式</p>
+</li>
+<li>
+<p>项目日常运维的操作手册（开服，合服，热更，强更，迁移服，抽取数据，抽取日志）</p>
+</li>
+<li>
+<p>数据库的主要结构,主要表和相关功能</p>
+</li>
+<li>
+<p>项目的CDN，CDN刷新方式</p>
+</li>
+<li>
+<p>项目自动化工具的操作方法，包括开源工具和自己开发的脚本工具</p>
+</li>
+<li>
+<p>项目日常遇到的高频率问题</p>
+</li>
+</ol>
+<h2 id="23-ssl">23. 域名及SSL证书管理规范</h2>
+<ol>
+<li>
+<p>所有域名和正式信息url，参见<a href="" target="_blank">域名管理系统</a></p>
+</li>
+<li>
+<p>SSL证书更新需要提前一个月通知项目组、运营。涉及的范围：CDN、Login、Game、Pay、DDOS，加速业务、工具类、网站类等等</p>
+</li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/t/game-operation-management-specification.html">📅 2024-12-23</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
