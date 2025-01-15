@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="关于技术,Devops" />
+  <meta name="description" content="一个完善的运维自动化系统都包含哪些功能模块" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>运维自动化系统各模块介绍</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="运维自动化系统各模块介绍" />
+  <meta property="og:description" content="一个完善的运维自动化系统都包含哪些功能模块" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
+          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+          <li><a href="/devops.html" target="_self">运维平台</a></li>
+          <li><a href="/travels.html" target="_self">旅行游记</a></li>
+          <li><a href="/r/index.html" target="_self">房车体验</a></li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <h1>运维咖啡吧</h1>
+        <h2>享受技术带来的乐趣，体验生活给予的感动</h2>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">运维自动化系统各模块介绍</h1>
+
+        <p>接触运维自动化系统开发好多年，也陆陆续续开发上线了不少的系统及功能模块，其中大部分独立的功能模块都能在<a href="https://blog.ops-coffee.cn/devops.html" target="_blank">我的文章</a>中找到详细的介绍，但至今还没有写过一个比较全面的文章，来系统的介绍下整个运维自动化平台都包含了哪些系统及功能模块，最近正好在梳理文档，那这篇文章就来介绍下一个较为完善的运维自动化系统都包含了哪些功能模块。曾经开发过的系统很多，有些已经下线了，有些扔在使用，为了便于介绍，就以当前的系统版本为基础，仅介绍当前这个版本都具有的功能模块</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0115.png" /></p>
+<p>以下是系统应用切换的界面截图，超级管理员视角，能看到所有的应用，详细介绍的话内容太多，本篇文章不会详细介绍每个模块的功能，仅从整体的视角来介绍下这些应用的整体功能以及主要解决的问题</p>
+<h2 id="_1">工作台</h2>
+<p>工作台：提供一个集中的界面，用于访问和管理系统的各种功能，显示关键的运维指标和信息，支持快速导航到其他应用模块。解决了运维人员需要在多个系统和界面之间切换，效率低下，关键信息分散，难以快速获取的问题</p>
+<h2 id="_2">资产管理</h2>
+<p><a href="https://blog.ops-coffee.cn/cloud" target="_blank">资产管理</a>：管理和跟踪IT资产的全生命周期，提供资产的详细视图，包括配置、状态和关联关系等，支持资产按照位置、业务和便签构建关联关系，支持资产服务树构建，配合API/AGENT等能够实现资产的自动纳管，尤其是对于多云资产，消除了多云间的模型异构，用户可以在资产管理中统一查看多个云厂商/云账号下的资产情况。解决了资产信息分散，数据孤立，难以统一管理，资产变更难以跟踪，多云资产管理复杂的问题</p>
+<h2 id="_3">容器管理</h2>
+<p><a href="https://blog.ops-coffee.cn/kubernetes" target="_blank">容器管理</a>：统一管理公有云、私有云或是自建的Kubernetes集群，优化各平台差异，提供一致的管理体验，降低使用成本，提供简单易用的WEB界面，支持在线查看资源，动态伸缩，日志检索，终端登录等等常用功能，通过配置文件来创建集群和服务，支持配置文件在不同集群间流转，降低容器使用难度。解决了Kubernetes集群分散，无法统一管理，系统复杂，上手难度大，专业人才不足，使用风险高，以及集群运维经验难以沉淀，运维过程不透明，配置复杂难继承等问题</p>
+<h2 id="_4">监控告警</h2>
+<p><a href="https://blog.ops-coffee.cn/monitor" target="_blank">监控告警</a>：统一不同云厂商不同云资源的监控数据展示，在一个系统中查看多云资源的监控图表，优化展示输出，提升查询效率，同时监控告警与上线流程打通，监控启停可融入项目发布流程以实现跟随项目发布节奏自动启停，提升上线流程完整度，打破数据孤岛，监控资源自动关联业务关系，以业务维度构建可视化的监控大盘，监控配置简单高效，告警信息快速定位。解决了多云监控数据孤立，与业务数据没有很好的关联，查看麻烦，以及监控配置复杂，监控数据展示不统一，监控启停管理无法与上线流程打通等问题</p>
+<h2 id="_5">作业系统</h2>
+<p><a href="https://blog.ops-coffee.cn/ansible" target="_blank">作业系统</a>：管理和调度运维日常操作和作业，深度集成Ansible，批量操作更简单，引入网域网关模式，跨网打通更容易，低延迟高效率，日常操作作业化，运维过程易沉淀，可以加速项目流转，同时提供作业的自动化执行和监控，支持作业的审批和审计。解决了日常操作需先登录控制台，流程麻烦，日常运维难沉淀，项目交接易遗漏，跨网络操作不稳定，全球统一运维困难，以及日常操作随意无记录无审计，遇到问题难追溯的问题</p>
+<h2 id="_6">任务系统</h2>
+<p><a href="https://blog.ops-coffee.cn/task" target="_blank">任务系统</a>：自研了一套强大的流程引擎，支持构建自定义任务流，可以满足不同语言、不同类型的项目持续构建/持续部署自动化，原生集成了命令执行、脚本执行、用户审批、发送通知、监控告警启停等等多种能力，使用场景丰富，拓展运维边界，同时具有水平运算扩展能力，支持大量任务并行执行，日志实时输出，任务随时中断，流程构建采用拖拽方式，所见即所得，全WEB图形化操作，权限控制灵活，支持审计。解决了运维任务执行不一致，难以标准化，任务执行过程难以跟踪和管理，发布部署全流程难以串联管理，项目在不同人员之间流转困难等问题</p>
+<h2 id="_7">域名管理</h2>
+<p><a href="https://blog.ops-coffee.cn/domain" target="_blank">域名管理</a>：实现了域名申请、使用、变更、下线全生命周期管理，接入审批流，支持域名在线申请和审批，与资源数据融合，使数据不再孤立，查找域名即可知晓域名访问的整条链路信息，提升业务感知能力，同时清晰了解域名当前资源绑定情况，支持域名自盘点，提升域名盘点效率，完善的域名解析数据库，支持自动扫描域名风险，自动识别使用证书，判断证书到期时间，临期发送提醒等。解决了域名管理混乱，只有创建没有删除，域名数据孤立，没有关联信息，域名/证书过期未及时提醒，过期造成系统无法提供服务，产生重大生产事故等问题</p>
+<h2 id="_8">备份系统</h2>
+<p>备份系统：接入了MySQL、Redis等数据库备份，可以在线管理备份策略，定时触发备份操作，并检查备份任务执行状态和结果，支持查看历史备份结果，支持查看备份趋势，支持备份失败报警等等功能，降低了数据丢失和损坏的风险，极大的提升了数据备份的稳定性，保障了数据的安全和可靠。解决了数据备份无法统一管理，备份失败无通知，备份状态不清晰等问题</p>
+<h2 id="_9">数据库服务</h2>
+<p>数据库服务：对数据库进行集中管理，支持数据库的在线查询、执行和导出，所有执行语句和结果归档记录，支持在线审计，支持加入审批流，重要 SQL语句执行前审批，提高数据库管理规范和整体系统安全性。解决了数据库操作登录控制台麻烦、数据库操作无审计、数据库操作缺少审批等问题</p>
+<h2 id="_10">费用中心</h2>
+<p><a href="https://blog.ops-coffee.cn/finops" target="_blank">费用中心</a>：收集和统计资源的费用信息，对费用进行分类和分析，如按部门、项目、资源类型等维度进行费用拆分和统计，快速了解成本的构成和分布情况，同时提供费用预测和预算管理功能，根据历史费用数据和业务增长趋势，预测未来的费用支出，并协助制定合理的预算计划。解决企业IT成本不透明、难以控制的问题，使企业能够清晰地了解费用的去向，为成本优化和决策提供数据支持，帮助企业合理规划IT预算，避免超支，提高IT投资的回报率</p>
+<h2 id="_11">审计中心</h2>
+<p>审计中心：记录和审计系统中的各类操作和事件，包括用户登录、操作记录、系统配置变更、数据访问等，提供审计查询和报表功能，用户可以根据时间、用户、操作类型等条件查询审计记录，并生成审计报表，对审计数据进行分析，发现潜在的安全风险和违规操作，如异常登录、频繁的数据访问等，并及时发出告警通知。满足企业对IT系统的合规性要求，确保系统操作的可追溯性和安全性，防范内部和外部的安全威胁，帮助企业及时发现和处理安全事件，降低安全风险，保障企业的信息资产安全。解决用户操作无审计，或审计数据分散，以及风险无法及时发现的问题</p>
+<h2 id="_12">用户管理</h2>
+<p>用户管理：管理系统用户账号，包括用户的创建、修改、删除、密码重置等操作，定义用户角色和权限，根据用户的职责和工作需求，为用户分配不同的角色和权限，确保用户只能访问和操作其授权范围内的资源和功能，支持用户组管理，方便对具有相同权限的用户进行批量管理和权限分配。同时支持LDAP/CAS/OIDC等单点认证，支持企业微信/钉钉/飞书扫码登录，还支持MFA二次认证，在避免用户记录过多密码的同时，也能方便用户使用。解决系统用户管理混乱、权限分配不清晰的问题，实现用户的规范化管理和权限的精细化控制，保障系统的安全性和数据隐私</p>
+<h2 id="_13">系统配置</h2>
+<p>系统配置：对系统的全局参数和配置进行管理，如系统名称、Logo、登录方式、密码策略、日志级别、邮件服务器配置、告警通知设置、系统界面风格等。支持系统的初始化配置和升级后的配置调整，确保系统能够根据企业的环境和需求进行灵活配置。提供配置的备份和恢复功能，防止配置信息丢失或误操作导致系统异常。满足系统在不同环境和场景下的个性化配置需求，使系统能够更好地适应企业的实际情况，保障系统配置的安全性和可恢复性，避免因配置问题影响系统的正常运行</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/devops-cmdb-cloud-monitor-domain-task-billing.html">📅 2025-01-15</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell clearfix">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell clearfix">
+            <p class="nav-list-title">能看到这里一定是真爱，关注一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container clearfix">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/search.html" title="搜索" target="_blank">搜索</a>
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
