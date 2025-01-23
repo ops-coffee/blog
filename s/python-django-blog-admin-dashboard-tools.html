@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="Django,Just-For-Fun,关于技术,博客,6" />
+  <meta name="keywords" content="Django,关于技术,6,博客,Just-For-Fun" />
   <meta name="description" content="还在维护吗？有赚到钱吗？" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>6年过去，当初的静态博客生成工具如今怎样了</title>
@@ -28,13 +28,31 @@
       <nav class="header-site">
         <ul>
           <li><a href="/">首页</a></li>
-          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
-          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
-          <li><a href="/devops.html" target="_self">运维平台</a></li>
-          <li><a href="/travels.html" target="_self">旅行游记</a></li>
-          <li><a href="/r/index.html" target="_self">房车体验</a></li>
-          <li><a href="/tag/index.html" target="_self">标签</a></li>
-          <li><a href="/archive.html" target="_self">归档</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/"target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html"target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html"target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/"target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/"target="_self">Python</a></li>
+                <li><a href="/tag/Django/"target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html"target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html"target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html"target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+            <li><a href="/devops.html" target="_self">运维平台</a></li>
+            <li><a href="/travels.html" target="_self">旅行</a></li>
+            <li><a href="/r/index.html" target="_self">房车</a></li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
         </ul>
       </nav>
     </div>
@@ -89,7 +107,7 @@
 <p><img alt="" loading="lazy" src="/static/images/2024/0718.08.png" /></p>
 <p>RSS订阅：有许多读者朋友希望博客能增加订阅功能，这样就能通过RSS工具及时发现新的博客内容，这可是对博客极大的认可，必须满足，于是去查了RSS订阅的实现，订阅地址其实就是一个特定格式的XML文件，于是写了个功能，每次发布博客就自动更新XML内容</p>
 <p>谷歌广告：在博客内容丰富了之后，申请了谷歌广告，希望能负担博客的成本支出，虽然博客的成本并不高，后台跑在本地，没额外花钱买资源，内容托管在免费的Github-Pages，图床用了免费的Cloudflare-R2，CDN用了免费的Cloudflare代理，只有域名要钱，39元/年，总体成本很低，谷歌广告收入虽然不多，但负担这点支出也是绰绰有余，所以博客广告加的很少，不影响文章阅读。前段时间刚刚<a href="https://blog.ops-coffee.cn/s/google-adsense-payment-china-merchants-bank" target="_blank">提现了一笔谷歌广告收入167美元</a>，能给域名续费30年，所以大伙放心，30年内不会关站</p>
-<p><img alt="" loading="lazy" src="/static/images/20240610.04.jpg" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2024/0610.04.jpg" /></p>
 <p>数据备份：博客最重要的还是数据，我不想写的这些文字突然有一天因为什么问题就没了，所以数据备份显得尤为重要，采用Github-Pages托管的一大好处就是可靠，Github作为全球最大的代码托管网站，应该不会说关就关，所有内容放在它上边较为安心，同时也有版本控制机制，即便是本地不小心删除也不用担心找不到。作为专业运维，数据只放在Github一个地方也不是很妥当，在设计之初就考虑了这个问题，博客后台用了sqlite数据库，优势很明显，单文件数据库，可以作为附件发到邮箱里，于是每次数据变更就会自动发邮件到邮箱，核心数据又多了一层保障</p>
 <h2 id="_9">写在最后</h2>
 <p>博客从上线到现在几年过去了，整体的发布流程没变，托管平台没变，甚至连页面风格都没变，但有不断的调整优化一些小细节，目标只有一个就是让它变得更好。一个静态页面生成工具，也就我自己在用，也没有因此而懈怠和妥协，不是能用就行，而是追求完美，虽然没有专门花时间和精力来做这个，但却是在使用中不断的优化更新，逐渐变得完善</p>
