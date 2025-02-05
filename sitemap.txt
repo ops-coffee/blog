@@ -1,5 +1,6 @@
 https://blog.ops-coffee.cn/
 https://blog.ops-coffee.cn/friends
+https://blog.ops-coffee.cn//travel/china/zhejiang/shaoxing(副本)
 https://blog.ops-coffee.cn//travel/china/zhejiang/ningbo
 https://blog.ops-coffee.cn//travel/china/zhejiang/hangzhou
 https://blog.ops-coffee.cn//travel/china/zhejiang/shaoxing
@@ -180,7 +181,7 @@ https://blog.ops-coffee.cn/s/XTXR-1FBKf2olZQQsesNVg
 https://blog.ops-coffee.cn/t/js-dict
 https://blog.ops-coffee.cn/r/wannan-318-chuanzangxian-taipinghu
 https://blog.ops-coffee.cn/s/mml5jzQVDzByf0F3sJN5dg
-https://blog.ops-coffee.cn/r/anji-tianchi-forest-camping
+https://blog.ops-coffee.cn/r/city-china-zhejiang-huzhou-anji-tianchi
 https://blog.ops-coffee.cn/t/linux-mysql-python-django-timezone
 https://blog.ops-coffee.cn/t/django-celery-beat-clocked-utc-timezone
 https://blog.ops-coffee.cn/t/echarts-options-config
