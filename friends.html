@@ -28,13 +28,36 @@
       <nav class="header-site">
         <ul>
           <li><a href="/">首页</a></li>
-          <li><a href="/tag/关于技术/" target="_self">关于技术</a></li>
-          <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
-          <li><a href="/devops.html" target="_self">运维平台</a></li>
-          <li><a href="/travels.html" target="_self">旅行游记</a></li>
-          <li><a href="/r/index.html" target="_self">房车体验</a></li>
-          <li><a href="/tag/index.html" target="_self">标签</a></li>
-          <li><a href="/archive.html" target="_self">归档</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops.html" target="_self">运维平台</a></li>
+            <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/r/index.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
         </ul>
       </nav>
     </div>
@@ -50,21 +73,21 @@
   </header>
 
   <div id="content-wrap">
-    <div class="container">
-      <div class="nav-cell clearfix">
+    <div class="container no-sidebar">
+      <div class="nav-cell">
         <h2>🔥 热门推荐
           <!-- <a class="more" href="">更多</a> -->
         </h2>
         <ul class="nav-list">
           <li>
-            <a class="nav-item clearfix" href="https://nav.ops-coffee.cn" target="_blank">
+            <a class="nav-item" href="https://nav.ops-coffee.cn" target="_blank">
               <div class="nav-img" style="margin-bottom:40px;background-image: url(https://blog.ops-coffee.cn/static/images/nav/favicon.ico);"></div>
               <div class="nav-name">咖啡吧导航</div>
               <p>一个非常实用的导航网站</p>
             </a>
           </li>
           <li>
-            <a class="nav-item clearfix" href="https://opendevops.cn" target="_blank">
+            <a class="nav-item" href="https://opendevops.cn" target="_blank">
               <div class="nav-img" style="margin-bottom:40px;background-image: url(https://opendevops.cn/icons/logo.svg);"></div>
               <div class="nav-name">CODO</div>
               <p>开源的一站式运维平台</p>
@@ -72,69 +95,69 @@
           </li>
         </ul>
       </div>
-      <div class="nav-cell clearfix">
+      <div class="nav-cell">
         <h2>📡 友情链接
           <!-- <a class="more" href="">更多</a> -->
         </h2>
         <ul class="nav-list">
           <li>
-            <a class="nav-item clearfix" href="https://www.k8stech.net/" target="_blank">
+            <a class="nav-item" href="https://www.k8stech.net/" target="_blank">
               <div class="nav-img" style="margin-bottom:40px;background-image: url(https://images.k8stech.net/avatar.jpg);"></div>
               <div class="nav-name">Kubernetes技术栈</div>
               <p>青牛踏雪的个人博客，关注云原生Kubernetes、Prometheus技术栈</p>
             </a>
           </li>
           <li>
-            <a class="nav-item clearfix" href="https://www.qikqiak.com" target="_blank">
+            <a class="nav-item" href="https://www.qikqiak.com" target="_blank">
               <div class="nav-img" style="margin-bottom:40px;background-image: url(https://picdn.youdianzhishi.com/images/blog-favicon.png);"></div>
               <div class="nav-name">阳明的博客</div>
               <p>阳明的个人博客</p>
             </a>
           </li>
           <li>
-            <a class="nav-item clearfix" href="https://icloudnative.io" target="_blank">
+            <a class="nav-item" href="https://icloudnative.io" target="_blank">
               <div class="nav-img" style="margin-bottom:40px;background-image: url(https://icloudnative.io/img/avatar_huc87ff6472ac02dded9d02f85c817eafc_103316_288x288_fill_box_center_3.png);"></div>
               <div class="nav-name">云原生实验室</div>
               <p>云原生爱好者社区</p>
             </a>
           </li>
           <li>
-            <a class="nav-item clearfix" href="https://nops.icu/" target="_blank">
+            <a class="nav-item" href="https://nops.icu/" target="_blank">
               <div class="nav-img" style="margin-bottom:40px;background-image: url(https://blog.ops-coffee.cn/static/images/icon-list.png);"></div>
               <div class="nav-name">nops</div>
               <p>运维不加班，记录一位运维同学的日常</p>
             </a>
           </li>
           <li>
-            <a class="nav-item clearfix" href="https://wiki.eryajf.net/" target="_blank">
+            <a class="nav-item" href="https://wiki.eryajf.net/" target="_blank">
               <div class="nav-img" style="margin-bottom:40px;background-image: url(https://wiki.eryajf.net/img/logo.png);"></div>
               <div class="nav-name">二丫讲梵</div>
               <p>二丫的个人博客，记录运维但不止于运维</p>
             </a>
           </li>
           <li>
-            <a class="nav-item clearfix" href="https://www.lujianxin.com/" target="_blank">
+            <a class="nav-item" href="https://www.lujianxin.com/" target="_blank">
               <div class="nav-img" style="margin-bottom:40px;background-image: url(https://www.lujianxin.com/images/avatar.jpeg);"></div>
               <div class="nav-name">陆鉴鑫的博客</div>
               <p>陆鉴鑫的博客，一个助力实现文学梦想，技术干货创作和分享的开放平台</p>
             </a>
           </li>
           <li>
-            <a class="nav-item clearfix" href="https://www.ssgeek.com" target="_blank">
+            <a class="nav-item" href="https://www.ssgeek.com" target="_blank">
               <div class="nav-img" style="margin-bottom:40px;background-image: url(https://www.ssgeek.com/images/avatar.png);"></div>
               <div class="nav-name">山山仙人博客</div>
               <p>山山仙人的个人博客</p>
             </a>
           </li>
           <li>
-            <a class="nav-item clearfix" href="https://www.foreverblog.cn/" target="_blank">
+            <a class="nav-item" href="https://www.foreverblog.cn/" target="_blank">
               <div class="nav-img" style="margin-bottom:40px;background-image: url(https://www.foreverblog.cn/favicon.ico);"></div>
               <div class="nav-name">十年之约</div>
               <p>十年不关站的博客聚合站</p>
             </a>
           </li>
           <li>
-            <a class="nav-item clearfix" href="https://www.boyouquan.com/home" target="_blank">
+            <a class="nav-item" href="https://www.boyouquan.com/home" target="_blank">
               <div class="nav-img" style="margin-bottom:40px;background-image: url(https://www.boyouquan.com/favicon.ico);"></div>
               <div class="nav-name">博友圈</div>
               <p>博客人的朋友圈，博客收录与文章 RSS 聚合网站</p>
@@ -154,7 +177,7 @@
   </div>
 
   <footer class="footer">
-    <div class="container clearfix">
+    <div class="container">
       <div class="copy"> © ops-coffee</div>
 
       <div class="link">
