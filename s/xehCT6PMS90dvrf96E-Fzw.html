@@ -73,7 +73,7 @@
   </header>
 
   <div id="content-wrap">
-    <div class="container">
+    <div class="container no-sidebar">
         <h1 id="art-title">Sadmin：打造私有Django公共库实现代码复用</h1>
 
         <p>我们借助于Django开发了许多的内部管理系统，例如之前介绍过的<a href="/s/uXQbM4t11ICdzNofZyDeXA" target="_blank">Probius</a>、<a href="/s/QG42UqJ9rnswQDMd41CYUg" target="_blank">Kerrigan</a>、<a href="/s/FV379mGIboVYky73kcoMMQ" target="_blank">Proxy</a>等等，这些系统看起来长的都一样，但实际实现的功能确是千差万别，这些不同的系统为什么会长的一样呢？这不仅仅是因为它们使用了同一套前端模板，更为重要的是我们将很多大多系统都要用到的基础功能给集中在了一起，封装成了一个基础的Django应用，例如前端页面及常用插件、后端用户及权限管理等等，任何一个Django项目只要集成了这个应用就能快速拥有这些功能，不仅省去了大把的基础功能开发时间，而且对于后续的更新也是非常的友好</p>

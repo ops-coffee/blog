@@ -73,7 +73,7 @@
   </header>
 
   <div id="content-wrap">
-    <div class="container">
+    <div class="container no-sidebar">
         <h1 id="art-title">Celery多队列解决生产环境下的任务优先级问题</h1>
 
         <p><a href="https://blog.ops-coffee.cn/devops" target="_blank">运维自动化</a>系统需要处理大量的周期任务，例如上篇文章<a href="https://blog.ops-coffee.cn/s/devops-domain-record-certificate" target="_blank">运维自动化之域名系统</a>中提到的域名临期提醒、域名解析绑定资源下线提醒、域名证书扫描及临期提醒等，同时也会有大量的异步任务和定时任务需要执行，例如异步的手动资源同步、定时的系统发布任务等等，这些周期/定时/异步任务的执行都依赖Celery这个Python环境下的知名工具，关于Celery我之前也有介绍过他的<a href="https://blog.ops-coffee.cn/s/lXrp3igYo9W2UuE5Gauysg" target="_blank">基本使用</a>，通常情况下这些用法已经能够满足我们的需求，但随着系统对功能强大用户增多，就会用到Celery的一些进阶的用法，例如今天这篇文章要写的多队列</p>
