@@ -62,6 +62,7 @@ https://blog.ops-coffee.cn/tag/系统运维/index.html
 https://blog.ops-coffee.cn/tag/Python/index.html
 https://blog.ops-coffee.cn/tag/Django/index.html
 https://blog.ops-coffee.cn/tag/Devops/index.html
+https://blog.ops-coffee.cn/r/city-china-heilongjiang-haerbin.html
 https://blog.ops-coffee.cn/r/the-dream-of-my-life.html
 https://blog.ops-coffee.cn/r/city-china-zhejiang-jiaxing-haiyan.html
 https://blog.ops-coffee.cn/s/2024-WeChat-official-accounts-data-share.html
