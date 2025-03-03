@@ -36,10 +36,8 @@ https://blog.ops-coffee.cn/bpmn/index.html
 https://blog.ops-coffee.cn/elk/index.html
 https://blog.ops-coffee.cn/ldap/index.html
 https://blog.ops-coffee.cn/sadmin/index.html
-https://blog.ops-coffee.cn/o/index.html
 https://blog.ops-coffee.cn/django/index.html
 https://blog.ops-coffee.cn/r/index.html
-https://blog.ops-coffee.cn/g/index.html
 https://blog.ops-coffee.cn/t/index.html
 https://blog.ops-coffee.cn/s/index.html
 https://blog.ops-coffee.cn/tag/人生轨迹/index.html
@@ -182,7 +180,6 @@ https://blog.ops-coffee.cn/s/fGshXWUaTRv0oHIMBKSn1Q.html
 https://blog.ops-coffee.cn/s/U0yPjGAhKnfqYqVWQd6ZSQ.html
 https://blog.ops-coffee.cn/r/hualangxian-huihanggudao-zhexitianlu.html
 https://blog.ops-coffee.cn/s/c4UPSpHCGqKsONeotn3LLw.html
-https://blog.ops-coffee.cn/o/chang-san-jiao-tu-bu-xian-lu.html
 https://blog.ops-coffee.cn/s/XTXR-1FBKf2olZQQsesNVg.html
 https://blog.ops-coffee.cn/t/js-dict.html
 https://blog.ops-coffee.cn/r/wannan-318-chuanzangxian-taipinghu.html
@@ -205,7 +202,6 @@ https://blog.ops-coffee.cn/s/Wtx2utkC4MErDLvC3cbSMg.html
 https://blog.ops-coffee.cn/s/mWYu4bSkSpymtk8opJa-IQ.html
 https://blog.ops-coffee.cn/r/weekend-camping-music-life.html
 https://blog.ops-coffee.cn/r/weekend-summer-camping.html
-https://blog.ops-coffee.cn/g/python-code-style-pep8.html
 https://blog.ops-coffee.cn/r/half-a-year-RV-experience.html
 https://blog.ops-coffee.cn/s/cKkFlBZnpLd_IRaC6i8i6A.html
 https://blog.ops-coffee.cn/s/PL31oUCLMEi3H1_1IMMDRA.html
@@ -221,7 +217,7 @@ https://blog.ops-coffee.cn/s/Drt44kkzaeAeSjhshSb0Vg.html
 https://blog.ops-coffee.cn/t/debian-lsb-release-source-list.html
 https://blog.ops-coffee.cn/r/my-gift-for-the-new-year.html
 https://blog.ops-coffee.cn/r/my-RV-is-registered.html
-https://blog.ops-coffee.cn/s/RAJa_YaRCvuubdWgy-AIhg.html
+https://blog.ops-coffee.cn/r/resign-after-10-years-at-company.html
 https://blog.ops-coffee.cn/r/V80-RV-experience.html
 https://blog.ops-coffee.cn/r/introduce-my-RV.html
 https://blog.ops-coffee.cn/s/wAH0fb2I2fHCxu5Gy0oSng.html
@@ -279,9 +275,7 @@ https://blog.ops-coffee.cn/s/11-yHYohTdSBl9FfNvCs6w.html
 https://blog.ops-coffee.cn/s/vbdJ4fAPOrgLAUipoCCXBA.html
 https://blog.ops-coffee.cn/s/8FOEsaEcCbHOsysYutMk7w.html
 https://blog.ops-coffee.cn/s/Q9yzJ0HtKDKW7qrJeqXKQQ.html
-https://blog.ops-coffee.cn/g/what-happends-when-google.html
 https://blog.ops-coffee.cn/s/JRszZcbeic5mJbY7dDkkMQ.html
-https://blog.ops-coffee.cn/g/laws-theories-principles-patterns.html
 https://blog.ops-coffee.cn/s/S_FFrP4s1KWSXXMSI4EG0A.html
 https://blog.ops-coffee.cn/s/UOu6XIoOOj4gP0QuKgFfMg.html
 https://blog.ops-coffee.cn/frontend/front-end-components-javascript-jquery-ace-js.html
