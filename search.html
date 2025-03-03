@@ -6,18 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="运维咖啡吧,ops-coffee,运维,运维博客,运维开发,自动化,云计算,ops,sre,docker,kubernetes,linux,devops,cloud" />
-  <meta name="description" content="运维咖啡吧所有精品原创文章内容供你搜索查看" />
+  <meta name="keywords" content="搜索, 站内搜索, 搜索引擎" />
+  <meta name="description" content="站内搜索引擎" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
 
+  /static/posts/css/search.css
+
   <!-- Begin SEO tag -->
-  <title>搜索 - 运维咖啡吧</title>
+  <title>站内搜索 - 运维咖啡吧</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
   <meta property="og:url" content="https://blog.ops-coffee.cn" />
-  <meta property="og:title" content="搜索 - 运维咖啡吧" />
-  <meta property="og:description" content="运维咖啡吧所有精品原创文章内容供你搜索查看" />
+  <meta property="og:title" content="站内搜索 - 运维咖啡吧" />
+  <meta property="og:description" content="站内搜索引擎" />
   <link rel="canonical" href="https://blog.ops-coffee.cn" />
   <!-- End SEO tag -->
 </head>
@@ -63,6 +65,7 @@
             </li>
             <li><a href="/tag/index.html" target="_self">标签</a></li>
             <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search-button"><a href="/search.html" target="_self">🔍</a></li>
         </ul>
       </nav>
     </div>
@@ -78,16 +81,18 @@
   </header>
 
   <div id="content-wrap">
-
   <div class="container no-sidebar">
-    <div style="text-align:center">
-    <small>本搜索功能直接使用了Google搜索，请先确保能访问Google</small>
-</div>
+    <div class="search-container">
+      <div class="search-box">
+        <input type="text" class="search-input" placeholder="输入关键词搜索..." id="searchInput">
+        <button class="search-button" onclick="performSearch()">搜索</button>
+      </div>
 
-<script async src="https://cse.google.com/cse.js?cx=016341445267207922918:anvu9tuqh9z"></script>
-<div class="gcse-search"></div>
+      <div class="search-results" id="searchResults">
+        <!-- 搜索结果将在这里动态显示 -->
+      </div>
+    </div>
   </div>
-
   </div>
 
   <footer class="footer">
@@ -106,7 +111,8 @@
 <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
 <!-- Google Adsense -->
-<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>{}
+/static/posts/js/search.js
 </body>
 
 </html>
