@@ -56,6 +56,9 @@ async function performSearch() {
     return;
   }
 
+  // 显示加载提示
+  searchResults.innerHTML = '<p style="text-align: center; color: #666;"><span style="display: inline-block; width: 20px; height: 20px; border: 2px solid #007bff; border-radius: 50%; border-top-color: transparent; animation: spin 1s linear infinite; margin-right: 10px; vertical-align: middle;"></span>正在搜索中...</p><style>@keyframes spin { to { transform: rotate(360deg); } }</style>';
+
   if (searchIndex.length === 0) {
     await loadSearchIndex();
   }
