@@ -156,7 +156,7 @@ https://blog.ops-coffee.cn/s/devops-kubernetes-docker-jenkins.html
 https://blog.ops-coffee.cn/r/city-china-zhejiang-jiaxing-xitang.html
 https://blog.ops-coffee.cn/r/city-china-zhejiang-zhoushan-daishan.html
 https://blog.ops-coffee.cn/frontend/jS-automatically-generates-letter-avatar.html
-https://blog.ops-coffee.cn/s/i-has-settled-down-in-shanghai.html
+https://blog.ops-coffee.cn/r/i-has-settled-down-in-shanghai.html
 https://blog.ops-coffee.cn/r/city-china-zhejiang-shaoxing-xuehuatan.html
 https://blog.ops-coffee.cn/s/django-move-model-to-another-app.html
 https://blog.ops-coffee.cn/r/city-china-jiangsu-taizhou.html
