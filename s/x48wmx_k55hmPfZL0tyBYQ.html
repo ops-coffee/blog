@@ -6,12 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="关于技术,Redis,key,keys,系统运维" />
-  <meta name="description" content="还在用keys命令模糊匹配删除数据吗？这就是一颗随时爆炸的炸弹！" />
+  <meta name="keywords" content="Redis, SCAN命令, 批量删除, Redis数据删除, SSCAN命令, HSCAN命令, ZSCAN命令, Redis生产环境" />
+  <meta name="description" content="本文介绍了如何在Redis中优雅地使用SCAN命令进行批量删除，避免使用keys命令带来的风险，并提供了针对不同数据类型的删除方法，适合在生产环境中使用。" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
-
-  
 
   <!-- Begin SEO tag -->
   <title>Redis删除特定前缀key的优雅实现</title>
@@ -19,7 +17,7 @@
   <meta property="og:site_name" content="运维咖啡吧" />
   <meta property="og:url" content="https://blog.ops-coffee.cn" />
   <meta property="og:title" content="Redis删除特定前缀key的优雅实现" />
-  <meta property="og:description" content="还在用keys命令模糊匹配删除数据吗？这就是一颗随时爆炸的炸弹！" />
+  <meta property="og:description" content="本文介绍了如何在Redis中优雅地使用SCAN命令进行批量删除，避免使用keys命令带来的风险，并提供了针对不同数据类型的删除方法，适合在生产环境中使用。" />
   <link rel="canonical" href="https://blog.ops-coffee.cn" />
   <!-- End SEO tag -->
 </head>

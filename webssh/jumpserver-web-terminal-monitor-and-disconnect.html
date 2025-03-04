@@ -6,12 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="关于技术,WebSSH,监控" />
-  <meta name="description" content="这个功能我可以不用，但你不能没有" />
+  <meta name="keywords" content="WebSSH, 实时监控, 用户操作监控, 强制下线, Django Channels, WebSocket" />
+  <meta name="description" content="本文介绍了如何通过Django Channels实现WebSSH的实时用户操作监控功能，包括如何实时查看用户操作并在必要时强制将用户踢下线。文章详细讲解了如何使用Channels的layer功能将多个channel合并成一个group，并通过group发送消息来实现监控功能，同时也介绍了如何通过后端逻辑实现强制断开用户连接。" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
-
-  
 
   <!-- Begin SEO tag -->
   <title>堡垒机WebSSH进阶之实时监控和强制下线</title>
@@ -19,7 +17,7 @@
   <meta property="og:site_name" content="运维咖啡吧" />
   <meta property="og:url" content="https://blog.ops-coffee.cn" />
   <meta property="og:title" content="堡垒机WebSSH进阶之实时监控和强制下线" />
-  <meta property="og:description" content="这个功能我可以不用，但你不能没有" />
+  <meta property="og:description" content="本文介绍了如何通过Django Channels实现WebSSH的实时用户操作监控功能，包括如何实时查看用户操作并在必要时强制将用户踢下线。文章详细讲解了如何使用Channels的layer功能将多个channel合并成一个group，并通过group发送消息来实现监控功能，同时也介绍了如何通过后端逻辑实现强制断开用户连接。" />
   <link rel="canonical" href="https://blog.ops-coffee.cn" />
   <!-- End SEO tag -->
 </head>

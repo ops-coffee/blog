@@ -6,12 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="update,关于技术,save,Django,model" />
-  <meta name="description" content="一个非常实用的小方法" />
+  <meta name="keywords" content="Django, 数据校验, save方法, Python, 数据库, 校验方法, pre_save信号, model重写" />
+  <meta name="description" content="在Django中，通过重写model的save方法可以方便地在数据入库前进行复杂的校验，避免了在多个view中重复校验的问题。本文详细介绍了如何实现这一方法，并指出了在批量更新数据时需要注意的问题及其解决方案。" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
-
-  
 
   <!-- Begin SEO tag -->
   <title>Django model重写save方法及update踩坑记录</title>
@@ -19,7 +17,7 @@
   <meta property="og:site_name" content="运维咖啡吧" />
   <meta property="og:url" content="https://blog.ops-coffee.cn" />
   <meta property="og:title" content="Django model重写save方法及update踩坑记录" />
-  <meta property="og:description" content="一个非常实用的小方法" />
+  <meta property="og:description" content="在Django中，通过重写model的save方法可以方便地在数据入库前进行复杂的校验，避免了在多个view中重复校验的问题。本文详细介绍了如何实现这一方法，并指出了在批量更新数据时需要注意的问题及其解决方案。" />
   <link rel="canonical" href="https://blog.ops-coffee.cn" />
   <!-- End SEO tag -->
 </head>
