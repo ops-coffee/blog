@@ -1941,204 +1941,204 @@
   {
     "url": "https://blog.ops-coffee.cn/s/A6GPJlAxvEopUsimWaNcqA.html",
     "title": "Django+Echarts画图实例",
-    "content": "画图之外带你详细了解Django中的聚合函数使用",
-    "keywords": "",
+    "content": "Learn how to use Django's aggregate and annotate functions to create a bar chart using ECharts, with a complete example of displaying the top 20 meeting locations in a Django project.",
+    "keywords": "D, j, a, n, g, o, ,,  , a, g, g, r, e, g, a, t, e, ,,  , a, n, n, o, t, a, t, e, ,,  , E, C, h, a, r, t, s, ,,  , c, h, a, r, t, ,,  , P, y, t, h, o, n, ,,  , v, i, s, u, a, l, i, z, a, t, i, o, n, ,,  , w, e, b,  , d, e, v, e, l, o, p, m, e, n, t",
     "date": "2018-11-26"
   },
   {
     "url": "https://blog.ops-coffee.cn/s/cMxdAfsTno56ixurmD4KXA.html",
     "title": "Django使用Signals监测model字段变化发送通知",
-    "content": "阅读本文将get到if使用新姿势和signals使用真实案例",
-    "keywords": "",
+    "content": "本文介绍了在实现工单通知过程中的一些优化技巧，包括如何利用Python的if语句简化代码，通过Django的signals机制实现状态变更通知的自动化，以及如何提高代码的可读性和维护性。",
+    "keywords": "工单通知, Django2.0, signals, Python, 工单状态变更",
     "date": "2018-11-19"
   },
   {
     "url": "https://blog.ops-coffee.cn/s/6ztLq8Q591KnlQY33-YFdQ.html",
     "title": "运维效率之数据迁移自动化",
-    "content": "overmind上线三个月的成果展示及新功能更新",
-    "keywords": "",
+    "content": "Overmind系统上线三个月以来，通过自动化SQL审核和数据迁移，显著提升了运维效率。本文详细介绍了系统的功能、工作流程和使用体验，展示了如何通过自动化工具实现‘一杯咖啡，轻松运维’的目标。",
+    "keywords": "Overmind系统, 自动化运维, SQL自动审核, 数据迁移, 工单系统, 数据库运维",
     "date": "2018-11-10"
   },
   {
     "url": "https://blog.ops-coffee.cn/s/dpGqieL4WCmGdQh1AEG4Gw.html",
     "title": "代码中的敏感信息加密方案",
-    "content": "曾经有个同事不小心把项目代码给传到了Github上，后果不堪设想",
-    "keywords": "",
+    "content": "本文介绍了如何在代码中处理敏感信息，特别是通过RSA加密方法保护邮箱账号密码、数据库连接信息等。同时，文章还详细描述了流程管控的重要性，以减少信息泄露的风险。",
+    "keywords": "代码敏感信息, 信息加密, RSA加密, 流程管控, 数据库密码管理",
     "date": "2018-10-30"
   },
   {
     "url": "https://blog.ops-coffee.cn/s/7gPLaCESHAB0dLgq7qZq5Q.html",
     "title": "Django model转字典的几种方法",
-    "content": "目前Json格式几乎成了前后端之间数据交换的标准，掌握model转dict的方法很有必要",
-    "keywords": "",
+    "content": "本文介绍了在Django 2.0环境中，将Model转换为字典的几种常用方法，包括直接构建字典、使用__dict__、model_to_dict以及自定义to_dict方法，帮助开发者轻松处理前后端分离架构中的数据交换需求。",
+    "keywords": "Django, Model转换字典, 前后端分离, Json格式, Django 2.0, model_to_dict, to_dict方法, Python开发",
     "date": "2018-10-13"
   },
   {
     "url": "https://blog.ops-coffee.cn/s/sROfvo1y_76fi70nmAs-vg.html",
     "title": "使用Nagios打造专业的业务状态监控",
-    "content": "Nagios这种老古董就应该被淘汰吗？用对地方一样可以发光发热！",
-    "keywords": "",
+    "content": "本文介绍了如何使用Nagios监控业务状态，探讨了传统监控系统的不足以及如何通过Nagios弥补业务状态监控的缺失，详细讲解了Nagios的部署与配置，以及如何通过Nagios插件实现更及时的监控报警。",
+    "keywords": "Nagios, 业务监控, 监控系统, 业务状态, API监控, 网络监控, 监控部署, 监控报警, 监控配置, 监控插件",
     "date": "2018-09-19"
   },
   {
     "url": "https://blog.ops-coffee.cn/s/Dj5t142BkRIONC58xacBoA.html",
     "title": "Etcd安全配置之Basic Auth认证",
-    "content": "本文介绍我们使用Etcd权限认证的设计过程及详细配置",
-    "keywords": "",
+    "content": "本文详细介绍了中小团队如何基于Etcd+Confd构建配置中心，并详细解读了如何开启Etcd的Basic Auth认证机制以及如何设计权限访问策略，确保配置中心的安全访问。",
+    "keywords": "Etcd认证, 权限设计, Basic Auth, Etcd安全性, 配置中心, Etcd权限控制, BasicAuth设置, 中小团队技术实践",
     "date": "2018-09-12"
   },
   {
     "url": "https://blog.ops-coffee.cn/elk/common-system-project-java-log-collect.html",
     "title": "ELK日志系统之通用应用程序日志接入方案",
-    "content": "形形色色各种不同的应用程序日志你们都是怎么收集的？",
-    "keywords": "",
+    "content": "本文详细介绍了如何通过制定日志规范、使用Filebeat和Kafka进行高效的日志采集，以及如何通过Kibana展示日志，帮助开发和运维人员快速定位和解决问题。",
+    "keywords": "日志规范, 日志采集, 日志展示, ELK, Filebeat, Kafka, Logstash, Elasticsearch, Kibana",
     "date": "2018-09-06"
   },
   {
     "url": "https://blog.ops-coffee.cn/elk/elasticsearch-logstash-rsyslog-nginx.html",
     "title": "ELK日志系统之使用Rsyslog快速方便的收集Nginx日志",
-    "content": "ELK收集日志一定要额外安装一个Agent程序吗？这篇文章会给你答案",
-    "keywords": "",
+    "content": "Rsyslog是一款高性能的日志收集处理服务，无需额外安装Agent即可实现日志收集。本文详细介绍了如何使用Rsyslog收集Nginx日志，并通过ELK栈进行日志分析和展示，提供了完整的配置指南和联调测试步骤。",
+    "keywords": "Rsyslog, 日志收集, 无需Agent, Nginx日志, ELK, Kafka, Logstash, Elasticsearch, Kibana",
     "date": "2018-08-30"
   },
   {
     "url": "https://blog.ops-coffee.cn/s/uGUvV4jl4YIvNztuepdC8A.html",
     "title": "中小团队落地配置中心详解",
-    "content": "这将是我们运维工作中的又一个里程碑，简单易落地的配置中心来了",
-    "keywords": "",
+    "content": "本文介绍了如何通过Etcd和Confd构建一个简单、易落地的配置中心解决方案，解决线上配置文件管理中的常见问题，帮助轻松运维。",
+    "keywords": "配置中心, Etcd, Confd, 运维, 配置管理, 部署, Kubernetes, WebUI, 集群",
     "date": "2018-08-23"
   },
   {
     "url": "https://blog.ops-coffee.cn/elk/elasticsearch-logstash-mysql-slowlog.html",
     "title": "ELK构建MySQL慢日志收集平台详解",
-    "content": "构建完SQL审核系统，我们再来聊聊MySQL的慢日志收集",
-    "keywords": "",
+    "content": "本文详细介绍了如何利用ELK（Elasticsearch, Logstash, Kibana）进行MySQL慢查询日志的收集与处理，提高团队在慢查询日志收集和处理方面的效率。",
+    "keywords": "ELK, 慢日志, MySQL, Filebeat, Logstash, Kibana, SQL审核, 慢查询日志, 日志收集",
     "date": "2018-08-16"
   },
   {
     "url": "https://blog.ops-coffee.cn/s/JVh4UnS2Tql9gUVaBSoGuA.html",
     "title": "Django model select的各种用法详解",
-    "content": "最全的Django QuerySet示例，强烈建议收藏以备不时之需",
-    "keywords": "",
+    "content": "本文详细介绍了Django Model的Select操作，涵盖基本操作、常用操作、进阶操作以及时间字段查询等内容，并配以对应的MySQL查询语句，帮助开发者更轻松地理解Django ORM的用法。",
+    "keywords": "Django Model Select, Django ORM查询, MySQL查询对比, Django高级查询, Django Model操作, Django Q对象, Django外键查询, Django多对多查询, Django原生SQL执行",
     "date": "2018-08-13"
   },
   {
     "url": "https://blog.ops-coffee.cn/s/lXrp3igYo9W2UuE5Gauysg.html",
     "title": "Django配置Celery执行异步任务和定时任务",
-    "content": "想在Django项目中使用异步处理或计划任务？读这一篇文章就够了",
-    "keywords": "",
+    "content": "本文介绍了如何在Django2.0环境中配置和使用原生Celery进行异步和定时任务的调度，涵盖了RabbitMQ的安装、Celery的配置、异步任务的实现、定时任务的设置等内容。",
+    "keywords": "原生Celery, Django2.0, 异步任务, 定时任务, RabbitMQ, 任务队列, 分布式任务调度",
     "date": "2018-08-11"
   },
   {
     "url": "https://blog.ops-coffee.cn/s/eM7SNKmtw2tDQtXBsBXyxQ.html",
     "title": "探秘varian：优雅的发布部署程序",
-    "content": "项目多了之后配置Jenkins也成了一件麻烦的事情，如何实现优雅的程序部署呢？",
-    "keywords": "",
+    "content": "本文介绍了varian，一套基于Python3的部署系统，详细解释了其架构、设计思路、实现方法以及使用方式，展示了varian如何通过模块化设计解决大规模项目部署中的各种问题，提升部署效率和系统健壮性。",
+    "keywords": "varian, Python3部署系统, CMDB, Jenkins, SVN, Git, Harbor, Kubernetes, Docker镜像, 微服务, 容器化, 部署系统",
     "date": "2018-07-31"
   },
   {
     "url": "https://blog.ops-coffee.cn/s/fl3OiX7xg9GVrj9G--a5-g.html",
     "title": "记一次诡异的故障排查经历",
-    "content": "每一次故障排查都是一笔财富，各种狗血的经过不表，解决问题之后的那种满足是不可替代的",
-    "keywords": "",
+    "content": "本文详细记录了一次发布系统重构过程中的故障排查经历，重点解决了Nginx返回403错误及Tomcat8 UMASK设置问题，提供了详细的解决方案和背景信息，适合技术人员参考。",
+    "keywords": "Nginx 403错误, Tomcat8 UMASK, 故障排查, 发布系统重构, Python开发, Jenkins升级",
     "date": "2018-07-25"
   },
   {
     "url": "https://blog.ops-coffee.cn/s/ZrrLUNRlAXVfVKvA1m0nsg.html",
     "title": "中小团队快速构建SQL自动审核系统",
-    "content": "中小团队基础工具系统搭建的原则：简单、好用、易落地",
-    "keywords": "",
+    "content": "本文介绍了Inception和Overmind两款SQL审核工具，讨论了它们的架构、审核流程、系统介绍以及开源情况，旨在提高DBA的工作效率和SQL操作的规范性。",
+    "keywords": "SQL审核, Inception, Overmind, Mysql自动化工具, DBA工具, SQL执行, SQL回滚",
     "date": "2018-07-20"
   },
   {
     "url": "https://blog.ops-coffee.cn/s/B_aNB8Y8snbSVLURONZ4Qg.html",
     "title": "Django model update的各种用法介绍",
-    "content": "Django update的各种实用方法你都知道吗？",
-    "keywords": "",
+    "content": "本文介绍了在Django开发过程中如何对表进行增删改查，特别是model的更新操作，包括常规用法、auto_now属性字段的更新、json/dict类型数据更新、ForeignKey字段更新以及ManyToManyField字段更新等技巧。",
+    "keywords": "Django, Model Update, Django 2.0, 数据库更新, ORM, ForeignKey, ManyToManyField, auto_now, json数据更新",
     "date": "2018-07-10"
   },
   {
     "url": "https://blog.ops-coffee.cn/python/YhKyJ16yuI0bPpygKV_d1w.html",
     "title": "python如何帮我在投资中获取更高收益",
-    "content": "一篇很严肃的娱乐文章，希望看了之后除了技术之外能有收获",
-    "keywords": "",
+    "content": "本文介绍了P2P理财产品的特点及其投资风险，并详细阐述了如何使用Python、Django等技术实现数据的抓取、处理和展示，以及如何通过微信和微信公众号实现自动回复功能。",
+    "keywords": "P2P投资, 理财产品, 技术实现, Python, Django, MySQL, Redis, 微信机器人, 微信公众号, 投资风险, 数据抓取, 理财需谨慎",
     "date": "2018-07-06"
   },
   {
     "url": "https://blog.ops-coffee.cn/s/GATfwNETo_aGsJHZdV5YzQ.html",
     "title": "中小团队基于Docker的devops实践",
-    "content": "主流运维工具的融合，devops落地实践的总结，欢迎各位大拿拍砖",
-    "keywords": "",
+    "content": "本文总结了如何通过DevOps实践和一系列工具（如Jenkins、Docker、Kubernetes等）来提高技术团队的工作效率，减少手动操作的繁琐，实现从编码到发布的自动化流程，包括代码管理、持续集成、Docker化、监控报警和日志系统的具体实施方法。",
+    "keywords": "DevOps, Jenkins, Docker, Kubernetes, 自动部署, 监控系统, 日志管理, 持续集成",
     "date": "2018-07-03"
   },
   {
     "url": "https://blog.ops-coffee.cn/ldap/openldap-sso-python-django-auth-ldap.html",
     "title": "LDAP落地实战（五）：Django集成OpenLDAP认证",
-    "content": "本文详细介绍了django-auth-ldap的使用方法，参数含义，并提供了示例代码",
-    "keywords": "",
+    "content": "本文详细介绍了如何在Django项目中集成LDAP认证，包括django-auth-ldap模块的使用方法、参数配置及示例代码，帮助开发者快速实现LDAP认证功能。",
+    "keywords": "Django, LDAP, 认证, django-auth-ldap, LDAP认证, Django集成, LDAP配置, LDAP组配置, LDAP用户属性映射, LDAP认证缓存",
     "date": "2019-04-04"
   },
   {
     "url": "https://blog.ops-coffee.cn/ldap/openldap-sso-auth-jenkins-plugins-devops.html",
     "title": "LDAP落地实战（四）：Jenkins集成OpenLDAP认证",
-    "content": "SVN、Git已经顺利接入了LDAP，今天我们再下一城接入Jenkins",
-    "keywords": "",
+    "content": "本文详细介绍了如何在Jenkins中集成LDAP认证，包括安装LDAP插件的两种方法、配置LDAP认证的步骤以及使用LDAP登录的注意事项。",
+    "keywords": "Jenkins, LDAP, 插件安装, 认证配置, LDAP集成, LDAP服务器, LDAP搜索, LDAP登录, LDAP插件",
     "date": "2018-08-10"
   },
   {
     "url": "https://blog.ops-coffee.cn/ldap/openldap-sso-auth-gitlab-389-devops.html",
     "title": "LDAP落地实战（三）：GitLab集成OpenLDAP认证",
-    "content": "SVN已经能够顺利接入LDAP统一认证了，那么我们接着搞定Git吧",
-    "keywords": "",
+    "content": "本文详细介绍了如何在GitLab中集成OpenLDAP，实现账号认证，包括配置文件修改和重要参数解释，以及常见错误处理。",
+    "keywords": "GitLab, OpenLDAP, LDAP集成, GitLab认证, 版本控制",
     "date": "2018-07-01"
   },
   {
     "url": "https://blog.ops-coffee.cn/ldap/openldap-sso-auth-svn-apache-basic.html",
     "title": "LDAP落地实战（二）：SVN集成OpenLDAP认证",
-    "content": "还在用本地文件存储SVN账号密码进行认证？赶紧看下本文提高姿势吧",
-    "keywords": "",
+    "content": "本文详细介绍了如何在Debian8.4系统环境下，通过Apache2.4和Subversion集成OpenLDAP实现账号的统一认证，包括LDAP模块的启用、vhost配置的修改以及LDAP服务器认证过程的解析。",
+    "keywords": "SVN, OpenLDAP, 认证, Apache, LDAP集成, 账号统一认证, Debian, Subversion",
     "date": "2018-06-30"
   },
   {
     "url": "https://blog.ops-coffee.cn/ldap/lightweight-directory-access-protocol-sso.html",
     "title": "LDAP落地实战（一）：OpenLDAP部署及管理维护",
-    "content": "一篇文章助你轻松落地LDAP，笔者真实的实践经验总结",
-    "keywords": "",
+    "content": "本文详细介绍了如何部署和使用OpenLDAP进行单点登录认证，涵盖了LDAP的基本概念、OpenLDAP的部署步骤、ACL权限控制、备份与还原操作，以及推荐使用的Web管理工具LAM的安装与配置。",
+    "keywords": "LDAP, OpenLDAP, 单点登录, 认证服务, ACL权限控制, LDAP备份与还原, Web管理工具",
     "date": "2018-06-29"
   },
   {
     "url": "https://blog.ops-coffee.cn/t/git-readme-specification.html",
     "title": "git工程README结构规范",
-    "content": "git工程README结构规范",
-    "keywords": "",
+    "content": "本指南详细介绍了项目的技术选型、项目目录结构、单页面模块说明、运行与打包方式，以及不同环境的部署策略。",
+    "keywords": "技术选型, 项目目录, 单页面模块, 打包, 部署, 运行",
     "date": "2019-05-25"
   },
   {
     "url": "https://blog.ops-coffee.cn/elk/elasticsearch-cat-api-shards-nodes.html",
     "title": "Elasticsearch各Cat命令详解",
-    "content": "Elasticsearch各Cat命令详解",
-    "keywords": "",
+    "content": "A comprehensive guide to Elasticsearch's Cat commands, covering various commands to monitor and manage your Elasticsearch cluster, indices, health, shards, and node information.",
+    "keywords": "Elasticsearch, cat commands, Elasticsearch cluster, Elasticsearch indices, Elasticsearch health, Elasticsearch shards, Elasticsearch node information",
     "date": "2019-05-21"
   },
   {
     "url": "https://blog.ops-coffee.cn/t/django-custom-error-page.html",
     "title": "Django自定义错误页面配置",
-    "content": "Django自定义错误页面配置",
-    "keywords": "",
+    "content": "本文介绍了如何在Django 2.2版本中实现自定义错误页面，包括400、403、404和500错误页面的处理方法。通过修改settings.py文件、创建自定义错误页面和在视图中定义错误处理方法，可以有效管理Django应用中的错误响应。",
+    "keywords": "D, j, a, n, g, o,  , 2, ., 2, ,,  , 自, 定, 义, 错, 误, 页, 面, ,,  , 4, 0, 0, 错, 误, ,,  , 4, 0, 3, 错, 误, ,,  , 4, 0, 4, 错, 误, ,,  , 5, 0, 0, 错, 误, ,,  , D, j, a, n, g, o, 错, 误, 处, 理",
     "date": "2019-05-21"
   },
   {
     "url": "https://blog.ops-coffee.cn/t/remove-github-commit-log.html",
     "title": "清除github所有历史提交记录的方法",
-    "content": "清除github所有历史提交记录的方法",
-    "keywords": "",
+    "content": "本文介绍了两种删除Git提交历史的方法，操作前请确保备份数据，避免数据丢失。",
+    "keywords": "删除Git历史, Git提交历史, Git分支管理, Git操作, Git备份",
     "date": "2019-05-21"
   },
   {
     "url": "https://blog.ops-coffee.cn/t/server-ssh-specification.html",
     "title": "服务器SSH密钥管理规范",
-    "content": "服务器SSH密钥管理规范",
-    "keywords": "",
+    "content": "本文提供了服务器SSH密钥管理的规范，包括密钥使用说明、生成方法及使用场景，确保服务器安全并有效管理SSH密钥。",
+    "keywords": "SSH密钥管理, 服务器安全, 密钥生成, RSA密钥, 密钥备份",
     "date": "2019-05-21"
   }
 ]
