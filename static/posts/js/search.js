@@ -1,5 +1,113 @@
 let searchIndex = [];
 
+// 注入CSS样式
+function injectStyles() {
+  const styles = `
+    .search-container {
+      margin: 1.5rem auto;
+      padding: 0 1rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .search-box {
+      display: flex;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    .search-input {
+      flex: 1;
+      padding: 0.7rem 1rem;
+      font-size: 15px;
+      border: 2px solid #ddd;
+      border-radius: 4px 0 0 4px;
+      outline: none;
+      transition: border-color .3s;
+      margin: 0;
+      -webkit-appearance: none;
+      width: 100%;
+    }
+    .search-input:focus {
+      border-color: #007bff;
+    }
+    .search-button {
+      padding: .8rem 1.5rem;
+      font-size: 16px;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+      transition: background-color .3s;
+      margin: 0;
+      -webkit-appearance: none;
+    }
+    .search-button:hover {
+      background-color: #0056b3;
+    }
+    .search-results {
+      margin-top: 2rem;
+    }
+    .result-item {
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+    .result-title {
+      font-size: 1.25rem;
+      margin-bottom: .5rem;
+      word-break: break-word;
+    }
+    .result-title a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    .result-title a:hover {
+      text-decoration: underline;
+    }
+    .result-excerpt {
+      color: #666;
+      margin-bottom: .5rem;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      word-break: break-word;
+    }
+    .result-meta {
+      color: #999;
+      font-size: .875rem;
+    }
+    @media (max-width: 480px) {
+      .search-container {
+        margin: 1rem auto;
+        padding: 0 0.8rem;
+      }
+      .search-box {
+        margin-bottom: 1rem;
+      }
+      .search-input {
+        padding: 0.6rem 0.8rem;
+        font-size: 14px;
+      }
+      .search-button {
+        padding: 0.6rem 1rem;
+        font-size: 14px;
+      }
+      .result-title {
+        font-size: 1rem;
+      }
+      .result-excerpt {
+        font-size: 0.875rem;
+        line-height: 1.5;
+      }
+      .result-meta {
+        font-size: 0.75rem;
+      }
+    }
+  `;
+  const styleElement = document.createElement('style');
+  styleElement.textContent = styles;
+  document.head.appendChild(styleElement);
+}
+
 // 加载搜索索引
 async function loadSearchIndex() {
   try {
@@ -100,5 +208,8 @@ document.getElementById('searchInput').addEventListener('keypress', function(e) 
   }
 });
 
-// 页面加载时预加载搜索索引
-document.addEventListener('DOMContentLoaded', loadSearchIndex);
+// 页面加载时预加载搜索索引并注入样式
+document.addEventListener('DOMContentLoaded', () => {
+  injectStyles();
+  loadSearchIndex();
+});
