@@ -1,5 +1,12 @@
 [
   {
+    "url": "https://blog.ops-coffee.cn/s/ai-powered-seo-automation-for-tdk-generation.html",
+    "title": "AI 实践｜零成本生成SEO友好的TDK落地方案",
+    "content": "本文介绍如何利用AI自动生成博客SEO友好的TDK信息，包括标题、描述和关键词。通过调用AI模型的API，可以实现文章内容到SEO友好信息的自动化转换，提高博客的搜索引擎排名。",
+    "keywords": "AI自动化, SEO优化, TDK生成, 博客SEO, AI模型, API调用, 硅基流动, DeepSeek, 博客后台程序, 自动化生成",
+    "date": "2025-03-05"
+  },
+  {
     "url": "https://blog.ops-coffee.cn/s/ai-powered-project-creation-from-start-to-finish.html",
     "title": "全程使用 AI 从 0 到 1 写了个小工具",
     "content": "本文详细介绍了如何使用AI工具Trae从零开始创建一个简约的RSS阅读器，讨论了AI在编程领域的应用，工具的优缺点，以及在项目过程中遇到的问题和解决经验。",
@@ -1533,7 +1540,7 @@
     "date": "2020-01-18"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/googole-search-analytics-adsense-blog-site-seo.html",
+    "url": "https://blog.ops-coffee.cn/s/google-search-analytics-adsense-blog-site-seo.html",
     "title": "Google搜索成最大入口，简单谈下个人博客的SEO",
     "content": "本文详细介绍了如何从内容、描述、性能、移动端兼容等方面对个人静态博客进行SEO优化，以提高在Google等搜索引擎中的可见性和流量。",
     "keywords": "个人静态博客, SEO优化, Google搜索, 内容优化, 描述优化, 性能优化, 移动端兼容, sitemap",
