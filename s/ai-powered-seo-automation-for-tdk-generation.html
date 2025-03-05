@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="AI自动化, SEO优化, TDK生成, 博客SEO, AI模型, API调用, 硅基流动, DeepSeek, 博客后台程序, 自动化生成" />
+  <meta name="description" content="本文介绍如何利用AI自动生成博客SEO友好的TDK信息，包括标题、描述和关键词。通过调用AI模型的API，可以实现文章内容到SEO友好信息的自动化转换，提高博客的搜索引擎排名。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>AI 实践｜零成本生成SEO友好的TDK落地方案</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="AI 实践｜零成本生成SEO友好的TDK落地方案" />
+  <meta property="og:description" content="本文介绍如何利用AI自动生成博客SEO友好的TDK信息，包括标题、描述和关键词。通过调用AI模型的API，可以实现文章内容到SEO友好信息的自动化转换，提高博客的搜索引擎排名。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops.html" target="_self">运维平台</a></li>
+            <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">AI 实践｜零成本生成SEO友好的TDK落地方案</h1>
+
+        <p>之前写过一篇文章<a href="https://blog.ops-coffee.cn/s/google-search-analytics-adsense-blog-site-seo.html" target="_blank">「Google搜索成最大入口，简单谈下个人博客的SEO」</a>，文章里介绍了网页的描述信息TDK（Title、Description和Keywords）对SEO的重要作用，尽管已经意识到了TDK能够直接影响到SEO的效果，但仍存在随意编写或忽略的情况，究其原因，第一是懒散，嫌麻烦，第二是不懂，随便写写效果不佳。曾经幻想有一个工具既能读懂文章的意思，又对SEO比较的了解，可以根据文章内容自动生成SEO友好的TDK，一直以来也仅仅是幻想，但随着AI的出现，随着GPT的普及，让这件原本几乎不太可能实现的事情也变得容易了很多</p>
+<p>写好文章丢给GPT，再配上一段提示词，GPT就能根据文章的内容生成SEO友好的slug、title、keywords和description等信息，例如我把上篇文章<a href="https://blog.ops-coffee.cn/s/ai-powered-project-creation-from-start-to-finish.html" target="_blank">「    全程使用 AI 从 0 到 1 写了个小工具」</a>的内容丢给DeepSeek，让他从SEO友好的角度生成文章的TDK等信息</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0304.01.png" /></p>
+<p>可以看到DeepSeek生成的内容确实十分的专业，利用AI生成SEO友好的TDK已然可以实现了。虽然功能能够实现，但每次都要复制文章内容给GPT，还是麻烦的，于是考虑借助API来实现自动化，许多AI模型都有提供API，但几乎全都收费，提供API还免费的不多，调研了一圈，决定试用硅基流动，主要原因是当前邀请注册送2000万Token，同时也支持Json格式输出，这对于我后续要拿到数据做自动化处理可太重要了。也想试用的朋友可以用我的<a href="https://cloud.siliconflow.cn/i/tqPo40nB" target="_blank">推荐链接注册</a>或是填写我的推荐码：tqPo40nB，这样就能免费获得2000万的Token</p>
+<p>实际体验下来2000万的Token根本用不完，我300多篇文章近60万字，加上前期的调试调用，全部文章重新生成一遍SEO友好的描述信息，也就用了大概180万Token，用不完，根本用不完</p>
+<h2 id="_1">过程</h2>
+<p>大概的实现流程是，调用AI的API，把文章内容喂它，同时让它输出Json格式的结果，我们拿到结果之后，把相应的TDK描述信息例如Keywords和Description写入数据库，然后再调用生成程序把文章连带这些描述生成HTML文件，最后上传到github自动发布，整个流程就算完成了。这其中基本的流程<a href="https://blog.ops-coffee.cn/s/python-django-blog-admin-dashboard-tools.html" target="_blank">我的博客后台程序</a>都已经是实现好的，需要修改的主要就是根据文章内容，调用AI来生成SEO友好的描述信息，然后把这些信息写入数据库。具体的实现过程很简单，主要就两步，以我用的硅基流动平台为例</p>
+<p>首先去<a href="https://cloud.siliconflow.cn/i/tqPo40nB" target="_blank">注册平台账号</a>并登录，登录之后点击页面左侧的API密钥-新建API密钥，填写描述信息了之后就创建了一个API密钥</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0304.02.png" /></p>
+<p>然后就可以调用API传入文章内容+需求让他生成数据，硅基流动它不是具体的某个模型，而是提供了一个模型市场，这个模型市场里的模型都可以调用，部分模型支持openai库进行调用，这样就比较方便，我们通过python调用，需要Python版本高于3.7.1，在调用之前先安装openai库，执行如下命令：</p>
+<pre class="codehilite"><code>pip install --upgrade openai</code></pre>
+
+
+<p>安装完成后，就可以调用，一个简单的调用示例如下：</p>
+<pre class="codehilite"><code>import json  
+from openai import OpenAI
+
+
+def generate_seo_data(content):
+    client = OpenAI(
+        api_key=&quot;sk-xxxxxxxx&quot;, # 替换成自己的密钥
+        base_url=&quot;https://api.siliconflow.cn/v1&quot;
+    )
+
+    try:
+        response = client.chat.completions.create(
+            model=&quot;deepseek-ai/DeepSeek-V2.5&quot;,
+            messages=[
+                {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;You are a helpful assistant designed to output JSON.&quot;},
+                {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: f&quot;? 以下是一篇markdown格式的文章，请根据文章内容从SEO友好的角度提取出slug、title、keywoards和description，至少10个keywords，要列表格式：{content}&quot;
+                &quot;Please respond in the format {\&quot;slug\&quot;: ..., \&quot;title\&quot;: ..., \&quot;keywords\&quot;: ..., \&quot;description\&quot;: ...}&quot;}
+            ],
+            response_format={&quot;type&quot;: &quot;json_object&quot;}
+        )
+
+        return json.loads(response.choices[0].message.content)
+    except Exception as e:
+        print(&quot;Error generating SEO data:&quot;, str(e))
+        return {&quot;slug&quot;: &quot;&quot;, &quot;title&quot;: &quot;&quot;, &quot;keywords&quot;: [], &quot;description&quot;: &quot;&quot;}</code></pre>
+
+
+<p>把代码里的<code>api_key</code>替换成第一步里生成的key，稍微调整下content的内容就可以为你所用。输出的结果就是这样的</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; blog = Blog.objects.get(title='运维自动化系统各模块介绍')
+&gt;&gt;&gt; seo_data = generate_seo_data(blog.content)
+&gt;&gt;&gt; 
+&gt;&gt;&gt; seo_data.get('slug')
+'devops-automation-platform-overview'
+&gt;&gt;&gt; 
+&gt;&gt;&gt; seo_data.get('title')
+'运维自动化平台功能模块全面解析'
+&gt;&gt;&gt; 
+&gt;&gt;&gt; seo_data.get('keywords')
+['运维自动化', '资产管理', '容器管理', '监控告警', '作业系统', '任务系统', '域名管理', '备份系统', '数据库服务', '费用中心', '审计中心', '用户管理']
+&gt;&gt;&gt; 
+&gt;&gt;&gt; seo_data.get('description')
+'本文从整体视角介绍了一个较为完善的运维自动化系统包含的主要功能模块，包括工作台、资产管理、容器管理、监控告警、作业系统、任务系统、域名管理、备份系统、数据库服务、费用中心、审计中心和用户管理，详细解析每个模块如何解决实际运维中的问题。</code></pre>
+
+
+<p>然后我只需要把这些输出的数据保存到数据库，会自动触发页面生成方法并上传，整个流程就完成了</p>
+<h2 id="_2">后记</h2>
+<p>当初找了好久的工具尝试了很多的方法来实现SEO友好型TDK信息的自动生成，始终没有很好的方案，现在终于找到了完美的方式来解决这个问题，但如今已经进入AI的时代，传统网站加速走向没落变成了一个不争的事实，那即便是生成再完美的TDK，做再好的SEO，意义还大吗</p>
+<p>AI用的越多，越是感叹其强大，同时带来的打击也越大</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/ai-powered-seo-automation-for-tdk-generation.html">📅 2025-03-05</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Just-For-Fun/">🏷️ Just-For-Fun</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/AI应用/">🏷️ AI应用</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
