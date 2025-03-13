@@ -82,7 +82,7 @@
     <div class="container no-sidebar">
         <h1 id="art-title">从ansi_up到xterm提升了几十倍性能</h1>
 
-        <p>无论是<a href="/s/YjfTypcHD03fTGLV_JsqWw" target="_blank">任务系统</a>还是<a href="/s/fGshXWUaTRv0oHIMBKSn1Q" target="_blank">作业系统</a>都会去执行linux命令或脚本，命令或脚本的输出也会实时展示在Web页面上，在终端中执行命令或脚本可以输出颜色，主要是因为这些有颜色的文字周围包含了颜色相关的ANSI码，例如：<code>\033[31m运维咖啡吧\033[0m</code></p>
+        <p>无论是<a href="/s/YjfTypcHD03fTGLV_JsqWw" target="_blank">任务系统</a>还是<a href="https://blog.ops-coffee.cn/s/devops-cloud-ansible-task-webui-tower-awx-web.html" target="_blank">作业系统</a>都会去执行linux命令或脚本，命令或脚本的输出也会实时展示在Web页面上，在终端中执行命令或脚本可以输出颜色，主要是因为这些有颜色的文字周围包含了颜色相关的ANSI码，例如：<code>\033[31m运维咖啡吧\033[0m</code></p>
 <p><img alt="" loading="lazy" src="/static/images/2023/1206.01.png" /></p>
 <p>如何在Web页面上输出时同样展示颜色呢，这里我用到了<code>ansi_up.js</code>，ansi_up是一个简单易用的Javascript库，可将包含ANSI颜色转义码的文本转换为HTML。纯前端插件使用起来确实简单，只依赖一个js文件，示例代码如下：</p>
 <pre class="codehilite"><code>&lt;script src=&quot;../ansi_up.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
