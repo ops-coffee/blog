@@ -83,11 +83,11 @@
         <h1 id="art-title">这一年我们上线的自动化系统</h1>
 
         <p>新年之初我就写了篇文章<a href="https://blog.ops-coffee.cn/s/c4UPSpHCGqKsONeotn3LLw" target="_blank">2022，房车使用这一年</a>总结过去一年的日常生活，2022年除了认真的生活之外，在工作上也有了不小的变化，首先是2021年底<a href="https://blog.ops-coffee.cn/r/resign-after-10-years-at-company.html" target="_blank">从工作了近10年的公司离职</a>，在2022年的第一个工作日就入职了新公司，算是无缝衔接，在新公司的这一年主要负责运维自动化的规划、开发及推动落地，挑战很大，尤其是在推动落地这个环节，听过并见过很多自动化系统无法落地的案例，曾也担心过一个全新的环境一套不同的方案如何才能让大家接受并认可，好在领导认可同事配合，大家都很给力，给予了我最大的支持，到目前为止推进顺利整体都符合预期</p>
-<p>这一年从零开始，1月完成了基础框架的搭建，3月上线了<a href="https://blog.ops-coffee.cn/s/YjfTypcHD03fTGLV_JsqWw" target="_blank">任务系统</a>，6月上线了<a href="https://blog.ops-coffee.cn/s/Wtx2utkC4MErDLvC3cbSMg" target="_blank">多云系统</a>，9月上线了<a href="https://blog.ops-coffee.cn/s/multi-cloud-monitoring-alert-system.html" target="_blank">监控系统</a>，11月系统整体移动端兼容上线，最后在12月上线了<a href="https://blog.ops-coffee.cn/s/devops-cloud-ansible-task-webui-tower-awx-web.html" target="_blank">作业系统</a>，至此一个相对完善的自动化运维系统逐渐行成</p>
+<p>这一年从零开始，1月完成了基础框架的搭建，3月上线了<a href="https://blog.ops-coffee.cn/s/YjfTypcHD03fTGLV_JsqWw" target="_blank">任务系统</a>，6月上线了<a href="https://blog.ops-coffee.cn/s/cmp-multi-cloud-cmdb-system-terraform.html" target="_blank">多云系统</a>，9月上线了<a href="https://blog.ops-coffee.cn/s/multi-cloud-monitoring-alert-system.html" target="_blank">监控系统</a>，11月系统整体移动端兼容上线，最后在12月上线了<a href="https://blog.ops-coffee.cn/s/devops-cloud-ansible-task-webui-tower-awx-web.html" target="_blank">作业系统</a>，至此一个相对完善的自动化运维系统逐渐行成</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/0118.01.png" /></p>
 <p>临近春节，真心的希望过去这一年在自动化运维方面的发展能真真切切的给大家带来便利，尤其是当下完全兼容移动的自动化系统，通过手机就能搞定大部分的日常运维工作，这算是实打实的好处吧，不用在假期期间背着电脑到处跑，突发状况，拿出手机，气定神闲，轻松搞定</p>
 <h2 id="_1">多云系统</h2>
-<p><a href="https://blog.ops-coffee.cn/s/Wtx2utkC4MErDLvC3cbSMg" target="_blank">多云系统</a>主要是用来统一多云资源实现集中管理，同时基于关联关系来构建资源拓扑，为上层业务提供清晰准确的基础数据。到目前为止已接入国内外十多个主要云厂商下数十种云资源，构建了完整的本地资源数据库</p>
+<p><a href="https://blog.ops-coffee.cn/s/cmp-multi-cloud-cmdb-system-terraform.html" target="_blank">多云系统</a>主要是用来统一多云资源实现集中管理，同时基于关联关系来构建资源拓扑，为上层业务提供清晰准确的基础数据。到目前为止已接入国内外十多个主要云厂商下数十种云资源，构建了完整的本地资源数据库</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/0120.01.png" /></p>
 <p>多云系统作为基础资源数据库，最为重要的是要保证数据的准确性，为了达成此目的，我们采用了强依赖模式，上层业务所需要的基础数据全都来自于多云，例如发布系统所需的主机数据从多云获取，构建监控大盘的服务树也来自于多云，日常作业所选择的目标主机属于同样取自于多云，甚至于项目成本计算、资源缩减等等也都依赖于多云的基础数据，一系列的强依赖从侧面保证大家在项目基础资源发生变更时会及时的去更新多云数据</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/0120.02.png" /></p>
