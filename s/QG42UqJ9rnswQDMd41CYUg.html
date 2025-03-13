@@ -96,7 +96,7 @@
 <p><img alt="" loading="lazy" src="/static/images/2019/1220.02.png" /></p>
 <p>当点击“新建/导入项目”时，可以选择从CMDB同步项目，或者自己填写项目名称新建配置中心中的项目，但由于我们配置中心和CMDB是打通的，配置中心里的所有项目都来源于CMDB，保证项目信息一致性，所以新建项目功能并没有被用到</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/1220.03.png" /></p>
-<p>与CMDB系统的同步是通过http协议进行了，当点击“与CMDB同步”按钮时，会发送个get请求到cmdb服务器获取项目信息，cmdb采用<a href="/s/Kgj_5ydnT2W4Gt0vrw7gtw" target="_blank">JWT认证</a>，主要代码如下：</p>
+<p>与CMDB系统的同步是通过http协议进行了，当点击“与CMDB同步”按钮时，会发送个get请求到cmdb服务器获取项目信息，cmdb采用<a href="https://blog.ops-coffee.cn/s/django-api-auth-jwt-token-without-drf.html" target="_blank">JWT认证</a>，主要代码如下：</p>
 <pre class="codehilite"><code>headers = {
     &quot;WWW-Authenticate&quot;: &quot;Token&quot;,
     &quot;Content-Type&quot;: &quot;application/json&quot;,
