@@ -868,7 +868,7 @@
     "date": "2022-11-01"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/mml5jzQVDzByf0F3sJN5dg.html",
+    "url": "https://blog.ops-coffee.cn/s/multi-cloud-monitoring-alert-system.html",
     "title": "基于多云构建监控告警系统",
     "content": "本文介绍如何基于多云系统设计和实现监控告警系统，确保云上资源监控的准确性和可观测性，提供资源图表、监控大盘和告警大盘等功能，实现平台化的运维监控能力。",
     "keywords": "多云系统, 监控告警, 资源拓扑, 服务树, 监控大盘, 告警大盘, 云上监控, 云上告警, 资源图表, 可观测性",
