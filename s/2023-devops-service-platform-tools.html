@@ -83,14 +83,14 @@
         <h1 id="art-title">这一年我们上线的运维自动化系统</h1>
 
         <p>上篇文章<a href="https://blog.ops-coffee.cn/r/2023-rv-travel-camping-and-vanlife.html" target="_blank">使用房车这一年</a>总结了过去一年并不平淡的生活，然而，这一年的时光不仅有生活，工作也占去了大半，那这篇文章就来聊聊这稳中有进的工作，总结下这一年我们上线的那些新的自动化运维系统，也回顾下去年上线的那些系统有了怎样的改变，这也算是对去年同名文章<a href="https://blog.ops-coffee.cn/s/2022-automation-operations-platform-summary.html" target="_blank">这一年我们上线的自动化系统</a>的递进和补充了</p>
-<p>上一年我们已经上线了<a href="https://blog.ops-coffee.cn/s/YjfTypcHD03fTGLV_JsqWw" target="_blank">任务系统</a>、<a href="https://blog.ops-coffee.cn/s/Wtx2utkC4MErDLvC3cbSMg" target="_blank">多云系统</a>、<a href="https://blog.ops-coffee.cn/s/multi-cloud-monitoring-alert-system.html" target="_blank">监控系统</a>和<a href="https://blog.ops-coffee.cn/s/devops-cloud-ansible-task-webui-tower-awx-web.html" target="_blank">作业系统</a>，构建了一个相对完善的自动化运维平台，也切切实实的提升了小伙伴们的工作效率，尤其是移动端的全面兼容，更是赞不绝口，我深受鼓舞，感谢这群靠谱的伙伴。2023这一年在去年的基础之上，于2月上线了<a href="https://blog.ops-coffee.cn/s/devops-automation-journey-team-learning.html" target="_blank">软件系统</a>，3月上线了<a href="https://blog.ops-coffee.cn/s/devops-kubernetes-docker-jenkins" target="_blank">容器系统</a>，6月上线了多云安全，8月上了硬件系统，9月上线了<a href="https://blog.ops-coffee.cn/s/devops-domain-record-certificate" target="_blank">域名系统</a>，同时于今年结束前完成了大量的系统底层优化，做了平台化改造，同时也完善了系统报表，提供了全面的审计支持</p>
+<p>上一年我们已经上线了<a href="https://blog.ops-coffee.cn/task.html" target="_blank">任务系统</a>、<a href="https://blog.ops-coffee.cn/cloud.html" target="_blank">多云系统</a>、<a href="https://blog.ops-coffee.cn/monitor.html" target="_blank">监控系统</a>和<a href="https://blog.ops-coffee.cn/ansible.html" target="_blank">作业系统</a>，构建了一个相对完善的自动化运维平台，也切切实实的提升了小伙伴们的工作效率，尤其是移动端的全面兼容，更是赞不绝口，我深受鼓舞，感谢这群靠谱的伙伴。2023这一年在去年的基础之上，于2月上线了<a href="https://blog.ops-coffee.cn/s/devops-automation-journey-team-learning.html" target="_blank">软件系统</a>，3月上线了<a href="https://blog.ops-coffee.cn/kubernetes.html" target="_blank">容器系统</a>，6月上线了多云安全，8月上了硬件系统，9月上线了<a href="https://blog.ops-coffee.cn/domain.html" target="_blank">域名系统</a>，同时于今年结束前完成了大量的系统底层优化，做了平台化改造，同时也完善了系统报表，提供了全面的审计支持</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/1229.01.png" /></p>
 <h2 id="_1">软件系统</h2>
 <p><a href="https://blog.ops-coffee.cn/s/devops-automation-journey-team-learning.html" target="_blank">软件系统</a>主要是为了实现公司内部软件的管理，包含订单管理、软件分配等等功能。公司内部购买了许多软件，这些软件的订单及分配情况、过期时间等等基础信息一直都是通过Excel来管理的，久而久之难免混乱。入职新公司之后，领导给了个额外的任务，希望我能带领下团队内做传统运维的小伙伴学习运维自动化开发技能，于是软件系统应运而生，大家伙以此为实战项目，边学边做，顺利完成</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/0304.01.png" /></p>
 <p>软件系统本身并不复杂，但它却为伙伴们打开了应用开发的大门，当系统上线真的投入生产使用，它的意义已经远超软件管理本身。这也为8月我们硬件系统的上线打下了坚实的基础</p>
 <h2 id="_2">容器系统</h2>
-<p><a href="https://blog.ops-coffee.cn/s/devops-kubernetes-docker-jenkins" target="_blank">容器系统</a>容器主要用来集中管理Kubernetes集群，实现自建以及云上容器的统一管理。可以完成容器的创建、伸缩、删除、监控、日志查看、终端登录等全生命周期管理。通过云平台API实现了Kubernetes集群的统一管理，包括监控查看，节点扩容等，通过Kubernetes集群API实现了集群资源的统一管理，包括资源创建、副本伸缩等，通过WebSocket打通了容器的SSH协议，实现容器登录，可以网页端在线操作容器</p>
+<p><a href="https://blog.ops-coffee.cn/kubernetes.html" target="_blank">容器系统</a>容器主要用来集中管理Kubernetes集群，实现自建以及云上容器的统一管理。可以完成容器的创建、伸缩、删除、监控、日志查看、终端登录等全生命周期管理。通过云平台API实现了Kubernetes集群的统一管理，包括监控查看，节点扩容等，通过Kubernetes集群API实现了集群资源的统一管理，包括资源创建、副本伸缩等，通过WebSocket打通了容器的SSH协议，实现容器登录，可以网页端在线操作容器</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/1229.05.png" /></p>
 <p>同时扩展了任务系统，集成Jenkins，支持原本基于Jenkins发布部署的容器项目低成本迁移至我们的任务系统，实现完善且高效的发布部署任务流。文章<a href="https://blog.ops-coffee.cn/s/devops-task-subtask-jenkins" target="_blank">任务系统之Jenkins子任务</a>就介绍了这一部分的技术实现及渊源，我们不可能设计出完美的系统，但可以在不断的使用中使系统变得逐渐完善，这就是一个实际的例子，这一年对于已经上线的系统像这样的更新还有很多很多</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/0428.01.png" /></p>
@@ -104,7 +104,7 @@
 <p><img alt="" loading="lazy" src="/static/images/2023/1229.09.png" /></p>
 <p>硬件系统的上线完全替代了原本低效的Excel管理模式，同时也弥补了资源流转过程缺失的问题，使得资产管理更专业和高效。同时也是团队小伙伴的另一个里程碑</p>
 <h2 id="_5">域名系统</h2>
-<p><a href="https://blog.ops-coffee.cn/s/devops-domain-record-certificate" target="_blank">域名系统</a>主要用来实现域名从申请到变更再到下线的全生命周期管理，域名系统整体上包含三个部分，分别是查询、变更、巡检，除了最基本的域名变更操作外，我们还收集了域名的全部基础数据例如注册厂商、注册时间、到期时间、解析记录等等，以及有效关联信息例如指向资源、资源类型、资源状态、申请用户等等，从而构建了完整的域名基础数据库，这个数据库不仅能支持完善的域名信息查询，还能基于此做很多的自动化巡检工作，例如域名临期提醒、域名解析绑定资源下线提醒、域名证书扫描及临期提醒等，完善了整个域名管理体系</p>
+<p><a href="https://blog.ops-coffee.cn/domain.html" target="_blank">域名系统</a>主要用来实现域名从申请到变更再到下线的全生命周期管理，域名系统整体上包含三个部分，分别是查询、变更、巡检，除了最基本的域名变更操作外，我们还收集了域名的全部基础数据例如注册厂商、注册时间、到期时间、解析记录等等，以及有效关联信息例如指向资源、资源类型、资源状态、申请用户等等，从而构建了完整的域名基础数据库，这个数据库不仅能支持完善的域名信息查询，还能基于此做很多的自动化巡检工作，例如域名临期提醒、域名解析绑定资源下线提醒、域名证书扫描及临期提醒等，完善了整个域名管理体系</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/1020.01.png" /></p>
 <p>在基础数据较为完善的前提下，还做了<a href="https://blog.ops-coffee.cn/s/domain-entry-full-network-trace-link" target="_blank">全链路自动化拓扑</a>方向的探索，充分发挥数据的价值，让数据不再枯燥，使资源更加立体，也为后续基于架构/拓扑的可观测平台提供基础支撑</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/1201.png" /></p>
