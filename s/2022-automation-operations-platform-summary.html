@@ -83,7 +83,7 @@
         <h1 id="art-title">这一年我们上线的自动化系统</h1>
 
         <p>新年之初我就写了篇文章<a href="https://blog.ops-coffee.cn/s/c4UPSpHCGqKsONeotn3LLw" target="_blank">2022，房车使用这一年</a>总结过去一年的日常生活，2022年除了认真的生活之外，在工作上也有了不小的变化，首先是2021年底<a href="https://blog.ops-coffee.cn/r/resign-after-10-years-at-company.html" target="_blank">从工作了近10年的公司离职</a>，在2022年的第一个工作日就入职了新公司，算是无缝衔接，在新公司的这一年主要负责运维自动化的规划、开发及推动落地，挑战很大，尤其是在推动落地这个环节，听过并见过很多自动化系统无法落地的案例，曾也担心过一个全新的环境一套不同的方案如何才能让大家接受并认可，好在领导认可同事配合，大家都很给力，给予了我最大的支持，到目前为止推进顺利整体都符合预期</p>
-<p>这一年从零开始，1月完成了基础框架的搭建，3月上线了<a href="https://blog.ops-coffee.cn/s/YjfTypcHD03fTGLV_JsqWw" target="_blank">任务系统</a>，6月上线了<a href="https://blog.ops-coffee.cn/s/Wtx2utkC4MErDLvC3cbSMg" target="_blank">多云系统</a>，9月上线了<a href="https://blog.ops-coffee.cn/s/mml5jzQVDzByf0F3sJN5dg" target="_blank">监控系统</a>，11月系统整体移动端兼容上线，最后在12月上线了<a href="https://blog.ops-coffee.cn/s/devops-cloud-ansible-task-webui-tower-awx-web.html" target="_blank">作业系统</a>，至此一个相对完善的自动化运维系统逐渐行成</p>
+<p>这一年从零开始，1月完成了基础框架的搭建，3月上线了<a href="https://blog.ops-coffee.cn/s/YjfTypcHD03fTGLV_JsqWw" target="_blank">任务系统</a>，6月上线了<a href="https://blog.ops-coffee.cn/s/Wtx2utkC4MErDLvC3cbSMg" target="_blank">多云系统</a>，9月上线了<a href="https://blog.ops-coffee.cn/s/multi-cloud-monitoring-alert-system.html" target="_blank">监控系统</a>，11月系统整体移动端兼容上线，最后在12月上线了<a href="https://blog.ops-coffee.cn/s/devops-cloud-ansible-task-webui-tower-awx-web.html" target="_blank">作业系统</a>，至此一个相对完善的自动化运维系统逐渐行成</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/0118.01.png" /></p>
 <p>临近春节，真心的希望过去这一年在自动化运维方面的发展能真真切切的给大家带来便利，尤其是当下完全兼容移动的自动化系统，通过手机就能搞定大部分的日常运维工作，这算是实打实的好处吧，不用在假期期间背着电脑到处跑，突发状况，拿出手机，气定神闲，轻松搞定</p>
 <h2 id="_1">多云系统</h2>
@@ -99,7 +99,7 @@
 <p><img alt="" loading="lazy" src="/static/images/2023/0120.03.png" /></p>
 <p>到目前为止任务上线大半年，已经接入了公司大多数项目，稳定运行了几千个任务，还是非常可靠的，取代了之前的一众CI/CD工具，例如Rundeck/Jenings等，算是站稳了脚跟。原本是希望任务系统能接管日常运维中的绝大部分工作，但是在实际使用中发现一些临时性工作大家还是喜欢登录系统控制台去处理，所以后边又开发了作业系统来优化这一问题</p>
 <h2 id="_3">监控系统</h2>
-<p><a href="https://blog.ops-coffee.cn/s/mml5jzQVDzByf0F3sJN5dg" target="_blank">监控系统</a>主要用来实现基础资源的监控，同时整合多云资源、云上事件、云上告警等信息，以业务为维度构建可视化的监控大盘和告警大盘，提供资源和业务的可观测性，形成平台化的运维监控能力</p>
+<p><a href="https://blog.ops-coffee.cn/s/multi-cloud-monitoring-alert-system.html" target="_blank">监控系统</a>主要用来实现基础资源的监控，同时整合多云资源、云上事件、云上告警等信息，以业务为维度构建可视化的监控大盘和告警大盘，提供资源和业务的可观测性，形成平台化的运维监控能力</p>
 <p><img alt="" loading="lazy" src="/static/images/2022/1020.04.png" /></p>
 <p>监控系统看似只简单的收集整合了云上的监控数据，但实际上意义重大，我单独写过一篇文章来介绍<a href="https://blog.ops-coffee.cn/s/why-build-custom-cloud-monitoring-system.html" target="_blank">多云监控告警系统的优势</a>，主要包括统一平台，简化操作，优化展示，权限隔离和多云融合，从使用体验上来说完全碾压各个厂商的云监控</p>
 <p><img alt="" loading="lazy" src="/static/images/2022/1020.09.png" /></p>
