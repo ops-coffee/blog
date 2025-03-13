@@ -826,7 +826,7 @@
     "date": "2023-01-17"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/U0yPjGAhKnfqYqVWQd6ZSQ.html",
+    "url": "https://blog.ops-coffee.cn/s/django-redis-cache-log-truncation-issue.html",
     "title": "使用Django Cache引发的Bug处理",
     "content": "本文详细介绍了一个在Django任务系统中由于缓存超时导致的日志截断问题的发现、分析和解决过程。通过设置缓存TIMEOUT参数为None，确保缓存键值不过期，从而避免日志截断问题。",
     "keywords": "Django, Cache缓存, 日志截断, 任务系统, 缓存超时, Redis",
