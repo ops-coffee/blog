@@ -819,7 +819,7 @@
     "date": "2023-01-20"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/fGshXWUaTRv0oHIMBKSn1Q.html",
+    "url": "https://blog.ops-coffee.cn/s/devops-cloud-ansible-task-webui-tower-awx-web.html",
     "title": "运维自动化之作业系统分享",
     "content": "作业系统的上线标志着自动化运维的新篇章，通过集成Ansible和多云系统，实现了轻量、易用的自动化操作，提供实时反馈和危险命令过滤，确保安全高效的运维操作。",
     "keywords": "作业系统, 自动化运维, Ansible, 多云系统, 任务系统, 实时反馈, 危险命令过滤, 移动端兼容",
