@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="作业系统, 自动化运维, Ansible, 多云系统, 任务系统, 实时反馈, 危险命令过滤, 移动端兼容" />
+  <meta name="description" content="作业系统的上线标志着自动化运维的新篇章，通过集成Ansible和多云系统，实现了轻量、易用的自动化操作，提供实时反馈和危险命令过滤，确保安全高效的运维操作。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>运维自动化之作业系统分享</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="运维自动化之作业系统分享" />
+  <meta property="og:description" content="作业系统的上线标志着自动化运维的新篇章，通过集成Ansible和多云系统，实现了轻量、易用的自动化操作，提供实时反馈和危险命令过滤，确保安全高效的运维操作。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops.html" target="_self">运维平台</a></li>
+            <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">运维自动化之作业系统分享</h1>
+
+        <p><a href="/s/YjfTypcHD03fTGLV_JsqWw" target="_blank">任务系统</a>的上线，帮助我们实现了发布部署等日常任务的自动化，但仍然有相当一部分日常运维操作大家会登录系统控制台处理，并不会借助于任务系统来执行，究其原因，其一是任务系统还有局限性，没有打通所有的终端主机，想要批量操作目标主机尤其是目标主机在不同云上内网的情况下实现起来较为苦难，其二是任务系统使用较为复杂，想要执行一些临时性的操作，需要先创建子任务，再创建模板，最后创建任务，过程繁琐效率不高</p>
+<p>鉴于此开发上线了作业系统，作业系统作为任务系统的扩展与补充，主要用来实现系统命令或脚本的便捷执行，以<strong>轻量</strong>和<strong>易用</strong>为目标，直接触达终端主机并实时获取结果反馈。作业系统深度集成了大家使用最为广泛的自动化工具Ansible，可以方便的批量执行命令或模板，同时与我们的<a href="/s/Wtx2utkC4MErDLvC3cbSMg" target="_blank">多云系统</a>相融合，选择业务节点即可批量选择主机，通过网关代理打通网域内网，解决网络互通问题，作业操作直达目标主机，实时获取结果反馈，并能随时主动中断作业执行。为了尽量保证作业执行的安全，还引入了危险命令过滤机制，自动过滤危险命令，提升作业安全性，配合完善的审计日志，能够做到操作有记录，过程可追踪</p>
+<p>同时在这个阶段，还将整个自动化运维平台做了移动端兼容，优化了页面设计和操作方式，以保证整个自动化运维平台在移动端下也能有良好的使用体验，上线之后广受好评，解决了大家随时随地应对紧急需求还要打开电脑处理的问题</p>
+<p>这篇文章就记录一下作业系统上线之后给大家的公开分享，介绍作业系统的由来、设计和使用</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.01.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.02.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.03.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.04.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.05.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.06.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.07.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.08.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.09.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.10.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.11.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.12.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.13.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.14.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.15.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.16.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.17.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.18.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.19.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.20.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.21.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.22.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.23.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.24.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.25.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.26.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.27.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.28.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.29.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.30.png" /></p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0117.31.png" /></p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/devops-cloud-ansible-task-webui-tower-awx-web.html">📅 2023-01-17</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/PPT/">🏷️ PPT</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
