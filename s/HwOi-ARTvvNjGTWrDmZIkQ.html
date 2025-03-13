@@ -91,7 +91,7 @@
 <h2 id="cmdb">CMDB</h2>
 <p>CMDB配置管理数据库，主要用来记录我们管理维护的软硬件信息，包含实体的服务器，交换机以及虚拟的项目、服务、环境等所有需要管理维护的信息，通俗一点理解就是之前我们可能一个excel表格记录了我们维护的所有项目，项目所用的服务器资源，服务器的配置等等信息，都可以录入到CMDB系统里统一维护管理</p>
 <p>CMDB系统是其他很多系统的基石，要给所有用到基础信息的第三方系统提供API以查询或修改数据，例如提供项目对应的服务器信息给持续部署工具推送代码到项目服务器上，所以CMDB系统的数据准确性非常重要，同时只在一个地方维护基础信息能够让整个运维系统更可控，更高效，减少出错</p>
-<p>我们CMDB系统上线时间比较久，之前仅是用来替代Excel表格维护信息用，今年为他增加了API，提供给第三方系统获取基础数据，API认证采用了JWT，关于API认证这篇文章有更多的介绍：<a href="/s/Kgj_5ydnT2W4Gt0vrw7gtw" target="_blank">Django+JWT实现Token认证</a></p>
+<p>我们CMDB系统上线时间比较久，之前仅是用来替代Excel表格维护信息用，今年为他增加了API，提供给第三方系统获取基础数据，API认证采用了JWT，关于API认证这篇文章有更多的介绍：<a href="https://blog.ops-coffee.cn/s/django-api-auth-jwt-token-without-drf.html" target="_blank">Django+JWT实现Token认证</a></p>
 <p><img alt="" loading="lazy" src="/static/images/2019/0130.cmdb.png" /></p>
 <h2 id="varian">varian</h2>
 <p>varian是我们内部开发的一个模块化的持续集成工具，主要负责项目从源代码到最终可部署程序的这个过程，现在有大部分项目已经是Docker部署了，那么varian会负责从源代码到最终打包好的项目镜像并上传到镜像仓库这个过程，其中会涉及到编译、合并、压缩等等操作，这篇文章有详细介绍我们varian的工作过程：<a href="/s/eM7SNKmtw2tDQtXBsBXyxQ" target="_blank">探秘varian：优雅的发布部署程序</a></p>
