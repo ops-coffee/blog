@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django, Cache缓存, 日志截断, 任务系统, 缓存超时, Redis" />
+  <meta name="description" content="本文详细介绍了一个在Django任务系统中由于缓存超时导致的日志截断问题的发现、分析和解决过程。通过设置缓存TIMEOUT参数为None，确保缓存键值不过期，从而避免日志截断问题。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>使用Django Cache引发的Bug处理</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="使用Django Cache引发的Bug处理" />
+  <meta property="og:description" content="本文详细介绍了一个在Django任务系统中由于缓存超时导致的日志截断问题的发现、分析和解决过程。通过设置缓存TIMEOUT参数为None，确保缓存键值不过期，从而避免日志截断问题。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops.html" target="_self">运维平台</a></li>
+            <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">使用Django Cache引发的Bug处理</h1>
+
+        <p>两年前写过一篇文章<a href="/s/JpnxTf-Z9vkKrwl8nXJljQ" target="_blank">Django开发中使用Cache缓存提升10倍效率</a>用来解决任务系统执行任务慢的问题，也就是在这个方案中引入了Django的Cache缓存系统，从此之后任务系统运行稳定，没再遇到其他问题。在加入新公司之后重新设计任务系统时依然沿用了这个方案，到现在新公司任务系统上线运行了近一年的时间，也稳定跑了跑了几千个任务没出现问题，这几天突然有小伙伴跟我反馈，任务日志被截断，没有显示全</p>
+<p><img alt="" loading="lazy" src="/static/images/2023/0113.01.png" /></p>
+<p>任务系统在之前一直运行稳定没有出现过日志截断的问题，我在想是不是最近更新了什么内容导致的bug，于是又运行了几个测试任务都正常。那大概率就是程序有bug，在某些特殊的情况下会触发，往往这种问题是最难解决的，我先仔细的去看了下代码，并没有发现什么问题，核心代码如下</p>
+<pre class="codehilite"><code>class Logger:
+    def __init__(self, tid, state=None):
+        self.tid = tid
+        self.state = state
+
+        self.key = 'engine_subtask_log_%d' % self.tid
+
+    def add(self, details):
+        subtasklog = SubTaskLog.objects.get(id=self.tid)
+
+        if details:
+            # 将详情更新到缓存中
+            old_log = cache.get(self.key, '')
+            cache.set(self.key, old_log + details) if old_log else cache.set(self.key, details)
+
+        if self.state is not None:
+            # 将缓存写入数据库并保存
+            subtasklog.details = _details
+            subtasklog.save()
+
+            # 删除缓存
+            cache.delete(self.key)
+
+# 执行命令循环获取日志
+
+p = subprocess.Popen(cmd, shell=shell, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                     stderr=subprocess.STDOUT, env=env)
+
+while p.poll() is None:
+    for realtime_output in iter(p.stdout.readline, b''):
+        dt = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+        Logger(tid).add(dt + ' ----&gt; ' + realtime_output.decode(encoding='utf-8'))</code></pre>
+
+
+<p>日志记录的逻辑大概就是：有新日志产生时调用Logger类的add方法，传入tid和details，tid用来标识是那个任务的日志，details就是新的日志信息，Logger程序根据任务日志拼装的key先去cache中获取value，如果value不存在也就是说当前任务还没有日志产生则会set当前details到cache中，如果value存在也就是说当前任务已经有日志输出，那就将新的日志与cache中已存在的任务日志合并之后再set回cache中</p>
+<p>整个逻辑比较清晰，看代码并没有发现什么问题，其他任务执行都正常，就那一条任务有日志截断的问题，那就去看看这条有问题的任务与其他任务有何区别，仔细分析后发现，这条任务执行时间较长，有差不多半个小时的时间，任务日志输出较多，可能有几万行占几M的空间，另外任务执行过程中还会有长时间的sleep</p>
+<p>首先就考虑是不是因为日志太大造成的截断，后端缓存用了redis，存储的就是普通的string，于是去查了redis的string类型单个key的最大数据长度，512M，那肯定是没有达到的，于是就写了三条测试任务来测试</p>
+<ol>
+<li>一个长时间执行的任务，跑了几个小时，远远超过了出问题任务的执行时间，没有出现问题</li>
+<li>一个大量输出日志的任务，输出了大量的日志，是出问题任务的好几倍，也没有出现问题</li>
+<li>一个长时间sleep的任务，任务执行过程中sleep了5分钟，复现了bug，出现了日志被截断的问题</li>
+</ol>
+<p>至此基本就确定问题就是因为任务执行过程中长时间sleep导致的，那就接着分析为什么长时间的sleep会导致日志截断，再返回上边的代码仔细看，存取日志主要两行</p>
+<pre class="codehilite"><code>old_log = cache.get(self.key, '')
+cache.set(self.key, old_log + details) if old_log else cache.set(self.key, details)</code></pre>
+
+
+<p>从cache中获取日志是否存在<code>cache.get(self.key,'')</code>，若存在则追加不存在则添加。那是不是在任务执行的过程中没有获取到之前的日志，也就是<code>cache.get(self.key,'')</code>结果为空？按道理来说任务一旦执行就会有日志输出，那么在任务执行的过程中<code>cache.get(self.key,'')</code>是一定不会出现获取不到数据的情况，现在出现了获取不到数据的情况，那只有一个可能就是缓存中的这个key不存在了，代码中只有在任务执行结束显性传递状态之后才会删除key，任务执行过程中没有删除key的操作，那是什么个情况？这个时候自然就想到了key过期</p>
+<p>代码中在执行set操作时并没有指定key的过期时间，我原本以为不设置就是永不过期，看来跟我的想法不一致，于是测试了一下，果然如果不设置过期时间的话并不是永不过期，而是有大约300秒也就是5分钟的默认过期时间，那就可以解释为什么长时间的sleep会导致日志截断了</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; from django.core.cache import cache
+&gt;&gt;&gt;
+&gt;&gt;&gt; cache.set('site', 'ops-coffee.cn')
+True
+&gt;&gt;&gt; cache.ttl('site')
+293</code></pre>
+
+
+<p>知道了问题，那就很好解决了，又去翻了Django的官网，关于cache的TIMEOUT参数有这么一段描述：<strong>TIMEOUT: The default timeout, in seconds, to use for the cache. This argument defaults to 300 seconds (5 minutes). You can set TIMEOUT to None so that, by default, cache keys never expire. A value of 0 causes keys to immediately expire (effectively “don’t cache”)</strong>，可能是因为我英文太菜之前没有看仔细，TIMEOUT缓存过期时间默认5分钟，设置为None则是永不过期，设置为0是不缓存，我们不需要key过期，会在任务结束后主动删除，则设置为None永不过期即可，修改代码添加TIMEOUT参数为None</p>
+<pre class="codehilite"><code>cache.set(self.key, old_log + details, None) if old_log else cache.set(self.key, details, None)</code></pre>
+
+
+<p>至此，问题顺利解决</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/django-redis-cache-log-truncation-issue.html">📅 2023-01-13</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/系统运维/">🏷️ 系统运维</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+            <script async src="https://giscus.app/client.js"
+                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+                    data-emit-metadata="0" data-input-position="top" data-theme="light"
+                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+            </script>
+        </div>
+
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/questions.html" title="提问" target="_blank">提问</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
