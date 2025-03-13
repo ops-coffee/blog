@@ -1708,7 +1708,7 @@
     "date": "2019-09-12"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/p5UKuh1yY3P4zrOzVBmY1w.html",
+    "url": "https://blog.ops-coffee.cn/s/mysql-explain-output-slow-queries.html",
     "title": "MySQL EXPLAIN结果集分析 - 附带大量案例",
     "content": "通过大量实例深入解析MySQL的EXPLAIN命令输出内容，帮助你理解和优化慢查询，提升数据库性能。",
     "keywords": "MySQL, EXPLAIN, 慢查询优化, SQL执行计划, 索引优化, 数据库性能调优",

@@ -306,7 +306,7 @@ https://blog.ops-coffee.cn/s/svwe15Nee2Fou5J4F7Ewg.html
 https://blog.ops-coffee.cn/s/zfR5kn1tejVSiH-mireT3A.html
 https://blog.ops-coffee.cn/t/Kubernetes-Python-API-Demo.html
 https://blog.ops-coffee.cn/s/Nxh7mwPJPlbL3R9MdlkO_A.html
-https://blog.ops-coffee.cn/s/p5UKuh1yY3P4zrOzVBmY1w.html
+https://blog.ops-coffee.cn/s/mysql-explain-output-slow-queries.html
 https://blog.ops-coffee.cn/s/lUS2mxBjzm1cIYd0OPmHaw.html
 https://blog.ops-coffee.cn/s/e3m9xHVsvhe36IvG1YKhbA.html
 https://blog.ops-coffee.cn/t/debian8-jessie-install-java8.html
