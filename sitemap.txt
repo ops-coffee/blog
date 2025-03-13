@@ -175,7 +175,7 @@ https://blog.ops-coffee.cn/sadmin/django-sadmin-model.html
 https://blog.ops-coffee.cn/sadmin/django-sadmin-view.html
 https://blog.ops-coffee.cn/sadmin/django-sadmin-list-of-software-functions.html
 https://blog.ops-coffee.cn/r/city-china-zhejiang-hangzhou-tonglu.html
-https://blog.ops-coffee.cn/s/zecCwjr0TyxqufOSkp_ndA.html
+https://blog.ops-coffee.cn/s/devops-automation-journey-team-learning.html
 https://blog.ops-coffee.cn/r/city-china-jiangsu-zhenjiang.html
 https://blog.ops-coffee.cn/r/live-on-the-RV-during-the-spring-festival.html
 https://blog.ops-coffee.cn/s/xrlgoCee9CZwxt5lBdq1oA.html
