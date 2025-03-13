@@ -1918,7 +1918,7 @@
     "date": "2019-01-24"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/Kgj_5ydnT2W4Gt0vrw7gtw.html",
+    "url": "https://blog.ops-coffee.cn/s/django-api-auth-jwt-token-without-drf.html",
     "title": "Django+JWT实现Token认证",
     "content": "本文探讨了在Django项目中不使用Django Rest Framework（DRF）提供API的可能性，重点介绍了基于Token的鉴权机制，特别是JWT的使用，以及如何在Django中实现自定义的鉴权和权限校验。",
     "keywords": "Django, API, Token鉴权, JWT, PyJWT, 前后端分离, 鉴权机制, DRF, HTTP无状态协议, 权限校验",
