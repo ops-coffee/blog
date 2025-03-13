@@ -21,7 +21,7 @@ https://blog.ops-coffee.cn/ansible.html
 https://blog.ops-coffee.cn/domain.html
 https://blog.ops-coffee.cn/monitor.html
 https://blog.ops-coffee.cn/comments.html
-https://blog.ops-coffee.cn/cloud.html
+https://blog.ops-coffee.cn/devops/cloud.html
 https://blog.ops-coffee.cn/task.html
 https://blog.ops-coffee.cn/resume.html
 https://blog.ops-coffee.cn/travels.html
