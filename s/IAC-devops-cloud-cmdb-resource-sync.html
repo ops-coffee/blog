@@ -82,7 +82,7 @@
     <div class="container no-sidebar">
         <h1 id="art-title">多云系统之资源同步过程解析</h1>
 
-        <p><a href="/s/Wtx2utkC4MErDLvC3cbSMg" target="_blank">多云系统</a>主要是用来统一多云资源实现集中管理，同时基于关联关系来构建资源拓扑，为上层业务提供清晰准确的基础数据。到目前为止已接入国内外十多个主要云厂商下数十种云资源，构建了完整的本地资源数据库。前边写过三篇文章分别介绍了多云系统的三个核心功能：<a href="/s/PL31oUCLMEi3H1_1IMMDRA" target="_blank">多云配置</a>、<a href="/s/cKkFlBZnpLd_IRaC6i8i6A" target="_blank">资源管理</a>和<a href="/s/G4wSM_KxpgypNSpY4lYMhA" target="_blank">关系管理</a>。<a href="https://blog.ops-coffee.cn/s/I-created-a-paid-WeChat-group" target="_blank">微信群</a>里有小伙伴想要更深入的了解下资源同步的处理逻辑，于是便有了这篇文章，记录下我是如何实现多云环境下的资源同步的</p>
+        <p><a href="https://blog.ops-coffee.cn/s/cmp-multi-cloud-cmdb-system-terraform.html" target="_blank">多云系统</a>主要是用来统一多云资源实现集中管理，同时基于关联关系来构建资源拓扑，为上层业务提供清晰准确的基础数据。到目前为止已接入国内外十多个主要云厂商下数十种云资源，构建了完整的本地资源数据库。前边写过三篇文章分别介绍了多云系统的三个核心功能：<a href="/s/PL31oUCLMEi3H1_1IMMDRA" target="_blank">多云配置</a>、<a href="/s/cKkFlBZnpLd_IRaC6i8i6A" target="_blank">资源管理</a>和<a href="/s/G4wSM_KxpgypNSpY4lYMhA" target="_blank">关系管理</a>。<a href="https://blog.ops-coffee.cn/s/I-created-a-paid-WeChat-group" target="_blank">微信群</a>里有小伙伴想要更深入的了解下资源同步的处理逻辑，于是便有了这篇文章，记录下我是如何实现多云环境下的资源同步的</p>
 <p>整体逻辑如下：新建云帐号--&gt;触发Signals自动创建周期任务--&gt;周期任务定时触发同步任务<code>sync_resources</code>执行--&gt;<code>sync_resources</code>会循环云帐号下要同步的资源然后调用<code>sync_resource</code>方法逐个资源类型同步--&gt;<code>sync_resource</code>方法调用<code>sync</code>方法同步资源--&gt;<code>sync</code>方法根据传入的资源类型调用不同的资源同步方法--&gt;资源同步方法进行资源同步的操作同时记录同步过程日志</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0130.05.png" /></p>
 <p>接下来具体看下每一步都做了啥，为了让大家有更清晰的理解，会以伪代码的方式呈现</p>
