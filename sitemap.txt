@@ -26,7 +26,7 @@ https://blog.ops-coffee.cn/devops/task.html
 https://blog.ops-coffee.cn/resume.html
 https://blog.ops-coffee.cn/travels.html
 https://blog.ops-coffee.cn/search.html
-https://blog.ops-coffee.cn/devops.html
+https://blog.ops-coffee.cn/devops/index.html
 https://blog.ops-coffee.cn/questions.html
 https://blog.ops-coffee.cn/index.html
 https://blog.ops-coffee.cn/veops/index.html

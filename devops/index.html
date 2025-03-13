@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta name="keywords" content="devops,kubernetes,docker,cmdb,cicd,jenkins,python,django,开源,自动化,运维咖啡吧" />
+  <meta name='description' content='这是一个包含了CMDB、多云、任务、域名、账单、数据库等等运维所需的管理工具系统的统一平台'>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/plugins/sadmin/style.min.css">
+  <script src="https://blog.ops-coffee.cn/static/plugins/sadmin/coreui.bundle.min.js"></script>
+
+  <!-- Begin SEO tag -->
+  <title>DevOps运维自动化工具系统平台</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn/" />
+  <meta property="og:title" content="DevOps运维自动化工具系统平台" />
+  <meta property="og:description" content="自主研发以及优秀开源的Devops运维自动化系统汇总分享，助力SRE轻松运维大规模服务器集群" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn/" />
+  <!-- End SEO tag -->
+
+  <!-- Umami Cloud -->
+  <script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+  <!-- Google Adsense -->
+  <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+</head>
+
+<body>
+  <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+    <div class="sidebar-brand d-md-flex">
+      <h3 class="sidebar-brand-full"><span class="site-name"><img src="/static/images/devops.logo.png" height="46"></span></h3>
+      <h3 class="sidebar-brand-narrow"><span class="site-icon">运维</span></h3>
+    </div>
+
+    <ul class="sidebar-nav" data-coreui="navigation">
+      <li class="nav-item">
+        <div class="nav-link">
+          <div class="sidebar-brand-full">工作台</div>
+          <button class="px-0 ms-auto" data-coreui-toggle="offcanvas" data-coreui-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" style="color: var(--cui-header-toggler-color); background-color: var(--cui-header-toggler-bg); border: 0;">
+            <i class="fa fa-exchange"></i>
+          </button>
+        </div>
+      </li>
+      <li class="nav-item"><a class="nav-link active" href="#" target="_self"><i class="fa fa-home nav-icon"></i>我的应用</a></li>
+      <li class="nav-item"><a class="nav-link" href="https://blog.ops-coffee.cn/s/django-tenant-rbac-auth-permission" target="_self"><i class="fa fa-sitemap nav-icon"></i>我的项目</a></li>
+      <li class="nav-item"><a class="nav-link" href="#workflow" target="_self"><i class="fa fa-ticket nav-icon"></i>我的流程</a></li>
+    </ul>
+    <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
+  </div>
+  <div class="wrapper d-flex flex-column min-vh-100 bg-light">
+    <header class="header header-sticky mb-4">
+      <div class="container-fluid">
+        <button class="header-toggler px-0 me-3 d-md-none" type="button" onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()">
+          <i class="fa fa-bars"></i>
+        </button>
+
+        <button class="header-toggler px-0 me-3 d-md-none" type="button" data-coreui-toggle="offcanvas" data-coreui-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
+          <i class="fa fa-sitemap"></i>
+        </button>
+        <div class="offcanvas" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel" style="
+              top: var(--cui-header-min-height);
+              left: var(--cui-sidebar-occupy-start);
+              right: var(--cui-header-padding-x);
+              max-height: 100vh;
+              transform: translateX(-100%);
+          ">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">全部产品与服务</h5>
+            <button type="button" class="btn-close btn-close-block" data-coreui-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body bg-light">
+            <div class="row">
+              <div class="input-group d-none mb-3">
+                <input class="form-control" type="text" placeholder="请输入服务名" aria-label="Username" aria-describedby="basic-addon1">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/devops.html" target="_blank">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-home"></i> 工作台</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/devops/cloud.html" target="_blank">
+
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-cloud"></i> 多云管理</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/s/devops-kubernetes-docker-jenkins.html" target="_blank">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-cubes"></i> 容器管理</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/devops/monitor.html" target="_blank">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-line-chart"></i> 监控告警</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/s/devops-cloud-ansible-task-webui-tower-awx-web.html" target="_blank">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-linux"></i> 作业系统</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/devops/task.html" target="_blank">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-puzzle-piece"></i> 任务系统</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/devops/domain.html" target="_blank">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-globe"></i> 域名管理</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/devops/finops.html" target="_blank">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-credit-card"></i> 费用中心</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2 d-none">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="#" onclick="alert('暂无介绍～')">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-drupal"></i> 安全管理</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="#" onclick="alert('暂无介绍～')">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-cloud-upload"></i> 备份系统</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="#" onclick="alert('暂无介绍～')">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-pie-chart"></i> 数据报告</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="#" onclick="alert('暂无介绍～')">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-database"></i> 数据库服务</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="#" onclick="alert('暂无介绍～')">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-calendar"></i> 审计中心</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/s/0xee6JzCUcqXao9bY1ULgA" target="_blank">
+                    <div onclick="setDefaultApp(197, &quot;/accounts/user/&quot;)" class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-users"></i> 用户管理</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                <div class="card mb-4">
+                  <a class="text-decoration-none" href="https://blog.ops-coffee.cn/s/xehCT6PMS90dvrf96E-Fzw" target="_blank">
+                    <div class="text-dark" style="cursor: pointer;">
+                      <div class="card-header position-relative d-flex justify-content-center align-items-center">
+                        <div class="my-4">
+                          <h4><i class="fa fa-gears"></i> 系统配置</h4>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="card-body row text-center">
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-star-o"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-share-alt"></i></div>
+                      </a></div>
+                    <div class="vr"></div>
+                    <div class="col"><a href="#" class="text-black text-decoration-none">
+                        <div class="fs-5 fw-semibold"><i class="fa fa-file-text-o"></i></div>
+                      </a></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ul class="header-nav d-md-flex">
+          <li><select class="form-select" style="display: block;" onchange="setDefaultProject()">
+              <option value="1">devops</option>
+              <option value="2">支付项目</option>
+            </select></li>
+        </ul>
+
+        <ul class="header-nav d-sm-flex ms-auto me-sm-2">
+          <li class="nav-item">
+            <a class="nav-link" href="#tab-approve" role="button">
+              <span class="d-inline-block my-0 position-relative">
+                <i class="fa fa fa-bell"></i> <span class="d-none d-md-inline-block"> 通知</span>
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle d-none"></span>
+              </span>
+            </a>
+          </li>
+          <li class="nav-item d-none d-md-inline-block">
+            <a class="nav-link" href="https://kissops-doc.ops-coffee.cn" role="button" target="_blank">
+              <span class="d-inline-block my-0 mx-2 position-relative">
+                <i class="fa fa fa-book"></i> 文档
+              </span>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-user-circle-o"></i><input type="hidden"> 37丫37
+            </a>
+            <div class="dropdown-menu dropdown-menu-end pt-0">
+              <a class="dropdown-item" href="#">
+                <i class="fa fa-vcard-o"></i> 个人信息</a>
+
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">
+                <i class="fa fa-sign-out"></i> Logout</a>
+            </div>
+          </li>
+        </ul>
+
+        <button class="header-toggler px-md-0" type="button" onclick="coreui.Sidebar.getInstance(document.querySelector('#aside')).show()">
+          <i class="fa fa-globe"></i>
+        </button>
+
+        <div class="sidebar sidebar-light sidebar-lg sidebar-end sidebar-overlaid hide" id="aside">
+          <div class="sidebar-header bg-transparent p-0">
+            <ul class="nav nav-underline nav-underline-primary" role="tablist">
+              <li class="nav-item" role="presentation"><a class="nav-link active" data-coreui-toggle="tab" href="#tab-the-project" role="tab" aria-selected="true">
+                  <i class="fa fa-at"></i></a></li>
+              <li class="nav-item" role="presentation"><a class="nav-link" data-coreui-toggle="tab" href="#tab-all-project" role="tab" aria-selected="false" tabindex="-1">
+                  <i class="fa fa-globe"></i></a></li>
+              <li class="nav-item" role="presentation"><a class="nav-link" data-coreui-toggle="tab" href="#tab-myself" role="tab" aria-selected="false" tabindex="-1">
+                  <i class="fa fa-anchor"></i></a></li>
+            </ul>
+            <button class="sidebar-close" type="button" data-coreui-close="sidebar">
+              <i class="fa fa-close"></i>
+            </button>
+          </div>
+          <!-- Tab panes-->
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab-the-project" role="tabpanel">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <div class="input-group mb-3">
+                    <input type="text" autocomplete="off" class="form-control" name="search" onchange="loadGlobalLinkData('#tab-the-project', this.value)" placeholder="搜索当前项目快捷链接">
+                    <button class="input-group-text"><i class="fa fa-search"></i></button>
+                  </div>
+                </li>
+              </ul>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">这里记录当前项目相关的链接，点击可以快速跳转到项目相关的其他地址，例如项目维护文档、项目后台地址等等，以下几个链接可以点击测试</li>
+                <li class="list-group-item"><a href="https://blog.ops-coffee.cn/r" target="_blank" class="text-decoration-none">运维咖啡吧的房车使用体验</a></li>
+                <li class="list-group-item"><a href="https://blog.ops-coffee.cn/travels" target="_blank" class="text-decoration-none">运维咖啡吧的旅行游记</a></li>
+                <li class="list-group-item"><a href="https://blog.ops-coffee.cn/devops/cloud.html" target="_blank" class="text-decoration-none">运维自动化之多云系列</a></li>
+                <li class="list-group-item"><a href="https://blog.ops-coffee.cn/devops/task.html" target="_blank" class="text-decoration-none">运维自动化之任务系列</a></li>
+              </ul>
+
+            </div>
+            <div class="tab-pane" id="tab-all-project" role="tabpanel">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <div class="input-group mb-3">
+                    <input type="text" autocomplete="off" class="form-control" name="search" onchange="loadGlobalLinkData('#tab-all-project', this.value)" placeholder="搜索全局共享快捷链接">
+                    <button class="input-group-text"><i class="fa fa-search"></i></button>
+                  </div>
+                </li>
+              </ul>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">这里记录所有全局项目也就是所有用户都可查看的链接，例如平台说明文档、以及用到的其他第三方工具系统地址等等，以下几个链接可以点击测试</li>
+                <li class="list-group-item"><a href="https://github.com" target="_blank" class="text-decoration-none">代码仓库地址</a></li>
+                <li class="list-group-item"><a href="https://blog.ops-coffee.cn/s/eZX5qoJzuCSuLI98gSCtpw.html" target="_blank" class="text-decoration-none">开源项目CODO</a></li>
+                <li class="list-group-item"><a href="https://blog.ops-coffee.cn/s/veops-open-source-cmdb-devops.html" target="_blank" class="text-decoration-none">开源项目CMDB</a></li>
+                <li class="list-group-item"><a href="https://blog.ops-coffee.cn/s/veops-open-source-jumpserver-oneterm.html" target="_blank" class="text-decoration-none">开源项目OneTerm</a></li>
+              </ul>
+
+            </div>
+            <div class="tab-pane" id="tab-myself" role="tabpanel">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <div class="input-group mb-3">
+                    <input type="text" autocomplete="off" class="form-control" name="search" onchange="loadGlobalLinkData('#tab-myself', this.value)" placeholder="搜索我的私密快捷链接">
+                    <button class="input-group-text"><i class="fa fa-search"></i></button>
+                  </div>
+                </li>
+              </ul>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">这里记录私密链接地址，仅自己可以查看，例如我的常用工具等等</li>
+                <li class="list-group-item"><a href="https://nav.ops-coffee.cn" target="_blank" class="text-decoration-none">咖啡吧导航</a></li>
+              </ul>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <div class="body flex-grow-1">
+      <div class="container-fluid">
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h4>页面说明</h4>
+                <div class="small text-medium-emphasis">
+                  这并不是DevOps运维自动化系统，而是沉浸式的DevOps文档引导页面
+                </div>
+              </div>
+              <div class="btn-toolbar d-md-block" role="toolbar" aria-label="Toolbar with buttons">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-header">
+            <i class="fa fa-info"></i> 页面说明
+          </div>
+          <div class="card-body">
+            <h1 class="d-none">DevOps运维自动化工具系统平台 - 开源DevOps运维自动化系统 - 实践及介绍</h1>
+            <p>这并不是一个DevOps系统，而是为了方便大家理解那些DevOps的那些文章而制作的文档页面，页面参考了DevOps系统平台的布局，基于开源项目CoreUI构建，点击不同的模块会跳转到对应模块的介绍文章，加深对当前模块的理解</p>
+            <p><strong>点击左侧菜单栏「工作台」后的切换按钮（ <i class="fa fa-exchange"></i> ）可以查看全部应用</strong></p>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-header">
+            <i class="fa fa-list"></i> 文章列表
+          </div>
+          <div class="card-body">
+            <p>2022年之后，入职了新公司，开始着手规划新公司的DevOps运维自动化系统，也就是本系统，以下文章对本系统有整体的介绍：</p>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/2023-devops-service-platform-tools.html" class="text-decoration-none" target="_blank"> 这一年我们上线的运维自动化系统（2023）</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/2022-automation-operations-platform-summary.html" class="text-decoration-none" target="_blank"> 这一年我们上线的自动化系统（2022）</a></li>
+            
+            <p>阅读完以上文章对系统有整体了解后，如果兴趣可以通过以下文章对系统各个模块做深入的了解，有设计思路，有实现功能：</p>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/devops/finops.html" class="text-decoration-none" target="_blank"> 运维自动化之成本管理</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/devops/domain.html" class="text-decoration-none" target="_blank"> 运维自动化之域名系统</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/devops/kubernetes.html" class="text-decoration-none" target="_blank"> 运维自动化之容器系统</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/devops/ansible.html" class="text-decoration-none" target="_blank"> 运维自动化之作业系统</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/devops/task.html" class="text-decoration-none" target="_blank"> 运维自动化之任务系统</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/devops/monitor.html" class="text-decoration-none" target="_blank"> 运维自动化之监控系统</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/devops/cloud.html" class="text-decoration-none" target="_blank"> 运维自动化之多云系统</a></li>
+            
+            <p>以上这些系统都依赖底层框架sadmin，同时灵活的权限系统也是一大亮点，以下文章重点介绍了sadmin和权限系统：</p>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/xehCT6PMS90dvrf96E-Fzw.html" class="text-decoration-none" target="_blank"> 基础框架sadmin</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/0xee6JzCUcqXao9bY1ULgA.html" class="text-decoration-none" target="_blank"> 权限管理系统设计</a></li>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-header">
+            <i class="fa fa-github"></i> 开源推荐
+          </div>
+
+          <div class="card-body">
+            <p>以下是我参与的或者使用过的DevOps相关开源项目，感兴趣的可以看看：</p>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/veops-open-source-cmdb-devops.html" class="text-decoration-none" target="_blank"> 开源推荐｜灵活多变功能强大的CMDB</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/veops-open-source-jumpserver-oneterm.html" class="text-decoration-none" target="_blank"> 开源推荐｜简洁且强大的开源堡垒机OneTerm</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/eZX5qoJzuCSuLI98gSCtpw.html" class="text-decoration-none" target="_blank"> 开源推荐｜CoDo开源一站式DevOps平台</a></li>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-header">
+            <i class="fa fa-history"></i> 历史文章
+          </div>
+                  
+          <div class="card-body">
+            <p>2022年以前在公司A从零开始学习Python和Django，陆陆续续写了一些列的DevOps运维自动化工具，在这期间的主要文章有以下这些：</p>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/wAH0fb2I2fHCxu5Gy0oSng.html" class="text-decoration-none" target="_blank"> 再聊我们自研的那些Devops工具</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/HwOi-ARTvvNjGTWrDmZIkQ.html" class="text-decoration-none" target="_blank"> 我们自研的那些Devops工具</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/6YAC_Lqw3jB0LZlJTx4A2g.html" class="text-decoration-none" target="_blank"> Django+Ansible构建任务中心思路</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/GATfwNETo_aGsJHZdV5YzQ.html" class="text-decoration-none" target="_blank"> 中小团队基于Docker的devops实践</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/ZrrLUNRlAXVfVKvA1m0nsg.html" class="text-decoration-none" target="_blank"> 中小团队快速构建SQL自动审核系统</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/uGUvV4jl4YIvNztuepdC8A.html" class="text-decoration-none" target="_blank"> 中小团队落地配置中心详解</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/Nxh7mwPJPlbL3R9MdlkO_A.html" class="text-decoration-none" target="_blank"> Alodi：为了保密我开发了一个系统</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/h9k_C7kNB6q1VqxQDVHyiQ.html" class="text-decoration-none" target="_blank"> Alodi：环境创建从未如此简单</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/QG42UqJ9rnswQDMd41CYUg.html" class="text-decoration-none" target="_blank"> Kerrigan：配置中心管理UI的实现思路和技术细节</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/uXQbM4t11ICdzNofZyDeXA.html" class="text-decoration-none" target="_blank"> Probius：一个功能强大的自定义任务系统</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/U88HPUYiVDar-7yBx3IoIA.html" class="text-decoration-none" target="_blank"> Probius+Kubernetes任务系统如虎添翼</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/sOlBFC5FsSqVd78eFuxUyQ.html" class="text-decoration-none" target="_blank"> Probius+Prometheus通过API集成POD监控</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/FV379mGIboVYky73kcoMMQ.html" class="text-decoration-none" target="_blank"> Proxy：简单小巧又强大好用的代理系统</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/eM7SNKmtw2tDQtXBsBXyxQ.html" class="text-decoration-none" target="_blank"> 探秘varian：优雅的发布部署程序</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/xnBehfSlZ3J02xb0GFuGDw.html" class="text-decoration-none" target="_blank"> Docker环境的持续部署优化实践</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/dpGqieL4WCmGdQh1AEG4Gw.html" class="text-decoration-none" target="_blank"> 代码中的敏感信息加密方案</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/6ztLq8Q591KnlQY33-YFdQ.html" class="text-decoration-none" target="_blank"> 运维效率之数据迁移自动化</a></li>
+            <li class="mb-2"><a href="https://blog.ops-coffee.cn/s/k0rAVHLALYTxCR5ggMg-ag.html" class="text-decoration-none" target="_blank"> 面向老板的需求管理系统</a></li>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-header">
+            <i class="fa fa-map-signs"></i> 在线试用
+          </div>
+                  
+          <div class="card-body">
+            <p>当前系统开放给「咖啡吧的朋友们」微信群用户测试，如果你已入群可联系群主开通账号。「咖啡吧的朋友们」是一个付费群，如果想要入群，先看这个
+            <a class="text-decoration-none" href="https://blog.ops-coffee.cn/s/Increase-the-price-of-paid-WeChat-group">关于微信群的介绍说明</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div>Copyright © <a href="https://blog.ops-coffee.cn" class="text-decoration-none">ops-coffee.cn</a> All rights
+        reserved.
+      </div>
+      <div class="d-none d-md-block ms-auto"><b>Version</b> 3.7</div>
+    </footer>
+  </div>
+
+</body>
+
+</html>
