@@ -847,7 +847,7 @@
     "date": "2023-01-03"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/XTXR-1FBKf2olZQQsesNVg.html",
+    "url": "https://blog.ops-coffee.cn/s/why-build-custom-cloud-monitoring-system.html",
     "title": "多云监控告警系统的优势",
     "content": "本文讨论了为什么在多云环境下构建自定义的监控告警系统，而不是依赖云厂商提供的监控服务。文章详细介绍了自定义系统的优势，包括统一平台、简化操作、优化展示、权限隔离和多云融合。",
     "keywords": "多云监控, 自定义监控系统, 云厂商, 告警系统, 权限隔离, 优化展示, 简化操作, 多云融合",
