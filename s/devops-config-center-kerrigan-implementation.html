@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Kerrigan, 配置中心, etcd, confd, Django, JWT认证, 配置管理, 历史版本, 回滚" />
+  <meta name="description" content="本文详细介绍了Kerrigan配置中心管理UI的设计思路、实现技术、核心代码以及主要功能，包括配置管理、历史版本记录、回滚等，帮助中小团队更好地管理和优化配置文件。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Kerrigan：配置中心管理UI的实现思路和技术细节</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Kerrigan：配置中心管理UI的实现思路和技术细节" />
+  <meta property="og:description" content="本文详细介绍了Kerrigan配置中心管理UI的设计思路、实现技术、核心代码以及主要功能，包括配置管理、历史版本记录、回滚等，帮助中小团队更好地管理和优化配置文件。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">Kerrigan：配置中心管理UI的实现思路和技术细节</h1>
+
+        <p>去年写过一篇文章<a href="/s/uGUvV4jl4YIvNztuepdC8A" target="_blank">『中小团队落地配置中心详解』</a>，介绍了我们借助etcd+confd实现的配置中心方案，这是一个对<strong>运维友好</strong>，与开发解耦的极佳方案，经过了一年多的实践也确实帮我们解决了配置文件无版本、难回滚、更新复杂等问题</p>
+<p>这套配置中心解决方案的特点是，对整个配置文件进行管理，而非配置项，且在配置中心修改的配置，客户端可以实时自动更新。同时借助于我们自研的配置中心管理UI（kerrigan）还能够实现记录修改历史，快速回滚配置，与线上配置做对比等实用功能</p>
+<p>陆续有小伙伴问我能否写篇文章介绍一下配置中心的管理UI（Kerrigan）的实现，咖啡君就通过本篇文章来介绍Kerrigan的设计思路，以及用到的技术和部分核心代码，由于kerrigan有过一次改版，所以界面会与上面文章中的截图有出入</p>
+<h2 id="_1">界面与功能</h2>
+<p>用户登陆进入会看到一个简单的统计页面，展示配置文件相关数据</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1220.01.png" /></p>
+<p>这个实现非常简单就是对数据库数据进行查询统计，都是类似于下边这样的语句输出的结果</p>
+<pre class="codehilite"><code>Config.objects.all().count()</code></pre>
+
+
+<p>当点击“我的项目”标签时，会出现所有的项目，在这里可以搜索你要操作的项目，或是新建/导入项目</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1220.02.png" /></p>
+<p>当点击“新建/导入项目”时，可以选择从CMDB同步项目，或者自己填写项目名称新建配置中心中的项目，但由于我们配置中心和CMDB是打通的，配置中心里的所有项目都来源于CMDB，保证项目信息一致性，所以新建项目功能并没有被用到</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1220.03.png" /></p>
+<p>与CMDB系统的同步是通过http协议进行了，当点击“与CMDB同步”按钮时，会发送个get请求到cmdb服务器获取项目信息，cmdb采用<a href="https://blog.ops-coffee.cn/s/django-api-auth-jwt-token-without-drf.html" target="_blank">JWT认证</a>，主要代码如下：</p>
+<pre class="codehilite"><code>headers = {
+    &quot;WWW-Authenticate&quot;: &quot;Token&quot;,
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+    &quot;Authorization&quot;: &quot;Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDgyMjg4MzgsImlhdCI6MTU0ODE0MjQzOCwiZGF0YSI6eyJ1c2VybmFtZSI6ImFkbWluQDE2My5jb20ifX0.oKc0SafgksMT9ZIhTACupUlz49Q5kI4oJA-B8-GHqLA&quot;
+}
+
+requests.get('https://ops-coffee.cn/api/cmdb/project', headers=headers)</code></pre>
+
+
+<p>在我的项目页面点击项目时，会进入项目的配置管理页面，这个页面列出了项目下的所有配置文件，也可以通过右上角的“添加配置”按钮添加配置文件</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1220.04.png" /></p>
+<p>当添加配置文件时，会做三件事情：</p>
+<ol>
+<li>配置文件表（Config）添加一条新数据</li>
+<li>历史记录表（History）添加一条新数据，作为历史版本</li>
+<li>往etcd里写入一条新的KV数据，其中key为：项目+环境+服务+文件名称的组合，保证在etcd内唯一</li>
+</ol>
+<p>操作etcd的代码如下：</p>
+<pre class="codehilite"><code>class EtcdApi:
+
+    def __init__(self):
+        self.client = etcd.Client(
+            host=str(self.ETCD_HOST),
+            port=int(self.ETCD_PORT),
+            username=str(self.ETCD_USER),
+            password=str(self.ETCD_PASS)
+        )
+
+    def read(self, key):
+        try:
+            kx = self.client.read(key)
+            return {&quot;state&quot;: 1, &quot;message&quot;: &quot;&quot;, &quot;action&quot;: kx.action, &quot;key&quot;: kx.key, &quot;value&quot;: kx.value,
+                    &quot;newKey&quot;: kx.newKey, &quot;dir&quot;: kx.dir, &quot;_children&quot;: kx._children}
+        except Exception as e:
+            return {&quot;state&quot;: 0, &quot;message&quot;: str(e)}
+
+    def write(self, key, value):
+        try:
+            kx = self.client.write(key, value)
+            return {&quot;state&quot;: 1, &quot;message&quot;: &quot;&quot;, &quot;action&quot;: kx.action, &quot;key&quot;: kx.key, &quot;newKey&quot;: kx.newKey,
+                    &quot;dir&quot;: kx.dir, &quot;_children&quot;: kx._children}
+        except Exception as e:
+            return {&quot;state&quot;: 0, &quot;message&quot;: str(e)}
+
+    def delete(self, key, recursive=False, dir=False):
+        try:
+            if dir:
+                kx = self.client.delete(key, recursive, True)
+                return {&quot;state&quot;: 1, &quot;message&quot;: &quot;&quot;, &quot;action&quot;: kx.action, &quot;key&quot;: kx.key, &quot;newKey&quot;: kx.newKey,
+                        &quot;dir&quot;: kx.dir, &quot;_children&quot;: kx._children}
+            else:
+                kx = self.client.delete(key)
+                return {&quot;state&quot;: 1, &quot;message&quot;: kx}
+        except Exception as e:
+            return {&quot;state&quot;: 0, &quot;message&quot;: str(e)}</code></pre>
+
+
+<p>当编辑和删除配置文件时，操作与新建类似，修改Config表数据--&gt;Histror表添加新数据--&gt;修改或删除etcd数据，History表在每次新建或修改配置时都需要添加一条新数据，这里使用到了<a href="/s/cMxdAfsTno56ixurmD4KXA" target="_blank">Django的信号Signales</a>来实现，主要代码如下：</p>
+<pre class="codehilite"><code>@receiver(signals.post_init, sender=Config)
+def migrate_notify_init(instance, **kwargs):
+    instance.old_content = instance.content
+
+
+@receiver(signals.post_save, sender=Config)
+def migrate_notify_post(instance, created, **kwargs):
+    _t = Setting.objects.get(key='enable_etcd')
+
+    # 每次新建或者content变更都往历史表里插入一条历史数据
+    if created or instance.old_content != instance.content:
+        History.objects.create(
+            config=instance,
+            user=instance.user,
+            content=instance.content
+        )</code></pre>
+
+
+<p>除了History表操作之外，对于etcd的操作以及下边要说到的发布功能也是在signales里完成的，signals可以简化代码强化逻辑</p>
+<p>当点击“编辑”按钮后，会进入配置文件编辑页面，在这里可以修改、保存或发布配置文件，也可以拿当前配置文件与已发布配置文件做对比</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1220.05.png" /></p>
+<p>这里“保存”和“发布”的区别在于，保存只会将配置文件保存在Kerrigan内，不会修改etcd里的数据，从而实现客户端不更新，而发布会直接修改etcd里的数据，客户端能够直接更新，对于未发布的配置文件，当你点击配置文件时会有如下的提示，你可以对比或者发布</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1220.06.png" /></p>
+<p>判断是否发布主要是在Config表里加入了<code>is_published</code>字段，同样通过signals的post_save信号在每次保存时检查这个字段，如果为True，则修改对应etcd的值，否则不处理</p>
+<pre class="codehilite"><code>@receiver(signals.post_save, sender=Config)
+def migrate_notify_post(instance, created, **kwargs):
+    ...
+
+    # 判断状态为发布且开启了etcd，则更新数据到etcd
+    if instance.is_published:
+        _r = EtcdApi().write(key, instance.content)
+        if _r.get('state') == 0:
+            raise '写入key：%s失败' % (key)</code></pre>
+
+
+<p>系统中多次出现“对比”功能，都指的是当前配置文件和已发布配置文件的对比，通过对比可以清晰的看出修改的内容，对比结果展示如下</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1220.07.png" /></p>
+<p>对比功能主要用到了difflib模块，主要代码如下：</p>
+<pre class="codehilite"><code>difflib.HtmlDiff().make_file(src_value, diff_value, context=True, numlines=3)</code></pre>
+
+
+<p>每一次的添加或者修改都会往History表里写入一条新数据，“历史版本”便是直接读的History表，展示出谁在什么时间修改了什么内容</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1220.08.png" /></p>
+<p>当点击历史版本时可以查看此版本的配置文件内容，同时在必要的时候回滚，有了历史版本的内容，回滚也只是将历史内容覆盖到etcd</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1220.09.png" /></p>
+<p>至此，Kerrigan介绍完成，其最主要的功能是通过web浏览器来操作etcd里的KV数据，在此基础上做了扩展，对每一次的修改都做了记录，以实现实用的保存、发布、历史、回滚等功能</p>
+<p>最后再回顾一下整个配置中心的工作流程，配置管理员通过Kerrigan来添加或修改配置文件，Kerrigan记录修改，同时将修改同步至etcd，客户端上的confd服务在检测到etcd对应key的数据发生变化时，会自动拉取数据覆盖至本地配置文件，然后配合<code>check_cmd</code>和<code>reload_cmd</code>指令对配置文件进行检查和重载，更多细节原理回顾文章<a href="/s/uGUvV4jl4YIvNztuepdC8A" target="_blank">『中小团队落地配置中心详解』</a></p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/devops-config-center-kerrigan-implementation.html">📅 2019-12-23</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
