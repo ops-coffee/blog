@@ -96,7 +96,7 @@
 <p><img alt="" loading="lazy" src="/static/images/2021/1130.03.png" /></p>
 <h2 id="kerrigan">kerrigan</h2>
 <p>作为对运维非常友好的配置管理工具，Kerrigan在整个项目运行中起着至关重要的作用，目前已经管理了数百个不同类型的配置文件，保障了上万次的配置修改得以正常执行，近两年来也对其进行了优化升级，主要有2个方面</p>
-<p>confd该为watch模式，配置修改立即生效。这个主要是针对nginx配置文件的管理，在之前的模式中，配置修改之后需要重新部署项目或者重启confd服务配置才能生效，这个过程较为繁琐，于是我们将confd改为了watch模式，配置一旦修改就会立即更新，这个模式有一个风险在于如果配置改错了怎么办？配置改错分两种情况，语法错误与规则错误，首先confd在更新配置文件前会检查配置文件是否有语法错误，如果没有才会更新，这样就避免了因为语法错误导致的更新失败，其次对于规则本身写错的问题，这个只能在更新前认真检查了，即便不是watch模式自动更新也会有这种问题存在，为此kerrigan做了几个方面的优化来尽量保证不改错以及改错后能快速修正，具体的可以看这篇文章：<a href="/s/QG42UqJ9rnswQDMd41CYUg" target="_blank">Kerrigan：配置中心管理UI的实现思路和技术细节</a>，包括配置对比、快速回滚等</p>
+<p>confd该为watch模式，配置修改立即生效。这个主要是针对nginx配置文件的管理，在之前的模式中，配置修改之后需要重新部署项目或者重启confd服务配置才能生效，这个过程较为繁琐，于是我们将confd改为了watch模式，配置一旦修改就会立即更新，这个模式有一个风险在于如果配置改错了怎么办？配置改错分两种情况，语法错误与规则错误，首先confd在更新配置文件前会检查配置文件是否有语法错误，如果没有才会更新，这样就避免了因为语法错误导致的更新失败，其次对于规则本身写错的问题，这个只能在更新前认真检查了，即便不是watch模式自动更新也会有这种问题存在，为此kerrigan做了几个方面的优化来尽量保证不改错以及改错后能快速修正，具体的可以看这篇文章：<a href="https://blog.ops-coffee.cn/s/devops-config-center-kerrigan-implementation.html" target="_blank">Kerrigan：配置中心管理UI的实现思路和技术细节</a>，包括配置对比、快速回滚等</p>
 <p>提供了完善的API。kerrigan除了管理了nginx之类的服务配置外，同时还管理了Dockerfile之类的文件，在持续集成的过程中需要用到Dockerfile，所以为Kerrigan提供了API来支持通过http的方式来获取配置文件，以便在Probius系统中使用配置文件，为此还用Python专门写了个获取配置文件的系统命令，只需要一个命令即可获取kerrigan里的配置文件，具体的实现方式可以看这里：<a href="/s/GXBrzg9wxUy1Y4XKazb67Q" target="_blank">用Python写个Linux系统命令</a></p>
 <p><img alt="" loading="lazy" src="/static/images/2021/1130.04.png" /></p>
 <h2 id="overmind">overmind</h2>
@@ -141,21 +141,21 @@
         <hr>
 
         <div class="nav-cell">
-            <script async src="https://giscus.app/client.js"
-                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
-                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
-                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
-                    data-emit-metadata="0" data-input-position="top" data-theme="light"
-                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
-            </script>
-        </div>
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
 
         <div>
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
-                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
 
         <div class="nav-cell">
             <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
