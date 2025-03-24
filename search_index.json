@@ -1568,7 +1568,7 @@
     "date": "2019-12-26"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/QG42UqJ9rnswQDMd41CYUg.html",
+    "url": "https://blog.ops-coffee.cn/s/devops-config-center-kerrigan-implementation.html",
     "title": "Kerrigan：配置中心管理UI的实现思路和技术细节",
     "content": "本文详细介绍了Kerrigan配置中心管理UI的设计思路、实现技术、核心代码以及主要功能，包括配置管理、历史版本记录、回滚等，帮助中小团队更好地管理和优化配置文件。",
     "keywords": "Kerrigan, 配置中心, etcd, confd, Django, JWT认证, 配置管理, 历史版本, 回滚",
