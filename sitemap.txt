@@ -213,7 +213,7 @@ https://blog.ops-coffee.cn/s/YjfTypcHD03fTGLV_JsqWw.html
 https://blog.ops-coffee.cn/s/zpVZw8vdpTLgGOR6GvpiqA.html
 https://blog.ops-coffee.cn/t/disk-init-fdisk-mkfs-blkid-uuid.html
 https://blog.ops-coffee.cn/r/lingang-father-son-rv-adventure.html
-https://blog.ops-coffee.cn/s/0xee6JzCUcqXao9bY1ULgA.html
+https://blog.ops-coffee.cn/s/djanbo-auth-permission-system-design.html
 https://blog.ops-coffee.cn/s/0Q31jzeYBTeWdrLMufdig.html
 https://blog.ops-coffee.cn/s/Q3BBxBAWBcpUhQhfwO7pgQ.html
 https://blog.ops-coffee.cn/s/Drt44kkzaeAeSjhshSb0Vg.html
