@@ -1477,7 +1477,7 @@
     "date": "2020-05-07"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/MhMwW0p2lHVzoFRsFa6S3A.html",
+    "url": "https://blog.ops-coffee.cn/s/django-object-permission-django-guardian-rbac.html",
     "title": "Django Object Permission之Django-guardian使用详解",
     "content": "本文详细介绍了Django-guardian的安装配置、权限分配、权限去除、根据用户和对象获取权限、以及如何在模板和视图中使用guardian进行权限管理，帮助你在各种场景下更好地管理Django权限。",
     "keywords": "Django权限管理, Django-guardian, 对象权限控制, Django权限扩展, Django权限分配, Django授权",
