@@ -93,7 +93,7 @@
 <p>针对Django默认权限控制粒度粗的问题，我在Probius中引入了对象权限，对象权限的最小控制粒度是表里的单条数据，既然想把不同的任务分配给不同的用户，那通过对象授权就能很好的解决</p>
 <p><img alt="" loading="lazy" src="/static/images/2022/0309.02.png" /></p>
 <p>默认权限在对象授权的加持下能解决授权粒度太粗的问题，如果仅仅是需要任务执行这个功能需要单独授权的话还好，但是当需要授权的功能有N多个的时候就会非常崩溃了，每一个权限每一个资源都需要单独授权，管理起来非常繁琐，例如子任务的增删改查、模板的增删改查、执行用户的增删改查都需要单独授权，那再采用对象授权的方式就不敢想象了</p>
-<p>关于Django的对象授权这篇文章有详细的介绍：<a href="/s/MhMwW0p2lHVzoFRsFa6S3A" target="_blank">Django Object Permission之Django-guardian使用详解</a>，这里也不赘述了</p>
+<p>关于Django的对象授权这篇文章有详细的介绍：<a href="https://blog.ops-coffee.cn/s/django-object-permission-django-guardian-rbac.html" target="_blank">Django Object Permission之Django-guardian使用详解</a>，这里也不赘述了</p>
 <h2 id="_3">资源隔离</h2>
 <p>默认权限的授权粒度太粗，而对象授权的授权粒度又太细，资源隔离就是在两者之间取一个平衡。这里所讲的资源隔离与通常所说的多租户以及云上的资源组概念类似，就是所有资源先按照业务或是项目进行隔离，我们是按项目维度进行隔离，用户所属项目，项目拥有相应的资源，那用户也就继承了项目的资源，这里的资源指的是数据表里的每一条数据，例如任务表下的每一条数据都算一个资源</p>
 <p><img alt="" loading="lazy" src="/static/images/2022/0309.03.png" /></p>
