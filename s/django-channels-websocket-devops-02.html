@@ -293,7 +293,7 @@ def tailf(id, channel_name):
 
 
 <p>这里边主要涉及到Channels中另一个非常重要的点：<strong>从Channels的外部发送消息给Channel</strong></p>
-<p>其实<a href="/s/hqaPrPS7w3D-9SeegQAB2Q" target="_blank">上篇文章</a>中检查通道层是否能够正常工作的时候使用的方法就是从外部给Channel通道发消息的示例，本文的具体代码如下</p>
+<p>其实<a href="https://blog.ops-coffee.cn/s/django-channels-websocket-devops-01.html" target="_blank">上篇文章</a>中检查通道层是否能够正常工作的时候使用的方法就是从外部给Channel通道发消息的示例，本文的具体代码如下</p>
 <pre class="codehilite"><code>async_to_sync(channel_layer.send)(
     channel_name,
     {
@@ -346,7 +346,7 @@ def tailf(id, channel_name):
   }</code></pre>
 
 
-<p><a href="/s/hqaPrPS7w3D-9SeegQAB2Q" target="_blank">上一篇文章</a>中有详细介绍过websocket的消息类型，这里不多介绍了</p>
+<p><a href="https://blog.ops-coffee.cn/s/django-channels-websocket-devops-01.html" target="_blank">上一篇文章</a>中有详细介绍过websocket的消息类型，这里不多介绍了</p>
 <p>至此我们一个日志监听页面完成了，包含了完整的监听功能，但还无法终止，接着看下面的内容</p>
 <h2 id="webwebsocket">Web页面主动断开WebSocket</h2>
 <p>web页面上“终止监听”按钮的主要逻辑就是触发WebSocket的onclose方法，从而可以触发Channels后端consumer的<code>disconnect</code>方法，进而终止Celery的循环读取日志任务</p>
