@@ -136,7 +136,7 @@ server {
 <p>根据平时的使用经验，可能有多个域名使用同一个代理，所以提交的数据还有个别名。同时高级配置里还支持用户输入自定义的Nginx配置，这些自定义的Nginx配置会自动填充到Server中，这样就能方便的实现更加复杂的需求，例如修改上传文件大小限制、开启websocket支持、甚至是根据URI的代理等</p>
 <p>对于实例更多的信息可以在实例详情页面查看</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1203.09.png" /></p>
-<p>注意右上角有个“日志”按钮，系统还集成了查看日志的功能，通过websocket去监听日志文件，实时的输出到页面上，方便排错，Websocket实时获取日志文件之前写过一篇文章有介绍，<a href="/s/r5SpyTjRl0jJeAuYE4Q_-Q" target="_blank">可以点这个链接查看</a>，不过我在Proxy里使用的有所简化，没有用到Celery，更轻便</p>
+<p>注意右上角有个“日志”按钮，系统还集成了查看日志的功能，通过websocket去监听日志文件，实时的输出到页面上，方便排错，Websocket实时获取日志文件之前写过一篇文章有介绍，<a href="https://blog.ops-coffee.cn/s/django-channels-websocket-devops-02.html" target="_blank">可以点这个链接查看</a>，不过我在Proxy里使用的有所简化，没有用到Celery，更轻便</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1203.10.png" /></p>
 <h2 id="_3">额外收获</h2>
 <p>Proxy原本用来管理需要对外开放访问的项目，但为了统一的管理，逐渐的把所有的代理都迁移进了Proxy，这样做不仅管理起来更为方便，而且无形中还提供了一个查询团队所有域名的入口，团队现在维护了超过100+项目，并不是每个人都能准确的记住每个项目各个环境的域名，而通过Proxy就可以方便的查询</p>
