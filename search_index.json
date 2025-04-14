@@ -1890,7 +1890,7 @@
     "date": "2019-04-19"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/hqaPrPS7w3D-9SeegQAB2Q.html",
+    "url": "https://blog.ops-coffee.cn/s/django-channels-websocket-devops-01.html",
     "title": "Django使用Channels实现WebSocket--上篇",
     "content": "本文详细介绍了如何使用WebSocket和Django Channels构建实时应用，特别是聊天室功能。通过集成Channels框架，Django不仅支持HTTP协议，还能支持WebSocket等多种协议。文章还讲解了如何使用Channels Layer实现多人聊天，并提供了异步代码实现以提升性能。",
     "keywords": "WebSocket, Django Channels, 实时通信, 全双工通信, 聊天室, 异步, ASGI, Channels Layer, Redis",

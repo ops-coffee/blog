@@ -331,7 +331,7 @@ https://blog.ops-coffee.cn/s/TnvJlcnB51miI-t8N8IkXQ.html
 https://blog.ops-coffee.cn/elk/elasticsearch-select-query-DSL-api.html
 https://blog.ops-coffee.cn/s/JyUnN_OtQ2NtXcH0mtCJUg.html
 https://blog.ops-coffee.cn/s/r5SpyTjRl0jJeAuYE4Q_-Q.html
-https://blog.ops-coffee.cn/s/hqaPrPS7w3D-9SeegQAB2Q.html
+https://blog.ops-coffee.cn/s/django-channels-websocket-devops-01.html
 https://blog.ops-coffee.cn/elk/elasticsearch-logstash-filebeat-registry.html
 https://blog.ops-coffee.cn/elk/elasticsearch-logstash-kafka-webhdfs.html
 https://blog.ops-coffee.cn/s/fewb1jDso_FKPqhu9P1uHA.html
