@@ -1883,7 +1883,7 @@
     "date": "2019-04-29"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/r5SpyTjRl0jJeAuYE4Q_-Q.html",
+    "url": "https://blog.ops-coffee.cn/s/django-channels-websocket-devops-02.html",
     "title": "Django使用Channels实现WebSocket--下篇",
     "content": "本文介绍了如何使用Django Channels与Celery实现WebSocket日志监听功能，详细讲解了如何集成Channels和Celery来实现实时日志监控，并提供了完整的代码示例。",
     "keywords": "Django, Channels, WebSocket, Celery, 日志监听, Tailf, Python",
