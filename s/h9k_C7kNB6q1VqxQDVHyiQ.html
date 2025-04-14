@@ -93,7 +93,7 @@
 <p>创建完成之后，可以在部署列表里找到创建环境的任务，在这里可以直接通过域名访问新创建的环境，或进行一些管理，例如创建过程中的日志查看，容器Log查看，进入容器终端排错，绑定新域名，或是销毁环境</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/0103.png" /></p>
 <h2 id="_2">创建过程</h2>
-<p>创建临时环境通过<a href="/s/lXrp3igYo9W2UuE5Gauysg" target="_blank">Django的Celery</a>来异步完成，同时通过<a href="/s/r5SpyTjRl0jJeAuYE4Q_-Q" target="_blank">Django的Channels</a>来建立WebSocket通道实时获取任务日志输出</p>
+<p>创建临时环境通过<a href="/s/lXrp3igYo9W2UuE5Gauysg" target="_blank">Django的Celery</a>来异步完成，同时通过<a href="https://blog.ops-coffee.cn/s/django-channels-websocket-devops-02.html" target="_blank">Django的Channels</a>来建立WebSocket通道实时获取任务日志输出</p>
 <p>相同部署发布流程的项目会编写统一的模板，例如JavaWeb项目会编写一个适合所有JavaWeb项目的模板，NodeJS项目会编写一个适合所有NodeJS项目的模板，创建临时环境实际上就是通过Celery执行了一个任务模板</p>
 <p>任务模板内定义了这个任务要做的事情，大体上包含以下内容：创建临时目录--&gt;拉代码--&gt;编译--&gt;生成DOCKERFILE--&gt;打包Docker镜像--&gt;上传镜像到私有仓库--&gt;创建Kubernetes资源--&gt;检查Pod状态--&gt;完成</p>
 <p>每一次任务都会生成一个全新的环境，一个全新的域名，所以无论有多少个版本多少个用户在并行测试都<strong>不会相互影响</strong></p>
@@ -138,21 +138,21 @@
         <hr>
 
         <div class="nav-cell">
-            <script async src="https://giscus.app/client.js"
-                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
-                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
-                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
-                    data-emit-metadata="0" data-input-position="top" data-theme="light"
-                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
-            </script>
-        </div>
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
 
         <div>
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
-                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
 
         <div class="nav-cell">
             <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
