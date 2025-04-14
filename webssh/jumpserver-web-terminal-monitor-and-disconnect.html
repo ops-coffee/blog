@@ -89,7 +89,7 @@
 <p>这一篇文章接着实现一个看起来很炫酷，但实际上你可能不会经常使用，又必须要存在的功能：实时监控用户操作，在必要的时候将用户踢下线</p>
 <h2 id="_1">实时查看操作</h2>
 <p>django通过channels实现websocket中有一个非常重要的概念叫layer，layer可以将多个channel合并成一个group，我们可以发送消息给group，那么group里的每个channel都能收到</p>
-<p>关于Channel我有写过两篇文章结合<strong>聊天室</strong>和<strong>web端实现tail-f功能</strong>这两个案例来详细介绍，两篇文章是<a href="/s/hqaPrPS7w3D-9SeegQAB2Q" target="_blank">『Django使用Channels实现WebSocket--上篇』</a>和<a href="/s/r5SpyTjRl0jJeAuYE4Q_-Q" target="_blank">『Django使用Channels实现WebSocket--下篇』</a>，对上边提到的名词一脸懵逼的朋友可以通过这两篇文章来学习</p>
+<p>关于Channel我有写过两篇文章结合<strong>聊天室</strong>和<strong>web端实现tail-f功能</strong>这两个案例来详细介绍，两篇文章是<a href="https://blog.ops-coffee.cn/s/django-channels-websocket-devops-01.html" target="_blank">『Django使用Channels实现WebSocket--上篇』</a>和<a href="https://blog.ops-coffee.cn/s/django-channels-websocket-devops-02.html" target="_blank">『Django使用Channels实现WebSocket--下篇』</a>，对上边提到的名词一脸懵逼的朋友可以通过这两篇文章来学习</p>
 <p>之前的WebSSH仅是单连接，只需要客户端和服务器建立长连接，然后处理指令就ok了，我们并没有启用channel的layer，实际上也可以看作是单channel，但要实现监控的功能，就需要将操作者和管理员(监控者)的多个channel合并在一起组成一个group，这样操作者的所有操作都可以发送给这个group，同处于这个group内监控者就能实时收到消息了，大概流程变化如下图所示</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/1128.01.jpg" /></p>
 <p>接下来看下具体实现，以下所有代码均是在这篇文章的基础上进行说明讲解：<a href="https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-ssh-paramiko-stream" target="_blank">『Django实现WebSSH操作物理机或虚拟机』</a></p>
@@ -239,21 +239,21 @@ async_to_sync(get_channel_layer().group_send)(
         <hr>
 
         <div class="nav-cell">
-            <script async src="https://giscus.app/client.js"
-                    data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
-                    data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
-                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
-                    data-emit-metadata="0" data-input-position="top" data-theme="light"
-                    data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
-            </script>
-        </div>
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
 
         <div>
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
-                 data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
 
         <div class="nav-cell">
             <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
