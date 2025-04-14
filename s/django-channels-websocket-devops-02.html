@@ -85,7 +85,7 @@
         <blockquote>
 <p>希望通过对这两篇文章的学习，能够对Channels有更加深入的了解，使用起来得心应手游刃有余</p>
 </blockquote>
-<p>通过上一篇<a href="/s/hqaPrPS7w3D-9SeegQAB2Q" target="_blank">《Django使用Channels实现WebSocket--上篇》</a>的学习应该对Channels的各种概念有了清晰的认知，可以顺利的将Channels框架集成到自己的Django项目中实现WebSocket了，本篇文章将以一个Channels+Celery实现web端tailf功能的例子更加深入的介绍Channels</p>
+<p>通过上一篇<a href="https://blog.ops-coffee.cn/s/django-channels-websocket-devops-01.html" target="_blank">《Django使用Channels实现WebSocket--上篇》</a>的学习应该对Channels的各种概念有了清晰的认知，可以顺利的将Channels框架集成到自己的Django项目中实现WebSocket了，本篇文章将以一个Channels+Celery实现web端tailf功能的例子更加深入的介绍Channels</p>
 <p>先说下我们要实现的目标：所有登录的用户可以查看tailf日志页面，在页面上能够选择日志文件进行监听，多个页面终端同时监听任何日志都互不影响，页面同时提供终止监听的按钮能够终止前端的输出以及后台对日志文件的读取</p>
 <p>最终实现的结果见下图</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/0419.channels.2.gif" /></p>
