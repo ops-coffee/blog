@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="WebSocket, Django Channels, 实时通信, 全双工通信, 聊天室, 异步, ASGI, Channels Layer, Redis" />
+  <meta name="description" content="本文详细介绍了如何使用WebSocket和Django Channels构建实时应用，特别是聊天室功能。通过集成Channels框架，Django不仅支持HTTP协议，还能支持WebSocket等多种协议。文章还讲解了如何使用Channels Layer实现多人聊天，并提供了异步代码实现以提升性能。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Django使用Channels实现WebSocket--上篇</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django使用Channels实现WebSocket--上篇" />
+  <meta property="og:description" content="本文详细介绍了如何使用WebSocket和Django Channels构建实时应用，特别是聊天室功能。通过集成Channels框架，Django不仅支持HTTP协议，还能支持WebSocket等多种协议。文章还讲解了如何使用Channels Layer实现多人聊天，并提供了异步代码实现以提升性能。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">Django使用Channels实现WebSocket--上篇</h1>
+
+        <blockquote>
+<p>WebSocket - 开启通往新世界的大门</p>
+</blockquote>
+<p><strong>WebSocket是什么？</strong></p>
+<p>WebSocket是一种在单个TCP连接上进行全双工通讯的协议。WebSocket允许服务端主动向客户端推送数据。在WebSocket协议中，客户端浏览器和服务器只需要完成一次握手就可以创建持久性的连接，并在浏览器和服务器之间进行双向的数据传输。</p>
+<p><strong>WebSocket有什么用？</strong></p>
+<p>WebSocket区别于HTTP协议的一个最为显著的特点是，WebSocket协议可以由服务端主动发起消息，对于浏览器需要及时接收数据变化的场景非常适合，例如在Django中遇到一些耗时较长的任务我们通常会使用Celery来异步执行，那么浏览器如果想要获取这个任务的执行状态，在HTTP协议中只能通过轮训的方式由浏览器不断的发送请求给服务器来获取最新状态，这样发送很多无用的请求不仅浪费资源，还不够优雅，如果使用WebSokcet来实现就很完美了</p>
+<p>WebSocket的另外一个应用场景就是下文要说的聊天室，一个用户（浏览器）发送的消息需要实时的让其他用户（浏览器）接收，这在HTTP协议下是很难实现的，但WebSocket基于长连接加上可以主动给浏览器发消息的特性处理起来就游刃有余了</p>
+<p>初步了解WebSocket之后，我们看看如何在Django中实现WebSocket</p>
+<h1 id="channels">Channels</h1>
+<p>Django本身不支持WebSocket，但可以通过集成Channels框架来实现WebSocket</p>
+<p>Channels是针对Django项目的一个增强框架，可以使Django不仅支持HTTP协议，还能支持WebSocket，MQTT等多种协议，同时Channels还整合了Django的auth以及session系统方便进行用户管理及认证。</p>
+<p>我下文所有的代码实现使用以下python和Django版本</p>
+<ul>
+<li>python==3.6.3</li>
+<li>django==2.2</li>
+</ul>
+<h2 id="channels_1">集成Channels</h2>
+<p>我假设你已经新建了一个django项目，项目名字就叫<code>webapp</code>，目录结构如下</p>
+<pre class="codehilite"><code>project
+    - webapp
+        - __init__.py
+        - settings.py
+        - urls.py
+        - wsgi.py
+    - manage.py</code></pre>
+
+
+<ol>
+<li>安装channels</li>
+</ol>
+<pre class="codehilite"><code>pip install channels==2.1.7</code></pre>
+
+
+<ol>
+<li>修改settings.py文件，</li>
+</ol>
+<pre class="codehilite"><code># APPS中添加channels
+INSTALLED_APPS = [
+    'django.contrib.staticfiles',
+    'channels',
+]
+
+# 指定ASGI的路由地址
+ASGI_APPLICATION = 'webapp.routing.application'</code></pre>
+
+
+<p>channels运行于ASGI协议上，ASGI的全名是Asynchronous Server Gateway Interface。它是区别于Django使用的WSGI协议 的一种异步服务网关接口协议，正是因为它才实现了websocket</p>
+<p><strong>ASGI_APPLICATION</strong> 指定主路由的位置为webapp下的routing.py文件中的application</p>
+<ol>
+<li>setting.py的同级目录下创建routing.py路由文件，routing.py类似于Django中的url.py指明websocket协议的路由</li>
+</ol>
+<pre class="codehilite"><code>from channels.routing import ProtocolTypeRouter
+
+application = ProtocolTypeRouter({
+    # 暂时为空，下文填充
+})</code></pre>
+
+
+<ol>
+<li>运行Django项目</li>
+</ol>
+<pre class="codehilite"><code>C:\python36\python.exe D:/demo/tailf/manage.py runserver 0.0.0.0:80
+Performing system checks...
+Watching for file changes with StatReloader
+
+System check identified no issues (0 silenced).
+April 12, 2019 - 17:44:52
+Django version 2.2, using settings 'webapp.settings'
+Starting ASGI/Channels version 2.1.7 development server at http://0.0.0.0:80/
+Quit the server with CTRL-BREAK.</code></pre>
+
+
+<p>仔细观察上边的输出会发现Django启动中的<code>Starting development server</code>已经变成了<code>Starting ASGI/Channels version 2.1.7 development server</code>，这表明项目已经由django使用的WSGI协议转换为了Channels使用的ASGI协议</p>
+<p>至此Django已经基本集成了Channels框架</p>
+<h2 id="_1">构建聊天室</h2>
+<p>上边虽然在项目中集成了Channels，但并没有任何的应用使用它，接下来我们以聊天室的例子来讲解Channels的使用</p>
+<p>假设你已经创建好了一个叫chat的app，并添加到了settings.py的INSTALLED_APPS中，app的目录结构大概如下</p>
+<pre class="codehilite"><code>chat
+    - migrations
+        - __init__.py
+    - __init__.py
+    - admin.py
+    - apps.py
+    - models.py
+    - tests.py
+    - views.py</code></pre>
+
+
+<p>我们构建一个标准的Django聊天页面，相关代码如下</p>
+<p>url:</p>
+<pre class="codehilite"><code>from django.urls import path
+from chat.views import chat
+
+urlpatterns = [
+    path('chat', chat, name='chat-url')
+]</code></pre>
+
+
+<p>view:</p>
+<pre class="codehilite"><code>from django.shortcuts import render
+
+def chat(request):
+    return render(request, 'chat/index.html')</code></pre>
+
+
+<p>template:</p>
+<pre class="codehilite"><code>{% extends &quot;base.html&quot; %}
+
+{% block content %}
+  &lt;textarea class=&quot;form-control&quot; id=&quot;chat-log&quot; disabled rows=&quot;20&quot;&gt;&lt;/textarea&gt;&lt;br/&gt;
+  &lt;input class=&quot;form-control&quot; id=&quot;chat-message-input&quot; type=&quot;text&quot;/&gt;&lt;br/&gt;
+  &lt;input class=&quot;btn btn-success btn-block&quot; id=&quot;chat-message-submit&quot; type=&quot;button&quot; value=&quot;Send&quot;/&gt;
+{% endblock %}</code></pre>
+
+
+<p>通过上边的代码一个简单的web聊天页面构建完成了，访问页面大概样子如下：</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0416.01.jpeg" /></p>
+<p>接下来我们利用Channels的WebSocket协议实现消息的发送接收功能</p>
+<ol>
+<li>先从路由入手，上边我们已经创建了routing.py路由文件，现在来填充里边的内容</li>
+</ol>
+<pre class="codehilite"><code>from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+import chat.routing
+
+application = ProtocolTypeRouter({
+    'websocket': AuthMiddlewareStack(
+        URLRouter(
+            chat.routing.websocket_urlpatterns
+        )
+    ),
+})</code></pre>
+
+
+<p><strong>ProtocolTypeRouter：</strong> ASIG支持多种不同的协议，在这里可以指定特定协议的路由信息，我们只使用了websocket协议，这里只配置websocket即可</p>
+<p><strong>AuthMiddlewareStack：</strong> django的channels封装了django的auth模块，使用这个配置我们就可以在consumer中通过下边的代码获取到用户的信息</p>
+<pre class="codehilite"><code>def connect(self):
+    self.user = self.scope[&quot;user&quot;]</code></pre>
+
+
+<p><code>self.scope</code>类似于django中的request，包含了请求的type、path、header、cookie、session、user等等有用的信息</p>
+<p><strong>URLRouter：</strong> 指定路由文件的路径，也可以直接将路由信息写在这里，代码中配置了路由文件的路径，会去chat下的routeing.py文件中查找websocket_urlpatterns，<code>chat/routing.py</code>内容如下</p>
+<pre class="codehilite"><code>from django.urls import path
+from chat.consumers import ChatConsumer
+
+websocket_urlpatterns = [
+    path('ws/chat/', ChatConsumer),
+]</code></pre>
+
+
+<p>routing.py路由文件跟django的url.py功能类似，语法也一样，意思就是访问<code>ws/chat/</code>都交给<code>ChatConsumer</code>处理</p>
+<ol>
+<li>接着编写consumer，consumer类似django中的view，内容如下</li>
+</ol>
+<pre class="codehilite"><code>from channels.generic.websocket import WebsocketConsumer
+import json
+
+class ChatConsumer(WebsocketConsumer):
+    def connect(self):
+        self.accept()
+
+    def disconnect(self, close_code):
+        pass
+
+    def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        message = '运维咖啡吧：' + text_data_json['message']
+
+        self.send(text_data=json.dumps({
+            'message': message
+        }))</code></pre>
+
+
+<p>这里是个最简单的同步websocket consumer类，connect方法在连接建立时触发，disconnect在连接关闭时触发，receive方法会在收到消息后触发。整个ChatConsumer类会将所有收到的消息加上“运维咖啡吧：”的前缀发送给客户端</p>
+<ol>
+<li>最后我们在html模板页面添加websocket支持</li>
+</ol>
+<pre class="codehilite"><code>{% extends &quot;base.html&quot; %}
+
+{% block content %}
+  &lt;textarea class=&quot;form-control&quot; id=&quot;chat-log&quot; disabled rows=&quot;20&quot;&gt;&lt;/textarea&gt;&lt;br/&gt;
+  &lt;input class=&quot;form-control&quot; id=&quot;chat-message-input&quot; type=&quot;text&quot;/&gt;&lt;br/&gt;
+  &lt;input class=&quot;btn btn-success btn-block&quot; id=&quot;chat-message-submit&quot; type=&quot;button&quot; value=&quot;Send&quot;/&gt;
+{% endblock %}
+
+{% block js %}
+&lt;script&gt;
+  var chatSocket = new WebSocket(
+    'ws://' + window.location.host + '/ws/chat/');
+
+  chatSocket.onmessage = function(e) {
+    var data = JSON.parse(e.data);
+    var message = data['message'];
+    document.querySelector('#chat-log').value += (message + '\n');
+  };
+
+  chatSocket.onclose = function(e) {
+    console.error('Chat socket closed unexpectedly');
+  };
+
+  document.querySelector('#chat-message-input').focus();
+  document.querySelector('#chat-message-input').onkeyup = function(e) {
+    if (e.keyCode === 13) {  // enter, return
+        document.querySelector('#chat-message-submit').click();
+    }
+  };
+
+  document.querySelector('#chat-message-submit').onclick = function(e) {
+    var messageInputDom = document.querySelector('#chat-message-input');
+    var message = messageInputDom.value;
+    chatSocket.send(JSON.stringify({
+        'message': message
+    }));
+
+    messageInputDom.value = '';
+  };
+&lt;/script&gt;
+{% endblock %}</code></pre>
+
+
+<p>WebSocket对象一个支持四个消息：onopen，onmessage，oncluse和onerror，我们这里用了两个onmessage和onclose</p>
+<p><strong>onopen：</strong> 当浏览器和websocket服务端连接成功后会触发onopen消息</p>
+<p><strong>onerror：</strong> 如果连接失败，或者发送、接收数据失败，或者数据处理出错都会触发onerror消息</p>
+<p><strong>onmessage：</strong> 当浏览器接收到websocket服务器发送过来的数据时，就会触发onmessage消息，参数<code>e</code>包含了服务端发送过来的数据</p>
+<p><strong>onclose：</strong> 当浏览器接收到websocket服务器发送过来的关闭连接请求时，会触发onclose消息</p>
+<ol>
+<li>完成前边的代码，一个可以聊天的websocket页面就完成了，运行项目，在浏览器中输入消息就会通过websocket--&gt;rouging.py--&gt;consumer.py处理后返回给前端</li>
+</ol>
+<p><img alt="" loading="lazy" src="/static/images/2019/0416.02.jpeg" /></p>
+<h2 id="channel-layer">启用Channel Layer</h2>
+<p>上边的例子我们已经实现了消息的发送和接收，但既然是聊天室，肯定要支持多人同时聊天的，当我们打开多个浏览器分别输入消息后发现只有自己收到消息，其他浏览器端收不到，如何解决这个问题，让所有客户端都能一起聊天呢？</p>
+<p>Channels引入了一个layer的概念，channel layer是一种通信系统，允许多个consumer实例之间互相通信，以及与外部Djanbo程序实现互通。</p>
+<p>channel layer主要实现了两种概念抽象：</p>
+<p><strong>channel name：</strong> channel实际上就是一个发送消息的通道，每个Channel都有一个名称，每一个拥有这个名称的人都可以往Channel里边发送消息</p>
+<p><strong>group：</strong> 多个channel可以组成一个Group，每个Group都有一个名称，每一个拥有这个名称的人都可以往Group里添加/删除Channel，也可以往Group里发送消息，Group内的所有channel都可以收到，但是无法发送给Group内的具体某个Channel</p>
+<p>了解了上边的概念，接下来我们利用channel layer实现真正的聊天室，能够让多个客户端发送的消息被彼此看到</p>
+<ol>
+<li>官方推荐使用redis作为channel layer，所以先安装channels_redis</li>
+</ol>
+<pre class="codehilite"><code>pip install channels_redis==2.3.3</code></pre>
+
+
+<ol>
+<li>然后修改settings.py添加对layer的支持</li>
+</ol>
+<pre class="codehilite"><code>CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            &quot;hosts&quot;: [('ops-coffee.cn', 6379)],
+        },
+    },
+}</code></pre>
+
+
+<p>添加channel之后我们可以通过以下命令检查通道层是否能够正常工作</p>
+<pre class="codehilite"><code>&gt;python manage.py shell
+Python 3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 18:11:49) [MSC v.1900 64 bit (AMD64)] on win32
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+(InteractiveConsole)
+&gt;&gt;&gt; import channels.layers
+&gt;&gt;&gt; channel_layer = channels.layers.get_channel_layer()
+&gt;&gt;&gt;
+&gt;&gt;&gt; from asgiref.sync import async_to_sync
+&gt;&gt;&gt; async_to_sync(channel_layer.send)('test_channel',{'site':'https://ops-coffee.cn'})
+&gt;&gt;&gt; async_to_sync(channel_layer.receive)('test_channel')
+{'site': 'https://ops-coffee.cn'}
+&gt;&gt;&gt;</code></pre>
+
+
+<ol>
+<li>consumer做如下修改引入channel layer</li>
+</ol>
+<pre class="codehilite"><code>from asgiref.sync import async_to_sync
+from channels.generic.websocket import WebsocketConsumer
+import json
+
+class ChatConsumer(WebsocketConsumer):
+    def connect(self):
+        self.room_group_name = 'ops_coffee'
+
+        # Join room group
+        async_to_sync(self.channel_layer.group_add)(
+            self.room_group_name,
+            self.channel_name
+        )
+
+        self.accept()
+
+    def disconnect(self, close_code):
+        # Leave room group
+        async_to_sync(self.channel_layer.group_discard)(
+            self.room_group_name,
+            self.channel_name
+        )
+
+    # Receive message from WebSocket
+    def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        message = text_data_json['message']
+
+        # Send message to room group
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'message': message
+            }
+        )
+
+    # Receive message from room group
+    def chat_message(self, event):
+        message = '运维咖啡吧：' + event['message']
+
+        # Send message to WebSocket
+        self.send(text_data=json.dumps({
+            'message': message
+        }))</code></pre>
+
+
+<p>这里我们设置了一个固定的房间名作为Group name，所有的消息都会发送到这个Group里边，当然你也可以通过参数的方式将房间名传进来作为Group name，从而建立多个Group，这样可以实现仅同房间内的消息互通</p>
+<p>当我们启用了channel layer之后，所有与consumer之间的通信将会变成异步的，所以必须使用<code>async_to_sync</code></p>
+<p>一个链接（channel）创建时，通过<code>group_add</code>将channel添加到Group中，链接关闭通过<code>group_discard</code>将channel从Group中剔除，收到消息时可以调用<code>group_send</code>方法将消息发送到Group，这个Group内所有的channel都可以收的到</p>
+<p><code>group_send</code>中的type指定了消息处理的函数，这里会将消息转给<code>chat_message</code>函数去处理</p>
+<ol>
+<li>经过以上的修改，我们再次在多个浏览器上打开聊天页面输入消息，发现彼此已经能够看到了，至此一个完整的聊天室已经基本完成</li>
+</ol>
+<h2 id="_2">修改为异步</h2>
+<p>我们前边实现的consumer是同步的，为了能有更好的性能，官方支持异步的写法，只需要修改consumer.py即可</p>
+<pre class="codehilite"><code>from channels.generic.websocket import AsyncWebsocketConsumer
+import json
+
+class ChatConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.room_group_name = 'ops_coffee'
+
+        # Join room group
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        # Leave room group
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+
+    # Receive message from WebSocket
+    async def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        message = text_data_json['message']
+
+        # Send message to room group
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'message': message
+            }
+        )
+
+    # Receive message from room group
+    async def chat_message(self, event):
+        message = '运维咖啡吧：' + event['message']
+
+        # Send message to WebSocket
+        await self.send(text_data=json.dumps({
+            'message': message
+        }))</code></pre>
+
+
+<p>其实异步的代码跟之前的差别不大，只有几个小区别：</p>
+<p>ChatConsumer由<code>WebsocketConsumer</code>修改为了<code>AsyncWebsocketConsumer</code></p>
+<p>所有的方法都修改为了异步def<code>async def</code></p>
+<p>用<code>await</code>来实现异步I/O的调用</p>
+<p>channel layer也不再需要使用<code>async_to_sync</code>了</p>
+<p>好了，现在一个完全异步且功能完整的聊天室已经构建完成了</p>
+<h1 id="_3">代码地址</h1>
+<p>我已经将以上的演示代码上传至Github方便你在实现的过程中查看参考，具体地址为：</p>
+<p><a href="https://github.com/ops-coffee/demo/tree/master/websocket" target="_blank">https://github.com/ops-coffee/demo/tree/master/websocket</a></p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/django-channels-websocket-devops-01.html">📅 2019-04-16</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
