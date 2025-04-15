@@ -92,7 +92,7 @@
 <p>持续集成原本是通过<a href="/s/eM7SNKmtw2tDQtXBsBXyxQ" target="_blank">varian系统</a>来实现的，但现在我们已经彻底废弃了varian，用更为强大的<a href="/s/uXQbM4t11ICdzNofZyDeXA" target="_blank">自定义任务引擎Probius</a>来代替了，Probius下边介绍</p>
 <p>现在将回滚功能也集成进了nova，回滚基于Docker镜像来实现，选择要回滚环境，会根据环境拉对应项目和环境去Dockerhub拉取相应的镜像列表，选择镜像进行回滚，可以快速回滚到之前的任何一个版本</p>
 <p><img alt="" loading="lazy" src="/static/images/2021/1130.02.png" /></p>
-<p>还为nova增加了批量任务执行的功能，主要基于Ansible来实现，详细介绍可以看之前的文章：<a href="/s/6YAC_Lqw3jB0LZlJTx4A2g" target="_blank">Django+Ansible构建任务中心思路</a>，借助于批量任务可以方便的进行多节点异常排查，以及非部署类的任务处理</p>
+<p>还为nova增加了批量任务执行的功能，主要基于Ansible来实现，详细介绍可以看之前的文章：<a href="https://blog.ops-coffee.cn/s/django-ansible-devops-web-automation.html" target="_blank">Django+Ansible构建任务中心思路</a>，借助于批量任务可以方便的进行多节点异常排查，以及非部署类的任务处理</p>
 <p><img alt="" loading="lazy" src="/static/images/2021/1130.03.png" /></p>
 <h2 id="kerrigan">kerrigan</h2>
 <p>作为对运维非常友好的配置管理工具，Kerrigan在整个项目运行中起着至关重要的作用，目前已经管理了数百个不同类型的配置文件，保障了上万次的配置修改得以正常执行，近两年来也对其进行了优化升级，主要有2个方面</p>
