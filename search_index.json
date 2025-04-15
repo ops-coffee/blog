@@ -1204,7 +1204,7 @@
     "date": "2021-09-06"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/6YAC_Lqw3jB0LZlJTx4A2g.html",
+    "url": "https://blog.ops-coffee.cn/s/django-ansible-devops-web-automation.html",
     "title": "Django+Ansible构建任务中心思路",
     "content": "本文介绍了如何基于Ansible开发一个简单的DevOps任务中心的思路，包括前端页面和后端逻辑的设计，帮助新手理解流程并整理开发思路。",
     "keywords": "Ansible, DevOps, 任务中心, 自动化运维, Python, API, Playbook, Module, CMDB",
