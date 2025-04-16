@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="博客搭建, Github Pages, SEO优化, 博客工具选择, Django后台, 静态页面生成, Netlify加速" />
+  <meta name="description" content="本文详细介绍了我从使用第三方博客平台到自建静态博客的折腾历程，包括选择Github Pages的原因、使用Django自建后台生成静态页面的方法、以及如何通过SEO优化和Netlify加速提升博客访问体验。希望这些经验对正在考虑搭建个人博客的你有所帮助。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>关于个人博客那些事儿</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="关于个人博客那些事儿" />
+  <meta property="og:description" content="本文详细介绍了我从使用第三方博客平台到自建静态博客的折腾历程，包括选择Github Pages的原因、使用Django自建后台生成静态页面的方法、以及如何通过SEO优化和Netlify加速提升博客访问体验。希望这些经验对正在考虑搭建个人博客的你有所帮助。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">关于个人博客那些事儿</h1>
+
+        <p>写文章有两年多的时间，博客站在这两年多的时间里不曾有一天停止服务过，后边也将继续运行很多很多个2年，本篇文章简单介绍下我的博客折腾历程，希望对你有点帮助</p>
+<p>至于为什么要写文章，可以看下<a href="/s/TnvJlcnB51miI-t8N8IkXQ" target="_blank">『我为什么要写微信公众号』</a></p>
+<p>刚开始写博客用第三方博客平台，各种不爽，完全不可控，总有一种寄人篱下的感觉，并且不是很信任这些平台，停止服务也是常有的事，于是便决定自己搭建，开始之初就想清楚了一个事情，那就是：博客要想持久，少花钱很重要，<strong>不花钱</strong>最好</p>
+<p>没有成本压力，会少很大负担，所以选择了Github Pages。虽然云主机每年也就百十块钱，但依然有成本，有成本就会面临选择，在主机到期的时候想到没有什么流量的博客很有可能就不再续费了，而Github Pages没有这个问题，别杠，像Github Pages倒闭这种低概率事件暂不考虑</p>
+<p>于是自己写了个Django的后台跑在本地，用来管理博文，生成纯静态的html文件自动上传到Github，可以看下这篇文章有介绍及代码：<a href="/s/7g2wncQG1lIziOmtBxXwEw" target="_blank">『利用Django徒手写个静态页面生成工具』</a></p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1107.02.png" /></p>
+<p>之所以没有选择市面上那些成熟的工具，主要有以下几点原因：</p>
+<p>1.很难找到一个完全符合自己想法的工具，即便是找到了一个能满足目前需求的工具，但难免后边有了新的想法，想要第三方支持几乎不可能</p>
+<p>2.通用的工具因为要满足不同的人的不同想法，基本做的都很重，有一大堆自己可能完全用不上的功能，个人对代码和工具有洁癖，考虑到还有一定的学习成本，直接放弃</p>
+<p>3.对Django轻车熟路，觉得自己造轮子也不费事，个人博客也不想做的太复杂，无非就是CRUD</p>
+<p>4.最重要的能使生成的内容“最优”，这里的最优指的是完全符合自己的预期，几乎没有任何第三方依赖，最少的资源加载，去掉一切非必要的功能，就是纯静态html，连异步加载，异步渲染都没有，也寄希望能加载的稍微快一点</p>
+<p>但Github的服务器节点毕竟全部在国外，访问链路天然不好，也折腾了Netlify的全球CDN加速，可以看下这个介绍：<a href="/s/11-yHYohTdSBl9FfNvCs6w" target="_blank">『Github Pages访问太慢？通过Netlify免费加速』</a>，刚折腾好的时候测试确实可以加速，但Netlify同样在国内没有节点，效果时好时差，并不稳定</p>
+<p>之所以不用国内的CDN，那是因为国内CDN都要备案啊，之前考虑过备案，但阿里云看了一圈，想备案的话就要有台阿里云主机，虽然只是几十块钱的事，但还是懒得折腾了</p>
+<p>迫于网络这种硬伤不好解决，就暂时放下了网络方面的纠结，转而研究SEO，这篇文章有介绍：<a href="https://blog.ops-coffee.cn/s/googole-search-analytics-adsense-blog-site-seo" target="_blank">『Google搜索成最大入口，简单谈下个人博客的SEO』</a>，希望博客能得到更多的关注和流量，还好这个小有成效，随着时间的推移效果也逐渐显现</p>
+<p>看到很多小伙伴都在纠结究竟是用现成的博客平台，还是开源的第三方程序搭建，或是发挥自己的特长动手撸，这种问题我在技术论坛里经常看到，同时也见证了太多人在选择博客平台、挑选博客程序、折腾博客主题上花了大量的时间，而忽略了对于博客最为重要的<strong>内容</strong>，用啥不纠结，个人觉得简单就好，很多知名的博客，都算不上特别好看，但以过硬的内容品质，吸引了大量的流量，例如阮一峰的网络日志、CoolShell等</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1107.01.png" /></p>
+<p>到现在我的博客内容在不断丰富，后台也添加了不少的功能，但前台的主UI始终未有大的改变，仅是不断的在做一些小的优化调整，考虑到文章详情页面的阅读体验，最近去掉了详情页的侧边栏，还加了文章推荐，个人感觉还不错，你不来看看吗？</p>
+<p><a href="https://blog.ops-coffee.cn" target="_blank">运维咖啡吧</a>，就在这里等着你~</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/ops-coffee-blog-system-github-netify.html">📅 2020-11-07</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/这是生活/">🏷️ 这是生活</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Just-For-Fun/">🏷️ Just-For-Fun</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/博客/">🏷️ 博客</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
