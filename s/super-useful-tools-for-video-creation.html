@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="ScreenToGif, OBS Studio, Clipchamp, 视频录制工具, 视频编辑软件, 开源软件, 免费工具" />
+  <meta name="description" content="本文介绍了三款优质的视频录制与编辑工具：ScreenToGif、OBS Studio和Clipchamp。这些工具功能强大，使用方便，适合各种视频制作需求，无论是初学者还是专业人士都能从中受益。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>神器推荐 | 我的第一个视频是如何诞生的</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="神器推荐 | 我的第一个视频是如何诞生的" />
+  <meta property="og:description" content="本文介绍了三款优质的视频录制与编辑工具：ScreenToGif、OBS Studio和Clipchamp。这些工具功能强大，使用方便，适合各种视频制作需求，无论是初学者还是专业人士都能从中受益。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li><a href="/tag/这是生活/" target="_self">这是生活</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">神器推荐 | 我的第一个视频是如何诞生的</h1>
+
+        <blockquote>
+<p>介绍几款超级好用的工具，或开源或免费</p>
+</blockquote>
+<p><a href="https://blog.ops-coffee.cn/webssh" target="_blank">WebSSH相关的文章</a>写了一个系列，实现了很多非常好用的功能，在每一篇文章中都有一个Gif图片来展示这篇文章实现的成果，但没有一个完整功能的展示，所以就想录个视频演示一下所有的功能，以方便读者在动手实现之前了解可以实现的功能，最终效果如下</p>
+<div class="aspect-ratio">
+        <iframe src="//player.bilibili.com/player.html?aid=78686836&cid=134635458&page=1&high_quality=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+</div>
+
+<p>接下里介绍下制作的过程和用到的优秀软件</p>
+<h2 id="screentogif">ScreenToGif</h2>
+<p>首先要解决的问题是视频录制，咖啡君的文章里出现的屏幕录像Gif动图几乎全部由ScreenToGif这个软件制作完成</p>
+<p>ScreenToGif是一款开源且功能强大的录屏工具，可以对整个屏幕窗口或者选定屏幕区域进行录像，自带编辑功能，可以删除不需要的帧或调整画面大小等等，最后还可以将编辑好的内容导出成Gif图片或视频等格式的文件</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1213.01.png" /></p>
+<p>ScreenToGif制作Gif图片非常好用，起初想用其录像并导出视频文件，但尝试了几次导出视频后，发现导出的视频文件很大，且不好压缩，放弃</p>
+<h2 id="obs-studio">OBS Studio</h2>
+<p>找了好多视频录制软件，都不是很满意，最后发现了OBS Studio，这是一个用于屏幕录制和网络直播的开源软件，功能强大，使用简单</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1213.02.png" /></p>
+<p>主用户界面分为五个部分：场景、来源、混音器、转场特效和控件。场景是一组源，如实时和录制的视频、文本和音频。混音器面板允许用户静音，并通过虚拟faders调整音量，并通过按下静音按钮旁边的齿轮来应用效果。控件面板有开始推流、开始录制、工作室（Studio）模式、设置、退出这些按钮。上半部分是实时视频预览，用于监控和编辑当前场景</p>
+<p>OBS上手简单，操作流畅，录像清晰且文件小，还开源免费，非常优秀，最终通过OBS录制了演示视频</p>
+<h2 id="clipchamp">clipchamp</h2>
+<p>视频录制完成后想要对视频进行简单的编辑，主要是加上说明，添加背景音乐，第一次录视频，没有声音讲解，觉得给加上文字介绍会清晰一点</p>
+<p>关于视频剪辑，咖啡君早已听过剪辑界扛把子软件Adobe Premiere的大名，查了一下收费还很贵，考虑到自己使用的机会不多，忍痛放弃。朋友推荐了Davinci，上手也较困难，没搞懂怎么用，之后试用了各种国产的剪辑软件，感觉都差点意思，不够优秀</p>
+<p>万念俱灰，准备放弃之际，发现了Clipchamp，Clipchamp是一款在线视频剪辑工具，地址是：<a href="https://app.clipchamp.com/" target="_blank">https://app.clipchamp.com/</a></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1213.03.png" /></p>
+<p>Clipchamp可以实现为视频添加片头片尾，添加字幕、水印、前景、背景、转场动画，对视频进行切割重组等等非常实用的功能，且其运行速度流畅，操作简单，全程拖拽即可完成</p>
+<p>高高兴兴的花了两个小时完成了对原始录像的剪辑，由于没有找到合适的背景音乐没有添加，在最后导出时看到收费$5.99，本着对版权的支持准备付钱，但国外支付渠道付款一直有问题，就又搜索了一番，发现了<a href="https://bilibili.clipchamp.com/" target="_blank">bilibili视频编辑器</a>，界面跟clipchamp一模一样，惊奇之余看了眼域名<a href="bilibili.clipchamp.com" target="_blank">bilibili.clipchamp.com</a>，瞬间明白了之间的关系，有了前边的经验，轻车熟路没多久就在bilibili视频编辑器中重新剪辑完成，导出，免费~</p>
+<p>中间的文字说明是用的图片，图片的制作比较讨巧直接用了PPT制作，然后截图上传</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1213.04.png" /></p>
+<h2 id="_1">写在最后</h2>
+<p>从构思视频到找合适软件到最终完成，总共花了约大半天的时间，质量较差，各位海涵，同时也将视频上传到了多个视频网站，体验了一把up主，真心觉得up主不易，再次为优秀的内容贡献者、软件开发者点赞，是你们的无私贡献让世界变得更加美好~</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/super-useful-tools-for-video-creation.html">📅 2019-12-13</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/这是生活/">🏷️ 这是生活</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Just-For-Fun/">🏷️ Just-For-Fun</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
