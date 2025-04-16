@@ -329,7 +329,7 @@ https://blog.ops-coffee.cn/t/python-pass-by-reference.html
 https://blog.ops-coffee.cn/s/D6PeQ_lzcaY8pmOLqTY-gQ.html
 https://blog.ops-coffee.cn/s/open-source-devops-system-tools-cloud-opendevops.html
 https://blog.ops-coffee.cn/s/7g2wncQG1lIziOmtBxXwEw.html
-https://blog.ops-coffee.cn/s/TnvJlcnB51miI-t8N8IkXQ.html
+https://blog.ops-coffee.cn/s/why-do-I-want-to-write-for-WeChat-official-account.html
 https://blog.ops-coffee.cn/elk/elasticsearch-select-query-DSL-api.html
 https://blog.ops-coffee.cn/s/JyUnN_OtQ2NtXcH0mtCJUg.html
 https://blog.ops-coffee.cn/s/django-channels-websocket-devops-02.html
