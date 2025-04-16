@@ -1,5 +1,6 @@
 https://blog.ops-coffee.cn/
 https://blog.ops-coffee.cn/friends.html
+https://blog.ops-coffee.cn/life/writing.html
 https://blog.ops-coffee.cn/life/money.html
 https://blog.ops-coffee.cn/life/chronicles.html
 https://blog.ops-coffee.cn/rv.html
@@ -253,7 +254,7 @@ https://blog.ops-coffee.cn/t/prod-redis-config-example.html
 https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-contextpad-demo-code-source.html
 https://blog.ops-coffee.cn/bpmn/bpmn-js-modeling-api-cn.html
 https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-palette-demo-code-source.html
-https://blog.ops-coffee.cn/s/fA9_YUuKAyKSNPwxbGxmkQ.html
+https://blog.ops-coffee.cn/s/ops-coffee-blog-system-github-netify.html
 https://blog.ops-coffee.cn/s/JpnxTf-Z9vkKrwl8nXJljQ.html
 https://blog.ops-coffee.cn/python/Aq2FiCLTsqIBX-RpARzM_w.html
 https://blog.ops-coffee.cn/t/python-list-skill.html

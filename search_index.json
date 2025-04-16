@@ -1330,7 +1330,7 @@
     "date": "2020-11-10"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/fA9_YUuKAyKSNPwxbGxmkQ.html",
+    "url": "https://blog.ops-coffee.cn/s/ops-coffee-blog-system-github-netify.html",
     "title": "关于个人博客那些事儿",
     "content": "本文详细介绍了我从使用第三方博客平台到自建静态博客的折腾历程，包括选择Github Pages的原因、使用Django自建后台生成静态页面的方法、以及如何通过SEO优化和Netlify加速提升博客访问体验。希望这些经验对正在考虑搭建个人博客的你有所帮助。",
     "keywords": "博客搭建, Github Pages, SEO优化, 博客工具选择, Django后台, 静态页面生成, Netlify加速",
