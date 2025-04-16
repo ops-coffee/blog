@@ -279,7 +279,7 @@ https://blog.ops-coffee.cn/s/django-object-permission-django-guardian-rbac.html
 https://blog.ops-coffee.cn/s/fKDyRxjMr0XmXJGCAv6Ghw.html
 https://blog.ops-coffee.cn/python/4S0L78-YOT50VT6nMAhqfg.html
 https://blog.ops-coffee.cn/s/DInxgNE2HHnPJ_MfxQ3_yA.html
-https://blog.ops-coffee.cn/s/11-yHYohTdSBl9FfNvCs6w.html
+https://blog.ops-coffee.cn/s/blog-website-github-pages-vs-netlify.html
 https://blog.ops-coffee.cn/s/vbdJ4fAPOrgLAUipoCCXBA.html
 https://blog.ops-coffee.cn/s/8FOEsaEcCbHOsysYutMk7w.html
 https://blog.ops-coffee.cn/s/Q9yzJ0HtKDKW7qrJeqXKQQ.html

@@ -1505,7 +1505,7 @@
     "date": "2020-03-23"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/11-yHYohTdSBl9FfNvCs6w.html",
+    "url": "https://blog.ops-coffee.cn/s/blog-website-github-pages-vs-netlify.html",
     "title": "Github Pages访问太慢？通过Netlify免费加速",
     "content": "本文对比了Github Pages和Netlify的静态网站托管服务，介绍了Netlify如何通过CDN加速提升网站国内访问速度，并详细说明了如何将Github仓库与Netlify绑定以实现自动发布和自定义域名设置。",
     "keywords": "Github Pages, Netlify, 静态网站托管, CDN加速, 自定义域名, HTTPS, SEO, 网站速度优化",
