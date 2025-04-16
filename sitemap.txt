@@ -288,7 +288,7 @@ https://blog.ops-coffee.cn/s/google-search-analytics-adsense-blog-site-seo.html
 https://blog.ops-coffee.cn/s/h9k_C7kNB6q1VqxQDVHyiQ.html
 https://blog.ops-coffee.cn/s/dAbyLz6-qrWuJsBnnyar2Q.html
 https://blog.ops-coffee.cn/s/devops-config-center-kerrigan-implementation.html
-https://blog.ops-coffee.cn/s/sNObdSPZAYl9ozUEkhCMyA.html
+https://blog.ops-coffee.cn/s/super-useful-tools-for-video-creation.html
 https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-lrzsz-file-scp-zmodem.html
 https://blog.ops-coffee.cn/t/debian8-jessie-install-python3.html
 https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-monitor-and-disconnect.html
