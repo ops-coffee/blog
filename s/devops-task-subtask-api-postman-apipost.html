@@ -125,7 +125,7 @@
 }</code></pre>
 
 
-<p>后端加解密的方法可以参考文章<a href="https://blog.ops-coffee.cn/s/pCIwRbWH-HaGAwBji8vDeQ" target="_blank">Model字段加密的优雅实现</a>，Request请求则比较简单</p>
+<p>后端加解密的方法可以参考文章<a href="https://blog.ops-coffee.cn/s/django-password-management-encryption-decryption.html" target="_blank">Model字段加密的优雅实现</a>，Request请求则比较简单</p>
 <pre class="codehilite"><code># 不同的认证类型使用不同的请求方式
 if authorization.get(&quot;type&quot;, &quot;&quot;).lower() == &quot;basic&quot;:
     auth = (authorization.get(&quot;basic_username&quot;, &quot;&quot;), authorization.get(&quot;basic_password&quot;, &quot;&quot;))
