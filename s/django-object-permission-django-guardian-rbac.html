@@ -93,7 +93,7 @@
         <blockquote>
 <p>Guardian详细用法介绍，助你玩转各种场景下的Django权限管理</p>
 </blockquote>
-<p><a href="/s/Fe7O4LIxe-L2otNguaQyqg" target="_blank">Django默认权限机制介绍及实践</a>文章中讲到Django默认的权限分配最小粒度是<strong>表</strong>，也就是说一旦我们给了用户这个表的修改权限，那么用户就可以修改表里的所有数据，这在某些情况下是无法满足需求的，例如对于一个Article文章表来说，我们规定用户只能修改自己的文章，而不能修改别人的文章，Django的默认权限机制就无法做到</p>
+<p><a href="https://blog.ops-coffee.cn/s/django-contrib-auth-permissions-system.html" target="_blank">Django默认权限机制介绍及实践</a>文章中讲到Django默认的权限分配最小粒度是<strong>表</strong>，也就是说一旦我们给了用户这个表的修改权限，那么用户就可以修改表里的所有数据，这在某些情况下是无法满足需求的，例如对于一个Article文章表来说，我们规定用户只能修改自己的文章，而不能修改别人的文章，Django的默认权限机制就无法做到</p>
 <p>那该如何实现上述需求呢？<a href="/s/BZsJnWLtv8ZwwlBYbWSbZQ" target="_blank">Django内置权限扩展案例</a>文章就给了实现的方法，在Article表新加字段来标识谁有修改的权限即可，试想如果我们有很多表都需要类似的权限控制呢？就需要不断的来添加字段标识权限，这种方案的弊端马上显现，那么有没有一种更为优雅的方案来解决呢？</p>
 <p>基于对象的权限控制就是很好的方法，他的权限控制粒度为表中的<strong>对象</strong>，可以给每一个对象赋予权限，<code>Django-guardian</code>便是基于Django的原生逻辑扩展出来的对象权限控制方案，他扩展了Django的默认权限方案，从而使Django的权限控制机制更加完善</p>
 <h2 id="_1">安装配置</h2>
