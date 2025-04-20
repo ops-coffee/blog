@@ -6,18 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="Live2D, 萌猫, 博客集成, 互动体验, 前端技术, 网页特效, 二次元" />
-  <meta name="description" content="了解如何将Live2D技术应用于博客，集成一只可爱的萌猫模型，增加网页互动性，提升用户体验。适合前端开发者和二次元爱好者。" />
+  <meta name="keywords" content="微信小程序, PC端, 微信v2.7.0测试版, 小程序功能, 微信登陆, 微信支付" />
+  <meta name="description" content="微信PC版v2.7.0测试版新增功能，支持在PC端打开聊天中分享的小程序。体验与手机端一致的操作，支持微信一键登录，但目前不支持微信支付。" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
-  <title>几行代码养只猫，心情瞬间好多了</title>
+  <title>喜大普奔 | 微信小程序支持PC端打开了</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
   <meta property="og:url" content="https://blog.ops-coffee.cn" />
-  <meta property="og:title" content="几行代码养只猫，心情瞬间好多了" />
-  <meta property="og:description" content="了解如何将Live2D技术应用于博客，集成一只可爱的萌猫模型，增加网页互动性，提升用户体验。适合前端开发者和二次元爱好者。" />
+  <meta property="og:title" content="喜大普奔 | 微信小程序支持PC端打开了" />
+  <meta property="og:description" content="微信PC版v2.7.0测试版新增功能，支持在PC端打开聊天中分享的小程序。体验与手机端一致的操作，支持微信一键登录，但目前不支持微信支付。" />
   <link rel="canonical" href="https://blog.ops-coffee.cn" />
   <!-- End SEO tag -->
 </head>
@@ -88,67 +88,33 @@
 
   <div id="content-wrap">
     <div class="container no-sidebar">
-        <h1 id="art-title">几行代码养只猫，心情瞬间好多了</h1>
+        <h1 id="art-title">喜大普奔 | 微信小程序支持PC端打开了</h1>
 
         <blockquote>
-<p>或枯燥或有趣的技术学习，都不妨碍一只憨态可掬的萌猫卧在你的网页上</p>
+<p>微信小程序可以在PC端打开啦</p>
 </blockquote>
-<p>浏览博客的时候经常会看到一个二次元的小姐姐或轻轻摇头或眨巴眼睛似在与你互动甚是可爱，就像下边这样</p>
-<p><img alt="" loading="lazy" src="/static/images/2019/0619.live2d.1.gif" /></p>
-<p>曾想了解是如何实现的，奈何本身不懂前端，且对二次元并不感冒，就放下了，直到遇到了这只猫，再也无法抵挡诱惑，决心将她抱进自己的博客，每天能看到她，就会有个好心情，我想也许会有读者跟我一样吧，能有这么一只萌宠呆在这里足以平添很多的乐趣了</p>
-<p><img alt="" loading="lazy" src="/static/images/2019/0619.live2d.2.gif" /></p>
-<p>以上这种效果都是使用Live2D技术实现的，Live2D是一种应用于电子游戏的绘图渲染技术，由日本Cybernoids公司开发，通过一系列的连续图像和人物建模来生成一种类似二维图像的三维模型，换句话说就是2D的素材实现一定程度的3D效果</p>
-<p>Live2D可以展示在很多平台上，例如浏览器，Android，IOS，Unity等，GitHub上有很多已经实现的Live2D项目，我所养的这只猫也来自于<a href="https://github.com/QiShaoXuan/live2DModel" target="_blank"><code>live2DModel</code></a>这个仓库，这个仓库下还收集了其他一些Live2D模型</p>
-<p>在自己的网站上养猫非常的简单，只需要以下两步即可，其实<a href="https://github.com/QiShaoXuan/live2DModel" target="_blank"><code>live2DModel</code></a>仓库里边有demo的，但是对于完全不懂前端的人来说看起来还是有点费劲，我这里仅仅是给整理成更容易理解和使用的版本，向原作者致敬：</p>
-<ol>
-<li>下载代码仓库到自己的项目下，仓库地址如下：</li>
-</ol>
-<pre class="codehilite"><code>https://github.com/ops-coffee/demo/tree/master/live2d</code></pre>
-
-
-<p>其中index.hmtl为示例代码，将整个项目放在nginx下可以直接查看效果</p>
-<p>live2d文件夹存放了猫的模型以及需要用到的两个js文件</p>
-<p>你只需要把index.html同层的live2d文件夹拷贝到你的项目下，然后按照下边步骤添加js就可以将猫养在你的站点了</p>
-<ol>
-<li>添加如下JS代码到需要显示猫的页面上</li>
-</ol>
-<pre class="codehilite"><code>&lt;script src=&quot;/live2d/L2Dwidget.min.js&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot;&gt;
-  L2Dwidget.init({
-    model: {
-      jsonPath: '/live2d/tororo/assets/tororo.model.json',
-    },
-    display: {
-      superSample: 2,
-      width: 150,
-      height: 150,
-      position: 'right',
-      hOffset: 0,
-      vOffset: 0,
-    },
-    mobile: {
-      show: true,
-      scale: 1,
-      motion: true,
-    },
-    react: {
-      opacityDefault: 0.8,
-      opacityOnHover: 0.2,
-    }
-  })
-&lt;/script&gt;</code></pre>
-
-
-<p><strong>model：</strong> 指定<code>model.json</code>位置，如果你不喜欢猫也可以在<a href="https://github.com/QiShaoXuan/live2DModel" target="_blank"><code>live2DModel</code></a>这个仓库下查找自己喜欢的模型，然后将模型目录拷贝到live2d文件夹下，然后修改model路径参数以及display显示参数即可</p>
-<p><strong>display：</strong> 控制live2d模型在页面上显示的位置</p>
-<p><strong>mobile：</strong> 控制手机上是否显示</p>
-<p><strong>react：</strong> 控制显示的透明度</p>
-<p>至此完成，再访问网页就会发现一只猫静静的卧在那里，看风云变幻，自云淡风轻~</p>
+<p>微信PC版发布了v2.7.0测试版，其中一个重磅的功能就是：<strong>支持打开聊天中分享的小程序</strong></p>
+<p>咖啡君这么喜欢尝鲜的人自然是在第一时间下载进行了体验</p>
+<p>安装成功，会有功能更新说明</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0809.wx01.png" /></p>
+<p>上边赫然写着“可以打开聊天中的小程序消息”，一阵兴奋</p>
+<p>将小程序分享给好友后，可以在PC端微信聊天窗口中看到卡片式的小程序界面跟手机端看到的样式保持了一致</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0809.wx02.png" /></p>
+<p>点击卡片可以打开小程序，小程序会以新窗口的形式呈现，且在任务栏有独立的图标</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0809.wx03.png" /></p>
+<p>大部分的操作跟手机端保持了一致，同时需要微信登陆的地方也支持微信一键登陆，支持打开webview</p>
+<p>目前小程序窗口不支持更改宽高大小，同时也还不支持微信支付</p>
+<p>右上角的菜单按钮目前仅有转发、关于、最小化三个按钮，点击“关于”按钮出现如下界面，可以将小程序发送给朋友</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0809.wx04.png" /></p>
+<p>如果你想关闭小程序可以点击小程序主界面右上角的退出按钮</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0809.wx05.png" /></p>
+<p>更多功能期待你的发现，赶紧下载体验吧</p>
+<p>下载地址：<a href="https://dldir1.qq.com/weixin/Windows/WeChat2.7.0_beta.exe" target="_blank">https://dldir1.qq.com/weixin/Windows/WeChat2.7.0_beta.exe</a></p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
-            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/xkrxfg4NULauzyU7uZqVwQ.html">📅 2019-06-19</a></li>
-<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/这是生活/">🏷️ 这是生活</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Just-For-Fun/">🏷️ Just-For-Fun</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/wechat-miniprogram-pc-support.html">📅 2019-08-09</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Just-For-Fun/">🏷️ Just-For-Fun</a></li>          </ul>
         </div>
 
         <hr>
