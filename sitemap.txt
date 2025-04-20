@@ -306,7 +306,7 @@ https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-ssh-paramiko-stream.ht
 https://blog.ops-coffee.cn/s/lVVe6OtX7U-USAHn4j5XZQ.html
 https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-kubernetes-ssh-resize.html
 https://blog.ops-coffee.cn/webssh/jumpserver-kubernetes-web-terminal-ssh-stream.html
-https://blog.ops-coffee.cn/s/Fe7O4LIxe-L2otNguaQyqg.html
+https://blog.ops-coffee.cn/s/django-contrib-auth-permissions-system.html
 https://blog.ops-coffee.cn/s/national-flag-in-wechat-avatar-event.html
 https://blog.ops-coffee.cn/s/specifications-mysql-development-guidelines.html
 https://blog.ops-coffee.cn/t/Kubernetes-Python-API-Demo.html
