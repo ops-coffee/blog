@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="MySQL开发规范, 数据库命名规范, 表命名规范, 字段命名规范, 索引设计规范, SQL编写规范, 数据库对象设计规范" />
+  <meta name="description" content="本文详细介绍了MySQL开发规范，包括数据库对象命名、表命名、字段命名、索引设计以及SQL编写等规范，旨在提高代码效率和项目稳定性。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>建议收藏 | 专业的MySQL开发规范</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="建议收藏 | 专业的MySQL开发规范" />
+  <meta property="og:description" content="本文详细介绍了MySQL开发规范，包括数据库对象命名、表命名、字段命名、索引设计以及SQL编写等规范，旨在提高代码效率和项目稳定性。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">建议收藏 | 专业的MySQL开发规范</h1>
+
+        <blockquote>
+<p>为了项目的稳定，代码的高效，管理的便捷，在开发团队内部会制定各种各样的规范</p>
+</blockquote>
+<p>这里分享一份我们定义的MySQL开发规范，欢迎交流拍砖</p>
+<h3 id="_1">数据库对象命名规范</h3>
+<h4 id="_2">数据库对象</h4>
+<p>命名规范的对象是指数据库SCHEMA、表TABLE、索引INDEX、约束CONSTRAINTS等的命名约定</p>
+<h4 id="_3">数据库对象命名原则</h4>
+<ol>
+<li>命名使用具有意义的英文词汇，词汇中间以下划线分隔</li>
+<li>命名只能使用英文字母、数字、下划线</li>
+<li>避免用MySQL的保留字如：call、group等</li>
+<li>所有数据库对象使用小写字母</li>
+</ol>
+<h4 id="_4">数据库命名规范</h4>
+<ol>
+<li>数据库名不能超过30个字符</li>
+<li>数据库命名必须为项目英文名称或有意义的简写</li>
+<li>数据库创建时必须添加默认字符集和校对规则子句。默认字符集为UTF8(已迁移dumbo的使用utf8mb4)</li>
+<li>命名应使用小写</li>
+</ol>
+<h4 id="_5">表命名规范</h4>
+<ol>
+<li>同一个模块的表尽可能使用相同的前缀，表名称尽可能表达含义</li>
+<li>多个单词以下划线（_）分隔</li>
+<li>表名不能超过30个字符</li>
+<li>普通表名以t_开头，表示为table，命名规则为t_模块名（或有意义的简写）_+table_name</li>
+<li>临时表(运营、开发或数据库人员临时用作临时进行数据采集用的中间表)命名规则：加上tmp前缀和8位时间后缀（tmp_test_user_20181109）</li>
+<li>备份表（DBA备份用作保存历史数据的中间表）命名规则：加上bak前缀和8位时间后缀（bak_test_user_20181109）</li>
+<li>命名应使用小写</li>
+</ol>
+<h4 id="_6">字段命名规范</h4>
+<ol>
+<li>字段命名需要表示其实际含义的英文单词或简写，单词之间用下划线（_）进行连接</li>
+<li>各表之间相同意义的字段必须同名</li>
+<li>字段名不能超过30个字符</li>
+</ol>
+<h4 id="_7">用户命名规范</h4>
+<ol>
+<li>生产使用的用户命名格式为 code_应用</li>
+<li>只读用户命名规则为 read_应用</li>
+</ol>
+<h3 id="_8">数据库对象设计规范</h3>
+<h4 id="_9">存储引擎的选择</h4>
+<p>如无特殊需求，必须使用innodb存储引擎</p>
+<h4 id="_10">字符集的选择</h4>
+<p>如无特殊要求，必须使用utf8或utf8mb4</p>
+<h4 id="_11">表设计规范</h4>
+<ol>
+<li>不同应用间所对应的数据库表之间的关联应尽可能减少，不允许使用外键对表之间进行关联，确保组件对应的表之间的独立性，为系统或表结构的重构提供可能性</li>
+<li>表设计的角度不应该针对整个系统进行数据库设计，而应该根据系统架构中组件划分，针对每个组件所处理的业务进行数据库设计</li>
+<li>表必须要有PK</li>
+<li>一个字段只表示一个含义</li>
+<li>表不应该有重复列</li>
+<li>禁止使用复杂数据类型(数组,自定义等)</li>
+<li>需要join的字段(连接键),数据类型必须保持绝对一致，避免隐式转换</li>
+<li>设计应至少满足第三范式,尽量减少数据冗余。一些特殊场景允许反范式化设计，但在项目评审时需要对冗余字段的设计给出解释</li>
+<li>TEXT字段必须放在独立的表中,用PK与主表关联。如无特殊需要，禁止使用TEXT、BLOB字段</li>
+<li>需要定期删除(或者转移)过期数据的表,通过分表解决</li>
+<li>单表字段数不要太多，建议最多不要大于50个</li>
+<li>MySQL在处理大表时，性能就开始明显降低，所以建议单表物理大小限制在16GB，表中数据控制在2000W内</li>
+<li>如果数据量或数据增长在前期规划时就较大，那么在设计评审时就应加入分表策略</li>
+<li>无特殊需求，严禁使用分区表</li>
+</ol>
+<h4 id="_12">字段设计规范</h4>
+<ol>
+<li>INT：如无特殊需要，存放整型数字使用UNSIGNED INT型。整型字段后的数字代表显示长度</li>
+<li>DATETIME：所有需要精确到时间(时分秒)的字段均使用DATETIME,不要使用TIMESTAMP类型</li>
+<li>VARCHAR：所有动态长度字符串 全部使用VARCHAR类型,类似于状态等有限类别的字段,也使用可以比较明显表示出实际意义的字符串,而不应该使用INT之类的数字来代替；VARCHAR(N)，N表示的是字符数而不是字节数。比如VARCHAR(255)，可以最大可存储255个字符（字符包括英文字母，汉字，特殊字符等）。但N应尽可能小，因为MySQL一个表中所有的VARCHAR字段最大长度是65535个字节，且存储字符个数由所选字符集决定。如UTF8存储一个字符最大要3个字节，那么varchar在存放占用3个字节长度的字符时不应超过21845个字符。同时，在进行排序和创建临时表一类的内存操作时，会使用N的长度申请内存。(如无特殊需要，原则上单个varchar型字段不允许超过255个字符)</li>
+<li>TEXT:仅仅当字符数量可能超过20000个的时候,才可以使用TEXT类型来存放字符类数据,因为所有MySQL数据库都会使用UTF8字符集。所有使用TEXT类型的字段必须和原表进行分拆,与原表主键单独组成另外一个表进行存放。如无特殊需要，严禁开发人员使用MEDIUMTEXT、TEXT、LONGTEXT类型</li>
+<li>对于精确浮点型数据存储，需要使用DECIMAL，严禁使用FLOAT和DOUBLE</li>
+<li>如无特殊需要，严禁开发人员使用BLOB类型</li>
+<li>如无特殊需要，字段建议使用NOT NULL属性，可用默认值代替NULL</li>
+<li>自增字段类型必须是整型且必须为UNSIGNED，推荐类型为INT或BIGINT，并且自增字段必须是主键或者主键的一部分</li>
+</ol>
+<h4 id="_13">索引设计规范</h4>
+<ol>
+<li>索引必须创建在索引选择性选择性较高的列上,选择性的计算方式为: <code>select count(distinct(col_name))/count(*) from tb_name;</code>如果结果小于0.2，则不建议在此列上创建索引，否则大概率会拖慢SQL执行</li>
+<li>组合索引的首字段,必须在where条件中，对于确定需要组成组合索引的多个字段,建议将选择性高的字段靠前放</li>
+<li>禁止使用外键</li>
+<li>Text类型字段如果需要创建索引，必须使用前缀索引</li>
+<li>单张表的索引数量理论上应控制在5个以内。经常有大批量插入、更新操作表，应尽量少建索引</li>
+<li>ORDER BY，GROUP BY，DISTINCT的字段需要添加在索引的后面，形成覆盖索引</li>
+<li>尽量使用Btree索引，不要使用其它类型索引</li>
+</ol>
+<h4 id="_14">约束设计规范</h4>
+<ol>
+<li>PK应该是有序并且无意义的,尽量由开发人员自定义,且尽可能短，使用自增序列。</li>
+<li>表中除PK以外,还存在唯一性约束的,可以在数据库中创建以“uidx_”作为前缀的唯一约束索引。</li>
+<li>PK字段不允许更新。</li>
+<li>禁止创建外键约束,外键约束由应用控制。</li>
+<li>如无特殊需要，所有字段必须添加非空约束，即not null。</li>
+<li>如无特殊需要，所有字段必须有默认值。</li>
+</ol>
+<h4 id="sql">SQL编写规范</h4>
+<ol>
+<li>尽量避免使用<code>select *</code>，join语句使用<code>select *</code>可能导致只需要访问索引即可完成的查询需要回表取数</li>
+<li>严禁使用<code>select *  from table</code>而不加任何where条件</li>
+<li>MySQL中的text类型字段存储的时候不是和由其他普通字段类型的字段组成的记录存放在一起,而且读取效率本身也不如普通字段块。如果不需要取回text字段，又使用了<code>select *</code>,会让完成相同功能的sql所消耗的io量大很多,而且增加部分的io效率也更低下</li>
+<li>在取出字段上可以使用相关函数，但应尽可能避免出现<code>now()</code>,<code>rand()</code>,<code>sysdate()</code>,<code>current_user()</code>等不确定结果的函数，在Where条件中的过滤条件字段上严禁使用任何函数，包括数据类型转换函数</li>
+<li>所有连接的SQL必须使用<code>Join ... On ...</code>方式进行连接，而不允许直接通过普通的Where条件关联方式。外连接的SQL语句,可以使用<code>Left Join  On</code>的Join方式，且所有外连接一律写成<code>Left Join</code>，而不要使用<code>Right Join</code></li>
+<li>分页查询语句全部都需要带有排序条件,除非应用方明确要求不要使用任何排序来随机展示数据</li>
+<li>WHERE条件中严禁在索引列上进行数学运算或函数运算</li>
+<li>用<code>in()</code>/<code>union</code>替换or，并注意in的个数小于300</li>
+<li>严禁使用%前缀进行模糊前缀查询:如：<code>select id,val from table where val like ‘%name’;</code>可以使用%模糊后缀查询如：<code>select id,val from table where val like ‘name%’</code></li>
+<li>严禁使用<code>INSERT ON DUPLICATE KEY UPDATE、REPLACE INTO、INSERT IGNORE</code></li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/specifications-mysql-development-guidelines.html">📅 2019-09-20</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/系统运维/">🏷️ 系统运维</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
