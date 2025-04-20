@@ -1743,7 +1743,7 @@
     "date": "2019-08-22"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/e3m9xHVsvhe36IvG1YKhbA.html",
+    "url": "https://blog.ops-coffee.cn/s/tree-plugin-ztree-and-django-model-design.html",
     "title": "Django+zTree构建组织架构树",
     "content": "本文介绍了如何使用多功能前端树插件zTree以及在Django中设计树结构的模型，帮助开发者更好地处理树形数据结构。",
     "keywords": "zTree, 前端树插件, Django树模型, 树结构, 前端开发, Django开发",
