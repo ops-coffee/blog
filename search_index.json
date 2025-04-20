@@ -1799,7 +1799,7 @@
     "date": "2019-07-19"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/F-IPkfo6jp6Wkb4ql-jaLg.html",
+    "url": "https://blog.ops-coffee.cn/s/introduction-to-skywalking-apm-system.html",
     "title": "APM系统SkyWalking介绍",
     "content": "本文介绍SkyWalking，一个开源的APM系统，专为微服务、云原生架构和基于容器架构设计，提供分布式追踪、服务网格遥测分析、度量聚合和可视化一体化解决方案。",
     "keywords": "SkyWalking, APM系统, 应用性能管理, 代码无侵入, 云原生架构, 服务网格遥测分析, 分布式追踪, 微服务监控, ElasticSearch, Mysql, Github开源, 华为开源, RocketBot, 仪表盘, 拓扑图, 追踪面板, 告警面板",
