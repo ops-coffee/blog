@@ -308,7 +308,7 @@ https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-kubernetes-ssh-resize.
 https://blog.ops-coffee.cn/webssh/jumpserver-kubernetes-web-terminal-ssh-stream.html
 https://blog.ops-coffee.cn/s/Fe7O4LIxe-L2otNguaQyqg.html
 https://blog.ops-coffee.cn/s/svwe15Nee2Fou5J4F7Ewg.html
-https://blog.ops-coffee.cn/s/zfR5kn1tejVSiH-mireT3A.html
+https://blog.ops-coffee.cn/s/specifications-mysql-development-guidelines.html
 https://blog.ops-coffee.cn/t/Kubernetes-Python-API-Demo.html
 https://blog.ops-coffee.cn/s/Nxh7mwPJPlbL3R9MdlkO_A.html
 https://blog.ops-coffee.cn/s/mysql-explain-output-slow-queries.html

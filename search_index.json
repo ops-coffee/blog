@@ -1708,7 +1708,7 @@
     "date": "2019-09-24"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/zfR5kn1tejVSiH-mireT3A.html",
+    "url": "https://blog.ops-coffee.cn/s/specifications-mysql-development-guidelines.html",
     "title": "建议收藏 | 专业的MySQL开发规范",
     "content": "本文详细介绍了MySQL开发规范，包括数据库对象命名、表命名、字段命名、索引设计以及SQL编写等规范，旨在提高代码效率和项目稳定性。",
     "keywords": "MySQL开发规范, 数据库命名规范, 表命名规范, 字段命名规范, 索引设计规范, SQL编写规范, 数据库对象设计规范",
