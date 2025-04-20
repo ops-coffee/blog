@@ -266,7 +266,7 @@ https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-viewer-demo-code-source.html
 https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-modeler-demo-code-source.html
 https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-local-file-demo-code-source.html
 https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-base-usage-demo-code-source.html
-https://blog.ops-coffee.cn/s/mzeUx4mnXKYiwZwDwHkBoQ.html
+https://blog.ops-coffee.cn/s/fire-financial-freedom-data-driven-perspective.html
 https://blog.ops-coffee.cn/t/prod-iptables-config-example.html
 https://blog.ops-coffee.cn/t/prod-ssh-config-example.html
 https://blog.ops-coffee.cn/s/uKPmc39C2Ysi_8J9ADUoUg.html
