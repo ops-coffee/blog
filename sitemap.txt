@@ -312,7 +312,7 @@ https://blog.ops-coffee.cn/s/specifications-mysql-development-guidelines.html
 https://blog.ops-coffee.cn/t/Kubernetes-Python-API-Demo.html
 https://blog.ops-coffee.cn/s/Nxh7mwPJPlbL3R9MdlkO_A.html
 https://blog.ops-coffee.cn/s/mysql-explain-output-slow-queries.html
-https://blog.ops-coffee.cn/s/lUS2mxBjzm1cIYd0OPmHaw.html
+https://blog.ops-coffee.cn/s/jingjiabao-browser-plugin.html
 https://blog.ops-coffee.cn/s/e3m9xHVsvhe36IvG1YKhbA.html
 https://blog.ops-coffee.cn/t/debian8-jessie-install-java8.html
 https://blog.ops-coffee.cn/s/wechat-miniprogram-pc-support.html
