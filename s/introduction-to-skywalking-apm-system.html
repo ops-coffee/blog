@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="SkyWalking, APM系统, 应用性能管理, 代码无侵入, 云原生架构, 服务网格遥测分析, 分布式追踪, 微服务监控, ElasticSearch, Mysql, Github开源, 华为开源, RocketBot, 仪表盘, 拓扑图, 追踪面板, 告警面板" />
+  <meta name="description" content="本文介绍SkyWalking，一个开源的APM系统，专为微服务、云原生架构和基于容器架构设计，提供分布式追踪、服务网格遥测分析、度量聚合和可视化一体化解决方案。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>APM系统SkyWalking介绍</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="APM系统SkyWalking介绍" />
+  <meta property="og:description" content="本文介绍SkyWalking，一个开源的APM系统，专为微服务、云原生架构和基于容器架构设计，提供分布式追踪、服务网格遥测分析、度量聚合和可视化一体化解决方案。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">APM系统SkyWalking介绍</h1>
+
+        <blockquote>
+<p>公司最近在构建服务化平台，需要上线APM系统，本篇文章简单的介绍SkyWalking</p>
+</blockquote>
+<h2 id="apm">APM</h2>
+<p>APM全称Application Performance Management应用性能管理，目的是通过各种探针采集数据，收集关键指标，同时搭配数据呈现以实现对应用程序性能管理和故障管理的系统化解决方案</p>
+<p>Zabbix、Premetheus、open-falcon等监控系统主要关注服务器硬件指标与系统服务运行状态等，而APM系统则更重视<strong>程序内部执行过程</strong>指标和<strong>服务之间链路调用</strong>情况的监控，APM更有利于深入代码找到请求响应“慢”的根本问题，与Zabbix之类的监控是互补关系</p>
+<p>目前市面上开源的APM系统主要有CAT、Zipkin、Pinpoint、SkyWalking，大都是参考Google的<a href="http://bigbully.github.io/Dapper-translation/" target="_blank">Dapper</a>实现的</p>
+<p><strong>CAT：</strong> 是由国内美团点评开源的，基于Java语言开发，目前提供Java、C/C++、Node.js、Python、Go等语言的客户端，监控数据会全量统计，国内很多公司在用，例如美团点评、携程、拼多多等，CAT跟下边要介绍的Zipkin都需要在应用程序中埋点，对代码侵入性强，我们倾向于选择对代码无侵入的产品，所以淘汰了CAT</p>
+<p><strong>Zipkin：</strong> 由Twitter公司开发并开源，Java语言实现，侵入性相对于CAT要低一点，需要对web.xml之类的配置文件做修改，但依然对代码有侵入，也没有选择</p>
+<p><strong>Pinpoint：</strong> 一个韩国团队开源的产品，运用了字节码增强技术，只需要在启动时添加启动参数即可，对代码<strong>无侵入</strong>，目前支持Java和PHP语言，底层采用HBase来存储数据，探针收集的数据粒度非常细，但性能损耗大，因其出现的时间较长，完成度也很高，应用的公司较多</p>
+<p><strong>SkyWalking：</strong> 国人开源的产品，主要开发人员来自于华为，2019年4月17日Apache董事会批准SkyWalking成为顶级项目，支持Java、.Net、NodeJs等探针，数据存储支持Mysql、Elasticsearch等，跟Pinpoint一样采用字节码注入的方式实现代码的<strong>无侵入</strong>，探针采集数据粒度粗，但性能表现优秀，且对云原生支持，目前增长势头强劲，社区活跃，中文文档没有语言障碍</p>
+<p>综合考虑，我们选择了SkyWalking</p>
+<h2 id="skywalking">SkyWalking</h2>
+<p>官方有两句话介绍SkyWalking：</p>
+<p>SkyWalking是分布式系统的应用程序性能监视工具，专为微服务、云原生架构和基于容器（Docker、K8S、Mesos）架构而设计</p>
+<p>SkyWalking是观察性分析平台和应用性能管理系统。提供分布式追踪、服务网格遥测分析、度量聚合和可视化一体化解决方案</p>
+<h3 id="skywalking_1">SkyWalking架构</h3>
+<p><img alt="" loading="lazy" src="/static/images/2019/0711.skywalking.jpg" /></p>
+<p>SkyWalking采用组件式开发，易于扩展，主要组件作用如下：</p>
+<p><strong>Skywalking Agent：</strong> 采集<code>tracing</code>（调用链数据）和<code>metric</code>（指标）信息并上报，上报通过HTTP或者gRPC方式发送数据到Skywalking Collector</p>
+<p><strong>Skywalking Collector ：</strong> 链路数据收集器，对agent传过来的<code>tracing</code>和<code>metric</code>数据进行整合分析通过<code>Analysis Core</code>模块处理并落入相关的数据存储中，同时会通过<code>Query Core</code>模块进行二次统计和监控告警</p>
+<p><strong>Storage：</strong> Skywalking的存储，支持以<code>ElasticSearch</code>、<code>Mysql</code>、<code>TiDB</code>、<code>H2</code>等作为存储介质进行数据存储</p>
+<p><strong>UI：</strong> Web可视化平台，用来展示落地的数据，目前官方采纳了RocketBot作为SkyWalking的主UI</p>
+<h3 id="skywalking_2">SkyWalking界面</h3>
+<ul>
+<li>仪表盘</li>
+</ul>
+<p><img alt="" loading="lazy" src="/static/images/2019/0711.apm-skywalking01.png" /></p>
+<p>仪表盘主要包含Service Dashboard和Database Dashboard</p>
+<p>Service Dashboard内分别有Global、Service、Endpoint、Instance面板，展示了全局以及服务、端点、实例的详细信息</p>
+<p>Database Dashboard内可以展示数据库的响应时间、响应时间分布、吞吐量、SLA、慢SQL等详细信息，便于直观展示数据库状态</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0711.apm-skywalking02.png" /></p>
+<ul>
+<li>拓扑图</li>
+</ul>
+<p><img alt="" loading="lazy" src="/static/images/2019/0711.apm-skywalking05.png" /></p>
+<p>SkyWalking能够根据获取的数据自动绘制服务之间的调用关系图，并能识别常见的服务显示在图标上，例如图上的kafka、H2服务</p>
+<p>每条连线的颜色反应了服务之间的调用延迟情况，可以非常直观的看到服务与服务之间的调用状态，连线中间的点能点击，可显示两个服务之间链路的平均响应时间、吞吐率以及SLA等信息</p>
+<ul>
+<li>追踪面板</li>
+</ul>
+<p><img alt="" loading="lazy" src="/static/images/2019/0711.apm-skywalking06.png" /></p>
+<p>能够显示请求的代码内部执行情况，一个完整的请求都经过了哪些服务、执行了哪些代码方法、每个方法的执行时间、执行状态等详细信息，快速定位代码问题</p>
+<ul>
+<li>告警面板</li>
+</ul>
+<p><img alt="" loading="lazy" src="/static/images/2019/0711.apm-skywalking07.png" /></p>
+<h2 id="_1">写在最后</h2>
+<p>SkyWalking目前还处在高速发展的阶段，我们在生产环境部署，遇到了一系列的问题，例如数据量过大图像断点，图像显示慢，与elasticsearch版本不兼容等，遇到问题所能查找的资料也有限，还需谨慎上线生产，但从Github上可以看到产品仍在快速更新不断完善，相信未来SkyWalking的发展也会越来越好，感谢开源</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/introduction-to-skywalking-apm-system.html">📅 2019-07-12</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/系统运维/">🏷️ 系统运维</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
