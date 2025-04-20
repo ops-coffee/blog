@@ -1176,7 +1176,7 @@
     "date": "2021-11-12"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/0tdpw_HKb8fm4AJ5mUQpBg.html",
+    "url": "https://blog.ops-coffee.cn/s/traditional-idc-environment-operation-and-automation.html",
     "title": "从一件小事说起我是如何思考与执行的",
     "content": "团队在接手传统IDC模式的运维工作时，面临了服务器上架、RAID配置、系统初始化等挑战。通过详细的文档整理和脚本编写，团队成功解决了这些问题，并为未来的自动化运维奠定了基础。",
     "keywords": "传统IDC, 服务器上架, RAID配置, 系统初始化, 自动化运维, 脚本编写",
