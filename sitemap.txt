@@ -259,7 +259,7 @@ https://blog.ops-coffee.cn/s/ops-coffee-blog-system-github-netify.html
 https://blog.ops-coffee.cn/s/devops-task-optimization-django-cache.html
 https://blog.ops-coffee.cn/python/python-https-certificate-expiration-sni-issue.html
 https://blog.ops-coffee.cn/t/python-list-skill.html
-https://blog.ops-coffee.cn/s/BEC-HtooUNFU9_JakRhjhw.html
+https://blog.ops-coffee.cn/s/customize-global-variables-in-django-for-seo-friendly-websites.html
 https://blog.ops-coffee.cn/python/AXOUz0v99OfpHrURdei9vw.html
 https://blog.ops-coffee.cn/s/100-original-articles-achievement-and-earnings.html
 https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-viewer-demo-code-source.html

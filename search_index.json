@@ -1365,7 +1365,7 @@
     "date": "2020-10-22"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/BEC-HtooUNFU9_JakRhjhw.html",
+    "url": "https://blog.ops-coffee.cn/s/customize-global-variables-in-django-for-seo-friendly-websites.html",
     "title": "Django Template 自定义全局变量",
     "content": "本文详细介绍了如何在Django模板中通过自定义context_processors来设置全局变量，从而避免在每个view中重复传递常用变量，如站点名称和标题。",
     "keywords": "Django, 全局变量, 模板, context_processors, 自定义变量, 站点名称, 站点标题",
