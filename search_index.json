@@ -1645,7 +1645,7 @@
     "date": "2019-11-20"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/PcstaBodjDS8D15ARwAfzA.html",
+    "url": "https://blog.ops-coffee.cn/s/asciinema-recording-errors-and-corrections.html",
     "title": "Asciinema文章勘误及Web端使用介绍",
     "content": "本文纠正了Asciinema录制功能中关于--stdin参数的误解，详细说明了其功能及效果，并介绍了如何在Web端使用asciinema-player播放录制的文件。",
     "keywords": "Asciinema, 录制功能, 文章勘误, Web端播放, 标准输入, 标准输出, asciinema-player",
