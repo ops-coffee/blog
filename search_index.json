@@ -1246,7 +1246,7 @@
     "date": "2021-03-22"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/h3lpkEHJ4-BWEfrHNQsFCQ.html",
+    "url": "https://blog.ops-coffee.cn/s/dynamic-task-django-celery-integration-guide.html",
     "title": "Django动态添加定时任务之django-celery的使用",
     "content": "本文详细介绍了如何在Django项目中使用django-celery实现定时任务和周期任务，包括安装配置、异步调用、周期任务和动态添加任务等内容，帮助你轻松将定时任务功能集成到自研的运维系统中。",
     "keywords": "Django Celery, 定时任务, 周期任务, 异步任务, 任务调度, Celery框架, Django集成, 任务队列, 动态添加任务, 计划任务, 任务引擎, Probius, 任务执行, 任务管理, Python任务调度, 周期执行任务, 定时执行任务, 任务队列配置, 任务调度器, 数据库调度",

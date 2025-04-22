@@ -242,7 +242,7 @@ https://blog.ops-coffee.cn/s/xehCT6PMS90dvrf96E-Fzw.html
 https://blog.ops-coffee.cn/r/city-china-zhejiang-anhui-wanzheyihaogonglu.html
 https://blog.ops-coffee.cn/r/city-china-zhejiang-hangzhou-chunan-qiandaohu.html
 https://blog.ops-coffee.cn/bpmn/bpmn-js-demo-source-code.html
-https://blog.ops-coffee.cn/s/h3lpkEHJ4-BWEfrHNQsFCQ.html
+https://blog.ops-coffee.cn/s/dynamic-task-django-celery-integration-guide.html
 https://blog.ops-coffee.cn/s/V8pEL8ylhUKIA8uQxwks2w.html
 https://blog.ops-coffee.cn/s/FV379mGIboVYky73kcoMMQ.html
 https://blog.ops-coffee.cn/s/AG9dc0G7mRaTPZ-3QQgX9Q.html
