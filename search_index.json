@@ -1190,7 +1190,7 @@
     "date": "2021-10-21"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/sOlBFC5FsSqVd78eFuxUyQ.html",
+    "url": "https://blog.ops-coffee.cn/s/probius-kubernetes-pod-monitoring-integration.html",
     "title": "Probius+Prometheus通过API集成POD监控",
     "content": "本文详细介绍了如何将容器监控集成进Probius，通过Prometheus获取容器数据并使用Grafana画图展示，提升Kubernetes任务系统的效率。",
     "keywords": "Probius, Kubernetes, 容器监控, Prometheus, Grafana, 监控数据, Kubernetes集群, Prometheus API, 数据获取, 画图展示, echarts",
