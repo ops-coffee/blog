@@ -1043,7 +1043,7 @@
     "date": "2022-06-10"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/PL31oUCLMEi3H1_1IMMDRA.html",
+    "url": "https://blog.ops-coffee.cn/s/cmp-multi-cloud-configuration-resource-management.html",
     "title": "多云系统之多云配置",
     "content": "本文详细介绍了多云配置在多云系统中的关键作用，包括多云账号的管理、云上资源的同步、数据模型的设计与实现，以及处理云厂商异构数据模型的挑战，旨在帮助读者理解如何通过多云配置实现高效的资源管理和数据同步。",
     "keywords": "多云配置, 账号管理, 资源同步, 云厂商, 数据模型, API, 异步任务, 定时任务, 加密存储, 权限管理",
