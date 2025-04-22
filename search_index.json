@@ -1344,7 +1344,7 @@
     "date": "2020-11-07"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/JpnxTf-Z9vkKrwl8nXJljQ.html",
+    "url": "https://blog.ops-coffee.cn/s/devops-task-optimization-django-cache.html",
     "title": "Django开发中使用Cache缓存提升10倍效率",
     "content": "本文介绍了如何通过优化任务引擎Probius，利用Django的缓存系统来提升任务执行效率，减少数据库压力，并通过实例代码展示了具体的优化过程。",
     "keywords": "Probius, Django缓存优化, 任务引擎性能优化, 缓存配置, 数据库压力缓解, Django Cache API, Memcached缓存, 任务执行效率提升",

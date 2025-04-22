@@ -256,7 +256,7 @@ https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-contextpad-demo-code-source.h
 https://blog.ops-coffee.cn/bpmn/bpmn-js-modeling-api-cn.html
 https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-palette-demo-code-source.html
 https://blog.ops-coffee.cn/s/ops-coffee-blog-system-github-netify.html
-https://blog.ops-coffee.cn/s/JpnxTf-Z9vkKrwl8nXJljQ.html
+https://blog.ops-coffee.cn/s/devops-task-optimization-django-cache.html
 https://blog.ops-coffee.cn/python/Aq2FiCLTsqIBX-RpARzM_w.html
 https://blog.ops-coffee.cn/t/python-list-skill.html
 https://blog.ops-coffee.cn/s/BEC-HtooUNFU9_JakRhjhw.html
