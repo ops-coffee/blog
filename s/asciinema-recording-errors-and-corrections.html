@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Asciinema, 录制功能, 文章勘误, Web端播放, 标准输入, 标准输出, asciinema-player" />
+  <meta name="description" content="本文纠正了Asciinema录制功能中关于--stdin参数的误解，详细说明了其功能及效果，并介绍了如何在Web端使用asciinema-player播放录制的文件。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Asciinema文章勘误及Web端使用介绍</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Asciinema文章勘误及Web端使用介绍" />
+  <meta property="og:description" content="本文纠正了Asciinema录制功能中关于--stdin参数的误解，详细说明了其功能及效果，并介绍了如何在Web端使用asciinema-player播放录制的文件。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">Asciinema文章勘误及Web端使用介绍</h1>
+
+        <blockquote>
+<p>欠下的债迟早是要还的，查文档，重验证，出结果，不误导</p>
+</blockquote>
+<h2 id="_1">文章勘误</h2>
+<p>在上一篇文章<a href="/s/oqZqGiQ3uNrNuT-nGrh9lg" target="_blank">Asciinema：你的所有操作都将被录制</a>中有两个地方表述有错误或瑕疵，这里更正一下</p>
+<p>第一个地方为录制时的参数<code>--stdin</code>，参数的意思是启用标准输入录制，原文中说看不到效果，可能官方还未支持，实际上官方已经支持了，且查看录制文件内容时可以看到区别，以下两个对比的例子来说明</p>
+<p>例一：执行下方的命令进行录制，录制开始之后执行ssh命令输入密码连接另一台主机</p>
+<pre class="codehilite"><code>asciinema rec ops-coffee.cast</code></pre>
+
+
+<p>执行<code>asciinema cat</code>命令查看执行命令</p>
+<pre class="codehilite"><code># asciinema cat ops-coffee.cast 
+root@onlinegame:~# ssh root@192.168.106.192 ls ops-coffee.cn
+root@192.168.106.192's password: 
+ops-coffee.cn
+root@onlinegame:~# exit
+exit</code></pre>
+
+
+<p>打印录制的文件内容如下：</p>
+<pre class="codehilite"><code># cat ops-coffee.cast 
+{&quot;version&quot;: 2, &quot;width&quot;: 237, &quot;height&quot;: 55, &quot;timestamp&quot;: 1574060513, &quot;env&quot;: {&quot;SHELL&quot;: &quot;/bin/bash&quot;, &quot;TERM&quot;: &quot;linux&quot;}}
+[0.012221, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]
+[0.607184, &quot;o&quot;, &quot;exit&quot;]
+[1.07092, &quot;o&quot;, &quot;\b\b\b\bssh root@192.168.106.192 ls ops-coffee.cn&quot;]
+[1.703405, &quot;o&quot;, &quot;\r\n&quot;]
+[1.762974, &quot;o&quot;, &quot;root@192.168.106.192's password: &quot;]
+[4.550759, &quot;o&quot;, &quot;\r\n&quot;]
+[4.558138, &quot;o&quot;, &quot;ops-coffee.cn\r\n&quot;]
+[4.559187, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]
+[5.182817, &quot;o&quot;, &quot;e&quot;]
+[5.582643, &quot;o&quot;, &quot;x&quot;]
+[5.838648, &quot;o&quot;, &quot;i&quot;]
+[6.03067, &quot;o&quot;, &quot;t&quot;]
+[6.759346, &quot;o&quot;, &quot;\r\nexit\r\n&quot;]</code></pre>
+
+
+<p>例二：执行同样的命令，加上<code>--stdin</code>参数</p>
+<pre class="codehilite"><code>asciinema rec --stdin ops-coffee.1.cast</code></pre>
+
+
+<p>执行<code>asciinema cat</code>命令查看执行命令</p>
+<pre class="codehilite"><code># asciinema cat ops-coffee.1.cast 
+root@onlinegame:~# ssh root@192.168.106.192 ls ops-coffee.cn
+root@192.168.106.192's password: 
+ops-coffee.cn
+root@onlinegame:~# exit
+exit</code></pre>
+
+
+<p>这次再看录制文件的内容：</p>
+<pre class="codehilite"><code># cat ops-coffee.1.cast
+{&quot;version&quot;: 2, &quot;width&quot;: 237, &quot;height&quot;: 55, &quot;timestamp&quot;: 1574060808, &quot;env&quot;: {&quot;SHELL&quot;: &quot;/bin/bash&quot;, &quot;TERM&quot;: &quot;linux&quot;}}
+[0.01012, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]
+[1.654752, &quot;i&quot;, &quot;\u001b[A&quot;]
+[1.654971, &quot;o&quot;, &quot;exit&quot;]
+[2.014568, &quot;i&quot;, &quot;\u001b[A&quot;]
+[2.014727, &quot;o&quot;, &quot;\b\b\b\bssh root@192.168.106.192 ls ops-coffee.cn&quot;]
+[3.7185, &quot;i&quot;, &quot;\r&quot;]
+[3.719167, &quot;o&quot;, &quot;\r\n&quot;]
+[3.781231, &quot;o&quot;, &quot;root@192.168.106.192's password: &quot;]
+[5.198467, &quot;i&quot;, &quot;s&quot;]
+[5.542343, &quot;i&quot;, &quot;m&quot;]
+[5.774451, &quot;i&quot;, &quot;i&quot;]
+[5.85435, &quot;i&quot;, &quot;l&quot;]
+[5.990628, &quot;i&quot;, &quot;e&quot;]
+[6.342587, &quot;i&quot;, &quot;\r&quot;]
+[6.342817, &quot;o&quot;, &quot;\r\n&quot;]
+[6.351245, &quot;o&quot;, &quot;ops-coffee.cn\r\n&quot;]
+[6.351475, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]
+[7.182384, &quot;i&quot;, &quot;e&quot;]
+[7.182585, &quot;o&quot;, &quot;e&quot;]
+[7.461976, &quot;i&quot;, &quot;x&quot;]
+[7.462183, &quot;o&quot;, &quot;x&quot;]
+[7.543019, &quot;i&quot;, &quot;i&quot;]
+[7.543306, &quot;o&quot;, &quot;i&quot;]
+[7.686868, &quot;i&quot;, &quot;t&quot;]
+[7.68703, &quot;o&quot;, &quot;t&quot;]
+[7.87045, &quot;i&quot;, &quot;\r&quot;]
+[7.871348, &quot;o&quot;, &quot;\r\nexit\r\n&quot;]</code></pre>
+
+
+<p>会发现在实际执行命令完全一致的情况下，录像文件与上一个没有加<code>--stdin</code>时的不一样，其中就多了输入密码的记录<code>smile</code></p>
+<p>且在asciinema文件IO流信息的第二个字段不仅有了<code>o</code>，还有<code>i</code>的出现，上一篇文章讲到<code>o</code>是一个固定字符串不知道作用，经过深入查询确认，IO信息流的第二个字段就是固定string字符串，且只会是<code>i</code>或<code>o</code>之间的一种，分别表示<code>stdin</code>标准输入或<code>stdout</code>标准输出</p>
+<p><code>--stdin</code>的效果无论是通过<code>asciinema play</code>命令播放或是<code>asciinema cat</code>命令查看都是无法察觉的，在实现WebSSH录像回放时又对录像文件进行了深入研究，最终发现问题，这里查漏补缺，予以更正，对于之前的错误，深表歉意</p>
+<h2 id="web">Web端使用</h2>
+<p>asciinema录制文件在web端播放是通过<code>asciinema-player</code>组件来实现的，使用也是非常的简单</p>
+<p>分别引入css和js文件，添加一个<code>asciinema-player</code>的标签即可播放标签内文件的录像</p>
+<pre class="codehilite"><code>&lt;html&gt;
+&lt;head&gt;
+  ...
+  &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/asciinema-player.css&quot; /&gt;
+  ...
+&lt;/head&gt;
+&lt;body&gt;
+  ...
+  &lt;asciinema-player src=&quot;/ops-coffee.cast&quot;&gt;&lt;/asciinema-player&gt;
+  ...
+  &lt;script src=&quot;/asciinema-player.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+
+<p>asciinema-player标签内可以添加如下一些属性：</p>
+<p><strong>cols：</strong> 播放终端的列数，默认为80，如果cast文件的header头有设置<code>width</code>，这里无需设置</p>
+<p><strong>rows：</strong> 播放终端的行数，默认为24，如果cast文件的header头有设置<code>height</code>，这里无需设置</p>
+<p><strong>autoplay：</strong> 是否自动开始播放，默认不会自动播放</p>
+<p><strong>preload：</strong> 预加载，如果你想为录像配音，这里可以预加载声音</p>
+<p><strong>loop：</strong> 是否循环播放，默认不循环</p>
+<p><strong>start-at：</strong> 从哪个地方开始播放，可以是<code>123</code>这样的秒数或者是<code>1:06</code>这样的时间点</p>
+<p><strong>speed：</strong> 播放的速度，类似于play命令播放时的<code>-s</code>参数</p>
+<p><strong>idle-time-limit：</strong> 最大空闲秒数，类似于play命令播放时的<code>-i</code>参数</p>
+<p><strong>poster：</strong> 播放之前的预览，可以是<code>npt:1:06</code>这样给定时间点的画面，也可以是<code>data:text/plain,ops-coffee.cn</code>这样给定的文字，其中文字支持ANSI编码，例如可以给文字加上颜色<code>data:text/plain,\x1b[1;32mops-coffee.cn\x1b[1;0m</code></p>
+<p><strong>font-size：</strong> 文字大小，可以是<code>small</code>、<code>medium</code>、<code>big</code>或者直接是<code>14px</code>这样的css样式大小</p>
+<p><strong>theme：</strong> 终端颜色主题，默认是<code>asciinema</code>，也提供有<code>tango</code>、<code>solarized-dark</code>、<code>solarized-light</code>或者<code>monokai</code>可选择，当然你也可以自定义主题</p>
+<p>还有几个参数<strong>title</strong>、<strong>author</strong>、<strong>author-url</strong>、<strong>author-img-url</strong>分别表示了录像的标题、作者、作者的主页、作者的头像，这些配置会在全屏观看录像时显示在标题栏中，像下边这样</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1118.png" /></p>
+<p>最后使用以下参数设置asciinema-player，看看播放的效果</p>
+<pre class="codehilite"><code>&lt;asciinema-player id=&quot;play&quot; 
+    title=&quot;WebSSH Record&quot; 
+    author=&quot;ops-coffee.cn&quot; 
+    author-url=&quot;https://ops-coffee.cn&quot; 
+    author-img-url=&quot;/static/img/logo.png&quot; 
+    src=&quot;/static/record/ops-coffee.cast&quot; 
+    speed=&quot;3&quot; idle-time-limit=&quot;2&quot; 
+    poster=&quot;data:text/plain,\x1b[1;32m2019-11-18 16:26:18\x1b[1;0m用户\x1b[1;32madmin\x1b[1;0m连接主机\x1b[1;32m192.168.106.101:22\x1b[1;0m的录像记录&quot;&gt;
+&lt;/asciinema-player&gt;</code></pre>
+
+
+<p>播放效果如下</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1118.gif" /></p>
+<p>同时asciinema-player播放时还支持以下快捷键的使用</p>
+<ul>
+<li><code>space</code> 空格，播放或暂停</li>
+<li><code>f</code> 全屏播放，可以看到title等设置</li>
+<li><code>←</code> / <code>→</code> 快进或快退，每次5秒</li>
+<li><code>0，1，6 ... 9</code> 跳转到录像的0%，10%，60% ... 90%</li>
+<li><code>&lt;</code> / <code>&gt;</code> 增加或降低播放速度，play的<code>-s</code>参数</li>
+</ul>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/asciinema-recording-errors-and-corrections.html">📅 2019-11-18</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/系统运维/">🏷️ 系统运维</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
