@@ -158,7 +158,7 @@ Cmd().migration()</code></pre>
 
 
 <p>这里采用了shell中的管道，管道用<code>|</code>符号分割两个命令，管道符前的命令正确输出作为管道符后命令的输入，好处是不需要生成单独的sql文件存放在磁盘上，也就不需要考虑文件删除，占用磁盘的问题，缺点是导出大的数据库时可能会造成OOM，这个要根据自身情况综合权衡。</p>
-<p>导数据属于耗时操作，在web中应异步执行，这里采用了Celery来处理，这篇文章<a href="/s/lXrp3igYo9W2UuE5Gauysg" target="_blank">Django配置Celery执行异步任务和定时任务</a>有详细介绍Django中Celery的使用</p>
+<p>导数据属于耗时操作，在web中应异步执行，这里采用了Celery来处理，这篇文章<a href="https://blog.ops-coffee.cn/s/devops-task-django-celery-setup-guide.html" target="_blank">Django配置Celery执行异步任务和定时任务</a>有详细介绍Django中Celery的使用</p>
 <h1 id="_3">系统界面</h1>
 <p>工单列表页：普通用户只显示自己提交的工单，工单状态一目了然，还有实用的搜索功能</p>
 <p><img alt="" loading="lazy" src="/static/images/2018/1110.01.png" /></p>
