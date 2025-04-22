@@ -1568,7 +1568,7 @@
     "date": "2020-01-09"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/h9k_C7kNB6q1VqxQDVHyiQ.html",
+    "url": "https://blog.ops-coffee.cn/s/devops-alodi-temporary-environment-system.html",
     "title": "Alodi：环境创建从未如此简单",
     "content": "Alodi是一个用于快速生成临时测试环境的系统，支持随机域名生成、域名绑定、容器操作和环境销毁等功能，极大地简化了测试流程，节省了时间和资源。",
     "keywords": "Alodi, 临时环境, 测试环境, Django, Celery, Kubernetes, Docker, 域名绑定, WebSSH, 环境销毁",
