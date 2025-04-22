@@ -1491,7 +1491,7 @@
     "date": "2020-05-06"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/fKDyRxjMr0XmXJGCAv6Ghw.html",
+    "url": "https://blog.ops-coffee.cn/s/django-model-update-save-method-validation.html",
     "title": "Django model重写save方法及update踩坑记录",
     "content": "在Django中，通过重写model的save方法可以方便地在数据入库前进行复杂的校验，避免了在多个view中重复校验的问题。本文详细介绍了如何实现这一方法，并指出了在批量更新数据时需要注意的问题及其解决方案。",
     "keywords": "Django, 数据校验, save方法, Python, 数据库, 校验方法, pre_save信号, model重写",
