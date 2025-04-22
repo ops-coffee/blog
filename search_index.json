@@ -1099,7 +1099,7 @@
     "date": "2022-02-27"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/Q3BBxBAWBcpUhQhfwO7pgQ.html",
+    "url": "https://blog.ops-coffee.cn/s/devops-task-system-manual-approval.html",
     "title": "任务系统之手动审批",
     "content": "本文详细介绍了如何在新开发的任务系统中实现手动审批功能，讨论了从单Celery任务到多Celery任务的转变，以及如何通过审批任务中断任务流执行，等待用户审批通过后再继续执行流程。",
     "keywords": "任务系统, DevOps, 手动审批, Celery, 子任务, 模板",
