@@ -229,7 +229,7 @@ https://blog.ops-coffee.cn/r/my-RV-is-registered.html
 https://blog.ops-coffee.cn/r/resign-after-10-years-at-company.html
 https://blog.ops-coffee.cn/r/V80-RV-experience.html
 https://blog.ops-coffee.cn/r/introduce-my-RV.html
-https://blog.ops-coffee.cn/s/wAH0fb2I2fHCxu5Gy0oSng.html
+https://blog.ops-coffee.cn/s/devops-tools-review-two-years-later.html
 https://blog.ops-coffee.cn/s/demand-management-system-development-guide.html
 https://blog.ops-coffee.cn/r/i-booked-an-RV.html
 https://blog.ops-coffee.cn/s/traditional-idc-environment-operation-and-automation.html

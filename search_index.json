@@ -1155,7 +1155,7 @@
     "date": "2021-12-10"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/wAH0fb2I2fHCxu5Gy0oSng.html",
+    "url": "https://blog.ops-coffee.cn/s/devops-tools-review-two-years-later.html",
     "title": "再聊我们自研的那些Devops工具",
     "content": "本文回顾了过去两年间我们自研的DevOps工具的演变与新发展，包括CMDB、Nova、Kerrigan、Overmind、Proxy、Wiki、Alodi、WebSSH、Probius和Sadmin等工具的更新和优化。",
     "keywords": "DevOps工具, CMDB, Nova, Kerrigan, Overmind, Proxy, Wiki, Alodi, WebSSH, Probius, Sadmin",
