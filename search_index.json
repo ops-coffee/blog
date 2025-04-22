@@ -1519,7 +1519,7 @@
     "date": "2020-03-14"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/vbdJ4fAPOrgLAUipoCCXBA.html",
+    "url": "https://blog.ops-coffee.cn/s/understanding-encoding-and-fixing-mojibake.html",
     "title": "关于编码你必须知道的知识和技巧",
     "content": "乱码问题是运维职业生涯中常见的问题。本文深入探讨字符编码的原理，包括ASCII、Unicode和UTF-8的细节，并提供实用的解决乱码问题的技巧，帮助你彻底理解和解决乱码问题。",
     "keywords": "编码, 乱码, ASCII, Unicode, UTF-8, 字符编码, 运维, 终端乱码, 处理技巧",
