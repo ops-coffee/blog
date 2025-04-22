@@ -90,7 +90,7 @@
     <div class="container no-sidebar">
         <h1 id="art-title">Django开发中使用Cache缓存提升10倍效率</h1>
 
-        <p><a href="https://blog.ops-coffee.cn/s/uXQbM4t11ICdzNofZyDeXA" target="_blank">自定义任务引擎Probius</a>上线运行一段时间后，小伙伴跟我反馈有部分任务执行时间太长，等的花儿都谢了，例如下边这个任务竟然执行了超过24分钟</p>
+        <p><a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">自定义任务引擎Probius</a>上线运行一段时间后，小伙伴跟我反馈有部分任务执行时间太长，等的花儿都谢了，例如下边这个任务竟然执行了超过24分钟</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1026.01.png" /></p>
 <p>查看每个子任务的执行时间，发现单单消耗在“YARN安装模块”这个子任务的时间就超过20分钟，检查这个子任务的执行逻辑发现并没有发现问题，抛弃Probius，直接在服务器上执行这个子任务惊奇的发现执行时间只有2分钟，由此断定肯定是Probius的问题了</p>
 <p>又一次看了下这个子任务，发现任务的输出日志超过1w条，瞬间就知晓了其中的问题，经过简单修改再次测试，原本执行24分钟的任务执行时间缩短至3分钟以内，效率提升相当明显</p>
