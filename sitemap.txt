@@ -220,7 +220,7 @@ https://blog.ops-coffee.cn/s/zpVZw8vdpTLgGOR6GvpiqA.html
 https://blog.ops-coffee.cn/t/disk-init-fdisk-mkfs-blkid-uuid.html
 https://blog.ops-coffee.cn/r/lingang-father-son-rv-adventure.html
 https://blog.ops-coffee.cn/s/django-auth-permission-system-design.html
-https://blog.ops-coffee.cn/s/0Q31jzeYBTeWdrLMufdig.html
+https://blog.ops-coffee.cn/s/parallel-task-execution-implementation.html
 https://blog.ops-coffee.cn/s/Q3BBxBAWBcpUhQhfwO7pgQ.html
 https://blog.ops-coffee.cn/s/script-robustness-and-best-practices.html
 https://blog.ops-coffee.cn/t/debian-lsb-release-source-list.html

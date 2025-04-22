@@ -1092,7 +1092,7 @@
     "date": "2022-03-09"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/0Q31jzeYBTeWdrLMufdig.html",
+    "url": "https://blog.ops-coffee.cn/s/parallel-task-execution-implementation.html",
     "title": "任务系统之并行任务",
     "content": "本文讲解了如何通过并行执行任务来提高任务流的效率，详细介绍了从串行任务到并行任务的转换实现方法，并提供了代码示例。",
     "keywords": "并行任务, 任务流, 子任务, 任务执行, 效率提升, 串行任务, 任务模板",
