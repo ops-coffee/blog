@@ -90,7 +90,7 @@
     <div class="container no-sidebar">
         <h1 id="art-title">Django动态添加定时任务之django-celery的使用</h1>
 
-        <p>定时任务和周期任务在我们日常工作中应用广泛，例如定时发布、周期巡检等，通常我们会借助Linux下的Crontab来实现，但如何将这一功能搬进我们自研的运维系统呢？借助django-celery即可轻松完成，本篇文章就通过<a href="/s/uXQbM4t11ICdzNofZyDeXA" target="_blank">自定义任务引擎Probius</a>中计划任务的实现来介绍django-celery的使用</p>
+        <p>定时任务和周期任务在我们日常工作中应用广泛，例如定时发布、周期巡检等，通常我们会借助Linux下的Crontab来实现，但如何将这一功能搬进我们自研的运维系统呢？借助django-celery即可轻松完成，本篇文章就通过<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">自定义任务引擎Probius</a>中计划任务的实现来介绍django-celery的使用</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1229.01.gif" /></p>
 <p>Celery是基于Python开发的一个分布式任务队列框架，主要用来实现异步任务，具体介绍和用法可以看我之前写的这篇文章：<a href="/s/lXrp3igYo9W2UuE5Gauysg" target="_blank">Django配置Celery执行异步任务和定时任务</a>，Django本身不支持异步，要想实现异步的话借助Celery是个不错的选择，上边这篇文章就提供了django集成celery的方法，但其配置稍微复杂，且不支持动态添加定时任务，django-celery的出现很好的解决了这个问题</p>
 <p>django-celery为django提供了celery集成，同时支持将结果存储在django的orm或cache中，最重要的是支持从数据库动态读取计划任务并执行，这也就是说我们只需要将需要执行的加护任务插入数据库，django-celery就可以自动发现并执行了，接下来就具体看下如何实现</p>
@@ -216,7 +216,7 @@ USE_TZ = False</code></pre>
 <p>至此已经可以添加周期任务或定时任务了，但操作方式比较麻烦，还需要改动配置文件，说好的动态添加呢，别急这就来了，打开数据库会看到几张以<code>djcelery_</code>开头的表</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1229.02.png" /></p>
 <p>其中对于动态添加计划任务有用的是计划任务时间定义表<code>djcelery_crontabschedule</code>，循环任务时间定义表<code>djcelery_crontabschedule</code>，以及任务表<code>djcelery_periodictask</code></p>
-<p>只需要在对应的表里插入数据就ok了，以我在<a href="/s/uXQbM4t11ICdzNofZyDeXA" target="_blank">自定义任务引擎Probius</a>中的使用为例，前端会传递时间到view，view中关于定时任务的的大概处理逻辑如下</p>
+<p>只需要在对应的表里插入数据就ok了，以我在<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">自定义任务引擎Probius</a>中的使用为例，前端会传递时间到view，view中关于定时任务的的大概处理逻辑如下</p>
 <pre class="codehilite"><code>from djcelery.models import CrontabSchedule, PeriodicTask
 
 with transaction.atomic():
