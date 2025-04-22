@@ -1197,7 +1197,7 @@
     "date": "2021-10-14"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/U88HPUYiVDar-7yBx3IoIA.html",
+    "url": "https://blog.ops-coffee.cn/s/devops-task-probius-kubernetes-integration.html",
     "title": "Probius+Kubernetes任务系统如虎添翼",
     "content": "本文详细介绍了Probius自定义任务系统与Kubernetes的集成，包括如何通过Probius管理Kubernetes的Deployment、Namespace等资源，以及如何通过WebSSH进行Pod操作，从而替代传统的Kubernetes Dashboard。",
     "keywords": "Probius, 自定义任务系统, Kubernetes, CI/CD, 运维, WebSSH, Kubernetes Dashboard",

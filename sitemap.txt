@@ -235,7 +235,7 @@ https://blog.ops-coffee.cn/r/i-booked-an-RV.html
 https://blog.ops-coffee.cn/s/traditional-idc-environment-operation-and-automation.html
 https://blog.ops-coffee.cn/s/django-password-management-encryption-decryption.html
 https://blog.ops-coffee.cn/s/sOlBFC5FsSqVd78eFuxUyQ.html
-https://blog.ops-coffee.cn/s/U88HPUYiVDar-7yBx3IoIA.html
+https://blog.ops-coffee.cn/s/devops-task-probius-kubernetes-integration.html
 https://blog.ops-coffee.cn/t/harbor-clear-space-python-api.html
 https://blog.ops-coffee.cn/s/django-ansible-devops-web-automation.html
 https://blog.ops-coffee.cn/s/xehCT6PMS90dvrf96E-Fzw.html
