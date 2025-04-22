@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Probius, Kubernetes, 容器监控, Prometheus, Grafana, 监控数据, Kubernetes集群, Prometheus API, 数据获取, 画图展示, echarts" />
+  <meta name="description" content="本文详细介绍了如何将容器监控集成进Probius，通过Prometheus获取容器数据并使用Grafana画图展示，提升Kubernetes任务系统的效率。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Probius+Prometheus通过API集成POD监控</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Probius+Prometheus通过API集成POD监控" />
+  <meta property="og:description" content="本文详细介绍了如何将容器监控集成进Probius，通过Prometheus获取容器数据并使用Grafana画图展示，提升Kubernetes任务系统的效率。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">Probius+Prometheus通过API集成POD监控</h1>
+
+        <p>上一篇文章<a href="https://blog.ops-coffee.cn/s/devops-task-probius-kubernetes-integration.html" target="_blank">Probius+Kubernetes任务系统如虎添翼</a>讲了我们把Kubernetes集成进了<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">任务系统Probius</a>，上线后小伙伴反馈虽然摆脱了Kubernetes-Dashboard，但还是得去Grafana系统查看容器的监控数据，能否将容器监控也给集成进Probius呢？只要能优化流程提高效率那就必须给安排</p>
+<p>当前Kubernetes集群通过Prometheus来收集和存储监控数据同时借助Grafana来画图展示，Probius若想集成容器监控只需要获取Prometheus存储的容器数据并绘图展示即可，这里涉及到两块内容：1. 获取Prometheus中存储的POD数据，2. 根据获取到的POD数据进行画图展示，完成后的效果如下</p>
+<p><img alt="" loading="lazy" src="/static/images/2021/1014.01.png" /></p>
+<h2 id="_1">获取数据</h2>
+<p>Prometheus提供<code>query</code>和<code>query_range</code>两个API来获取数据，<code>query</code>可以查询给定时间点的数据，而<code>query_range</code>支持查询给定时间段内的数据集合，对于我们的需求<code>query_range</code>再合适不过了</p>
+<pre class="codehilite"><code>GET /api/v1/query_range</code></pre>
+
+
+<p>API支持以下几个参数：</p>
+<p><strong>query</strong>：Prometheus查询表达式，string类型</p>
+<p><strong>start</strong>：开始时间，rfc3339或是unix_timestamp格式</p>
+<p><strong>end</strong>：结束时间，rfc3339或是unix_timestamp格式</p>
+<p><strong>step</strong>：步长，可以是<code>15s</code>这样的持续时间格式</p>
+<p><strong>timeout</strong>：超时时间</p>
+<p>根据这些信息就可以编写获取数据的程序了，大概如下</p>
+<pre class="codehilite"><code>class PrometheusApi:
+    def __init__(self, range=1):
+        self.domain = &quot;https://prometheus.ops-coffee.cn&quot;
+
+        self.nowtime = datetime.datetime.now(datetime.timezone.utc)
+        self.start_time = self.nowtime - datetime.timedelta(hours=int(range))
+
+    def get_pod_metric(self, namespace, pod):
+        _data = {&quot;datetime&quot;: [], &quot;cpu&quot;: {}, &quot;memory&quot;: {}, &quot;bandwidth&quot;: {}, &quot;iops&quot;: {}}
+
+        # cpu
+        params = {
+            &quot;query&quot;: &quot;sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace='%s', pod='%s'}) by (container)&quot; % (
+                namespace, pod),
+            &quot;start&quot;: self.start_time.isoformat(),
+            &quot;end&quot;: self.nowtime.isoformat(),
+            &quot;step&quot;: &quot;60s&quot;
+        }
+        rc = requests.get(self.domain + '/api/v1/query_range', params=params)
+
+        for c in rc.json().get('data').get('result'):
+            _data['cpu'][c['metric']['container']] = [j[1] for j in c['values']]
+
+        return True, 200, _data</code></pre>
+
+
+<p>这里如果对Prometheus的查询表达式不熟悉，可以直接去Grafana图形那复制表达式来使用，这里我把cpu\memory等需要展示的数据统一在一个函数里处理了，这样只需要根据namesapce、pod和时间范围就能获取到一个pod的所有监控数据，方便前端展示</p>
+<p>需要注意的是Prometheus默认使用的是UTC时间，所以在做时间处理时需要跟本地时间做转换</p>
+<h2 id="_2">画图展示</h2>
+<p>数据获取到了，下一步就是画图展示，这里采用了echarts，使用也非常简单，大概代码如下</p>
+<pre class="codehilite"><code>&lt;div class=&quot;tab-pane&quot; id=&quot;tab-monitor&quot;&gt;
+  &lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;col-md-4&quot;&gt;
+      &lt;div class=&quot;input-group&quot;&gt;
+        &lt;div class=&quot;input-group-btn&quot;&gt;&lt;button class=&quot;btn btn-default&quot;&gt;选择实例&lt;/button&gt;&lt;/div&gt;
+        &lt;select class=&quot;form-control&quot; id=&quot;id_pod_monitor&quot; onchange=&quot;getPodMonitor()&quot;&gt;
+          &lt;option value=&quot;&quot;&gt;------&lt;/option&gt;
+        &lt;/select&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;col-md-2&quot;&gt;
+       &lt;div class=&quot;input-group&quot;&gt;
+          &lt;div class=&quot;input-group-btn&quot;&gt;&lt;button class=&quot;btn btn-default&quot;&gt;时间范围&lt;/button&gt;&lt;/div&gt;
+          &lt;select class=&quot;form-control&quot; id=&quot;id_pod_monitor_time&quot; onchange=&quot;getPodMonitor()&quot;&gt;
+            &lt;option value=&quot;1&quot; selected=&quot;selected&quot;&gt;最近1小时&lt;/option&gt;
+            &lt;option value=&quot;4&quot;&gt;最近4小时&lt;/option&gt;
+            &lt;option value=&quot;24&quot;&gt;最近24小时&lt;/option&gt;
+            &lt;option value=&quot;48&quot;&gt;最近48小时&lt;/option&gt;
+            &lt;option value=&quot;72&quot;&gt;最近72小时&lt;/option&gt;
+          &lt;/select&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;col-md-6&quot;&gt;
+      &lt;div class=&quot;pull-right&quot;&gt;
+        &lt;button class=&quot;btn btn-default&quot; onclick=&quot;getPodMonitor()&quot;&gt;
+          &lt;span class=&quot;glyphicon glyphicon-refresh&quot;&gt;&lt;/span&gt; 刷新
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;row&quot; style=&quot;margin-top:10px;&quot;&gt;
+    &lt;div class=&quot;col-md-6&quot; id=&quot;id_chart_cpu&quot; style=&quot;position: relative; height: 300px;&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;col-md-6&quot; id=&quot;id_chart_memory&quot; style=&quot;position: relative; height: 300px;&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;col-md-6&quot; id=&quot;id_chart_bandwidth&quot; style=&quot;position: relative; height: 300px;&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;col-md-6&quot; id=&quot;id_chart_iops&quot; style=&quot;position: relative; height: 300px;&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    var chart_cpu = echarts.init(document.getElementById('id_chart_cpu')),
+        chart_memory = echarts.init(document.getElementById('id_chart_memory')),
+        chart_bandwidth = echarts.init(document.getElementById('id_chart_bandwidth')),
+        chart_iops = echarts.init(document.getElementById('id_chart_iops'));
+
+    function getPodMonitor() {
+      var pod = $('#id_pod_monitor').val(), range = $('#id_pod_monitor_time').val();
+      $.get(&quot;/kubeops/namespace/{{ namespace }}/pod/&quot; + pod + &quot;/monitor/?range=&quot;+ range +&quot;&amp;format=json&quot;, function(data) {
+        if (data.state) {
+          let cpu_legend = new Array, cpu_series = new Array;
+          $.each(data.data.cpu, function (k, v) {
+            cpu_legend.push(k);
+            cpu_series.push({
+              data: v,
+              name: k,
+              type: 'line'
+            });
+          })
+
+          chart_cpu.setOption(
+            {
+              title: {text: 'CPU使用(单位:core)'},
+              tooltip: {trigger: 'axis'},
+              legend: {data:cpu_legend},
+              xAxis: {data: data.data.datetime},
+              yAxis: {type: 'value'},
+              series: cpu_series
+            }
+          )
+        }
+      })
+    }
+&lt;/script&gt;</code></pre>
+
+
+<p>echarts使用了最简单的折线图，也没有太多花里胡哨的东西，就是去后端取数据然后展示</p>
+<p>至此搞定Probius集成POD监控，虽然这只是一个小功能但却是很有用~</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/probius-kubernetes-pod-monitoring-integration.html">📅 2021-10-14</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/任务系统/">🏷️ 任务系统</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/监控/">🏷️ 监控</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
