@@ -90,12 +90,12 @@
     <div class="container no-sidebar">
         <h1 id="art-title">证书监控 | 为什么我获取到的证书有效期是错的</h1>
 
-        <p>今天咖啡吧的一个小伙伴在实践<a href="/s/AXOUz0v99OfpHrURdei9vw" target="_blank">『Python实现HTTPS网站证书过期监控及更新』</a>后反馈，通过文章内的代码获取到的证书过期时间是错的</p>
+        <p>今天咖啡吧的一个小伙伴在实践<a href="https://blog.ops-coffee.cn/python/https-certificate-management-automation.html" target="_blank">『Python实现HTTPS网站证书过期监控及更新』</a>后反馈，通过文章内的代码获取到的证书过期时间是错的</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1023.01.png" /></p>
 <p>看到这个消息，第一反应就是他的网络或环境可能有问题导致获取到了错误的证书，因为其一我所有文章里的代码都是亲自跑过的，应该不会有明显的BUG，其二获取证书过期时间是通过<code>pyOpenSSL</code>模块来实现的，底层使用的<code>openssl</code>成熟且稳定。但本着对技术严谨的态度，还是询问小伙伴是否可以提供域名我来亲自测试下</p>
 <p>小伙伴很快把域名发了过来（为了保护隐私，小伙伴的域名我统一用blog.ops-coffee.cn来代替），我打开浏览器查看域名有效期时间，从2020年10月22日到2021年10月22日</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1023.02.png" /></p>
-<p>通过如下代码，也就是文章<a href="/s/AXOUz0v99OfpHrURdei9vw" target="_blank">『Python实现HTTPS网站证书过期监控及更新』</a>里提供的获取域名过期时间的代码，拿到的过期时间是2021年8月29日</p>
+<p>通过如下代码，也就是文章<a href="https://blog.ops-coffee.cn/python/https-certificate-management-automation.html" target="_blank">『Python实现HTTPS网站证书过期监控及更新』</a>里提供的获取域名过期时间的代码，拿到的过期时间是2021年8月29日</p>
 <pre class="codehilite"><code>from _datetime import datetime
 from urllib3.contrib import pyopenssl
 
