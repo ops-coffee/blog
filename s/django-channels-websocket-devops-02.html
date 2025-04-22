@@ -262,7 +262,7 @@ app.control.revoke(result.id, terminate=True)</code></pre>
 <p>方便我们通过Django的view或者Celery的task调用给channel发送消息，官方也比较推荐这种方式</p>
 <h2 id="celery">使用Celery异步循环读取日志</h2>
 <p>上边已经集成了Channels实现了WebSocket，但connect函数中的celery任务<code>tailf</code>还没有实现，下边来实现它</p>
-<p>关于Celery的详细内容可以看这篇文章：<a href="/s/lXrp3igYo9W2UuE5Gauysg" target="_blank">《Django配置Celery执行异步任务和定时任务》</a>，本文就不介绍集成使用以及细节原理，只讲一下任务task</p>
+<p>关于Celery的详细内容可以看这篇文章：<a href="https://blog.ops-coffee.cn/s/devops-task-django-celery-setup-guide.html" target="_blank">《Django配置Celery执行异步任务和定时任务》</a>，本文就不介绍集成使用以及细节原理，只讲一下任务task</p>
 <p>task实现代码如下：</p>
 <pre class="codehilite"><code>from __future__ import absolute_import
 from celery import shared_task
