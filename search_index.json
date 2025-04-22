@@ -1218,7 +1218,7 @@
     "date": "2021-08-29"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/xehCT6PMS90dvrf96E-Fzw.html",
+    "url": "https://blog.ops-coffee.cn/s/sadmin-django-common-application.html",
     "title": "Sadmin：打造私有Django公共库实现代码复用",
     "content": "本文介绍了如何通过Django开发内部管理系统，并详细讲解了Sadmin应用的设计思路及其主要功能，包括用户管理、权限管理、日志记录等，帮助开发者在项目中快速集成基础功能，提升开发效率。",
     "keywords": "Django, 内部管理系统, Sadmin, 前端模板, 用户管理, 权限管理, 日志记录, CRUD操作, 数据校验, 系统开发效率",

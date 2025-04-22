@@ -238,7 +238,7 @@ https://blog.ops-coffee.cn/s/probius-kubernetes-pod-monitoring-integration.html
 https://blog.ops-coffee.cn/s/devops-task-probius-kubernetes-integration.html
 https://blog.ops-coffee.cn/t/harbor-clear-space-python-api.html
 https://blog.ops-coffee.cn/s/django-ansible-devops-web-automation.html
-https://blog.ops-coffee.cn/s/xehCT6PMS90dvrf96E-Fzw.html
+https://blog.ops-coffee.cn/s/sadmin-django-common-application.html
 https://blog.ops-coffee.cn/r/city-china-zhejiang-anhui-wanzheyihaogonglu.html
 https://blog.ops-coffee.cn/r/city-china-zhejiang-hangzhou-chunan-qiandaohu.html
 https://blog.ops-coffee.cn/bpmn/bpmn-js-demo-source-code.html
