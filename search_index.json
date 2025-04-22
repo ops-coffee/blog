@@ -2051,7 +2051,7 @@
     "date": "2018-08-13"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/lXrp3igYo9W2UuE5Gauysg.html",
+    "url": "https://blog.ops-coffee.cn/s/devops-task-django-celery-setup-guide.html",
     "title": "Django配置Celery执行异步任务和定时任务",
     "content": "本文介绍了如何在Django2.0环境中配置和使用原生Celery进行异步和定时任务的调度，涵盖了RabbitMQ的安装、Celery的配置、异步任务的实现、定时任务的设置等内容。",
     "keywords": "原生Celery, Django2.0, 异步任务, 定时任务, RabbitMQ, 任务队列, 分布式任务调度",
