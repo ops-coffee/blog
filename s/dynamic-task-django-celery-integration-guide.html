@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django Celery, 定时任务, 周期任务, 异步任务, 任务调度, Celery框架, Django集成, 任务队列, 动态添加任务, 计划任务, 任务引擎, Probius, 任务执行, 任务管理, Python任务调度, 周期执行任务, 定时执行任务, 任务队列配置, 任务调度器, 数据库调度" />
+  <meta name="description" content="本文详细介绍了如何在Django项目中使用django-celery实现定时任务和周期任务，包括安装配置、异步调用、周期任务和动态添加任务等内容，帮助你轻松将定时任务功能集成到自研的运维系统中。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Django动态添加定时任务之django-celery的使用</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django动态添加定时任务之django-celery的使用" />
+  <meta property="og:description" content="本文详细介绍了如何在Django项目中使用django-celery实现定时任务和周期任务，包括安装配置、异步调用、周期任务和动态添加任务等内容，帮助你轻松将定时任务功能集成到自研的运维系统中。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">Django动态添加定时任务之django-celery的使用</h1>
+
+        <p>定时任务和周期任务在我们日常工作中应用广泛，例如定时发布、周期巡检等，通常我们会借助Linux下的Crontab来实现，但如何将这一功能搬进我们自研的运维系统呢？借助django-celery即可轻松完成，本篇文章就通过<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">自定义任务引擎Probius</a>中计划任务的实现来介绍django-celery的使用</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1229.01.gif" /></p>
+<p>Celery是基于Python开发的一个分布式任务队列框架，主要用来实现异步任务，具体介绍和用法可以看我之前写的这篇文章：<a href="https://blog.ops-coffee.cn/s/devops-task-django-celery-setup-guide.html" target="_blank">Django配置Celery执行异步任务和定时任务</a>，Django本身不支持异步，要想实现异步的话借助Celery是个不错的选择，上边这篇文章就提供了django集成celery的方法，但其配置稍微复杂，且不支持动态添加定时任务，django-celery的出现很好的解决了这个问题</p>
+<p>django-celery为django提供了celery集成，同时支持将结果存储在django的orm或cache中，最重要的是支持从数据库动态读取计划任务并执行，这也就是说我们只需要将需要执行的加护任务插入数据库，django-celery就可以自动发现并执行了，接下来就具体看下如何实现</p>
+<h2 id="_1">安装配置</h2>
+<p>1.安装<code>django-celery</code></p>
+<pre class="codehilite"><code>pip install django-celery</code></pre>
+
+
+<p>2.<code>settings.py</code>的<code>INSTALLED_APPS</code>中加入<code>djcelery</code></p>
+<pre class="codehilite"><code>INSTALLED_APPS = [
+    ...
+    'djcelery',
+]</code></pre>
+
+
+<p>3.<code>settings.py</code>中添加如下配置</p>
+<pre class="codehilite"><code>import djcelery
+djcelery.setup_loader()
+
+# BROKER和BACKEND配置，这里用了本地的redis，其中1和2表示分别用redis的第一个和第二个db
+BROKER_URL = 'redis://localhost/1'
+CELERY_RESULT_BACKEND = 'redis://localhost/2'
+
+# celery 关闭UTC时区
+CELERY_ENABLE_UTC = False
+
+# celery 并发数设置，最多可以有20个任务同时运行
+CELERYD_CONCURRENCY = 20
+CELERYD_MAX_TASKS_PER_CHILD = 4
+
+# celery开启数据库调度器，数据库修改后即时生效
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+from celery import platforms
+
+# 允许root 用户运行celery
+platforms.C_FORCE_ROOT = True</code></pre>
+
+
+<p>4.启动celery</p>
+<pre class="codehilite"><code>python manage.py celery worker -l info</code></pre>
+
+
+<p>至此就可以使用djcelery来处理异步任务了</p>
+<h2 id="_2">异步调用</h2>
+<p>具体的用法为在app根目录下添加一个<code>tasks.py</code>文件，在文件中编写函数，给函数添加上<code>shared_task</code>装饰器即可</p>
+<p>假设一个项目有如下目录结构</p>
+<pre class="codehilite"><code>project
+    - coffee
+        - __init__.py
+        - admin.py
+        - app.py
+        - models.py
+        - tasks.py
+        - tests.py
+        - views.py
+    - webapp
+        - __init__.py
+        - settings.py
+        - urls.py
+        - wsgi.py
+    - manage.py</code></pre>
+
+
+<p>我们在名为<code>coffee</code>的app下添加文件<code>tasks.py</code>，<code>tasks.py</code>文件内容如下</p>
+<pre class="codehilite"><code>from celery import shared_task
+
+
+@shared_task
+def welcome():
+    print('Welcome to ops-coffee.cn')
+
+    return True</code></pre>
+
+
+<p>然后就可以在view或其他地方异步调用这个<code>welcome</code>函数了</p>
+<pre class="codehilite"><code>from django.http import JsonResponse
+from coffee.tasks import welcome
+
+
+def index(request):
+    welcome.delay()
+
+    return JsonResponse({&quot;state&quot;: 1, &quot;message&quot;: &quot;welcome&quot;})</code></pre>
+
+
+<h2 id="_3">周期任务</h2>
+<p>以上只是将任务变成了异步，如果我们想要周期执行<code>welcome</code>任务，该如何操作呢？</p>
+<p>1.首先需要执行<code>migrate</code>命令在数据库创建表</p>
+<pre class="codehilite"><code>python manage.py migrate</code></pre>
+
+
+<p>2.然后修改<code>settings.py</code>文件中添加<code>CELERYBEAT_SCHEDULE</code>配置</p>
+<pre class="codehilite"><code>CELERYBEAT_SCHEDULE = {
+    'ops-coffee-1': {
+        'task': 'coffee.tasks.welcome',
+        'schedule': timedelta(seconds=20)
+    },
+    'ops-coffee-2': {
+        'task': 'coffee.tasks.welcome',
+        'schedule': crontab(hour=17, minute=30),
+    }
+}</code></pre>
+
+
+<p>以上配置详细的解释可以看文章：<a href="https://blog.ops-coffee.cn/s/devops-task-django-celery-setup-guide.html" target="_blank">Django配置Celery执行异步任务和定时任务</a></p>
+<p>3.最后启动beat</p>
+<pre class="codehilite"><code>python manage.py celery beat -l info</code></pre>
+
+
+<p>至此<code>welcome</code>任务就会在设置的时间执行了</p>
+<h3 id="_4">报错处理</h3>
+<p>PS: 启动beat时可能会有如下报错</p>
+<pre class="codehilite"><code>TypeError: can't subtract offset-naive and offset-aware datetimes</code></pre>
+
+
+<p>这主要是因为时区引起的，请修改时区相关的配置</p>
+<pre class="codehilite"><code>TIME_ZONE = 'Asia/Shanghai'
+USE_TZ = False</code></pre>
+
+
+<h2 id="_5">动态添加</h2>
+<p>至此已经可以添加周期任务或定时任务了，但操作方式比较麻烦，还需要改动配置文件，说好的动态添加呢，别急这就来了，打开数据库会看到几张以<code>djcelery_</code>开头的表</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1229.02.png" /></p>
+<p>其中对于动态添加计划任务有用的是计划任务时间定义表<code>djcelery_crontabschedule</code>，循环任务时间定义表<code>djcelery_crontabschedule</code>，以及任务表<code>djcelery_periodictask</code></p>
+<p>只需要在对应的表里插入数据就ok了，以我在<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">自定义任务引擎Probius</a>中的使用为例，前端会传递时间到view，view中关于定时任务的的大概处理逻辑如下</p>
+<pre class="codehilite"><code>from djcelery.models import CrontabSchedule, PeriodicTask
+
+with transaction.atomic():
+    save_id = transaction.savepoint()
+
+    try:
+        _c, created = CrontabSchedule.objects.get_or_create(
+            minute=str(minute),
+            hour=str(hour),
+            day_of_week=str(day_of_week),
+            day_of_month=str(day_of_month),
+            month_of_year=str(month_of_year)
+        )
+
+        dt = datetime.now().strftime('%Y%m%d%H%M%S')
+        _p = PeriodicTask.objects.create(
+            name=dt + '-' + '运维咖啡吧周期任务A',
+            task='coffee.tasks.welcome',
+            args=[37],
+            enabled=True,
+            crontab=_c
+        )
+
+        print('计划任务添加成功')
+    except Exception as e:
+        transaction.savepoint_rollback(save_id)
+        print('添加计划任务失败，错误原因：' + str(e))</code></pre>
+
+
+<p>通过<code>with transaction.atomic()</code>创建一个事物，保证时间和任务都能同时添加成功，否则就回滚</p>
+<p>然后通过<code>get_or_create</code>方法去检索循环任务时间定义表<code>CrontabSchedule</code>，如果有就获取到实例，没有就创建</p>
+<p>最后往任务表<code>PeriodicTask</code>里插入任务，<code>name</code>为任务名称，具有唯一性，所以这里加了时间前缀防止重复，<code>task</code>为celery的task任务，字符串类型，在启动celery的时候就可以看到，<code>args</code>传给任务的参数，这里也可以用kwargs的字典形式传，就把<code>args</code>字段改成<code>kwargs</code>即可，<code>enabled</code>定义了这个任务是启动或关闭状态，<code>crontab</code>为循环任务时间实例，如果这里要用周期任务，就是每n秒n分循环执行这样的，只需要将<code>crontab</code>关联换成<code>interval</code>即可，那就需要事先往<code>IntervalSchedule</code>表里插入数据</p>
+<p>还记得开头settings.py配置文件中我们配置的<code>CELERYBEAT_SCHEDULER</code>吗？就因为有这个配置，所以当数据表里的数据变更之后，celery的beat程序就能监听到从而在配置的时间触发worker去执行任务</p>
+<p>至此，主要功能我们都已实现，django-celery的计划任务只能支持固定时间吗？其实不然，他支持的语法与linux下的crontab类似，像<code>hour='*/3,9-18'</code>这样的复杂语法也是支持的，在Probius中对于复杂语法我们也直接提供了更为灵活的自定义任务执行方式</p>
+<p><img alt="" loading="lazy" src="/static/images/2020/1229.03.png" /></p>
+<p>为了便于使用，减少学习成本，这里就直接用了linux下crontab的格式，传到后端后解析成对应的时间写入数据库。有些小伙伴跟我说开发出来的工具没人用，或者是其他部门推不动，项目开发中的这些个细节考虑到位，尽量减少用户学习使用成本，做的足够好用、易用，还怕没有人用嘛</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/dynamic-task-django-celery-integration-guide.html">📅 2020-12-29</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Celery/">🏷️ Celery</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
