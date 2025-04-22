@@ -1351,7 +1351,7 @@
     "date": "2020-10-26"
   },
   {
-    "url": "https://blog.ops-coffee.cn/python/Aq2FiCLTsqIBX-RpARzM_w.html",
+    "url": "https://blog.ops-coffee.cn/python/python-https-certificate-expiration-sni-issue.html",
     "title": "证书监控 | 为什么我获取到的证书有效期是错的",
     "content": "本文详细介绍了如何使用Python实现HTTPS网站证书过期监控及更新，并解决了在多域名环境下因SNI问题导致的证书信息错误。",
     "keywords": "Python, HTTPS, 证书过期监控, 证书更新, SNI, pyOpenSSL, openssl",
