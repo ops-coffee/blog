@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="原生Celery, Django2.0, 异步任务, 定时任务, RabbitMQ, 任务队列, 分布式任务调度" />
+  <meta name="description" content="本文介绍了如何在Django2.0环境中配置和使用原生Celery进行异步和定时任务的调度，涵盖了RabbitMQ的安装、Celery的配置、异步任务的实现、定时任务的设置等内容。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Django配置Celery执行异步任务和定时任务</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django配置Celery执行异步任务和定时任务" />
+  <meta property="og:description" content="本文介绍了如何在Django2.0环境中配置和使用原生Celery进行异步和定时任务的调度，涵盖了RabbitMQ的安装、Celery的配置、异步任务的实现、定时任务的设置等内容。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">Django配置Celery执行异步任务和定时任务</h1>
+
+        <blockquote>
+<p>原生Celery，非djcelery模块，所有演示均基于Django2.0</p>
+</blockquote>
+<p>celery是一个基于python开发的简单、灵活且可靠的分布式任务队列框架，支持使用任务队列的方式在分布式的机器/进程/线程上执行任务调度。采用典型的生产者-消费者模型，主要由三部分组成：</p>
+<ol>
+<li>消息队列broker：broker实际上就是一个MQ队列服务，可以使用Redis、RabbitMQ等作为broker</li>
+<li>处理任务的消费者workers：broker通知worker队列中有任务，worker去队列中取出任务执行，每一个worker就是一个进程</li>
+<li>存储结果的backend：执行结果存储在backend，默认也会存储在broker使用的MQ队列服务中，也可以单独配置用何种服务做backend</li>
+</ol>
+<p><img alt="图片来自互联网" loading="lazy" src="/static/images/2018/0714.celery.png" /></p>
+<h1 id="_1">异步任务</h1>
+<p>我的异步使用场景为项目上线：前端web上有个上线按钮，点击按钮后发请求给后端，后端执行上线过程要5分钟，后端在接收到请求后把任务放入队列异步执行，同时马上返回给前端一个任务执行中的结果。若果没有异步执行会怎么样呢？同步的情况就是执行过程中前端一直在等后端返回结果，页面转呀转的就转超时了。</p>
+<h2 id="_2">异步任务配置</h2>
+<p>1.安装RabbitMQ，这里我们使用RabbitMQ作为broker，安装完成后默认启动了，也不需要其他任何配置</p>
+<pre class="codehilite"><code># apt-get install rabbitmq-server</code></pre>
+
+
+<p>2.安装celery</p>
+<pre class="codehilite"><code># pip3 install celery</code></pre>
+
+
+<p>3.celery用在django项目中，django项目目录结构(简化)如下</p>
+<pre class="codehilite"><code>website/
+|-- deploy
+|   |-- admin.py
+|   |-- apps.py
+|   |-- __init__.py
+|   |-- models.py
+|   |-- tasks.py
+|   |-- tests.py
+|   |-- urls.py
+|   `-- views.py
+|-- manage.py
+|-- README
+`-- website
+    |-- celery.py
+    |-- __init__.py
+    |-- settings.py
+    |-- urls.py
+    `-- wsgi.py</code></pre>
+
+
+<p>4.创建<code>website/celery.py</code>主文件</p>
+<pre class="codehilite"><code>from __future__ import absolute_import, unicode_literals
+import os
+from celery import Celery, platforms
+
+# set the default Django settings module for the 'celery' program.
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'website.settings')
+
+app = Celery('website')
+
+# Using a string here means the worker don't have to serialize
+# the configuration object to child processes.
+# - namespace='CELERY' means all celery-related configuration keys
+#   should have a `CELERY_` prefix.
+app.config_from_object('django.conf:settings', namespace='CELERY')
+
+# Load task modules from all registered Django app configs.
+app.autodiscover_tasks()
+
+# 允许root 用户运行celery
+platforms.C_FORCE_ROOT = True
+
+@app.task(bind=True)
+def debug_task(self):
+    print('Request: {0!r}'.format(self.request))</code></pre>
+
+
+<p>5.在<code>website/__init__.py</code>文件中增加如下内容，确保django启动的时候这个app能够被加载到</p>
+<pre class="codehilite"><code>from __future__ import absolute_import
+
+# This will make sure the app is always imported when
+# Django starts so that shared_task will use this app.
+from .celery import app as celery_app
+
+__all__ = ['celery_app']</code></pre>
+
+
+<p>6.各应用创建tasks.py文件，这里为<code>deploy/tasks.py</code></p>
+<pre class="codehilite"><code>from __future__ import absolute_import
+from celery import shared_task
+
+@shared_task
+def add(x, y):
+    return x + y</code></pre>
+
+
+<ul>
+<li><strong>注意tasks.py必须建在各app的根目录下，且只能叫tasks.py，不能随意命名</strong></li>
+</ul>
+<p>7.views.py中引用使用这个tasks异步处理</p>
+<pre class="codehilite"><code>from deploy.tasks import add
+
+def post(request):
+    result = add.delay(2, 3)</code></pre>
+
+
+<ul>
+<li>使用函数名.delay()即可使函数异步执行</li>
+<li>可以通过<code>result.ready()</code>来判断任务是否完成处理</li>
+<li>如果任务抛出一个异常，使用<code>result.get(timeout=1)</code>可以重新抛出异常</li>
+<li>如果任务抛出一个异常，使用<code>result.traceback</code>可以获取原始的回溯信息</li>
+</ul>
+<p>8.启动celery</p>
+<pre class="codehilite"><code># celery -A website worker -l info</code></pre>
+
+
+<p>9.这样在调用post这个方法时，里边的add就可以异步处理了</p>
+<h1 id="_3">定时任务</h1>
+<p>定时任务的使用场景就很普遍了，比如我需要定时发送报告给老板~</p>
+<h2 id="_4">定时任务配置</h2>
+<p>1.<code>website/celery.py</code>文件添加如下配置以支持定时任务crontab</p>
+<pre class="codehilite"><code>from celery.schedules import crontab
+
+app.conf.update(
+    CELERYBEAT_SCHEDULE = {
+        'sum-task': {
+            'task': 'deploy.tasks.add',
+            'schedule':  timedelta(seconds=20),
+            'args': (5, 6)
+        },
+        'send-report': {
+            'task': 'deploy.tasks.report',
+            'schedule': crontab(hour=4, minute=30, day_of_week=1),
+        }
+    }
+)</code></pre>
+
+
+<ul>
+<li>
+<p>定义了两个task：</p>
+<ul>
+<li>名字为'sum-task'的task，每20秒执行一次add函数，并传了两个参数5和6</li>
+<li>名字为'send-report'的task，每周一早上4：30执行report函数</li>
+</ul>
+</li>
+<li>
+<p>timedelta是datetime中的一个对象，需要<code>from datetime import timedelta</code>引入，有如下几个参数</p>
+<ul>
+<li><code>days</code>：天</li>
+<li><code>seconds</code>：秒</li>
+<li><code>microseconds</code>：微妙</li>
+<li><code>milliseconds</code>：毫秒</li>
+<li><code>minutes</code>：分</li>
+<li><code>hours</code>：小时</li>
+</ul>
+</li>
+<li>
+<p>crontab的参数有：</p>
+<ul>
+<li><code>month_of_year</code>：月份</li>
+<li><code>day_of_month</code>：日期</li>
+<li><code>day_of_week</code>：周</li>
+<li><code>hour</code>：小时</li>
+<li><code>minute</code>：分钟</li>
+</ul>
+</li>
+</ul>
+<p>2.<code>deploy/tasks.py</code>文件添加report方法：</p>
+<pre class="codehilite"><code>@shared_task
+def report():
+    return 5</code></pre>
+
+
+<p>3.启动celery beat，celery启动了一个beat进程一直在不断的判断是否有任务需要执行</p>
+<pre class="codehilite"><code># celery -A website beat -l info</code></pre>
+
+
+<h1 id="tips">Tips</h1>
+<p>1.如果你同时使用了异步任务和计划任务，有一种更简单的启动方式<code>celery -A website worker -b -l info</code>，可同时启动worker和beat</p>
+<p>2.如果使用的不是rabbitmq做队列那么需要在主配置文件中<code>website/celery.py</code>配置broker和backend，如下：</p>
+<pre class="codehilite"><code># redis做MQ配置
+app = Celery('website', backend='redis', broker='redis://localhost')
+# rabbitmq做MQ配置
+app = Celery('website', backend='amqp', broker='amqp://admin:admin@localhost')</code></pre>
+
+
+<p>3.celery不能用root用户启动的话需要在主配置文件中添加<code>platforms.C_FORCE_ROOT = True</code></p>
+<p>4.celery在长时间运行后可能出现内存泄漏，需要添加配置<code>CELERYD_MAX_TASKS_PER_CHILD = 10</code>，表示每个worker执行了多少个任务就死掉</p>
+<h1 id="_5">参考文章：</h1>
+<ul>
+<li><a href="http://docs.celeryproject.org/en/latest/" target="_blank">http://docs.celeryproject.org/en/latest/</a></li>
+<li><a href="https://github.com/pylixm/celery-examples" target="_blank">https://github.com/pylixm/celery-examples</a></li>
+<li><a href="https://pylixm.cc/posts/2015-12-03-Django-celery.html" target="_blank">https://pylixm.cc/posts/2015-12-03-Django-celery.html</a></li>
+</ul>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/devops-task-django-celery-setup-guide.html">📅 2018-08-11</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Celery/">🏷️ Celery</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
