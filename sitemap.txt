@@ -216,7 +216,7 @@ https://blog.ops-coffee.cn/s/cmp-resource-management-in-multicloud-system.html
 https://blog.ops-coffee.cn/s/cmp-multi-cloud-configuration-resource-management.html
 https://blog.ops-coffee.cn/s/cmp-multi-cloud-relationship-management.html
 https://blog.ops-coffee.cn/s/share-task-system-design-and-optimization.html
-https://blog.ops-coffee.cn/s/zpVZw8vdpTLgGOR6GvpiqA.html
+https://blog.ops-coffee.cn/s/rpa-data-work-weixin-send-message.html
 https://blog.ops-coffee.cn/t/disk-init-fdisk-mkfs-blkid-uuid.html
 https://blog.ops-coffee.cn/r/lingang-father-son-rv-adventure.html
 https://blog.ops-coffee.cn/s/django-auth-permission-system-design.html
