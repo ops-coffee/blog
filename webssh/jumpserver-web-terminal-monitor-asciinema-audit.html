@@ -93,7 +93,7 @@
         <blockquote>
 <p>WebSSH终端录像的实现终于来了</p>
 </blockquote>
-<p>前边写了两篇文章<a href="/s/oqZqGiQ3uNrNuT-nGrh9lg" target="_blank">『Asciinema：你的所有操作都将被录制』</a>和<a href="/s/PcstaBodjDS8D15ARwAfzA" target="_blank">『Asciinema文章勘误及Web端使用介绍』</a>深入介绍了终端录制工具Asciinema，我们已经可以实现在终端下对操作过程的录制，那么在WebSSH中的操作该如何记录并提供后续的回放审计呢？</p>
+<p>前边写了两篇文章<a href="/s/oqZqGiQ3uNrNuT-nGrh9lg" target="_blank">『Asciinema：你的所有操作都将被录制』</a>和<a href="https://blog.ops-coffee.cn/s/asciinema-recording-errors-and-corrections.html" target="_blank">『Asciinema文章勘误及Web端使用介绍』</a>深入介绍了终端录制工具Asciinema，我们已经可以实现在终端下对操作过程的录制，那么在WebSSH中的操作该如何记录并提供后续的回放审计呢？</p>
 <p>一种方式是<a href="/s/oqZqGiQ3uNrNuT-nGrh9lg" target="_blank">『Asciinema：你的所有操作都将被录制』</a>文章最后介绍的自动录制审计日志的方法，在主机上添加个脚本，每次连接自动进行录制，但这样不仅要在每台远程主机添加脚本，会很繁琐，而且录制的脚本文件都是放在远程主机上的，后续播放也很麻烦</p>
 <p>那该如何更好处理呢？下文介绍一种优雅的方式来实现，核心思想是不通过录制命令进行录制，而在Webssh交互执行的过程中直接<strong>生成可播放的录像文件</strong></p>
 <h2 id="_1">设计思路</h2>
