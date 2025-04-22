@@ -1372,7 +1372,7 @@
     "date": "2020-10-16"
   },
   {
-    "url": "https://blog.ops-coffee.cn/python/AXOUz0v99OfpHrURdei9vw.html",
+    "url": "https://blog.ops-coffee.cn/python/https-certificate-management-automation.html",
     "title": "Python实现HTTPS网站证书过期监控及更新",
     "content": "本教程详细介绍了如何从获取域名列表、检查HTTPS支持、获取证书过期时间、定时执行入库到更新证书的全流程，帮助您有效管理HTTPS证书，避免因证书过期导致的系统问题。",
     "keywords": "HTTPS证书管理, 域名列表获取, 证书过期检查, 证书更新, 阿里云API, pyopenssl, 定时执行入库",
