@@ -278,7 +278,7 @@ https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html
 https://blog.ops-coffee.cn/r/city-china-zhejiang-zhoushan-luotangxian.html
 https://blog.ops-coffee.cn/s/django-object-permission-django-guardian-rbac.html
 https://blog.ops-coffee.cn/s/django-model-update-save-method-validation.html
-https://blog.ops-coffee.cn/python/4S0L78-YOT50VT6nMAhqfg.html
+https://blog.ops-coffee.cn/python/security-eval-vs-ast-literal-eval.html
 https://blog.ops-coffee.cn/s/DInxgNE2HHnPJ_MfxQ3_yA.html
 https://blog.ops-coffee.cn/s/blog-website-github-pages-vs-netlify.html
 https://blog.ops-coffee.cn/s/vbdJ4fAPOrgLAUipoCCXBA.html

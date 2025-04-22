@@ -1498,7 +1498,7 @@
     "date": "2020-04-23"
   },
   {
-    "url": "https://blog.ops-coffee.cn/python/4S0L78-YOT50VT6nMAhqfg.html",
+    "url": "https://blog.ops-coffee.cn/python/security-eval-vs-ast-literal-eval.html",
     "title": "python函数eval与ast.literal_eval的区别",
     "content": "本文介绍了Python中eval和ast.literal_eval的区别，重点讨论了它们在数据类型转换和字符串处理中的不同行为，特别是ast.literal_eval在安全性方面的优势。",
     "keywords": "eval, ast.literal_eval, Python数据类型转换, Python字符串处理, Python安全性",
