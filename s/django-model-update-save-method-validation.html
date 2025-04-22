@@ -6,18 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="applicable-device" content="pc,mobile">
-  <meta name="keywords" content="Django, login_required, Middleware, 视图函数, 用户验证, 中间件, 登录页面, 全局验证, 自定义中间件" />
-  <meta name="description" content="本文介绍了如何通过Django的Middleware中间件优雅地处理用户访问view时的登录验证问题，避免了为每个视图函数添加@login_required装饰器的繁琐操作。" />
+  <meta name="keywords" content="Django, 数据校验, save方法, Python, 数据库, 校验方法, pre_save信号, model重写" />
+  <meta name="description" content="在Django中，通过重写model的save方法可以方便地在数据入库前进行复杂的校验，避免了在多个view中重复校验的问题。本文详细介绍了如何实现这一方法，并指出了在批量更新数据时需要注意的问题及其解决方案。" />
   <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
   <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
-  <title>Django全局启用登陆验证login_required</title>
+  <title>Django model重写save方法及update踩坑记录</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
   <meta property="og:url" content="https://blog.ops-coffee.cn" />
-  <meta property="og:title" content="Django全局启用登陆验证login_required" />
-  <meta property="og:description" content="本文介绍了如何通过Django的Middleware中间件优雅地处理用户访问view时的登录验证问题，避免了为每个视图函数添加@login_required装饰器的繁琐操作。" />
+  <meta property="og:title" content="Django model重写save方法及update踩坑记录" />
+  <meta property="og:description" content="在Django中，通过重写model的save方法可以方便地在数据入库前进行复杂的校验，避免了在多个view中重复校验的问题。本文详细介绍了如何实现这一方法，并指出了在批量更新数据时需要注意的问题及其解决方案。" />
   <link rel="canonical" href="https://blog.ops-coffee.cn" />
   <!-- End SEO tag -->
 </head>
@@ -88,77 +88,63 @@
 
   <div id="content-wrap">
     <div class="container no-sidebar">
-        <h1 id="art-title">Django全局启用登陆验证login_required</h1>
+        <h1 id="art-title">Django model重写save方法及update踩坑记录</h1>
 
-        <p>Django在做后台系统过程中，我们通常都会为view函数添加<code>@login_required</code>装饰器，这个装饰器的主要作用就是在用户访问这个方法时，检查用户是否已经成功登陆，如果没有则重定向到登陆页面</p>
-<p>登陆页面地址是通过<code>settings.LOGIN_URL</code>来获取的，默认为<code>/accounts/login/</code>页面，当然你也可以在settings配置文件中通过添加<code>LOGIN_URL</code>配置来改掉他，同时<code>@login_required</code>也接收参数<code>login_url</code>来指定登陆页面</p>
-<pre class="codehilite"><code>from django.contrib.auth.decorators import login_required
+        <blockquote>
+<p>一个非常实用的小方法</p>
+</blockquote>
+<p>试想一下，Django中如果我们想对保存进数据库的数据做校验，有哪些实现的方法？</p>
+<p>我们可以在view中去处理，每当view接收请求，就对提交的数据做校验，校验不通过直接返回错误，不写数据库，校验通过再调用<code>create</code>或<code>update</code>方法写入数据库</p>
+<p>以上方式比较简单，容易理解，但随之又带来了麻烦，我们需在所有接收数据的地方都要去校验，那么有没有更加优雅的方式呢？如果你看过我之前的文章<a href="/s/cMxdAfsTno56ixurmD4KXA" target="_blank">『Django使用Signals监测model字段变化发送通知』</a>]就能想到可以通过signals信号来处理，添加一个<code>pre_save</code>的信号，每当数据库数据变更前都会触发<code>pre_save</code>方法，可以在这里进行校验，免去了view中多个地方校验的麻烦</p>
+<p>而今天要说的并不是signals，而是另一种比较常用的做法：<strong>重写model的save方法</strong></p>
+<h2 id="save">重写save方法</h2>
+<p>save方法的主要作用就是将一个对象保存到数据库。如果我们想在数据入库之前做一些处理，除了上边提到的<code>signals</code>之外，还可以通过重写save方法来实现。具体实现方式看下面这个例子</p>
+<p>假如我们定义了model如下：</p>
+<pre class="codehilite"><code>class TempTask(models.Model):
+    ...
 
-
-@login_required(login_url='/login/')
-def home(request):
-    return JsonResponse({data': 'ops-coffee.cn'})</code></pre>
-
-
-<h2 id="middleware">Middleware</h2>
-<p>通常对于一个后台系统来说，每一个页面都需要登陆才能访问，这样我们就需要给每一个view方法添加<code>@login_required</code>装饰器，那么有没有简单优雅一点的方式呢？可以通过Middleware中间件来实现</p>
-<p>中间件位于用户请求和程序响应之间，当用户访问一个url之后并不是直接交给了view去处理，而是先经过中间件处理，然后再到了view，路线是这样的：user--&gt;middleware--&gt;view，所以针对全局所有view的操作就非常适合放在中间件里去处理</p>
-<p>Django的中间件都定义在settings的<code>MIDDLEWARE</code>配置下，默认就添加了诸如auth、csrf之类的中间件</p>
-<p><img alt="" loading="lazy" src="/static/images/2020/0601.01.png" /></p>
-<p>需要注意的是Django的中间件是有先后顺序的，对于接收到的请求默认从上到下依次执行，关于Django的中间件这里不过多介绍，查询相关文档即可</p>
-<p>对于优雅处理用户访问view验证登陆的需求，我们就可以通过添加自定义的中间件来处理，方法非常简单</p>
-<p>先来编写中间件类，代码如下：</p>
-<pre class="codehilite"><code>from django.shortcuts import redirect
-from django.conf import settings
+    exechost = models.CharField(max_length=64, default='localhost', verbose_name='执行主机')
+    execuser = models.ForeignKey(ExecUser, null=True, on_delete=models.PROTECT, db_constraint=False)</code></pre>
 
 
-class LoginRequiredMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-        self.login_url = settings.LOGIN_URL
-        self.open_urls = [self.login_url] + getattr(settings, 'OPEN_URLS', [])
+<p>exechost默认为Localhost，execuser默认为空，现有需求：当exechost不为localhost时，他必须符合<code>ip:port</code>的格式，且execuser不能为空。这是一个比较复杂的校验方式，我们可以通过重写save方法来处理</p>
+<pre class="codehilite"><code>class TempTask(models.Model):
+    ...
 
-    def __call__(self, request):
-        if not request.user.is_authenticated and request.path_info not in self.open_urls:
-            return redirect(self.login_url + '?next=' + request.path)
+    def save(self, *args, **kwargs):
+        if self.exechost and (self.exechost.strip() != 'localhost'):
+            if len(self.exechost.split(':')) != 2:
+                raise ValidationError('执行主机格式错误，应为ip:port格式')
 
-        return self.get_response(request)</code></pre>
+            if not self.execuser:
+                raise ValidationError('当执行主机存在时执行用户不能为空')
 
-
-<p><code>__init__</code>和<code>__call__</code>为middleware的固定格式</p>
-<p><code>__init__</code>函数，初始化了几个变量。需要注意的是定义了一个变量<code>open_urls</code>，这是一个list，包含所有不需要验证登陆的页面，提供了更强的灵活性，在这个列表里的url都不会验证是否登陆，默认将<code>login_url</code>添加到了<code>open_urls</code>列表中</p>
-<p><code>__call__</code>函数会判断当用户没有登陆且请求的URL不在<code>open_urls</code>列表中时，就直接给重定向到登陆页面</p>
-<p>代码比较简单，这里不做过多解释</p>
-<p>然后在setting配置文件的MIDDLEWARE中添加上边这个中间件的方法就可以了</p>
-<pre class="codehilite"><code>MIDDLEWARE = [
-    'coffee.middleware.loginrequired.LoginRequiredMiddleware',
-]</code></pre>
+        super().save(*args, **kwargs)</code></pre>
 
 
-<p><code>LoginRequiredMiddleware</code>中间件放在最后一行即可，前边为中间件类的路径，<code>coffee</code>作为一个app，需要包含在<code>INSTALLED_APPS</code>内，目录结构大概如下：</p>
-<pre class="codehilite"><code>webapp 
-    - coffee
-        - middleware
-            - __init__.py
-            - loginrequired.py
-        - views.py
-    - webapp
-        - __init__.py
-        - settings.py
-        - urls.py
-    - manage.py</code></pre>
+<p>我们可以在save函数内执行各种自定义逻辑，但需要注意的是，最后必须要调用<code>super().save()</code>方法来保证执行了父类的<code>save()</code>，这样才能保证数据写入了数据库。</p>
+<p>这样在当我们执行create语句插入数据的时候就会先去执行save中的校验方法进行校验了</p>
+<pre class="codehilite"><code>TempTask.objects.create(**postdata)</code></pre>
 
 
-<p>当我们有需要排除，不用检查是否登陆的URL时，只需要在settings配置文件中添加<code>OPEN_URLS</code>配置即可</p>
-<pre class="codehilite"><code>OPEN_URLS = ['/devops/', '/webssh/']</code></pre>
+<h2 id="update">update踩坑</h2>
+<p>就当我以为一切都要结束准备起身冲杯咖啡的时候，我发现新加数据可以正常进行校验，但更新数据却不行，更新的代码如下：</p>
+<pre class="codehilite"><code>TempTask.objects.filter(id=pk).update(**postdata)</code></pre>
 
 
-<p>至此，完美解决了所有view都需要添加<code>@login_required</code>的问题</p>
-<p>中间件的合理运用，能帮助我们简化很多操作，编写优雅的代码，例如记录系统审计日志就可以通过中间件来方便的实现，试想一下，还有哪些地方可以用到呢？</p>
+<p>经过一番查找发现了问题所在，官方文档中有这么一句话</p>
+<pre class="codehilite"><code>Unfortunately, there isn’t a workaround when creating or updating objects in bulk, since none of save(), pre_save, and post_save are called.</code></pre>
+
+
+<p>也就是说，<strong>当使用查询集批量更新对象时，将不会为每个对象调用save()方法</strong>，连<code>pre_save</code>和<code>post_save</code>也不会被调用。与<code>save()</code>类似的还有model的<code>delete()</code>方法，当批量删除的时候，同样不会调用model的<code>delete()</code>方法，但delete是可以使用<code>pre_delete</code>或<code>post_delete</code>信号的</p>
+<p>解决这个问题的方法很简单，那就是将更新的代码换成下边这种，保证调用到save方法</p>
+<pre class="codehilite"><code>_t = TempTask.objects.get(id=pk)
+_t.__dict__.update(**postdata)
+_t.save()</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
-            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/PQAjBTRP-2X4ESYyIf1mSw.html">📅 2020-06-01</a></li>
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/django-model-update-save-method-validation.html">📅 2020-04-23</a></li>
 <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
         </div>
 
