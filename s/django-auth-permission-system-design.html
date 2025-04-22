@@ -90,7 +90,7 @@
     <div class="container no-sidebar">
         <h1 id="art-title">权限管理系统设计</h1>
 
-        <p>上周分别分享了任务系统的两个主要功能：<a href="/s/Q3BBxBAWBcpUhQhfwO7pgQ" target="_blank">手动审批</a>和<a href="https://blog.ops-coffee.cn/s/parallel-task-execution-implementation.html" target="_blank">并行任务</a>，今天再来聊下任务系统的权限设计，实际上关于权限系统的设计并不只适用于任务系统，作为PAAS平台基础服务后续会贯穿所有的上层SAAS应用中</p>
+        <p>上周分别分享了任务系统的两个主要功能：<a href="https://blog.ops-coffee.cn/s/devops-task-system-manual-approval.html" target="_blank">手动审批</a>和<a href="https://blog.ops-coffee.cn/s/parallel-task-execution-implementation.html" target="_blank">并行任务</a>，今天再来聊下任务系统的权限设计，实际上关于权限系统的设计并不只适用于任务系统，作为PAAS平台基础服务后续会贯穿所有的上层SAAS应用中</p>
 <p>之前在写<a href="/s/FV379mGIboVYky73kcoMMQ" target="_blank">Probius的介绍文章</a>时，大概提过Probius的权限设计，主要是RBAC+单独对象授权的方式，而本次任务系统的权限设计除了延续之前的授权方式外，还新增了非常重要的资源隔离，接下来简单的说下这三种授权方式的区别跟实现</p>
 <h2 id="_1">默认权限</h2>
 <p>熟悉Django的朋友都知道，Django是有自带的权限系统的，如果把Django里的Group看作Role且抛弃用户单独授权的话，那大概的授权流程就变成了将用户加入组，给组授予对应模块操作的权限，那用户就有了相应模块的权限，这个授权方式就跟常见的RBAC权限模型非常相似了</p>
