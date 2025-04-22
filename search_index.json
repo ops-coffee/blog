@@ -1463,7 +1463,7 @@
     "date": "2020-06-09"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/PQAjBTRP-2X4ESYyIf1mSw.html",
+    "url": "https://blog.ops-coffee.cn/s/django-login-required-middleware.html",
     "title": "Django全局启用登陆验证login_required",
     "content": "本文介绍了如何通过Django的Middleware中间件优雅地处理用户访问view时的登录验证问题，避免了为每个视图函数添加@login_required装饰器的繁琐操作。",
     "keywords": "Django, login_required, Middleware, 视图函数, 用户验证, 中间件, 登录页面, 全局验证, 自定义中间件",

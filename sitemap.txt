@@ -273,7 +273,7 @@ https://blog.ops-coffee.cn/s/django-jsonfield-usage-and-updates.html
 https://blog.ops-coffee.cn/r/city-china-travel-zhejiang-jiangsu-taihu.html
 https://blog.ops-coffee.cn/t/django-debug-false-static-500.html
 https://blog.ops-coffee.cn/python/how-to-create-system-command-using-argparse.html
-https://blog.ops-coffee.cn/s/PQAjBTRP-2X4ESYyIf1mSw.html
+https://blog.ops-coffee.cn/s/django-login-required-middleware.html
 https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html
 https://blog.ops-coffee.cn/r/city-china-zhejiang-zhoushan-luotangxian.html
 https://blog.ops-coffee.cn/s/django-object-permission-django-guardian-rbac.html
