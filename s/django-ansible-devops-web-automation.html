@@ -91,7 +91,7 @@
         <h1 id="art-title">Django+Ansible构建任务中心思路</h1>
 
         <p>Ansible作为老牌的自动化运维工具，由Python开发，应用广泛，但其默认只提供了命令行下的使用方式，好在提供有完善的API支持二次开发，可以很方便的集成到我们的自动化运维系统中</p>
-<p>最近一个朋友跳槽到了新公司转做DevOps开发，接到的第一个需求就是基于Ansible研发简单的任务中心，而他欠缺相关经验就找我帮忙，我就花了两天时间从熟悉Ansible开始写了个项目，由于我们的任务都是通过自研的一套<a href="/s/uXQbM4t11ICdzNofZyDeXA" target="_blank">自定义任务引擎Probius</a>来实现的，之前从未正式用过Ansible，趁此机会也算是熟悉了</p>
+<p>最近一个朋友跳槽到了新公司转做DevOps开发，接到的第一个需求就是基于Ansible研发简单的任务中心，而他欠缺相关经验就找我帮忙，我就花了两天时间从熟悉Ansible开始写了个项目，由于我们的任务都是通过自研的一套<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">自定义任务引擎Probius</a>来实现的，之前从未正式用过Ansible，趁此机会也算是熟悉了</p>
 <p>本篇文章只有思路没有代码，主要帮助新手了解流程整理思路，从而更好的理解代码</p>
 <h2 id="_1">思路整理</h2>
 <p>可以通过Web运行Ansible的Module和Playbook这是我们的目标，要实现这个目标我们要做哪些功能呢？我大概画了个脑图帮助整理思路</p>
