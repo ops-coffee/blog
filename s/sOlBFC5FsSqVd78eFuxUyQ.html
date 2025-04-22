@@ -90,7 +90,7 @@
     <div class="container no-sidebar">
         <h1 id="art-title">Probius+Prometheus通过API集成POD监控</h1>
 
-        <p>上一篇文章<a href="https://blog.ops-coffee.cn/s/devops-task-probius-kubernetes-integration.html" target="_blank">Probius+Kubernetes任务系统如虎添翼</a>讲了我们把Kubernetes集成进了<a href="/s/uXQbM4t11ICdzNofZyDeXA" target="_blank">任务系统Probius</a>，上线后小伙伴反馈虽然摆脱了Kubernetes-Dashboard，但还是得去Grafana系统查看容器的监控数据，能否将容器监控也给集成进Probius呢？只要能优化流程提高效率那就必须给安排</p>
+        <p>上一篇文章<a href="https://blog.ops-coffee.cn/s/devops-task-probius-kubernetes-integration.html" target="_blank">Probius+Kubernetes任务系统如虎添翼</a>讲了我们把Kubernetes集成进了<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">任务系统Probius</a>，上线后小伙伴反馈虽然摆脱了Kubernetes-Dashboard，但还是得去Grafana系统查看容器的监控数据，能否将容器监控也给集成进Probius呢？只要能优化流程提高效率那就必须给安排</p>
 <p>当前Kubernetes集群通过Prometheus来收集和存储监控数据同时借助Grafana来画图展示，Probius若想集成容器监控只需要获取Prometheus存储的容器数据并绘图展示即可，这里涉及到两块内容：1. 获取Prometheus中存储的POD数据，2. 根据获取到的POD数据进行画图展示，完成后的效果如下</p>
 <p><img alt="" loading="lazy" src="/static/images/2021/1014.01.png" /></p>
 <h2 id="_1">获取数据</h2>
