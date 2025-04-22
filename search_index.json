@@ -1505,7 +1505,7 @@
     "date": "2020-04-16"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/DInxgNE2HHnPJ_MfxQ3_yA.html",
+    "url": "https://blog.ops-coffee.cn/s/system-design-principles-and-optimization-strategies.html",
     "title": "从知乎宕机说起，闲聊设计原则与优化方法",
     "content": "文章探讨了系统设计的简单原则、盖尔定律以及如何通过动静分离和页面静态化等策略优化用户体验，减少宕机概率，提升系统稳定性。",
     "keywords": "系统设计, 简单原则, 盖尔定律, 体验优化, 动静分离, 页面静态化, 知乎宕机",
