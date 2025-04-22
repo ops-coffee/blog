@@ -1106,7 +1106,7 @@
     "date": "2022-02-26"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/Drt44kkzaeAeSjhshSb0Vg.html",
+    "url": "https://blog.ops-coffee.cn/s/script-robustness-and-best-practices.html",
     "title": "简洁的脚本编写规范",
     "content": "本文深入探讨了脚本健壮性的重要性以及如何在设计脚本时遵循最佳实践，包括脚本风格、异常处理、日志记录等，以确保脚本的可靠性和可重复执行性。",
     "keywords": "脚本健壮性, 脚本设计, 异常处理, 日志记录, 脚本风格, USAGE函数, 幂等性, 单例执行, SEO, 任务系统",

@@ -222,7 +222,7 @@ https://blog.ops-coffee.cn/r/lingang-father-son-rv-adventure.html
 https://blog.ops-coffee.cn/s/django-auth-permission-system-design.html
 https://blog.ops-coffee.cn/s/0Q31jzeYBTeWdrLMufdig.html
 https://blog.ops-coffee.cn/s/Q3BBxBAWBcpUhQhfwO7pgQ.html
-https://blog.ops-coffee.cn/s/Drt44kkzaeAeSjhshSb0Vg.html
+https://blog.ops-coffee.cn/s/script-robustness-and-best-practices.html
 https://blog.ops-coffee.cn/t/debian-lsb-release-source-list.html
 https://blog.ops-coffee.cn/r/my-gift-for-the-new-year.html
 https://blog.ops-coffee.cn/r/my-RV-is-registered.html
