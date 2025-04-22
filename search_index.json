@@ -1162,7 +1162,7 @@
     "date": "2021-11-30"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/k0rAVHLALYTxCR5ggMg-ag.html",
+    "url": "https://blog.ops-coffee.cn/s/demand-management-system-development-guide.html",
     "title": "面向老板的需求管理系统",
     "content": "本文介绍了如何通过开发一个需求管理系统来解决多个项目之间开发资源争抢的问题。系统包括项目看板和需求审批流程，适用于普通用户和项目经理，并与Jira等项目管理工具相辅相成，提高项目管理和资源分配的效率。",
     "keywords": "需求管理系统, 开发资源管理, 项目看板, 需求审批流程, 项目经理, 普通用户, Jira, DevOps",
