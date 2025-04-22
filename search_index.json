@@ -1435,7 +1435,7 @@
     "date": "2020-08-26"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/uKPmc39C2Ysi_8J9ADUoUg.html",
+    "url": "https://blog.ops-coffee.cn/s/django-jsonfield-usage-and-updates.html",
     "title": "Django ORM中原生JSONField的使用方法",
     "content": "本文详细介绍了Django最新版v3.1中新增的JSONField功能，包括其使用方法、数据库支持情况、查询技巧以及SQLite不支持JSONFields时的解决方案。",
     "keywords": "Django JSONField, Django 3.1更新, JSONField使用方法, 数据库JSON支持, JSONField查询, MariaDB JSON支持, MySQL JSON支持, PostgreSQL JSON支持, SQLite JSON支持, Oracle JSON支持, Django models, Django forms, JSONField数据库查询, JSONField NULL处理, Django JSONField示例, JSONField数据库兼容性, JSONField查询方法, Django JSONField错误处理, SQL NULL vs JSON NULL",
