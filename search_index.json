@@ -1456,7 +1456,7 @@
     "date": "2020-06-12"
   },
   {
-    "url": "https://blog.ops-coffee.cn/python/GXBrzg9wxUy1Y4XKazb67Q.html",
+    "url": "https://blog.ops-coffee.cn/python/how-to-create-system-command-using-argparse.html",
     "title": "用Python写个Linux系统命令",
     "content": "本文介绍了如何使用Python的argparse模块创建系统命令，并详细解释了为什么要编写自定义命令以及如何通过命令从配置中心获取配置并写入本地文件。",
     "keywords": "系统命令, Linux命令, Python argparse, 可执行文件, 命令行工具, 自定义命令, 命令帮助, 配置中心, API获取配置, 代码复用",
