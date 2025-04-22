@@ -244,7 +244,7 @@ https://blog.ops-coffee.cn/r/city-china-zhejiang-hangzhou-chunan-qiandaohu.html
 https://blog.ops-coffee.cn/bpmn/bpmn-js-demo-source-code.html
 https://blog.ops-coffee.cn/s/dynamic-task-django-celery-integration-guide.html
 https://blog.ops-coffee.cn/s/company-annual-party-luxury-outing-2020.html
-https://blog.ops-coffee.cn/s/FV379mGIboVYky73kcoMMQ.html
+https://blog.ops-coffee.cn/s/nginx-proxy-management-system-devops.html
 https://blog.ops-coffee.cn/s/self-selected-fund-assistant-chrome-plugins.html
 https://blog.ops-coffee.cn/bpmn/bpmn-js-minimap.html
 https://blog.ops-coffee.cn/t/tcp-ip-mtu-mss-explained.html

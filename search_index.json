@@ -1260,7 +1260,7 @@
     "date": "2020-12-22"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/FV379mGIboVYky73kcoMMQ.html",
+    "url": "https://blog.ops-coffee.cn/s/nginx-proxy-management-system-devops.html",
     "title": "Proxy：简单小巧又强大好用的代理系统",
     "content": "本文介绍了一个基于Nginx的Proxy代理管理系统，旨在简化Nginx配置与管理，通过Web界面自动生成Nginx配置文件，支持实例管理、证书管理和黑白名单，显著提升了配置效率和管理便利性。",
     "keywords": "Proxy代理管理系统, Nginx配置, DevOps工具, 代理服务器, Web管理, 自动化配置, 黑白名单, 证书管理",
