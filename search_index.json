@@ -1470,7 +1470,7 @@
     "date": "2020-06-01"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/uXQbM4t11ICdzNofZyDeXA.html",
+    "url": "https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html",
     "title": "Probius：一个功能强大的自定义任务系统",
     "content": "Probius是一个基于命令、模板和任务的CICD工具，旨在通过简单易用的web配置实现各种自定义功能，覆盖广泛的运维场景。本文详细介绍了Probius的设计思路和页面配置。",
     "keywords": "Probius, CICD工具, 命令模板任务, DevOps平台, 任务模块, 运维场景",
