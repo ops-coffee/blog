@@ -2086,7 +2086,7 @@
     "date": "2018-07-10"
   },
   {
-    "url": "https://blog.ops-coffee.cn/python/YhKyJ16yuI0bPpygKV_d1w.html",
+    "url": "https://blog.ops-coffee.cn/python/p2p-investment-and-technical-implementation.html",
     "title": "python如何帮我在投资中获取更高收益",
     "content": "本文介绍了P2P理财产品的特点及其投资风险，并详细阐述了如何使用Python、Django等技术实现数据的抓取、处理和展示，以及如何通过微信和微信公众号实现自动回复功能。",
     "keywords": "P2P投资, 理财产品, 技术实现, Python, Django, MySQL, Redis, 微信机器人, 微信公众号, 投资风险, 数据抓取, 理财需谨慎",
