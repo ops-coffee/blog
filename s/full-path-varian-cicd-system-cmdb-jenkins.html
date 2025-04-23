@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="varian, Python3部署系统, CMDB, Jenkins, SVN, Git, Harbor, Kubernetes, Docker镜像, 微服务, 容器化, 部署系统" />
+  <meta name="description" content="本文介绍了varian，一套基于Python3的部署系统，详细解释了其架构、设计思路、实现方法以及使用方式，展示了varian如何通过模块化设计解决大规模项目部署中的各种问题，提升部署效率和系统健壮性。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>探秘varian：优雅的发布部署程序</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="探秘varian：优雅的发布部署程序" />
+  <meta property="og:description" content="本文介绍了varian，一套基于Python3的部署系统，详细解释了其架构、设计思路、实现方法以及使用方式，展示了varian如何通过模块化设计解决大规模项目部署中的各种问题，提升部署效率和系统健壮性。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">探秘varian：优雅的发布部署程序</h1>
+
+        <blockquote>
+<p>上一篇文章<a href="https://blog.ops-coffee.cn/s/fault-handling-nginx-403-issue-python-jenkins-varian-deployment.html" target="_blank">《记一次诡异的故障排查经历》</a>中有介绍到我们的部署程序varian，文章发布后有小伙伴对varian很感兴趣，今天就简单的介绍一下我们的varian，揭开她神秘的面纱~</p>
+</blockquote>
+<h1 id="varian">什么是varian</h1>
+<p>varian是我们基于Python3编写的一套部署程序，处在整个部署系统的中心，与CMDB、Jenkins、SVN/Git、镜像仓库Harbor、Kubernetes API、通知系统等都有交互，负责将源代码经过一系列的处理后打包成Docker镜像，并发布到各个环境，然后通知相关人员。简化后的varian架构如下：</p>
+<p><img alt="varian架构图" loading="lazy" src="/static/images/2018/0730.varian.png" /></p>
+<h1 id="_1">项目环境介绍</h1>
+<ul>
+<li>项目数量：50+</li>
+<li>开发语言：php、java、nodejs</li>
+<li>代码版本管理工具：svn、git</li>
+<li>编译方式：maven、grunt、yarn</li>
+<li>通知方式：email、sms、im</li>
+</ul>
+<h1 id="varian_1">varian能解决我们哪些问题</h1>
+<p>说到解决的问题，要先聊一下部署系统经历的几个迭代版本：</p>
+<ol>
+<li>
+<p>最早项目比较少，所用架构及技术也比较单一，每个项目都单独维护了一个shell脚本做部署，脚本里配置了项目的所有信息，包含服务器列表、代码路径等项目特有信息和通知类型等公共信息，各项目脚本之间互不干涉。这样做的好处是每个项目部署发布逻辑都比较简单，修改任何一个项目都对其他项目无影响；但缺点也很明显，各个项目脚本分散，任何项目信息变更都需要取改这个脚本，且一些公共功能的修改就需要所有项目脚本都改一遍，难免不出问题。</p>
+</li>
+<li>
+<p>后来随着项目、服务器数量的增多，引入了CMDB来管理项目和主机的基本信息，纯shell的脚本也升级为了python+shell的脚本来维护编译部署，把一部分公共模块例如去CMDB拉取项目下的主机列表、邮件通知等从shell脚本中单独抽出来用python重构，并用python实现了一个主入口，所有项目部署都通过这个主入口进入，然后调用python或shell脚本来实现部署发布整过程，这样解决了脚本分散和公共模块更新所有项目脚本都要跟着修改的问题，但是添加一个新项目还是要手动更新一堆的脚本文件，效率低且易出错，各个项目处理逻辑各不相同，对需要熟悉她的新人很不友好。</p>
+</li>
+<li>
+<p>现在线上项目数量已经超过50+，且还在不断增多，微服务、容器化等新技术也不断加入，每天进行数十上百次的部署更新，对部署系统的健壮性，扩展性有了更高的要求。基于之前一步步的探索，采用微服务的设计理念，我们实现了现在这一套部署程序varian，效率高、易扩展、出错率大大降低且对新人友好，解决了以上遇到的所有问题。</p>
+</li>
+</ol>
+<h1 id="varian_2">varian究竟长何种模样</h1>
+<p>说了这么多，那varian究竟是个什么样子呢？</p>
+<h2 id="_2">设计思路</h2>
+<p>Lego积木，就是那种各个不同的小模块能拼装成各种各样的建筑的玩具。设计的思路也主要采用了lego的方式，把所有的功能都拆分成一个一个的python类，部署项目时就组装不同的类，例如一个最简单的纯静态web项目，组装了“拉代码模块”+“JS/CSS合并压缩模块”+“分发API模块”+“邮件通知模块”，如果是一个纯java api项目呢？组装“拉代码模块”+“maven编译模块”+“分发API模块”+“邮件通知模块”即可，从上边的例子可以就可以看出这种组装模块的优势。</p>
+<p><img alt="lego拼装模块" loading="lazy" src="/static/images/2018/0730.lego.png" /></p>
+<p>所有模块可复用，来了一个新项目根据项目架构、开发语言等因素去判断目前的模块是否能够满足，如果可以满足就直接组装使用吧，如果确认过眼神，实在满足不了呢？那就新加一个模块，模块编写遵循简单可复用原则，需考虑到后续有类似功能可以直接使用此模块。</p>
+<p>可能会有疑问？那些各个项目不同的配置怎么办？例如代码路径。这里采用了逻辑（模块）跟配置拆分的设计方式，所有处理逻辑不涉及任何一个项目特有的属性，项目特有的属性都单独配置，我们采用CMDB来配置，CMDB里有一张deploy的表，表关联project，记录了项目的特殊属性，例如通知邮件列表等等，逻辑模块会调用CMDB API自动取出所需配置信息。</p>
+<h2 id="_3">实现方法</h2>
+<ul>
+<li>目录结构如下：</li>
+</ul>
+<pre class="codehilite"><code>varian/
+|-- main.py #入口主函数
+|-- module
+|   |-- __init__.py
+|   |-- notify.py
+|   |-- check.py
+|   |-- ...更多模块
+|-- project
+    |-- website #项目名
+    |   |-- cache   #存放log等内容
+    |   |-- docker  #打包docker镜像目录
+    |   |-- svn     #svn源代码目录</code></pre>
+
+
+<ul>
+<li>简化过的主函数<code>main.py</code>如下（代码随机删除。。意思对就行吧）</li>
+</ul>
+<pre class="codehilite"><code class="language-python linenums">#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import argparse,sys
+from module import build,public
+
+parser=argparse.ArgumentParser(description='deploys duang!!!')
+
+parser.add_argument(dest='pro_name',type=str)
+parser.add_argument(dest='env_name',type=str)
+parser.add_argument(dest='parameters',nargs='*')
+
+args=parser.parse_args()
+
+class M(object):
+    def __init__(self):
+        self.pro_name = args.pro_name
+        self.env_name = args.env_name
+        self.parameters = args.parameters
+
+        self.build_ob = build.BUILD(self.pro_name,self.env_name)
+        self.public_ob = public.PUBLIC(self.pro_name,self.env_name)
+
+        self.maps = {
+            &quot;7&quot;:&quot;self.build_ob.Maven_Build&quot;,
+
+            &quot;14&quot;:&quot;self.public_ob.Remove_Cache&quot;,
+        }
+
+    def main(self):
+        self.arg_list = self.parameters
+
+        if self.env_name not in (&quot;dev&quot;,&quot;qa&quot;,&quot;hidden&quot;,&quot;product&quot;):
+            print(&quot;\n环境参数错误.\n&quot;)
+            sys.exit()
+
+        for self.every_arg in self.arg_list:
+            self.func = self.maps[self.every_arg]
+            self.func_ob = str(&quot;%s()&quot; % self.func)
+            exec(self.func_ob)
+
+if __name__ == '__main__':
+    m = M()
+    m.main()</code></pre>
+
+
+<ul>
+<li>modele下的模块函数，以maven编译模块为例</li>
+</ul>
+<pre class="codehilite"><code>class BUILD(object):
+    def __init__(self,pro_name,env_name):
+        self.pro_name = pro_name
+        self.env_name = env_name
+
+        self.svn_path = (&quot;%s/project/%s/svn&quot; % (sys.path[0],self.pro_name))
+
+    def Maven_Build(self):
+        self.command = str(&quot;cd %s; mvn clean package -P%s -Dmaven.test.skip=true&quot; % (
+            self.svn_path, self.env_name)
+        )
+
+        try:
+            print(&quot;\nStart maven build in webapp.\n&quot;)
+            self.result = os.system(self.command)
+            assert self.result == 0
+        except AssertionError:
+            print(&quot;\nMvn build error!\n&quot;)
+            sys.exit()  # 异常退出，这个再模块中非常重要</code></pre>
+
+
+<h2 id="_4">使用方法</h2>
+<ul>
+<li>控制台使用：</li>
+</ul>
+<pre class="codehilite"><code>python main.py static qa 1 3 6 8
+
+# 第一个参数为项目名
+# 第二个参数为部署环境
+# 后边的参数就是要构建的模块组合</code></pre>
+
+
+<ul>
+<li>Jenkins使用：</li>
+</ul>
+<p>只需要将控制台命令贴到jenkins的构建步骤中当做shell执行即可</p>
+<h1 id="_5">总结</h1>
+<ol>
+<li>简单即是美</li>
+<li>适合自己的就是最好的</li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/full-path-varian-cicd-system-cmdb-jenkins.html">📅 2018-07-31</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
