@@ -2065,7 +2065,7 @@
     "date": "2018-07-31"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/fl3OiX7xg9GVrj9G--a5-g.html",
+    "url": "https://blog.ops-coffee.cn/s/fault-handling-nginx-403-issue-python-jenkins-varian-deployment.html",
     "title": "记一次诡异的故障排查经历",
     "content": "本文详细记录了一次发布系统重构过程中的故障排查经历，重点解决了Nginx返回403错误及Tomcat8 UMASK设置问题，提供了详细的解决方案和背景信息，适合技术人员参考。",
     "keywords": "Nginx 403错误, Tomcat8 UMASK, 故障排查, 发布系统重构, Python开发, Jenkins升级",
