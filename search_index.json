@@ -1841,7 +1841,7 @@
     "date": "2019-06-11"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/D6PeQ_lzcaY8pmOLqTY-gQ.html",
+    "url": "https://blog.ops-coffee.cn/s/nginx-security-configurations-best-practices.html",
     "title": "Nginx与安全有关的几个配置",
     "content": "本文详细介绍了从nginx配置角度进行安全防范的多种方法，包括隐藏版本号、开启HTTPS、添加黑白名单、账号认证、限制请求方法、拒绝User-Agent、图片防盗链、控制并发连接数、缓冲区溢出攻击防护以及Header头设置等，帮助提升网站的安全性。",
     "keywords": "nginx安全配置, nginx安全防范, nginx版本隐藏, nginx HTTPS配置, nginx黑白名单, nginx账号认证, nginx请求限制, nginx User-Agent限制, nginx防盗链, nginx并发连接数控制, nginx缓冲区溢出攻击, nginx Header头设置",
