@@ -95,7 +95,7 @@
 </blockquote>
 <p>试想一下，Django中如果我们想对保存进数据库的数据做校验，有哪些实现的方法？</p>
 <p>我们可以在view中去处理，每当view接收请求，就对提交的数据做校验，校验不通过直接返回错误，不写数据库，校验通过再调用<code>create</code>或<code>update</code>方法写入数据库</p>
-<p>以上方式比较简单，容易理解，但随之又带来了麻烦，我们需在所有接收数据的地方都要去校验，那么有没有更加优雅的方式呢？如果你看过我之前的文章<a href="/s/cMxdAfsTno56ixurmD4KXA" target="_blank">『Django使用Signals监测model字段变化发送通知』</a>]就能想到可以通过signals信号来处理，添加一个<code>pre_save</code>的信号，每当数据库数据变更前都会触发<code>pre_save</code>方法，可以在这里进行校验，免去了view中多个地方校验的麻烦</p>
+<p>以上方式比较简单，容易理解，但随之又带来了麻烦，我们需在所有接收数据的地方都要去校验，那么有没有更加优雅的方式呢？如果你看过我之前的文章<a href="https://blog.ops-coffee.cn/s/django-signals-for-notification-in-ticket-system.html" target="_blank">『Django使用Signals监测model字段变化发送通知』</a>]就能想到可以通过signals信号来处理，添加一个<code>pre_save</code>的信号，每当数据库数据变更前都会触发<code>pre_save</code>方法，可以在这里进行校验，免去了view中多个地方校验的麻烦</p>
 <p>而今天要说的并不是signals，而是另一种比较常用的做法：<strong>重写model的save方法</strong></p>
 <h2 id="save">重写save方法</h2>
 <p>save方法的主要作用就是将一个对象保存到数据库。如果我们想在数据入库之前做一些处理，除了上边提到的<code>signals</code>之外，还可以通过重写save方法来实现。具体实现方式看下面这个例子</p>
