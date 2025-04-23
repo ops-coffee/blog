@@ -1722,7 +1722,7 @@
     "date": "2019-09-19"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/Nxh7mwPJPlbL3R9MdlkO_A.html",
+    "url": "https://blog.ops-coffee.cn/s/create-test-environment-with-aloid-system.html",
     "title": "Alodi：为了保密我开发了一个系统",
     "content": "本文介绍了一个名为Aloid的系统，该系统可以快速生成具有一定有效期的临时测试环境，保护保密性内容。文章详细探讨了项目的技术实现，包括使用Django框架、subprocess模块进行系统命令执行，以及通过kubernetes-api与Kubernetes集群交互。",
     "keywords": "造轮子, 测试环境, Aloid系统, Django, subprocess, kubernetes-api, 临时环境, 保密性",

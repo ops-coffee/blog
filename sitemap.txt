@@ -310,7 +310,7 @@ https://blog.ops-coffee.cn/s/django-contrib-auth-permissions-system.html
 https://blog.ops-coffee.cn/s/national-flag-in-wechat-avatar-event.html
 https://blog.ops-coffee.cn/s/specifications-mysql-development-guidelines.html
 https://blog.ops-coffee.cn/t/Kubernetes-Python-API-Demo.html
-https://blog.ops-coffee.cn/s/Nxh7mwPJPlbL3R9MdlkO_A.html
+https://blog.ops-coffee.cn/s/create-test-environment-with-aloid-system.html
 https://blog.ops-coffee.cn/s/mysql-explain-output-slow-queries.html
 https://blog.ops-coffee.cn/s/jingjiabao-browser-plugin.html
 https://blog.ops-coffee.cn/s/tree-plugin-ztree-and-django-model-design.html
