@@ -2002,7 +2002,7 @@
     "date": "2018-10-13"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/sROfvo1y_76fi70nmAs-vg.html",
+    "url": "https://blog.ops-coffee.cn/s/business-status-monitoring-with-nagios.html",
     "title": "使用Nagios打造专业的业务状态监控",
     "content": "本文介绍了如何使用Nagios监控业务状态，探讨了传统监控系统的不足以及如何通过Nagios弥补业务状态监控的缺失，详细讲解了Nagios的部署与配置，以及如何通过Nagios插件实现更及时的监控报警。",
     "keywords": "Nagios, 业务监控, 监控系统, 业务状态, API监控, 网络监控, 监控部署, 监控报警, 监控配置, 监控插件",
