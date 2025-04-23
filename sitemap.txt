@@ -345,7 +345,7 @@ https://blog.ops-coffee.cn/s/django-api-auth-jwt-token-without-drf.html
 https://blog.ops-coffee.cn/s/xnBehfSlZ3J02xb0GFuGDw.html
 https://blog.ops-coffee.cn/s/XJloJMj9gTbfGnpWN_YU2A.html
 https://blog.ops-coffee.cn/s/L6Jud6gp5c9bbaUljUkNFA.html
-https://blog.ops-coffee.cn/s/A6GPJlAxvEopUsimWaNcqA.html
+https://blog.ops-coffee.cn/s/django-aggregate-annotate-echarts-bar-chart.html
 https://blog.ops-coffee.cn/s/cMxdAfsTno56ixurmD4KXA.html
 https://blog.ops-coffee.cn/s/6ztLq8Q591KnlQY33-YFdQ.html
 https://blog.ops-coffee.cn/s/dpGqieL4WCmGdQh1AEG4Gw.html

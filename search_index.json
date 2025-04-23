@@ -1967,7 +1967,7 @@
     "date": "2018-12-06"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/A6GPJlAxvEopUsimWaNcqA.html",
+    "url": "https://blog.ops-coffee.cn/s/django-aggregate-annotate-echarts-bar-chart.html",
     "title": "Django+Echarts画图实例",
     "content": "本文详细介绍了如何在Django中使用aggregate和annotate函数进行数据聚合和分组，并结合Echarts绘制柱状图，展示了如何从前端页面通过API获取数据并渲染图表，适用于前后端分离的项目架构。",
     "keywords": "Django, aggregate, annotate, Echarts, 柱状图, 前后端分离, API, 数据可视化",
