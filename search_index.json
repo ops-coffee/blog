@@ -2072,7 +2072,7 @@
     "date": "2018-07-25"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/ZrrLUNRlAXVfVKvA1m0nsg.html",
+    "url": "https://blog.ops-coffee.cn/s/sql-inception-overmind-automation-archery-yearning-bytebase.html",
     "title": "中小团队快速构建SQL自动审核系统",
     "content": "本文介绍了Inception和Overmind两款SQL审核工具，讨论了它们的架构、审核流程、系统介绍以及开源情况，旨在提高DBA的工作效率和SQL操作的规范性。",
     "keywords": "SQL审核, Inception, Overmind, Mysql自动化工具, DBA工具, SQL执行, SQL回滚",
