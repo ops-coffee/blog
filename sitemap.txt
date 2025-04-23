@@ -363,7 +363,7 @@ https://blog.ops-coffee.cn/s/fault-handling-nginx-403-issue-python-jenkins-varia
 https://blog.ops-coffee.cn/s/sql-inception-overmind-automation-archery-yearning-bytebase.html
 https://blog.ops-coffee.cn/s/django-model-update-guide-dict-json.html
 https://blog.ops-coffee.cn/python/p2p-investment-and-technical-implementation.html
-https://blog.ops-coffee.cn/s/GATfwNETo_aGsJHZdV5YzQ.html
+https://blog.ops-coffee.cn/s/devops-practice-and-tools-for-efficient-development-and-deployment.html
 https://blog.ops-coffee.cn/ldap/openldap-sso-python-django-auth-ldap.html
 https://blog.ops-coffee.cn/ldap/openldap-sso-auth-jenkins-plugins-devops.html
 https://blog.ops-coffee.cn/ldap/openldap-sso-auth-gitlab-389-devops.html
