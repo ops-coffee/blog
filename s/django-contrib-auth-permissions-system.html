@@ -100,7 +100,7 @@
 <p>如果希望用户只能删除自己创建的Blog，不能删除别人创建的Blog，这种需求Django默认的权限管理就无法实现了，需要用到<code>object permission</code>对象权限，有第三方模块实现了对象权限，如<a href="https://github.com/django-guardian/django-guardian" target="_blank">django-guardian</a>，你可以直接使用，或者也可以自己实现对象权限，具体思路可参考这篇文章：<a href="https://blog.ops-coffee.cn/s/extending-django-permissions-custom-solutions.html" target="_blank">Django内置权限扩展案例</a></p>
 <p>2.每个Model模型默认只有四个权限，分别是添加<code>add_</code>、修改<code>change_</code>、删除<code>delete_</code>、查看<code>view_</code>，这些权限记录在Permission表中，表数据如下：</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/0926.01.png" /></p>
-<p>默认权限的创建是通过Django的信号signals实现的，使用了<code>post_migrate</code>信号，在每次执行migrate操作时都会为新的Model模型创建默认权限，关于Django的信号Signals介绍和使用可以查看这篇文章：<a href="/s/cMxdAfsTno56ixurmD4KXA" target="_blank">Django使用Signals监测model字段变化发送通知</a>，</p>
+<p>默认权限的创建是通过Django的信号signals实现的，使用了<code>post_migrate</code>信号，在每次执行migrate操作时都会为新的Model模型创建默认权限，关于Django的信号Signals介绍和使用可以查看这篇文章：<a href="https://blog.ops-coffee.cn/s/django-signals-for-notification-in-ticket-system.html" target="_blank">Django使用Signals监测model字段变化发送通知</a>，</p>
 <h3 id="_1">自定义权限</h3>
 <p>默认的权限名字和描述都是英文的，且只有四个，如果你不想用默认的几个权限，想要自定义的话，可以这样做：</p>
 <pre class="codehilite"><code>class Blog(models.Model):
