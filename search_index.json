@@ -2058,7 +2058,7 @@
     "date": "2018-08-11"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/eM7SNKmtw2tDQtXBsBXyxQ.html",
+    "url": "https://blog.ops-coffee.cn/s/full-path-varian-cicd-system-cmdb-jenkins.html",
     "title": "探秘varian：优雅的发布部署程序",
     "content": "本文介绍了varian，一套基于Python3的部署系统，详细解释了其架构、设计思路、实现方法以及使用方式，展示了varian如何通过模块化设计解决大规模项目部署中的各种问题，提升部署效率和系统健壮性。",
     "keywords": "varian, Python3部署系统, CMDB, Jenkins, SVN, Git, Harbor, Kubernetes, Docker镜像, 微服务, 容器化, 部署系统",
