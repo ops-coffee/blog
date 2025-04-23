@@ -337,7 +337,7 @@ https://blog.ops-coffee.cn/s/django-channels-websocket-devops-02.html
 https://blog.ops-coffee.cn/s/django-channels-websocket-devops-01.html
 https://blog.ops-coffee.cn/elk/elasticsearch-logstash-filebeat-registry.html
 https://blog.ops-coffee.cn/elk/elasticsearch-logstash-kafka-webhdfs.html
-https://blog.ops-coffee.cn/s/fewb1jDso_FKPqhu9P1uHA.html
+https://blog.ops-coffee.cn/s/wechat-miniapp-development-journey.html
 https://blog.ops-coffee.cn/s/BZsJnWLtv8ZwwlBYbWSbZQ.html
 https://blog.ops-coffee.cn/s/HwOi-ARTvvNjGTWrDmZIkQ.html
 https://blog.ops-coffee.cn/s/XchAJWiMN3DNpKGj_yMdcA.html

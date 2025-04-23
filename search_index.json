@@ -1911,7 +1911,7 @@
     "date": "2019-03-19"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/fewb1jDso_FKPqhu9P1uHA.html",
+    "url": "https://blog.ops-coffee.cn/s/wechat-miniapp-development-journey.html",
     "title": "没有基础也能写个小程序",
     "content": "本文详细记录了开发一个微信小程序的设计思路、使用的技术、审核过程以及最终的源码提供。通过ColorUI组件库，开发了一个展示技术文章列表的小程序，并分享了开发中的技术细节和审核故事。",
     "keywords": "微信小程序, 小程序开发, ColorUI, 运维咖啡吧, 小程序审核, 技术文章, SEO友好",
