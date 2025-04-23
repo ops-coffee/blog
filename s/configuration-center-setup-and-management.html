@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="配置中心, Etcd, Confd, 运维, 配置管理, 部署, Kubernetes, WebUI, 集群" />
+  <meta name="description" content="本文介绍了如何通过Etcd和Confd构建一个简单、易落地的配置中心解决方案，解决线上配置文件管理中的常见问题，帮助轻松运维。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>中小团队落地配置中心详解</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="中小团队落地配置中心详解" />
+  <meta property="og:description" content="本文介绍了如何通过Etcd和Confd构建一个简单、易落地的配置中心解决方案，解决线上配置文件管理中的常见问题，帮助轻松运维。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">中小团队落地配置中心详解</h1>
+
+        <blockquote>
+<p>不知道配置文件上次什么时候修改的、修改了什么内容？改了配置文件还要重新发布项目或者手动触发重启服务？无缘无故发现配置文件错了影响到线上正常部署？你是否正在因为这些问题而困扰？50+线上项目，数百+配置文件，我们经常被这些配置文件虐的生无可恋，是时候作出改变了！本文将带你解决这些问题，喝着咖啡轻松运维</p>
+</blockquote>
+<h1 id="_1">配置中心选型</h1>
+<p>选型的原则：简单，易落地，不挑平台，不挑语言，尽量少的依赖。</p>
+<p>对比了Disconf、Apollo等方案，最终选择了Etcd+Confd的方案，基本符合上边的原则，且Etcd我们在部署Kubernetes的时候已经有过使用，算是轻车熟路。</p>
+<h2 id="_2">配置中心架构图</h2>
+<p><img alt="" loading="lazy" src="/static/images/2018/0823.00.png" /></p>
+<ul>
+<li>配置中心整体采用C/S的模式，用Etcd作为服务端来存储数据，Confd作为客户端去Etcd取数据更新</li>
+<li>为了更方便的管理写了WebUI，实际上是一个Etcd服务的WebUI，主要与Etcd服务交互，去Etcd存取数据</li>
+<li>Confd根据配置文件去Etcd集群拉取数据，然后根据模板文件将数据按照设定的格式填充的固定的位置生成最终的配置文件</li>
+<li>配置文件生成后还可以配合<code>check_cmd</code>和<code>reload_cmd</code>命令对配置文件进行检查和重新加载</li>
+</ul>
+<h1 id="_3">配置中心部署</h1>
+<h2 id="etcd">Etcd集群</h2>
+<ul>
+<li>
+<p>系统环境</p>
+<ul>
+<li>System：Debian 8</li>
+<li>Etcd：v3.3.9</li>
+</ul>
+</li>
+<li>
+<p>服务器地址</p>
+<ul>
+<li>192.168.107.101</li>
+<li>192.168.107.102</li>
+<li>192.168.107.103</li>
+</ul>
+</li>
+</ul>
+<h5 id="etcd_1">所有服务器都需要执行以下命令来安装etcd和创建目录</h5>
+<p>1.下载etcd安装包并解压</p>
+<pre class="codehilite"><code># wget https://github.com/coreos/etcd/releases/download/v3.3.9/etcd-v3.3.9-linux-amd64.tar.gz
+# tar -zxvf etcd-v3.3.9-linux-amd64.tar.gz </code></pre>
+
+
+<p>2.拷贝程序到/usr/bin目录下方便执行，etcd为go编写，直接可运行，主要有两个文件etcd和ectdctl，</p>
+<pre class="codehilite"><code># mv etcd-v3.3.9-linux-amd64/etcd* /usr/bin/</code></pre>
+
+
+<p>3.创建etcd配置文件目录<code>/etc/etcd</code>和数据存放目录<code>/home/data/etcd</code></p>
+<pre class="codehilite"><code># mkdir /etc/etcd /home/data/etcd</code></pre>
+
+
+<h5 id="nodeetcd">三个node节点etcd配置文件分别如下</h5>
+<p>node1配置</p>
+<pre class="codehilite"><code># cat /etc/etcd/etcd.conf 
+name: 'node1'
+data-dir: /home/data/etcd
+
+listen-peer-urls: http://192.168.107.101:2380
+listen-client-urls: http://192.168.107.101:2379,http://127.0.0.1:2379
+
+initial-cluster-state: 'new'
+initial-cluster-token: 'etcd-cluster-conf'
+advertise-client-urls: http://192.168.107.101:2379
+initial-advertise-peer-urls: http://192.168.107.101:2380
+initial-cluster: node1=http://192.168.107.101:2380,node2=http://192.168.107.102:2380,node3=http://192.168.107.103:2380</code></pre>
+
+
+<p>node2配置</p>
+<pre class="codehilite"><code># cat /etc/etcd/etcd.conf 
+name: 'node2'
+data-dir: /home/data/etcd
+
+listen-peer-urls: http://192.168.107.102:2380
+listen-client-urls: http://192.168.107.102:2379,http://127.0.0.1:2379
+
+initial-cluster-state: 'new'
+initial-cluster-token: 'etcd-cluster-conf'
+advertise-client-urls: http://192.168.107.102:2379
+initial-advertise-peer-urls: http://192.168.107.102:2380
+initial-cluster: node1=http://192.168.107.101:2380,node2=http://192.168.107.102:2380,node3=http://192.168.107.103:2380</code></pre>
+
+
+<p>node3配置</p>
+<pre class="codehilite"><code># cat /etc/etcd/etcd.conf 
+name: 'node3'
+data-dir: /home/data/etcd
+
+listen-peer-urls: http://192.168.107.103:2380
+listen-client-urls: http://192.168.107.103:2379,http://127.0.0.1:2379
+
+initial-cluster-state: 'new'
+initial-cluster-token: 'etcd-cluster-conf'
+advertise-client-urls: http://192.168.107.103:2379
+initial-advertise-peer-urls: http://192.168.107.103:2380
+initial-cluster: node1=http://192.168.107.101:2380,node2=http://192.168.107.102:2380,node3=http://192.168.107.103:2380</code></pre>
+
+
+<h5 id="_4">每个节点配置完成后均启动</h5>
+<p>需要放在后台运行，推荐使用<code>screen</code>工具</p>
+<pre class="codehilite"><code># /usr/bin/etcd --config-file /etc/etcd/etcd.conf </code></pre>
+
+
+<p>三个节点全部启动完成后，可通过<code>etcdctl member list</code>命令查看集群列表，确认集群状态</p>
+<pre class="codehilite"><code># etcdctl member list
+732ca490026f580d: name=node3 peerURLs=http://192.168.107.103:2380 clientURLs=http://192.168.107.103:2379 isLeader=false
+bc16d35c3ad1c5ee: name=node2 peerURLs=http://192.168.107.102:2380 clientURLs=http://192.168.107.102:2379 isLeader=true
+f7a043d3b65cd4a4: name=node1 peerURLs=http://192.168.107.101:2380 clientURLs=http://192.168.107.101:2379 isLeader=false</code></pre>
+
+
+<h2 id="confd">Confd</h2>
+<p>1.下载confd并放到<code>/usr/bin/</code>目录下方便使用</p>
+<pre class="codehilite"><code># wget https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64
+# mv confd-0.16.0-linux-amd64 /usr/bin/confd
+# chmod +x /usr/bin/confd</code></pre>
+
+
+<p>2.新建confd配置文件目录</p>
+<pre class="codehilite"><code># mkdir /etc/confd/{conf.d,templates}</code></pre>
+
+
+<p>3.新建资源文件，<code>.toml</code>文件结尾已经成了固定格式</p>
+<pre class="codehilite"><code># cat /etc/confd/conf.d/nginx.conf.toml 
+[template]
+src = &quot;nginx.conf.tmpl&quot;
+dest = &quot;/tmp/nginx.conf&quot;
+
+keys = [
+   &quot;/conf/project/env/nginx/nginx.conf&quot;,
+]
+
+check_cmd = &quot;/usr/sbin/nginx -t -c {{.src}}&quot;
+reload_cmd = &quot;/usr/sbin/service nginx reload&quot;</code></pre>
+
+
+<p>这里我们新建了一个nginx配置的资源文件，参数解释：</p>
+<ul>
+<li><strong>src</strong>：指定模板文件的位置，也就是nginx配置文件模板tmpl的位置</li>
+<li><strong>dest</strong>：指定最终生成或更新的配置文件绝对路径，这里为了测试我们给指定到/tmp/下</li>
+<li><strong>keys</strong>：模板文件里边要用到的key，也就是etcd里边对应的这个项目配置文件的key</li>
+<li><strong>check_cmd</strong>：在更新配置文件完成后执行的check命令，这里我们就check下nginx配置文件是否有语法错误</li>
+<li>
+<p><strong>reload_cmd</strong>：在check通过后可以执行这里配置的命令，上一步的check没有问题，就会执行reload命令重新加载配置文件</p>
+</li>
+<li>
+<p><strong>prefix</strong>：配置key的前缀，例如我们的key都是以/conf开头的，那么可以增加个配置<code>prefix="/conf"</code>，在下边keys里就可以省略掉/conf了</p>
+</li>
+<li><strong>owner</strong>：配置生成配置文件的用户</li>
+<li><strong>mode</strong>：配置生成配置文件的权限</li>
+</ul>
+<p>4.新建模板文件</p>
+<pre class="codehilite"><code># cat /etc/confd/templates/nginx.conf.tmpl 
+{{getv &quot;/conf/project/env/nginx/nginx.conf&quot;}}</code></pre>
+
+
+<ul>
+<li>confd的模板语法有很多，这里不赘述，具体可查官网</li>
+<li>我们是把整个配置文件的内容作为一个value存在etcd里边的，所以这里只需要一个getv指令获取到value的值填充到目标文件就可以了</li>
+</ul>
+<h2 id="_5">联调测试</h2>
+<p>部署好了etcd集群和confd服务，接下来我们就要测试下他们是否能够正常协同工作了</p>
+<p>1.在Etcd服务器新建一个KV值</p>
+<pre class="codehilite"><code># etcdctl set /conf/project/env/nginx/nginx.conf 'user  www-data;
+&gt; worker_processes 4;
+&gt; 
+&gt; pid        /var/run/nginx.pid;
+&gt; error_log  /home/logs/nginx/error.log  warn;
+&gt; 
+&gt; events  {
+&gt;     use epoll;
+&gt;     worker_connections 51200;
+&gt; }
+&gt; 
+&gt; http {
+&gt;     default_type  application/octet-stream;
+&gt; 
+&gt;     server {
+&gt;         listen       80;
+&gt;         server_name  domain.com;
+&gt; 
+&gt;         root /home/project/webroot;
+&gt;         index index.shtml index.html;
+&gt;     }
+&gt; }'</code></pre>
+
+
+<pre class="codehilite"><code># 查看设置key的内容
+# etcdctl get /conf/project/env/nginx/nginx.conf
+user  www-data;
+worker_processes 4;
+
+pid        /var/run/nginx.pid;
+error_log  /home/logs/nginx/error.log  warn;
+
+events  {
+    use epoll;
+    worker_connections 51200;
+}
+
+http {
+    default_type  application/octet-stream;
+
+    server {
+        listen       80;
+        server_name  domain.com;
+
+        root /home/project/webroot;
+        index index.shtml index.html;
+    }
+}</code></pre>
+
+
+<ul>
+<li>Etcd API分v2和v3版本，两个版本差别较大，v3优化了很多，但考虑兼容性等问题我们这里使用v2版本</li>
+<li>默认为v2版本，可以通过环境变量<code>export ETCDCTL_API=3</code>来切换到v3版本，v2通过<code>etcdctl -v</code>可以查看api版本，v3通过<code>etcdctl version</code>查看api版本</li>
+</ul>
+<p>2.启动confd</p>
+<pre class="codehilite"><code># confd -watch -backend etcd -node=http://192.168.107.101:2379 -node=http://192.168.107.102:2379 -node=http://192.168.107.103:2379
+2018-08-23T13:46:13+08:00 onlinegame.i.nease.net confd[17084]: INFO Backend set to etcd
+2018-08-23T13:46:13+08:00 onlinegame.i.nease.net confd[17084]: INFO Starting confd
+2018-08-23T13:46:13+08:00 onlinegame.i.nease.net confd[17084]: INFO Backend source(s) set to http://192.168.107.101:2379, http://192.168.107.102:2379, http://192.168.107.103:2379
+2018-08-23T13:46:13+08:00 onlinegame.i.nease.net confd[17084]: INFO Target config /tmp/nginx.conf out of sync
+2018-08-23T13:46:13+08:00 onlinegame.i.nease.net confd[17084]: INFO Target config /tmp/nginx.conf has been updated</code></pre>
+
+
+<p>配置参数说明</p>
+<ul>
+<li><strong>-watch</strong>：开启watch模式，监听etcd配置中心文件变化，一旦有变这边立即更新，没有这个选项配置中心修改client不会更新</li>
+<li><strong>-backend</strong>：后端类型，目前支持etcd、zookeeper、consul、vault、redis、file、rancher等多种类型，confd也有一些针对不通后端类型的单独配置，具体可以通过<code>confd --help</code>命令查看</li>
+<li>
+<p><strong>-node</strong>：etcd节点地址，有多个节点的话就这么写多个-node就好了，我们etcd是三个节点的集群所以这里写三次'-node'</p>
+</li>
+<li>
+<p><strong>-onetime</strong>：可用来替换上边的<code>-watch</code>参数，表示运行一次就退出，如果你不想让配置文件实时更新，只是想更新一次，可以用这个参数</p>
+</li>
+<li><strong>-interval</strong>：可用来替换上边的<code>-watch</code>参数，表示每隔多少秒去backend取一次数据，如果想降低etcd服务器压力，又想让客户端配置文件能自动更新，可以通过这个参数来控制</li>
+</ul>
+<p>3.通过上边日志可以看到/tmp/nginx.conf文件已经正常同步且更新了，查看/tmp/nginx.conf确定内容正确</p>
+<h1 id="webui-kerrigan">WebUI Kerrigan</h1>
+<p>总不能所有的配置文件更新都通过命令行的方式吧？为了方便管理，花了三天（真的是三天）写了个WebUI，命名为Kerrigan，能够实现目录树，在线查看配置、修改配置、查看配置更新历史等实用功能</p>
+<p>配置页面，通过这个页面可以配置etcd的连接信息</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0823.01.png" /></p>
+<p>首页，左侧项目列表（项目信息同步CMDB）</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0823.02.png" /></p>
+<p>点击项目列表后，根据对应规则去etcd里边取出目录结构按树状呈现出来</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0823.03.png" /></p>
+<p>点击配置文件，右侧会展示当前配置文件内容</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0823.04.png" /></p>
+<p>点击“编辑”按钮可以编辑这个配置，新建页面一样，只是编辑不允许修改路径</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0823.05.png" /></p>
+<p>点击“历史”按钮，则跳转到配置文件的历史页面，这个页面展示了这个配置文件所有的修改历史</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/0823.06.png" /></p>
+<h1 id="_6">写在最后</h1>
+<ol>
+<li>是不是要说这个界面丑爆了！没办法，前端后端测试加上线都我一人干，没有设计细胞，就这么看吧，并且最重要的不是功能好用么</li>
+<li>为什么不用K8S的configmap？我们最初是想用K8S的configmap来做配置中心的，但是并非所有的项目都跑在K8S里，且修改configmap也需要重启容器才能生效，所以就没有采用了</li>
+<li>etcd谁都可以修改么，感觉不安全啊？实际上我们是用了账号密码认证的，且只在内网，限制IP，安全一点吧，另一种解决方案是etcd走ssl，但client端要放证书比较麻烦没有采用</li>
+<li>怎么确认Client端配置文件更新成功了？如果你是一次性启动可以在启动命令之后判断启动命令是否正常执行，如果你是watch模式或者interval，那么。。只能人肉check了吧，我也没有好方法</li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/configuration-center-setup-and-management.html">📅 2018-08-23</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
