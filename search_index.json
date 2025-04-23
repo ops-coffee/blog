@@ -2044,7 +2044,7 @@
     "date": "2018-08-16"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/JVh4UnS2Tql9gUVaBSoGuA.html",
+    "url": "https://blog.ops-coffee.cn/s/django-model-queryset-select-guide.html",
     "title": "Django model select的各种用法详解",
     "content": "本文详细介绍了Django Model的Select操作，涵盖基本操作、常用操作、进阶操作以及时间字段查询等内容，并配以对应的MySQL查询语句，帮助开发者更轻松地理解Django ORM的用法。",
     "keywords": "Django Model Select, Django ORM查询, MySQL查询对比, Django高级查询, Django Model操作, Django Q对象, Django外键查询, Django多对多查询, Django原生SQL执行",
