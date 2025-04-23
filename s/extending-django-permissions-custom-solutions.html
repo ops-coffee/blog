@@ -94,7 +94,7 @@
 <p>当Django的内置权限无法满足需求的时候就自己扩展吧~</p>
 </blockquote>
 <h1 id="_1">背景介绍</h1>
-<p><a href="/s/HwOi-ARTvvNjGTWrDmZIkQ" target="_blank">overmind项目</a>使用了Django内置的权限系统，Django内置权限系统基于model层做控制，新的model创建后会默认新建三个权限，分别为：add、change、delete，如果给用户或组赋予delete的权限，那么用户将可以删除这个model下的所有数据。</p>
+<p><a href="https://blog.ops-coffee.cn/s/devops-tools-cmdb-cicd-config-db-proxy-wiki.html" target="_blank">overmind项目</a>使用了Django内置的权限系统，Django内置权限系统基于model层做控制，新的model创建后会默认新建三个权限，分别为：add、change、delete，如果给用户或组赋予delete的权限，那么用户将可以删除这个model下的所有数据。</p>
 <p>原本overmind只管理了我们自己部门的数据库，权限设置只针对具体的功能不针对细粒度的数据库实例，例如用户A 有审核的权限，那么用户A 可以审核所有的DB，此时使用内置的权限系统就可以满足需求了，但随着系统的不断完善要接入其他部门的数据库管理，这就要求针对不同用户开放不同DB的权限了，例如A部门的用户只能操作A部门的DB，Django内置基于model的权限无法满足需求了。</p>
 <h1 id="_2">实现过程</h1>
 <p>先来确定下需求：
