@@ -2093,7 +2093,7 @@
     "date": "2018-07-06"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/GATfwNETo_aGsJHZdV5YzQ.html",
+    "url": "https://blog.ops-coffee.cn/s/devops-practice-and-tools-for-efficient-development-and-deployment.html",
     "title": "中小团队基于Docker的devops实践",
     "content": "本文总结了如何通过DevOps实践和一系列工具（如Jenkins、Docker、Kubernetes等）来提高技术团队的工作效率，减少手动操作的繁琐，实现从编码到发布的自动化流程，包括代码管理、持续集成、Docker化、监控报警和日志系统的具体实施方法。",
     "keywords": "DevOps, Jenkins, Docker, Kubernetes, 自动部署, 监控系统, 日志管理, 持续集成",
