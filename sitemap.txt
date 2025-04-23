@@ -342,7 +342,7 @@ https://blog.ops-coffee.cn/s/BZsJnWLtv8ZwwlBYbWSbZQ.html
 https://blog.ops-coffee.cn/s/HwOi-ARTvvNjGTWrDmZIkQ.html
 https://blog.ops-coffee.cn/s/markdown-editor-md-integration.html
 https://blog.ops-coffee.cn/s/django-api-auth-jwt-token-without-drf.html
-https://blog.ops-coffee.cn/s/xnBehfSlZ3J02xb0GFuGDw.html
+https://blog.ops-coffee.cn/s/optimizing-continuous-deployment-with-docker.html
 https://blog.ops-coffee.cn/s/svn-hooks-introduction-and-application.html
 https://blog.ops-coffee.cn/s/L6Jud6gp5c9bbaUljUkNFA.html
 https://blog.ops-coffee.cn/s/django-aggregate-annotate-echarts-bar-chart.html

@@ -1946,7 +1946,7 @@
     "date": "2019-01-22"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/xnBehfSlZ3J02xb0GFuGDw.html",
+    "url": "https://blog.ops-coffee.cn/s/optimizing-continuous-deployment-with-docker.html",
     "title": "Docker环境的持续部署优化实践",
     "content": "A detailed account of optimizing continuous deployment processes using Docker, including Python multi-threading for efficient deployment and handling configuration files across different environments.",
     "keywords": "continuous deployment, Docker, CICD, Python multi-threading, container orchestration, Kubernetes, configuration management, deployment optimization, Python deployment scripts",
