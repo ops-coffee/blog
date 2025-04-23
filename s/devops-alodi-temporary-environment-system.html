@@ -131,7 +131,7 @@
 <p>应用内的日志有接入ELK系统，容器的启动日志Alodi系统也提供查看功能，点击“Log”按钮即可查看</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/0103.03.png" /></p>
 <p>Log查看通过调用Kubernetes API的<code>read_namespaced_pod_log</code>方法来实现，Kubernetes的API比较多，鉴于篇幅不在文章中细说，有整理一份文档：<a href="https://blog.ops-coffee.cn/t/Kubernetes-Python-API-Demo.html" target="_blank">Kubernetes Python API中文使用说明</a></p>
-<p>SSH进入Pod容器也给集成到了Alodi系统中，之前有一篇文章专门介绍：<a href="/s/FHDyvHsh-oO1cn7AXk_4WA" target="_blank">Django实现WebSSH操作Kubernetes Pod</a>，有很多小伙伴按照文章内容实现了集成</p>
+<p>SSH进入Pod容器也给集成到了Alodi系统中，之前有一篇文章专门介绍：<a href="https://mp.weixin.qq.com/s/FHDyvHsh-oO1cn7AXk_4WA" target="_blank">Django实现WebSSH操作Kubernetes Pod</a>，有很多小伙伴按照文章内容实现了集成</p>
 <h2 id="_6">销毁环境</h2>
 <p>Alodi系统希望用户能够快速创建环境，用完销毁环境，不长时间占用资源，所以设计了定期销毁和用户主动销毁策略，定期销毁是会销毁超过n天没有使用的环境，而主动销毁只需要点击“点击销毁”按钮即可</p>
 <p>销毁环境会删除创建的临时目录，拉取的代码，生成的文件，以及Kubernetes上的各种资源</p>
