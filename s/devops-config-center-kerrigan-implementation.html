@@ -90,7 +90,7 @@
     <div class="container no-sidebar">
         <h1 id="art-title">Kerrigan：配置中心管理UI的实现思路和技术细节</h1>
 
-        <p>去年写过一篇文章<a href="/s/uGUvV4jl4YIvNztuepdC8A" target="_blank">『中小团队落地配置中心详解』</a>，介绍了我们借助etcd+confd实现的配置中心方案，这是一个对<strong>运维友好</strong>，与开发解耦的极佳方案，经过了一年多的实践也确实帮我们解决了配置文件无版本、难回滚、更新复杂等问题</p>
+        <p>去年写过一篇文章<a href="https://blog.ops-coffee.cn/s/configuration-center-setup-and-management.html" target="_blank">『中小团队落地配置中心详解』</a>，介绍了我们借助etcd+confd实现的配置中心方案，这是一个对<strong>运维友好</strong>，与开发解耦的极佳方案，经过了一年多的实践也确实帮我们解决了配置文件无版本、难回滚、更新复杂等问题</p>
 <p>这套配置中心解决方案的特点是，对整个配置文件进行管理，而非配置项，且在配置中心修改的配置，客户端可以实时自动更新。同时借助于我们自研的配置中心管理UI（kerrigan）还能够实现记录修改历史，快速回滚配置，与线上配置做对比等实用功能</p>
 <p>陆续有小伙伴问我能否写篇文章介绍一下配置中心的管理UI（Kerrigan）的实现，咖啡君就通过本篇文章来介绍Kerrigan的设计思路，以及用到的技术和部分核心代码，由于kerrigan有过一次改版，所以界面会与上面文章中的截图有出入</p>
 <h2 id="_1">界面与功能</h2>
