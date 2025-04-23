@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django, Model Update, Django 2.0, 数据库更新, ORM, ForeignKey, ManyToManyField, auto_now, json数据更新" />
+  <meta name="description" content="本文介绍了在Django开发过程中如何对表进行增删改查，特别是model的更新操作，包括常规用法、auto_now属性字段的更新、json/dict类型数据更新、ForeignKey字段更新以及ManyToManyField字段更新等技巧。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Django model update的各种用法介绍</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django model update的各种用法介绍" />
+  <meta property="og:description" content="本文介绍了在Django开发过程中如何对表进行增删改查，特别是model的更新操作，包括常规用法、auto_now属性字段的更新、json/dict类型数据更新、ForeignKey字段更新以及ManyToManyField字段更新等技巧。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">Django model update的各种用法介绍</h1>
+
+        <blockquote>
+<p>Django开发过程中对表(model)的增删改查是最常用的功能之一，本文介绍笔者在使用model update过程中遇到的那些事</p>
+</blockquote>
+<p>[ 运行环境：Django2.0 ]</p>
+<h1 id="model-update">model update常规用法</h1>
+<p>假如我们的表结构是这样的</p>
+<pre class="codehilite"><code>class User(models.Model):
+    username = models.CharField(max_length=255, unique=True, verbose_name='用户名')
+    is_active = models.BooleanField(default=False, verbose_name='激活状态')</code></pre>
+
+
+<p>那么我们修改用户名和状态可以使用如下两种方法：</p>
+<p>方法一：</p>
+<pre class="codehilite"><code>User.objects.filter(id=1).update(username='nick',is_active=True)</code></pre>
+
+
+<p>方法二：</p>
+<pre class="codehilite"><code>_t = User.objects.get(id=1)
+_t.username='nick'
+_t.is_active=True
+_t.save()</code></pre>
+
+
+<p>方法一适合更新一批数据，类似于mysql语句<code>update user set username='nick' where id = 1</code></p>
+<p>方法二适合更新一条数据，也只能更新一条数据，当只有一条数据更新时推荐使用此方法，另外此方法还有一个好处，我们接着往下看</p>
+<h1 id="auto_now">具有auto_now属性字段的更新</h1>
+<p>我们通常会给表添加三个默认字段</p>
+<ul>
+<li>自增ID，这个django已经默认加了，就像上边的建表语句，虽然只写了username和is_active两个字段，但表建好后也会有一个默认的自增id字段</li>
+<li>创建时间，用来标识这条记录的创建时间，具有<code>auto_now_add</code>属性，创建记录时会自动填充当前时间到此字段</li>
+<li>修改时间，用来标识这条记录最后一次的修改时间，具有<code>auto_now</code>属性，当记录发生变化时填充当前时间到此字段</li>
+</ul>
+<p>就像下边这样的表结构</p>
+<pre class="codehilite"><code>class User(models.Model):
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+    username = models.CharField(max_length=255, unique=True, verbose_name='用户名')
+    is_active = models.BooleanField(default=False, verbose_name='激活状态')</code></pre>
+
+
+<p><strong>当表有字段具有<code>auto_now</code>属性且你希望他能自动更新时，必须使用上边方法二的更新，不然auto_now字段不会更新</strong>，也就是：</p>
+<pre class="codehilite"><code>_t = User.objects.get(id=1)
+_t.username='nick'
+_t.is_active=True
+_t.save()</code></pre>
+
+
+<h1 id="jsondict">json/dict类型数据更新字段</h1>
+<p>目前主流的web开放方式都讲究前后端分离，分离之后前后端交互的数据格式大都用通用的jason型，那么如何用最少的代码方便的更新json格式数据到数据库呢？同样可以使用如下两种方法：</p>
+<p>方法一：</p>
+<pre class="codehilite"><code>data = {'username':'nick','is_active':'0'}
+User.objects.filter(id=1).update(**data)</code></pre>
+
+
+<ul>
+<li>同样这种方法不能自动更新具有<code>auto_now</code>属性字段的值</li>
+<li>通常我们再变量前加一个星号(*)表示这个变量是元组/列表，加两个星号表示这个参数是字典</li>
+</ul>
+<p>方法二：</p>
+<pre class="codehilite"><code>data = {'username':'nick','is_active':'0'}
+_t = User.objects.get(id=1)
+_t.__dict__.update(**data)
+_t.save()</code></pre>
+
+
+<ul>
+<li>方法二和方法一同样无法自动更新<code>auto_now</code>字段的值</li>
+<li>注意这里使用到了一个<code>__dict__</code>方法</li>
+</ul>
+<p>方法三：</p>
+<pre class="codehilite"><code>_t = User.objects.get(id=1)
+_t.role=Role.objects.get(id=3)
+_t.save()</code></pre>
+
+
+<h1 id="foreignkey">ForeignKey字段更新</h1>
+<p>假如我们的表中有Foreignkey外键时，该如何更新呢？</p>
+<pre class="codehilite"><code>class User(models.Model):
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+    username = models.CharField(max_length=255, unique=True, verbose_name='用户名')
+    is_active = models.BooleanField(default=False, verbose_name='激活状态')
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True, verbose_name='角色')</code></pre>
+
+
+<p>方法一：</p>
+<pre class="codehilite"><code>User.objects.filter(id=1).update(role=2)</code></pre>
+
+
+<ul>
+<li>最简单的方法，直接让给role字段设置为一个id即可</li>
+<li>当然也可以用dict作为参数更新：</li>
+</ul>
+<pre class="codehilite"><code>User.objects.filter(id=1).update(**{'username':'nick','role':3})</code></pre>
+
+
+<p>方法二：</p>
+<pre class="codehilite"><code>_role = Role.objects.get(id=2)
+User.objects.filter(id=1).update(role=_role)</code></pre>
+
+
+<ul>
+<li>也可以赋值一个实例给role</li>
+<li>当然也可以用dict作为参数更新：</li>
+</ul>
+<pre class="codehilite"><code>_role = Role.objects.get(id=1)
+User.objects.filter(id=1).update(**{'username':'nick','role':_role})</code></pre>
+
+
+<p>方法三：</p>
+<pre class="codehilite"><code>_t = User.objects.get(id=1)
+_t.role=Role.objects.get(id=3)
+_t.save()</code></pre>
+
+
+<ul>
+<li>注意：<strong>这里的role必须赋值为一个对象，不能写id</strong>，不然会报错<code>"User.role" must be a "Role" instance</code></li>
+<li>当使用dict作为参数更新时又有一点不同，如下代码：</li>
+</ul>
+<pre class="codehilite"><code>_t = User.objects.get(id=1)
+_t.__dict__.update(**{'username':'nick','role_id':2})
+_t.save()</code></pre>
+
+
+<ul>
+<li><strong>Foreignkey外键必须加上<code>_id</code></strong>，例如：{'role_id':3}</li>
+<li>role_id后边必须跟一个id（int或str类型都可），不能跟role实例</li>
+</ul>
+<h1 id="manytomanyfield">ManyToManyField字段更新</h1>
+<p>假如我们的表中有ManyToManyField字段时更新又有什么影响呢？</p>
+<pre class="codehilite"><code>class User(models.Model):
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+    username = models.CharField(max_length=255, unique=True, verbose_name='用户名')
+    is_active = models.BooleanField(default=False, verbose_name='激活状态')
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True, verbose_name='角色')
+    groups = models.ManyToManyField(Group, null=True, verbose_name='组')</code></pre>
+
+
+<p>m2m更新：m2m字段没有直接更新的方法，只能通过清空再添加的方法更新了</p>
+<pre class="codehilite"><code>_t = User.objects.get(id=1)
+_t.groups.clear()
+_t.groups.add(*[1,3,5])
+_t.save()</code></pre>
+
+
+<ul>
+<li>
+<p><code>add()</code>：m2m字段添加一个值，当有多个值的时候可用列表，参照上边例子</p>
+<ul>
+<li>_t.groups.add(2)</li>
+<li>_t.groups.add(Group.objects.get(id=2))</li>
+</ul>
+</li>
+<li>
+<p><code>remove()</code>：m2m字段移除一个值，，当有多个值的时候可用列表，参照上边例子</p>
+<ul>
+<li>_t.groups.remove(2)</li>
+<li>_t.groups.remove(Group.objects.get(id=2))</li>
+</ul>
+</li>
+<li>
+<p><code>clear()</code>：清空m2m字段的值</p>
+</li>
+</ul>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/django-model-update-guide-dict-json.html">📅 2018-07-10</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
