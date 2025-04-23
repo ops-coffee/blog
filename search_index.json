@@ -1988,7 +1988,7 @@
     "date": "2018-11-10"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/dpGqieL4WCmGdQh1AEG4Gw.html",
+    "url": "https://blog.ops-coffee.cn/s/sensitive-information-handling-in-code.html",
     "title": "代码中的敏感信息加密方案",
     "content": "本文介绍了如何在代码中处理敏感信息，特别是通过RSA加密方法保护邮箱账号密码、数据库连接信息等。同时，文章还详细描述了流程管控的重要性，以减少信息泄露的风险。",
     "keywords": "代码敏感信息, 信息加密, RSA加密, 流程管控, 数据库密码管理",

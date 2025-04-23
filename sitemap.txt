@@ -348,7 +348,7 @@ https://blog.ops-coffee.cn/s/django-security-password-table-database-rsa.html
 https://blog.ops-coffee.cn/s/django-aggregate-annotate-echarts-bar-chart.html
 https://blog.ops-coffee.cn/s/django-signals-for-notification-in-ticket-system.html
 https://blog.ops-coffee.cn/s/overmind-system-automation-sql-data-migration.html
-https://blog.ops-coffee.cn/s/dpGqieL4WCmGdQh1AEG4Gw.html
+https://blog.ops-coffee.cn/s/sensitive-information-handling-in-code.html
 https://blog.ops-coffee.cn/s/7gPLaCESHAB0dLgq7qZq5Q.html
 https://blog.ops-coffee.cn/s/sROfvo1y_76fi70nmAs-vg.html
 https://blog.ops-coffee.cn/s/Dj5t142BkRIONC58xacBoA.html
