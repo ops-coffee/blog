@@ -119,7 +119,7 @@
 <h2 id="wiki">wiki</h2>
 <p>wiki整体功能没有太大的变化，只是强化了搜索功能，首页依然是个目录树，内页则只有内容，聚焦重点，没有花里胡哨的功能，不过随着目录的越来越多，后边若是重构则会考虑增加空间的概念，团队与团队，板块与板块之间做个区分还是很有必要的</p>
 <p><img alt="" loading="lazy" src="/static/images/2021/1130.09.png" /></p>
-<p><a href="/s/HwOi-ARTvvNjGTWrDmZIkQ" target="_blank">我们自研的那些Devops工具</a>这篇文章里介绍过的工具除了varian已经完全废弃了之外，其他的各个系统都有在正常使用和迭代更新，生命力依然顽强。除了以上这些系统外，近两年还开发了一些新的工具系统</p>
+<p><a href="https://blog.ops-coffee.cn/s/devops-tools-cmdb-cicd-config-db-proxy-wiki.html" target="_blank">我们自研的那些Devops工具</a>这篇文章里介绍过的工具除了varian已经完全废弃了之外，其他的各个系统都有在正常使用和迭代更新，生命力依然顽强。除了以上这些系统外，近两年还开发了一些新的工具系统</p>
 <h2 id="alodi">alodi</h2>
 <p>alodi系统主要用来快速生成临时环境，并实现对临时环境整个生命周期的一站式管理，主要应用在同一项目多版本同时开发测试或是保密项目不能通过常规测试环境测试的情况下使用，通过alodi可以快速的创建一个项目运行环境，通过生成的随机临时域名访问</p>
 <p>alodi基于Kubernetes实现，部署过程日志、容器终端日志、进入容器终端查看都可以在alodi系统中实现，无需跳转到其他系统，同时为了应对某些特殊的测试环境，还允许绑定自定义域名，使用完成之后一个按钮即可销毁所有创建的资源</p>
@@ -137,7 +137,7 @@
 <p>Sadmin是一个Django的基础公共库，这个公共库集成了许多基础的功能，例如后台配置网站标题、Title以及主题，动态配置菜单，自动的审计日志记录，多种认方式等等，同时也对最常用到的CRUD进行了封装，使用起来得心应手</p>
 <p>目前以上这些系统几乎全都使用了Sadmin公共库进行了重构，保证了统一，也方便后续维护，sadmin公共库的更多介绍看这里：<a href="https://blog.ops-coffee.cn/s/sadmin-django-common-application.html" target="_blank">Sadmin：打造私有Django公共库实现代码复用</a></p>
 <h2 id="_1">最后</h2>
-<p><a href="/s/HwOi-ARTvvNjGTWrDmZIkQ" target="_blank">我们自研的那些Devops工具</a>的文章里写未来一年的计划，将那些相对分散的系统给串联起来，现在未来已成过去，我们借助于probius实现了对多个系统的串联，实现了更高程度的自动化，那下一阶段要怎么发展？真的需要再停下来认真思考一下了</p>
+<p><a href="https://blog.ops-coffee.cn/s/devops-tools-cmdb-cicd-config-db-proxy-wiki.html" target="_blank">我们自研的那些Devops工具</a>的文章里写未来一年的计划，将那些相对分散的系统给串联起来，现在未来已成过去，我们借助于probius实现了对多个系统的串联，实现了更高程度的自动化，那下一阶段要怎么发展？真的需要再停下来认真思考一下了</p>
 <p>除了以上这些DevOps相关工具系统外，我还协助开发了一些业务相关的系统，例如前两天介绍的<a href="https://blog.ops-coffee.cn/s/demand-management-system-development-guide.html" target="_blank">需求管理系统</a>，关于以上这些工具系统，我写过很多相关文章来介绍，感兴趣的可以前往运维咖啡吧同名公众号或是<a href="https://blog.ops-coffee.cn" target="_blank">博客</a>查看，如有想法可以一起交流</p>
 
         <div>
