@@ -1855,7 +1855,7 @@
     "date": "2019-05-30"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/7g2wncQG1lIziOmtBxXwEw.html",
+    "url": "https://blog.ops-coffee.cn/s/build-static-blog-with-django-github-pages.html",
     "title": "利用Django徒手写个静态页面生成工具",
     "content": "文章详细介绍了从微信公众号到GitHub Pages的技术博客搭建过程，包括使用Django生成静态博客页面、SEO优化、JSON格式化、HTML生成等技术细节，以及如何利用GitPython实现自动化上传更新。",
     "keywords": "Geek博客, GitHub Pages, Django, 静态博客, SEO优化, 技术博客, 微信公众号, HTML生成, JSON格式化, GitPython",
