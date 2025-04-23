@@ -2009,7 +2009,7 @@
     "date": "2018-09-19"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/Dj5t142BkRIONC58xacBoA.html",
+    "url": "https://blog.ops-coffee.cn/s/small-team-etcd-confd-configuration-center.html",
     "title": "Etcd安全配置之Basic Auth认证",
     "content": "本文详细介绍了中小团队如何基于Etcd+Confd构建配置中心，并详细解读了如何开启Etcd的Basic Auth认证机制以及如何设计权限访问策略，确保配置中心的安全访问。",
     "keywords": "Etcd认证, 权限设计, Basic Auth, Etcd安全性, 配置中心, Etcd权限控制, BasicAuth设置, 中小团队技术实践",
