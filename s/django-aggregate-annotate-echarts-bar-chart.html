@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django, aggregate, annotate, Echarts, 柱状图, 前后端分离, API, 数据可视化" />
+  <meta name="description" content="本文详细介绍了如何在Django中使用aggregate和annotate函数进行数据聚合和分组，并结合Echarts绘制柱状图，展示了如何从前端页面通过API获取数据并渲染图表，适用于前后端分离的项目架构。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Django+Echarts画图实例</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django+Echarts画图实例" />
+  <meta property="og:description" content="本文详细介绍了如何在Django中使用aggregate和annotate函数进行数据聚合和分组，并结合Echarts绘制柱状图，展示了如何从前端页面通过API获取数据并渲染图表，适用于前后端分离的项目架构。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">Django+Echarts画图实例</h1>
+
+        <blockquote>
+<p>所有演示均基于Django2.0</p>
+</blockquote>
+<p>阅读此篇文章你可以：</p>
+<ul>
+<li>了解Django中aggregate和annotate函数的使用方法</li>
+<li>获取一个Django+Echarts绘制柱状图的完整示例</li>
+</ul>
+<h1 id="_1">需求说明</h1>
+<p>一张会议记录表，里边有一个字段存放会议举行的地点，例如北京、上海、洛阳等等，需要取举行会议最多的前20个地点绘制成柱状图展示，项目为前后端分离的架构</p>
+<h2 id="_2">需求分析</h2>
+<p>看了需求主要有三个关键点：</p>
+<p>1.前后端分离：前端只负责页面渲染，后端提供API负责数据输出</p>
+<p>2.需要绘制成柱状图：绘制图表的第三方插件有很多，我们这里就选择百度开源的echarts，简单好用且功能强大</p>
+<p>3.取举行会议最多的前20个地点：了解一点SQL知识的话就知道需要先要对地点字段进行group by，然后order by desc倒序，最后limit取前20</p>
+<p>那么在Django中应该如何group by，并在group by之后order by排序，最后limit呢？这里我们介绍django的两个函数<code>aggregate</code>和<code>annotate</code></p>
+<h3 id="aggregate">aggregate</h3>
+<p>aggregate聚合函数，用于对QuerySet整个对象结果的汇总，例如获取员工总数（COUNT），平均（AVG）年龄，最大（MAX）年龄，最小（MIN）年龄，销售总额（SUM）等，输出的结果是一个字典</p>
+<p>我们有一个model如下：</p>
+<pre class="codehilite"><code>class Employee(models.Model):
+    name = models.CharField(max_length=32, verbose_name='姓名')
+    age = models.IntegerField(verbose_name='年龄')
+    salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='薪资')</code></pre>
+
+
+<p>想要获取员工的工资总额，我们可以这样写</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; from django.db.models import Sum
+
+&gt;&gt;&gt; Employee.objects.aggregate(Sum('salary'))
+{'salary__sum': Decimal('5000.00')}</code></pre>
+
+
+<p>想要同时获取员工的平均年龄、最大年龄和最小年龄，我们可以这样写</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; from django.db.models import Avg, Max, Min
+
+&gt;&gt;&gt; Employee.objects.aggregate(Avg('age'), Max('age'), Min('age'))
+{'age__avg': 23.333333333333332, 'age__max': 30, 'age__min': 18}</code></pre>
+
+
+<h3 id="annotate">annotate</h3>
+<p>annotate函数区别于aggregate函数的一个最重要的地方是annotate函数<strong>输出的结果是一个QuerySet对象</strong>，这个非常重要，aggregate函数最后输出的结果是个字典，也就不能再在字典的基础上进行QuerySet操作了，而annotate函数执行完成后输出QuerySet对象可以继续调用Django内置的filter、order_by等函数来完成更加复杂的查询计算操作</p>
+<p>用到annotate函数的逻辑往往比较复杂，Django非常人性化的提供了query方法，方便查看annotate生成的SQL语句帮助我们确定执行过程</p>
+<p>以上边的实际需求为例，model如下：</p>
+<pre class="codehilite"><code>class EventInfo(models.Model):
+    event_location = models.CharField(max_length=30)
+
+    class Meta:
+        db_table = &quot;app_event_info&quot;</code></pre>
+
+
+<p>我们需要先对地点event_location进行group by：</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; _t = EventInfo.objects.values_list('event_location').annotate(Count('id'))
+
+# values_list可以获取evnet_location的元组列表。
+# values_list方法加个参数flat=True可以获取event_location的值列表。</code></pre>
+
+
+<p>group by之后我们就需要order by排序了，如果我们不知道order by的字段，我们可以通过query先查看group by生成的SQL语句</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; print(_t.query)
+SELECT &quot;app_event_info&quot;.&quot;event_location&quot;, COUNT(&quot;app_event_info&quot;.&quot;id&quot;) AS &quot;id__count&quot; FROM &quot;app_event_info&quot; GROUP BY &quot;app_event_info&quot;.&quot;event_location&quot;</code></pre>
+
+
+<p>这个时候可以看到实际上输出的结果有一个叫<code>id__count</code>的字段表示地点的总数，那么我们就可以接着对地点总数进行排序了,因为是要倒叙，需要在字段名<code>id__count</code>前边加上<code>-</code>号来表示倒序</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; _x = _t.order_by('-id__count')
+&gt;&gt;&gt;
+&gt;&gt;&gt; print(_x.query)
+SELECT &quot;app_event_info&quot;.&quot;event_location&quot;, COUNT(&quot;app_event_info&quot;.&quot;id&quot;) AS &quot;id__count&quot; FROM &quot;app_event_info&quot; GROUP BY &quot;app_event_info&quot;.&quot;event_location&quot; ORDER BY &quot;id__count&quot; DESC</code></pre>
+
+
+<p>最后limit取前二十，Django中limit可以直接通过QuerySet结果后加python的数组切片语法来实现，就像[0:20]（其中0可以省略）相当于limit 20一样，[10:20]意思为取第10到第20条数据</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; _y = _x[:20]
+&gt;&gt;&gt;
+&gt;&gt;&gt; print(_y.query)
+SELECT &quot;app_event_info&quot;.&quot;event_location&quot;, COUNT(&quot;app_event_info&quot;.&quot;id&quot;) AS &quot;id__count&quot; FROM &quot;app_event_info&quot; GROUP BY &quot;app_event_info&quot;.&quot;event_location&quot; ORDER BY &quot;id__count&quot; DESC LIMIT 20</code></pre>
+
+
+<p>上边的每一步我们都通过query打印了SQL，确定是我们想要的结果了。需求分析清楚，所有的关键点我们也都知道怎么处理了，那么接下来实现就水到渠成了。</p>
+<h1 id="_3">实现代码</h1>
+<p>URL如下：</p>
+<pre class="codehilite"><code>from django.urls import path
+from django.views.generic.base import TemplateView
+
+from .views import echarts_data
+urlpatterns = [
+    path('echarts/', TemplateView.as_view(template_name='echarts.html'), name='echarts-url'),
+
+    path('api/echarts/', echarts_data, name='api-echarts')
+]</code></pre>
+
+
+<p>因为是前后端分离的，所以我这里用了两个url<code>echarts</code>和<code>api/echarts</code></p>
+<p><code>echarts</code>为前台访问地址，对应下边的html代码，通过ajax方式调用后端接口，所以这里直接用了TemplateView，不需要再写额外的view代码</p>
+<p><code>api/echarts</code>为后端API的地址，对应下边的view代码，为前台提供数据接口</p>
+<p>前端HTML：</p>
+<pre class="codehilite"><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;title&gt;ops-coffee&lt;/title&gt;
+  &lt;!-- 引入 echarts.js --&gt;
+  &lt;script src=&quot;/static/js/jquery.min.js&quot;&gt;&lt;/script&gt;
+  &lt;script src=&quot;/static/js/echarts/echarts.common.min.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- 为ECharts准备一个具备大小（宽高）的Dom --&gt;
+  &lt;div id=&quot;main&quot; style=&quot;height:400px;&quot;&gt;&lt;/div&gt;
+  &lt;script type=&quot;text/javascript&quot;&gt;
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+
+    $.ajax({
+      type: &quot;get&quot;,
+      url: &quot;/api/echarts&quot;,
+      dataType: &quot;json&quot;,
+      success: function (data) {
+
+        // 指定图表的配置项和数据
+        var option = {
+          title: {
+            left: 'center',
+            text: 'ops-coffee 运维咖啡吧'
+          },
+          tooltip: {},
+          xAxis: {
+              data: data.key
+          },
+          yAxis: {},
+          series: [{
+            name: '数量',
+            type: 'bar',
+            data: data.value
+          }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+      },
+      error: function () {
+        alert('Error: ajax 请求出错！')
+      }
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+
+<p>实例比较简单，抄的echarts官方示例，这里会看到echarts渲染图形实际上只需要X轴和Y轴两个数据变量，且都为list列表类型</p>
+<p>后端VIEW：</p>
+<pre class="codehilite"><code>from django.http import JsonResponse
+from django.db.models import Count
+
+from .models import EventInfo
+
+def echarts_data(request):
+    _x = EventInfo.objects.values_list('event_location').annotate(Count('id')).order_by('-id__count')[:20]
+
+    jsondata = {
+        &quot;key&quot;: [i[0] for i in _x],
+        &quot;value&quot;: [i[1] for i in _x]
+    }
+
+    return JsonResponse(jsondata)</code></pre>
+
+
+<p>最核心的那行group by + order by + limit的ORM拼接，我们上边已经详细的介绍过了，那么这里只需要在输出的结果中单独的把城市跟数量转成两个列表对应echarts里边需要的X轴Y轴数据就可以了</p>
+<p>最后访问url:https://ops-coffee.cn/echarts 可以看到我们想要的结果</p>
+<p><img alt="" loading="lazy" src="/static/images/2018/1126.01.png" /></p>
+<p>整个Demo示例介绍完成。</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/django-aggregate-annotate-echarts-bar-chart.html">📅 2018-11-26</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
