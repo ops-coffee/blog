@@ -209,7 +209,7 @@ def migrate_notify_post(instance, created, **kwargs):
 <p>当点击历史版本时可以查看此版本的配置文件内容，同时在必要的时候回滚，有了历史版本的内容，回滚也只是将历史内容覆盖到etcd</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/1220.09.png" /></p>
 <p>至此，Kerrigan介绍完成，其最主要的功能是通过web浏览器来操作etcd里的KV数据，在此基础上做了扩展，对每一次的修改都做了记录，以实现实用的保存、发布、历史、回滚等功能</p>
-<p>最后再回顾一下整个配置中心的工作流程，配置管理员通过Kerrigan来添加或修改配置文件，Kerrigan记录修改，同时将修改同步至etcd，客户端上的confd服务在检测到etcd对应key的数据发生变化时，会自动拉取数据覆盖至本地配置文件，然后配合<code>check_cmd</code>和<code>reload_cmd</code>指令对配置文件进行检查和重载，更多细节原理回顾文章<a href="/s/uGUvV4jl4YIvNztuepdC8A" target="_blank">『中小团队落地配置中心详解』</a></p>
+<p>最后再回顾一下整个配置中心的工作流程，配置管理员通过Kerrigan来添加或修改配置文件，Kerrigan记录修改，同时将修改同步至etcd，客户端上的confd服务在检测到etcd对应key的数据发生变化时，会自动拉取数据覆盖至本地配置文件，然后配合<code>check_cmd</code>和<code>reload_cmd</code>指令对配置文件进行检查和重载，更多细节原理回顾文章<a href="https://blog.ops-coffee.cn/s/configuration-center-setup-and-management.html" target="_blank">『中小团队落地配置中心详解』</a></p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
