@@ -253,7 +253,7 @@ print(args.integers)</code></pre>
 <p>先说我为什么要写个系统命令？</p>
 <p>文章<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">『Probius：一个功能强大的自定义任务系统』</a>中介绍了我们的自定义任务系统，这个系统可以用来编排任务，而在编排CICD任务中会用到配置文件，我们的配置文件都是通过<a href="https://blog.ops-coffee.cn/s/devops-config-center-kerrigan-implementation.html" target="_blank">Kerrigan配置中心</a>来管理的,目前获取配置中心的配置主要有两种方法</p>
 <ol>
-<li>配合confd服务自动拉取更新，详细内容可以查看这篇文章：<a href="/s/uGUvV4jl4YIvNztuepdC8A" target="_blank">中小团队落地配置中心详解</a></li>
+<li>配合confd服务自动拉取更新，详细内容可以查看这篇文章：<a href="https://blog.ops-coffee.cn/s/configuration-center-setup-and-management.html" target="_blank">中小团队落地配置中心详解</a></li>
 <li>配置中心提供API，可以通过API获取配置内容</li>
 </ol>
 <p>脚本里如果想要使用配置中心的配置，则只能通过API的方式去获取，这样就要在每个需要用到配置的地方写一段代码来获取及处理，不仅会出现大量的重复代码，并且非常的不优雅，更为重要的是请求API的Token将会出现在脚本里，带来一定的安全风险</p>
