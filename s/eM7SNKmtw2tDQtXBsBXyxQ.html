@@ -91,7 +91,7 @@
         <h1 id="art-title">探秘varian：优雅的发布部署程序</h1>
 
         <blockquote>
-<p>上一篇文章<a href="/s/fl3OiX7xg9GVrj9G--a5-g" target="_blank">《记一次诡异的故障排查经历》</a>中有介绍到我们的部署程序varian，文章发布后有小伙伴对varian很感兴趣，今天就简单的介绍一下我们的varian，揭开她神秘的面纱~</p>
+<p>上一篇文章<a href="https://blog.ops-coffee.cn/s/fault-handling-nginx-403-issue-python-jenkins-varian-deployment.html" target="_blank">《记一次诡异的故障排查经历》</a>中有介绍到我们的部署程序varian，文章发布后有小伙伴对varian很感兴趣，今天就简单的介绍一下我们的varian，揭开她神秘的面纱~</p>
 </blockquote>
 <h1 id="varian">什么是varian</h1>
 <p>varian是我们基于Python3编写的一套部署程序，处在整个部署系统的中心，与CMDB、Jenkins、SVN/Git、镜像仓库Harbor、Kubernetes API、通知系统等都有交互，负责将源代码经过一系列的处理后打包成Docker镜像，并发布到各个环境，然后通知相关人员。简化后的varian架构如下：</p>
