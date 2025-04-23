@@ -1960,7 +1960,7 @@
     "date": "2018-12-27"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/L6Jud6gp5c9bbaUljUkNFA.html",
+    "url": "https://blog.ops-coffee.cn/s/django-security-password-table-database-rsa.html",
     "title": "Django开发密码管理表实例【附源码】",
     "content": "本文介绍了如何使用Django实现增删改查功能，并详细讲解了如何在Python3中使用RSA加密算法进行数据加密，适合初、中级开发者学习。",
     "keywords": "Django, 增删改查, 数据加密, Python3, RSA加密, update_or_create, 数据库运维",
