@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Markdown, editor.md, Markdown编辑器, 项目集成, 图片上传, 页面展示, 开源编辑器, Markdown语法, 技术博客, 开源项目" />
+  <meta name="description" content="本文介绍了如何将editor.md集成到项目中，包括如何配置和使用editor.md编辑器进行内容写作，以及如何处理图片上传等功能。适合技术人员和内容创作者学习和使用。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Django集成Markdown编辑器【附源码】</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django集成Markdown编辑器【附源码】" />
+  <meta property="og:description" content="本文介绍了如何将editor.md集成到项目中，包括如何配置和使用editor.md编辑器进行内容写作，以及如何处理图片上传等功能。适合技术人员和内容创作者学习和使用。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">Django集成Markdown编辑器【附源码】</h1>
+
+        <blockquote>
+<p>专注内容写作的你一定不要错过markdown</p>
+</blockquote>
+<h1 id="_1">简单介绍</h1>
+<p>markdown是一种标记语言，通过简单的标记语法可以使普通的文本内容具有一定的格式，使用非常简单，学习成本极低</p>
+<p>目前各大Blog平台都已支持markdown编辑器，某道云笔记也已支持markdown，各开源Blog，Wiki都在逐渐投入markdown的怀抱，身为技术人员如果现在还不知道markdown的话可能会被大佬diss</p>
+<p>editor.md是一款开源的的markdown编辑器，体验流畅且界面友好，被诸多系统所采用，本篇文章也主要使用editor.md编辑器做介绍</p>
+<h1 id="_2">项目集成</h1>
+<p>editor.md编辑器的使用非常简单，只需如下几步</p>
+<p><strong>github下载软件放到项目内，这里我放在static/plugins下</strong></p>
+<pre class="codehilite"><code>git pull https://github.com/pandao/editor.md.git</code></pre>
+
+
+<p><strong>页面引入css、js文件</strong></p>
+<pre class="codehilite"><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/plugins/editor.md/css/editormd.min.css&quot;&gt;
+
+// 依赖jquery，自行引入或参考demo
+&lt;script src=&quot;/static/plugins/editor.md/js/editormd.min.js&quot;&gt;&lt;/script&gt;</code></pre>
+
+
+<p><strong>创建一个DOM容器来容纳编辑器</strong></p>
+<pre class="codehilite"><code>&lt;div id=&quot;editormd&quot;&gt;&lt;/div&gt;</code></pre>
+
+
+<p><strong>通过editormd方法来实例化容器</strong></p>
+<pre class="codehilite"><code>var testEditor = editormd(&quot;editormd&quot;, {
+    width: &quot;100%&quot;,
+    height: 720,
+    syncScrolling: &quot;single&quot;,
+    path: &quot;/static/plugins/editor.md/lib/&quot;,
+
+    // 设置主体颜色
+    theme : &quot;dark&quot;,
+    previewTheme : &quot;dark&quot;,
+    editorTheme : &quot;pastel-on-dark&quot;,
+
+    markdown : md,
+    codeFold : true,
+    //syncScrolling : false,
+    saveHTMLToTextarea : true,    // 保存 HTML 到 Textarea
+    searchReplace : true,
+    //watch : false,                // 关闭实时预览
+    htmlDecode : &quot;style,script,iframe|on*&quot;,            // 开启 HTML 标签解析，为了安全性，默认不开启    
+    //toolbar  : false,             //关闭工具栏
+    //previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
+    emoji : true,   // 启用emoji表情
+    taskList : true,    // 启用tasklist
+    tocm            : true,         // Using [TOCM]
+    tex : true,                   // 开启科学公式TeX语言支持，默认关闭
+    flowChart : true,             // 开启流程图支持，默认关闭
+    sequenceDiagram : true,       // 开启时序/序列图支持，默认关闭,
+    //dialogLockScreen : false,   // 设置弹出层对话框不锁屏，全局通用，默认为true
+    //dialogShowMask : false,     // 设置弹出层对话框显示透明遮罩层，全局通用，默认为true
+    //dialogDraggable : false,    // 设置弹出层对话框不可拖动，全局通用，默认为true
+    //dialogMaskOpacity : 0.4,    // 设置透明遮罩层的透明度，全局通用，默认值为0.1
+    //dialogMaskBgColor : &quot;#000&quot;, // 设置透明遮罩层的背景颜色，全局通用，默认为#fff
+
+    imageUpload: true, //开启图片上传
+    imageFormats: [&quot;jpg&quot;, &quot;jpeg&quot;, &quot;gif&quot;, &quot;png&quot;, &quot;bmp&quot;], //支持上传的图片格式
+    imageUploadURL: &quot;{% url 'api-upload-url' %}&quot; //处理图片上传的后端URL地址
+    // 图片上传后可以在onload里做进一步处理
+    onload : function() {
+        console.log('onload', this);
+        //this.fullscreen();
+        //this.unwatch();
+        //this.watch().fullscreen();
+
+        //this.setMarkdown(&quot;#PHP&quot;);
+        //this.width(&quot;100%&quot;);
+        //this.height(480);
+        //this.resize(&quot;100%&quot;, 640);
+    }
+
+});</code></pre>
+
+
+<p>editor.md提供了很多配置参数可以用了配置编辑器，根据自己环境选择使用，具体参考官方文档</p>
+<p>这里配置了图片上传的三个参数imageUpload、imageFormats、imageUploadURL，在下边图片上传的地方会用到</p>
+<p><strong>一个基于editor.md的markdown编辑器就诞生了</strong></p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0124.01.png" /></p>
+<h1 id="_3">页面展示</h1>
+<p><strong>如果页面不涉及编辑，单纯展示，那么则需要引入如下JS/CSS文件</strong></p>
+<pre class="codehilite"><code>&lt;link href=&quot;/static/plugins/editor.md/css/editormd.preview.min.css&quot; rel=&quot;stylesheet&quot;/&gt;
+
+&lt;script type=&quot;text/javascript&quot; src=&quot;/static/plugins/editor.md/lib/marked.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/static/plugins/editor.md/lib/prettify.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/static/plugins/editor.md/lib/raphael.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/static/plugins/editor.md/lib/underscore.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/static/plugins/editor.md/lib/sequence-diagram.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/static/plugins/editor.md/lib/flowchart.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/static/plugins/editor.md/lib/jquery.flowchart.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/static/plugins/editor.md/js/editormd.min.js&quot;&gt;&lt;/script&gt;</code></pre>
+
+
+<p><strong>初始化DOM容器</strong></p>
+<pre class="codehilite"><code>&lt;div id=&quot;editormd-view&quot;&gt;
+    &lt;textarea style=&quot;display:none;&quot;&gt;# 站点介绍
+- site：**运维咖啡吧**
+- url：[https://ops-coffee.cn](https://ops-coffee.cn)
+- slogen: **追求技术的道路上，我从不曾停下脚步**
+
+# 图片示例
+![扫码关注查看更多原创文章](/static/img/qrcode.jpg)&lt;/textarea&gt;
+&lt;/div&gt;</code></pre>
+
+
+<p><strong>实例化</strong></p>
+<pre class="codehilite"><code>&lt;script type=&quot;text/javascript&quot;&gt;
+$(function () {
+  var EditormdView = editormd.markdownToHTML(&quot;editormd-view&quot;, {
+    htmlDecode: &quot;style,script,iframe&quot;,  // you can filter tags decode
+    emoji: true,
+    taskList: true,
+    tex: true,  // 默认不解析
+    flowChart: true,  // 默认不解析
+    sequenceDiagram: true  // 默认不解析
+  });
+});
+&lt;/script&gt;</code></pre>
+
+
+<p><img alt="" loading="lazy" src="/static/images/2019/0124.02.png" /></p>
+<h1 id="_4">图片上传</h1>
+<p>图片是内容编辑中不可缺少的元素，markdown作为标记语言默认不存储图片，仅有url引用标记，editor.md提供了图片上传的方法，当然需要配合后端程序一起将用户选择的图片进行本地或云端存储</p>
+<p>接下来我们看一个图片上传存储服务器本地的案例</p>
+<p>editor.md接收json格式的返回数据，服务端在处理完图片上传之后需要按照如下格式返回数据</p>
+<pre class="codehilite"><code>{
+    success : &quot;状态码0或1&quot;, //0表示上传失败;1表示上传成功
+    message : &quot;提示信息&quot;, //上传成功或失败返回的信息
+    url     : &quot;图片地址&quot; //上传成功时才返回
+}</code></pre>
+
+
+<p><strong>先编写一个upload的函数来处理上传，最终返回上边的json格式数据即可</strong></p>
+<pre class="codehilite"><code>@csrf_exempt
+def upload(request):
+    upload_file = request.FILES['imagefile']
+    if request.method == 'POST' and upload_file:
+        success, message = 0, '上传失败'
+
+        # 本地创建保存图片的文件夹
+        path = settings.STATIC_URL + 'upload/' + time.strftime('%Y%m%d') + '/'
+        if not os.path.exists(settings.BASE_DIR + path):
+            os.makedirs(settings.BASE_DIR + path)
+
+        # 拼装本地保存图片的完整文件名
+        filename = time.strftime('%H%M%S') + '_' + upload_file.name
+        local_file = settings.BASE_DIR + path + filename
+
+        # 写入文件
+        with open(local_file, 'wb+') as f:
+            for chunk in upload_file.chunks():
+                f.write(chunk)
+
+            success, message = 1, '上传成功'
+
+        # 返回格式
+        data = {
+            'success': success,
+            'message': message,
+            'url': path + filename
+        }
+
+        return JsonResponse(data)
+    else:
+        return JsonResponse({'state': 0, 'message': 'Not support method or Can not get file'})</code></pre>
+
+
+<p>由于前端页面采用post方式上传，会遇到CSRF问题导致403，这里我们通过添加装饰器@csrf_exempt来取消CSRF验证</p>
+<p><strong>接着添加一个url地址指向这个view</strong></p>
+<pre class="codehilite"><code>path('api/upload/', upload, name='api-upload-url'),</code></pre>
+
+
+<p>上边我们已经配置过editormd上传图片相关的image参数了，就可以直接通过编辑器工具栏上的上传图片图标上传图片到服务器本地</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0124.03.png" /></p>
+<p>如果要上传图片到第三方的云存储，参考云存储提供的API修改upload的view函数即可</p>
+<h1 id="_5">源码地址</h1>
+<p>写本文时顺便写了个demo，方便有问题的小伙伴对比查看，地址如下：</p>
+<p>aHR0cHM6Ly9naXRodWIuY29tL29wcy1jb2ZmZWUvZGVtby90cmVlL21hc3Rlci9tYXJrZG93bg==</p>
+<p>URL经过简单加密，解密即可获取，或关注微信公众号【运维咖啡吧】回复"02"直接获取源码地址，期待你的到来</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/markdown-editor-md-integration.html">📅 2019-01-24</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
