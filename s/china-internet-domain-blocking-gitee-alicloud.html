@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="码云无法访问, 阿里云停了码云Gitee.com的域名解析, 域名封禁, 备用域名, 自建DNS服务" />
+  <meta name="description" content="本文讨论了中国互联网可能面临的域名封禁问题，特别是码云Gitee.com的域名解析被阿里云停止的事件，提供了应对域名封禁的策略和建议。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>码云域名被阿里云停止解析，如果是你维护的域名该怎么办？</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="码云域名被阿里云停止解析，如果是你维护的域名该怎么办？" />
+  <meta property="og:description" content="本文讨论了中国互联网可能面临的域名封禁问题，特别是码云Gitee.com的域名解析被阿里云停止的事件，提供了应对域名封禁的策略和建议。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">码云域名被阿里云停止解析，如果是你维护的域名该怎么办？</h1>
+
+        <blockquote>
+<p>中国的互联网不能这么胡来，真要是胡来我们该怎么办？</p>
+</blockquote>
+<p>今天下午咖啡君发现<a href="https://gitee.com" target="_blank">码云</a>网站无法访问，随后看到开源中国站长红薯发布了一篇名为“阿里云停了码云Gitee.com的域名解析！！！！”的文章</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/1021.01.png" /></p>
+<p>从文章标题的四个感叹号就可以看出站长是有多么的愤怒和震惊，结尾一句标红的“中国的互联网不能这么胡来！！！”似乎是对阿里云随意封禁域名的控诉</p>
+<p>Gitee（中文名：码云）是开源中国推出的基于Git的代码托管服务，作用类似于大名鼎鼎的Github，因其功能强大，网络稳定而被开发人员和中小型公司所广泛使用，对于这么一个网站阿里云在没有任何提前通知的情况下对域名停止解析，咖啡君心里也是慌的很，生怕这种事情发生在我所维护的项目上</p>
+<p>虽然我相信合规合法的域名不会被随意封禁，但在出现意外的时候该如何应对？作为运维人员还是很有必要知道的</p>
+<p>1.域名作为整个网站的入口，如果一旦被限制解析应第一时间与域名提供商沟通，确定问题，争取最快解禁</p>
+<p>2.同时也需要通过第三方发布公告提供其他的途径让用户正常访问，有两种方法可以让用户能够访问网站，方法一是红薯文章里边给出的绑定hosts的方式，绑定hosts麻烦且有一定的操作门槛，不推荐，方法二是启用备用域名，码云的主域名是https://gitee.com，同时还会有其他的备用域名例如https://git.oschina.net，当主域名被封禁时可让用户通过备用域名进行访问，推荐这个方法</p>
+<p>3.如果确定短时间内域名服务商不能解禁域名，则需要尽快将域名迁移至其他服务商，域名迁移服务商也比较简单，只需修改域名所对应的NS记录就可以了，但是需要提前把所有的域名记录数据都导出来，导入到新的域名解析服务商的系统上，这个过程需要一定的时间，属下下策</p>
+<p>最后建议有能力的团队自建DNS服务，将域名NS记录指向自建DNS服务，这就杜绝了第三方对域名的封禁</p>
+<p>截至发文时，码云访问已恢复</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/china-internet-domain-blocking-gitee-alicloud.html">📅 2019-10-21</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/系统运维/">🏷️ 系统运维</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
