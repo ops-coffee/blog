@@ -1673,7 +1673,7 @@
     "date": "2019-11-01"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/lVVe6OtX7U-USAHn4j5XZQ.html",
+    "url": "https://blog.ops-coffee.cn/s/china-internet-domain-blocking-gitee-alicloud.html",
     "title": "码云域名被阿里云停止解析，如果是你维护的域名该怎么办？",
     "content": "本文讨论了中国互联网可能面临的域名封禁问题，特别是码云Gitee.com的域名解析被阿里云停止的事件，提供了应对域名封禁的策略和建议。",
     "keywords": "码云无法访问, 阿里云停了码云Gitee.com的域名解析, 域名封禁, 备用域名, 自建DNS服务",
