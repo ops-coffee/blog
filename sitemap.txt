@@ -354,7 +354,7 @@ https://blog.ops-coffee.cn/s/business-status-monitoring-with-nagios.html
 https://blog.ops-coffee.cn/s/small-team-etcd-confd-configuration-center.html
 https://blog.ops-coffee.cn/elk/common-system-project-java-log-collect.html
 https://blog.ops-coffee.cn/elk/elasticsearch-logstash-rsyslog-nginx.html
-https://blog.ops-coffee.cn/s/uGUvV4jl4YIvNztuepdC8A.html
+https://blog.ops-coffee.cn/s/configuration-center-setup-and-management.html
 https://blog.ops-coffee.cn/elk/elasticsearch-logstash-mysql-slowlog.html
 https://blog.ops-coffee.cn/s/JVh4UnS2Tql9gUVaBSoGuA.html
 https://blog.ops-coffee.cn/s/devops-task-django-celery-setup-guide.html
