@@ -1932,7 +1932,7 @@
     "date": "2019-01-31"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/XchAJWiMN3DNpKGj_yMdcA.html",
+    "url": "https://blog.ops-coffee.cn/s/markdown-editor-md-integration.html",
     "title": "Django集成Markdown编辑器【附源码】",
     "content": "本文介绍了如何将editor.md集成到项目中，包括如何配置和使用editor.md编辑器进行内容写作，以及如何处理图片上传等功能。适合技术人员和内容创作者学习和使用。",
     "keywords": "Markdown, editor.md, Markdown编辑器, 项目集成, 图片上传, 页面展示, 开源编辑器, Markdown语法, 技术博客, 开源项目",
