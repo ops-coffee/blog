@@ -1820,7 +1820,7 @@
     "date": "2019-06-19"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/x48wmx_k55hmPfZL0tyBYQ.html",
+    "url": "https://blog.ops-coffee.cn/s/redis-scan-command-for-bulk-deletion.html",
     "title": "Redis删除特定前缀key的优雅实现",
     "content": "本文介绍了如何在Redis中优雅地使用SCAN命令进行批量删除，避免使用keys命令带来的风险，并提供了针对不同数据类型的删除方法，适合在生产环境中使用。",
     "keywords": "Redis, SCAN命令, 批量删除, Redis数据删除, SSCAN命令, HSCAN命令, ZSCAN命令, Redis生产环境",
