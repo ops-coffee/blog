@@ -110,7 +110,7 @@
 <p>扩容、回滚、重启等操作都可以通过nova系统自动完成，这篇文章介绍了持续部署的更多细节：<a href="https://blog.ops-coffee.cn/s/optimizing-continuous-deployment-with-docker.html" target="_blank">Docker环境的持续部署优化实践</a></p>
 <p><img alt="" loading="lazy" src="/static/images/2019/0130.nova.png" /></p>
 <h2 id="kerrigan">kerrigan</h2>
-<p>在整个发布上线的过程中除了代码的变更之外，通常还会涉及到配置文件、数据库的变更，为了解决配置文件自动更新的问题我们开发了kerrigan系统，这篇文章有关于配置中心实现细节的介绍：<a href="/s/uGUvV4jl4YIvNztuepdC8A" target="_blank">中小团队落地配置中心详解</a></p>
+<p>在整个发布上线的过程中除了代码的变更之外，通常还会涉及到配置文件、数据库的变更，为了解决配置文件自动更新的问题我们开发了kerrigan系统，这篇文章有关于配置中心实现细节的介绍：<a href="https://blog.ops-coffee.cn/s/configuration-center-setup-and-management.html" target="_blank">中小团队落地配置中心详解</a></p>
 <p>kerrigan底层基于etcd+confd实现，主要实现在web端修改，服务器上自动更新生效的功能，kerrigan还能够管理多环境不同类型的配置，尤其擅长文件型的配置（区别于通常看到的基于KV的配置中心，对运维更友好），例如管理nginx，tomcat等配置，同时能够记录配置文件的修改历史，快速回滚配置，还支持配置文件对比，只修改保存延后发布等功能</p>
 <p>因为我们项目比较多，每个项目的nginx里边有一堆的规则，基于Docker的话每个rewrite的更新都需要重新打包发布比较繁琐，使用kerrigan之后有效解决了这个问题</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/0130.kerrigan.png" /></p>
