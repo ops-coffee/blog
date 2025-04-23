@@ -183,7 +183,7 @@
 
 <p>实现思路与上边类似，只是多了一步根据项目和环境再进行判断</p>
 <p>需要根据group去反查都有哪些DB实例包含了该组，这里用到了M2M的related_name属性：<code>group.read.all()</code></p>
-<p>更多关于Django ORM查询的内容可以看这篇文章<a href="/s/JVh4UnS2Tql9gUVaBSoGuA" target="_blank">Django model select的各种用法详解</a>有详细的总结</p>
+<p>更多关于Django ORM查询的内容可以看这篇文章<a href="https://blog.ops-coffee.cn/s/django-model-queryset-select-guide.html" target="_blank">Django model select的各种用法详解</a>有详细的总结</p>
 <h2 id="_5">执行操作权限控制</h2>
 <p>除了上边的两个场景之外我们还需要在执行具体的操作之前去判断是否有权限，例如执行审核操作前判断用户是否对此DB有写权限</p>
 <p>有很多地方都需要做这个判断，所以把这个权限判断单独写个方法来处理，代码如下：</p>
