@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="微信小程序, 小程序开发, ColorUI, 运维咖啡吧, 小程序审核, 技术文章, SEO友好" />
+  <meta name="description" content="本文详细记录了开发一个微信小程序的设计思路、使用的技术、审核过程以及最终的源码提供。通过ColorUI组件库，开发了一个展示技术文章列表的小程序，并分享了开发中的技术细节和审核故事。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>没有基础也能写个小程序</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="没有基础也能写个小程序" />
+  <meta property="og:description" content="本文详细记录了开发一个微信小程序的设计思路、使用的技术、审核过程以及最终的源码提供。通过ColorUI组件库，开发了一个展示技术文章列表的小程序，并分享了开发中的技术细节和审核故事。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">没有基础也能写个小程序</h1>
+
+        <blockquote>
+<p>文章记录了小程序的设计思路，介绍了使用的技术，描述了提交审核的故事，还提供了最终的完整源码</p>
+</blockquote>
+<h1 id="_1">背景说明</h1>
+<p>微信小程序自从发布以来就占据着超高的话题热度，一直以来都想开发一款自己的小程序，但苦于不懂前端迟迟没有开始。偶然发现了ColorUI这个开源的小程序组件库，界面好看且提供Demo，心中狂喜马上动手</p>
+<p>做个什么小程序呢？想了一圈这半年多一直坚持在写技术文章，为此开通了微信公众号，因为公众号查看文章列表不友好，且不方便在微信以外的渠道传播，我又利用Github Pages搭建了<a href="https://ops-coffee.cn" target="_blank">运维咖啡吧</a>网站主页，就想做个类似于网站主页的小程序吧，可以在微信体系内优化公众号文章列表页读取以及方便分类检索</p>
+<h1 id="_2">开发过程</h1>
+<p>计划参考<a href="https://ops-coffee.cn" target="_blank">运维咖啡吧</a>网站主页写个小程序页面来展示微信公众号内的所有文章，后边加上搜索、标签等方便检索，用户点击列表后跳转到微信公众号具体的文章查看，形成闭环</p>
+<p>首先写了个“列表”页，用来展示公众号内的所有文章，但写完列表后发现小程序并不支持跳转到公众号的文章，不能查看文章这个小程序的意义就失去了大半</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0308.01.png" /></p>
+<p>然后添加了一个“关于”页面，页面内介绍小程序是干嘛的顺便给个公众号入口，方便对文章感兴趣的朋友继续阅读</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0308.02.png" /></p>
+<p>代码完成后提交给小程序审核，约半天时间反馈审核失败，原因是“实际运营内容与名称简介不符”，想着可能审核的伙伴不知道运维是干嘛的，看到名称里包含咖啡吧，以为是跟咖啡相关的，反馈解释了一下什么是运维，以及小程序跟公众号的关系，再次提交审核，又等了半天功夫，还是反馈审核失败，这次原因是“小程序进入点击页面内容无反应”，我就写了个列表页，列表内容并不能点，这不是BUG，又反馈了一次但很遗憾跟上次一样的原因依然审核失败，看来必须得能点</p>
+<p>决定添加一个“详情”页面，并不准备在详情内放文章的详细内容，因为这涉及到以往文章数据整理以及需要提供后端接口等问题，只想着能够审核通过，所以简单展示了文章的基本内容，给了个跳转到公众号的按钮</p>
+<p><img alt="" loading="lazy" src="/static/images/2019/0308.03.png" /></p>
+<p>编码完成再次提交审核，顺利通过</p>
+<h1 id="_3">所用技术</h1>
+<p>下边介绍一下这个小程序中用到一些技术点</p>
+<h2 id="for">for循环展示</h2>
+<p>列表页面的展示采用了for循环读取JS数据</p>
+<p>JS里边用一个Blogs变量来记录文章列表页的数据，JS里边定义的变量可以直接在模板渲染时引用</p>
+<pre class="codehilite"><code>Page({
+  data: {
+    StatusBar: app.globalData.StatusBar,
+    CustomBar: app.globalData.CustomBar,
+    Blogs: [
+        {
+            &quot;title&quot;: &quot;Django内置权限扩展案例&quot;,
+            &quot;image&quot;: &quot;https://ws1.sinaimg.cn/large/7164c73agy1g0vl4k4veej20zk0f841d.jpg&quot;,
+            &quot;description&quot;: &quot;当Django的内置权限无法满足需求的时候&quot;,
+            &quot;url&quot;: &quot;/s/BZsJnWLtv8ZwwlBYbWSbZQ&quot;,
+            &quot;tag&quot;: &quot;Django&quot;
+        },
+        {
+            &quot;title&quot;: &quot;我们自研的那些Devops工具&quot;,
+            &quot;image&quot;: &quot;https://ws1.sinaimg.cn/large/7164c73agy1g0vl4wtqdfj20zk0k00ve.jpg&quot;,
+            &quot;description&quot;: &quot;随着云技术以及容器技术的崛起，人肉运维的时代结束了&quot;,
+            &quot;url&quot;: &quot;/s/HwOi-ARTvvNjGTWrDmZIkQ&quot;,
+            &quot;tag&quot;: &quot;DevOps&quot;
+        }
+    ]
+  }
+})</code></pre>
+
+
+<p>模板渲染时用到了循环标签<code>wx:for</code>，可以读取JS变量的列表值，然后通过<code>{{item}}</code>拿到列表中的每个对象，再通过<code>{{item.key}}</code>拿到对象的值</p>
+<pre class="codehilite"><code>&lt;view bindtap=&quot;toChild&quot; data-blog=&quot;{{item}}&quot; class=&quot;cu-item shadow&quot; wx:for=&quot;{{Blogs}}&quot; wx:key&gt;
+&lt;view class=&quot;title&quot;&gt;{{item.title}}&lt;/view&gt;
+&lt;view class=&quot;content&quot;&gt;
+  &lt;image src=&quot;{{item.image}}&quot; mode=&quot;aspectFill&quot;&gt;&lt;/image&gt;
+  &lt;view class=&quot;desc&quot;&gt;
+    &lt;view class=&quot;text-content&quot;&gt; {{item.description}}&lt;/view&gt;
+    &lt;view class=&quot;flex justify-between&quot;&gt;
+      &lt;text class=&quot;text-xs text-gray&quot;&gt;原创：37丫37&lt;/text&gt;
+      &lt;view class=&quot;bg-right cu-tag bg-green light sm round&quot;&gt;{{item.tag}}&lt;/view&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/view&gt;
+&lt;/view&gt;</code></pre>
+
+
+<h2 id="_4">后端取数据</h2>
+<p>考虑到文章可能会随时增加，将数据直接写在JS里边并不友好，每次变更还要重新发布审核，所以从后端接口读取数据才是最好的方式，但考虑到成本问题没必要专门写个后端程序来处理，直接将内容存json，提供https访问即可</p>
+<p>在页面加载的时候去后台请求数据，然后给设置成变量Blogs，页面渲染参考上边介绍</p>
+<pre class="codehilite"><code>onLoad: function () {
+    var that = this;
+    wx.request({
+      url: 'https://ops-coffee.cn/blog.json',
+      header: {
+        'content-type': 'application/json'
+      },
+      //请求后台数据成功
+      success: function (res) {
+        that.setData({
+          Blogs: res.data.data
+        })
+      }
+    })
+}</code></pre>
+
+
+<h2 id="_5">页面跳转</h2>
+<p>点击列表内容跳转到详情页该怎么实现呢？</p>
+<p>我们先来看看跳转，跳转可以直接通过<code>navigator</code>标签实现，<code>open-type</code>指定跳转方式，<code>url</code>指定跳转的页面</p>
+<pre class="codehilite"><code>&lt;navigator open-type=&quot;navigate&quot; url=&quot;/pages/index/detail/detail?data={{item}}&quot; class=&quot;cu-item shadow&quot; wx:for=&quot;{{Blog}}&quot; wx:key&gt;
+    &lt;view class=&quot;title&quot;&gt;{{item.title}}&lt;/view&gt;
+    ...
+&lt;/navigator&gt;</code></pre>
+
+
+<p>或者通过<code>bindtap</code>事件触发<code>wx.navigateTo</code>实现跳转，<code>data-blog</code>可以指定bindtap事件参数，从而在JS中获取</p>
+<pre class="codehilite"><code>&lt;view bindtap=&quot;toChild&quot; data-blog=&quot;{{item}}&quot; class=&quot;cu-item shadow&quot; wx:for=&quot;{{Blogs}}&quot; wx:key&gt;</code></pre>
+
+
+<pre class="codehilite"><code>toChild(event) {
+    var blog = event.currentTarget.dataset.blog;
+
+    wx.navigateTo({
+      url: '/pages/index/blog/blog'
+    })
+}</code></pre>
+
+
+<h2 id="_6">本地存储</h2>
+<p>当点击列表内容跳转到详情页，正常的做法应该是去后台请求文章的详情以渲染详情页面，但这里我需要展示的内容列表页已经存在了，无需再次请求就找了个偷懒的做法，在用户点击列表内容时，把这篇文章的详细信息利用<code>wx.setStorageSync</code>存储在本地</p>
+<pre class="codehilite"><code>toChild(event) {
+    var blog = event.currentTarget.dataset.blog;
+
+    wx.setStorageSync(
+      'blog',blog
+    );
+}</code></pre>
+
+
+<p>然后在详情页加载时利用<code>wx.getStorageSync</code>取出来渲染到页面</p>
+<pre class="codehilite"><code>onLoad: function (option) {
+    var blog = wx.getStorageSync('blog');
+
+    this.setData({
+      blog:blog
+    })
+},</code></pre>
+
+
+<h2 id="_7">关联公众号</h2>
+<p>小程序提供关联公众号的功能，需要先在小程序后台：设置-&gt;关注公众号中开启公众号关注组件，然后在页面的相应地方添加上如下代码就可以像文章详情页最下边一样出来个关联公众号的组件</p>
+<pre class="codehilite"><code>&lt;official-account&gt;&lt;/official-account&gt;</code></pre>
+
+
+<p>但访问时可能会发现打开详情页并没有出现关联公众号的组件，这个主要是因为并非所有的情况下都会展示，只有用对了姿势才能看到，官方文档有更多介绍，目前还没有办法彻底解决看不到的问题</p>
+<h2 id="_8">页面分享</h2>
+<p>小程序上线后我想分享给朋友装逼，确发现没有方便的方式，查官方文档发现可以用<code>onShareAppMessage</code>方法，只需简单的添加到想分享页面的JS中即可，然后在右上角的功能按钮中就会出现转发功能</p>
+<pre class="codehilite"><code>onShareAppMessage() {
+    return {
+      title: '运维咖啡吧',
+      path: '/pages/index/list/list'
+    }
+}</code></pre>
+
+
+<h1 id="_9">源码地址</h1>
+<p>长按文末二维码关注微信公众号【运维咖啡吧】回复"03"可获取源码地址，期待你的到来</p>
+<h1 id="_10">写在最后</h1>
+<ol>
+<li>感谢ColorUI，如此优秀的项目才能让我没有基础的情况下快速开发一款小程序</li>
+<li>此项目从开发到完成大概只花了1天的时间，比较简陋，学习小程序的实验项目，各位轻喷</li>
+<li>对于框架的学习我的做法是先看一遍官方文档的介绍，了解基本的内容，能看得懂项目结构，然后再开始编码</li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/wechat-miniapp-development-journey.html">📅 2019-03-08</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Just-For-Fun/">🏷️ Just-For-Fun</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
