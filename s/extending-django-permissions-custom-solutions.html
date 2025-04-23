@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="Django权限系统, 自定义权限, Django模型权限, 数据库权限管理, Django权限扩展, Django ORM查询" />
+  <meta name="description" content="当Django的内置权限系统无法满足特定需求时，可以通过扩展权限系统来实现细粒度的控制，如针对不同用户开放不同数据库实例的权限。本文详细介绍了如何在Django项目中扩展权限系统，以满足特定的数据库权限管理需求。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>Django内置权限扩展案例</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="Django内置权限扩展案例" />
+  <meta property="og:description" content="当Django的内置权限系统无法满足特定需求时，可以通过扩展权限系统来实现细粒度的控制，如针对不同用户开放不同数据库实例的权限。本文详细介绍了如何在Django项目中扩展权限系统，以满足特定的数据库权限管理需求。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container no-sidebar">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container no-sidebar">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container no-sidebar">
+        <h1 id="art-title">Django内置权限扩展案例</h1>
+
+        <blockquote>
+<p>当Django的内置权限无法满足需求的时候就自己扩展吧~</p>
+</blockquote>
+<h1 id="_1">背景介绍</h1>
+<p><a href="/s/HwOi-ARTvvNjGTWrDmZIkQ" target="_blank">overmind项目</a>使用了Django内置的权限系统，Django内置权限系统基于model层做控制，新的model创建后会默认新建三个权限，分别为：add、change、delete，如果给用户或组赋予delete的权限，那么用户将可以删除这个model下的所有数据。</p>
+<p>原本overmind只管理了我们自己部门的数据库，权限设置只针对具体的功能不针对细粒度的数据库实例，例如用户A 有审核的权限，那么用户A 可以审核所有的DB，此时使用内置的权限系统就可以满足需求了，但随着系统的不断完善要接入其他部门的数据库管理，这就要求针对不同用户开放不同DB的权限了，例如A部门的用户只能操作A部门的DB，Django内置基于model的权限无法满足需求了。</p>
+<h1 id="_2">实现过程</h1>
+<p>先来确定下需求：
+1. 保持原本的基于功能的权限控制不变，例如用户A有查询权限，B有审核权限
+2. 增加针对DB实例的权限控制，例如用户A只能查询特定的DB，B只能审核特定的DB</p>
+<p>对于上边需求1用内置的权限系统已经可以实现，这里不赘述，重点看下需求2，DB信息都存放在同一个表里，不同用户能操作不同的DB，也就是需要把每一条DB信息与有权限操作的用户进行关联，为了方便操作，我们考虑把DB跟用户组关联，在用户组里的用户都有权限，而操作类型经过分析主要有两类读和写，那么需要给每个MySQL实例添加两个字段分别记录对此实例有读和写权限的用户组</p>
+<p>如下代码在原来的model基础上添加<code>read_groups</code>和<code>write_groups</code>字段，DB实例跟用户组应是ManyToManyField多对多关系，一个实例可以关联多个用户组，一个用户组也可以属于多个实例</p>
+<pre class="codehilite"><code>class Mysql(models.Model):
+    Env = (
+        (1, 'Dev'),
+        (2, 'Qa'),
+        (3, 'Prod'),
+    )
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+
+    project_id = models.IntegerField(verbose_name='项目')
+    project_tmp = models.CharField(max_length=128, default='')
+    environment = models.IntegerField(choices=Env, verbose_name='环境')
+
+    master_host = models.GenericIPAddressField(verbose_name='master主机')
+    master_port = models.IntegerField(default=3306, verbose_name='master端口')
+
+    slave_host = models.GenericIPAddressField(null=True, verbose_name='slave主机')
+    slave_port = models.IntegerField(null=True, default=3306, verbose_name='slave端口')
+
+    database = models.CharField(max_length=64, verbose_name='数据库')
+
+    read_groups = models.ManyToManyField(Group, related_name='read', verbose_name='读权限')
+    write_groups = models.ManyToManyField(Group, related_name='write', verbose_name='写权限')
+
+    description = models.TextField(null=True, verbose_name='备注')</code></pre>
+
+
+<p>model确定了，接下来我们分三部分详细介绍下权限验证的具体实现</p>
+<h2 id="_3">列表页权限控制</h2>
+<p><img alt="" loading="lazy" src="/static/images/2019/0228.01.png" /></p>
+<p>如上图列表页，每个用户进入系统后只能查看自己有读权限的MySQL实例列表，管理员能查看所有，代码如下：</p>
+<pre class="codehilite"><code>def mysql(request):
+    if request.method == 'GET':
+        if request.user.is_superuser:
+            _lists = Mysql.objects.all().order_by('id')
+        else:
+            # 获取登录用户的所有组
+            _user_groups = request.user.groups.all()
+
+            # 构造一个空的QuerySet然后合并
+            _lists = Mysql.objects.none()
+            for group in _user_groups:
+                _lists = _lists | group.read.all()
+
+        return render(request, 'overmind/mysql.index.html', {'request': request, 'lPage': _lists})</code></pre>
+
+
+<p>实现的思路是：获取登录用户的所有组，然后循环查询每个组有读取权限的数据库实例，最后把每个组有权限读的数据库实例进行合并返回</p>
+<p>获取登录用户的所有组用到了ManyToMany的查询方法：<code>request.user.groups.all()</code></p>
+<p>最终返回的一个结果是QuerySet，所以我们需要先构造一个空的Queryset：<code>Mysql.objects.none()</code></p>
+<p>QuerySet合并不能用简单的相加，应为：<code>QuerySet-1 | QuerySet-2</code></p>
+<h2 id="_4">查询接口权限控制</h2>
+<p><img alt="" loading="lazy" src="/static/images/2019/0228.02.png" /></p>
+<p>如上图系统中有很多功能是需要根据项目、环境查询对应的DB信息的，对于此类接口也需要控制用户只能查询自己有权限读的DB实例，管理员能查看所有，代码如下：</p>
+<pre class="codehilite"><code>def get_project_database(request, project, environment):
+    if request.method == 'GET':
+        _jsondata = {}
+
+        if request.user.is_superuser:
+            # 返回所有项目和环境匹配的DB
+            _lists = Mysql.objects.filter(
+                project_id=int(project),
+                environment=int(environment)
+            )
+
+            _jsondata = {i.id: i.database for i in _lists}
+        else:
+            # 只返回用户有权限查询的DB
+            _user_groups = request.user.groups.all()
+
+            for group in _user_groups:
+                # 循环mysql表中有read_groups权限的所有组
+                for mysql in group.read.all():
+                    if mysql.project_id == int(project) and mysql.environment == int(environment):
+                        _jsondata[mysql.id] = mysql.database
+
+        return JsonResponse(_jsondata)</code></pre>
+
+
+<p>实现思路与上边类似，只是多了一步根据项目和环境再进行判断</p>
+<p>需要根据group去反查都有哪些DB实例包含了该组，这里用到了M2M的related_name属性：<code>group.read.all()</code></p>
+<p>更多关于Django ORM查询的内容可以看这篇文章<a href="/s/JVh4UnS2Tql9gUVaBSoGuA" target="_blank">Django model select的各种用法详解</a>有详细的总结</p>
+<h2 id="_5">执行操作权限控制</h2>
+<p>除了上边的两个场景之外我们还需要在执行具体的操作之前去判断是否有权限，例如执行审核操作前判断用户是否对此DB有写权限</p>
+<p>有很多地方都需要做这个判断，所以把这个权限判断单独写个方法来处理，代码如下：</p>
+<pre class="codehilite"><code>def check_permission(perm, mysql, user):
+    # 如果用户是超级管理员则有权限
+    if user.is_superuser:
+        return True
+
+    # 取出用户所属的所有组
+    _user_groups = user.groups.all()
+
+    # 取出Mysql对应权限的所有组
+    if perm == 'read':
+        _mysql_groups = mysql.read_groups.all()
+    if perm == 'write':
+        _mysql_groups = mysql.write_groups.all()
+
+    # 用户组和DB权限组取交集，有则表示有权限，否则没有权限
+    group_list = list(set(_user_groups).intersection(set(_mysql_groups)))
+
+    return False if len(group_list) == 0 else True</code></pre>
+
+
+<p>实现思路是：根据传入的第三个用户参数，来获取到用户所有的组，然后根据传入的第一个参数类型读取或写入和第二个参数DB实例来获取到有权限的所有组，然后对两个组取交集，交集不为空则表示有权限，为空则没有</p>
+<p>M2M的<code>.all()</code>取出来的结果是个list，两个list取交集的方法为：<code>list(set(list-A).intersection(set(list-B)))</code></p>
+<p>view中使用就很简单了，如下：</p>
+<pre class="codehilite"><code>def query(request):
+    if request.method == 'POST':
+        postdata = request.body.decode('utf-8')
+        _host = get_object_or_404(Mysql, id=int(postdata.get('database')))
+
+        # 检查用户是否有DB的查询权限
+        if check_permission('read', _host, request.user) == False:
+            return JsonResponse({'state': 0, 'message': '当前用户没有查询此DB的权限'})</code></pre>
+
+
+<h1 id="_6">写在最后</h1>
+<ol>
+<li>Django有第三方的基于object的权限管理模块Django-guardian，本项目没有使用主要是因为一来权限需求并不复杂，自己实现也很方便，二来个人在非必要的情况下并不喜欢引用过多第三方的包，后续升级维护都是负担</li>
+<li>方案和代码不尽完美，各位有更好的方案建议或更优雅的代码写法欢迎与我交流</li>
+</ol>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/extending-django-permissions-custom-solutions.html">📅 2019-02-28</a></li>
+<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+        </div>
+
+        <hr>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
