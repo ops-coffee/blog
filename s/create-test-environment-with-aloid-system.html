@@ -96,7 +96,7 @@
 <p>咖啡君维护了几十个不同类型项目，其中有相当一部分项目是对保密性有很高要求的，也就是说下个版本要上线的内容是不能提前泄露的，就像苹果新产品的介绍网站决不允许在产品发布之前流出一样，这种保密内容除了在制度上加以约束外，还需要一些技术手段来保障</p>
 <p>本次要介绍的Aloid系统就对保密有着一定的作用，这个系统的主要作用是快速生成临时环境，这个临时环境会有一定的有效期，过期自动清除，当然你也可以手动清除，同时这个环境会有唯一的<strong>随机</strong>访问地址，只有知道这个随机地址的人才能访问</p>
 <h2 id="_1">涉及技术</h2>
-<p>整个项目基于Django构建，前后端<strong>框架代码</strong>可以通过<a href="/s/L6Jud6gp5c9bbaUljUkNFA" target="_blank">这篇文章</a>获取，通过框架代码可以快速构建项目，添加自己需要的功能，需要说明的是框架代码并非这个项目源码</p>
+<p>整个项目基于Django构建，前后端<strong>框架代码</strong>可以通过<a href="https://blog.ops-coffee.cn/s/django-security-password-table-database-rsa.html" target="_blank">这篇文章</a>获取，通过框架代码可以快速构建项目，添加自己需要的功能，需要说明的是框架代码并非这个项目源码</p>
 <h3 id="subprocess">subprocess</h3>
 <p>编译部署难免要跟系统命令打交道，在调研了几种python执行系统命令的方法后选择了<code>subprocess</code>，subprocess作为<code>os.system</code>和<code>os.popen</code>的替代模块，功能更为强大，且为python自带模块，不需额外安装，使用方便</p>
 <p>在需要频繁执行系统命令的情况下，可以写一个类似下边这样的方法封装命令执行和返回输出，使代码简洁易读</p>
