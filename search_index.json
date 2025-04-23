@@ -1981,7 +1981,7 @@
     "date": "2018-11-19"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/6ztLq8Q591KnlQY33-YFdQ.html",
+    "url": "https://blog.ops-coffee.cn/s/overmind-system-automation-sql-data-migration.html",
     "title": "运维效率之数据迁移自动化",
     "content": "Overmind系统上线三个月以来，通过自动化SQL审核和数据迁移，显著提升了运维效率。本文详细介绍了系统的功能、工作流程和使用体验，展示了如何通过自动化工具实现‘一杯咖啡，轻松运维’的目标。",
     "keywords": "Overmind系统, 自动化运维, SQL自动审核, 数据迁移, 工单系统, 数据库运维",
