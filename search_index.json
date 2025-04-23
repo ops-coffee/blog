@@ -1995,7 +1995,7 @@
     "date": "2018-10-30"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/7gPLaCESHAB0dLgq7qZq5Q.html",
+    "url": "https://blog.ops-coffee.cn/s/django-model-to-dict-methods.html",
     "title": "Django model转字典的几种方法",
     "content": "本文介绍了在Django 2.0环境中，将Model转换为字典的几种常用方法，包括直接构建字典、使用__dict__、model_to_dict以及自定义to_dict方法，帮助开发者轻松处理前后端分离架构中的数据交换需求。",
     "keywords": "Django, Model转换字典, 前后端分离, Json格式, Django 2.0, model_to_dict, to_dict方法, Python开发",
