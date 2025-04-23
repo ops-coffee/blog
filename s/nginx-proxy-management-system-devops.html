@@ -107,7 +107,7 @@
 <p>证书模块可以用来管理所有用到的HTTPS证书，每一个证书都会在服务器上创建对应的crt和key文件，方便在实例中引用，对于证书的更新也只需要更新这一个地方就可以了，更新完成之后会自动reload以保证生效</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1203.02.png" /></p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1203.03.png" /></p>
-<p>黑白名单模块对应与Nginx的ACL设置，通过allow和deny来实现黑名单禁止访问，白名单允许访问，原理与证书管理差不多，都是根据输入内容生成对应的文件保存到服务器上，生成配置文件用到了jinja2，我的博客也是同样的方法生成的，可以看这篇文章来了解：<a href="/s/7g2wncQG1lIziOmtBxXwEw" target="_blank">利用Django徒手写个静态页面生成工具</a>，黑白名单最终在实例里以include的方式引入</p>
+<p>黑白名单模块对应与Nginx的ACL设置，通过allow和deny来实现黑名单禁止访问，白名单允许访问，原理与证书管理差不多，都是根据输入内容生成对应的文件保存到服务器上，生成配置文件用到了jinja2，我的博客也是同样的方法生成的，可以看这篇文章来了解：<a href="https://blog.ops-coffee.cn/s/build-static-blog-with-django-github-pages.html" target="_blank">利用Django徒手写个静态页面生成工具</a>，黑白名单最终在实例里以include的方式引入</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1203.04.png" /></p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1203.05.png" /></p>
 <p>无论是证书还是黑白名单最终都是为实例也就是Nginx的Server服务的，对于作为代理的Server配置很简单，下方是一个模板</p>
