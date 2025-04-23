@@ -346,7 +346,7 @@ https://blog.ops-coffee.cn/s/optimizing-continuous-deployment-with-docker.html
 https://blog.ops-coffee.cn/s/svn-hooks-introduction-and-application.html
 https://blog.ops-coffee.cn/s/django-security-password-table-database-rsa.html
 https://blog.ops-coffee.cn/s/django-aggregate-annotate-echarts-bar-chart.html
-https://blog.ops-coffee.cn/s/cMxdAfsTno56ixurmD4KXA.html
+https://blog.ops-coffee.cn/s/django-signals-for-notification-in-ticket-system.html
 https://blog.ops-coffee.cn/s/6ztLq8Q591KnlQY33-YFdQ.html
 https://blog.ops-coffee.cn/s/dpGqieL4WCmGdQh1AEG4Gw.html
 https://blog.ops-coffee.cn/s/7gPLaCESHAB0dLgq7qZq5Q.html
