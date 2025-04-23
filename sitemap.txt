@@ -332,7 +332,7 @@ https://blog.ops-coffee.cn/s/open-source-devops-system-tools-cloud-opendevops.ht
 https://blog.ops-coffee.cn/s/build-static-blog-with-django-github-pages.html
 https://blog.ops-coffee.cn/s/why-do-I-want-to-write-for-WeChat-official-account.html
 https://blog.ops-coffee.cn/elk/elasticsearch-select-query-DSL-api.html
-https://blog.ops-coffee.cn/s/JyUnN_OtQ2NtXcH0mtCJUg.html
+https://blog.ops-coffee.cn/s/nginx-optimized-practical-configurations.html
 https://blog.ops-coffee.cn/s/django-channels-websocket-devops-02.html
 https://blog.ops-coffee.cn/s/django-channels-websocket-devops-01.html
 https://blog.ops-coffee.cn/elk/elasticsearch-logstash-filebeat-registry.html

@@ -1876,7 +1876,7 @@
     "date": "2019-05-15"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/JyUnN_OtQ2NtXcH0mtCJUg.html",
+    "url": "https://blog.ops-coffee.cn/s/nginx-optimized-practical-configurations.html",
     "title": "Nginx的几个常用配置和技巧",
     "content": "本文介绍了Nginx中常见的实用配置，包括多域名配置、多站点配置、账号验证、列目录、默认站点、反向代理、keepalive设置以及404页面自动跳转等，帮助你更好地管理和优化Nginx服务器。",
     "keywords": "Nginx配置, 多域名配置, 多站点配置, 虚拟主机, 账号密码验证, 列目录, 默认站点, 禁止IP访问, 反向代理, keepalive, 404跳转",
