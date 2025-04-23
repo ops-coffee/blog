@@ -300,7 +300,7 @@ https://blog.ops-coffee.cn/s/my-investment-story-and-lessons-learned.html
 https://blog.ops-coffee.cn/s/why-no-github-link-in-articles.html
 https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-monitor-asciinema-audit.html
 https://blog.ops-coffee.cn/s/asciinema-recording-errors-and-corrections.html
-https://blog.ops-coffee.cn/s/oqZqGiQ3uNrNuT-nGrh9lg.html
+https://blog.ops-coffee.cn/s/asciinema-webssh-terminal-recording-playback.html
 https://blog.ops-coffee.cn/s/wechat-official-account-growth-and-future-directions.html
 https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-ssh-paramiko-stream.html
 https://blog.ops-coffee.cn/s/lVVe6OtX7U-USAHn4j5XZQ.html

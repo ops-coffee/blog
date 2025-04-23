@@ -1652,7 +1652,7 @@
     "date": "2019-11-18"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/oqZqGiQ3uNrNuT-nGrh9lg.html",
+    "url": "https://blog.ops-coffee.cn/s/asciinema-webssh-terminal-recording-playback.html",
     "title": "Asciinema：你的所有操作都将被录制",
     "content": "本文介绍了一个名为asciinema的开源终端录制工具，它可以将命令行的输入输出内容加上时间保存在文件中，并在终端或web浏览器中进行回放。asciinema的录制和播放基于文本，具有文件体积小、可暂停复制内容等优点，适用于操作审计和日志记录。",
     "keywords": "终端录制, asciinema, Jumpserver koko, 命令行录制工具, 终端回放, 文本录制, 视频替代, 审计日志, 操作记录, IT审计, linux命令录制, 终端会话记录, asciinema安装, asciinema使用, 终端录像, 操作过程记录, 自动录制, bash_profile设置, 操作审计",
