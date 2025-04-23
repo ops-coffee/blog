@@ -162,7 +162,7 @@ requests.get('https://ops-coffee.cn/api/cmdb/project', headers=headers)</code></
             return {&quot;state&quot;: 0, &quot;message&quot;: str(e)}</code></pre>
 
 
-<p>当编辑和删除配置文件时，操作与新建类似，修改Config表数据--&gt;Histror表添加新数据--&gt;修改或删除etcd数据，History表在每次新建或修改配置时都需要添加一条新数据，这里使用到了<a href="/s/cMxdAfsTno56ixurmD4KXA" target="_blank">Django的信号Signales</a>来实现，主要代码如下：</p>
+<p>当编辑和删除配置文件时，操作与新建类似，修改Config表数据--&gt;Histror表添加新数据--&gt;修改或删除etcd数据，History表在每次新建或修改配置时都需要添加一条新数据，这里使用到了<a href="https://blog.ops-coffee.cn/s/django-signals-for-notification-in-ticket-system.html" target="_blank">Django的信号Signales</a>来实现，主要代码如下：</p>
 <pre class="codehilite"><code>@receiver(signals.post_init, sender=Config)
 def migrate_notify_init(instance, **kwargs):
     instance.old_content = instance.content
