@@ -1925,7 +1925,7 @@
     "date": "2019-02-28"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/HwOi-ARTvvNjGTWrDmZIkQ.html",
+    "url": "https://blog.ops-coffee.cn/s/devops-tools-cmdb-cicd-config-db-proxy-wiki.html",
     "title": "我们自研的那些Devops工具",
     "content": "本文介绍了我们自研的DevOps工具系统，包括CMDB、varian、nova、kerrigan、overmind和proxy等，这些工具旨在提高运维效率，实现从开发到部署的全流程自动化。",
     "keywords": "DevOps, CMDB, 持续集成, 持续部署, 配置管理, 数据库运维, Kubernetes, 自动化运维",
