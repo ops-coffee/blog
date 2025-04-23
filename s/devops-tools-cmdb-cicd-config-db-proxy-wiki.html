@@ -102,7 +102,7 @@
 <p>我们CMDB系统上线时间比较久，之前仅是用来替代Excel表格维护信息用，今年为他增加了API，提供给第三方系统获取基础数据，API认证采用了JWT，关于API认证这篇文章有更多的介绍：<a href="https://blog.ops-coffee.cn/s/django-api-auth-jwt-token-without-drf.html" target="_blank">Django+JWT实现Token认证</a></p>
 <p><img alt="" loading="lazy" src="/static/images/2019/0130.cmdb.png" /></p>
 <h2 id="varian">varian</h2>
-<p>varian是我们内部开发的一个模块化的持续集成工具，主要负责项目从源代码到最终可部署程序的这个过程，现在有大部分项目已经是Docker部署了，那么varian会负责从源代码到最终打包好的项目镜像并上传到镜像仓库这个过程，其中会涉及到编译、合并、压缩等等操作，这篇文章有详细介绍我们varian的工作过程：<a href="/s/eM7SNKmtw2tDQtXBsBXyxQ" target="_blank">探秘varian：优雅的发布部署程序</a></p>
+<p>varian是我们内部开发的一个模块化的持续集成工具，主要负责项目从源代码到最终可部署程序的这个过程，现在有大部分项目已经是Docker部署了，那么varian会负责从源代码到最终打包好的项目镜像并上传到镜像仓库这个过程，其中会涉及到编译、合并、压缩等等操作，这篇文章有详细介绍我们varian的工作过程：<a href="https://blog.ops-coffee.cn/s/full-path-varian-cicd-system-cmdb-jenkins.html" target="_blank">探秘varian：优雅的发布部署程序</a></p>
 <p>varian的核心逻辑是把持续集成中的每一个小步骤拆分成独立的类或方法，最终根据项目类型的不同组装不同的类或方法，实现不同类型不同技术栈项目能够共用同一套持续集成程序，减少代码冗余，提高可用性</p>
 <h2 id="nova">nova</h2>
 <p>nova持续部署，配合varian做整个上线流程，nova主要负责的是将最终的可部署程序或者Docker镜像推送到线上各个节点更新的过程，因为线上环境比较复杂，有云主机、Docker容器、私有云、公有云k8s等，所以在nova这一层做了兼容</p>
