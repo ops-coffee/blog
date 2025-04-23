@@ -1953,7 +1953,7 @@
     "date": "2019-01-07"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/XJloJMj9gTbfGnpWN_YU2A.html",
+    "url": "https://blog.ops-coffee.cn/s/svn-hooks-introduction-and-application.html",
     "title": "SVN Hooks的介绍及使用",
     "content": "本文介绍了SVN Hooks的基本概念和应用场景，提供了两个实际案例，包括如何使用pre-commit Hook来强制执行log提交规则，以及如何使用post-commit Hook来发送提交成功后的邮件通知。",
     "keywords": "SVN Hooks, pre-commit, post-commit, SVN Hooks应用, log提交规则, 邮件通知",
