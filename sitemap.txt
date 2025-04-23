@@ -361,7 +361,7 @@ https://blog.ops-coffee.cn/s/devops-task-django-celery-setup-guide.html
 https://blog.ops-coffee.cn/s/full-path-varian-cicd-system-cmdb-jenkins.html
 https://blog.ops-coffee.cn/s/fault-handling-nginx-403-issue-python-jenkins-varian-deployment.html
 https://blog.ops-coffee.cn/s/sql-inception-overmind-automation-archery-yearning-bytebase.html
-https://blog.ops-coffee.cn/s/B_aNB8Y8snbSVLURONZ4Qg.html
+https://blog.ops-coffee.cn/s/django-model-update-guide-dict-json.html
 https://blog.ops-coffee.cn/python/p2p-investment-and-technical-implementation.html
 https://blog.ops-coffee.cn/s/GATfwNETo_aGsJHZdV5YzQ.html
 https://blog.ops-coffee.cn/ldap/openldap-sso-python-django-auth-ldap.html

@@ -2079,7 +2079,7 @@
     "date": "2018-07-20"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/B_aNB8Y8snbSVLURONZ4Qg.html",
+    "url": "https://blog.ops-coffee.cn/s/django-model-update-guide-dict-json.html",
     "title": "Django model update的各种用法介绍",
     "content": "本文介绍了在Django开发过程中如何对表进行增删改查，特别是model的更新操作，包括常规用法、auto_now属性字段的更新、json/dict类型数据更新、ForeignKey字段更新以及ManyToManyField字段更新等技巧。",
     "keywords": "Django, Model Update, Django 2.0, 数据库更新, ORM, ForeignKey, ManyToManyField, auto_now, json数据更新",
