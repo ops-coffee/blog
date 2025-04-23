@@ -1918,7 +1918,7 @@
     "date": "2019-03-08"
   },
   {
-    "url": "https://blog.ops-coffee.cn/s/BZsJnWLtv8ZwwlBYbWSbZQ.html",
+    "url": "https://blog.ops-coffee.cn/s/extending-django-permissions-custom-solutions.html",
     "title": "Django内置权限扩展案例",
     "content": "当Django的内置权限系统无法满足特定需求时，可以通过扩展权限系统来实现细粒度的控制，如针对不同用户开放不同数据库实例的权限。本文详细介绍了如何在Django项目中扩展权限系统，以满足特定的数据库权限管理需求。",
     "keywords": "Django权限系统, 自定义权限, Django模型权限, 数据库权限管理, Django权限扩展, Django ORM查询",
