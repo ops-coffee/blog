@@ -92,8 +92,12 @@
     <div class="container no-sidebar" style="min-height: calc(100vh - 300px) !important;">
   <div class="search-container" style="margin: 1.5rem auto; padding: 0 1rem; width: 100%; box-sizing: border-box;">
     <div class="search-box" style="display: flex; width: 100%; margin-bottom: 1.5rem;">
-      <input type="text" class="search-input" placeholder="页面已更新，请输入关键词，回车搜索最新内容..." id="searchInput" style="flex: 1; padding: 0.7rem 1rem; width: 100%;">
-      <button onclick="performSearch()" style="background-color: green; color: white; border: none; padding: 10px 20px;">搜索</button>
+      <input type="text" class="search-input" placeholder="页面已更新，请输入关键词，回车搜索最新内容..." id="searchInput" 
+        style="flex: 1; padding: 0.7rem 1rem; width: 100%; border: 1px solid #ddd; border-radius: 4px 0 0 4px;"
+      >
+      <button onclick="performSearch()" onmouseover="this.style.backgroundColor='#006400'" onmouseout="this.style.backgroundColor='green'"
+        style="background-color: green; color: white; border: none; padding: 0.7rem 1.5rem; cursor: pointer; border-radius: 0 4px 4px 0; transition: background-color 0.2s;"
+      >搜索</button>
     </div>
 
     <div class="search-results" id="searchResults" style="margin-top: 2rem;">
@@ -102,7 +106,7 @@
   </div>
 </div>
 
-<script async src="/static/posts/js/search.js"></script>
+<script defer src="/static/posts/js/search.js"></script>
   </div>
 
   </div>
