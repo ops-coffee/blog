@@ -1,5 +1,6 @@
 https://blog.ops-coffee.cn/
 https://blog.ops-coffee.cn/friends.html
+https://blog.ops-coffee.cn/travel/2025-nanxijiang.html
 https://blog.ops-coffee.cn/404.html
 https://blog.ops-coffee.cn/life/writing.html
 https://blog.ops-coffee.cn/life/money.html
@@ -31,7 +32,6 @@ https://blog.ops-coffee.cn/resume.html
 https://blog.ops-coffee.cn/travels.html
 https://blog.ops-coffee.cn/search.html
 https://blog.ops-coffee.cn/devops/index.html
-https://blog.ops-coffee.cn/index.html
 https://blog.ops-coffee.cn/veops/index.html
 https://blog.ops-coffee.cn/frontend/index.html
 https://blog.ops-coffee.cn/python/index.html
@@ -65,6 +65,7 @@ https://blog.ops-coffee.cn/tag/系统运维/index.html
 https://blog.ops-coffee.cn/tag/Python/index.html
 https://blog.ops-coffee.cn/tag/Django/index.html
 https://blog.ops-coffee.cn/tag/Devops/index.html
+https://blog.ops-coffee.cn/r/city-china-zhejiang-wenzhou-yongjia-nanxijiang-01.html
 https://blog.ops-coffee.cn/r/side-hustle-personal-website-advertising-success.html
 https://blog.ops-coffee.cn/r/rv-guide-diesel-water-electricity-management.html
 https://blog.ops-coffee.cn/r/city-china-zhejiang-jinhua-panan-318.html
