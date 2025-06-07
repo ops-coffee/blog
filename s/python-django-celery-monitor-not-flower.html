@@ -28,7 +28,7 @@
         <span class="menu-title">运维咖啡吧</span>
     </div> 
 
-    <div class="container no-sidebar">
+    <div class="container">
       <nav class="header-site">
         <ul>
           <li><a href="/">首页</a></li>
@@ -78,7 +78,7 @@
   </div>
 
   <header>
-    <div class="container no-sidebar">
+    <div class="container">
       <a href="/">
         <div class="name">运维咖啡吧</div>
         <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
@@ -87,7 +87,7 @@
   </header>
 
   <div id="content-wrap">
-    <div class="container no-sidebar">
+    <div class="container">
         <h1 id="art-title">监控Celery不一定非要使用Flower</h1>
 
         <p>运维平台中有许多的周期/定时/异步任务，例如证书扫描、数据备份、日志清理、线上作业等等，这些任务的执行都是借助于Celery来完成的。任务多了之后就会遇到一系列的问题，例如我之前写过的<a href="https://blog.ops-coffee.cn/s/django-celery-beat-queues-priority" target="_blank">将任务分多队列来解决生产环境下的任务优先级问题</a>，除此之外还要经常关注队列的状态以及任务的运行情况，为了方便查看任务以及Worker的运行情况，我在后台中添加了队列状态这个功能</p>
