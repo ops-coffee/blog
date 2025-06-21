@@ -1,5 +1,12 @@
 [
   {
+    "url": "https://blog.ops-coffee.cn/s/free-services-for-website-deployment.html",
+    "title": "免费服务清单｜零成本上线并维护你的网站",
+    "content": "本文分享了一份免费服务清单，帮助你低成本上线并维护网站，包括GitHub Pages、Cloudflare CDN、Cloudflare Pages等，让你的网站稳定运行多年。",
+    "keywords": "免费服务, 网站部署, GitHub Pages, Cloudflare CDN, Cloudflare Pages, Cloudflare R2, Vercel, Supabase, ClawCloud, Docker容器, Serverless Functions, PostgreSQL数据库",
+    "date": "2025-06-21"
+  },
+  {
     "url": "https://blog.ops-coffee.cn/r/city-china-zhejiang-jinhua-lanxi-youbu.html",
     "title": "兰溪｜从天下江南到游埠早茶，解锁小城慢时光",
     "content": "探索兰溪的诗意风光与独特美食，从兰溪牛肉面到游埠古镇的早茶文化，感受江南小城的魅力与历史沉淀。",

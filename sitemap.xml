@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
  <loc>https://blog.ops-coffee.cn</loc>
- <lastmod>2025-06-09</lastmod>
+ <lastmod>2025-06-21</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.cn/friends.html</loc>
@@ -271,6 +271,10 @@
 <url>
  <loc>https://blog.ops-coffee.cn/tag/Devops/index.html</loc>
  <lastmod>2020-10-27</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.cn/s/free-services-for-website-deployment.html</loc>
+ <lastmod>2025-06-21</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.cn/r/city-china-zhejiang-jinhua-lanxi-youbu.html</loc>
