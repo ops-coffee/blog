@@ -1,5 +1,12 @@
 [
   {
+    "url": "https://blog.ops-coffee.cn/s/auto-cicd-with-github-actions-dockerhub-clawcloud.html",
+    "title": "无需付费｜借助免费服务零成本上线动态网站",
+    "content": "本文详细介绍如何利用GitHub Actions、DockerHub和ClawCloud实现Django应用的自动化部署，通过Docker容器托管服务，轻松实现代码提交后的自动构建和部署，无需额外维护，低成本且高效。",
+    "keywords": "自动化部署, GitHub Actions, DockerHub, ClawCloud, Django, Python, 持续集成, 持续交付, Docker镜像, 免费服务, CI/CD",
+    "date": "2025-06-24"
+  },
+  {
     "url": "https://blog.ops-coffee.cn/s/free-services-for-website-deployment.html",
     "title": "免费服务清单｜零成本上线并维护你的网站",
     "content": "本文分享了一份免费服务清单，帮助你低成本上线并维护网站，包括GitHub Pages、Cloudflare CDN、Cloudflare Pages等，让你的网站稳定运行多年。",
