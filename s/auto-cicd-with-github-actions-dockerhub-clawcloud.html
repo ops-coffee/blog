@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="自动化部署, GitHub Actions, DockerHub, ClawCloud, Django, Python, 持续集成, 持续交付, Docker镜像, 免费服务, CI/CD" />
+  <meta name="description" content="本文详细介绍如何利用GitHub Actions、DockerHub和ClawCloud实现Django应用的自动化部署，通过Docker容器托管服务，轻松实现代码提交后的自动构建和部署，无需额外维护，低成本且高效。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>无需付费｜借助免费服务零成本上线动态网站</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="无需付费｜借助免费服务零成本上线动态网站" />
+  <meta property="og:description" content="本文详细介绍如何利用GitHub Actions、DockerHub和ClawCloud实现Django应用的自动化部署，通过Docker容器托管服务，轻松实现代码提交后的自动构建和部署，无需额外维护，低成本且高效。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">无需付费｜借助免费服务零成本上线动态网站</h1>
+
+        <p>上篇文章我推荐了自己用过的<a href="https://blog.ops-coffee.cn/s/free-services-for-website-deployment.html" target="_blank">几个十分好用的免费服务</a>，收藏点赞者无数，这些反馈足以说明了这份分享清单还是很有价值的。趁热打铁，结合自己的使用场景，详细介绍下我的使用方案，顺便再推荐几个用到的其他免费服务</p>
+<h2 id="_1">背景</h2>
+<p>我的博客后台是基于Python的Django框架开发的，大部分的免费托管服务例如GithubPages、CloudflarePages等都只支持静态网站部署，而对于像Django这样的动态网站则无能为力。因此很长一段时间里，我的博客后台都是跑在本地电脑上，这带来了不少的限制，例如无法随时随地的访问它，想要发表文章的话就必须要到我的电脑上处理，如果能将其部署在公网，就能摆脱对本地环境的依赖，真正做到随时随地无论在哪想发就发了</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0621.07.png" /></p>
+<p>单独购买服务器来运行这样一个小型项目显然不太划算。直到我遇到了ClawCloud，它提供Docker容器托管服务，这意味着无论你的应用是什么语言、什么框架写的，只要你能把它打包成一个Docker镜像，它就能正常运行。Django编写的Python应用当然也完全适用，更重要的是，ClawCLoud每月还提供5美元的免费额度，对于运行我这这种轻量级的应用那是绰绰有余了</p>
+<p>ClawCloud只是提供了让Web应用对外访问的能力，那整个Django应用又是如何实现更新和部署的呢？其实很简单，这部分我也实现了自动化，整体流程是：<strong>编写代码 -&gt; 提交代码到GitHub仓库 -&gt; 自动触发GithubAction构建镜像 -&gt; 镜像构建完成后自动推送到DockerHub仓库 -&gt; 最后在ClawCloud上更新镜像即可完成部署并正常访问了</strong></p>
+<p>上述流程可以简化为：Github -&gt; DockerHub -&gt; ClawCloud</p>
+<h2 id="github-actions">GitHub Actions</h2>
+<p>GitHub仓库负责代码托管，编写好代码之后直接提交到GitHub仓库，然后通过GitHub Actions实现在提交代码后自动打包成 Docker镜像并推送到DockerHub。这里的核心是GitHub Acitons，它是GitHub提供的一个持续集成与持续交付（CI/CD）平台，允许你在GitHub上自动化构建、测试、部署等软件开发流程。</p>
+<p>你可以将它理解为一个“自动化的工作流引擎”，与你的代码仓库紧密集成，支持自定义各种任务。更为重要的是GitHub Actions对于GitHub上的公共仓库是完全免费的，私有仓库也有一定的免费额度，正常个人用户来说完全够用</p>
+<p>利用GitHub Actions构建Docker镜像并上传到DockerHub也比较简单，首先就是需要一个Dockerfile，Dockerfile定义了镜像如何构建。以我的项目为例，Dockerfile放在项目根目录下，内容如下：</p>
+<pre class="codehilite"><code>FROM python:3.11.12-slim-bookworm
+
+WORKDIR /home/project/code
+
+# 安装构建依赖并替换清华源
+RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends \
+        build-essential libssl-dev libffi-dev python3-dev git openssh-client \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+# 替换为清华大学镜像源
+RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources \
+    &amp;&amp; sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources
+
+# 安装 Python 依赖
+COPY requirements.txt .
+RUN pip3 install --upgrade pip \
+    &amp;&amp; pip3 install --no-cache-dir -r requirements.txt
+
+# 复制项目代码
+COPY . .
+
+# 启动命令
+CMD [&quot;python3&quot;, &quot;/home/project/code/manage.py&quot;, &quot;runserver&quot;, &quot;0.0.0.0:8088&quot;]</code></pre>
+
+
+<p>然后在项目也就是Git仓库中创建一个<code>.github/workflows</code>目录，并在里面添加一个YAML格式的CI/CD工作流文件，就算是定义好GitHub Actions了。同样以我的项目为例，文件路径为<code>.github/workflows/docker-build-push.yml</code>，内容如下：</p>
+<pre class="codehilite"><code>name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main    # push main分支则触发
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Get git commit short SHA
+        id: gitversion
+        run: echo &quot;sha_short=$(git rev-parse --short=8 HEAD)&quot; &gt;&gt; $GITHUB_OUTPUT
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            37bar/ops-coffee-blog:latest
+            37bar/ops-coffee-blog:${{ steps.gitversion.outputs.sha_short }}
+          push: true</code></pre>
+
+
+<p>这个配置就实现了镜像的打包及上传，需要注意的是，上传镜像到DockerHub的话需要DockerHub的认证信息。这个认证可以从DockerHub获取，获取方法为：登录DockerHub -&gt; 右上角Account Settings -&gt; Personal access tokens -&gt; 点击Generate new token，就能生成新的Token</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0624.02.png" /></p>
+<p>生成的Token需要配置到GitHub仓库中，配置方法为：登录GitHub -&gt; 进入对应的仓库 -&gt; Settings -&gt; Secrets and variables -&gt; Actions -&gt; 点击New repository secrets添加两个密钥，分别为<code>DOCKERHUB_USERNAME</code>对应DockerHub仓库的用户名，<code>DOCKERHUB_TOKEN</code>为DockerHub的Token，这两个信息在上一步创建DockerHub的Token时都能获取到</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0624.03.png" /></p>
+<p>Github Actions无需额外开启，密钥配置完成后就能正常使用了。每次push代码到main分支都会自动触发构建流程，打包镜像并自动上传到DockerHub</p>
+<h2 id="dockerhub">DockerHub</h2>
+<p>整个构建过程中会用到DockerHub，DockerHub是Docker公司提供的一个云端容器镜像托管服务，允许用户存储和共享他们的Docker镜像，通过DockerHub，开发者可以轻松地发布自己的镜像、下载官方和其他用户的镜像，并且能够自动化构建流程。</p>
+<p>DockerHub有公共镜像库和私有镜像库，任何人都可以访问和使用公共镜像，用户可以创建私有仓库来存储不想公开分享的镜像，对于私有镜像库，DockerHub也有免费的额度</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0624.04.png" /></p>
+<p>DockerHub还支持Webhook，当新的镜像被推送至DockerHub后，可以通过Webhook触发外部服务的通知，例如通知持续集成/部署系统进行进一步的操作。遗憾的是，ClawCloud似乎并不支持Webhook触发应用重建，不然就能直接镜像更新完成后自动触发ClawCloud应用更新了，实现全链路的自动化</p>
+<h2 id="clawcloud">ClawCloud</h2>
+<p>既然应用已经打包成了Docker镜像，那就很容易通过ClawCloud来运行并对外提供服务了，打开ClawCloud官网，并通过Github登录，之所以要通过Github登录，是因为老的Github账号每个月有5美金的免费额度可用。登录ClawCloud之后 -&gt; 点击App Launchpad -&gt; Creat App，填写应用名称、Image信息、选择实例规格并配置网络映射之后就能可以进行构建了</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0624.05.png" /></p>
+<p>ClawCloud的使用有几点需要注意：</p>
+<p>1.ClawCloud对镜像仓库的支持比较友好，不仅支持DockerHub的公共镜像仓库镜像，还支持私有镜像仓库的镜像，当配置镜像为私有镜像仓库镜像时输入镜像仓库的地址、账号和密码并保证网络连接即可</p>
+<p>2.配置Network时可以指定容器内的端口，并进行映射。同时当开启<code>Public Access</code>时还可以配置自定义的域名，通过自定义域名访问容器服务。当然如果没有自定义域名，ClawCloud也会给你的应用生成一个默认的域名，可以通过这个默认域名进行公网访问</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0624.06.png" /></p>
+<p>3.ClawCloud也支持配置本地存储，如果你的项目有一些数据需要持久化存储，就可以通过添加 Local Storage 来实现。配置Local Storage后，Local Storage内的数据就不会随着容器销毁而删除。例如我的Django应用就直接用了SQLite文件数据库，数据库是需要持久存储的，我就用到了Local Storage创建了一个新的卷来进行单独存储，实现了数据持久化。当然ClawCloud也提供Database服务，可以跟应用打通，只是这就要考量免费的5$是否能够负担了</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0624.07.png" /></p>
+<p>最后，还是要提醒下，如果你的服务对SLA有要求，那还是付费吧，支持下这些平台的可持续发展，对于免费的服务，我们就不要对SLA有太高的要求。ClawCloud虽然整体稳定，但我在使用的这段时间内也遇到过一次故障，很长时间才修复，好在仅仅是后台而已，对SLA要求不高，短暂挂掉影响也不大。还是要感谢这些服务提供商提供了这么好用的服务，还免费给用户使用，功德无量</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/auto-cicd-with-github-actions-dockerhub-clawcloud.html">📅 2025-06-24</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="pagination">
+            <a href="https://blog.ops-coffee.cn/s/free-services-for-website-deployment.html" class="pagination-item prev-page">
+                <span class="pagination-arrow">←</span>
+                <span class="pagination-text">上一篇：<br>免费服务清单｜零成本上线并维护你的网站</span>
+            </a>
+            <a href="/archive.html" class="pagination-item next-page">
+                <span class="pagination-text">下一篇：<br>文章列表</span>
+                <span class="pagination-arrow">→</span>
+            </a>
+        </div>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
