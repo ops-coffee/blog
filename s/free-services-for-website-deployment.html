@@ -112,7 +112,7 @@
 <p>有了后端逻辑，自然就需要数据库来存储数据。想白嫖数据库？Supabase来了。Supabase提供了一整套后端即服务（BaaS）的解决方案，其核心是一个免费的PostgreSQL数据库。除此之外，它还提供了身份验证、即时API、对象存储、函数等功能。免费套餐包含一个共享的PostgreSQL数据库、5GB的存储和带宽以及每月5万的用户认证。它与上边的Vercel搭配非常完美，可以说是黄金组合，可以轻松地在Vercel的Serverless函数中调用Supabase的数据库和API，一个功能齐全的全栈应用就此诞生，而且还是免费的</p>
 <p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0621.05.png" /></p>
 <p>我的个人网站流量统计用了开源的umami，就是部署在Vercel上的，使用了Supabase提供的数据库存储。部署非常方便，vercel支持许多github托管的项目一键部署到vercel，umami就是其中之一</p>
-<h2 id="clawcloud">ClawCloud</h2>
+<h2 id="clawcloud"><a href="https://console.run.claw.cloud/signin?link=9BRETQHLUILQ" target="_blank">ClawCloud</a></h2>
 <p>如果你的应用比较复杂，不是简单的Node.js或者静态页面，比如一个Java应用、一个PHP论坛，甚至一个需要特定环境的Python爬虫，怎么办？答案是：Docker。ClawCloud提供Docker容器托管服务，这意味着无论你的应用是什么语言、什么框架写的，只要你能把它打包成一个Docker镜像，它就能帮你运行。ClawCLoud每个月提供5美元的免费额度。这个额度足以让你7x24小时不间断地跑一个小型容器实例了。对于个人博客、API服务或者一些自动化任务来说，简直是绝配</p>
 <p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0621.06.png" /></p>
 <p>我用Python的Django框架编写的<a href="https://blog.ops-coffee.cn/s/python-django-blog-admin-dashboard-tools.html" target="_blank">个人博客后台</a>就是打包成了Docker镜像，免费托管在Dockerhub，然后使用ClawCloud部署的，整条链路零成本</p>
