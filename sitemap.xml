@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
  <loc>https://blog.ops-coffee.cn</loc>
- <lastmod>2025-06-25</lastmod>
+ <lastmod>2025-06-27</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.cn/friends.html</loc>
@@ -274,7 +274,7 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.cn/s/auto-cicd-with-github-actions-dockerhub-clawcloud.html</loc>
- <lastmod>2025-06-24</lastmod>
+ <lastmod>2025-06-27</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.cn/s/free-services-for-website-deployment.html</loc>
