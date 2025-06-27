@@ -181,7 +181,7 @@ jobs:
 <p>DockerHub有公共镜像库和私有镜像库，任何人都可以访问和使用公共镜像，用户可以创建私有仓库来存储不想公开分享的镜像，对于私有镜像库，DockerHub也有免费的额度</p>
 <p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0624.04.png" /></p>
 <p>DockerHub还支持Webhook，当新的镜像被推送至DockerHub后，可以通过Webhook触发外部服务的通知，例如通知持续集成/部署系统进行进一步的操作。遗憾的是，ClawCloud似乎并不支持Webhook触发应用重建，不然就能直接镜像更新完成后自动触发ClawCloud应用更新了，实现全链路的自动化</p>
-<h2 id="clawcloud">ClawCloud</h2>
+<h2 id="clawcloud"><a href="https://console.run.claw.cloud/signin?link=9BRETQHLUILQ" target="_blank">ClawCloud</a></h2>
 <p>既然应用已经打包成了Docker镜像，那就很容易通过ClawCloud来运行并对外提供服务了，打开ClawCloud官网，并通过Github登录，之所以要通过Github登录，是因为老的Github账号每个月有5美金的免费额度可用。登录ClawCloud之后 -&gt; 点击App Launchpad -&gt; Creat App，填写应用名称、Image信息、选择实例规格并配置网络映射之后就能可以进行构建了</p>
 <p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0624.05.png" /></p>
 <p>ClawCloud的使用有几点需要注意：</p>
