@@ -7,7 +7,7 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Custom CMS v1.0</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 27 Jun 2025 10:25:12 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 28 Jun 2025 20:22:05 +0800</lastBuildDate>
     <item>
       <title>服务器SSH密钥管理规范</title>
       <link>https://blog.ops-coffee.cn/t/server-ssh-specification.html</link>
@@ -2254,6 +2254,13 @@
       <description>本文详细介绍如何利用GitHub Actions、DockerHub和ClawCloud实现Django应用的自动化部署，通过Docker容器托管服务，轻松实现代码提交后的自动构建和部署，无需额外维护，低成本且高效。</description>
       <guid isPermaLink="false">https://blog.ops-coffee.cn/s/auto-cicd-with-github-actions-dockerhub-clawcloud.html</guid>
       <pubDate>Tue, 24 Jun 2025 16:17:58 +0800</pubDate>
+    </item>
+    <item>
+      <title>我珍藏的免费服务清单，在这个GitHub项目面前不值一提</title>
+      <link>https://blog.ops-coffee.cn/s/free-for-dev-free-services-for-developers.html</link>
+      <description>探索free-for-dev项目，一个汇集了超过1600个免费开发者服务的宝藏库，覆盖软件开发全生命周期，助你在预算有限的情况下找到高性价比工具。</description>
+      <guid isPermaLink="false">https://blog.ops-coffee.cn/s/free-for-dev-free-services-for-developers.html</guid>
+      <pubDate>Sat, 28 Jun 2025 20:01:33 +0800</pubDate>
     </item>
   </channel>
 </rss>

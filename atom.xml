@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-06-27T10:25:12.246688+08:00</updated>
+  <updated>2025-06-28T20:22:05.184144+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -2576,5 +2576,13 @@
     <link href="https://blog.ops-coffee.cn/s/auto-cicd-with-github-actions-dockerhub-clawcloud.html"/>
     <summary>本文详细介绍如何利用GitHub Actions、DockerHub和ClawCloud实现Django应用的自动化部署，通过Docker容器托管服务，轻松实现代码提交后的自动构建和部署，无需额外维护，低成本且高效。</summary>
     <published>2025-06-24T16:17:58.201180+08:00</published>
+  </entry>
+  <entry>
+    <id>https://blog.ops-coffee.cn/s/free-for-dev-free-services-for-developers.html</id>
+    <title>我珍藏的免费服务清单，在这个GitHub项目面前不值一提</title>
+    <updated>2025-06-28T20:22:05.184144+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/s/free-for-dev-free-services-for-developers.html"/>
+    <summary>探索free-for-dev项目，一个汇集了超过1600个免费开发者服务的宝藏库，覆盖软件开发全生命周期，助你在预算有限的情况下找到高性价比工具。</summary>
+    <published>2025-06-28T20:01:33.958131+08:00</published>
   </entry>
 </feed>
