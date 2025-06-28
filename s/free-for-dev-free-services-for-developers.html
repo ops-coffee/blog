@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="free-for-dev, 免费服务, 开发者工具, 云服务, CI/CD, 数据库, 监控告警, 测试, 项目管理, GCP, AWS, Azure" />
+  <meta name="description" content="探索free-for-dev项目，一个汇集了超过1600个免费开发者服务的宝藏库，覆盖软件开发全生命周期，助你在预算有限的情况下找到高性价比工具。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>我珍藏的免费服务清单，在这个GitHub项目面前不值一提</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:title" content="我珍藏的免费服务清单，在这个GitHub项目面前不值一提" />
+  <meta property="og:description" content="探索free-for-dev项目，一个汇集了超过1600个免费开发者服务的宝藏库，覆盖软件开发全生命周期，助你在预算有限的情况下找到高性价比工具。" />
+  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
+
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">我珍藏的免费服务清单，在这个GitHub项目面前不值一提</h1>
+
+        <p>前边已经写了两篇关于免费服务的文章，第一篇<a href="https://blog.ops-coffee.cn/s/free-services-for-website-deployment.html" target="_blank">「零成本上线并维护你的网站」</a>分享了我自己在用的免费且好用的服务清单，第二篇<a href="https://blog.ops-coffee.cn/s/auto-cicd-with-github-actions-dockerhub-clawcloud.html" target="_blank">「借助免费服务零成本上线动态网站」</a>是在免费清单的基础上详细的介绍了我使用这些免费服务自动化上线应用的方案。当我还在为分享的这个珍藏免费服务列表而沾沾自喜时，朋友给发来了一个GitHub项目，瞬间就让我分享的这个列表黯然失色不值一提</p>
+<p>这个GitHub项目就是：<strong>free-for-dev</strong>，它系统性地梳理了几乎所有开发环节中可能用到的、提供免费套餐的服务，就像一张详尽的地图，可以引导我们在软件开发的世界里，找到那些极具性价比甚至零成本的解决方案</p>
+<p>项目地址：<a href="https://github.com/ripienaar/free-for-dev" target="_blank">https://github.com/ripienaar/free-for-dev</a></p>
+<h2 id="free-for-dev">free-for-dev</h2>
+<p><code>free-for-dev</code>是一个由全球开发者社区共同维护的列表，致力于收录所有为开发者提供免费使用额度的软件服务。目前已经有超过1700个用户参与共建，<strong>收录的免费软件服务也已超过1600个</strong>，覆盖了从云服务、代码托管、CI/CD、数据库、监控告警到测试、设计、项目管理等软件研发的全生命周期，绝对是每个开发者都应该收藏的宝藏仓库</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0628.01.png" /></p>
+<p>无论是在进行技术预研、搭建实验环境，还是启动一个预算有限的个人项目，<code>free-for-dev</code>都提供了一个可靠的资源索引。相比网上零散的推荐或博客文章，<code>free-for-dev</code>最大的优势在于它的结构化整理能力，它将所有的服务按照功能和使用场景分门别类，目前已经整理了<strong>超过60个分类</strong>，这种条理清晰的分类方式极大提高了查找效率，避免了大海捞针式的搜索过程</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0628.02.jpg" /></p>
+<p>从以上分类的内容就可见内容的翔实，真的太多了，我也就看了很小的一部分，发现了很多惊喜，例如这些全球超级云厂商GCP/AWS/Azure等等，都有许多的免费服务可以用，之前的了解还是太有限</p>
+<p><code>free-for-dev</code>不仅仅是简单的罗列了这些免费服务，针对每个免费服务还会提供官网链接、免费套餐说明、是否限制团队人数、是否有广告或水印、是否有自动续费陷阱、是否有地域限制等等关于免费的细节，这些细节对于开发者来说至关重要，尤其是在做产品选型或者创业初期时，能帮你快速判断某个服务是否真正适合自己</p>
+<p>虽然这个列表的服务都是免费的，但质量一点都不差，仓库的维护者在收录时也会对服务进行一定的筛选，尽量避免假免费服务的存在，并且仓库很活跃，一旦有些服务退出免费了，也能及时的删除，确保列表的纯净</p>
+<h2 id="_1">后记</h2>
+<p>在这个成本敏感的时代，无论是创业者、学生、自由职业者还是刚入行的开发者，应该都能从<code>free-for-dev</code>中找到适合自己使用的工具和服务，它不仅是一张地图，更是一座桥梁，连接着我们与世界级技术之间的距离。请慢慢探索，尽情享用吧</p>
+
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/free-for-dev-free-services-for-developers.html">📅 2025-06-28</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="pagination">
+            <a href="https://blog.ops-coffee.cn/s/auto-cicd-with-github-actions-dockerhub-clawcloud.html" class="pagination-item prev-page">
+                <span class="pagination-arrow">←</span>
+                <span class="pagination-text">上一篇：<br>无需付费｜借助免费服务零成本上线动态网站</span>
+            </a>
+            <a href="/archive.html" class="pagination-item next-page">
+                <span class="pagination-text">下一篇：<br>文章列表</span>
+                <span class="pagination-arrow">→</span>
+            </a>
+        </div>
+
+        <div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+        <div class="nav-cell">
+            <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+            <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+        </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami Cloud -->
+<script async src="https://umami.ops-coffee.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
+
+<!-- Google Adsense -->
+<script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</body>
+
+</html>
