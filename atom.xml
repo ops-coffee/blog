@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-06-30T20:28:29.925413+08:00</updated>
+  <updated>2025-07-01T18:03:40.300015+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -2592,5 +2592,13 @@
     <link href="https://blog.ops-coffee.cn/s/free-puzzle-tool-no-login-hd-download.html"/>
     <summary>本文介绍了一款由作者自主开发的在线拼图工具，无需登录，完全免费，拥有丰富的拼图模板和智能对齐功能，确保拼图效果高清且个性化。</summary>
     <published>2025-06-30T20:25:48.172942+08:00</published>
+  </entry>
+  <entry>
+    <id>https://blog.ops-coffee.cn/s/free-puzzle-tool-update-mobile-and-panning.html</id>
+    <title>一个纯粹的免费在线拼图工具，它进化了！</title>
+    <updated>2025-07-01T18:03:40.300015+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/s/free-puzzle-tool-update-mobile-and-panning.html"/>
+    <summary>免费在线拼图工具全新升级，支持移动端适配与图片视区平移，优化智能上传逻辑和可折叠侧边栏，带来更流畅的拼图体验，完全免费且注重隐私安全。</summary>
+    <published>2025-07-01T17:29:10.630700+08:00</published>
   </entry>
 </feed>
