@@ -1,5 +1,12 @@
 [
   {
+    "url": "https://blog.ops-coffee.cn/s/free-online-puzzle-tool-development-journey.html",
+    "title": "借免费拼图工具诞生的故事分享下使用AI编程的经验",
+    "content": "这篇文章讲述了一个免费在线拼图工具的开发过程，从解决个人需求到逐渐完善功能，最终成为一个完全免费、无需登录的工具。通过AI辅助开发，实现了多种创新功能，如移动端兼容、图片视区平移等，展现了AI时代的创作可能性。",
+    "keywords": "免费在线拼图工具, AI辅助开发, Gemini模型, 无需登录, 移动端兼容, 图片视区平移, 自定义边框, 添加文字, 添加箭头, 完全免费",
+    "date": "2025-07-02"
+  },
+  {
     "url": "https://blog.ops-coffee.cn/s/free-puzzle-tool-update-mobile-and-panning.html",
     "title": "一个纯粹的免费在线拼图工具，它进化了！",
     "content": "免费在线拼图工具全新升级，支持移动端适配与图片视区平移，优化智能上传逻辑和可折叠侧边栏，带来更流畅的拼图体验，完全免费且注重隐私安全。",
