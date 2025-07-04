@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-07-03T22:23:55.174683+08:00</updated>
+  <updated>2025-07-04T21:23:23.661046+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -2616,5 +2616,13 @@
     <link href="https://blog.ops-coffee.cn/s/new-version-free-puzzle-tool-update.html"/>
     <summary>免费拼图工具新版本上线，新增照片缩放、键盘操作、画布优化等功能，支持添加文字、箭头、方框和圆圈，完全免费，在线接反馈，快来体验吧！</summary>
     <published>2025-07-03T22:17:19.587713+08:00</published>
+  </entry>
+  <entry>
+    <id>https://blog.ops-coffee.cn/s/weekly-update-free-online-puzzle-tool.html</id>
+    <title>当我昨天还在为那1000流量欣喜时，今天直接翻10倍</title>
+    <updated>2025-07-04T21:23:23.661046+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/s/weekly-update-free-online-puzzle-tool.html"/>
+    <summary>本周更新了免费在线拼图工具，新增多语言支持和解决小屏幕下载模糊问题，支持11种语言，覆盖全球80%以上用户，提升用户体验和国际化支持。</summary>
+    <published>2025-07-04T21:07:56.436175+08:00</published>
   </entry>
 </feed>

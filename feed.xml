@@ -7,7 +7,7 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Custom CMS v1.0</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 03 Jul 2025 22:23:55 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 04 Jul 2025 21:23:23 +0800</lastBuildDate>
     <item>
       <title>服务器SSH密钥管理规范</title>
       <link>https://blog.ops-coffee.cn/t/server-ssh-specification.html</link>
@@ -2289,6 +2289,13 @@
       <description>免费拼图工具新版本上线，新增照片缩放、键盘操作、画布优化等功能，支持添加文字、箭头、方框和圆圈，完全免费，在线接反馈，快来体验吧！</description>
       <guid isPermaLink="false">https://blog.ops-coffee.cn/s/new-version-free-puzzle-tool-update.html</guid>
       <pubDate>Thu, 03 Jul 2025 22:17:19 +0800</pubDate>
+    </item>
+    <item>
+      <title>当我昨天还在为那1000流量欣喜时，今天直接翻10倍</title>
+      <link>https://blog.ops-coffee.cn/s/weekly-update-free-online-puzzle-tool.html</link>
+      <description>本周更新了免费在线拼图工具，新增多语言支持和解决小屏幕下载模糊问题，支持11种语言，覆盖全球80%以上用户，提升用户体验和国际化支持。</description>
+      <guid isPermaLink="false">https://blog.ops-coffee.cn/s/weekly-update-free-online-puzzle-tool.html</guid>
+      <pubDate>Fri, 04 Jul 2025 21:07:56 +0800</pubDate>
     </item>
   </channel>
 </rss>
