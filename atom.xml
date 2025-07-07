@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-07-05T18:25:33.322376+08:00</updated>
+  <updated>2025-07-07T20:27:48.947929+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -2632,5 +2632,13 @@
     <link href="https://blog.ops-coffee.cn/s/how-to-make-money-with-a-free-online-puzzle-tool.html"/>
     <summary>本次AI工具更新重点解决了移动端操作问题，优化了图像导出质量和文件大小，并增加了PWA支持，用户可享受更流畅的操作体验和更清晰的图像下载。</summary>
     <published>2025-07-05T18:24:01.157001+08:00</published>
+  </entry>
+  <entry>
+    <id>https://blog.ops-coffee.cn/s/thank-you-for-recommending-my-free-online-puzzle-tool.html</id>
+    <title>说真的朋友们，有被感动到</title>
+    <updated>2025-07-07T20:27:48.947929+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/s/thank-you-for-recommending-my-free-online-puzzle-tool.html"/>
+    <summary>新上线免费在线拼图工具受到用户热烈推荐，感谢虫部落、猫鱼周刊和那些免费的砖的宣传。更新修复了已知问题，提升了用户体验。</summary>
+    <published>2025-07-07T20:15:28.580265+08:00</published>
   </entry>
 </feed>
