@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-07-08T06:25:31.870061+08:00</updated>
+  <updated>2025-07-10T21:10:10.179515+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -2640,5 +2640,13 @@
     <link href="https://blog.ops-coffee.cn/s/thank-you-for-recommending-my-free-online-puzzle-tool.html"/>
     <summary>新上线免费在线拼图工具受到用户热烈推荐，感谢虫部落、猫鱼周刊和那些免费的砖的宣传。更新修复了已知问题，提升了用户体验。</summary>
     <published>2025-07-07T20:15:28.580265+08:00</published>
+  </entry>
+  <entry>
+    <id>https://blog.ops-coffee.cn/s/free-online-puzzle-tool-weekly-traffic-share.html</id>
+    <title>给朋友们分享个好消息 23.5k</title>
+    <updated>2025-07-10T21:10:10.179515+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/s/free-online-puzzle-tool-weekly-traffic-share.html"/>
+    <summary>刚刚更新了免费在线拼图工具，主要优化了边框与间距的分离设计，支持快捷键粘贴，并对SEO进行了特别优化，提升自然流量。</summary>
+    <published>2025-07-10T21:08:59.276155+08:00</published>
   </entry>
 </feed>
