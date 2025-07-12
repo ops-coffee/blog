@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-07-10T21:10:10.179515+08:00</updated>
+  <updated>2025-07-12T22:39:21.902856+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -2648,5 +2648,13 @@
     <link href="https://blog.ops-coffee.cn/s/free-online-puzzle-tool-weekly-traffic-share.html"/>
     <summary>刚刚更新了免费在线拼图工具，主要优化了边框与间距的分离设计，支持快捷键粘贴，并对SEO进行了特别优化，提升自然流量。</summary>
     <published>2025-07-10T21:08:59.276155+08:00</published>
+  </entry>
+  <entry>
+    <id>https://blog.ops-coffee.cn/s/ruan-yifeng-weekly-traffic-analysis-and-tool-update.html</id>
+    <title>免费在线拼图工具被「科技爱好者周刊」收录啦</title>
+    <updated>2025-07-12T22:39:21.902856+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/s/ruan-yifeng-weekly-traffic-analysis-and-tool-update.html"/>
+    <summary>阮一峰老师的科技爱好者周刊不仅是信息筛选的宝库，还能带来实实在在的流量。本文详细介绍了被周刊收录后的流量效果及免费拼图工具的最新更新。</summary>
+    <published>2025-07-12T22:36:20.803930+08:00</published>
   </entry>
 </feed>
