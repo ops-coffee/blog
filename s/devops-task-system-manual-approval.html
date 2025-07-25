@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
@@ -15,10 +14,36 @@
   <title>任务系统之手动审批</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cn" />
+  <meta property="og:url" content="https://blog.ops-coffee.cns/devops-task-system-manual-approval.html" />
   <meta property="og:title" content="任务系统之手动审批" />
   <meta property="og:description" content="本文详细介绍了如何在新开发的任务系统中实现手动审批功能，讨论了从单Celery任务到多Celery任务的转变，以及如何通过审批任务中断任务流执行，等待用户审批通过后再继续执行流程。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cn" />
+  <link rel="canonical" href="https://blog.ops-coffee.cns/devops-task-system-manual-approval.html" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "任务系统之手动审批",
+    "description": "本文详细介绍了如何在新开发的任务系统中实现手动审批功能，讨论了从单Celery任务到多Celery任务的转变，以及如何通过审批任务中断任务流执行，等待用户审批通过后再继续执行流程。",
+    "url": "https://blog.ops-coffee.cns/devops-task-system-manual-approval.html",
+    "author": {
+      "@type": "Person",
+      "name": "运维咖啡吧"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "运维咖啡吧",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://blog.ops-coffee.cn/favicon.ico"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://blog.ops-coffee.cns/devops-task-system-manual-approval.html"
+    }
+  }
+  </script>
   <!-- End SEO tag -->
 </head>
 
@@ -71,7 +96,7 @@
             </li>
             <li><a href="/tag/index.html" target="_self">标签</a></li>
             <li><a href="/archive.html" target="_self">归档</a></li>
-          <li class="search"><a href="/search.html" target="_self">🔍</a></li>
+          <li class="search"><a href="/search.html" target="_self" aria-label="搜索">🔍</a></li>
         </ul>
       </nav>
     </div>
@@ -319,18 +344,10 @@ def run_subtask(tid):
     </div>
   </footer>
   
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-7VC01SQQTE"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-7VC01SQQTE');
-</script>
+  <!-- Umami -->
+<script defer src="https://umami.opendevops.cn/script.js" data-website-id="a4aabd8e-32c7-40e7-a81c-119b909f2d0f"></script>
 
 <!-- Google Adsense -->
 <script data-ad-client="ca-pub-8944257246828217" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </body>
-
 </html>
