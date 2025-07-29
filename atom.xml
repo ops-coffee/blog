@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-07-22T16:28:18.757226+08:00</updated>
+  <updated>2025-07-24T23:32:57.220222+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -2688,5 +2688,13 @@
     <link href="https://blog.ops-coffee.cn/r/city-china-zhejiang-shaoxing-shengzhou-summer.html"/>
     <summary>逃离城市的喧嚣，到嵊州的山间小溪中玩水，感受夏日的清凉和美食的魅力。探索嵊州的清澈水域和特色小吃，享受一段宁静而放松的时光。</summary>
     <published>2025-07-22T16:02:18.750885+08:00</published>
+  </entry>
+  <entry>
+    <id>https://blog.ops-coffee.cn/s/collage-maker-another-milestone-passing-200k.html</id>
+    <title>又是一个里程碑，轻松超过200k</title>
+    <updated>2025-07-24T23:32:57.220222+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/s/collage-maker-another-milestone-passing-200k.html"/>
+    <summary>在线拼图工具访问量突破200k！了解其背后的故事与最新更新，包括高清下载优化、工具栏动态调整及全球化支持，体验完全免费、高清下载的在线拼图工具。</summary>
+    <published>2025-07-24T22:41:26.117960+08:00</published>
   </entry>
 </feed>
