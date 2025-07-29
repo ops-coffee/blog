@@ -10,46 +10,6 @@
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
   <entry>
-    <id>https://blog.ops-coffee.cn/t/server-ssh-specification.html</id>
-    <title>服务器SSH密钥管理规范</title>
-    <updated>2025-03-04T12:04:36.987049+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/t/server-ssh-specification.html"/>
-    <summary>本文提供了服务器SSH密钥管理的规范，包括密钥使用说明、生成方法及使用场景，确保服务器安全并有效管理SSH密钥。</summary>
-    <published>2019-05-21T23:50:35.400428+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/t/remove-github-commit-log.html</id>
-    <title>清除github所有历史提交记录的方法</title>
-    <updated>2025-03-04T12:04:40.316892+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/t/remove-github-commit-log.html"/>
-    <summary>本文介绍了两种删除Git提交历史的方法，操作前请确保备份数据，避免数据丢失。</summary>
-    <published>2019-05-21T23:52:19.965160+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/t/django-custom-error-page.html</id>
-    <title>Django自定义错误页面配置</title>
-    <updated>2025-03-04T14:54:46.433856+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/t/django-custom-error-page.html"/>
-    <summary>本文介绍了如何在Django 2.2版本中实现自定义错误页面，包括400、403、404和500错误页面的处理方法。通过修改settings.py文件、创建自定义错误页面和在视图中定义错误处理方法，可以有效管理Django应用中的错误响应。</summary>
-    <published>2019-05-21T23:53:48.992804+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/elk/elasticsearch-cat-api-shards-nodes.html</id>
-    <title>Elasticsearch各Cat命令详解</title>
-    <updated>2025-03-04T12:04:50.248265+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/elk/elasticsearch-cat-api-shards-nodes.html"/>
-    <summary>A comprehensive guide to Elasticsearch's Cat commands, covering various commands to monitor and manage your Elasticsearch cluster, indices, health, shards, and node information.</summary>
-    <published>2019-05-21T23:54:45.983122+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/t/git-readme-specification.html</id>
-    <title>git工程README结构规范</title>
-    <updated>2025-03-04T12:04:54.202280+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/t/git-readme-specification.html"/>
-    <summary>本指南详细介绍了项目的技术选型、项目目录结构、单页面模块说明、运行与打包方式，以及不同环境的部署策略。</summary>
-    <published>2019-05-25T18:14:20.665529+08:00</published>
-  </entry>
-  <entry>
     <id>https://blog.ops-coffee.cn/ldap/lightweight-directory-access-protocol-sso.html</id>
     <title>LDAP落地实战（一）：OpenLDAP部署及管理维护</title>
     <updated>2025-03-04T12:04:59.247182+08:00</updated>
@@ -72,22 +32,6 @@
     <link href="https://blog.ops-coffee.cn/ldap/openldap-sso-auth-gitlab-389-devops.html"/>
     <summary>本文详细介绍了如何在GitLab中集成OpenLDAP，实现账号认证，包括配置文件修改和重要参数解释，以及常见错误处理。</summary>
     <published>2018-07-01T00:00:00+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/ldap/openldap-sso-auth-jenkins-plugins-devops.html</id>
-    <title>LDAP落地实战（四）：Jenkins集成OpenLDAP认证</title>
-    <updated>2025-03-04T12:05:20.612736+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/ldap/openldap-sso-auth-jenkins-plugins-devops.html"/>
-    <summary>本文详细介绍了如何在Jenkins中集成LDAP认证，包括安装LDAP插件的两种方法、配置LDAP认证的步骤以及使用LDAP登录的注意事项。</summary>
-    <published>2018-08-10T00:00:00+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/ldap/openldap-sso-python-django-auth-ldap.html</id>
-    <title>LDAP落地实战（五）：Django集成OpenLDAP认证</title>
-    <updated>2025-03-04T12:05:26.808913+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/ldap/openldap-sso-python-django-auth-ldap.html"/>
-    <summary>本文详细介绍了如何在Django项目中集成LDAP认证，包括django-auth-ldap模块的使用方法、参数配置及示例代码，帮助开发者快速实现LDAP认证功能。</summary>
-    <published>2019-04-04T00:00:00+08:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.cn/s/devops-practice-and-tools-for-efficient-development-and-deployment.html</id>
@@ -136,6 +80,14 @@
     <link href="https://blog.ops-coffee.cn/s/full-path-varian-cicd-system-cmdb-jenkins.html"/>
     <summary>本文介绍了varian，一套基于Python3的部署系统，详细解释了其架构、设计思路、实现方法以及使用方式，展示了varian如何通过模块化设计解决大规模项目部署中的各种问题，提升部署效率和系统健壮性。</summary>
     <published>2018-07-31T00:00:00+08:00</published>
+  </entry>
+  <entry>
+    <id>https://blog.ops-coffee.cn/ldap/openldap-sso-auth-jenkins-plugins-devops.html</id>
+    <title>LDAP落地实战（四）：Jenkins集成OpenLDAP认证</title>
+    <updated>2025-03-04T12:05:20.612736+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/ldap/openldap-sso-auth-jenkins-plugins-devops.html"/>
+    <summary>本文详细介绍了如何在Jenkins中集成LDAP认证，包括安装LDAP插件的两种方法、配置LDAP认证的步骤以及使用LDAP登录的注意事项。</summary>
+    <published>2018-08-10T00:00:00+08:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.cn/s/devops-task-django-celery-setup-guide.html</id>
@@ -322,6 +274,14 @@
     <published>2019-03-28T00:00:00+08:00</published>
   </entry>
   <entry>
+    <id>https://blog.ops-coffee.cn/ldap/openldap-sso-python-django-auth-ldap.html</id>
+    <title>LDAP落地实战（五）：Django集成OpenLDAP认证</title>
+    <updated>2025-03-04T12:05:26.808913+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/ldap/openldap-sso-python-django-auth-ldap.html"/>
+    <summary>本文详细介绍了如何在Django项目中集成LDAP认证，包括django-auth-ldap模块的使用方法、参数配置及示例代码，帮助开发者快速实现LDAP认证功能。</summary>
+    <published>2019-04-04T00:00:00+08:00</published>
+  </entry>
+  <entry>
     <id>https://blog.ops-coffee.cn/s/django-channels-websocket-devops-01.html</id>
     <title>Django使用Channels实现WebSocket--上篇</title>
     <updated>2025-04-14T16:12:44.889271+08:00</updated>
@@ -360,6 +320,46 @@
     <link href="https://blog.ops-coffee.cn/s/why-do-I-want-to-write-for-WeChat-official-account.html"/>
     <summary>通过打造个人作品，不仅可以提升自身能力，还能帮助我们跳出‘时间换收入’的限制，选择一种一次投入能够持续获得收益的途径，如写作或开发个人项目。</summary>
     <published>2019-05-18T00:00:00+08:00</published>
+  </entry>
+  <entry>
+    <id>https://blog.ops-coffee.cn/t/server-ssh-specification.html</id>
+    <title>服务器SSH密钥管理规范</title>
+    <updated>2025-03-04T12:04:36.987049+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/t/server-ssh-specification.html"/>
+    <summary>本文提供了服务器SSH密钥管理的规范，包括密钥使用说明、生成方法及使用场景，确保服务器安全并有效管理SSH密钥。</summary>
+    <published>2019-05-21T23:50:35.400428+08:00</published>
+  </entry>
+  <entry>
+    <id>https://blog.ops-coffee.cn/t/remove-github-commit-log.html</id>
+    <title>清除github所有历史提交记录的方法</title>
+    <updated>2025-03-04T12:04:40.316892+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/t/remove-github-commit-log.html"/>
+    <summary>本文介绍了两种删除Git提交历史的方法，操作前请确保备份数据，避免数据丢失。</summary>
+    <published>2019-05-21T23:52:19.965160+08:00</published>
+  </entry>
+  <entry>
+    <id>https://blog.ops-coffee.cn/t/django-custom-error-page.html</id>
+    <title>Django自定义错误页面配置</title>
+    <updated>2025-03-04T14:54:46.433856+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/t/django-custom-error-page.html"/>
+    <summary>本文介绍了如何在Django 2.2版本中实现自定义错误页面，包括400、403、404和500错误页面的处理方法。通过修改settings.py文件、创建自定义错误页面和在视图中定义错误处理方法，可以有效管理Django应用中的错误响应。</summary>
+    <published>2019-05-21T23:53:48.992804+08:00</published>
+  </entry>
+  <entry>
+    <id>https://blog.ops-coffee.cn/elk/elasticsearch-cat-api-shards-nodes.html</id>
+    <title>Elasticsearch各Cat命令详解</title>
+    <updated>2025-03-04T12:04:50.248265+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/elk/elasticsearch-cat-api-shards-nodes.html"/>
+    <summary>A comprehensive guide to Elasticsearch's Cat commands, covering various commands to monitor and manage your Elasticsearch cluster, indices, health, shards, and node information.</summary>
+    <published>2019-05-21T23:54:45.983122+08:00</published>
+  </entry>
+  <entry>
+    <id>https://blog.ops-coffee.cn/t/git-readme-specification.html</id>
+    <title>git工程README结构规范</title>
+    <updated>2025-03-04T12:04:54.202280+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/t/git-readme-specification.html"/>
+    <summary>本指南详细介绍了项目的技术选型、项目目录结构、单页面模块说明、运行与打包方式，以及不同环境的部署策略。</summary>
+    <published>2019-05-25T18:14:20.665529+08:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.cn/s/build-static-blog-with-django-github-pages.html</id>

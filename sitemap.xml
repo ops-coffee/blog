@@ -1449,6 +1449,26 @@
  <lastmod>2025-04-23</lastmod>
 </url>
 <url>
+ <loc>https://blog.ops-coffee.cn/t/git-readme-specification.html</loc>
+ <lastmod>2025-03-04</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.cn/elk/elasticsearch-cat-api-shards-nodes.html</loc>
+ <lastmod>2025-03-04</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.cn/t/django-custom-error-page.html</loc>
+ <lastmod>2025-03-04</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.cn/t/remove-github-commit-log.html</loc>
+ <lastmod>2025-03-04</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.cn/t/server-ssh-specification.html</loc>
+ <lastmod>2025-03-04</lastmod>
+</url>
+<url>
  <loc>https://blog.ops-coffee.cn/s/why-do-I-want-to-write-for-WeChat-official-account.html</loc>
  <lastmod>2025-04-16</lastmod>
 </url>
@@ -1467,6 +1487,10 @@
 <url>
  <loc>https://blog.ops-coffee.cn/s/django-channels-websocket-devops-01.html</loc>
  <lastmod>2025-04-14</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.cn/ldap/openldap-sso-python-django-auth-ldap.html</loc>
+ <lastmod>2025-03-04</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.cn/elk/elasticsearch-logstash-filebeat-registry.html</loc>
@@ -1561,6 +1585,10 @@
  <lastmod>2025-04-22</lastmod>
 </url>
 <url>
+ <loc>https://blog.ops-coffee.cn/ldap/openldap-sso-auth-jenkins-plugins-devops.html</loc>
+ <lastmod>2025-03-04</lastmod>
+</url>
+<url>
  <loc>https://blog.ops-coffee.cn/s/full-path-varian-cicd-system-cmdb-jenkins.html</loc>
  <lastmod>2025-04-23</lastmod>
 </url>
@@ -1585,14 +1613,6 @@
  <lastmod>2025-04-23</lastmod>
 </url>
 <url>
- <loc>https://blog.ops-coffee.cn/ldap/openldap-sso-python-django-auth-ldap.html</loc>
- <lastmod>2025-03-04</lastmod>
-</url>
-<url>
- <loc>https://blog.ops-coffee.cn/ldap/openldap-sso-auth-jenkins-plugins-devops.html</loc>
- <lastmod>2025-03-04</lastmod>
-</url>
-<url>
  <loc>https://blog.ops-coffee.cn/ldap/openldap-sso-auth-gitlab-389-devops.html</loc>
  <lastmod>2025-03-04</lastmod>
 </url>
@@ -1602,26 +1622,6 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.cn/ldap/lightweight-directory-access-protocol-sso.html</loc>
- <lastmod>2025-03-04</lastmod>
-</url>
-<url>
- <loc>https://blog.ops-coffee.cn/t/git-readme-specification.html</loc>
- <lastmod>2025-03-04</lastmod>
-</url>
-<url>
- <loc>https://blog.ops-coffee.cn/elk/elasticsearch-cat-api-shards-nodes.html</loc>
- <lastmod>2025-03-04</lastmod>
-</url>
-<url>
- <loc>https://blog.ops-coffee.cn/t/django-custom-error-page.html</loc>
- <lastmod>2025-03-04</lastmod>
-</url>
-<url>
- <loc>https://blog.ops-coffee.cn/t/remove-github-commit-log.html</loc>
- <lastmod>2025-03-04</lastmod>
-</url>
-<url>
- <loc>https://blog.ops-coffee.cn/t/server-ssh-specification.html</loc>
  <lastmod>2025-03-04</lastmod>
 </url>
 </urlset>
