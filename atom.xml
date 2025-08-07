@@ -2,13 +2,21 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-07-30T01:23:07.600339+08:00</updated>
+  <updated>2025-08-07T14:30:25.107357+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
   <link href="https://blog.ops-coffee.cn" rel="alternate"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.cn/r/city-china-zhejiang-shaoxing-xinchang-yanbangshibadu.html</id>
+    <title>新昌｜从十八渡到十九峰，夏日徒步玩水的绝佳线路</title>
+    <updated>2025-08-07T14:30:25.107357+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/r/city-china-zhejiang-shaoxing-xinchang-yanbangshibadu.html"/>
+    <summary>探索绍兴嵊州的盐帮十八渡和穿岩十九峰，体验徒步与玩水的乐趣，感受山野之美，品味嵊州小吃，享受两天的完美旅行。</summary>
+    <published>2025-08-07T14:15:18.539306+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.cn/s/collage-maker-another-milestone-passing-200k.html</id>
     <title>又是一个里程碑，轻松超过200k</title>
@@ -160,13 +168,5 @@
     <link href="https://blog.ops-coffee.cn/r/city-china-zhejiang-wenzhou-yongjia-nanxijiang.html"/>
     <summary>本文总结了楠溪江自驾旅行的经历，推荐了最佳旅行线路和景点，包括暨家寨、狮子岩和林坑古村落，提供了实用的自驾游攻略和花费分析，适合计划前往楠溪江的旅行者参考。</summary>
     <published>2025-05-17T13:52:33.741723+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/r/city-china-zhejiang-wenzhou-yongjia-nanxijiang-06.html</id>
-    <title>楠溪江自驾Day6 - 交汇瓯江口</title>
-    <updated>2025-05-13T11:27:51.042402+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/city-china-zhejiang-wenzhou-yongjia-nanxijiang-06.html"/>
-    <summary>本文记录了楠溪江自驾游的最后一天，从太平岩出发，经过沙头镇，最终到达瓯北码头的旅程。文章详细描述了沿途的风景变化，楠溪江与瓯江的交汇，以及回程的体验，提供了丰富的旅游信息和感悟。</summary>
-    <published>2025-05-12T23:30:41.471945+08:00</published>
   </entry>
 </feed>
