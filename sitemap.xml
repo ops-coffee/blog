@@ -2,11 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
  <loc>https://blog.ops-coffee.cn</loc>
- <lastmod>2025-08-11</lastmod>
+ <lastmod>2025-08-12</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.cn/friends.html</loc>
  <changefreq>monthly</changefreq>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.cn/travel/2025-summer.html</loc>
+ <lastmod>2025-08-12</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.cn/img-comments.html</loc>
@@ -138,7 +142,7 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.cn/travels.html</loc>
- <lastmod>2025-08-07</lastmod>
+ <lastmod>2025-08-12</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.cn/search.html</loc>
@@ -279,6 +283,10 @@
 <url>
  <loc>https://blog.ops-coffee.cn/tag/Devops/index.html</loc>
  <lastmod>2020-10-27</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day1-departure.html</loc>
+ <lastmod>2025-08-12</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.cn/s/collage-maker-tool-gets-sponsored-after-one-month-launch.html</loc>
