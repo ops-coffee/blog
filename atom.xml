@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-08-12T08:36:04.791377+08:00</updated>
+  <updated>2025-08-13T06:58:32.187269+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.cn/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day2-wenlingshitang.html</id>
+    <title>久违的暑假｜沿海自驾DAY2 - 温岭</title>
+    <updated>2025-08-13T06:58:32.187269+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day2-wenlingshitang.html"/>
+    <summary>从绍兴到温岭的沿海自驾之旅，探索了104国道上的自然美景和温岭石塘的海利村，欣赏了最美的渔村风光和壮观的海景，是一次令人难忘的旅程。</summary>
+    <published>2025-08-13T00:02:00.704762+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day1-departure.html</id>
     <title>久违的暑假｜沿海自驾DAY1 - 出发</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.cn/s/auto-cicd-with-github-actions-dockerhub-clawcloud.html"/>
     <summary>本文详细介绍如何利用GitHub Actions、DockerHub和ClawCloud实现Django应用的自动化部署，通过Docker容器托管服务，轻松实现代码提交后的自动构建和部署，无需额外维护，低成本且高效。</summary>
     <published>2025-06-24T16:17:58.201180+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/s/free-services-for-website-deployment.html</id>
-    <title>免费服务清单｜零成本上线并维护你的网站</title>
-    <updated>2025-06-27T10:29:33.138449+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/s/free-services-for-website-deployment.html"/>
-    <summary>本文分享了一份免费服务清单，帮助你低成本上线并维护网站，包括GitHub Pages、Cloudflare CDN、Cloudflare Pages等，让你的网站稳定运行多年。</summary>
-    <published>2025-06-21T09:47:36.520291+08:00</published>
   </entry>
 </feed>

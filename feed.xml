@@ -8,7 +8,14 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Custom CMS v1.0</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 12 Aug 2025 08:36:04 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 13 Aug 2025 06:58:32 +0800</lastBuildDate>
+    <item>
+      <title>久违的暑假｜沿海自驾DAY2 - 温岭</title>
+      <link>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day2-wenlingshitang.html</link>
+      <description>从绍兴到温岭的沿海自驾之旅，探索了104国道上的自然美景和温岭石塘的海利村，欣赏了最美的渔村风光和壮观的海景，是一次令人难忘的旅程。</description>
+      <guid isPermaLink="false">https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day2-wenlingshitang.html</guid>
+      <pubDate>Wed, 13 Aug 2025 00:02:00 +0800</pubDate>
+    </item>
     <item>
       <title>久违的暑假｜沿海自驾DAY1 - 出发</title>
       <link>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day1-departure.html</link>
@@ -141,13 +148,6 @@
       <description>本文详细介绍如何利用GitHub Actions、DockerHub和ClawCloud实现Django应用的自动化部署，通过Docker容器托管服务，轻松实现代码提交后的自动构建和部署，无需额外维护，低成本且高效。</description>
       <guid isPermaLink="false">https://blog.ops-coffee.cn/s/auto-cicd-with-github-actions-dockerhub-clawcloud.html</guid>
       <pubDate>Tue, 24 Jun 2025 16:17:58 +0800</pubDate>
-    </item>
-    <item>
-      <title>免费服务清单｜零成本上线并维护你的网站</title>
-      <link>https://blog.ops-coffee.cn/s/free-services-for-website-deployment.html</link>
-      <description>本文分享了一份免费服务清单，帮助你低成本上线并维护网站，包括GitHub Pages、Cloudflare CDN、Cloudflare Pages等，让你的网站稳定运行多年。</description>
-      <guid isPermaLink="false">https://blog.ops-coffee.cn/s/free-services-for-website-deployment.html</guid>
-      <pubDate>Sat, 21 Jun 2025 09:47:36 +0800</pubDate>
     </item>
   </channel>
 </rss>
