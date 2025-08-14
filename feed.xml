@@ -8,7 +8,14 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Custom CMS v1.0</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 13 Aug 2025 06:58:32 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 14 Aug 2025 09:27:42 +0800</lastBuildDate>
+    <item>
+      <title>久违的暑假｜沿海自驾DAY3 - 洞头</title>
+      <link>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day3-dongtou.html</link>
+      <description>2025暑假沿海自驾第三天，探索温岭石塘的海利村与最美渔村，体验山顶TUTU咖啡馆的270°海景，随后前往洞头风景区，感受七彩洞头村的滨海生活气息。</description>
+      <guid isPermaLink="false">https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day3-dongtou.html</guid>
+      <pubDate>Thu, 14 Aug 2025 09:26:06 +0800</pubDate>
+    </item>
     <item>
       <title>久违的暑假｜沿海自驾DAY2 - 温岭</title>
       <link>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day2-wenlingshitang.html</link>
@@ -141,13 +148,6 @@
       <description>探索free-for-dev项目，一个汇集了超过1600个免费开发者服务的宝藏库，覆盖软件开发全生命周期，助你在预算有限的情况下找到高性价比工具。</description>
       <guid isPermaLink="false">https://blog.ops-coffee.cn/s/free-for-dev-free-services-for-developers.html</guid>
       <pubDate>Sat, 28 Jun 2025 20:01:33 +0800</pubDate>
-    </item>
-    <item>
-      <title>无需付费｜借助免费服务零成本上线动态网站</title>
-      <link>https://blog.ops-coffee.cn/s/auto-cicd-with-github-actions-dockerhub-clawcloud.html</link>
-      <description>本文详细介绍如何利用GitHub Actions、DockerHub和ClawCloud实现Django应用的自动化部署，通过Docker容器托管服务，轻松实现代码提交后的自动构建和部署，无需额外维护，低成本且高效。</description>
-      <guid isPermaLink="false">https://blog.ops-coffee.cn/s/auto-cicd-with-github-actions-dockerhub-clawcloud.html</guid>
-      <pubDate>Tue, 24 Jun 2025 16:17:58 +0800</pubDate>
     </item>
   </channel>
 </rss>
