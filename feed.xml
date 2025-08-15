@@ -8,7 +8,14 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Custom CMS v1.0</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 14 Aug 2025 09:27:42 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 15 Aug 2025 08:19:02 +0800</lastBuildDate>
+    <item>
+      <title>久违的暑假｜沿海自驾DAY4 - 泉州</title>
+      <link>https://blog.ops-coffee.cn/s/2025-summer-coastal-road-trip-day4-quanzhou-xijie.html</link>
+      <description>探索泉州西街、开元寺和清源山，体验闽南特色美食和夜茶文化，感受泉州的独特魅力与生活格调。</description>
+      <guid isPermaLink="false">https://blog.ops-coffee.cn/s/2025-summer-coastal-road-trip-day4-quanzhou-xijie.html</guid>
+      <pubDate>Fri, 15 Aug 2025 08:15:18 +0800</pubDate>
+    </item>
     <item>
       <title>久违的暑假｜沿海自驾DAY3 - 洞头</title>
       <link>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day3-dongtou.html</link>
@@ -141,13 +148,6 @@
       <description>本文介绍了一款由作者自主开发的在线拼图工具，无需登录，完全免费，拥有丰富的拼图模板和智能对齐功能，确保拼图效果高清且个性化。</description>
       <guid isPermaLink="false">https://blog.ops-coffee.cn/s/free-puzzle-tool-no-login-hd-download.html</guid>
       <pubDate>Mon, 30 Jun 2025 20:25:48 +0800</pubDate>
-    </item>
-    <item>
-      <title>我珍藏的免费服务清单，在这个GitHub项目面前不值一提</title>
-      <link>https://blog.ops-coffee.cn/s/free-for-dev-free-services-for-developers.html</link>
-      <description>探索free-for-dev项目，一个汇集了超过1600个免费开发者服务的宝藏库，覆盖软件开发全生命周期，助你在预算有限的情况下找到高性价比工具。</description>
-      <guid isPermaLink="false">https://blog.ops-coffee.cn/s/free-for-dev-free-services-for-developers.html</guid>
-      <pubDate>Sat, 28 Jun 2025 20:01:33 +0800</pubDate>
     </item>
   </channel>
 </rss>
