@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-08-18T10:51:10.672922+08:00</updated>
+  <updated>2025-08-19T10:47:22.948958+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.cn/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day8-quanzhou-shishi.html</id>
+    <title>久违的暑假｜沿海自驾DAY8 - 石狮</title>
+    <updated>2025-08-19T10:47:22.948958+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day8-quanzhou-shishi.html"/>
+    <summary>探索泉州洛阳桥的历史与建造技术，体验福建海滨的宁静与美丽，感受渔村生活与海滨风光的独特魅力。</summary>
+    <published>2025-08-19T10:46:43.719985+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day7-quanzhou-shaolin.html</id>
     <title>久违的暑假｜沿海自驾DAY7 - 少林</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.cn/s/weekly-update-free-online-puzzle-tool.html"/>
     <summary>本周更新了免费在线拼图工具，新增多语言支持和解决小屏幕下载模糊问题，支持11种语言，覆盖全球80%以上用户，提升用户体验和国际化支持。</summary>
     <published>2025-07-04T21:07:56.436175+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/s/new-version-free-puzzle-tool-update.html</id>
-    <title>周一才上线的网站，单单今天已经超过1000访问了</title>
-    <updated>2025-07-03T22:23:55.174683+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/s/new-version-free-puzzle-tool-update.html"/>
-    <summary>免费拼图工具新版本上线，新增照片缩放、键盘操作、画布优化等功能，支持添加文字、箭头、方框和圆圈，完全免费，在线接反馈，快来体验吧！</summary>
-    <published>2025-07-03T22:17:19.587713+08:00</published>
   </entry>
 </feed>
