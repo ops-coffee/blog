@@ -8,7 +8,14 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Custom CMS v1.0</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 20 Aug 2025 10:54:59 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 21 Aug 2025 10:35:40 +0800</lastBuildDate>
+    <item>
+      <title>久违的暑假｜沿海自驾DAY10 - 厦门</title>
+      <link>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day10-xiamen-huandao.html</link>
+      <description>2025暑假沿海自驾的第十天，探索了厦门的沿海风光与历史文化。骑行环岛路，感受海风与椰林，参观大嶝岛上的金门县政府旧址，体验厦门的浪漫与松弛。</description>
+      <guid isPermaLink="false">https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day10-xiamen-huandao.html</guid>
+      <pubDate>Thu, 21 Aug 2025 10:35:40 +0800</pubDate>
+    </item>
     <item>
       <title>久违的暑假｜沿海自驾DAY9 - 晋江</title>
       <link>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day9-quanzhou-jinjiang.html</link>
@@ -141,13 +148,6 @@
       <description>新上线免费在线拼图工具受到用户热烈推荐，感谢虫部落、猫鱼周刊和那些免费的砖的宣传。更新修复了已知问题，提升了用户体验。</description>
       <guid isPermaLink="false">https://blog.ops-coffee.cn/s/thank-you-for-recommending-my-free-online-puzzle-tool.html</guid>
       <pubDate>Mon, 07 Jul 2025 20:15:28 +0800</pubDate>
-    </item>
-    <item>
-      <title>做这么个免费在线拼图工具，如何赚钱呢</title>
-      <link>https://blog.ops-coffee.cn/s/how-to-make-money-with-a-free-online-puzzle-tool.html</link>
-      <description>本次AI工具更新重点解决了移动端操作问题，优化了图像导出质量和文件大小，并增加了PWA支持，用户可享受更流畅的操作体验和更清晰的图像下载。</description>
-      <guid isPermaLink="false">https://blog.ops-coffee.cn/s/how-to-make-money-with-a-free-online-puzzle-tool.html</guid>
-      <pubDate>Sat, 05 Jul 2025 18:24:01 +0800</pubDate>
     </item>
   </channel>
 </rss>

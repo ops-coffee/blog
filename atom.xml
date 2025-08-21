@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-08-20T10:54:59.286456+08:00</updated>
+  <updated>2025-08-21T10:35:40.456409+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.cn/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day10-xiamen-huandao.html</id>
+    <title>久违的暑假｜沿海自驾DAY10 - 厦门</title>
+    <updated>2025-08-21T10:35:40.456409+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day10-xiamen-huandao.html"/>
+    <summary>2025暑假沿海自驾的第十天，探索了厦门的沿海风光与历史文化。骑行环岛路，感受海风与椰林，参观大嶝岛上的金门县政府旧址，体验厦门的浪漫与松弛。</summary>
+    <published>2025-08-21T10:35:40.440901+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day9-quanzhou-jinjiang.html</id>
     <title>久违的暑假｜沿海自驾DAY9 - 晋江</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.cn/s/thank-you-for-recommending-my-free-online-puzzle-tool.html"/>
     <summary>新上线免费在线拼图工具受到用户热烈推荐，感谢虫部落、猫鱼周刊和那些免费的砖的宣传。更新修复了已知问题，提升了用户体验。</summary>
     <published>2025-07-07T20:15:28.580265+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/s/how-to-make-money-with-a-free-online-puzzle-tool.html</id>
-    <title>做这么个免费在线拼图工具，如何赚钱呢</title>
-    <updated>2025-07-05T18:25:33.322376+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/s/how-to-make-money-with-a-free-online-puzzle-tool.html"/>
-    <summary>本次AI工具更新重点解决了移动端操作问题，优化了图像导出质量和文件大小，并增加了PWA支持，用户可享受更流畅的操作体验和更清晰的图像下载。</summary>
-    <published>2025-07-05T18:24:01.157001+08:00</published>
   </entry>
 </feed>
