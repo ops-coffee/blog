@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-08-21T10:35:40.456409+08:00</updated>
+  <updated>2025-08-22T04:02:40.186727+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.cn/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day11-xiamen-shatan.html</id>
+    <title>久违的暑假｜沿海自驾DAY11 - 沙滩</title>
+    <updated>2025-08-22T04:02:40.186727+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day11-xiamen-shatan.html"/>
+    <summary>2025年暑假，厦门环岛骑行成为了最佳旅行体验。文章详细记录了从环岛东路到白城沙滩的骑行经历，以及在演武大桥观景平台欣赏厦门湾美景的难忘时刻。</summary>
+    <published>2025-08-22T04:02:40.177343+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day10-xiamen-huandao.html</id>
     <title>久违的暑假｜沿海自驾DAY10 - 厦门</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.cn/s/free-online-puzzle-tool-weekly-traffic-share.html"/>
     <summary>刚刚更新了免费在线拼图工具，主要优化了边框与间距的分离设计，支持快捷键粘贴，并对SEO进行了特别优化，提升自然流量。</summary>
     <published>2025-07-10T21:08:59.276155+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/s/thank-you-for-recommending-my-free-online-puzzle-tool.html</id>
-    <title>说真的朋友们，有被感动到</title>
-    <updated>2025-07-08T06:25:31.870061+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/s/thank-you-for-recommending-my-free-online-puzzle-tool.html"/>
-    <summary>新上线免费在线拼图工具受到用户热烈推荐，感谢虫部落、猫鱼周刊和那些免费的砖的宣传。更新修复了已知问题，提升了用户体验。</summary>
-    <published>2025-07-07T20:15:28.580265+08:00</published>
   </entry>
 </feed>
