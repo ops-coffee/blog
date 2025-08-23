@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-08-22T04:02:40.186727+08:00</updated>
+  <updated>2025-08-23T15:36:36.404627+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.cn/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day12-xiamen-budao.html</id>
+    <title>久违的暑假｜沿海自驾DAY12 - 步道</title>
+    <updated>2025-08-23T15:36:36.404627+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day12-xiamen-budao.html"/>
+    <summary>在厦门山海步道徒步，体验云海线和林海线的独特魅力，穿过山间与水系，感受城市与自然的完美结合，是一次难忘的旅行经历。</summary>
+    <published>2025-08-23T15:28:25.164997+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day11-xiamen-shatan.html</id>
     <title>久违的暑假｜沿海自驾DAY11 - 沙滩</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.cn/s/ruan-yifeng-weekly-traffic-analysis-and-tool-update.html"/>
     <summary>阮一峰老师的科技爱好者周刊不仅是信息筛选的宝库，还能带来实实在在的流量。本文详细介绍了被周刊收录后的流量效果及免费拼图工具的最新更新。</summary>
     <published>2025-07-12T22:36:20.803930+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/s/free-online-puzzle-tool-weekly-traffic-share.html</id>
-    <title>给朋友们分享个好消息 23.5k</title>
-    <updated>2025-07-10T21:10:10.179515+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/s/free-online-puzzle-tool-weekly-traffic-share.html"/>
-    <summary>刚刚更新了免费在线拼图工具，主要优化了边框与间距的分离设计，支持快捷键粘贴，并对SEO进行了特别优化，提升自然流量。</summary>
-    <published>2025-07-10T21:08:59.276155+08:00</published>
   </entry>
 </feed>

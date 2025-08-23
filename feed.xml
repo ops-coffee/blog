@@ -8,7 +8,14 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Custom CMS v1.0</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 22 Aug 2025 04:02:40 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 23 Aug 2025 15:36:36 +0800</lastBuildDate>
+    <item>
+      <title>久违的暑假｜沿海自驾DAY12 - 步道</title>
+      <link>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day12-xiamen-budao.html</link>
+      <description>在厦门山海步道徒步，体验云海线和林海线的独特魅力，穿过山间与水系，感受城市与自然的完美结合，是一次难忘的旅行经历。</description>
+      <guid isPermaLink="false">https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day12-xiamen-budao.html</guid>
+      <pubDate>Sat, 23 Aug 2025 15:28:25 +0800</pubDate>
+    </item>
     <item>
       <title>久违的暑假｜沿海自驾DAY11 - 沙滩</title>
       <link>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day11-xiamen-shatan.html</link>
@@ -141,13 +148,6 @@
       <description>阮一峰老师的科技爱好者周刊不仅是信息筛选的宝库，还能带来实实在在的流量。本文详细介绍了被周刊收录后的流量效果及免费拼图工具的最新更新。</description>
       <guid isPermaLink="false">https://blog.ops-coffee.cn/s/ruan-yifeng-weekly-traffic-analysis-and-tool-update.html</guid>
       <pubDate>Sat, 12 Jul 2025 22:36:20 +0800</pubDate>
-    </item>
-    <item>
-      <title>给朋友们分享个好消息 23.5k</title>
-      <link>https://blog.ops-coffee.cn/s/free-online-puzzle-tool-weekly-traffic-share.html</link>
-      <description>刚刚更新了免费在线拼图工具，主要优化了边框与间距的分离设计，支持快捷键粘贴，并对SEO进行了特别优化，提升自然流量。</description>
-      <guid isPermaLink="false">https://blog.ops-coffee.cn/s/free-online-puzzle-tool-weekly-traffic-share.html</guid>
-      <pubDate>Thu, 10 Jul 2025 21:08:59 +0800</pubDate>
     </item>
   </channel>
 </rss>
