@@ -1,0 +1,37 @@
+# .github/workflows/sync-to-r2.yml
+
+name: Sync to Cloudflare R2
+
+# 控制触发时机：当代码 push 到 main 分支时触发
+on:
+  push:
+    branches:
+      - main  # 你可以改成你的主分支名，比如 master
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest # 使用最新的 Ubuntu 运行环境
+    
+    steps:
+      # 第一步：检出（下载）你的仓库代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 第二步：使用一个现成的 Action 来执行同步
+      - name: Sync files to R2 with rclone
+        uses: wei/rclone@v1
+        with:
+          args: |
+            sync . r2:${{ secrets.R2_BUCKET_NAME }} --progress --fast-list
+            # 'sync' 表示同步，会删除 R2 有但本地没有的文件
+            # '.'  表示同步当前目录（整个仓库）
+            # 'r2:${{ secrets.R2_BUCKET_NAME }}' 是目标地址
+            # '--progress' 显示进度
+            # '--fast-list' 优化大量文件时的性能
+        env:
+          # 配置 rclone 连接 R2 所需的环境变量
+          RCLONE_CONFIG_R2_TYPE: "s3"
+          RCLONE_CONFIG_R2_PROVIDER: "Cloudflare"
+          RCLONE_CONFIG_R2_ACCOUNT: ${{ secrets.R2_ACCOUNT_ID }}
+          RCLONE_CONFIG_R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          RCLONE_CONFIG_R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
