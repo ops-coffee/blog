@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-08-24T11:05:46.396491+08:00</updated>
+  <updated>2025-08-24T13:13:05.892539+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.cn/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day13-xiamen-jimei.html</id>
+    <title>久违的暑假｜沿海自驾DAY13 - 集美</title>
+    <updated>2025-08-24T13:13:05.892539+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day13-xiamen-jimei.html"/>
+    <summary>文章记录了在厦门的图书馆、博物馆及集美学村的游览经历，体验了图书馆的静谧、博物馆的历史文化以及集美学村的中西合璧建筑，感受了厦门的文化魅力。</summary>
+    <published>2025-08-24T13:13:05.883987+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day12-xiamen-budao.html</id>
     <title>久违的暑假｜沿海自驾DAY12 - 步道</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.cn/s/how-to-create-a-successful-product-online-photo-collage.html"/>
     <summary>免费在线拼图工具更新，支持拖拽上传、智能自动布局和个性化配置持久化，提升用户体验，无需登录，高清下载，无水印，完全免费。</summary>
     <published>2025-07-16T11:40:35.148715+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/s/ruan-yifeng-weekly-traffic-analysis-and-tool-update.html</id>
-    <title>免费在线拼图工具被「科技爱好者周刊」收录啦</title>
-    <updated>2025-07-12T22:39:21.902856+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/s/ruan-yifeng-weekly-traffic-analysis-and-tool-update.html"/>
-    <summary>阮一峰老师的科技爱好者周刊不仅是信息筛选的宝库，还能带来实实在在的流量。本文详细介绍了被周刊收录后的流量效果及免费拼图工具的最新更新。</summary>
-    <published>2025-07-12T22:36:20.803930+08:00</published>
   </entry>
 </feed>
