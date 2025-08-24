@@ -18,7 +18,7 @@ jobs:
       - name: Sync files to R2 using AWS CLI
         uses: jakejarvis/s3-sync-action@master
         with:
-          args: --delete --acl public-read --follow-symlinks
+          args: --delete --acl public-read --follow-symlinks --size-only
         env:
           AWS_S3_BUCKET: ${{ secrets.R2_BUCKET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
