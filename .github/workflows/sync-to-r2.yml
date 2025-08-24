@@ -1,37 +1,37 @@
 # .github/workflows/sync-to-r2.yml
 
-name: Sync to Cloudflare R2
+name: Sync to Cloudflare R2 (Alternative Method)
 
-# 控制触发时机：当代码 push 到 main 分支时触发
 on:
   push:
     branches:
-      - main  # 你可以改成你的主分支名，比如 master
+      - main  # 或者你的主分支名，比如 master
 
 jobs:
   sync:
-    runs-on: ubuntu-latest # 使用最新的 Ubuntu 运行环境
+    runs-on: ubuntu-latest
     
     steps:
-      # 第一步：检出（下载）你的仓库代码
+      # 第一步：检出仓库代码
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 第二步：使用一个现成的 Action 来执行同步
-      - name: Sync files to R2 with rclone
-        uses: wei/rclone@v1
+      # 第二步：使用 AWS CLI Action 同步文件到 R2
+      - name: Sync files to R2 using AWS CLI
+        uses: jakejarvis/s3-sync-action@master # 注意：我们换了一个新的 Action
         with:
-          args: |
-            sync . r2:${{ secrets.R2_BUCKET_NAME }} --progress --fast-list
-            # 'sync' 表示同步，会删除 R2 有但本地没有的文件
-            # '.'  表示同步当前目录（整个仓库）
-            # 'r2:${{ secrets.R2_BUCKET_NAME }}' 是目标地址
-            # '--progress' 显示进度
-            # '--fast-list' 优化大量文件时的性能
+          # --delete: 删除 R2 有但仓库没有的文件，实现真正同步
+          # --acl public-read: 让上传的文件公开可读（如果你的 R2 桶是公开的）
+          args: --delete --acl public-read --follow-symlinks
         env:
-          # 配置 rclone 连接 R2 所需的环境变量
-          RCLONE_CONFIG_R2_TYPE: "s3"
-          RCLONE_CONFIG_R2_PROVIDER: "Cloudflare"
-          RCLONE_CONFIG_R2_ACCOUNT: ${{ secrets.R2_ACCOUNT_ID }}
-          RCLONE_CONFIG_R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          RCLONE_CONFIG_R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          # 环境变量名称变了，但它们引用的 secrets 还是一样的
+          AWS_S3_BUCKET: ${{ secrets.R2_BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          
+          # 这是最关键的一步：为 R2 指定正确的 Endpoint URL
+          # 这个 Action 需要我们明确告诉它服务器地址
+          AWS_S3_ENDPOINT: "https://`${{ secrets.R2_ACCOUNT_ID }}`.r2.cloudflarestorage.com"
+          
+          # R2 需要将 AWS Region 设置为 "auto"
+          AWS_REGION: "auto"
