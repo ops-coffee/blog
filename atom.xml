@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-08-24T13:13:05.892539+08:00</updated>
+  <updated>2025-08-25T10:38:57.496202+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.cn/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day14-xiamen-jiageng.html</id>
+    <title>久违的暑假｜沿海自驾DAY14 - 嘉庚</title>
+    <updated>2025-08-25T10:38:57.496202+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day14-xiamen-jiageng.html"/>
+    <summary/>
+    <published>2025-08-25T10:38:57.489831+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day13-xiamen-jimei.html</id>
     <title>久违的暑假｜沿海自驾DAY13 - 集美</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.cn/s/online-photo-collage-website-success-story.html"/>
     <summary>本文讲述了一个在线拼图网站如何在15天内实现超过10万访问量的成功故事。文章涵盖了产品的快速开发过程、用户反馈的积极影响以及新增的水印系统和复制到剪贴板功能。</summary>
     <published>2025-07-17T19:28:04.563181+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/s/how-to-create-a-successful-product-online-photo-collage.html</id>
-    <title>当我还在为那10倍流量狂喜时，它已悄悄变成了日常</title>
-    <updated>2025-07-16T11:55:32.287033+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/s/how-to-create-a-successful-product-online-photo-collage.html"/>
-    <summary>免费在线拼图工具更新，支持拖拽上传、智能自动布局和个性化配置持久化，提升用户体验，无需登录，高清下载，无水印，完全免费。</summary>
-    <published>2025-07-16T11:40:35.148715+08:00</published>
   </entry>
 </feed>

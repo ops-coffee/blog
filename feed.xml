@@ -8,7 +8,13 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Custom CMS v1.0</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 24 Aug 2025 13:13:05 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 25 Aug 2025 10:38:57 +0800</lastBuildDate>
+    <item>
+      <title>久违的暑假｜沿海自驾DAY14 - 嘉庚</title>
+      <link>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day14-xiamen-jiageng.html</link>
+      <guid isPermaLink="false">https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day14-xiamen-jiageng.html</guid>
+      <pubDate>Mon, 25 Aug 2025 10:38:57 +0800</pubDate>
+    </item>
     <item>
       <title>久违的暑假｜沿海自驾DAY13 - 集美</title>
       <link>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day13-xiamen-jimei.html</link>
@@ -141,13 +147,6 @@
       <description>本文讲述了一个在线拼图网站如何在15天内实现超过10万访问量的成功故事。文章涵盖了产品的快速开发过程、用户反馈的积极影响以及新增的水印系统和复制到剪贴板功能。</description>
       <guid isPermaLink="false">https://blog.ops-coffee.cn/s/online-photo-collage-website-success-story.html</guid>
       <pubDate>Thu, 17 Jul 2025 19:28:04 +0800</pubDate>
-    </item>
-    <item>
-      <title>当我还在为那10倍流量狂喜时，它已悄悄变成了日常</title>
-      <link>https://blog.ops-coffee.cn/s/how-to-create-a-successful-product-online-photo-collage.html</link>
-      <description>免费在线拼图工具更新，支持拖拽上传、智能自动布局和个性化配置持久化，提升用户体验，无需登录，高清下载，无水印，完全免费。</description>
-      <guid isPermaLink="false">https://blog.ops-coffee.cn/s/how-to-create-a-successful-product-online-photo-collage.html</guid>
-      <pubDate>Wed, 16 Jul 2025 11:40:35 +0800</pubDate>
     </item>
   </channel>
 </rss>
