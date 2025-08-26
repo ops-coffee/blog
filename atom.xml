@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.cn</id>
   <title>运维咖啡吧</title>
-  <updated>2025-08-25T10:38:57.496202+08:00</updated>
+  <updated>2025-08-26T12:47:37.492986+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.cn/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day15-zhangzhou-gucheng.html</id>
+    <title>久违的暑假｜沿海自驾DAY15 - 漳州</title>
+    <updated>2025-08-26T12:47:37.492986+08:00</updated>
+    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day15-zhangzhou-gucheng.html"/>
+    <summary/>
+    <published>2025-08-26T12:47:37.477265+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day14-xiamen-jiageng.html</id>
     <title>久违的暑假｜沿海自驾DAY14 - 嘉庚</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.cn/s/my-online-photo-collage-tool-was-copied.html"/>
     <summary>这篇文章讲述了一个免费在线拼图工具被抄袭的经历，作者分享了工具的流量增长和被抄袭后的心情，以及工具的最新更新和优化。</summary>
     <published>2025-07-19T18:10:38.439910+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/s/online-photo-collage-website-success-story.html</id>
-    <title>兄弟们！！！15天超100k</title>
-    <updated>2025-07-17T19:28:51.891947+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/s/online-photo-collage-website-success-story.html"/>
-    <summary>本文讲述了一个在线拼图网站如何在15天内实现超过10万访问量的成功故事。文章涵盖了产品的快速开发过程、用户反馈的积极影响以及新增的水印系统和复制到剪贴板功能。</summary>
-    <published>2025-07-17T19:28:04.563181+08:00</published>
   </entry>
 </feed>
