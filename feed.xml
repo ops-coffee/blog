@@ -8,7 +8,14 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Custom CMS v1.0</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 27 Aug 2025 10:13:01 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 28 Aug 2025 11:20:34 +0800</lastBuildDate>
+    <item>
+      <title>久违的暑假｜沿海自驾DAY17 - 东山</title>
+      <link>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day17-zhangzhou-dongshan.html</link>
+      <description>本文记录了从漳州到东山岛的沿海自驾游行程，途经六鳌半岛和古雷半岛，探索了金銮湾和苏峰山的美景，体验了当地的渔业文化和不期而遇的人情味。</description>
+      <guid isPermaLink="false">https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day17-zhangzhou-dongshan.html</guid>
+      <pubDate>Thu, 28 Aug 2025 11:20:34 +0800</pubDate>
+    </item>
     <item>
       <title>久违的暑假｜沿海自驾DAY16 - 龙海</title>
       <link>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day16-zhangzhou-longhai.html</link>
@@ -139,13 +146,6 @@
       <description>在线拼图工具访问量突破200k！了解其背后的故事与最新更新，包括高清下载优化、工具栏动态调整及全球化支持，体验完全免费、高清下载的在线拼图工具。</description>
       <guid isPermaLink="false">https://blog.ops-coffee.cn/s/collage-maker-another-milestone-passing-200k.html</guid>
       <pubDate>Thu, 24 Jul 2025 22:41:26 +0800</pubDate>
-    </item>
-    <item>
-      <title>嵊州｜不仅是碳水之都，更是玩水天堂</title>
-      <link>https://blog.ops-coffee.cn/r/city-china-zhejiang-shaoxing-shengzhou-summer.html</link>
-      <description>逃离城市的喧嚣，到嵊州的山间小溪中玩水，感受夏日的清凉和美食的魅力。探索嵊州的清澈水域和特色小吃，享受一段宁静而放松的时光。</description>
-      <guid isPermaLink="false">https://blog.ops-coffee.cn/r/city-china-zhejiang-shaoxing-shengzhou-summer.html</guid>
-      <pubDate>Tue, 22 Jul 2025 16:02:18 +0800</pubDate>
     </item>
   </channel>
 </rss>
