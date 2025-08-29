@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="WebSSH, Django, Paramiko, Kubernetes, 浏览器SSH, 物理机操作, 虚拟机操作" />
   <meta name="description" content="本文介绍了如何使用Django和Paramiko模块通过浏览器实现对物理机和虚拟机的SSH操作，替代传统的xshell、crt等工具，并提供动态调整终端窗口大小的解决方案。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Django实现WebSSH操作物理机或虚拟机</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnwebssh/jumpserver-web-terminal-ssh-paramiko-stream.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comwebssh/jumpserver-web-terminal-ssh-paramiko-stream.html" />
   <meta property="og:title" content="Django实现WebSSH操作物理机或虚拟机" />
   <meta property="og:description" content="本文介绍了如何使用Django和Paramiko模块通过浏览器实现对物理机和虚拟机的SSH操作，替代传统的xshell、crt等工具，并提供动态调整终端窗口大小的解决方案。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnwebssh/jumpserver-web-terminal-ssh-paramiko-stream.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comwebssh/jumpserver-web-terminal-ssh-paramiko-stream.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Django实现WebSSH操作物理机或虚拟机",
     "description": "本文介绍了如何使用Django和Paramiko模块通过浏览器实现对物理机和虚拟机的SSH操作，替代传统的xshell、crt等工具，并提供动态调整终端窗口大小的解决方案。",
-    "url": "https://blog.ops-coffee.cnwebssh/jumpserver-web-terminal-ssh-paramiko-stream.html",
+    "url": "https://blog.ops-coffee.comwebssh/jumpserver-web-terminal-ssh-paramiko-stream.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnwebssh/jumpserver-web-terminal-ssh-paramiko-stream.html"
+      "@id": "https://blog.ops-coffee.comwebssh/jumpserver-web-terminal-ssh-paramiko-stream.html"
     }
   }
   </script>
@@ -119,7 +119,7 @@
 <p>我想用它替换掉xshell、crt之类的工具</p>
 </blockquote>
 <h2 id="webssh">WebSSH操作物理机或虚拟机</h2>
-<p><a href="https://blog.ops-coffee.cn/webssh/jumpserver-kubernetes-web-terminal-ssh-stream" target="_blank">Django实现WebSSH操作Kubernetes Pod</a>文章发布后，有小伙伴说咖啡哥，我们现在还没有用上Kubernetes，但我想通过浏览器连接我们的物理机和虚拟机该怎么办？</p>
+<p><a href="https://blog.ops-coffee.com/webssh/jumpserver-kubernetes-web-terminal-ssh-stream" target="_blank">Django实现WebSSH操作Kubernetes Pod</a>文章发布后，有小伙伴说咖啡哥，我们现在还没有用上Kubernetes，但我想通过浏览器连接我们的物理机和虚拟机该怎么办？</p>
 <p>这就比较简单了，既然我们已经实现了浏览器操作Kubernetes的Pod，那么想想操作Pod和物理机虚拟机有什么区别呢？</p>
 <p>整个数据流是一点没变：用户打开浏览器--》浏览器发送websocket请求给Django建立长连接--》Django与要操作的服务器建立SSH通道，实时的将收到的用户数据发送给SSH后的主机，并将主机执行的结果数据返回给浏览器</p>
 <p>唯一不一样的地方就是Django与要操作的服务器建立SSH通道的方式，在Kubernetes中是通过Kubernetes提供的API建立的Stream流，而操作物理机或者虚拟机的时候我们可以使用<code>Paramiko</code>模块来建立SSH长连接隧道，<code>Paramiko</code>模块建立SSH长连接通道的方法如下：</p>
@@ -158,7 +158,7 @@ self.ssh_channel.invoke_shell()</code></pre>
         break</code></pre>
 
 
-<p>有了这些信息，结合<a href="https://blog.ops-coffee.cn/webssh/jumpserver-kubernetes-web-terminal-ssh-stream" target="_blank">Django实现WebSSH操作Kubernetes Pod</a>的文章，实现WebSSH浏览器操作物理机或者虚拟机就不算困难了，完整的Consumer代码如下：</p>
+<p>有了这些信息，结合<a href="https://blog.ops-coffee.com/webssh/jumpserver-kubernetes-web-terminal-ssh-stream" target="_blank">Django实现WebSSH操作Kubernetes Pod</a>的文章，实现WebSSH浏览器操作物理机或者虚拟机就不算困难了，完整的Consumer代码如下：</p>
 <pre class="codehilite"><code>import io
 import json
 import paramiko
@@ -254,7 +254,7 @@ class SSHConsumer(WebsocketConsumer):
 
 
 <h2 id="_1">动态调整终端窗口大小</h2>
-<p>看了<a href="https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-kubernetes-ssh-resize" target="_blank">Kubernetes WebSSH终端窗口自适应Resize</a>文章，小伙伴又说了，你这只能在连接建立时确定终端窗口的大小，如果我中途调整了浏览器的大小，显示就乱了，这该怎么办？</p>
+<p>看了<a href="https://blog.ops-coffee.com/webssh/jumpserver-web-terminal-kubernetes-ssh-resize" target="_blank">Kubernetes WebSSH终端窗口自适应Resize</a>文章，小伙伴又说了，你这只能在连接建立时确定终端窗口的大小，如果我中途调整了浏览器的大小，显示就乱了，这该怎么办？</p>
 <p>不要着急，接下来就让我们看看怎么让终端窗口随着浏览器大小的调整而改变，上边的文章中已经说过，终端窗口的大小需要浏览器和后端返回的Terminal大小保持一致，单单调整页面窗口大小或者后端返回的Terminal窗口大小都是不行的，那么从这两个方向来说明该如何动态调整窗口的大小</p>
 <p>首先<code>Paramiko</code>模块建立的SSH通道可以通过<code>resize_pty</code>来动态改变返回Terminal窗口的大小，使用方法如下：</p>
 <pre class="codehilite"><code>def resize_pty(self, cols, rows):
@@ -304,7 +304,7 @@ $(window).resize(function () {
 <h2 id="_2">演示与源码</h2>
 <p><img alt="" loading="lazy" src="/static/images/2019/1101.webssh.gif" /></p>
 <p>我写了个简单的Demo来实现上边的功能，Demo写完发现还挺好用，我就扩展了一下添加了内网的物理机和虚拟机，历史原因，有些是账号密码认证，有些是密钥认证，我都给兼容了一下，最终实现的效果如上图所示</p>
-<p>项目里边要记录主机的密码，为了安全这个密码是通过RSA加密存放在数据库的，每次使用的时候进行解密，加解密的实现，可参考这篇文章 <a href="https://blog.ops-coffee.cn/s/django-security-password-table-database-rsa.html" target="_blank">Django开发密码管理表实例【附源码】</a></p>
+<p>项目里边要记录主机的密码，为了安全这个密码是通过RSA加密存放在数据库的，每次使用的时候进行解密，加解密的实现，可参考这篇文章 <a href="https://blog.ops-coffee.com/s/django-security-password-table-database-rsa.html" target="_blank">Django开发密码管理表实例【附源码】</a></p>
 <p>最后，如果你对这个简单的小玩意感兴趣，想要自己实现，却遇到了一些问题，可以通过公众号后台加我微信获取源码</p>
 
         <div>
@@ -316,11 +316,11 @@ $(window).resize(function () {
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-kubernetes-ssh-resize.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/webssh/jumpserver-web-terminal-kubernetes-ssh-resize.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Kubernetes WebSSH终端窗口自适应Resize</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-monitor-asciinema-audit.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/webssh/jumpserver-web-terminal-monitor-asciinema-audit.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>堡垒机的核心武器：WebSSH录像实现</span>
                 <span class="pagination-arrow">→</span>
             </a>

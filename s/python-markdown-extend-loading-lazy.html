@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="博客优化, 图片懒加载, Markdown, Python, SEO, 页面加载速度, 用户体验" />
   <meta name="description" content="本文介绍了如何通过图片懒加载技术来优化博客的页面加载速度，提升用户体验，并通过Python-Markdown自定义扩展实现自动为图片添加懒加载属性，减少不必要的资源加载和流量浪费。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>个人博客优化之图片懒加载探索</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/python-markdown-extend-loading-lazy.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/python-markdown-extend-loading-lazy.html" />
   <meta property="og:title" content="个人博客优化之图片懒加载探索" />
   <meta property="og:description" content="本文介绍了如何通过图片懒加载技术来优化博客的页面加载速度，提升用户体验，并通过Python-Markdown自定义扩展实现自动为图片添加懒加载属性，减少不必要的资源加载和流量浪费。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/python-markdown-extend-loading-lazy.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/python-markdown-extend-loading-lazy.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "个人博客优化之图片懒加载探索",
     "description": "本文介绍了如何通过图片懒加载技术来优化博客的页面加载速度，提升用户体验，并通过Python-Markdown自定义扩展实现自动为图片添加懒加载属性，减少不必要的资源加载和流量浪费。",
-    "url": "https://blog.ops-coffee.cns/python-markdown-extend-loading-lazy.html",
+    "url": "https://blog.ops-coffee.coms/python-markdown-extend-loading-lazy.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/python-markdown-extend-loading-lazy.html"
+      "@id": "https://blog.ops-coffee.coms/python-markdown-extend-loading-lazy.html"
     }
   }
   </script>
@@ -115,12 +115,12 @@
     <div class="container">
         <h1 id="art-title">个人博客优化之图片懒加载探索</h1>
 
-        <p>之前有<a href="https://blog.ops-coffee.cn/tag/%E5%8D%9A%E5%AE%A2/" target="_blank">几篇文章</a>介绍过我的博客是通过Markdown直接生成HTML并自动上传到Github然后通过Netlify免费加速对外提供访问的，博客页面构成很简单，就HTML主体内容和一个CSS文件，连JS都很少，除了谷歌Analytics和Adsense必须依赖的JS再无其它，要的就是一个简单，尽可能的减少JS的渲染和资源的请求，能够获得更快的页面加载速度，从而为阅读者带来更好的体验</p>
+        <p>之前有<a href="https://blog.ops-coffee.com/tag/%E5%8D%9A%E5%AE%A2/" target="_blank">几篇文章</a>介绍过我的博客是通过Markdown直接生成HTML并自动上传到Github然后通过Netlify免费加速对外提供访问的，博客页面构成很简单，就HTML主体内容和一个CSS文件，连JS都很少，除了谷歌Analytics和Adsense必须依赖的JS再无其它，要的就是一个简单，尽可能的减少JS的渲染和资源的请求，能够获得更快的页面加载速度，从而为阅读者带来更好的体验</p>
 <p>之前的文章技术为主，文章内图片很少，而最近写的游记多了，游记内又放了大量的照片，加载起来就很慢，不仅是加载慢，如果用户在等待加载的过程中关闭了网页或者仅仅是看了文章开头发现不感兴趣关闭了，那一大部分图片已经加载并没有使用，这就造成了流量的浪费。今天花了点时间优化了这个问题，核心就是图片懒加载</p>
 <h2 id="lazy-loading">Lazy loading</h2>
 <p>在页面中有很多图片的时候，图片加载就需要很多时间，不仅影响渲染速度还会浪费带宽，为了解决这个问题，提高用户体验，就出现了懒加载这种方式来减轻服务器的压力，优先加载用户当前可视区域的图片，其他不在可视区域内的图片会在进入用户可视区域或即将进入用户可视区域时再加载</p>
 <p>图片懒加载的实现方式有很多种，我选择了通过HTML元素延迟加载属性loading来实现，主打一个简单，从2019年的Chrome浏览器76版本开始，IMG图片和IFRAME框架已经支持原生懒加载特性，使用<code>loading="lazy"</code>语法，用法如下</p>
-<pre class="codehilite"><code>&lt;img alt=&quot;ops-coffee&quot; loading=&quot;lazy&quot; src=&quot;https://blog.ops-coffee.cn/static/images/wx.sou1.png&quot; /&gt;</code></pre>
+<pre class="codehilite"><code>&lt;img alt=&quot;ops-coffee&quot; loading=&quot;lazy&quot; src=&quot;https://blog.ops-coffee.com/static/images/wx.sou1.png&quot; /&gt;</code></pre>
 
 
 <p>在img标签内添加<code>loading="lazy"</code>无需其他额外操作，浏览器就会自动的判断先加载哪些图片，哪些图片延迟加载。loading除了<code>lazy</code>配置是懒加载之外，还有两个配置<code>eager</code>无视一切进行加载和<code>auto</code>基于浏览器自己的策略进行加载，其中Auto是默认值，如果没有显式地设置loading属性或者loading属性设置错误，则都被当作<code>auto</code>来处理</p>
@@ -128,9 +128,9 @@
 <p>此时我们知道修改HTML的IMG标签添加<code>loading="lazy"</code>即可实现图片懒加载，我的HTML文件都是通过<code>python-markdown</code>这个工具生成的，使用起来很简单</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; from markdown import markdown
 &gt;&gt;&gt;
-&gt;&gt;&gt; a = '![](https://blog.ops-coffee.cn/static/images/wx.sou1.png)'
+&gt;&gt;&gt; a = '![](https://blog.ops-coffee.com/static/images/wx.sou1.png)'
 &gt;&gt;&gt; markdown(a)
-'&lt;p&gt;&lt;img alt=&quot;&quot; src=&quot;https://blog.ops-coffee.cn/static/images/wx.sou1.png&quot; /&gt;&lt;/p&gt;'</code></pre>
+'&lt;p&gt;&lt;img alt=&quot;&quot; src=&quot;https://blog.ops-coffee.com/static/images/wx.sou1.png&quot; /&gt;&lt;/p&gt;'</code></pre>
 
 
 <p>默认生成的IMG标签没有loading属性，怎么能让markdown工具在生成HTML文件时添加loading属性呢？<code>python-markdown</code>工具提供了内置的扩展来实现给元素添加属性，用法如下：</p>
@@ -138,10 +138,10 @@
 
 
 <p>用<code>#</code>开头的是元素id，用<code>.</code>开始的是分配给元素的class的列表，后面的键值等式，将被赋到元素上。借助扩展我们就可以给IMG添加loading属性了</p>
-<pre class="codehilite"><code>&gt;&gt;&gt; a = '![](https://blog.ops-coffee.cn/static/images/wx.sou1.png){: #ops-coffee-id .ops-coffee-class loading=&quot;lazy&quot; }'
+<pre class="codehilite"><code>&gt;&gt;&gt; a = '![](https://blog.ops-coffee.com/static/images/wx.sou1.png){: #ops-coffee-id .ops-coffee-class loading=&quot;lazy&quot; }'
 &gt;&gt;&gt;
 &gt;&gt;&gt; markdown(a, extensions=['extra'])
-'&lt;p&gt;&lt;img alt=&quot;&quot; class=&quot;ops-coffee-class&quot; id=&quot;ops-coffee-id&quot; loading=&quot;lazy&quot; src=&quot;https://blog.ops-coffee.cn/static/images/wx.sou1.png&quot; /&gt;&lt;/p&gt;'
+'&lt;p&gt;&lt;img alt=&quot;&quot; class=&quot;ops-coffee-class&quot; id=&quot;ops-coffee-id&quot; loading=&quot;lazy&quot; src=&quot;https://blog.ops-coffee.com/static/images/wx.sou1.png&quot; /&gt;&lt;/p&gt;'
 &gt;&gt;&gt;</code></pre>
 
 
@@ -168,7 +168,7 @@ class CustomExtension(Extension):
 
 
 if __name__ == '__main__':
-    c = '![](https://blog.ops-coffee.cn/static/images/wx.sou1.png)'
+    c = '![](https://blog.ops-coffee.com/static/images/wx.sou1.png)'
     print(markdown(c, extensions=['extra', CustomExtension()]))</code></pre>
 
 
@@ -183,11 +183,11 @@ if __name__ == '__main__':
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/devops-task-subtask-jenkins.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/devops-task-subtask-jenkins.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>任务系统之Jenkins子任务</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/django-move-model-to-another-app.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/django-move-model-to-another-app.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Django生产环境不同APP之间Model迁移</span>
                 <span class="pagination-arrow">→</span>
             </a>

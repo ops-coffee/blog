@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="工单通知, Django2.0, signals, Python, 工单状态变更" />
   <meta name="description" content="本文介绍了在实现工单通知过程中的一些优化技巧，包括如何利用Python的if语句简化代码，通过Django的signals机制实现状态变更通知的自动化，以及如何提高代码的可读性和维护性。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Django使用Signals监测model字段变化发送通知</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/django-signals-for-notification-in-ticket-system.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/django-signals-for-notification-in-ticket-system.html" />
   <meta property="og:title" content="Django使用Signals监测model字段变化发送通知" />
   <meta property="og:description" content="本文介绍了在实现工单通知过程中的一些优化技巧，包括如何利用Python的if语句简化代码，通过Django的signals机制实现状态变更通知的自动化，以及如何提高代码的可读性和维护性。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/django-signals-for-notification-in-ticket-system.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/django-signals-for-notification-in-ticket-system.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Django使用Signals监测model字段变化发送通知",
     "description": "本文介绍了在实现工单通知过程中的一些优化技巧，包括如何利用Python的if语句简化代码，通过Django的signals机制实现状态变更通知的自动化，以及如何提高代码的可读性和维护性。",
-    "url": "https://blog.ops-coffee.cns/django-signals-for-notification-in-ticket-system.html",
+    "url": "https://blog.ops-coffee.coms/django-signals-for-notification-in-ticket-system.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/django-signals-for-notification-in-ticket-system.html"
+      "@id": "https://blog.ops-coffee.coms/django-signals-for-notification-in-ticket-system.html"
     }
   }
   </script>
@@ -116,7 +116,7 @@
         <h1 id="art-title">Django使用Signals监测model字段变化发送通知</h1>
 
         <blockquote>
-<p>上一篇文章<a href="https://blog.ops-coffee.cn/s/overmind-system-automation-sql-data-migration.html" target="_blank">《运维效率之数据迁移自动化》</a>中讲到了工单通知，本文将介绍工单通知实现过程中的一些小技巧。所有演示均基于Django2.0</p>
+<p>上一篇文章<a href="https://blog.ops-coffee.com/s/overmind-system-automation-sql-data-migration.html" target="_blank">《运维效率之数据迁移自动化》</a>中讲到了工单通知，本文将介绍工单通知实现过程中的一些小技巧。所有演示均基于Django2.0</p>
 </blockquote>
 <p>阅读此篇文章你可以：</p>
 <ul>
@@ -150,7 +150,7 @@
 <p>每一个状态的变化都需要通知，为了代码易读及解耦，我们需要写一个单独的通知类，当需要通知的时候调用一下就好了。通知类中需要判断当前工单的状态，那么通常会写成下边这样</p>
 <pre class="codehilite"><code>class Notify:
     def __init__(self):
-        self.dba_list = [&quot;dba1@ops-coffee.cn&quot;, &quot;dba2@ops-coffee.cn&quot;]
+        self.dba_list = [&quot;dba1@ops-coffee.com&quot;, &quot;dba2@ops-coffee.com&quot;]
 
     def migration(self, pk):
         '''迁移通知'''
@@ -159,7 +159,7 @@
         _u = _t.create_user.username
         _s = _t.state
 
-        _d = &quot;https://ops-coffee.cn/workflow/migration/%d/&quot; % (_t.id)
+        _d = &quot;https://ops-coffee.com/workflow/migration/%d/&quot; % (_t.id)
 
         if _s == 1:
             try:
@@ -203,7 +203,7 @@
 <p>看看下边的代码，维护一个状态字典，然后用一个if判断就可以实现上边一堆if的代码写法，是不是就简洁了很多</p>
 <pre class="codehilite"><code>class Notify:
     def __init__(self):
-        self.dba_list = [&quot;dba1@ops-coffee.cn&quot;, &quot;dba2@ops-coffee.cn&quot;]
+        self.dba_list = [&quot;dba1@ops-coffee.com&quot;, &quot;dba2@ops-coffee.com&quot;]
 
     def migration(self, pk):
         '''迁移通知'''
@@ -212,7 +212,7 @@
         _u = _t.create_user.username
         _s = _t.state
 
-        _d = &quot;https://ops-coffee.cn/workflow/migration/%d/&quot; %(_t.id)
+        _d = &quot;https://ops-coffee.com/workflow/migration/%d/&quot; %(_t.id)
         smap = {
             1: [{
                 &quot;subject&quot;: &quot;[已提交]-[overmind]数据迁移工单&quot;,
@@ -345,11 +345,11 @@ class WorkflowConfig(AppConfig):
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/overmind-system-automation-sql-data-migration.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/overmind-system-automation-sql-data-migration.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>运维效率之数据迁移自动化</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/django-aggregate-annotate-echarts-bar-chart.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/django-aggregate-annotate-echarts-bar-chart.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Django+Echarts画图实例</span>
                 <span class="pagination-arrow">→</span>
             </a>

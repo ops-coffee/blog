@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="传统IDC, 服务器上架, RAID配置, 系统初始化, 自动化运维, 脚本编写" />
   <meta name="description" content="团队在接手传统IDC模式的运维工作时，面临了服务器上架、RAID配置、系统初始化等挑战。通过详细的文档整理和脚本编写，团队成功解决了这些问题，并为未来的自动化运维奠定了基础。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>从一件小事说起我是如何思考与执行的</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/traditional-idc-environment-operation-and-automation.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/traditional-idc-environment-operation-and-automation.html" />
   <meta property="og:title" content="从一件小事说起我是如何思考与执行的" />
   <meta property="og:description" content="团队在接手传统IDC模式的运维工作时，面临了服务器上架、RAID配置、系统初始化等挑战。通过详细的文档整理和脚本编写，团队成功解决了这些问题，并为未来的自动化运维奠定了基础。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/traditional-idc-environment-operation-and-automation.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/traditional-idc-environment-operation-and-automation.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "从一件小事说起我是如何思考与执行的",
     "description": "团队在接手传统IDC模式的运维工作时，面临了服务器上架、RAID配置、系统初始化等挑战。通过详细的文档整理和脚本编写，团队成功解决了这些问题，并为未来的自动化运维奠定了基础。",
-    "url": "https://blog.ops-coffee.cns/traditional-idc-environment-operation-and-automation.html",
+    "url": "https://blog.ops-coffee.coms/traditional-idc-environment-operation-and-automation.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/traditional-idc-environment-operation-and-automation.html"
+      "@id": "https://blog.ops-coffee.coms/traditional-idc-environment-operation-and-automation.html"
     }
   }
   </script>
@@ -136,13 +136,13 @@
 
 
 <p>解决了以上两个问题整个脚本就跑通了，但这并不代表结束，一个好的习惯是我们的脚本要能够把结果反馈给我们，能让我们清晰的知道本次执行究竟有没有达到理想的效果，既然这个脚本处理的是磁盘问题，那么我们就要知道这个脚本执行完成后所有的磁盘都是可以正常使用的，所以我在脚本的最后加上了磁盘写文件的测试</p>
-<pre class="codehilite"><code>echo ops-coffee.cn &gt; /data/test &amp;&amp; rm -rf /data/test &amp;&amp;\
+<pre class="codehilite"><code>echo ops-coffee.com &gt; /data/test &amp;&amp; rm -rf /data/test &amp;&amp;\
 echo ok ||
 echo fail</code></pre>
 
 
 <p>脚本写完测试通过，也丢到了临时下载服务器上，一个命令全搞定</p>
-<pre class="codehilite"><code>wget https://ops-coffee.cn:8000/init.sh &amp;&amp; /bin/bash init.sh</code></pre>
+<pre class="codehilite"><code>wget https://ops-coffee.com:8000/init.sh &amp;&amp; /bin/bash init.sh</code></pre>
 
 
 <h2 id="_1">后记</h2>
@@ -159,11 +159,11 @@ echo fail</code></pre>
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/django-password-management-encryption-decryption.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/django-password-management-encryption-decryption.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Django Model字段加密的优雅实现</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/demand-management-system-development-guide.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/demand-management-system-development-guide.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>面向老板的需求管理系统</span>
                 <span class="pagination-arrow">→</span>
             </a>

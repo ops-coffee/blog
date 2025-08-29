@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Elasticsearch, Query DSL, 查询, 过滤, 分页查询, 全文查询, 组合查询, DSL语言, ES新手, SEO友好" />
   <meta name="description" content="本文介绍了Elasticsearch中的Query DSL基础知识，包括查询与过滤的区别、简单查询、指定索引、分页查询、全文查询、精确匹配及组合查询等内容，适合ES新手学习，帮助你快速入门并掌握ES的查询语言。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Elasticsearch Query DSL查询入门</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnelk/elasticsearch-select-query-DSL-api.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comelk/elasticsearch-select-query-DSL-api.html" />
   <meta property="og:title" content="Elasticsearch Query DSL查询入门" />
   <meta property="og:description" content="本文介绍了Elasticsearch中的Query DSL基础知识，包括查询与过滤的区别、简单查询、指定索引、分页查询、全文查询、精确匹配及组合查询等内容，适合ES新手学习，帮助你快速入门并掌握ES的查询语言。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnelk/elasticsearch-select-query-DSL-api.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comelk/elasticsearch-select-query-DSL-api.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Elasticsearch Query DSL查询入门",
     "description": "本文介绍了Elasticsearch中的Query DSL基础知识，包括查询与过滤的区别、简单查询、指定索引、分页查询、全文查询、精确匹配及组合查询等内容，适合ES新手学习，帮助你快速入门并掌握ES的查询语言。",
-    "url": "https://blog.ops-coffee.cnelk/elasticsearch-select-query-DSL-api.html",
+    "url": "https://blog.ops-coffee.comelk/elasticsearch-select-query-DSL-api.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnelk/elasticsearch-select-query-DSL-api.html"
+      "@id": "https://blog.ops-coffee.comelk/elasticsearch-select-query-DSL-api.html"
     }
   }
   </script>
@@ -221,24 +221,24 @@
 <h2 id="_5">全文查询</h2>
 <p>上边有用到一个<code>match_all</code>的全文查询关键字，<code>match_all</code>为查询所有记录，常用的查询关键字在ES中还有以下几个</p>
 <h3 id="match">match</h3>
-<p>最简单的查询，下边的例子就表示查找<code>host</code>为<code>ops-coffee.cn</code>的所有记录</p>
+<p>最简单的查询，下边的例子就表示查找<code>host</code>为<code>ops-coffee.com</code>的所有记录</p>
 <pre class="codehilite"><code>GET /ops-coffee-2019.05.15/_search
 {
   &quot;query&quot;:{
     &quot;match&quot;: {
-      &quot;host&quot;:&quot;ops-coffee.cn&quot;
+      &quot;host&quot;:&quot;ops-coffee.com&quot;
     }
   }
 }</code></pre>
 
 
 <h3 id="multi_match">multi_match</h3>
-<p>在多个字段上执行相同的match查询，下边的例子就表示查询<code>host</code>或<code>http_referer</code>字段中包含<code>ops-coffee.cn</code>的记录</p>
+<p>在多个字段上执行相同的match查询，下边的例子就表示查询<code>host</code>或<code>http_referer</code>字段中包含<code>ops-coffee.com</code>的记录</p>
 <pre class="codehilite"><code>GET /ops-coffee-2019.05.15/_search
 {
   &quot;query&quot;:{
     &quot;multi_match&quot;: {
-      &quot;query&quot;:&quot;ops-coffee.cn&quot;,
+      &quot;query&quot;:&quot;ops-coffee.com&quot;,
       &quot;fields&quot;:[&quot;host&quot;,&quot;http_referer&quot;]
     }
   }
@@ -251,26 +251,26 @@
 {
   &quot;query&quot;:{
     &quot;query_string&quot;: {
-      &quot;query&quot;:&quot;(a.ops-coffee.cn) OR (b.ops-coffee.cn)&quot;,
+      &quot;query&quot;:&quot;(a.ops-coffee.com) OR (b.ops-coffee.com)&quot;,
       &quot;fields&quot;:[&quot;host&quot;]
     }
   }
 }</code></pre>
 
 
-<p>以上表示查找host为<code>a.ops-coffee.cn</code>或者<code>b.ops-coffee.cn</code>的所有记录</p>
+<p>以上表示查找host为<code>a.ops-coffee.com</code>或者<code>b.ops-coffee.com</code>的所有记录</p>
 <p>也可以用下边这种方式组合更多的条件完成更复杂的查询请求</p>
 <pre class="codehilite"><code>GET /ops-coffee-2019.05.14/_search
 {
   &quot;query&quot;:{
     &quot;query_string&quot;: {
-      &quot;query&quot;:&quot;host:a.ops-coffee.cn OR (host:b.ops-coffee.cn AND status:403)&quot;
+      &quot;query&quot;:&quot;host:a.ops-coffee.com OR (host:b.ops-coffee.com AND status:403)&quot;
     }
   }
 }</code></pre>
 
 
-<p>以上表示查询（host为<code>a.ops-coffee.cn</code>）或者是（host为<code>b.ops-coffee.cn</code>且status为403）的所有记录</p>
+<p>以上表示查询（host为<code>a.ops-coffee.com</code>）或者是（host为<code>b.ops-coffee.com</code>且status为403）的所有记录</p>
 <p>与其像类似的还有个<strong>simple_query_string</strong>的关键字，可以将<code>query_string</code>中的AND或OR用<code>+</code>或<code>|</code>这样的符号替换掉</p>
 <h3 id="term">term</h3>
 <p>term可以用来精确匹配，精确匹配的值可以是数字、时间、布尔值或者是设置了<code>not_analyzed</code>不分词的字符串</p>
@@ -354,14 +354,14 @@
 <p>elasticsearch中默认使用的是UTC时间，所以我们在使用时要通过<code>time_zone</code>来设置好时区，以免出错</p>
 <h2 id="_6">组合查询</h2>
 <p>通常我们可能需要将很多个条件组合在一起查出最后的结果，这个时候就需要使用ES提供的<code>bool</code>来实现了</p>
-<p>例如我们要查询<code>host</code>为<code>ops-coffee.cn</code>且<code>http_x_forworded_for</code>为<code>111.18.78.128</code>且<code>status</code>不为200的所有数据就可以使用下边的语句</p>
+<p>例如我们要查询<code>host</code>为<code>ops-coffee.com</code>且<code>http_x_forworded_for</code>为<code>111.18.78.128</code>且<code>status</code>不为200的所有数据就可以使用下边的语句</p>
 <pre class="codehilite"><code>GET /ops-coffee-2019.05.14/_search
 {
  &quot;query&quot;:{
     &quot;bool&quot;: {
       &quot;filter&quot;: [
         {&quot;match&quot;: {
-          &quot;host&quot;: &quot;ops-coffee.cn&quot;
+          &quot;host&quot;: &quot;ops-coffee.com&quot;
         }},
         {&quot;match&quot;: {
           &quot;http_x_forwarded_for&quot;: &quot;111.18.78.128&quot;
@@ -395,11 +395,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/elk/elasticsearch-logstash-filebeat-registry.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/elk/elasticsearch-logstash-filebeat-registry.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Filebeat的Registry文件解读</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/elk/elasticsearch-logstash-kafka-group.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/elk/elasticsearch-logstash-kafka-group.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>ELK架构下利用Kafka Group实现Logstash的高可用</span>
                 <span class="pagination-arrow">→</span>
             </a>

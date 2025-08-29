@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="zTree, 前端树插件, Django树模型, 树结构, 前端开发, Django开发" />
   <meta name="description" content="本文介绍了如何使用多功能前端树插件zTree以及在Django中设计树结构的模型，帮助开发者更好地处理树形数据结构。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Django+zTree构建组织架构树</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/tree-plugin-ztree-and-django-model-design.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/tree-plugin-ztree-and-django-model-design.html" />
   <meta property="og:title" content="Django+zTree构建组织架构树" />
   <meta property="og:description" content="本文介绍了如何使用多功能前端树插件zTree以及在Django中设计树结构的模型，帮助开发者更好地处理树形数据结构。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/tree-plugin-ztree-and-django-model-design.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/tree-plugin-ztree-and-django-model-design.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Django+zTree构建组织架构树",
     "description": "本文介绍了如何使用多功能前端树插件zTree以及在Django中设计树结构的模型，帮助开发者更好地处理树形数据结构。",
-    "url": "https://blog.ops-coffee.cns/tree-plugin-ztree-and-django-model-design.html",
+    "url": "https://blog.ops-coffee.coms/tree-plugin-ztree-and-django-model-design.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/tree-plugin-ztree-and-django-model-design.html"
+      "@id": "https://blog.ops-coffee.coms/tree-plugin-ztree-and-django-model-design.html"
     }
   }
   </script>
@@ -125,7 +125,7 @@
 </ol>
 <h2 id="ztree">zTree</h2>
 <p>zTree是一个开源的依靠JQuery实现的多功能树插件，具有性能优异、配置灵活、功能强大的特点</p>
-<p>之前的<a href="https://blog.ops-coffee.cn/frontend/index.html" target="_blank">系列前端插件文章</a>已经多次介绍过将前端插件引入自己项目中的方法，这里就不赘述了，如有问题也可以参考文章末尾给出的Demo代码，在引入JS/CSS之后只需要如下代码即可构建一颗树</p>
+<p>之前的<a href="https://blog.ops-coffee.com/frontend/index.html" target="_blank">系列前端插件文章</a>已经多次介绍过将前端插件引入自己项目中的方法，这里就不赘述了，如有问题也可以参考文章末尾给出的Demo代码，在引入JS/CSS之后只需要如下代码即可构建一颗树</p>
 <pre class="codehilite"><code>&lt;ul id=&quot;treeDemo&quot; class=&quot;ztree&quot;&gt;&lt;/ul&gt;
 
 &lt;script&gt;
@@ -255,11 +255,11 @@ class MyModel(models.Model):
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/wechat-miniprogram-pc-support.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/wechat-miniprogram-pc-support.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>喜大普奔 | 微信小程序支持PC端打开了</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/jingjiabao-browser-plugin.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/jingjiabao-browser-plugin.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>插件推荐 | 这个浏览器插件能让你躺着赚钱</span>
                 <span class="pagination-arrow">→</span>
             </a>

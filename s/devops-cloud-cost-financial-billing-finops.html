@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="费用分摊, 多云环境, 账单系统, 成本管理, 云厂商, 项目分摊, 资源折扣, 云账户, 消费趋势, 汇率计算" />
   <meta name="description" content="本文介绍了在多云环境下如何通过账单系统优化费用分摊和成本管理，详细讲解了系统的各个功能模块，包括总体概览、项目概览、项目详情、账户列表、账户概览和账户详情，帮助企业更清晰地了解和控制云资源消费。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>运维自动化之账单系统</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/devops-cloud-cost-financial-billing-finops.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/devops-cloud-cost-financial-billing-finops.html" />
   <meta property="og:title" content="运维自动化之账单系统" />
   <meta property="og:description" content="本文介绍了在多云环境下如何通过账单系统优化费用分摊和成本管理，详细讲解了系统的各个功能模块，包括总体概览、项目概览、项目详情、账户列表、账户概览和账户详情，帮助企业更清晰地了解和控制云资源消费。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/devops-cloud-cost-financial-billing-finops.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/devops-cloud-cost-financial-billing-finops.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "运维自动化之账单系统",
     "description": "本文介绍了在多云环境下如何通过账单系统优化费用分摊和成本管理，详细讲解了系统的各个功能模块，包括总体概览、项目概览、项目详情、账户列表、账户概览和账户详情，帮助企业更清晰地了解和控制云资源消费。",
-    "url": "https://blog.ops-coffee.cns/devops-cloud-cost-financial-billing-finops.html",
+    "url": "https://blog.ops-coffee.coms/devops-cloud-cost-financial-billing-finops.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/devops-cloud-cost-financial-billing-finops.html"
+      "@id": "https://blog.ops-coffee.coms/devops-cloud-cost-financial-billing-finops.html"
     }
   }
   </script>
@@ -119,7 +119,7 @@
 <p>我们每个月都需要计算项目成本，每到这个时候就很头疼，会花很多的时间在对账算账上。为了优化这个问题，我们上线了账单系统，不仅可以清晰明了以可视化的方式来查看账单，更为重要的是通过账单系统，还能方便快速的发现一些账务上面的问题，帮助公司优化成本管理。这篇文章就简单的介绍一下账单系统</p>
 <p>为了避免引起误会，以下所有资源和账单无论是文章中提到还是截图中截取的都是<strong>脱敏模拟数据</strong>，并不代表真实消费情况，各位不必当真</p>
 <h2 id="_1">系统介绍</h2>
-<p>尽管各家云厂商基本都可以按照项目来划分资源，但各家云厂商对项目这个维度的费用账单却并不完善，并不是所有的资源都可以按照项目维度去计算费用，这无疑增加了我们按项目汇总资源消费的难度。好在我们<a href="https://blog.ops-coffee.cn/devops/cloud.html" target="_blank">多云系统</a>汇总了所有云上资源，同时也有这些资源的所属项目及关联关系，这让我们的账单系统好做很多，可以针对不同的云厂商采用不同的费用汇算方式，以达到最终费用计算分摊的目的</p>
+<p>尽管各家云厂商基本都可以按照项目来划分资源，但各家云厂商对项目这个维度的费用账单却并不完善，并不是所有的资源都可以按照项目维度去计算费用，这无疑增加了我们按项目汇总资源消费的难度。好在我们<a href="https://blog.ops-coffee.com/devops/cloud.html" target="_blank">多云系统</a>汇总了所有云上资源，同时也有这些资源的所属项目及关联关系，这让我们的账单系统好做很多，可以针对不同的云厂商采用不同的费用汇算方式，以达到最终费用计算分摊的目的</p>
 <p>不同云厂商需要采用不同的费用计算方式，这缘于不同云厂商对费用对支持力度不一样导致的，例如腾讯云几乎所有的资源都支持按标签计费，这样我们只需要给不同的资源打上对应的项目标签就能很方便的算出项目费用，而阿里云对于标签的支持却不完善，所以需要针对不同云厂商找到适合的费用汇算方式，这个是另外一个议题，后续文章再讲，这一篇重点介绍下账单系统</p>
 <h3 id="_2">总体概览</h3>
 <p>首先我们需要知道每个月的消费总额，所以做了这个费用总体概览页面，依次展示了记账周期内的费用总额、最近半年内的整体消费趋势，这些费用所分布的云账户的柱状图和饼状图，以及这些费用所分布的项目的饼状图和柱状图</p>
@@ -149,7 +149,7 @@
 <h2 id="_8">写在最后</h2>
 <p>账单系统上线后，小伙伴们对线上账单进行了详细的校对，发现了很多问题，让我有种运维也可以作为创收部门存在的错觉</p>
 <p>从发现的问题来看，云平台的计费确实十分复杂，云平台也不可全信，或许它们自己都没办法很准确的算清楚各种账单。所以推荐使用云的小伙伴，都仔细看看云平台给出的账单，大概率会有意想不到的收获</p>
-<p>至此运维自动化平台又下一城，包含了<a href="https://blog.ops-coffee.cn/devops/cloud.html" target="_blank">多云系统</a>、<a href="https://blog.ops-coffee.cn/devops/ansible.html" target="_blank">作业系统</a>、<a href="https://blog.ops-coffee.cn/devops/task.html" target="_blank">任务系统</a>、<a href="https://blog.ops-coffee.cn/devops/monitor.html" target="_blank">监控系统</a>、<a href="https://blog.ops-coffee.cn/devops/kubernetes.html" target="_blank">容器系统</a>、<a href="https://blog.ops-coffee.cn/devops/domain.html" target="_blank">域名系统</a>等等实用且好用的子系统，涵盖了日常运维工作的方方面面</p>
+<p>至此运维自动化平台又下一城，包含了<a href="https://blog.ops-coffee.com/devops/cloud.html" target="_blank">多云系统</a>、<a href="https://blog.ops-coffee.com/devops/ansible.html" target="_blank">作业系统</a>、<a href="https://blog.ops-coffee.com/devops/task.html" target="_blank">任务系统</a>、<a href="https://blog.ops-coffee.com/devops/monitor.html" target="_blank">监控系统</a>、<a href="https://blog.ops-coffee.com/devops/kubernetes.html" target="_blank">容器系统</a>、<a href="https://blog.ops-coffee.com/devops/domain.html" target="_blank">域名系统</a>等等实用且好用的子系统，涵盖了日常运维工作的方方面面</p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
@@ -160,11 +160,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/cloudflare-monitor-dashboard-by-graphql-python-api.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/cloudflare-monitor-dashboard-by-graphql-python-api.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>构建好用的Cloudflare监控大盘</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/devops-cloud-cost-financial-billing-finops-resource.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/devops-cloud-cost-financial-billing-finops-resource.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>找出隐藏在账单里的秘密</span>
                 <span class="pagination-arrow">→</span>
             </a>

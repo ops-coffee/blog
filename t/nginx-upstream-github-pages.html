@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Github Pages加速, Netlify CDN, Nginx反向代理, 香港主机代理, 博客加速" />
   <meta name="description" content="本文介绍了如何通过Netlify的全球CDN和Nginx的反向代理技术，结合香港主机的帮助，有效提升Github Pages博客的访问速度。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Nginx反向代理加速Github Pages访问</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnt/nginx-upstream-github-pages.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comt/nginx-upstream-github-pages.html" />
   <meta property="og:title" content="Nginx反向代理加速Github Pages访问" />
   <meta property="og:description" content="本文介绍了如何通过Netlify的全球CDN和Nginx的反向代理技术，结合香港主机的帮助，有效提升Github Pages博客的访问速度。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnt/nginx-upstream-github-pages.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comt/nginx-upstream-github-pages.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Nginx反向代理加速Github Pages访问",
     "description": "本文介绍了如何通过Netlify的全球CDN和Nginx的反向代理技术，结合香港主机的帮助，有效提升Github Pages博客的访问速度。",
-    "url": "https://blog.ops-coffee.cnt/nginx-upstream-github-pages.html",
+    "url": "https://blog.ops-coffee.comt/nginx-upstream-github-pages.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnt/nginx-upstream-github-pages.html"
+      "@id": "https://blog.ops-coffee.comt/nginx-upstream-github-pages.html"
     }
   }
   </script>
@@ -115,13 +115,13 @@
     <div class="container">
         <h1 id="art-title">Nginx反向代理加速Github Pages访问</h1>
 
-        <p>我的博客托管在Github Pages，为了加速访问，最初尝试了Netlify全球CDN加速，具体介绍及配置见这里：<a href="https://blog.ops-coffee.cn/s/blog-website-github-pages-vs-netlify.html" target="_blank">『Github Pages访问太慢？通过Netlify免费加速』</a>，但效果并不是特别理想，正巧朋友有一台香港主机可以帮我加个代理，于是速度飞跃效果喜人</p>
+        <p>我的博客托管在Github Pages，为了加速访问，最初尝试了Netlify全球CDN加速，具体介绍及配置见这里：<a href="https://blog.ops-coffee.com/s/blog-website-github-pages-vs-netlify.html" target="_blank">『Github Pages访问太慢？通过Netlify免费加速』</a>，但效果并不是特别理想，正巧朋友有一台香港主机可以帮我加个代理，于是速度飞跃效果喜人</p>
 <p>反向代理通过Nginx的upstream实现，配置非常简单，仅需以下三步</p>
 <p>1.申请https证书，这个不赘述，网上很多教程</p>
 <p>2.Nginx添加个server，把所有请求都代理到Netlify，配置如下</p>
 <pre class="codehilite"><code>server {
     listen              443 ssl http2;
-    server_name         blog.ops-coffee.cn;
+    server_name         blog.ops-coffee.com;
 
     ssl_certificate     /etc/nginx/certificates/mlyxprovyp0ez6jw.cer;
     ssl_certificate_key /etc/nginx/certificates/mlyxprovyp0ez6jw.key;
@@ -145,11 +145,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/t/prod-redis-config-example.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/t/prod-redis-config-example.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>生产环境下的Redis标准配置</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/t/eastmoney-fund-free-open-api.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/t/eastmoney-fund-free-open-api.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>天天基金免费开放数据API使用说明</span>
                 <span class="pagination-arrow">→</span>
             </a>

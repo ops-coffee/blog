@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="资源账单, DevOps, 云成本优化, 计费问题, 账单系统, 云厂商账单, 运维自动化" />
   <meta name="description" content="本文介绍了如何通过资源账单系统优化DevOps中的云成本核算，识别并解决云厂商账单中的隐藏问题，提升运维效率和成本透明度。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>找出隐藏在账单里的秘密</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/devops-cloud-cost-financial-billing-finops-resource.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/devops-cloud-cost-financial-billing-finops-resource.html" />
   <meta property="og:title" content="找出隐藏在账单里的秘密" />
   <meta property="og:description" content="本文介绍了如何通过资源账单系统优化DevOps中的云成本核算，识别并解决云厂商账单中的隐藏问题，提升运维效率和成本透明度。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/devops-cloud-cost-financial-billing-finops-resource.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/devops-cloud-cost-financial-billing-finops-resource.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "找出隐藏在账单里的秘密",
     "description": "本文介绍了如何通过资源账单系统优化DevOps中的云成本核算，识别并解决云厂商账单中的隐藏问题，提升运维效率和成本透明度。",
-    "url": "https://blog.ops-coffee.cns/devops-cloud-cost-financial-billing-finops-resource.html",
+    "url": "https://blog.ops-coffee.coms/devops-cloud-cost-financial-billing-finops-resource.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/devops-cloud-cost-financial-billing-finops-resource.html"
+      "@id": "https://blog.ops-coffee.coms/devops-cloud-cost-financial-billing-finops-resource.html"
     }
   }
   </script>
@@ -115,15 +115,15 @@
     <div class="container">
         <h1 id="art-title">找出隐藏在账单里的秘密</h1>
 
-        <p>两年前刚进公司的时候，就发现每个月的成本核算花费了大家很多的时间，当时就想要优化解决这个问题，但当了解计费逻辑后，太复杂了，加之基础建设不足，便暂时搁置。经过两年的发展，整个运维基础建设逐渐完善，再回过头来看，自动算帐似乎也没那么难，于是顺理成章上线了<a href="https://blog.ops-coffee.cn/s/devops-cloud-cost-financial-billing-finops" target="_blank">账单系统</a>，节省了大伙不少的时间</p>
-<p><a href="https://blog.ops-coffee.cn/s/devops-cloud-cost-financial-billing-finops" target="_blank">账单系统</a>的上线原本只是想要优化每个月的项目成本分摊核算，但一不小心发现了许多隐藏在账单里的计费相关的问题，有资源使用的不合理，也有云厂商账务的错算，在追踪问题的过程中，时常需要查看某个资源实例一段时间内的消费趋势，主要是每个账期内资源的原价多少钱、是否有折扣、最终支付了多少钱，以及与其他账期相比有无明显的变化</p>
-<p>上篇文章介绍的<a href="https://blog.ops-coffee.cn/s/devops-cloud-cost-financial-billing-finops" target="_blank">账单系统</a>重点还在数据的汇总，根据账号汇总，根据产品汇总，根据项目汇总，根据地域汇总等等，虽然账号详情及项目详情页面也有列实例维度消费的详情，但表格的展示形式始终不够直观，没有办法一眼看出其中的问题，于是快马加鞭上线了资源账单</p>
+        <p>两年前刚进公司的时候，就发现每个月的成本核算花费了大家很多的时间，当时就想要优化解决这个问题，但当了解计费逻辑后，太复杂了，加之基础建设不足，便暂时搁置。经过两年的发展，整个运维基础建设逐渐完善，再回过头来看，自动算帐似乎也没那么难，于是顺理成章上线了<a href="https://blog.ops-coffee.com/s/devops-cloud-cost-financial-billing-finops" target="_blank">账单系统</a>，节省了大伙不少的时间</p>
+<p><a href="https://blog.ops-coffee.com/s/devops-cloud-cost-financial-billing-finops" target="_blank">账单系统</a>的上线原本只是想要优化每个月的项目成本分摊核算，但一不小心发现了许多隐藏在账单里的计费相关的问题，有资源使用的不合理，也有云厂商账务的错算，在追踪问题的过程中，时常需要查看某个资源实例一段时间内的消费趋势，主要是每个账期内资源的原价多少钱、是否有折扣、最终支付了多少钱，以及与其他账期相比有无明显的变化</p>
+<p>上篇文章介绍的<a href="https://blog.ops-coffee.com/s/devops-cloud-cost-financial-billing-finops" target="_blank">账单系统</a>重点还在数据的汇总，根据账号汇总，根据产品汇总，根据项目汇总，根据地域汇总等等，虽然账号详情及项目详情页面也有列实例维度消费的详情，但表格的展示形式始终不够直观，没有办法一眼看出其中的问题，于是快马加鞭上线了资源账单</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0418.01.png" /></p>
 <p>再次声明：为了避免引起误会，所有资源和账单无论是文章中提到还是截图中截取的都是<strong>脱敏模拟数据</strong>，并不代表真实消费情况，各位不必当真</p>
 <p>资源账单可以以资源单维度展示账单数据，同时也可以快速对根据资源账号、类型、ID等快速搜索资源，点击资源ID可以查看资源详细账单</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0418.02.png" /></p>
 <p>资源详细账单主要用来展示某个资源实例一段时间内的资源消费趋势变化以详情，页面分三个部分，第一部分展示资源的ID、类型和所属账户，第二部分展示资源的消费变化，主要包含官方原价、实际支付金额和折扣，单个资源的数据有限，所以这里会展示资源从购买到当前所有数据，第二部分就是当前资源详细的消费数据。资源账单是否有问题，几乎只需要一眼，看第二部分的消费趋势是否有大的变化即可，如果趋势波动明显，那就要仔细看下资源账单了，通过第三部分的数据可以详细追踪查看</p>
-<p>资源账单从构思到上线也就花了几个小时的时间，在做账单系统时已经全量同步了云上的账单，数据都有，展示那就比较轻松了，资源账单的核心就是根据资源ID去详细账单数据中检索数据，对数据进行简单处理展示，这里的处理主要集中在第二部分图表，图表是按账期也就是月维度来展示的，而一个资源ID在一个账期内可能会有多条明细数据存在，此时只需要将这多条明细数据汇总即可。在使用的过程中快速迭代优化，遇到问题能够及时的处理解决，这就是我们自研了<a href="https://blog.ops-coffee.cn/devops" target="_blank">整套运维自动化</a>系统的主要魅力</p>
+<p>资源账单从构思到上线也就花了几个小时的时间，在做账单系统时已经全量同步了云上的账单，数据都有，展示那就比较轻松了，资源账单的核心就是根据资源ID去详细账单数据中检索数据，对数据进行简单处理展示，这里的处理主要集中在第二部分图表，图表是按账期也就是月维度来展示的，而一个资源ID在一个账期内可能会有多条明细数据存在，此时只需要将这多条明细数据汇总即可。在使用的过程中快速迭代优化，遇到问题能够及时的处理解决，这就是我们自研了<a href="https://blog.ops-coffee.com/devops" target="_blank">整套运维自动化</a>系统的主要魅力</p>
 <p>账单系统的开发和落地使用，让我清晰的意识到即便是知名的公有云厂商，账单异常那也很难避免，所以我也建议大伙都要去仔细看看自己的公有云账单，抱着怀疑的态度，擦亮眼睛，找出隐藏在账单里的秘密</p>
 <p>昨天上线资源账单，意犹未尽，今天大早上爬起来写了这篇文章记录分享，事情赶紧做，不能拖，拖着拖着就不想干了，就比如文章总结，问题解决的当下最有记录的动力，时间越长记录的欲望逐渐降低，直至放弃</p>
 
@@ -136,11 +136,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/devops-cloud-cost-financial-billing-finops.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/devops-cloud-cost-financial-billing-finops.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>运维自动化之账单系统</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/devops-task-subtask-args-kwargs-jinja-template.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/devops-task-subtask-args-kwargs-jinja-template.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>任务系统之结果传递</span>
                 <span class="pagination-arrow">→</span>
             </a>

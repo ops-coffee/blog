@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Django, 数据校验, save方法, Python, 数据库, 校验方法, pre_save信号, model重写" />
   <meta name="description" content="在Django中，通过重写model的save方法可以方便地在数据入库前进行复杂的校验，避免了在多个view中重复校验的问题。本文详细介绍了如何实现这一方法，并指出了在批量更新数据时需要注意的问题及其解决方案。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Django model重写save方法及update踩坑记录</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/django-model-update-save-method-validation.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/django-model-update-save-method-validation.html" />
   <meta property="og:title" content="Django model重写save方法及update踩坑记录" />
   <meta property="og:description" content="在Django中，通过重写model的save方法可以方便地在数据入库前进行复杂的校验，避免了在多个view中重复校验的问题。本文详细介绍了如何实现这一方法，并指出了在批量更新数据时需要注意的问题及其解决方案。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/django-model-update-save-method-validation.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/django-model-update-save-method-validation.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Django model重写save方法及update踩坑记录",
     "description": "在Django中，通过重写model的save方法可以方便地在数据入库前进行复杂的校验，避免了在多个view中重复校验的问题。本文详细介绍了如何实现这一方法，并指出了在批量更新数据时需要注意的问题及其解决方案。",
-    "url": "https://blog.ops-coffee.cns/django-model-update-save-method-validation.html",
+    "url": "https://blog.ops-coffee.coms/django-model-update-save-method-validation.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/django-model-update-save-method-validation.html"
+      "@id": "https://blog.ops-coffee.coms/django-model-update-save-method-validation.html"
     }
   }
   </script>
@@ -120,7 +120,7 @@
 </blockquote>
 <p>试想一下，Django中如果我们想对保存进数据库的数据做校验，有哪些实现的方法？</p>
 <p>我们可以在view中去处理，每当view接收请求，就对提交的数据做校验，校验不通过直接返回错误，不写数据库，校验通过再调用<code>create</code>或<code>update</code>方法写入数据库</p>
-<p>以上方式比较简单，容易理解，但随之又带来了麻烦，我们需在所有接收数据的地方都要去校验，那么有没有更加优雅的方式呢？如果你看过我之前的文章<a href="https://blog.ops-coffee.cn/s/django-signals-for-notification-in-ticket-system.html" target="_blank">『Django使用Signals监测model字段变化发送通知』</a>]就能想到可以通过signals信号来处理，添加一个<code>pre_save</code>的信号，每当数据库数据变更前都会触发<code>pre_save</code>方法，可以在这里进行校验，免去了view中多个地方校验的麻烦</p>
+<p>以上方式比较简单，容易理解，但随之又带来了麻烦，我们需在所有接收数据的地方都要去校验，那么有没有更加优雅的方式呢？如果你看过我之前的文章<a href="https://blog.ops-coffee.com/s/django-signals-for-notification-in-ticket-system.html" target="_blank">『Django使用Signals监测model字段变化发送通知』</a>]就能想到可以通过signals信号来处理，添加一个<code>pre_save</code>的信号，每当数据库数据变更前都会触发<code>pre_save</code>方法，可以在这里进行校验，免去了view中多个地方校验的麻烦</p>
 <p>而今天要说的并不是signals，而是另一种比较常用的做法：<strong>重写model的save方法</strong></p>
 <h2 id="save">重写save方法</h2>
 <p>save方法的主要作用就是将一个对象保存到数据库。如果我们想在数据入库之前做一些处理，除了上边提到的<code>signals</code>之外，还可以通过重写save方法来实现。具体实现方式看下面这个例子</p>
@@ -176,11 +176,11 @@ _t.save()</code></pre>
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/system-design-principles-and-optimization-strategies.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/system-design-principles-and-optimization-strategies.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>从知乎宕机说起，闲聊设计原则与优化方法</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/django-object-permission-django-guardian-rbac.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/django-object-permission-django-guardian-rbac.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Django Object Permission之Django-guardian使用详解</span>
                 <span class="pagination-arrow">→</span>
             </a>

@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="DevOps, 任务参数, JSON, 表单, 参数隐藏, 参数修改, 参数位置拖动, RowReorder, Datatables" />
   <meta name="description" content="本文介绍了如何将DevOps任务参数从复杂的JSON配置升级为更直观的表格+表单方式，并通过增加参数隐藏、修改和位置拖动功能，进一步优化了用户的使用体验。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>简洁表单替代复杂JSON，完成开始完美结束</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/devops-task-args-edit-datatables-rowreorder.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/devops-task-args-edit-datatables-rowreorder.html" />
   <meta property="og:title" content="简洁表单替代复杂JSON，完成开始完美结束" />
   <meta property="og:description" content="本文介绍了如何将DevOps任务参数从复杂的JSON配置升级为更直观的表格+表单方式，并通过增加参数隐藏、修改和位置拖动功能，进一步优化了用户的使用体验。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/devops-task-args-edit-datatables-rowreorder.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/devops-task-args-edit-datatables-rowreorder.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "简洁表单替代复杂JSON，完成开始完美结束",
     "description": "本文介绍了如何将DevOps任务参数从复杂的JSON配置升级为更直观的表格+表单方式，并通过增加参数隐藏、修改和位置拖动功能，进一步优化了用户的使用体验。",
-    "url": "https://blog.ops-coffee.cns/devops-task-args-edit-datatables-rowreorder.html",
+    "url": "https://blog.ops-coffee.coms/devops-task-args-edit-datatables-rowreorder.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/devops-task-args-edit-datatables-rowreorder.html"
+      "@id": "https://blog.ops-coffee.coms/devops-task-args-edit-datatables-rowreorder.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">简洁表单替代复杂JSON，完成开始完美结束</h1>
 
-        <p>上篇文章<a href="https://blog.ops-coffee.cn/s/devops-task-subtask-args-json-to-form-table" target="_blank">「简洁表单替代复杂JSON，配置直观又简单」</a>讲了我们将任务参数由定义并修改JSON的方式升级为了表格+表单的方式，理解更加简单，上手难度降低，对用户也更为友好，使用成本明显降低</p>
+        <p>上篇文章<a href="https://blog.ops-coffee.com/s/devops-task-subtask-args-json-to-form-table" target="_blank">「简洁表单替代复杂JSON，配置直观又简单」</a>讲了我们将任务参数由定义并修改JSON的方式升级为了表格+表单的方式，理解更加简单，上手难度降低，对用户也更为友好，使用成本明显降低</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0521.04.png" /></p>
 <p>通常情况下一个新功能开发完成，做到能用就快速上线了，往往体验并不十分完美，后续会进行持续的优化，以提升使用体验。这个功能也不例外，上线前都知道一些体验有待提升的地方，例如：</p>
 <p>1.对于一些参数，会存在默认值，并且这些默认值同一任务是不变的，例如基于Java项目部署模板创建了A、B、C三个任务流，模板中有一个Project的参数，对应项目名字，对于特定的任务流项目名字固定，不需要修改，此时我们会给任务流的Project参数一个固定的默认值，并且在后续点击任务流执行时也不需要显示Project参数的填写或选择。此时的话我们就需要一个隐藏属性以标识参数是否需要在任务流执行时渲染</p>
@@ -265,11 +265,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/devops-task-subtask-args-json-to-form-table.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/devops-task-subtask-args-json-to-form-table.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>简洁表单替代复杂JSON，配置直观又简单</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/google-adsense-payment-china-merchants-bank.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/google-adsense-payment-china-merchants-bank.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>躺赚的第一笔美金</span>
                 <span class="pagination-arrow">→</span>
             </a>

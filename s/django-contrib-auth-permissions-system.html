@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Django权限系统, Django自定义权限, Django对象权限, Django权限管理, Django signals, Django admin权限, Django用户权限, Django组权限" />
   <meta name="description" content="本文详细介绍了Django默认权限系统的工作原理及限制，并提供了自定义权限、权限修改、权限查看和校验的方法，适用于希望深入了解和扩展Django权限管理功能的开发者。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Django默认权限机制介绍及实践</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/django-contrib-auth-permissions-system.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/django-contrib-auth-permissions-system.html" />
   <meta property="og:title" content="Django默认权限机制介绍及实践" />
   <meta property="og:description" content="本文详细介绍了Django默认权限系统的工作原理及限制，并提供了自定义权限、权限修改、权限查看和校验的方法，适用于希望深入了解和扩展Django权限管理功能的开发者。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/django-contrib-auth-permissions-system.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/django-contrib-auth-permissions-system.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Django默认权限机制介绍及实践",
     "description": "本文详细介绍了Django默认权限系统的工作原理及限制，并提供了自定义权限、权限修改、权限查看和校验的方法，适用于希望深入了解和扩展Django权限管理功能的开发者。",
-    "url": "https://blog.ops-coffee.cns/django-contrib-auth-permissions-system.html",
+    "url": "https://blog.ops-coffee.coms/django-contrib-auth-permissions-system.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/django-contrib-auth-permissions-system.html"
+      "@id": "https://blog.ops-coffee.coms/django-contrib-auth-permissions-system.html"
     }
   }
   </script>
@@ -122,10 +122,10 @@
 <p>之所以说简单呢？主要是因为：</p>
 <p>1.默认的权限系统是基于表的控制，权限最小粒度是表</p>
 <p>也就是说，假如有一个Blog表，我们可以赋予用户或组对Blog表有delete的权限，那么用户或组成员就可以删除全部Blog，是不能控制用户只能删除自己创建的blog的</p>
-<p>如果希望用户只能删除自己创建的Blog，不能删除别人创建的Blog，这种需求Django默认的权限管理就无法实现了，需要用到<code>object permission</code>对象权限，有第三方模块实现了对象权限，如<a href="https://github.com/django-guardian/django-guardian" target="_blank">django-guardian</a>，你可以直接使用，或者也可以自己实现对象权限，具体思路可参考这篇文章：<a href="https://blog.ops-coffee.cn/s/extending-django-permissions-custom-solutions.html" target="_blank">Django内置权限扩展案例</a></p>
+<p>如果希望用户只能删除自己创建的Blog，不能删除别人创建的Blog，这种需求Django默认的权限管理就无法实现了，需要用到<code>object permission</code>对象权限，有第三方模块实现了对象权限，如<a href="https://github.com/django-guardian/django-guardian" target="_blank">django-guardian</a>，你可以直接使用，或者也可以自己实现对象权限，具体思路可参考这篇文章：<a href="https://blog.ops-coffee.com/s/extending-django-permissions-custom-solutions.html" target="_blank">Django内置权限扩展案例</a></p>
 <p>2.每个Model模型默认只有四个权限，分别是添加<code>add_</code>、修改<code>change_</code>、删除<code>delete_</code>、查看<code>view_</code>，这些权限记录在Permission表中，表数据如下：</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/0926.01.png" /></p>
-<p>默认权限的创建是通过Django的信号signals实现的，使用了<code>post_migrate</code>信号，在每次执行migrate操作时都会为新的Model模型创建默认权限，关于Django的信号Signals介绍和使用可以查看这篇文章：<a href="https://blog.ops-coffee.cn/s/django-signals-for-notification-in-ticket-system.html" target="_blank">Django使用Signals监测model字段变化发送通知</a>，</p>
+<p>默认权限的创建是通过Django的信号signals实现的，使用了<code>post_migrate</code>信号，在每次执行migrate操作时都会为新的Model模型创建默认权限，关于Django的信号Signals介绍和使用可以查看这篇文章：<a href="https://blog.ops-coffee.com/s/django-signals-for-notification-in-ticket-system.html" target="_blank">Django使用Signals监测model字段变化发送通知</a>，</p>
 <h3 id="_1">自定义权限</h3>
 <p>默认的权限名字和描述都是英文的，且只有四个，如果你不想用默认的几个权限，想要自定义的话，可以这样做：</p>
 <pre class="codehilite"><code>class Blog(models.Model):
@@ -240,11 +240,11 @@ def ops_coffee_view(request):
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/national-flag-in-wechat-avatar-event.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/national-flag-in-wechat-avatar-event.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>朋友圈被刷屏的头像加国旗是这么来的？</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/china-internet-domain-blocking-gitee-alicloud.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/china-internet-domain-blocking-gitee-alicloud.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>码云域名被阿里云停止解析，如果是你维护的域名该怎么办？</span>
                 <span class="pagination-arrow">→</span>
             </a>

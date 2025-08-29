@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Probius, CICD工具, 命令模板任务, DevOps平台, 任务模块, 运维场景" />
   <meta name="description" content="Probius是一个基于命令、模板和任务的CICD工具，旨在通过简单易用的web配置实现各种自定义功能，覆盖广泛的运维场景。本文详细介绍了Probius的设计思路和页面配置。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Probius：一个功能强大的自定义任务系统</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/devops-task-probius-cicd-system.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/devops-task-probius-cicd-system.html" />
   <meta property="og:title" content="Probius：一个功能强大的自定义任务系统" />
   <meta property="og:description" content="Probius是一个基于命令、模板和任务的CICD工具，旨在通过简单易用的web配置实现各种自定义功能，覆盖广泛的运维场景。本文详细介绍了Probius的设计思路和页面配置。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/devops-task-probius-cicd-system.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/devops-task-probius-cicd-system.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Probius：一个功能强大的自定义任务系统",
     "description": "Probius是一个基于命令、模板和任务的CICD工具，旨在通过简单易用的web配置实现各种自定义功能，覆盖广泛的运维场景。本文详细介绍了Probius的设计思路和页面配置。",
-    "url": "https://blog.ops-coffee.cns/devops-task-probius-cicd-system.html",
+    "url": "https://blog.ops-coffee.coms/devops-task-probius-cicd-system.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/devops-task-probius-cicd-system.html"
+      "@id": "https://blog.ops-coffee.coms/devops-task-probius-cicd-system.html"
     }
   }
   </script>
@@ -118,7 +118,7 @@
         <blockquote>
 <p>断更的这些日子，我又折腾了一个轮子，文末参考源码</p>
 </blockquote>
-<p>大约在一年半以前写过一篇文章<a href="https://blog.ops-coffee.cn/s/full-path-varian-cicd-system-cmdb-jenkins.html" target="_blank">『探秘varian：优雅的发布部署程序』</a>，里边有讲到我们采用类似lego的模块化方式来构建CICD的流程，虽能满足我们的需求，但终究需要编写代码，使用成本有点高，不够友好。近段时间终于下定决心将其重构，只为带来更好的使用体验，于是便有了这个项目<strong>Probius</strong></p>
+<p>大约在一年半以前写过一篇文章<a href="https://blog.ops-coffee.com/s/full-path-varian-cicd-system-cmdb-jenkins.html" target="_blank">『探秘varian：优雅的发布部署程序』</a>，里边有讲到我们采用类似lego的模块化方式来构建CICD的流程，虽能满足我们的需求，但终究需要编写代码，使用成本有点高，不够友好。近段时间终于下定决心将其重构，只为带来更好的使用体验，于是便有了这个项目<strong>Probius</strong></p>
 <p>Probius为游戏星际争霸里的角色，是一只充满好奇心的星灵探测机，取此名字的意思也是希望用户能够在这个系统中充分发挥想象，借助此系统实现各种自定义的功能，覆盖更多的运维场景</p>
 <h2 id="_1">设计思路</h2>
 <p>Probius由三个关键词构成：命令、模板、任务</p>
@@ -133,7 +133,7 @@
 <p><img alt="" loading="lazy" src="/static/images/2020/0529.02.png" /></p>
 <p>理论上不限制脚本的类型，可以是shell、python或者go之类的，前提是系统上有脚本的运行环境，当命令或者脚本有参数的时候可以在参数列写上参数名称，然后在最终执行任务的时候需要传递具体参数的值过来</p>
 <p>在命令执行完成后，会根据命令的返回状态也就是<code>$?</code>的值来判断命令是否执行成功，当<code>$?</code>为0是表示执行成功，否则表示执行失败，如果是执行的脚本时，需要在脚本最后明确脚本返回状态，shell脚本可以在脚本执行成功时通过exit指定退出状态，例如</p>
-<pre class="codehilite"><code>ls /ops-coffee.cn &amp;&amp;\
+<pre class="codehilite"><code>ls /ops-coffee.com &amp;&amp;\
 exit 0 ||\
 exit 2</code></pre>
 
@@ -141,7 +141,7 @@ exit 2</code></pre>
 <p>而对于python脚本则可以借助<code>sys.exit</code>这样写</p>
 <pre class="codehilite"><code>import sys
 
-if 'www' in 'ops-coffee.cn':
+if 'www' in 'ops-coffee.com':
   sys.exit(0)
 else:
   sys.exit(3)</code></pre>
@@ -177,11 +177,11 @@ else:
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/django-object-permission-django-guardian-rbac.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/django-object-permission-django-guardian-rbac.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Django Object Permission之Django-guardian使用详解</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/django-login-required-middleware.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/django-login-required-middleware.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Django全局启用登陆验证login_required</span>
                 <span class="pagination-arrow">→</span>
             </a>

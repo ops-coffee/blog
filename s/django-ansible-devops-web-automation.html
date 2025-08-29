@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Ansible, DevOps, 任务中心, 自动化运维, Python, API, Playbook, Module, CMDB" />
   <meta name="description" content="本文介绍了如何基于Ansible开发一个简单的DevOps任务中心的思路，包括前端页面和后端逻辑的设计，帮助新手理解流程并整理开发思路。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Django+Ansible构建任务中心思路</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/django-ansible-devops-web-automation.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/django-ansible-devops-web-automation.html" />
   <meta property="og:title" content="Django+Ansible构建任务中心思路" />
   <meta property="og:description" content="本文介绍了如何基于Ansible开发一个简单的DevOps任务中心的思路，包括前端页面和后端逻辑的设计，帮助新手理解流程并整理开发思路。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/django-ansible-devops-web-automation.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/django-ansible-devops-web-automation.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Django+Ansible构建任务中心思路",
     "description": "本文介绍了如何基于Ansible开发一个简单的DevOps任务中心的思路，包括前端页面和后端逻辑的设计，帮助新手理解流程并整理开发思路。",
-    "url": "https://blog.ops-coffee.cns/django-ansible-devops-web-automation.html",
+    "url": "https://blog.ops-coffee.coms/django-ansible-devops-web-automation.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/django-ansible-devops-web-automation.html"
+      "@id": "https://blog.ops-coffee.coms/django-ansible-devops-web-automation.html"
     }
   }
   </script>
@@ -116,7 +116,7 @@
         <h1 id="art-title">Django+Ansible构建任务中心思路</h1>
 
         <p>Ansible作为老牌的自动化运维工具，由Python开发，应用广泛，但其默认只提供了命令行下的使用方式，好在提供有完善的API支持二次开发，可以很方便的集成到我们的自动化运维系统中</p>
-<p>最近一个朋友跳槽到了新公司转做DevOps开发，接到的第一个需求就是基于Ansible研发简单的任务中心，而他欠缺相关经验就找我帮忙，我就花了两天时间从熟悉Ansible开始写了个项目，由于我们的任务都是通过自研的一套<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">自定义任务引擎Probius</a>来实现的，之前从未正式用过Ansible，趁此机会也算是熟悉了</p>
+<p>最近一个朋友跳槽到了新公司转做DevOps开发，接到的第一个需求就是基于Ansible研发简单的任务中心，而他欠缺相关经验就找我帮忙，我就花了两天时间从熟悉Ansible开始写了个项目，由于我们的任务都是通过自研的一套<a href="https://blog.ops-coffee.com/s/devops-task-probius-cicd-system.html" target="_blank">自定义任务引擎Probius</a>来实现的，之前从未正式用过Ansible，趁此机会也算是熟悉了</p>
 <p>本篇文章只有思路没有代码，主要帮助新手了解流程整理思路，从而更好的理解代码</p>
 <h2 id="_1">思路整理</h2>
 <p>可以通过Web运行Ansible的Module和Playbook这是我们的目标，要实现这个目标我们要做哪些功能呢？我大概画了个脑图帮助整理思路</p>
@@ -151,11 +151,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/sadmin-django-common-application.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/sadmin-django-common-application.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Sadmin：打造私有Django公共库实现代码复用</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/devops-task-probius-kubernetes-integration.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/devops-task-probius-kubernetes-integration.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Probius+Kubernetes任务系统如虎添翼</span>
                 <span class="pagination-arrow">→</span>
             </a>

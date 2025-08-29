@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="运维平台, Celery, 任务管理, 监控工具, Flower, 任务队列, 异步任务, 周期任务, 定时任务, 任务优先级, DevOps" />
   <meta name="description" content="本文介绍了如何在运维平台中借助Celery实现对周期、定时和异步任务的监控与管理，探讨了使用Celery的API如inspect和AsyncResult来获取任务队列状态和任务执行结果，以及如何通过这些工具来优化运维自动化平台的任务管理。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>监控Celery不一定非要使用Flower</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/python-django-celery-monitor-not-flower.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/python-django-celery-monitor-not-flower.html" />
   <meta property="og:title" content="监控Celery不一定非要使用Flower" />
   <meta property="og:description" content="本文介绍了如何在运维平台中借助Celery实现对周期、定时和异步任务的监控与管理，探讨了使用Celery的API如inspect和AsyncResult来获取任务队列状态和任务执行结果，以及如何通过这些工具来优化运维自动化平台的任务管理。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/python-django-celery-monitor-not-flower.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/python-django-celery-monitor-not-flower.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "监控Celery不一定非要使用Flower",
     "description": "本文介绍了如何在运维平台中借助Celery实现对周期、定时和异步任务的监控与管理，探讨了使用Celery的API如inspect和AsyncResult来获取任务队列状态和任务执行结果，以及如何通过这些工具来优化运维自动化平台的任务管理。",
-    "url": "https://blog.ops-coffee.cns/python-django-celery-monitor-not-flower.html",
+    "url": "https://blog.ops-coffee.coms/python-django-celery-monitor-not-flower.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/python-django-celery-monitor-not-flower.html"
+      "@id": "https://blog.ops-coffee.coms/python-django-celery-monitor-not-flower.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">监控Celery不一定非要使用Flower</h1>
 
-        <p>运维平台中有许多的周期/定时/异步任务，例如证书扫描、数据备份、日志清理、线上作业等等，这些任务的执行都是借助于Celery来完成的。任务多了之后就会遇到一系列的问题，例如我之前写过的<a href="https://blog.ops-coffee.cn/s/django-celery-beat-queues-priority" target="_blank">将任务分多队列来解决生产环境下的任务优先级问题</a>，除此之外还要经常关注队列的状态以及任务的运行情况，为了方便查看任务以及Worker的运行情况，我在后台中添加了队列状态这个功能</p>
+        <p>运维平台中有许多的周期/定时/异步任务，例如证书扫描、数据备份、日志清理、线上作业等等，这些任务的执行都是借助于Celery来完成的。任务多了之后就会遇到一系列的问题，例如我之前写过的<a href="https://blog.ops-coffee.com/s/django-celery-beat-queues-priority" target="_blank">将任务分多队列来解决生产环境下的任务优先级问题</a>，除此之外还要经常关注队列的状态以及任务的运行情况，为了方便查看任务以及Worker的运行情况，我在后台中添加了队列状态这个功能</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0125.01.png" /></p>
 <p>这个功能参考了Celery知名监控工具Flower的实现，之所以没有直接使用Flower，主要有几方面的考虑，其一是Flower的页面风格与我们本身的平台风格差异较大，其二是Flower要单独启动进程或者是去看代码深度集成，比较麻烦，其三也是想要更加深入的了解下Celery，毕竟项目用了它，了解不深遇到问题不好解决。基于以上几点考虑，就自己实现了Celery监控功能的开发。好在并不复杂，Celery本身提供了一组API，可以查询任务队列的状态、执行结果等信息。借助于这些API就能完成比较详细的监控，Celery的API主要有两个</p>
 <h3 id="inspect">inspect</h3>
@@ -210,7 +210,7 @@ result.forget()</code></pre>
 <p>通过<code>AsyncResult</code>可以获取到任务执行的相关信息，对任务执行过程和结果都有很好的把控。不过这需要任务的ID，任务ID通常可以通过任务执行时获取，<code>ops_coffee_auto_notify_task.delay()</code>异步执行任务后返回的就是任务的ID。但对于任务的话我通常会单独记录任务执行的过程和状态，而不依赖Celery的结果记录，所以对于<code>AsyncResult</code>的需求并不强</p>
 <p>但平常需要开关系统内置的周期任务，此时就需要知道系统任务列表，通过获取<code>PeriodicTask</code>表的数据即可，同时通过修改<code>PeriodicTask</code>表的<code>enabled</code>字段值来达到开启或暂停的目的</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0125.04.png" /></p>
-<p><code>inspect</code>更关注Celery的Worker运行情况，而<code>AsyncResult</code>则更关注于Celery的任务运行状态，通过两者的配合就能更好的掌握周期/定时/异步任务的执行情况了，通过监控功能的开发也对Celery有了更深的了解，同时<a href="https://blog.ops-coffee.cn/devops" target="_blank">运维自动化平台</a>也变得更加完善</p>
+<p><code>inspect</code>更关注Celery的Worker运行情况，而<code>AsyncResult</code>则更关注于Celery的任务运行状态，通过两者的配合就能更好的掌握周期/定时/异步任务的执行情况了，通过监控功能的开发也对Celery有了更深的了解，同时<a href="https://blog.ops-coffee.com/devops" target="_blank">运维自动化平台</a>也变得更加完善</p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
@@ -221,11 +221,11 @@ result.forget()</code></pre>
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/2023-WeChat-official-accounts-data-share.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/2023-WeChat-official-accounts-data-share.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>我的2023年公众号创作数据分享</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/IAC-devops-cloud-cmdb-resource-sync.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/IAC-devops-cloud-cmdb-resource-sync.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>多云系统之资源同步过程解析</span>
                 <span class="pagination-arrow">→</span>
             </a>

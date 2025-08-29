@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="VECMDB部署, Docker Compose, MySQL, Redis, CMDB系统, CMDB API, CMDB UI, Docker安装, CentOS7, 容器化部署, 自定义网络, 本地卷, 环境变量, 排错方法" />
   <meta name="description" content="本文详细介绍了VECMDB的部署过程，包括Docker和Docker Compose的安装、项目启动、访问方式以及系统管理。此外，还提供了详细的排错方法和常见问题的解决方案，帮助读者深入了解VECMDB的运行机制。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>开源｜维易CMDB详解之安装部署及常见问题处理</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnveops/oneops-cmdb-install-for-centos-linux.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comveops/oneops-cmdb-install-for-centos-linux.html" />
   <meta property="og:title" content="开源｜维易CMDB详解之安装部署及常见问题处理" />
   <meta property="og:description" content="本文详细介绍了VECMDB的部署过程，包括Docker和Docker Compose的安装、项目启动、访问方式以及系统管理。此外，还提供了详细的排错方法和常见问题的解决方案，帮助读者深入了解VECMDB的运行机制。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnveops/oneops-cmdb-install-for-centos-linux.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comveops/oneops-cmdb-install-for-centos-linux.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "开源｜维易CMDB详解之安装部署及常见问题处理",
     "description": "本文详细介绍了VECMDB的部署过程，包括Docker和Docker Compose的安装、项目启动、访问方式以及系统管理。此外，还提供了详细的排错方法和常见问题的解决方案，帮助读者深入了解VECMDB的运行机制。",
-    "url": "https://blog.ops-coffee.cnveops/oneops-cmdb-install-for-centos-linux.html",
+    "url": "https://blog.ops-coffee.comveops/oneops-cmdb-install-for-centos-linux.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnveops/oneops-cmdb-install-for-centos-linux.html"
+      "@id": "https://blog.ops-coffee.comveops/oneops-cmdb-install-for-centos-linux.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">开源｜维易CMDB详解之安装部署及常见问题处理</h1>
 
-        <p>之前介绍过一个<a href="https://blog.ops-coffee.cn/s/veops-open-source-cmdb-devops" target="_blank">灵活多变功能强大的开源CMDB系统</a>，设计精巧，可玩性高，经过一段时间的深度使用，发现了许多可取之处，无论是构建系统内部的资产管理数据库，还是学习它的设计方式都有不少的可取之处，接下来我准备写一系列的文章来系统的介绍一下它，从使用到设计，全面深入了解下</p>
+        <p>之前介绍过一个<a href="https://blog.ops-coffee.com/s/veops-open-source-cmdb-devops" target="_blank">灵活多变功能强大的开源CMDB系统</a>，设计精巧，可玩性高，经过一段时间的深度使用，发现了许多可取之处，无论是构建系统内部的资产管理数据库，还是学习它的设计方式都有不少的可取之处，接下来我准备写一系列的文章来系统的介绍一下它，从使用到设计，全面深入了解下</p>
 <p>这个系列第一篇就从部署开始，详细介绍下VECMDB的安装、启动、访问以及系统的详细管理方式和常见错误的处理等</p>
 <h2 id="_1">安装</h2>
 <p>在开始之前你只需要准备一台主机，Linux或MacOS系统，只要能安装docker即可。以下操作环境基于CentOS7</p>
@@ -520,7 +520,7 @@ cmdb-ui      registry.cn-hangzhou.aliyuncs.com/veops/cmdb-ui:2.4.5    &quot;/doc
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>文章列表</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/veops/oneops-cmdb-ci-types-configure-base.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/veops/oneops-cmdb-ci-types-configure-base.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>开源｜维易CMDB详解之模型基础配置</span>
                 <span class="pagination-arrow">→</span>
             </a>

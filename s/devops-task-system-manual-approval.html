@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="任务系统, DevOps, 手动审批, Celery, 子任务, 模板" />
   <meta name="description" content="本文详细介绍了如何在新开发的任务系统中实现手动审批功能，讨论了从单Celery任务到多Celery任务的转变，以及如何通过审批任务中断任务流执行，等待用户审批通过后再继续执行流程。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>任务系统之手动审批</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/devops-task-system-manual-approval.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/devops-task-system-manual-approval.html" />
   <meta property="og:title" content="任务系统之手动审批" />
   <meta property="og:description" content="本文详细介绍了如何在新开发的任务系统中实现手动审批功能，讨论了从单Celery任务到多Celery任务的转变，以及如何通过审批任务中断任务流执行，等待用户审批通过后再继续执行流程。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/devops-task-system-manual-approval.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/devops-task-system-manual-approval.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "任务系统之手动审批",
     "description": "本文详细介绍了如何在新开发的任务系统中实现手动审批功能，讨论了从单Celery任务到多Celery任务的转变，以及如何通过审批任务中断任务流执行，等待用户审批通过后再继续执行流程。",
-    "url": "https://blog.ops-coffee.cns/devops-task-system-manual-approval.html",
+    "url": "https://blog.ops-coffee.coms/devops-task-system-manual-approval.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/devops-task-system-manual-approval.html"
+      "@id": "https://blog.ops-coffee.coms/devops-task-system-manual-approval.html"
     }
   }
   </script>
@@ -118,10 +118,10 @@
         <p>今日阳光明媚，心情也跟着好了许多，坐在安静的图书馆里任阳光透过窗户照在脸上，暖洋洋很舒服</p>
 <p><img alt="" loading="lazy" src="/static/images/2022/0226.01.jpg" /></p>
 <p>入职新公司近两月，到目前为止感觉还不错，重写了整个任务系统并推进了项目接入落地，昨天刚跟团队的小伙伴们吃过饭，也算是给这个阶段性的成果一点奖励。进入新团队我主要负责整个DevOps相关工具的开发及落地，对于开发之前我有过相当丰富的经验非常自信没有问题，但对于落地说实在的我之前还是有点担忧的，毕竟大多数人都习惯于自己的舒适圈不愿改变，见过太多太多DevOps推进失败的例子，但我幸得上苍眷顾，遇到了一群非常靠谱的小伙伴，到目前为止落地还算顺利</p>
-<p>之所以说是重写了任务系统，是因为我上份工作写过<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">任务系统Probius</a>，到了新公司的第一项工作就是要解决发布部署问题，把原本分散于各个不同开源工具的部署方案给统一，那任务系统首当其冲的要承担重任了，我跟团队内的小伙伴们都逐一聊了聊，了解了当前的项目架构跟日常管理方式，发现曾经写过的任务系统并不能很好的满足当下的需求，所以重新设计，从前端模板到后端逻辑都进行了全新的开发</p>
+<p>之所以说是重写了任务系统，是因为我上份工作写过<a href="https://blog.ops-coffee.com/s/devops-task-probius-cicd-system.html" target="_blank">任务系统Probius</a>，到了新公司的第一项工作就是要解决发布部署问题，把原本分散于各个不同开源工具的部署方案给统一，那任务系统首当其冲的要承担重任了，我跟团队内的小伙伴们都逐一聊了聊，了解了当前的项目架构跟日常管理方式，发现曾经写过的任务系统并不能很好的满足当下的需求，所以重新设计，从前端模板到后端逻辑都进行了全新的开发</p>
 <p>全新开发的任务系统加入了诸多非常好用的功能，例如资源隔离、并行任务、数据隔离、定时任务、周期任务，以及这篇文章将要讲到的手动审批等等。这里顺便说一下，我写DevOps相关的文章都倾向于讲思路和方法，少有代码，我觉得思路比代码更重要，况且代码属于公司，除非得到允许，否则不允许也不能够公开分享，所以各位也不要问我有没有源码，肯定没有</p>
 <p><img alt="" loading="lazy" src="/static/images/2022/0226.02.jpg" /></p>
-<p>言归正传，接下来讲一下手动审批，在开始之前需要先看下这篇文章了解下任务系统的基本设计：<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">Probius：一个功能强大的自定义任务系统</a>，虽然我整个重写了，但基本的设计思路没太大变化，只是将命令给改成了子任务，现在全新的任务系统三个核心模块变成了子任务、模板和任务</p>
+<p>言归正传，接下来讲一下手动审批，在开始之前需要先看下这篇文章了解下任务系统的基本设计：<a href="https://blog.ops-coffee.com/s/devops-task-probius-cicd-system.html" target="_blank">Probius：一个功能强大的自定义任务系统</a>，虽然我整个重写了，但基本的设计思路没太大变化，只是将命令给改成了子任务，现在全新的任务系统三个核心模块变成了子任务、模板和任务</p>
 <p><strong>子任务：</strong> 任务系统的最小粒度，子任务有多种类型，例如命令、脚本、通知以及审批</p>
 <p><strong>模板：</strong> 一组子任务的集合，也可以理解为任务流，主要对模板下的子任务进行编排</p>
 <p><strong>任务：</strong> 模板+参数=任务，模板是静态的不可执行，而任务是动态的可以执行</p>
@@ -299,11 +299,11 @@ def run_subtask(tid):
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/script-robustness-and-best-practices.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/script-robustness-and-best-practices.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>简洁的脚本编写规范</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/parallel-task-execution-implementation.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/parallel-task-execution-implementation.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>任务系统之并行任务</span>
                 <span class="pagination-arrow">→</span>
             </a>

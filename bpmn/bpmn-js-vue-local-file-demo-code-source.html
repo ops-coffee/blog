@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="bpmn-js, 流程编辑器, 工作流, 本地文件加载, 本地文件保存, vue, bpmn文件, svg图片, saveXML, saveSVG, 流程图" />
   <meta name="description" content="本文是bpmn-js系列文章之一，介绍了如何从本地加载BPMN文件以及如何将绘制好的工作流保存为BPMN文件或SVG图片到本地，基于Vue环境实现。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>最好用的流程编辑器bpmn-js系列之本地文件</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnbpmn/bpmn-js-vue-local-file-demo-code-source.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.combpmn/bpmn-js-vue-local-file-demo-code-source.html" />
   <meta property="og:title" content="最好用的流程编辑器bpmn-js系列之本地文件" />
   <meta property="og:description" content="本文是bpmn-js系列文章之一，介绍了如何从本地加载BPMN文件以及如何将绘制好的工作流保存为BPMN文件或SVG图片到本地，基于Vue环境实现。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnbpmn/bpmn-js-vue-local-file-demo-code-source.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.combpmn/bpmn-js-vue-local-file-demo-code-source.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "最好用的流程编辑器bpmn-js系列之本地文件",
     "description": "本文是bpmn-js系列文章之一，介绍了如何从本地加载BPMN文件以及如何将绘制好的工作流保存为BPMN文件或SVG图片到本地，基于Vue环境实现。",
-    "url": "https://blog.ops-coffee.cnbpmn/bpmn-js-vue-local-file-demo-code-source.html",
+    "url": "https://blog.ops-coffee.combpmn/bpmn-js-vue-local-file-demo-code-source.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnbpmn/bpmn-js-vue-local-file-demo-code-source.html"
+      "@id": "https://blog.ops-coffee.combpmn/bpmn-js-vue-local-file-demo-code-source.html"
     }
   }
   </script>
@@ -118,7 +118,7 @@
         <blockquote>
 <p>最好用的流程编辑器bpmn-js系列文章</p>
 </blockquote>
-<p>上一篇文章<a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-base-usage-demo-code-source" target="_blank">『最好用的流程编辑器bpmn-js系列之基本使用』</a>介绍了bpmn的相关概念以及基本使用，基于bpmn-js的工作流编辑器已经run了起来，这篇文章将会介绍如何从本地加载xml格式的bpmn文件，以及如何将绘制好的工作流保作为bpmn文件或是svg图片保存到本地</p>
+<p>上一篇文章<a href="https://blog.ops-coffee.com/bpmn/bpmn-js-vue-base-usage-demo-code-source" target="_blank">『最好用的流程编辑器bpmn-js系列之基本使用』</a>介绍了bpmn的相关概念以及基本使用，基于bpmn-js的工作流编辑器已经run了起来，这篇文章将会介绍如何从本地加载xml格式的bpmn文件，以及如何将绘制好的工作流保作为bpmn文件或是svg图片保存到本地</p>
 <p>以下演示代码基于上一节搭建好的vue环境，使用bpmn版本为当前最新版7.3.0</p>
 <h2 id="_1">从本地文件中加载流程</h2>
 <p>上一节的演示代码中我们将bpmn流程图内容作为字符串赋予给了变量<code>xmlStr</code>，在渲染时通过<code>importXML(xmlStr)</code>直接读取了<code>xmlStr</code>变量的内容从而实现了绘图，核心代码如下所示</p>
@@ -414,7 +414,7 @@ export default {
 <p><img alt="" loading="lazy" src="/static/images/2020/0910.01.png" /></p>
 <h2 id="_4">写在最后</h2>
 <p>接触bpmn-js不久，且第一次用VUE，边学边写，文章难免出错，各位多多包含。想要打造一个好用的适合自己的流程编辑器，需要了解的内容比较多，bpmn-js会分多篇文章来介绍，下一篇介绍bpmn-js的页面布局等内容，欢迎关注</p>
-<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.cn" target="_blank">https://bpmn.ops-coffee.cn</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
+<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.com" target="_blank">https://bpmn.ops-coffee.com</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
@@ -425,11 +425,11 @@ export default {
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-base-usage-demo-code-source.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/bpmn/bpmn-js-vue-base-usage-demo-code-source.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>最好用的流程编辑器bpmn-js系列之基本使用</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-modeler-demo-code-source.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/bpmn/bpmn-js-vue-custom-modeler-demo-code-source.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>最好用的流程编辑器bpmn-js系列之Modeler</span>
                 <span class="pagination-arrow">→</span>
             </a>

@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="微信小程序, 小程序开发, ColorUI, 运维咖啡吧, 小程序审核, 技术文章, SEO友好" />
   <meta name="description" content="本文详细记录了开发一个微信小程序的设计思路、使用的技术、审核过程以及最终的源码提供。通过ColorUI组件库，开发了一个展示技术文章列表的小程序，并分享了开发中的技术细节和审核故事。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>没有基础也能写个小程序</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/wechat-miniapp-development-journey.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/wechat-miniapp-development-journey.html" />
   <meta property="og:title" content="没有基础也能写个小程序" />
   <meta property="og:description" content="本文详细记录了开发一个微信小程序的设计思路、使用的技术、审核过程以及最终的源码提供。通过ColorUI组件库，开发了一个展示技术文章列表的小程序，并分享了开发中的技术细节和审核故事。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/wechat-miniapp-development-journey.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/wechat-miniapp-development-journey.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "没有基础也能写个小程序",
     "description": "本文详细记录了开发一个微信小程序的设计思路、使用的技术、审核过程以及最终的源码提供。通过ColorUI组件库，开发了一个展示技术文章列表的小程序，并分享了开发中的技术细节和审核故事。",
-    "url": "https://blog.ops-coffee.cns/wechat-miniapp-development-journey.html",
+    "url": "https://blog.ops-coffee.coms/wechat-miniapp-development-journey.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/wechat-miniapp-development-journey.html"
+      "@id": "https://blog.ops-coffee.coms/wechat-miniapp-development-journey.html"
     }
   }
   </script>
@@ -120,9 +120,9 @@
 </blockquote>
 <h1 id="_1">背景说明</h1>
 <p>微信小程序自从发布以来就占据着超高的话题热度，一直以来都想开发一款自己的小程序，但苦于不懂前端迟迟没有开始。偶然发现了ColorUI这个开源的小程序组件库，界面好看且提供Demo，心中狂喜马上动手</p>
-<p>做个什么小程序呢？想了一圈这半年多一直坚持在写技术文章，为此开通了微信公众号，因为公众号查看文章列表不友好，且不方便在微信以外的渠道传播，我又利用Github Pages搭建了<a href="https://ops-coffee.cn" target="_blank">运维咖啡吧</a>网站主页，就想做个类似于网站主页的小程序吧，可以在微信体系内优化公众号文章列表页读取以及方便分类检索</p>
+<p>做个什么小程序呢？想了一圈这半年多一直坚持在写技术文章，为此开通了微信公众号，因为公众号查看文章列表不友好，且不方便在微信以外的渠道传播，我又利用Github Pages搭建了<a href="https://ops-coffee.com" target="_blank">运维咖啡吧</a>网站主页，就想做个类似于网站主页的小程序吧，可以在微信体系内优化公众号文章列表页读取以及方便分类检索</p>
 <h1 id="_2">开发过程</h1>
-<p>计划参考<a href="https://ops-coffee.cn" target="_blank">运维咖啡吧</a>网站主页写个小程序页面来展示微信公众号内的所有文章，后边加上搜索、标签等方便检索，用户点击列表后跳转到微信公众号具体的文章查看，形成闭环</p>
+<p>计划参考<a href="https://ops-coffee.com" target="_blank">运维咖啡吧</a>网站主页写个小程序页面来展示微信公众号内的所有文章，后边加上搜索、标签等方便检索，用户点击列表后跳转到微信公众号具体的文章查看，形成闭环</p>
 <p>首先写了个“列表”页，用来展示公众号内的所有文章，但写完列表后发现小程序并不支持跳转到公众号的文章，不能查看文章这个小程序的意义就失去了大半</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/0308.01.png" /></p>
 <p>然后添加了一个“关于”页面，页面内介绍小程序是干嘛的顺便给个公众号入口，方便对文章感兴趣的朋友继续阅读</p>
@@ -182,7 +182,7 @@
 <pre class="codehilite"><code>onLoad: function () {
     var that = this;
     wx.request({
-      url: 'https://ops-coffee.cn/blog.json',
+      url: 'https://ops-coffee.com/blog.json',
       header: {
         'content-type': 'application/json'
       },
@@ -273,11 +273,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/extending-django-permissions-custom-solutions.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/extending-django-permissions-custom-solutions.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Django内置权限扩展案例</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/django-channels-websocket-devops-01.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/django-channels-websocket-devops-01.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Django使用Channels实现WebSocket--上篇</span>
                 <span class="pagination-arrow">→</span>
             </a>

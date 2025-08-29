@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="VECMDB, CMDB系统, 动态模型, 关联配置, 数据库设计, 表设计, 关联关系, 一对一, 一对多, 多对多, 自动化关联" />
   <meta name="description" content="本文详细介绍了VECMDB模型的关联配置，包括表设计原则、关联关系类型、模型关系配置和实例关系管理。通过合理的表设计和关联配置，可以提高数据库的性能和可维护性，同时实现数据模型的自动化关联。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>开源｜维易CMDB详解之模型关联关系</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnveops/oneops-cmdb-ci-types-configure-relationship.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comveops/oneops-cmdb-ci-types-configure-relationship.html" />
   <meta property="og:title" content="开源｜维易CMDB详解之模型关联关系" />
   <meta property="og:description" content="本文详细介绍了VECMDB模型的关联配置，包括表设计原则、关联关系类型、模型关系配置和实例关系管理。通过合理的表设计和关联配置，可以提高数据库的性能和可维护性，同时实现数据模型的自动化关联。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnveops/oneops-cmdb-ci-types-configure-relationship.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comveops/oneops-cmdb-ci-types-configure-relationship.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "开源｜维易CMDB详解之模型关联关系",
     "description": "本文详细介绍了VECMDB模型的关联配置，包括表设计原则、关联关系类型、模型关系配置和实例关系管理。通过合理的表设计和关联配置，可以提高数据库的性能和可维护性，同时实现数据模型的自动化关联。",
-    "url": "https://blog.ops-coffee.cnveops/oneops-cmdb-ci-types-configure-relationship.html",
+    "url": "https://blog.ops-coffee.comveops/oneops-cmdb-ci-types-configure-relationship.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnveops/oneops-cmdb-ci-types-configure-relationship.html"
+      "@id": "https://blog.ops-coffee.comveops/oneops-cmdb-ci-types-configure-relationship.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">开源｜维易CMDB详解之模型关联关系</h1>
 
-        <p>维易CMDB是一套灵活性非常高的开源CMDB系统，动态模型是这套系统的核心和亮点，支持的配置十分丰富，可玩儿性很高，之前的两篇文章详细介绍了VECMDB的核心功能动态模型的配置，包括满足基本使用的模型<a href="https://blog.ops-coffee.cn/veops/oneops-cmdb-ci-types-configure-base" target="_blank">基础配置</a>和扩展能力很强的模型<a href="https://blog.ops-coffee.cn/veops/oneops-cmdb-ci-types-configure-advanced" target="_blank">高级配置</a>，除了属性配置外，VECMDB的模型还支持各种关联关系配置，构建合理的关联关系不仅能让资源数据看上去更加清晰，更为重要的是在为上层业务提供数据时更加简单且灵活，这篇文章将详细的介绍下VECMDB模型的关联配置</p>
+        <p>维易CMDB是一套灵活性非常高的开源CMDB系统，动态模型是这套系统的核心和亮点，支持的配置十分丰富，可玩儿性很高，之前的两篇文章详细介绍了VECMDB的核心功能动态模型的配置，包括满足基本使用的模型<a href="https://blog.ops-coffee.com/veops/oneops-cmdb-ci-types-configure-base" target="_blank">基础配置</a>和扩展能力很强的模型<a href="https://blog.ops-coffee.com/veops/oneops-cmdb-ci-types-configure-advanced" target="_blank">高级配置</a>，除了属性配置外，VECMDB的模型还支持各种关联关系配置，构建合理的关联关系不仅能让资源数据看上去更加清晰，更为重要的是在为上层业务提供数据时更加简单且灵活，这篇文章将详细的介绍下VECMDB模型的关联配置</p>
 <p>在开始介绍关联配置之前我们需要先理清楚为什么要将数据分表，以及基本的表设计原则，同时的话还要知道逻辑表之间有哪些常见的关联关系，以及哪种情况下适合使用哪种关联关系</p>
 <h2 id="_1">表设计</h2>
 <p>将所有数据存储在一张表中虽然在某些情况下看似简便，但在实践中会带来许多问题，例如：</p>
@@ -208,7 +208,7 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/veops/oneops-cmdb-ci-types-configure-advanced.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/veops/oneops-cmdb-ci-types-configure-advanced.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>开源｜维易CMDB详解之模型高级配置</span>
             </a>

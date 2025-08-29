@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="continuous deployment, Docker, CICD, Python multi-threading, container orchestration, Kubernetes, configuration management, deployment optimization, Python deployment scripts" />
   <meta name="description" content="A detailed account of optimizing continuous deployment processes using Docker, including Python multi-threading for efficient deployment and handling configuration files across different environments." />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Docker环境的持续部署优化实践</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/optimizing-continuous-deployment-with-docker.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/optimizing-continuous-deployment-with-docker.html" />
   <meta property="og:title" content="Docker环境的持续部署优化实践" />
   <meta property="og:description" content="A detailed account of optimizing continuous deployment processes using Docker, including Python multi-threading for efficient deployment and handling configuration files across different environments." />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/optimizing-continuous-deployment-with-docker.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/optimizing-continuous-deployment-with-docker.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Docker环境的持续部署优化实践",
     "description": "A detailed account of optimizing continuous deployment processes using Docker, including Python multi-threading for efficient deployment and handling configuration files across different environments.",
-    "url": "https://blog.ops-coffee.cns/optimizing-continuous-deployment-with-docker.html",
+    "url": "https://blog.ops-coffee.coms/optimizing-continuous-deployment-with-docker.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/optimizing-continuous-deployment-with-docker.html"
+      "@id": "https://blog.ops-coffee.coms/optimizing-continuous-deployment-with-docker.html"
     }
   }
   </script>
@@ -196,7 +196,7 @@ class DownloadThread(threading.Thread):
         self.image_url = image_url
 
     def run(self):
-        Conn(self.host).cmd('docker login -u ops -p coffee hub.ops-coffee.cn')
+        Conn(self.host).cmd('docker login -u ops -p coffee hub.ops-coffee.com')
         r2 = Conn(self.host).cmd('docker pull %s' % self.image_url)
         if r2.get('state'):
             self.alive_host = self.host
@@ -303,7 +303,7 @@ if __name__ == '__main__':
 <p>经过以上优化我们实测后发现，一个28台主机的项目在优化前上线要花10分钟左右的时间，优化后只要2分钟左右，效率提高80%</p>
 <h1 id="_2">多环境下配置文件的处理</h1>
 <p>我们采用了项目代码打包进镜像的镜像管理方案，开发、测试、预发布、生产环境配置文件都不同，所以即便是同一个项目不同的环境都会单独走一遍部署发布流程打包镜像，把不同环境的配置打包到不同的镜像中，这个操作太过繁琐且没有必要，还大大增加了我们的上线时间</p>
-<p>用过k8s的都知道，k8s中有专门管理配置文件的ConfigMap，每个容器可以定义要挂载的配置，在容器启动时自动挂载，以解决打包一次镜像不同环境都能使用的问题，对于没有用到k8s的要如何处理呢？配置中心还是必不可少的，之前一篇文章<a href="https://blog.ops-coffee.cn/s/configuration-center-setup-and-management.html" target="_blank">《中小团队落地配置中心详解》</a>有详细的介绍我们配置中心的方案</p>
+<p>用过k8s的都知道，k8s中有专门管理配置文件的ConfigMap，每个容器可以定义要挂载的配置，在容器启动时自动挂载，以解决打包一次镜像不同环境都能使用的问题，对于没有用到k8s的要如何处理呢？配置中心还是必不可少的，之前一篇文章<a href="https://blog.ops-coffee.com/s/configuration-center-setup-and-management.html" target="_blank">《中小团队落地配置中心详解》</a>有详细的介绍我们配置中心的方案</p>
 <p>我们处理不同配置的整体思路是，在Docker启动时传入两个环境变量ENVT和PROJ，这两个环境变量用来定义这个容器是属于哪个项目的哪个环境，Docker的启动脚本拿到这两个环境变量后利用confd服务自动去配置中心获取对应的配置，然后更新到本地对应的位置，这样就不需要把配置文件打包进镜像了</p>
 <p>以一个纯静态只需要nginx服务的项目为例</p>
 <p>Dockerfile如下：</p>
@@ -346,11 +346,11 @@ exit 1</code></pre>
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/svn-hooks-introduction-and-application.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/svn-hooks-introduction-and-application.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>SVN Hooks的介绍及使用</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/django-api-auth-jwt-token-without-drf.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/django-api-auth-jwt-token-without-drf.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Django+JWT实现Token认证</span>
                 <span class="pagination-arrow">→</span>
             </a>

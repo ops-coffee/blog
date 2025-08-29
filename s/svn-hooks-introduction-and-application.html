@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="SVN Hooks, pre-commit, post-commit, SVN Hooks应用, log提交规则, 邮件通知" />
   <meta name="description" content="本文介绍了SVN Hooks的基本概念和应用场景，提供了两个实际案例，包括如何使用pre-commit Hook来强制执行log提交规则，以及如何使用post-commit Hook来发送提交成功后的邮件通知。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>SVN Hooks的介绍及使用</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/svn-hooks-introduction-and-application.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/svn-hooks-introduction-and-application.html" />
   <meta property="og:title" content="SVN Hooks的介绍及使用" />
   <meta property="og:description" content="本文介绍了SVN Hooks的基本概念和应用场景，提供了两个实际案例，包括如何使用pre-commit Hook来强制执行log提交规则，以及如何使用post-commit Hook来发送提交成功后的邮件通知。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/svn-hooks-introduction-and-application.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/svn-hooks-introduction-and-application.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "SVN Hooks的介绍及使用",
     "description": "本文介绍了SVN Hooks的基本概念和应用场景，提供了两个实际案例，包括如何使用pre-commit Hook来强制执行log提交规则，以及如何使用post-commit Hook来发送提交成功后的邮件通知。",
-    "url": "https://blog.ops-coffee.cns/svn-hooks-introduction-and-application.html",
+    "url": "https://blog.ops-coffee.coms/svn-hooks-introduction-and-application.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/svn-hooks-introduction-and-application.html"
+      "@id": "https://blog.ops-coffee.coms/svn-hooks-introduction-and-application.html"
     }
   }
   </script>
@@ -192,7 +192,7 @@ exit 0</code></pre>
 <p><img alt="" loading="lazy" src="/static/images/2018/1227.02.png" /></p>
 <h2 id="_1">提交成功发送邮件通知</h2>
 <p>看了上边强制log提交规则的示例，想必对SVN hooks有了一定的了解，那么我们趁热打铁再来看一个提交成功发送邮件的例子</p>
-<p>假如我们有一个账号叫merge，专门用来合并上线代码，经过这个账号合并的代码自动触发发布API更新代码到生产环境，其他账号合并的代码发送邮件通知给leader@ops-coffee.cn的邮箱，那么该如何实现呢？</p>
+<p>假如我们有一个账号叫merge，专门用来合并上线代码，经过这个账号合并的代码自动触发发布API更新代码到生产环境，其他账号合并的代码发送邮件通知给leader@ops-coffee.com的邮箱，那么该如何实现呢？</p>
 <p>1.首先是代码提交（合并）之后触发，那么就需要用到<code>post-commit</code>这个hook，具体内容如下</p>
 <pre class="codehilite"><code># cat /home/svn/repos/ops-coffee/hooks/post-commit
 #!/bin/bash
@@ -222,9 +222,9 @@ $CHANGED
 
 
 if [ $AUTHOR == merge ];then
-    curl -H &quot;Authorization:Token 3w2290j02baa1xb8cemec35k8b&quot; &quot;https://ops-coffee.cn/api/deploy?p=${REPERTORY}&amp;v=${REV}&quot;
+    curl -H &quot;Authorization:Token 3w2290j02baa1xb8cemec35k8b&quot; &quot;https://ops-coffee.com/api/deploy?p=${REPERTORY}&amp;v=${REV}&quot;
 else
-    mail -s &quot;SVN 更新通知：系统版本号【$REV】&quot; leader@ops-coffee.cn &lt; $LOGFILE
+    mail -s &quot;SVN 更新通知：系统版本号【$REV】&quot; leader@ops-coffee.com &lt; $LOGFILE
 fi</code></pre>
 
 
@@ -246,11 +246,11 @@ fi</code></pre>
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/django-security-password-table-database-rsa.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/django-security-password-table-database-rsa.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Django开发密码管理表实例【附源码】</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/optimizing-continuous-deployment-with-docker.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/optimizing-continuous-deployment-with-docker.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Docker环境的持续部署优化实践</span>
                 <span class="pagination-arrow">→</span>
             </a>

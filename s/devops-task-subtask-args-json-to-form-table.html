@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="任务系统, 参数优化, JSON数据格式, 图形化配置, DevOps, 任务流" />
   <meta name="description" content="本文详细介绍了任务系统中任务参数的优化过程，从最初的JSON数据格式定义到最终的图形化配置，旨在提高用户的使用体验和降低学习成本。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>简洁表单替代复杂JSON，配置直观又简单</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/devops-task-subtask-args-json-to-form-table.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/devops-task-subtask-args-json-to-form-table.html" />
   <meta property="og:title" content="简洁表单替代复杂JSON，配置直观又简单" />
   <meta property="og:description" content="本文详细介绍了任务系统中任务参数的优化过程，从最初的JSON数据格式定义到最终的图形化配置，旨在提高用户的使用体验和降低学习成本。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/devops-task-subtask-args-json-to-form-table.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/devops-task-subtask-args-json-to-form-table.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "简洁表单替代复杂JSON，配置直观又简单",
     "description": "本文详细介绍了任务系统中任务参数的优化过程，从最初的JSON数据格式定义到最终的图形化配置，旨在提高用户的使用体验和降低学习成本。",
-    "url": "https://blog.ops-coffee.cns/devops-task-subtask-args-json-to-form-table.html",
+    "url": "https://blog.ops-coffee.coms/devops-task-subtask-args-json-to-form-table.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/devops-task-subtask-args-json-to-form-table.html"
+      "@id": "https://blog.ops-coffee.coms/devops-task-subtask-args-json-to-form-table.html"
     }
   }
   </script>
@@ -115,13 +115,13 @@
     <div class="container">
         <h1 id="art-title">简洁表单替代复杂JSON，配置直观又简单</h1>
 
-        <p>昨天晚上给<a href="https://blog.ops-coffee.cn/s/Increase-the-price-of-paid-WeChat-group" target="_blank">微信群</a>里的朋友们分享了<a href="https://blog.ops-coffee.cn/devops/task.html" target="_blank">任务系统</a>，包括系统介绍、设计理念以及使用场景等等相关的话题，其中就有朋友对任务参数这个功能提出了异议，通过JSON数据格式来定义任务参数，配置麻烦，不好理解，使用成本高。实际上关于JSON定义任务参数这个功能一早就有优化的想法，但一直没下定决心去做，主要是目前大伙已经使用习惯，并没有出现什么问题或者实现不了的场景，所以优化动力不大，这次既然又有朋友提起，那就花点时间优化一下吧。本身并不复杂，几个小时的时间从设计到编码再到上线，最后更新原始数据并通过测试验收，没有问题</p>
+        <p>昨天晚上给<a href="https://blog.ops-coffee.com/s/Increase-the-price-of-paid-WeChat-group" target="_blank">微信群</a>里的朋友们分享了<a href="https://blog.ops-coffee.com/devops/task.html" target="_blank">任务系统</a>，包括系统介绍、设计理念以及使用场景等等相关的话题，其中就有朋友对任务参数这个功能提出了异议，通过JSON数据格式来定义任务参数，配置麻烦，不好理解，使用成本高。实际上关于JSON定义任务参数这个功能一早就有优化的想法，但一直没下定决心去做，主要是目前大伙已经使用习惯，并没有出现什么问题或者实现不了的场景，所以优化动力不大，这次既然又有朋友提起，那就花点时间优化一下吧。本身并不复杂，几个小时的时间从设计到编码再到上线，最后更新原始数据并通过测试验收，没有问题</p>
 <h2 id="_1">任务参数</h2>
-<p><a href="https://blog.ops-coffee.cn/devops/task.html" target="_blank">任务系统</a>可以像乐高搭积木一样组合不同的子任务为一个模板，然后基于模板配合参数来创建任务流并执行，以此来满足各种各样的日常运维场景，十分灵活。那任务参数在这个任务流执行过程中有什么用？我们就用一个简单的例子来解释下，假如有一个项目构建并部署的任务流，只有四个步骤：拉代码、编译、打包和更新，拉代码就是去git仓库拉代码，编译就是将源代码编译成可执行的二进制文件，打包就是将可执行的二进制文件打包成docker镜像，更新则是将docker镜像更新到对应的环境里去</p>
+<p><a href="https://blog.ops-coffee.com/devops/task.html" target="_blank">任务系统</a>可以像乐高搭积木一样组合不同的子任务为一个模板，然后基于模板配合参数来创建任务流并执行，以此来满足各种各样的日常运维场景，十分灵活。那任务参数在这个任务流执行过程中有什么用？我们就用一个简单的例子来解释下，假如有一个项目构建并部署的任务流，只有四个步骤：拉代码、编译、打包和更新，拉代码就是去git仓库拉代码，编译就是将源代码编译成可执行的二进制文件，打包就是将可执行的二进制文件打包成docker镜像，更新则是将docker镜像更新到对应的环境里去</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0521.01.png" /></p>
 <p>这个任务流需要用到三个参数：branch、version和environment，其中branch用来定义git的分支，需要用户在任务执行时填写，version用来定义构建完的版本号，来自于构建子任务的执行结果，environment用来定义本次部署的环境，需要用户在任务执行时选择。其中除了version来自于其他子任务的结果外，branch和environment都需要用户自己在任务执行时提交，类似这样</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0521.02.png" /></p>
-<p>branch、version和environment这三个参数就是任务参数，任务在执行的过程中需要用到这三个参数对应的结果值。关于version参数的获取上篇文章<a href="https://blog.ops-coffee.cn/s/devops-task-subtask-args-kwargs-jinja-template" target="_blank">任务系统之结果传递</a>有过详细的介绍，这里不赘述。那另外两个参数branch和environment就需要我们在任务中定义，在任务执行时传递</p>
+<p>branch、version和environment这三个参数就是任务参数，任务在执行的过程中需要用到这三个参数对应的结果值。关于version参数的获取上篇文章<a href="https://blog.ops-coffee.com/s/devops-task-subtask-args-kwargs-jinja-template" target="_blank">任务系统之结果传递</a>有过详细的介绍，这里不赘述。那另外两个参数branch和environment就需要我们在任务中定义，在任务执行时传递</p>
 <p>任务执行时传递的参数每个任务都不一样，需要根据任务本身来配置，不仅要能配置任务需要传递的参数，同时也要配置参数渲染的样式，例如有些参数需要渲染成input输入框让用户填写，有些参数需要渲染成select下拉框让用户选择，有些参数有默认值，而有些参数则需要显示帮助信息，主打灵活</p>
 <h2 id="json">JSON数据</h2>
 <p>为了满足这个需求，我们最早采用了JSON数据格式来定义这些参数，其中有三个保留的KEY：<code>_helper</code>、<code>_default</code>和<code>_select</code>，分别定义帮助信息、默认值和下拉框选项，而其他非保留的KEY则作为任务参数存在。格式大概这样</p>
@@ -233,11 +233,11 @@ def update_kwargs_format():
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/devops-task-subtask-args-kwargs-jinja-template.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/devops-task-subtask-args-kwargs-jinja-template.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>任务系统之结果传递</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/devops-task-args-edit-datatables-rowreorder.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/devops-task-args-edit-datatables-rowreorder.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>简洁表单替代复杂JSON，完成开始完美结束</span>
                 <span class="pagination-arrow">→</span>
             </a>

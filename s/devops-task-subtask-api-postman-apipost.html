@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="任务系统, API子任务, Jenkins, API调用, 任务模板, 子任务, 运维, DevOps, 自动化, 安全" />
   <meta name="description" content="本文介绍了任务系统中的API子任务类型，如何通过API子任务实现高效且安全的API调用，以及API子任务的创建和使用流程，为任务系统增加了无限可能。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>任务系统之API子任务</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/devops-task-subtask-api-postman-apipost.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/devops-task-subtask-api-postman-apipost.html" />
   <meta property="og:title" content="任务系统之API子任务" />
   <meta property="og:description" content="本文介绍了任务系统中的API子任务类型，如何通过API子任务实现高效且安全的API调用，以及API子任务的创建和使用流程，为任务系统增加了无限可能。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/devops-task-subtask-api-postman-apipost.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/devops-task-subtask-api-postman-apipost.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "任务系统之API子任务",
     "description": "本文介绍了任务系统中的API子任务类型，如何通过API子任务实现高效且安全的API调用，以及API子任务的创建和使用流程，为任务系统增加了无限可能。",
-    "url": "https://blog.ops-coffee.cns/devops-task-subtask-api-postman-apipost.html",
+    "url": "https://blog.ops-coffee.coms/devops-task-subtask-api-postman-apipost.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/devops-task-subtask-api-postman-apipost.html"
+      "@id": "https://blog.ops-coffee.coms/devops-task-subtask-api-postman-apipost.html"
     }
   }
   </script>
@@ -115,9 +115,9 @@
     <div class="container">
         <h1 id="art-title">任务系统之API子任务</h1>
 
-        <p>日常运维工作中有许多的任务要执行，例如项目发布/数据备份/定时巡检/证书更新/漏洞修复等等，大部分的任务都会有多个步骤共同完成，例如一个发布任务会有拉代码、编译、分发、通知等等步骤，而不同的任务可能还包含相同或相似的步骤，例如对于相同语言相同架构的不同项目来说，他们的发布任务步骤可能是相同的，仅仅是几个参数不同而已，为此我们上线了<a href="https://blog.ops-coffee.cn/devops/task.html" target="_blank">任务系统</a>，任务系统可以像乐高搭积木一样组合不同的步骤（也就是子任务）为一个模板，然后基于模板配合参数来创建任务并执行，灵活且高效</p>
+        <p>日常运维工作中有许多的任务要执行，例如项目发布/数据备份/定时巡检/证书更新/漏洞修复等等，大部分的任务都会有多个步骤共同完成，例如一个发布任务会有拉代码、编译、分发、通知等等步骤，而不同的任务可能还包含相同或相似的步骤，例如对于相同语言相同架构的不同项目来说，他们的发布任务步骤可能是相同的，仅仅是几个参数不同而已，为此我们上线了<a href="https://blog.ops-coffee.com/devops/task.html" target="_blank">任务系统</a>，任务系统可以像乐高搭积木一样组合不同的步骤（也就是子任务）为一个模板，然后基于模板配合参数来创建任务并执行，灵活且高效</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0223.01.png" /></p>
-<p>其中子任务的类型越丰富则上层模板的组合方式就会越多样，从而最终的任务覆盖场景就能越全面，目前任务系统子任务的类型已经支持了命令、脚本、作业、Jenkins、审批、通知、API、告警策略和事件规则，之前有篇文章<a href="https://blog.ops-coffee.cn/s/devops-task-subtask-jenkins" target="_blank">任务系统之Jenkins子任务</a>介绍过Jenkins类型子任务的实现，那这篇文章来介绍下另一个很重要的子任务类型：API</p>
+<p>其中子任务的类型越丰富则上层模板的组合方式就会越多样，从而最终的任务覆盖场景就能越全面，目前任务系统子任务的类型已经支持了命令、脚本、作业、Jenkins、审批、通知、API、告警策略和事件规则，之前有篇文章<a href="https://blog.ops-coffee.com/s/devops-task-subtask-jenkins" target="_blank">任务系统之Jenkins子任务</a>介绍过Jenkins类型子任务的实现，那这篇文章来介绍下另一个很重要的子任务类型：API</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0223.02.png" /></p>
 <p>API的使用场景非常之广，在现代的Web系统中绝大部分的操作都可以由API来完成，任务系统对API类型子任务的支持不仅使得任务系统的覆盖场景更加的全面，同时也使得API的调用更加的方便和安全。在未支持API类型子任务之前，任务系统都是通过脚本类型子任务由用户自己编写脚本来实现API调用的，这种方式虽然可用但存在问题，其一是因为写脚本对用户有一定的能力要求，同时增加了复杂度，其二也更为关键的是不安全，API往往需要验证，验证内容写在脚本中，脚本明文存储在数据库中，增加了安全风险，集成API类型子任务可以完美解决这两个问题</p>
 <p>API类型子任务的使用方式很简单，只需要三步，第一步新建API，第二步新建API类型的子任务，这里选择第一步创建的API，第三步在任务模板中添加第二步创建的子任务，然后就可以新建任务执行了。其中第二第三步是任务系统的通用流程，这里重点说下第一步关于API的创建，API与Jenkins一样是作为一个插件存在于系统中的，由独立的API管理页面</p>
@@ -150,7 +150,7 @@
 }</code></pre>
 
 
-<p>后端加解密的方法可以参考文章<a href="https://blog.ops-coffee.cn/s/django-password-management-encryption-decryption.html" target="_blank">Model字段加密的优雅实现</a>，Request请求则比较简单</p>
+<p>后端加解密的方法可以参考文章<a href="https://blog.ops-coffee.com/s/django-password-management-encryption-decryption.html" target="_blank">Model字段加密的优雅实现</a>，Request请求则比较简单</p>
 <pre class="codehilite"><code># 不同的认证类型使用不同的请求方式
 if authorization.get(&quot;type&quot;, &quot;&quot;).lower() == &quot;basic&quot;:
     auth = (authorization.get(&quot;basic_username&quot;, &quot;&quot;), authorization.get(&quot;basic_password&quot;, &quot;&quot;))
@@ -183,11 +183,11 @@ else:
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/AIGC-Midjourney -and-WeChat-red-packet.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/AIGC-Midjourney -and-WeChat-red-packet.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>是驾驭而不是焦虑，送红包封面啦</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/veops-open-source-jumpserver-oneterm.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/veops-open-source-jumpserver-oneterm.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>开源推荐 | 简洁且强大的开源堡垒机OneTerm</span>
                 <span class="pagination-arrow">→</span>
             </a>

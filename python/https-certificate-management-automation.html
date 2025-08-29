@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="HTTPS证书管理, 域名列表获取, 证书过期检查, 证书更新, 阿里云API, pyopenssl, 定时执行入库" />
   <meta name="description" content="本教程详细介绍了如何从获取域名列表、检查HTTPS支持、获取证书过期时间、定时执行入库到更新证书的全流程，帮助您有效管理HTTPS证书，避免因证书过期导致的系统问题。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Python实现HTTPS网站证书过期监控及更新</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnpython/https-certificate-management-automation.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.compython/https-certificate-management-automation.html" />
   <meta property="og:title" content="Python实现HTTPS网站证书过期监控及更新" />
   <meta property="og:description" content="本教程详细介绍了如何从获取域名列表、检查HTTPS支持、获取证书过期时间、定时执行入库到更新证书的全流程，帮助您有效管理HTTPS证书，避免因证书过期导致的系统问题。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnpython/https-certificate-management-automation.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.compython/https-certificate-management-automation.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Python实现HTTPS网站证书过期监控及更新",
     "description": "本教程详细介绍了如何从获取域名列表、检查HTTPS支持、获取证书过期时间、定时执行入库到更新证书的全流程，帮助您有效管理HTTPS证书，避免因证书过期导致的系统问题。",
-    "url": "https://blog.ops-coffee.cnpython/https-certificate-management-automation.html",
+    "url": "https://blog.ops-coffee.compython/https-certificate-management-automation.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnpython/https-certificate-management-automation.html"
+      "@id": "https://blog.ops-coffee.compython/https-certificate-management-automation.html"
     }
   }
   </script>
@@ -160,7 +160,7 @@ class DomainApi:
             return False, str(e)
 
 if __name__ == '__main__':
-    print(DomainApi().get_records('ops-coffee.cn'))</code></pre>
+    print(DomainApi().get_records('ops-coffee.com'))</code></pre>
 
 
 <p>以上代码使用了阿里云提供的SDK，调用简单方便，最终返回请求状态及数据。<code>get_domains</code>方法可以获取到账号下的所有域名，<code>get_records</code>方法可以获取到域名下的所有解析记录，需要注意数据量大小，以确定是否需要分页查询</p>
@@ -193,7 +193,7 @@ def get_expire(domain):
         return False, 500, str(e)
 
 if __name__ == '__main__':
-    print(get_expire('blog.ops-coffee.cn'))</code></pre>
+    print(get_expire('blog.ops-coffee.com'))</code></pre>
 
 
 <p>使用之前需要先安装<code>pyopenssl</code>模块，这里建议使用python3.6及以上版本，除了<code>get_notAfter</code>可以拿到证书过期时间外，还有以下方法能够获取到更多证书相关的信息：<code>get_notAfter</code>,<code>get_notBefore</code>,<code>get_pubkey</code>,<code>get_serial_number</code>,<code>get_signature_algorithm</code>,<code>get_subject</code>,<code>get_version</code>,<code>gmtime_adj_notAfter</code>,<code>gmtime_adj_notBefore</code>,<code>has_expired</code></p>
@@ -209,7 +209,7 @@ if __name__ == '__main__':
 <p>数据库就三个字段，在每次执行完一轮扫码后都会将详细信息计入上表中</p>
 <pre class="codehilite"><code>jsondata = {
     'items': [{
-        'record': 'blog.ops-coffee.cn',
+        'record': 'blog.ops-coffee.com',
         'rdtype': 'A',
         'dept': '天玑'
         'enable_https': 1,
@@ -221,7 +221,7 @@ if __name__ == '__main__':
     'record_a_count': 23,
     'record_a_https_count': 19}
 
-Domain.objects.create(domain='ops-coffee.cn', jsondata=jsondata)</code></pre>
+Domain.objects.create(domain='ops-coffee.com', jsondata=jsondata)</code></pre>
 
 
 <p>前端获取最新一条数据展示</p>
@@ -232,7 +232,7 @@ Domain.objects.create(domain='ops-coffee.cn', jsondata=jsondata)</code></pre>
 <p>证书更新是最繁琐的事情，因为涉及到多平台不同环境，每家公司情况可能都有不同，我们因为大量使用了SAAS服务，SAAS服务又提供有API，所以更新起来比较简单，调用API即</p>
 <pre class="codehilite"><code>class LBCApi:
     def __init__(self):
-        self.domain = 'https://lbc.ops-coffee.cn'
+        self.domain = 'https://lbc.ops-coffee.com'
 
         self.headers = {
             'content-type': 'application/json',
@@ -267,11 +267,11 @@ if __name__ == '__main__':
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/python/how-to-create-system-command-using-argparse.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/python/how-to-create-system-command-using-argparse.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>用Python写个Linux系统命令</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/python/python-https-certificate-expiration-sni-issue.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/python/python-https-certificate-expiration-sni-issue.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>证书监控 | 为什么我获取到的证书有效期是错的</span>
                 <span class="pagination-arrow">→</span>
             </a>

@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="varian, Python3部署系统, CMDB, Jenkins, SVN, Git, Harbor, Kubernetes, Docker镜像, 微服务, 容器化, 部署系统" />
   <meta name="description" content="本文介绍了varian，一套基于Python3的部署系统，详细解释了其架构、设计思路、实现方法以及使用方式，展示了varian如何通过模块化设计解决大规模项目部署中的各种问题，提升部署效率和系统健壮性。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>探秘varian：优雅的发布部署程序</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/full-path-varian-cicd-system-cmdb-jenkins.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/full-path-varian-cicd-system-cmdb-jenkins.html" />
   <meta property="og:title" content="探秘varian：优雅的发布部署程序" />
   <meta property="og:description" content="本文介绍了varian，一套基于Python3的部署系统，详细解释了其架构、设计思路、实现方法以及使用方式，展示了varian如何通过模块化设计解决大规模项目部署中的各种问题，提升部署效率和系统健壮性。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/full-path-varian-cicd-system-cmdb-jenkins.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/full-path-varian-cicd-system-cmdb-jenkins.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "探秘varian：优雅的发布部署程序",
     "description": "本文介绍了varian，一套基于Python3的部署系统，详细解释了其架构、设计思路、实现方法以及使用方式，展示了varian如何通过模块化设计解决大规模项目部署中的各种问题，提升部署效率和系统健壮性。",
-    "url": "https://blog.ops-coffee.cns/full-path-varian-cicd-system-cmdb-jenkins.html",
+    "url": "https://blog.ops-coffee.coms/full-path-varian-cicd-system-cmdb-jenkins.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/full-path-varian-cicd-system-cmdb-jenkins.html"
+      "@id": "https://blog.ops-coffee.coms/full-path-varian-cicd-system-cmdb-jenkins.html"
     }
   }
   </script>
@@ -116,7 +116,7 @@
         <h1 id="art-title">探秘varian：优雅的发布部署程序</h1>
 
         <blockquote>
-<p>上一篇文章<a href="https://blog.ops-coffee.cn/s/fault-handling-nginx-403-issue-python-jenkins-varian-deployment.html" target="_blank">《记一次诡异的故障排查经历》</a>中有介绍到我们的部署程序varian，文章发布后有小伙伴对varian很感兴趣，今天就简单的介绍一下我们的varian，揭开她神秘的面纱~</p>
+<p>上一篇文章<a href="https://blog.ops-coffee.com/s/fault-handling-nginx-403-issue-python-jenkins-varian-deployment.html" target="_blank">《记一次诡异的故障排查经历》</a>中有介绍到我们的部署程序varian，文章发布后有小伙伴对varian很感兴趣，今天就简单的介绍一下我们的varian，揭开她神秘的面纱~</p>
 </blockquote>
 <h1 id="varian">什么是varian</h1>
 <p>varian是我们基于Python3编写的一套部署程序，处在整个部署系统的中心，与CMDB、Jenkins、SVN/Git、镜像仓库Harbor、Kubernetes API、通知系统等都有交互，负责将源代码经过一系列的处理后打包成Docker镜像，并发布到各个环境，然后通知相关人员。简化后的varian架构如下：</p>
@@ -270,11 +270,11 @@ if __name__ == '__main__':
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/fault-handling-nginx-403-issue-python-jenkins-varian-deployment.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/fault-handling-nginx-403-issue-python-jenkins-varian-deployment.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>记一次诡异的故障排查经历</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/devops-task-django-celery-setup-guide.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/devops-task-django-celery-setup-guide.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Django配置Celery执行异步任务和定时任务</span>
                 <span class="pagination-arrow">→</span>
             </a>

@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Django, LDAP, 认证, django-auth-ldap, LDAP认证, Django集成, LDAP配置, LDAP组配置, LDAP用户属性映射, LDAP认证缓存" />
   <meta name="description" content="本文详细介绍了如何在Django项目中集成LDAP认证，包括django-auth-ldap模块的使用方法、参数配置及示例代码，帮助开发者快速实现LDAP认证功能。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>LDAP落地实战（五）：Django集成OpenLDAP认证</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnldap/openldap-sso-python-django-auth-ldap.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comldap/openldap-sso-python-django-auth-ldap.html" />
   <meta property="og:title" content="LDAP落地实战（五）：Django集成OpenLDAP认证" />
   <meta property="og:description" content="本文详细介绍了如何在Django项目中集成LDAP认证，包括django-auth-ldap模块的使用方法、参数配置及示例代码，帮助开发者快速实现LDAP认证功能。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnldap/openldap-sso-python-django-auth-ldap.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comldap/openldap-sso-python-django-auth-ldap.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "LDAP落地实战（五）：Django集成OpenLDAP认证",
     "description": "本文详细介绍了如何在Django项目中集成LDAP认证，包括django-auth-ldap模块的使用方法、参数配置及示例代码，帮助开发者快速实现LDAP认证功能。",
-    "url": "https://blog.ops-coffee.cnldap/openldap-sso-python-django-auth-ldap.html",
+    "url": "https://blog.ops-coffee.comldap/openldap-sso-python-django-auth-ldap.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnldap/openldap-sso-python-django-auth-ldap.html"
+      "@id": "https://blog.ops-coffee.comldap/openldap-sso-python-django-auth-ldap.html"
     }
   }
   </script>
@@ -133,7 +133,7 @@
 from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 
 # Baseline configuration.
-AUTH_LDAP_SERVER_URI = 'ldap://ldap.ops-coffee.cn'
+AUTH_LDAP_SERVER_URI = 'ldap://ldap.ops-coffee.com'
 
 AUTH_LDAP_BIND_DN = 'uid=authz,ou=Public,dc=ops-coffee,dc=cn'
 AUTH_LDAP_BIND_PASSWORD = 'CzfdX629K7'
@@ -283,7 +283,7 @@ Successfully installed python-ldap-3.2.0</code></pre>
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/ldap/openldap-sso-auth-jenkins-plugins-devops.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/ldap/openldap-sso-auth-jenkins-plugins-devops.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>LDAP落地实战（四）：Jenkins集成OpenLDAP认证</span>
             </a>

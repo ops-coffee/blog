@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Python, 列表, 自我引用, 内存地址, 引用传递, 无限循环, id函数, 解释, 变量赋值, 编程问题" />
   <meta name="description" content="本文通过一个Python列表操作的例子，详细解释了为什么列表操作会导致递归现象，并说明了Python中的引用传递机制。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>python中的引用传递</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnt/python-pass-by-reference.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comt/python-pass-by-reference.html" />
   <meta property="og:title" content="python中的引用传递" />
   <meta property="og:description" content="本文通过一个Python列表操作的例子，详细解释了为什么列表操作会导致递归现象，并说明了Python中的引用传递机制。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnt/python-pass-by-reference.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comt/python-pass-by-reference.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "python中的引用传递",
     "description": "本文通过一个Python列表操作的例子，详细解释了为什么列表操作会导致递归现象，并说明了Python中的引用传递机制。",
-    "url": "https://blog.ops-coffee.cnt/python-pass-by-reference.html",
+    "url": "https://blog.ops-coffee.comt/python-pass-by-reference.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnt/python-pass-by-reference.html"
+      "@id": "https://blog.ops-coffee.comt/python-pass-by-reference.html"
     }
   }
   </script>
@@ -127,13 +127,13 @@
 
 
 <p>有没有大佬释义下这个结果为啥是[1, [...]]   </p>
-<p><span style="color:blue">ops-coffee.cn 17:59:05</span></p>
+<p><span style="color:blue">ops-coffee.com 17:59:05</span></p>
 <p>@网友9527  这个问题有意思，我怕给你解释不清楚，你自己查一下python的引导传递吧</p>
 <p><span style="color:green">网友9527 17:59:20</span></p>
 <p>多谢</p>
-<p><span style="color:blue">ops-coffee.cn 18:02:25</span></p>
+<p><span style="color:blue">ops-coffee.com 18:02:25</span></p>
 <p>简单来说这里实际上传递的不是值，而是内存地址，这样就导致了最终结果里边是一个无限循环</p>
-<p><span style="color:blue">ops-coffee.cn 18:09:54</span></p>
+<p><span style="color:blue">ops-coffee.com 18:09:54</span></p>
 <pre class="codehilite"><code>&gt;&gt;&gt; a = [1, 2]
 &gt;&gt;&gt;
 &gt;&gt;&gt; id(a)
@@ -147,7 +147,7 @@
 1332642909640</code></pre>
 
 
-<p><span style="color:blue">ops-coffee.cn 18:10:04</span></p>
+<p><span style="color:blue">ops-coffee.com 18:10:04</span></p>
 <p>这个应该看得更清晰一点</p>
 
         <div>
@@ -159,11 +159,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/t/git-readme-specification.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/t/git-readme-specification.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>git工程README结构规范</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/t/django-model-field-comment.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/t/django-model-field-comment.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>django model字段添加备注Comment</span>
                 <span class="pagination-arrow">→</span>
             </a>

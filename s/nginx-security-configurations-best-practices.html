@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="nginx安全配置, nginx安全防范, nginx版本隐藏, nginx HTTPS配置, nginx黑白名单, nginx账号认证, nginx请求限制, nginx User-Agent限制, nginx防盗链, nginx并发连接数控制, nginx缓冲区溢出攻击, nginx Header头设置" />
   <meta name="description" content="本文详细介绍了从nginx配置角度进行安全防范的多种方法，包括隐藏版本号、开启HTTPS、添加黑白名单、账号认证、限制请求方法、拒绝User-Agent、图片防盗链、控制并发连接数、缓冲区溢出攻击防护以及Header头设置等，帮助提升网站的安全性。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Nginx与安全有关的几个配置</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/nginx-security-configurations-best-practices.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/nginx-security-configurations-best-practices.html" />
   <meta property="og:title" content="Nginx与安全有关的几个配置" />
   <meta property="og:description" content="本文详细介绍了从nginx配置角度进行安全防范的多种方法，包括隐藏版本号、开启HTTPS、添加黑白名单、账号认证、限制请求方法、拒绝User-Agent、图片防盗链、控制并发连接数、缓冲区溢出攻击防护以及Header头设置等，帮助提升网站的安全性。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/nginx-security-configurations-best-practices.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/nginx-security-configurations-best-practices.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Nginx与安全有关的几个配置",
     "description": "本文详细介绍了从nginx配置角度进行安全防范的多种方法，包括隐藏版本号、开启HTTPS、添加黑白名单、账号认证、限制请求方法、拒绝User-Agent、图片防盗链、控制并发连接数、缓冲区溢出攻击防护以及Header头设置等，帮助提升网站的安全性。",
-    "url": "https://blog.ops-coffee.cns/nginx-security-configurations-best-practices.html",
+    "url": "https://blog.ops-coffee.coms/nginx-security-configurations-best-practices.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/nginx-security-configurations-best-practices.html"
+      "@id": "https://blog.ops-coffee.coms/nginx-security-configurations-best-practices.html"
     }
   }
   </script>
@@ -118,7 +118,7 @@
         <blockquote>
 <p>安全无小事，安全防范从nginx配置做起</p>
 </blockquote>
-<p>上一篇文章<a href="https://blog.ops-coffee.cn/s/nginx-optimized-practical-configurations.html" target="_blank">《Nginx的几个常用配置和技巧》</a>收到了不错的反馈，这里再总结下nginx配置中与安全有关的一些配置</p>
+<p>上一篇文章<a href="https://blog.ops-coffee.com/s/nginx-optimized-practical-configurations.html" target="_blank">《Nginx的几个常用配置和技巧》</a>收到了不错的反馈，这里再总结下nginx配置中与安全有关的一些配置</p>
 <h2 id="_1">隐藏版本号</h2>
 <pre class="codehilite"><code>http {
     server_tokens off;
@@ -129,7 +129,7 @@
 <h2 id="https">开启HTTPS</h2>
 <pre class="codehilite"><code>server {
     listen 443;
-    server_name ops-coffee.cn;
+    server_name ops-coffee.com;
 
     ssl on;
     ssl_certificate /etc/nginx/server.crt;
@@ -176,7 +176,7 @@ if ($allow = false) { return 404; }</code></pre>
 }</code></pre>
 
 
-<p>关于账号认证<a href="https://blog.ops-coffee.cn/s/nginx-optimized-practical-configurations.html" target="_blank">《Nginx的几个常用配置和技巧》</a>文章中已有详细介绍，这里不赘述</p>
+<p>关于账号认证<a href="https://blog.ops-coffee.com/s/nginx-optimized-practical-configurations.html" target="_blank">《Nginx的几个常用配置和技巧》</a>文章中已有详细介绍，这里不赘述</p>
 <h2 id="_4">限制请求方法</h2>
 <pre class="codehilite"><code>if ($request_method !~ ^(GET|POST)$ ) {
     return 405;
@@ -195,17 +195,17 @@ if ($allow = false) { return 404; }</code></pre>
 <p>Nginx的444状态比较特殊，如果返回444那么客户端将不会收到服务端返回的信息，就像是网站无法连接一样</p>
 <h2 id="_5">图片防盗链</h2>
 <pre class="codehilite"><code>location /images/ {
-    valid_referers none blocked www.ops-coffee.cn ops-coffee.cn;
+    valid_referers none blocked www.ops-coffee.com ops-coffee.com;
     if ($invalid_referer) {
         return  403;
     }
 }</code></pre>
 
 
-<p><strong>valid_referers：</strong> 验证referer，其中<code>none</code>允许referer为空，<code>blocked</code>允许不带协议的请求，除了以上两类外仅允许referer为www.ops-coffee.cn或ops-coffee.cn时访问images下的图片资源，否则返回403</p>
+<p><strong>valid_referers：</strong> 验证referer，其中<code>none</code>允许referer为空，<code>blocked</code>允许不带协议的请求，除了以上两类外仅允许referer为www.ops-coffee.com或ops-coffee.com时访问images下的图片资源，否则返回403</p>
 <p>当然你也可以给不符合referer规则的请求重定向到一个默认的图片，比如下边这样</p>
 <pre class="codehilite"><code>location /images/ {
-    valid_referers blocked www.ops-coffee.cn ops-coffee.cn
+    valid_referers blocked www.ops-coffee.com ops-coffee.com
     if ($invalid_referer) {
         rewrite ^/images/.*\.(gif|jpg|jpeg|png)$ /static/qrcode.jpg last;
     }
@@ -219,7 +219,7 @@ if ($allow = false) { return 404; }</code></pre>
 
     server {
         listen       80;
-        server_name  ops-coffee.cn;
+        server_name  ops-coffee.com;
 
         root /home/project/webapp;
         index index.html;
@@ -244,7 +244,7 @@ if ($allow = false) { return 404; }</code></pre>
 
     server {
         listen       80;
-        server_name  ops-coffee.cn;
+        server_name  ops-coffee.com;
 
         root /home/project/webapp;
         index index.html;
@@ -314,11 +314,11 @@ add_header X-Content-Type-Options &quot;nosniff&quot;;</code></pre>
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/open-source-devops-system-tools-cloud-opendevops.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/open-source-devops-system-tools-cloud-opendevops.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>开源推荐 - CoDo开源一站式DevOps平台</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/redis-scan-command-for-bulk-deletion.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/redis-scan-command-for-bulk-deletion.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Redis删除特定前缀key的优雅实现</span>
                 <span class="pagination-arrow">→</span>
             </a>

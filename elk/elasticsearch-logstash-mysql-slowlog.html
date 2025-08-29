@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="ELK, 慢日志, MySQL, Filebeat, Logstash, Kibana, SQL审核, 慢查询日志, 日志收集" />
   <meta name="description" content="本文详细介绍了如何利用ELK（Elasticsearch, Logstash, Kibana）进行MySQL慢查询日志的收集与处理，提高团队在慢查询日志收集和处理方面的效率。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>ELK构建MySQL慢日志收集平台详解</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnelk/elasticsearch-logstash-mysql-slowlog.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comelk/elasticsearch-logstash-mysql-slowlog.html" />
   <meta property="og:title" content="ELK构建MySQL慢日志收集平台详解" />
   <meta property="og:description" content="本文详细介绍了如何利用ELK（Elasticsearch, Logstash, Kibana）进行MySQL慢查询日志的收集与处理，提高团队在慢查询日志收集和处理方面的效率。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnelk/elasticsearch-logstash-mysql-slowlog.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comelk/elasticsearch-logstash-mysql-slowlog.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "ELK构建MySQL慢日志收集平台详解",
     "description": "本文详细介绍了如何利用ELK（Elasticsearch, Logstash, Kibana）进行MySQL慢查询日志的收集与处理，提高团队在慢查询日志收集和处理方面的效率。",
-    "url": "https://blog.ops-coffee.cnelk/elasticsearch-logstash-mysql-slowlog.html",
+    "url": "https://blog.ops-coffee.comelk/elasticsearch-logstash-mysql-slowlog.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnelk/elasticsearch-logstash-mysql-slowlog.html"
+      "@id": "https://blog.ops-coffee.comelk/elasticsearch-logstash-mysql-slowlog.html"
     }
   }
   </script>
@@ -116,7 +116,7 @@
         <h1 id="art-title">ELK构建MySQL慢日志收集平台详解</h1>
 
         <blockquote>
-<p>上篇文章<a href="https://blog.ops-coffee.cn/s/sql-inception-overmind-automation-archery-yearning-bytebase.html" target="_blank">《中小团队快速构建SQL自动审核系统》</a>我们完成了SQL的自动审核与执行，不仅提高了效率还受到了同事的肯定，心里美滋滋。但关于慢查询的收集及处理也耗费了我们太多的时间和精力，如何在这一块也能提升效率呢？且看本文讲解如何利用ELK做慢日志收集</p>
+<p>上篇文章<a href="https://blog.ops-coffee.com/s/sql-inception-overmind-automation-archery-yearning-bytebase.html" target="_blank">《中小团队快速构建SQL自动审核系统》</a>我们完成了SQL的自动审核与执行，不仅提高了效率还受到了同事的肯定，心里美滋滋。但关于慢查询的收集及处理也耗费了我们太多的时间和精力，如何在这一块也能提升效率呢？且看本文讲解如何利用ELK做慢日志收集</p>
 </blockquote>
 <h1 id="elk">ELK介绍</h1>
 <p>ELK最早是Elasticsearch（以下简称ES）、Logstash、Kibana三款开源软件的简称，三款软件后来被同一公司收购，并加入了Xpark、Beats等组件，改名为Elastic Stack，成为现在最流行的开源日志解决方案，虽然有了新名字但大家依然喜欢叫她ELK，现在所说的ELK就指的是基于这些开源软件构建的日志系统。</p>
@@ -303,11 +303,11 @@ output {
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/elk/elasticsearch-cat-api-shards-nodes.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/elk/elasticsearch-cat-api-shards-nodes.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Elasticsearch各Cat命令详解</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/elk/elasticsearch-logstash-rsyslog-nginx.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/elk/elasticsearch-logstash-rsyslog-nginx.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>ELK日志系统之使用Rsyslog快速方便的收集Nginx日志</span>
                 <span class="pagination-arrow">→</span>
             </a>

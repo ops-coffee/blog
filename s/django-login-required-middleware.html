@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Django, login_required, Middleware, 视图函数, 用户验证, 中间件, 登录页面, 全局验证, 自定义中间件" />
   <meta name="description" content="本文介绍了如何通过Django的Middleware中间件优雅地处理用户访问view时的登录验证问题，避免了为每个视图函数添加@login_required装饰器的繁琐操作。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Django全局启用登陆验证login_required</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/django-login-required-middleware.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/django-login-required-middleware.html" />
   <meta property="og:title" content="Django全局启用登陆验证login_required" />
   <meta property="og:description" content="本文介绍了如何通过Django的Middleware中间件优雅地处理用户访问view时的登录验证问题，避免了为每个视图函数添加@login_required装饰器的繁琐操作。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/django-login-required-middleware.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/django-login-required-middleware.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Django全局启用登陆验证login_required",
     "description": "本文介绍了如何通过Django的Middleware中间件优雅地处理用户访问view时的登录验证问题，避免了为每个视图函数添加@login_required装饰器的繁琐操作。",
-    "url": "https://blog.ops-coffee.cns/django-login-required-middleware.html",
+    "url": "https://blog.ops-coffee.coms/django-login-required-middleware.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/django-login-required-middleware.html"
+      "@id": "https://blog.ops-coffee.coms/django-login-required-middleware.html"
     }
   }
   </script>
@@ -122,7 +122,7 @@
 
 @login_required(login_url='/login/')
 def home(request):
-    return JsonResponse({data': 'ops-coffee.cn'})</code></pre>
+    return JsonResponse({data': 'ops-coffee.com'})</code></pre>
 
 
 <h2 id="middleware">Middleware</h2>
@@ -190,11 +190,11 @@ class LoginRequiredMiddleware:
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/devops-task-probius-cicd-system.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Probius：一个功能强大的自定义任务系统</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/django-jsonfield-usage-and-updates.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/django-jsonfield-usage-and-updates.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Django ORM中原生JSONField的使用方法</span>
                 <span class="pagination-arrow">→</span>
             </a>

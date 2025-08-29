@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="多云监控, Cloudflare监控, GraphQL API, CDN监控, 监控系统, GraphiQL, 数据分析, SEO友好" />
   <meta name="description" content="本文详细介绍了如何在多云监控系统中集成Cloudflare的监控功能，通过GraphQL API获取数据，并利用GraphiQL工具优化查询语句，提高监控效率和数据准确性。适合对CDN监控有需求的用户学习参考。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>构建好用的Cloudflare监控大盘</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/cloudflare-monitor-dashboard-by-graphql-python-api.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/cloudflare-monitor-dashboard-by-graphql-python-api.html" />
   <meta property="og:title" content="构建好用的Cloudflare监控大盘" />
   <meta property="og:description" content="本文详细介绍了如何在多云监控系统中集成Cloudflare的监控功能，通过GraphQL API获取数据，并利用GraphiQL工具优化查询语句，提高监控效率和数据准确性。适合对CDN监控有需求的用户学习参考。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/cloudflare-monitor-dashboard-by-graphql-python-api.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/cloudflare-monitor-dashboard-by-graphql-python-api.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "构建好用的Cloudflare监控大盘",
     "description": "本文详细介绍了如何在多云监控系统中集成Cloudflare的监控功能，通过GraphQL API获取数据，并利用GraphiQL工具优化查询语句，提高监控效率和数据准确性。适合对CDN监控有需求的用户学习参考。",
-    "url": "https://blog.ops-coffee.cns/cloudflare-monitor-dashboard-by-graphql-python-api.html",
+    "url": "https://blog.ops-coffee.coms/cloudflare-monitor-dashboard-by-graphql-python-api.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/cloudflare-monitor-dashboard-by-graphql-python-api.html"
+      "@id": "https://blog.ops-coffee.coms/cloudflare-monitor-dashboard-by-graphql-python-api.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">构建好用的Cloudflare监控大盘</h1>
 
-        <p><a href="https://blog.ops-coffee.cn/s/multi-cloud-monitoring-alert-system.html" target="_blank">多云监控系统</a>要接入Cloudflare的监控，当初接入时，看了Cloudflare页面里的图表，都是通过GraphQL查询获取数据展示的，随后去查了Cloudflare的官方文档，发现了graphql-api：</p>
+        <p><a href="https://blog.ops-coffee.com/s/multi-cloud-monitoring-alert-system.html" target="_blank">多云监控系统</a>要接入Cloudflare的监控，当初接入时，看了Cloudflare页面里的图表，都是通过GraphQL查询获取数据展示的，随后去查了Cloudflare的官方文档，发现了graphql-api：</p>
 <p>https://developers.cloudflare.com/analytics/graphql-api/</p>
 <p>根据API文档，获取数据很简单，示例如下：</p>
 <pre class="codehilite"><code>import json
@@ -157,7 +157,7 @@ class CloudFlareAPI:
           AND:[
           {datetime_geq:&quot;2024-03-28T10:00:00Z&quot;, datetime_leq:&quot;2024-03-28T11:00:00Z&quot;},
           {requestSource:&quot;eyeball&quot;},
-          {clientRequestHTTPHost: &quot;blog.ops-coffee.cn&quot;},
+          {clientRequestHTTPHost: &quot;blog.ops-coffee.com&quot;},
           ]
         }
       )
@@ -183,7 +183,7 @@ class CloudFlareAPI:
           AND:[
           {datetime_geq:&quot;2024-03-28T10:00:00Z&quot;, datetime_leq:&quot;2024-03-28T11:00:00Z&quot;},
           {requestSource:&quot;eyeball&quot;},
-          {clientRequestHTTPHost: &quot;blog.ops-coffee.cn&quot;},
+          {clientRequestHTTPHost: &quot;blog.ops-coffee.com&quot;},
           ]
         }
         orderBy: [datetimeMinute_ASC]
@@ -213,7 +213,7 @@ class CloudFlareAPI:
           AND:[
           {datetime_geq:&quot;2024-03-28T10:00:00Z&quot;, datetime_leq:&quot;2024-03-28T11:00:00Z&quot;},
           {requestSource:&quot;eyeball&quot;},
-          {clientRequestHTTPHost: &quot;blog.ops-coffee.cn&quot;},
+          {clientRequestHTTPHost: &quot;blog.ops-coffee.com&quot;},
           {cacheStatus: &quot;hit&quot;}
           ]
         }
@@ -243,7 +243,7 @@ class CloudFlareAPI:
           AND: [
           {datetime_geq:&quot;2024-03-28T10:00:00Z&quot;, datetime_leq:&quot;2024-03-28T11:00:00Z&quot;},
           {requestSource:&quot;eyeball&quot;},
-          {clientRequestHTTPHost: &quot;blog.ops-coffee.cn&quot;},
+          {clientRequestHTTPHost: &quot;blog.ops-coffee.com&quot;},
           {cacheStatus: &quot;hit&quot;}
           ]
         }
@@ -260,7 +260,7 @@ class CloudFlareAPI:
           AND: [
           {datetime_geq:&quot;2024-03-28T10:00:00Z&quot;, datetime_leq:&quot;2024-03-28T11:00:00Z&quot;},
           {requestSource:&quot;eyeball&quot;},
-          {clientRequestHTTPHost: &quot;blog.ops-coffee.cn&quot;},
+          {clientRequestHTTPHost: &quot;blog.ops-coffee.com&quot;},
           ]
         }
         orderBy: [datetimeMinute_ASC]
@@ -289,11 +289,11 @@ class CloudFlareAPI:
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/suggestion-for-open-source-jumpserver-oneterm.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/suggestion-for-open-source-jumpserver-oneterm.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>用了两周开源堡垒机OneTerm，我有一些建议</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/devops-cloud-cost-financial-billing-finops.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/devops-cloud-cost-financial-billing-finops.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>运维自动化之账单系统</span>
                 <span class="pagination-arrow">→</span>
             </a>

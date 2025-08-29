@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Asciinema, 录制功能, 文章勘误, Web端播放, 标准输入, 标准输出, asciinema-player" />
   <meta name="description" content="本文纠正了Asciinema录制功能中关于--stdin参数的误解，详细说明了其功能及效果，并介绍了如何在Web端使用asciinema-player播放录制的文件。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Asciinema文章勘误及Web端使用介绍</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/asciinema-recording-errors-and-corrections.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/asciinema-recording-errors-and-corrections.html" />
   <meta property="og:title" content="Asciinema文章勘误及Web端使用介绍" />
   <meta property="og:description" content="本文纠正了Asciinema录制功能中关于--stdin参数的误解，详细说明了其功能及效果，并介绍了如何在Web端使用asciinema-player播放录制的文件。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/asciinema-recording-errors-and-corrections.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/asciinema-recording-errors-and-corrections.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Asciinema文章勘误及Web端使用介绍",
     "description": "本文纠正了Asciinema录制功能中关于--stdin参数的误解，详细说明了其功能及效果，并介绍了如何在Web端使用asciinema-player播放录制的文件。",
-    "url": "https://blog.ops-coffee.cns/asciinema-recording-errors-and-corrections.html",
+    "url": "https://blog.ops-coffee.coms/asciinema-recording-errors-and-corrections.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/asciinema-recording-errors-and-corrections.html"
+      "@id": "https://blog.ops-coffee.coms/asciinema-recording-errors-and-corrections.html"
     }
   }
   </script>
@@ -119,7 +119,7 @@
 <p>欠下的债迟早是要还的，查文档，重验证，出结果，不误导</p>
 </blockquote>
 <h2 id="_1">文章勘误</h2>
-<p>在上一篇文章<a href="https://blog.ops-coffee.cn/s/asciinema-webssh-terminal-recording-playback.html" target="_blank">Asciinema：你的所有操作都将被录制</a>中有两个地方表述有错误或瑕疵，这里更正一下</p>
+<p>在上一篇文章<a href="https://blog.ops-coffee.com/s/asciinema-webssh-terminal-recording-playback.html" target="_blank">Asciinema：你的所有操作都将被录制</a>中有两个地方表述有错误或瑕疵，这里更正一下</p>
 <p>第一个地方为录制时的参数<code>--stdin</code>，参数的意思是启用标准输入录制，原文中说看不到效果，可能官方还未支持，实际上官方已经支持了，且查看录制文件内容时可以看到区别，以下两个对比的例子来说明</p>
 <p>例一：执行下方的命令进行录制，录制开始之后执行ssh命令输入密码连接另一台主机</p>
 <pre class="codehilite"><code>asciinema rec ops-coffee.cast</code></pre>
@@ -127,9 +127,9 @@
 
 <p>执行<code>asciinema cat</code>命令查看执行命令</p>
 <pre class="codehilite"><code># asciinema cat ops-coffee.cast 
-root@onlinegame:~# ssh root@192.168.106.192 ls ops-coffee.cn
+root@onlinegame:~# ssh root@192.168.106.192 ls ops-coffee.com
 root@192.168.106.192's password: 
-ops-coffee.cn
+ops-coffee.com
 root@onlinegame:~# exit
 exit</code></pre>
 
@@ -139,11 +139,11 @@ exit</code></pre>
 {&quot;version&quot;: 2, &quot;width&quot;: 237, &quot;height&quot;: 55, &quot;timestamp&quot;: 1574060513, &quot;env&quot;: {&quot;SHELL&quot;: &quot;/bin/bash&quot;, &quot;TERM&quot;: &quot;linux&quot;}}
 [0.012221, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]
 [0.607184, &quot;o&quot;, &quot;exit&quot;]
-[1.07092, &quot;o&quot;, &quot;\b\b\b\bssh root@192.168.106.192 ls ops-coffee.cn&quot;]
+[1.07092, &quot;o&quot;, &quot;\b\b\b\bssh root@192.168.106.192 ls ops-coffee.com&quot;]
 [1.703405, &quot;o&quot;, &quot;\r\n&quot;]
 [1.762974, &quot;o&quot;, &quot;root@192.168.106.192's password: &quot;]
 [4.550759, &quot;o&quot;, &quot;\r\n&quot;]
-[4.558138, &quot;o&quot;, &quot;ops-coffee.cn\r\n&quot;]
+[4.558138, &quot;o&quot;, &quot;ops-coffee.com\r\n&quot;]
 [4.559187, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]
 [5.182817, &quot;o&quot;, &quot;e&quot;]
 [5.582643, &quot;o&quot;, &quot;x&quot;]
@@ -158,9 +158,9 @@ exit</code></pre>
 
 <p>执行<code>asciinema cat</code>命令查看执行命令</p>
 <pre class="codehilite"><code># asciinema cat ops-coffee.1.cast 
-root@onlinegame:~# ssh root@192.168.106.192 ls ops-coffee.cn
+root@onlinegame:~# ssh root@192.168.106.192 ls ops-coffee.com
 root@192.168.106.192's password: 
-ops-coffee.cn
+ops-coffee.com
 root@onlinegame:~# exit
 exit</code></pre>
 
@@ -172,7 +172,7 @@ exit</code></pre>
 [1.654752, &quot;i&quot;, &quot;\u001b[A&quot;]
 [1.654971, &quot;o&quot;, &quot;exit&quot;]
 [2.014568, &quot;i&quot;, &quot;\u001b[A&quot;]
-[2.014727, &quot;o&quot;, &quot;\b\b\b\bssh root@192.168.106.192 ls ops-coffee.cn&quot;]
+[2.014727, &quot;o&quot;, &quot;\b\b\b\bssh root@192.168.106.192 ls ops-coffee.com&quot;]
 [3.7185, &quot;i&quot;, &quot;\r&quot;]
 [3.719167, &quot;o&quot;, &quot;\r\n&quot;]
 [3.781231, &quot;o&quot;, &quot;root@192.168.106.192's password: &quot;]
@@ -183,7 +183,7 @@ exit</code></pre>
 [5.990628, &quot;i&quot;, &quot;e&quot;]
 [6.342587, &quot;i&quot;, &quot;\r&quot;]
 [6.342817, &quot;o&quot;, &quot;\r\n&quot;]
-[6.351245, &quot;o&quot;, &quot;ops-coffee.cn\r\n&quot;]
+[6.351245, &quot;o&quot;, &quot;ops-coffee.com\r\n&quot;]
 [6.351475, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]
 [7.182384, &quot;i&quot;, &quot;e&quot;]
 [7.182585, &quot;o&quot;, &quot;e&quot;]
@@ -227,7 +227,7 @@ exit</code></pre>
 <p><strong>start-at：</strong> 从哪个地方开始播放，可以是<code>123</code>这样的秒数或者是<code>1:06</code>这样的时间点</p>
 <p><strong>speed：</strong> 播放的速度，类似于play命令播放时的<code>-s</code>参数</p>
 <p><strong>idle-time-limit：</strong> 最大空闲秒数，类似于play命令播放时的<code>-i</code>参数</p>
-<p><strong>poster：</strong> 播放之前的预览，可以是<code>npt:1:06</code>这样给定时间点的画面，也可以是<code>data:text/plain,ops-coffee.cn</code>这样给定的文字，其中文字支持ANSI编码，例如可以给文字加上颜色<code>data:text/plain,\x1b[1;32mops-coffee.cn\x1b[1;0m</code></p>
+<p><strong>poster：</strong> 播放之前的预览，可以是<code>npt:1:06</code>这样给定时间点的画面，也可以是<code>data:text/plain,ops-coffee.com</code>这样给定的文字，其中文字支持ANSI编码，例如可以给文字加上颜色<code>data:text/plain,\x1b[1;32mops-coffee.com\x1b[1;0m</code></p>
 <p><strong>font-size：</strong> 文字大小，可以是<code>small</code>、<code>medium</code>、<code>big</code>或者直接是<code>14px</code>这样的css样式大小</p>
 <p><strong>theme：</strong> 终端颜色主题，默认是<code>asciinema</code>，也提供有<code>tango</code>、<code>solarized-dark</code>、<code>solarized-light</code>或者<code>monokai</code>可选择，当然你也可以自定义主题</p>
 <p>还有几个参数<strong>title</strong>、<strong>author</strong>、<strong>author-url</strong>、<strong>author-img-url</strong>分别表示了录像的标题、作者、作者的主页、作者的头像，这些配置会在全屏观看录像时显示在标题栏中，像下边这样</p>
@@ -235,8 +235,8 @@ exit</code></pre>
 <p>最后使用以下参数设置asciinema-player，看看播放的效果</p>
 <pre class="codehilite"><code>&lt;asciinema-player id=&quot;play&quot; 
     title=&quot;WebSSH Record&quot; 
-    author=&quot;ops-coffee.cn&quot; 
-    author-url=&quot;https://ops-coffee.cn&quot; 
+    author=&quot;ops-coffee.com&quot; 
+    author-url=&quot;https://ops-coffee.com&quot; 
     author-img-url=&quot;/static/img/logo.png&quot; 
     src=&quot;/static/record/ops-coffee.cast&quot; 
     speed=&quot;3&quot; idle-time-limit=&quot;2&quot; 
@@ -264,11 +264,11 @@ exit</code></pre>
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/asciinema-webssh-terminal-recording-playback.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/asciinema-webssh-terminal-recording-playback.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Asciinema：你的所有操作都将被录制</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/why-no-github-link-in-articles.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/why-no-github-link-in-articles.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>你的文章里为什么不放源码Github链接了</span>
                 <span class="pagination-arrow">→</span>
             </a>

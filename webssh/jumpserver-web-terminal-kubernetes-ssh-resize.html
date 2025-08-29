@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="WebSSH, Kubernetes, Pod, 终端窗口调整, xterm.js, RESIZE_CHANNEL, WebSocket" />
   <meta name="description" content="本文介绍如何通过WebSSH操作Kubernetes Pod时调整终端窗口大小，使用xterm.js和RESIZE_CHANNEL实现动态调整，解决浏览器可视区域太小的问题。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Kubernetes WebSSH终端窗口自适应Resize</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnwebssh/jumpserver-web-terminal-kubernetes-ssh-resize.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comwebssh/jumpserver-web-terminal-kubernetes-ssh-resize.html" />
   <meta property="og:title" content="Kubernetes WebSSH终端窗口自适应Resize" />
   <meta property="og:description" content="本文介绍如何通过WebSSH操作Kubernetes Pod时调整终端窗口大小，使用xterm.js和RESIZE_CHANNEL实现动态调整，解决浏览器可视区域太小的问题。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnwebssh/jumpserver-web-terminal-kubernetes-ssh-resize.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comwebssh/jumpserver-web-terminal-kubernetes-ssh-resize.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Kubernetes WebSSH终端窗口自适应Resize",
     "description": "本文介绍如何通过WebSSH操作Kubernetes Pod时调整终端窗口大小，使用xterm.js和RESIZE_CHANNEL实现动态调整，解决浏览器可视区域太小的问题。",
-    "url": "https://blog.ops-coffee.cnwebssh/jumpserver-web-terminal-kubernetes-ssh-resize.html",
+    "url": "https://blog.ops-coffee.comwebssh/jumpserver-web-terminal-kubernetes-ssh-resize.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnwebssh/jumpserver-web-terminal-kubernetes-ssh-resize.html"
+      "@id": "https://blog.ops-coffee.comwebssh/jumpserver-web-terminal-kubernetes-ssh-resize.html"
     }
   }
   </script>
@@ -118,7 +118,7 @@
         <blockquote>
 <p>追求完美不服输的我，一直在与各种问题斗争的路上痛并快乐着</p>
 </blockquote>
-<p>上一篇文章<a href="https://blog.ops-coffee.cn/webssh/jumpserver-kubernetes-web-terminal-ssh-stream" target="_blank">Django实现WebSSH操作Kubernetes Pod</a>最后留了个问题没有解决，那就是terminal内容窗口的大小没有办法调整，这会导致的一个问题就是浏览器上可显示内容的区域太小，当查看/编辑文件时非常不便，就像下边这样，红色可视区域并没有被用到</p>
+<p>上一篇文章<a href="https://blog.ops-coffee.com/webssh/jumpserver-kubernetes-web-terminal-ssh-stream" target="_blank">Django实现WebSSH操作Kubernetes Pod</a>最后留了个问题没有解决，那就是terminal内容窗口的大小没有办法调整，这会导致的一个问题就是浏览器上可显示内容的区域太小，当查看/编辑文件时非常不便，就像下边这样，红色可视区域并没有被用到</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/1018.01.png" /></p>
 <p><img alt="" loading="lazy" src="/static/images/2019/1018.02.png" /></p>
 <h2 id="resize_channel">RESIZE_CHANNEL</h2>
@@ -250,11 +250,11 @@ cont_stream.write_channel(4, json.dumps({&quot;Height&quot;: int(rows), &quot;Wi
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/webssh/jumpserver-kubernetes-web-terminal-ssh-stream.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/webssh/jumpserver-kubernetes-web-terminal-ssh-stream.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Django实现WebSSH操作Kubernetes Pod</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-ssh-paramiko-stream.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/webssh/jumpserver-web-terminal-ssh-paramiko-stream.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Django实现WebSSH操作物理机或虚拟机</span>
                 <span class="pagination-arrow">→</span>
             </a>

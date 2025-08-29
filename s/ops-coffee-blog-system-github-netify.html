@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="博客搭建, Github Pages, SEO优化, 博客工具选择, Django后台, 静态页面生成, Netlify加速" />
   <meta name="description" content="本文详细介绍了我从使用第三方博客平台到自建静态博客的折腾历程，包括选择Github Pages的原因、使用Django自建后台生成静态页面的方法、以及如何通过SEO优化和Netlify加速提升博客访问体验。希望这些经验对正在考虑搭建个人博客的你有所帮助。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>关于个人博客那些事儿</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/ops-coffee-blog-system-github-netify.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/ops-coffee-blog-system-github-netify.html" />
   <meta property="og:title" content="关于个人博客那些事儿" />
   <meta property="og:description" content="本文详细介绍了我从使用第三方博客平台到自建静态博客的折腾历程，包括选择Github Pages的原因、使用Django自建后台生成静态页面的方法、以及如何通过SEO优化和Netlify加速提升博客访问体验。希望这些经验对正在考虑搭建个人博客的你有所帮助。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/ops-coffee-blog-system-github-netify.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/ops-coffee-blog-system-github-netify.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "关于个人博客那些事儿",
     "description": "本文详细介绍了我从使用第三方博客平台到自建静态博客的折腾历程，包括选择Github Pages的原因、使用Django自建后台生成静态页面的方法、以及如何通过SEO优化和Netlify加速提升博客访问体验。希望这些经验对正在考虑搭建个人博客的你有所帮助。",
-    "url": "https://blog.ops-coffee.cns/ops-coffee-blog-system-github-netify.html",
+    "url": "https://blog.ops-coffee.coms/ops-coffee-blog-system-github-netify.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/ops-coffee-blog-system-github-netify.html"
+      "@id": "https://blog.ops-coffee.coms/ops-coffee-blog-system-github-netify.html"
     }
   }
   </script>
@@ -116,23 +116,23 @@
         <h1 id="art-title">关于个人博客那些事儿</h1>
 
         <p>写文章有两年多的时间，博客站在这两年多的时间里不曾有一天停止服务过，后边也将继续运行很多很多个2年，本篇文章简单介绍下我的博客折腾历程，希望对你有点帮助</p>
-<p>至于为什么要写文章，可以看下<a href="https://blog.ops-coffee.cn/s/why-do-I-want-to-write-for-WeChat-official-account.html" target="_blank">『我为什么要写微信公众号』</a></p>
+<p>至于为什么要写文章，可以看下<a href="https://blog.ops-coffee.com/s/why-do-I-want-to-write-for-WeChat-official-account.html" target="_blank">『我为什么要写微信公众号』</a></p>
 <p>刚开始写博客用第三方博客平台，各种不爽，完全不可控，总有一种寄人篱下的感觉，并且不是很信任这些平台，停止服务也是常有的事，于是便决定自己搭建，开始之初就想清楚了一个事情，那就是：博客要想持久，少花钱很重要，<strong>不花钱</strong>最好</p>
 <p>没有成本压力，会少很大负担，所以选择了Github Pages。虽然云主机每年也就百十块钱，但依然有成本，有成本就会面临选择，在主机到期的时候想到没有什么流量的博客很有可能就不再续费了，而Github Pages没有这个问题，别杠，像Github Pages倒闭这种低概率事件暂不考虑</p>
-<p>于是自己写了个Django的后台跑在本地，用来管理博文，生成纯静态的html文件自动上传到Github，可以看下这篇文章有介绍及代码：<a href="https://blog.ops-coffee.cn/s/build-static-blog-with-django-github-pages.html" target="_blank">『利用Django徒手写个静态页面生成工具』</a></p>
+<p>于是自己写了个Django的后台跑在本地，用来管理博文，生成纯静态的html文件自动上传到Github，可以看下这篇文章有介绍及代码：<a href="https://blog.ops-coffee.com/s/build-static-blog-with-django-github-pages.html" target="_blank">『利用Django徒手写个静态页面生成工具』</a></p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1107.02.png" /></p>
 <p>之所以没有选择市面上那些成熟的工具，主要有以下几点原因：</p>
 <p>1.很难找到一个完全符合自己想法的工具，即便是找到了一个能满足目前需求的工具，但难免后边有了新的想法，想要第三方支持几乎不可能</p>
 <p>2.通用的工具因为要满足不同的人的不同想法，基本做的都很重，有一大堆自己可能完全用不上的功能，个人对代码和工具有洁癖，考虑到还有一定的学习成本，直接放弃</p>
 <p>3.对Django轻车熟路，觉得自己造轮子也不费事，个人博客也不想做的太复杂，无非就是CRUD</p>
 <p>4.最重要的能使生成的内容“最优”，这里的最优指的是完全符合自己的预期，几乎没有任何第三方依赖，最少的资源加载，去掉一切非必要的功能，就是纯静态html，连异步加载，异步渲染都没有，也寄希望能加载的稍微快一点</p>
-<p>但Github的服务器节点毕竟全部在国外，访问链路天然不好，也折腾了Netlify的全球CDN加速，可以看下这个介绍：<a href="https://blog.ops-coffee.cn/s/blog-website-github-pages-vs-netlify.html" target="_blank">『Github Pages访问太慢？通过Netlify免费加速』</a>，刚折腾好的时候测试确实可以加速，但Netlify同样在国内没有节点，效果时好时差，并不稳定</p>
+<p>但Github的服务器节点毕竟全部在国外，访问链路天然不好，也折腾了Netlify的全球CDN加速，可以看下这个介绍：<a href="https://blog.ops-coffee.com/s/blog-website-github-pages-vs-netlify.html" target="_blank">『Github Pages访问太慢？通过Netlify免费加速』</a>，刚折腾好的时候测试确实可以加速，但Netlify同样在国内没有节点，效果时好时差，并不稳定</p>
 <p>之所以不用国内的CDN，那是因为国内CDN都要备案啊，之前考虑过备案，但阿里云看了一圈，想备案的话就要有台阿里云主机，虽然只是几十块钱的事，但还是懒得折腾了</p>
-<p>迫于网络这种硬伤不好解决，就暂时放下了网络方面的纠结，转而研究SEO，这篇文章有介绍：<a href="https://blog.ops-coffee.cn/s/googole-search-analytics-adsense-blog-site-seo" target="_blank">『Google搜索成最大入口，简单谈下个人博客的SEO』</a>，希望博客能得到更多的关注和流量，还好这个小有成效，随着时间的推移效果也逐渐显现</p>
+<p>迫于网络这种硬伤不好解决，就暂时放下了网络方面的纠结，转而研究SEO，这篇文章有介绍：<a href="https://blog.ops-coffee.com/s/googole-search-analytics-adsense-blog-site-seo" target="_blank">『Google搜索成最大入口，简单谈下个人博客的SEO』</a>，希望博客能得到更多的关注和流量，还好这个小有成效，随着时间的推移效果也逐渐显现</p>
 <p>看到很多小伙伴都在纠结究竟是用现成的博客平台，还是开源的第三方程序搭建，或是发挥自己的特长动手撸，这种问题我在技术论坛里经常看到，同时也见证了太多人在选择博客平台、挑选博客程序、折腾博客主题上花了大量的时间，而忽略了对于博客最为重要的<strong>内容</strong>，用啥不纠结，个人觉得简单就好，很多知名的博客，都算不上特别好看，但以过硬的内容品质，吸引了大量的流量，例如阮一峰的网络日志、CoolShell等</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1107.01.png" /></p>
 <p>到现在我的博客内容在不断丰富，后台也添加了不少的功能，但前台的主UI始终未有大的改变，仅是不断的在做一些小的优化调整，考虑到文章详情页面的阅读体验，最近去掉了详情页的侧边栏，还加了文章推荐，个人感觉还不错，你不来看看吗？</p>
-<p><a href="https://blog.ops-coffee.cn" target="_blank">运维咖啡吧</a>，就在这里等着你~</p>
+<p><a href="https://blog.ops-coffee.com" target="_blank">运维咖啡吧</a>，就在这里等着你~</p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
@@ -143,11 +143,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/devops-task-optimization-django-cache.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/devops-task-optimization-django-cache.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Django开发中使用Cache缓存提升10倍效率</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/self-selected-fund-assistant-chrome-plugins.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/self-selected-fund-assistant-chrome-plugins.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>插件推荐 | 如果你在关注基金，一定要看看这个开源的插件</span>
                 <span class="pagination-arrow">→</span>
             </a>

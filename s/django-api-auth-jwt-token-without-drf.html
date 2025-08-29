@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Django, API, Token鉴权, JWT, PyJWT, 前后端分离, 鉴权机制, DRF, HTTP无状态协议, 权限校验" />
   <meta name="description" content="本文探讨了在Django项目中不使用Django Rest Framework（DRF）提供API的可能性，重点介绍了基于Token的鉴权机制，特别是JWT的使用，以及如何在Django中实现自定义的鉴权和权限校验。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Django+JWT实现Token认证</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/django-api-auth-jwt-token-without-drf.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/django-api-auth-jwt-token-without-drf.html" />
   <meta property="og:title" content="Django+JWT实现Token认证" />
   <meta property="og:description" content="本文探讨了在Django项目中不使用Django Rest Framework（DRF）提供API的可能性，重点介绍了基于Token的鉴权机制，特别是JWT的使用，以及如何在Django中实现自定义的鉴权和权限校验。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/django-api-auth-jwt-token-without-drf.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/django-api-auth-jwt-token-without-drf.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Django+JWT实现Token认证",
     "description": "本文探讨了在Django项目中不使用Django Rest Framework（DRF）提供API的可能性，重点介绍了基于Token的鉴权机制，特别是JWT的使用，以及如何在Django中实现自定义的鉴权和权限校验。",
-    "url": "https://blog.ops-coffee.cns/django-api-auth-jwt-token-without-drf.html",
+    "url": "https://blog.ops-coffee.coms/django-api-auth-jwt-token-without-drf.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/django-api-auth-jwt-token-without-drf.html"
+      "@id": "https://blog.ops-coffee.coms/django-api-auth-jwt-token-without-drf.html"
     }
   }
   </script>
@@ -137,7 +137,7 @@
 
 <h5 id="pyjwttoken">利用PyJWT生成Token</h5>
 <pre class="codehilite"><code>&gt;&gt;&gt; import jwt
-&gt;&gt;&gt; encoded_jwt = jwt.encode({'username':'运维咖啡吧','site':'https://ops-coffee.cn'},'secret_key',algorithm='HS256')</code></pre>
+&gt;&gt;&gt; encoded_jwt = jwt.encode({'username':'运维咖啡吧','site':'https://ops-coffee.com'},'secret_key',algorithm='HS256')</code></pre>
 
 
 <p>这里传了三部分内容给JWT，</p>
@@ -164,13 +164,13 @@ b'{&quot;typ&quot;:&quot;JWT&quot;,&quot;alg&quot;:&quot;HS256&quot;}'
 <p>因为JWT不会对结果进行加密，所以不要保存敏感信息在Header或者Payload中，服务端也主要依靠最后的Signature来验证Token是否有效以及有无被篡改</p>
 <h5 id="token_1">解密Token</h5>
 <pre class="codehilite"><code>&gt;&gt;&gt; jwt.decode(encoded_jwt,'secret_key',algorithms=['HS256'])
-{'username': '运维咖啡吧', 'site': 'https://ops-coffee.cn'}</code></pre>
+{'username': '运维咖啡吧', 'site': 'https://ops-coffee.com'}</code></pre>
 
 
 <p>服务端在有秘钥的情况下可以直接对JWT生成的Token进行解密，解密成功说明Token正确，且数据没有被篡改</p>
 <p>当然我们前文说了JWT并没有对数据进行加密，如果没有secret_key也可以直接获取到Payload里边的数据，只是缺少了签名算法无法验证数据是否准确，pyjwt也提供了直接获取Payload数据的方法，如下</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; jwt.decode(encoded_jwt, verify=False)
-{'username': '运维咖啡吧', 'site': 'https://ops-coffee.cn'}</code></pre>
+{'username': '运维咖啡吧', 'site': 'https://ops-coffee.com'}</code></pre>
 
 
 <h1 id="django">Django案例</h1>
@@ -239,7 +239,7 @@ def user(request):
     if request.method == 'GET':
         _jsondata = {
             &quot;user&quot;: &quot;ops-coffee&quot;,
-            &quot;site&quot;: &quot;https://ops-coffee.cn&quot;
+            &quot;site&quot;: &quot;https://ops-coffee.com&quot;
         }
 
         return JsonResponse({&quot;state&quot;: 1, &quot;message&quot;: _jsondata})
@@ -291,7 +291,7 @@ def user(request):
 
 <p>可以直接通过用户对象来生成Token：</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; from accounts.models import User
-&gt;&gt;&gt; u = User.objects.get(username='admin@ops-coffee.cn')
+&gt;&gt;&gt; u = User.objects.get(username='admin@ops-coffee.com')
 &gt;&gt;&gt; u.token
 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDgyMjg3NzksImlhdCI6MTU0ODE0MjM3OSwiZGF0YSI6eyJ1c2VybmFtZSI6ImFkbWluQDE2My5jb20ifX0.akZNU7t_z2kwPxDJjmc-QxtNdICK0yhnwWmKxqqXKLw'</code></pre>
 
@@ -302,7 +302,7 @@ def user(request):
 &gt;&gt;&gt;
 &gt;&gt;&gt; r = requests.get('http://localhost/api/user', headers={'Authorization': 'Token '+token})
 &gt;&gt;&gt; r.json()
-{'username': 'admin@ops-coffee.cn', 'fullname': '运维咖啡吧', 'is_active': True}</code></pre>
+{'username': 'admin@ops-coffee.com', 'fullname': '运维咖啡吧', 'is_active': True}</code></pre>
 
 
 <p>这样一个<code>auth_permission_required</code>方法就可以搞定上边的全部需求了，简单好用。</p>
@@ -316,11 +316,11 @@ def user(request):
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/optimizing-continuous-deployment-with-docker.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/optimizing-continuous-deployment-with-docker.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Docker环境的持续部署优化实践</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/markdown-editor-md-integration.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/markdown-editor-md-integration.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Django集成Markdown编辑器【附源码】</span>
                 <span class="pagination-arrow">→</span>
             </a>

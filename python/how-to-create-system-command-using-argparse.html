@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="系统命令, Linux命令, Python argparse, 可执行文件, 命令行工具, 自定义命令, 命令帮助, 配置中心, API获取配置, 代码复用" />
   <meta name="description" content="本文介绍了如何使用Python的argparse模块创建系统命令，并详细解释了为什么要编写自定义命令以及如何通过命令从配置中心获取配置并写入本地文件。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>用Python写个Linux系统命令</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnpython/how-to-create-system-command-using-argparse.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.compython/how-to-create-system-command-using-argparse.html" />
   <meta property="og:title" content="用Python写个Linux系统命令" />
   <meta property="og:description" content="本文介绍了如何使用Python的argparse模块创建系统命令，并详细解释了为什么要编写自定义命令以及如何通过命令从配置中心获取配置并写入本地文件。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnpython/how-to-create-system-command-using-argparse.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.compython/how-to-create-system-command-using-argparse.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "用Python写个Linux系统命令",
     "description": "本文介绍了如何使用Python的argparse模块创建系统命令，并详细解释了为什么要编写自定义命令以及如何通过命令从配置中心获取配置并写入本地文件。",
-    "url": "https://blog.ops-coffee.cnpython/how-to-create-system-command-using-argparse.html",
+    "url": "https://blog.ops-coffee.compython/how-to-create-system-command-using-argparse.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnpython/how-to-create-system-command-using-argparse.html"
+      "@id": "https://blog.ops-coffee.compython/how-to-create-system-command-using-argparse.html"
     }
   }
   </script>
@@ -276,9 +276,9 @@ print(args.integers)</code></pre>
 
 <h2 id="_4">自定义命令</h2>
 <p>先说我为什么要写个系统命令？</p>
-<p>文章<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">『Probius：一个功能强大的自定义任务系统』</a>中介绍了我们的自定义任务系统，这个系统可以用来编排任务，而在编排CICD任务中会用到配置文件，我们的配置文件都是通过<a href="https://blog.ops-coffee.cn/s/devops-config-center-kerrigan-implementation.html" target="_blank">Kerrigan配置中心</a>来管理的,目前获取配置中心的配置主要有两种方法</p>
+<p>文章<a href="https://blog.ops-coffee.com/s/devops-task-probius-cicd-system.html" target="_blank">『Probius：一个功能强大的自定义任务系统』</a>中介绍了我们的自定义任务系统，这个系统可以用来编排任务，而在编排CICD任务中会用到配置文件，我们的配置文件都是通过<a href="https://blog.ops-coffee.com/s/devops-config-center-kerrigan-implementation.html" target="_blank">Kerrigan配置中心</a>来管理的,目前获取配置中心的配置主要有两种方法</p>
 <ol>
-<li>配合confd服务自动拉取更新，详细内容可以查看这篇文章：<a href="https://blog.ops-coffee.cn/s/configuration-center-setup-and-management.html" target="_blank">中小团队落地配置中心详解</a></li>
+<li>配合confd服务自动拉取更新，详细内容可以查看这篇文章：<a href="https://blog.ops-coffee.com/s/configuration-center-setup-and-management.html" target="_blank">中小团队落地配置中心详解</a></li>
 <li>配置中心提供API，可以通过API获取配置内容</li>
 </ol>
 <p>脚本里如果想要使用配置中心的配置，则只能通过API的方式去获取，这样就要在每个需要用到配置的地方写一段代码来获取及处理，不仅会出现大量的重复代码，并且非常的不优雅，更为重要的是请求API的Token将会出现在脚本里，带来一定的安全风险</p>
@@ -306,7 +306,7 @@ localfile = args.localfile
 header = {
     'Authorization': 'Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.JTdCJTIyZXhwJTIyJTNBMTkwNjcwNzAyMCUyQyUyMmlhdCUyMiUzQTE1OTEzNDcwMjAlMkMlMjJkYXRhJTIyJTNBJTdCJTIydXNlcm5hbWUlMjIlM0ElMjJwcm9iaXVzQG9wcy1jb2ZmZWUuY24lMjIlN0QlN0Q.ops1ZNhq19XSEL2PUo-iQqzbhimDnpFiYc_7EUXftF4'}
 
-uri = 'http://kerrigan.ops-coffee.cn/api/config/?key=' + configkey
+uri = 'http://kerrigan.ops-coffee.com/api/config/?key=' + configkey
 r = requests.get(uri, headers=header)
 
 if r.json()['state']:
@@ -338,11 +338,11 @@ else:
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/python/security-eval-vs-ast-literal-eval.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/python/security-eval-vs-ast-literal-eval.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>python函数eval与ast.literal_eval的区别</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/python/https-certificate-management-automation.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/python/https-certificate-management-automation.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Python实现HTTPS网站证书过期监控及更新</span>
                 <span class="pagination-arrow">→</span>
             </a>

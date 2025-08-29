@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="容器系统, Kubernetes集群, 运维自动化, CI/CD流程, Jenkins集成, 任务系统, 多云系统" />
   <meta name="description" content="本文分享了年初上线的容器系统，该系统用于集中管理自建或云上的Kubernetes集群，实现容器的全生命周期管理，并通过集成Jenkins和任务系统，降低了运维复杂度，提升了更新发布的便捷性。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>运维自动化之容器系统分享</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/devops-kubernetes-docker-jenkins.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/devops-kubernetes-docker-jenkins.html" />
   <meta property="og:title" content="运维自动化之容器系统分享" />
   <meta property="og:description" content="本文分享了年初上线的容器系统，该系统用于集中管理自建或云上的Kubernetes集群，实现容器的全生命周期管理，并通过集成Jenkins和任务系统，降低了运维复杂度，提升了更新发布的便捷性。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/devops-kubernetes-docker-jenkins.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/devops-kubernetes-docker-jenkins.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "运维自动化之容器系统分享",
     "description": "本文分享了年初上线的容器系统，该系统用于集中管理自建或云上的Kubernetes集群，实现容器的全生命周期管理，并通过集成Jenkins和任务系统，降低了运维复杂度，提升了更新发布的便捷性。",
-    "url": "https://blog.ops-coffee.cns/devops-kubernetes-docker-jenkins.html",
+    "url": "https://blog.ops-coffee.coms/devops-kubernetes-docker-jenkins.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/devops-kubernetes-docker-jenkins.html"
+      "@id": "https://blog.ops-coffee.coms/devops-kubernetes-docker-jenkins.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">运维自动化之容器系统分享</h1>
 
-        <p>去年一年我分享了许多进入新公司之后在新公司负责的<a href="https://blog.ops-coffee.cn/s/2022-automation-operations-platform-summary.html" target="_blank">运维自动化系统</a>建设的相关内容，今年关于这一块的分享少了许多，更多的分享是关于游山玩水的旅行游记了，技术分享虽然少了，但关于运维自动化的工作依然在照常进行，今年除了不断的完善去年上线的几个系统使其更好用之外，同时还上线了不少新的系统和功能，这篇文章就来分享下于年初已经上线的容器系统</p>
+        <p>去年一年我分享了许多进入新公司之后在新公司负责的<a href="https://blog.ops-coffee.com/s/2022-automation-operations-platform-summary.html" target="_blank">运维自动化系统</a>建设的相关内容，今年关于这一块的分享少了许多，更多的分享是关于游山玩水的旅行游记了，技术分享虽然少了，但关于运维自动化的工作依然在照常进行，今年除了不断的完善去年上线的几个系统使其更好用之外，同时还上线了不少新的系统和功能，这篇文章就来分享下于年初已经上线的容器系统</p>
 <p>容器系统主要是用来集中管理自建或云上Kubernetes集群，实现容器的统一管理，可以完成容器的在线创建、伸缩、删除、监控、日志查看、终端登录等全生命周期管理，同时更为重要的是能与我们的多云系统和任务系统相结合，整合底层资源，打通上线流程，实现便捷的更新发布</p>
 <p>在推动容器系统落地时发现许多基于容器的项目已经有了基于Jenkins较为完善的CI/CD流程，为了降低运维复杂度，<a href="/s/devops-task-subtask-jenkins" target="_blank">将Jenkins作为一个插件集成进了任务系统</a>，原本的Jenkins任务只需要简单的配置就能在任务系统中正常使用，同时也能用到任务系统其他的能力，例如审批/通知等，这样整个容器相关管理都可以通过自动化系统来完成</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/0923.01.png" /></p>
@@ -150,11 +150,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/django-move-model-to-another-app.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/django-move-model-to-another-app.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Django生产环境不同APP之间Model迁移</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/devops-domain-record-certificate.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/devops-domain-record-certificate.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>运维自动化之域名系统</span>
                 <span class="pagination-arrow">→</span>
             </a>

@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Django权限系统, 自定义权限, Django模型权限, 数据库权限管理, Django权限扩展, Django ORM查询" />
   <meta name="description" content="当Django的内置权限系统无法满足特定需求时，可以通过扩展权限系统来实现细粒度的控制，如针对不同用户开放不同数据库实例的权限。本文详细介绍了如何在Django项目中扩展权限系统，以满足特定的数据库权限管理需求。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Django内置权限扩展案例</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/extending-django-permissions-custom-solutions.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/extending-django-permissions-custom-solutions.html" />
   <meta property="og:title" content="Django内置权限扩展案例" />
   <meta property="og:description" content="当Django的内置权限系统无法满足特定需求时，可以通过扩展权限系统来实现细粒度的控制，如针对不同用户开放不同数据库实例的权限。本文详细介绍了如何在Django项目中扩展权限系统，以满足特定的数据库权限管理需求。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/extending-django-permissions-custom-solutions.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/extending-django-permissions-custom-solutions.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Django内置权限扩展案例",
     "description": "当Django的内置权限系统无法满足特定需求时，可以通过扩展权限系统来实现细粒度的控制，如针对不同用户开放不同数据库实例的权限。本文详细介绍了如何在Django项目中扩展权限系统，以满足特定的数据库权限管理需求。",
-    "url": "https://blog.ops-coffee.cns/extending-django-permissions-custom-solutions.html",
+    "url": "https://blog.ops-coffee.coms/extending-django-permissions-custom-solutions.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/extending-django-permissions-custom-solutions.html"
+      "@id": "https://blog.ops-coffee.coms/extending-django-permissions-custom-solutions.html"
     }
   }
   </script>
@@ -119,7 +119,7 @@
 <p>当Django的内置权限无法满足需求的时候就自己扩展吧~</p>
 </blockquote>
 <h1 id="_1">背景介绍</h1>
-<p><a href="https://blog.ops-coffee.cn/s/devops-tools-cmdb-cicd-config-db-proxy-wiki.html" target="_blank">overmind项目</a>使用了Django内置的权限系统，Django内置权限系统基于model层做控制，新的model创建后会默认新建三个权限，分别为：add、change、delete，如果给用户或组赋予delete的权限，那么用户将可以删除这个model下的所有数据。</p>
+<p><a href="https://blog.ops-coffee.com/s/devops-tools-cmdb-cicd-config-db-proxy-wiki.html" target="_blank">overmind项目</a>使用了Django内置的权限系统，Django内置权限系统基于model层做控制，新的model创建后会默认新建三个权限，分别为：add、change、delete，如果给用户或组赋予delete的权限，那么用户将可以删除这个model下的所有数据。</p>
 <p>原本overmind只管理了我们自己部门的数据库，权限设置只针对具体的功能不针对细粒度的数据库实例，例如用户A 有审核的权限，那么用户A 可以审核所有的DB，此时使用内置的权限系统就可以满足需求了，但随着系统的不断完善要接入其他部门的数据库管理，这就要求针对不同用户开放不同DB的权限了，例如A部门的用户只能操作A部门的DB，Django内置基于model的权限无法满足需求了。</p>
 <h1 id="_2">实现过程</h1>
 <p>先来确定下需求：
@@ -208,7 +208,7 @@
 
 <p>实现思路与上边类似，只是多了一步根据项目和环境再进行判断</p>
 <p>需要根据group去反查都有哪些DB实例包含了该组，这里用到了M2M的related_name属性：<code>group.read.all()</code></p>
-<p>更多关于Django ORM查询的内容可以看这篇文章<a href="https://blog.ops-coffee.cn/s/django-model-queryset-select-guide.html" target="_blank">Django model select的各种用法详解</a>有详细的总结</p>
+<p>更多关于Django ORM查询的内容可以看这篇文章<a href="https://blog.ops-coffee.com/s/django-model-queryset-select-guide.html" target="_blank">Django model select的各种用法详解</a>有详细的总结</p>
 <h2 id="_5">执行操作权限控制</h2>
 <p>除了上边的两个场景之外我们还需要在执行具体的操作之前去判断是否有权限，例如执行审核操作前判断用户是否对此DB有写权限</p>
 <p>有很多地方都需要做这个判断，所以把这个权限判断单独写个方法来处理，代码如下：</p>
@@ -260,11 +260,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/devops-tools-cmdb-cicd-config-db-proxy-wiki.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/devops-tools-cmdb-cicd-config-db-proxy-wiki.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>我们自研的那些Devops工具</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/wechat-miniapp-development-journey.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/wechat-miniapp-development-journey.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>没有基础也能写个小程序</span>
                 <span class="pagination-arrow">→</span>
             </a>

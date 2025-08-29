@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Docker, Harbor, 磁盘空间, 垃圾回收, API删除镜像, 管理员密码找回" />
   <meta name="description" content="本文详细介绍了如何解决Docker Push报错500 Internal Server Error的问题，包括清理Harbor磁盘空间的步骤和找回管理员密码的方法。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>清理Harbor服务器磁盘空间</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnt/harbor-clear-space-python-api.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comt/harbor-clear-space-python-api.html" />
   <meta property="og:title" content="清理Harbor服务器磁盘空间" />
   <meta property="og:description" content="本文详细介绍了如何解决Docker Push报错500 Internal Server Error的问题，包括清理Harbor磁盘空间的步骤和找回管理员密码的方法。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnt/harbor-clear-space-python-api.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comt/harbor-clear-space-python-api.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "清理Harbor服务器磁盘空间",
     "description": "本文详细介绍了如何解决Docker Push报错500 Internal Server Error的问题，包括清理Harbor磁盘空间的步骤和找回管理员密码的方法。",
-    "url": "https://blog.ops-coffee.cnt/harbor-clear-space-python-api.html",
+    "url": "https://blog.ops-coffee.comt/harbor-clear-space-python-api.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnt/harbor-clear-space-python-api.html"
+      "@id": "https://blog.ops-coffee.comt/harbor-clear-space-python-api.html"
     }
   }
   </script>
@@ -177,8 +177,8 @@ class ClearHarbor(object):
 
 if __name__ == &quot;__main__&quot;:
 
-    domain = &quot;https://harbor.ops-coffee.cn&quot;
-    password = &quot;ops-coffee.cn&quot;
+    domain = &quot;https://harbor.ops-coffee.com&quot;
+    password = &quot;ops-coffee.com&quot;
     res = ClearHarbor(domain, password)
     for i in res.fetch_pros_id():
         repos = res.fetch_del_repos_name(i)
@@ -213,7 +213,7 @@ if __name__ == &quot;__main__&quot;:
 <h2 id="harbor_1">找回Harbor管理员账号密码</h2>
 <p>忘记Harbor管理员密码，可以在<code>harbor.cfg</code>初始化文件中找回</p>
 <pre class="codehilite"><code># vi harbor.cfg
-harbor_admin_password = ops-coffee.cn</code></pre>
+harbor_admin_password = ops-coffee.com</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
@@ -224,11 +224,11 @@ harbor_admin_password = ops-coffee.cn</code></pre>
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/t/tcp-ip-mtu-mss-explained.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/t/tcp-ip-mtu-mss-explained.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>MTU 和 MSS 区别</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/t/debian-lsb-release-source-list.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/t/debian-lsb-release-source-list.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Debian系统修改软件源</span>
                 <span class="pagination-arrow">→</span>
             </a>

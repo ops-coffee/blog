@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Overmind系统, 自动化运维, SQL自动审核, 数据迁移, 工单系统, 数据库运维" />
   <meta name="description" content="Overmind系统上线三个月以来，通过自动化SQL审核和数据迁移，显著提升了运维效率。本文详细介绍了系统的功能、工作流程和使用体验，展示了如何通过自动化工具实现‘一杯咖啡，轻松运维’的目标。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>运维效率之数据迁移自动化</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/overmind-system-automation-sql-data-migration.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/overmind-system-automation-sql-data-migration.html" />
   <meta property="og:title" content="运维效率之数据迁移自动化" />
   <meta property="og:description" content="Overmind系统上线三个月以来，通过自动化SQL审核和数据迁移，显著提升了运维效率。本文详细介绍了系统的功能、工作流程和使用体验，展示了如何通过自动化工具实现‘一杯咖啡，轻松运维’的目标。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/overmind-system-automation-sql-data-migration.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/overmind-system-automation-sql-data-migration.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "运维效率之数据迁移自动化",
     "description": "Overmind系统上线三个月以来，通过自动化SQL审核和数据迁移，显著提升了运维效率。本文详细介绍了系统的功能、工作流程和使用体验，展示了如何通过自动化工具实现‘一杯咖啡，轻松运维’的目标。",
-    "url": "https://blog.ops-coffee.cns/overmind-system-automation-sql-data-migration.html",
+    "url": "https://blog.ops-coffee.coms/overmind-system-automation-sql-data-migration.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/overmind-system-automation-sql-data-migration.html"
+      "@id": "https://blog.ops-coffee.coms/overmind-system-automation-sql-data-migration.html"
     }
   }
   </script>
@@ -183,7 +183,7 @@ Cmd().migration()</code></pre>
 
 
 <p>这里采用了shell中的管道，管道用<code>|</code>符号分割两个命令，管道符前的命令正确输出作为管道符后命令的输入，好处是不需要生成单独的sql文件存放在磁盘上，也就不需要考虑文件删除，占用磁盘的问题，缺点是导出大的数据库时可能会造成OOM，这个要根据自身情况综合权衡。</p>
-<p>导数据属于耗时操作，在web中应异步执行，这里采用了Celery来处理，这篇文章<a href="https://blog.ops-coffee.cn/s/devops-task-django-celery-setup-guide.html" target="_blank">Django配置Celery执行异步任务和定时任务</a>有详细介绍Django中Celery的使用</p>
+<p>导数据属于耗时操作，在web中应异步执行，这里采用了Celery来处理，这篇文章<a href="https://blog.ops-coffee.com/s/devops-task-django-celery-setup-guide.html" target="_blank">Django配置Celery执行异步任务和定时任务</a>有详细介绍Django中Celery的使用</p>
 <h1 id="_3">系统界面</h1>
 <p>工单列表页：普通用户只显示自己提交的工单，工单状态一目了然，还有实用的搜索功能</p>
 <p><img alt="" loading="lazy" src="/static/images/2018/1110.01.png" /></p>
@@ -208,11 +208,11 @@ Cmd().migration()</code></pre>
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/sensitive-information-handling-in-code.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/sensitive-information-handling-in-code.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>代码中的敏感信息加密方案</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/django-signals-for-notification-in-ticket-system.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/django-signals-for-notification-in-ticket-system.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Django使用Signals监测model字段变化发送通知</span>
                 <span class="pagination-arrow">→</span>
             </a>

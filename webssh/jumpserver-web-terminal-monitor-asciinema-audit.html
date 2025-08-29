@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="WebSSH, 终端录像, Asciinema, 审计日志, 回放功能, websocket, IO流数据, 录像文件, 历史连接列表" />
   <meta name="description" content="本文详细介绍了一种在WebSSH中实现终端操作录像的方法，核心思想是在WebSSH交互执行的过程中直接生成可播放的录像文件，并提供了实时写入和一次性写入两种方案，帮助用户实现操作过程的记录和后续的回放审计。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>堡垒机的核心武器：WebSSH录像实现</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnwebssh/jumpserver-web-terminal-monitor-asciinema-audit.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comwebssh/jumpserver-web-terminal-monitor-asciinema-audit.html" />
   <meta property="og:title" content="堡垒机的核心武器：WebSSH录像实现" />
   <meta property="og:description" content="本文详细介绍了一种在WebSSH中实现终端操作录像的方法，核心思想是在WebSSH交互执行的过程中直接生成可播放的录像文件，并提供了实时写入和一次性写入两种方案，帮助用户实现操作过程的记录和后续的回放审计。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnwebssh/jumpserver-web-terminal-monitor-asciinema-audit.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comwebssh/jumpserver-web-terminal-monitor-asciinema-audit.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "堡垒机的核心武器：WebSSH录像实现",
     "description": "本文详细介绍了一种在WebSSH中实现终端操作录像的方法，核心思想是在WebSSH交互执行的过程中直接生成可播放的录像文件，并提供了实时写入和一次性写入两种方案，帮助用户实现操作过程的记录和后续的回放审计。",
-    "url": "https://blog.ops-coffee.cnwebssh/jumpserver-web-terminal-monitor-asciinema-audit.html",
+    "url": "https://blog.ops-coffee.comwebssh/jumpserver-web-terminal-monitor-asciinema-audit.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnwebssh/jumpserver-web-terminal-monitor-asciinema-audit.html"
+      "@id": "https://blog.ops-coffee.comwebssh/jumpserver-web-terminal-monitor-asciinema-audit.html"
     }
   }
   </script>
@@ -118,8 +118,8 @@
         <blockquote>
 <p>WebSSH终端录像的实现终于来了</p>
 </blockquote>
-<p>前边写了两篇文章<a href="https://blog.ops-coffee.cn/s/asciinema-webssh-terminal-recording-playback.html" target="_blank">『Asciinema：你的所有操作都将被录制』</a>和<a href="https://blog.ops-coffee.cn/s/asciinema-recording-errors-and-corrections.html" target="_blank">『Asciinema文章勘误及Web端使用介绍』</a>深入介绍了终端录制工具Asciinema，我们已经可以实现在终端下对操作过程的录制，那么在WebSSH中的操作该如何记录并提供后续的回放审计呢？</p>
-<p>一种方式是<a href="https://blog.ops-coffee.cn/s/asciinema-webssh-terminal-recording-playback.html" target="_blank">『Asciinema：你的所有操作都将被录制』</a>文章最后介绍的自动录制审计日志的方法，在主机上添加个脚本，每次连接自动进行录制，但这样不仅要在每台远程主机添加脚本，会很繁琐，而且录制的脚本文件都是放在远程主机上的，后续播放也很麻烦</p>
+<p>前边写了两篇文章<a href="https://blog.ops-coffee.com/s/asciinema-webssh-terminal-recording-playback.html" target="_blank">『Asciinema：你的所有操作都将被录制』</a>和<a href="https://blog.ops-coffee.com/s/asciinema-recording-errors-and-corrections.html" target="_blank">『Asciinema文章勘误及Web端使用介绍』</a>深入介绍了终端录制工具Asciinema，我们已经可以实现在终端下对操作过程的录制，那么在WebSSH中的操作该如何记录并提供后续的回放审计呢？</p>
+<p>一种方式是<a href="https://blog.ops-coffee.com/s/asciinema-webssh-terminal-recording-playback.html" target="_blank">『Asciinema：你的所有操作都将被录制』</a>文章最后介绍的自动录制审计日志的方法，在主机上添加个脚本，每次连接自动进行录制，但这样不仅要在每台远程主机添加脚本，会很繁琐，而且录制的脚本文件都是放在远程主机上的，后续播放也很麻烦</p>
 <p>那该如何更好处理呢？下文介绍一种优雅的方式来实现，核心思想是不通过录制命令进行录制，而在Webssh交互执行的过程中直接<strong>生成可播放的录像文件</strong></p>
 <h2 id="_1">设计思路</h2>
 <p>通过上边两篇文章的阅读，我们已经知道了Asciinema录像文件主要由两部分组成：header头和IO流数据</p>
@@ -248,7 +248,7 @@ def _ssh_to_ws(self):
 // 播放录像
 function play(host,user,time,file) {
   $('#play').html(
-    '&lt;asciinema-player id=&quot;play&quot; title=&quot;WebSSH Record&quot; author=&quot;ops-coffee.cn&quot; author-url=&quot;https://ops-coffee.cn&quot; author-img-url=&quot;/static/img/logo.png&quot; src=&quot;/static/record/'+file+'&quot; speed=&quot;3&quot; '+
+    '&lt;asciinema-player id=&quot;play&quot; title=&quot;WebSSH Record&quot; author=&quot;ops-coffee.com&quot; author-url=&quot;https://ops-coffee.com&quot; author-img-url=&quot;/static/img/logo.png&quot; src=&quot;/static/record/'+file+'&quot; speed=&quot;3&quot; '+
     'idle-time-limit=&quot;2&quot; poster=&quot;data:text/plain,\x1b[1;32m'+time+
     '\x1b[1;0m用户\x1b[1;32m'+user+
     '\x1b[1;0m连接主机\x1b[1;32m'+host+
@@ -259,7 +259,7 @@ function play(host,user,time,file) {
 }</code></pre>
 
 
-<p>asciinema-player标签的详细参数介绍可以看这篇文章<a href="https://blog.ops-coffee.cn/s/asciinema-recording-errors-and-corrections.html" target="_blank">『Asciinema文章勘误及Web端使用介绍』</a></p>
+<p>asciinema-player标签的详细参数介绍可以看这篇文章<a href="https://blog.ops-coffee.com/s/asciinema-recording-errors-and-corrections.html" target="_blank">『Asciinema文章勘误及Web端使用介绍』</a></p>
 <h2 id="_2">演示与总结</h2>
 <p><img alt="" loading="lazy" src="/static/images/2019/1119.gif" /></p>
 <p>在写入文件的方案中，考虑了实时写入和一次性写入，实时写入就像上边这样，所有的操作都会实时写入录像文件，好处是录像不丢失，且能在操作的过程中进行实时的播放，缺点也很明显，就是会频繁的写文件，造成IO开销</p>
@@ -275,11 +275,11 @@ function play(host,user,time,file) {
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-ssh-paramiko-stream.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/webssh/jumpserver-web-terminal-ssh-paramiko-stream.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Django实现WebSSH操作物理机或虚拟机</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-monitor-and-disconnect.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/webssh/jumpserver-web-terminal-monitor-and-disconnect.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>堡垒机WebSSH进阶之实时监控和强制下线</span>
                 <span class="pagination-arrow">→</span>
             </a>

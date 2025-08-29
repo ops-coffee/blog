@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="作业系统, 自动化运维, Ansible, 多云系统, 任务系统, 实时反馈, 危险命令过滤, 移动端兼容" />
   <meta name="description" content="作业系统的上线标志着自动化运维的新篇章，通过集成Ansible和多云系统，实现了轻量、易用的自动化操作，提供实时反馈和危险命令过滤，确保安全高效的运维操作。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>运维自动化之作业系统分享</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/devops-cloud-ansible-task-webui-tower-awx-web.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/devops-cloud-ansible-task-webui-tower-awx-web.html" />
   <meta property="og:title" content="运维自动化之作业系统分享" />
   <meta property="og:description" content="作业系统的上线标志着自动化运维的新篇章，通过集成Ansible和多云系统，实现了轻量、易用的自动化操作，提供实时反馈和危险命令过滤，确保安全高效的运维操作。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/devops-cloud-ansible-task-webui-tower-awx-web.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/devops-cloud-ansible-task-webui-tower-awx-web.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "运维自动化之作业系统分享",
     "description": "作业系统的上线标志着自动化运维的新篇章，通过集成Ansible和多云系统，实现了轻量、易用的自动化操作，提供实时反馈和危险命令过滤，确保安全高效的运维操作。",
-    "url": "https://blog.ops-coffee.cns/devops-cloud-ansible-task-webui-tower-awx-web.html",
+    "url": "https://blog.ops-coffee.coms/devops-cloud-ansible-task-webui-tower-awx-web.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/devops-cloud-ansible-task-webui-tower-awx-web.html"
+      "@id": "https://blog.ops-coffee.coms/devops-cloud-ansible-task-webui-tower-awx-web.html"
     }
   }
   </script>
@@ -115,8 +115,8 @@
     <div class="container">
         <h1 id="art-title">运维自动化之作业系统分享</h1>
 
-        <p><a href="https://blog.ops-coffee.cn/devops/task.html" target="_blank">任务系统</a>的上线，帮助我们实现了发布部署等日常任务的自动化，但仍然有相当一部分日常运维操作大家会登录系统控制台处理，并不会借助于任务系统来执行，究其原因，其一是任务系统还有局限性，没有打通所有的终端主机，想要批量操作目标主机尤其是目标主机在不同云上内网的情况下实现起来较为苦难，其二是任务系统使用较为复杂，想要执行一些临时性的操作，需要先创建子任务，再创建模板，最后创建任务，过程繁琐效率不高</p>
-<p>鉴于此开发上线了作业系统，作业系统作为任务系统的扩展与补充，主要用来实现系统命令或脚本的便捷执行，以<strong>轻量</strong>和<strong>易用</strong>为目标，直接触达终端主机并实时获取结果反馈。作业系统深度集成了大家使用最为广泛的自动化工具Ansible，可以方便的批量执行命令或模板，同时与我们的<a href="https://blog.ops-coffee.cn/devops/cloud.html" target="_blank">多云系统</a>相融合，选择业务节点即可批量选择主机，通过网关代理打通网域内网，解决网络互通问题，作业操作直达目标主机，实时获取结果反馈，并能随时主动中断作业执行。为了尽量保证作业执行的安全，还引入了危险命令过滤机制，自动过滤危险命令，提升作业安全性，配合完善的审计日志，能够做到操作有记录，过程可追踪</p>
+        <p><a href="https://blog.ops-coffee.com/devops/task.html" target="_blank">任务系统</a>的上线，帮助我们实现了发布部署等日常任务的自动化，但仍然有相当一部分日常运维操作大家会登录系统控制台处理，并不会借助于任务系统来执行，究其原因，其一是任务系统还有局限性，没有打通所有的终端主机，想要批量操作目标主机尤其是目标主机在不同云上内网的情况下实现起来较为苦难，其二是任务系统使用较为复杂，想要执行一些临时性的操作，需要先创建子任务，再创建模板，最后创建任务，过程繁琐效率不高</p>
+<p>鉴于此开发上线了作业系统，作业系统作为任务系统的扩展与补充，主要用来实现系统命令或脚本的便捷执行，以<strong>轻量</strong>和<strong>易用</strong>为目标，直接触达终端主机并实时获取结果反馈。作业系统深度集成了大家使用最为广泛的自动化工具Ansible，可以方便的批量执行命令或模板，同时与我们的<a href="https://blog.ops-coffee.com/devops/cloud.html" target="_blank">多云系统</a>相融合，选择业务节点即可批量选择主机，通过网关代理打通网域内网，解决网络互通问题，作业操作直达目标主机，实时获取结果反馈，并能随时主动中断作业执行。为了尽量保证作业执行的安全，还引入了危险命令过滤机制，自动过滤危险命令，提升作业安全性，配合完善的审计日志，能够做到操作有记录，过程可追踪</p>
 <p>同时在这个阶段，还将整个自动化运维平台做了移动端兼容，优化了页面设计和操作方式，以保证整个自动化运维平台在移动端下也能有良好的使用体验，上线之后广受好评，解决了大家随时随地应对紧急需求还要打开电脑处理的问题</p>
 <p>这篇文章就记录一下作业系统上线之后给大家的公开分享，介绍作业系统的由来、设计和使用</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/0117.01.png" /></p>
@@ -160,11 +160,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/django-redis-cache-log-truncation-issue.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/django-redis-cache-log-truncation-issue.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>使用Django Cache引发的Bug处理</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/2022-automation-operations-platform-summary.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/2022-automation-operations-platform-summary.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>这一年我们上线的自动化系统</span>
                 <span class="pagination-arrow">→</span>
             </a>

@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="eval, ast.literal_eval, Python数据类型转换, Python字符串处理, Python安全性" />
   <meta name="description" content="本文介绍了Python中eval和ast.literal_eval的区别，重点讨论了它们在数据类型转换和字符串处理中的不同行为，特别是ast.literal_eval在安全性方面的优势。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>python函数eval与ast.literal_eval的区别</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnpython/security-eval-vs-ast-literal-eval.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.compython/security-eval-vs-ast-literal-eval.html" />
   <meta property="og:title" content="python函数eval与ast.literal_eval的区别" />
   <meta property="og:description" content="本文介绍了Python中eval和ast.literal_eval的区别，重点讨论了它们在数据类型转换和字符串处理中的不同行为，特别是ast.literal_eval在安全性方面的优势。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnpython/security-eval-vs-ast-literal-eval.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.compython/security-eval-vs-ast-literal-eval.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "python函数eval与ast.literal_eval的区别",
     "description": "本文介绍了Python中eval和ast.literal_eval的区别，重点讨论了它们在数据类型转换和字符串处理中的不同行为，特别是ast.literal_eval在安全性方面的优势。",
-    "url": "https://blog.ops-coffee.cnpython/security-eval-vs-ast-literal-eval.html",
+    "url": "https://blog.ops-coffee.compython/security-eval-vs-ast-literal-eval.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnpython/security-eval-vs-ast-literal-eval.html"
+      "@id": "https://blog.ops-coffee.compython/security-eval-vs-ast-literal-eval.html"
     }
   }
   </script>
@@ -122,7 +122,7 @@
 <pre class="codehilite"><code>&gt;&gt;&gt; from ast import literal_eval
 &gt;&gt;&gt; 
 &gt;&gt;&gt; data1 = &quot;['ops-coffee','cn']&quot;
-&gt;&gt;&gt; data2 = &quot;{'title':'运维咖啡吧','url':'https://ops-coffee.cn'}&quot;
+&gt;&gt;&gt; data2 = &quot;{'title':'运维咖啡吧','url':'https://ops-coffee.com'}&quot;
 &gt;&gt;&gt; 
 &gt;&gt;&gt; print(type(data1),type(data2))
 &lt;class 'str'&gt; &lt;class 'str'&gt;
@@ -135,7 +135,7 @@
 &gt;&gt;&gt; 
 &gt;&gt;&gt; a2 = eval(data2)
 &gt;&gt;&gt; print(a2, type(a2))
-{'title': '运维咖啡吧', 'url': 'https://ops-coffee.cn'} &lt;class 'dict'&gt;
+{'title': '运维咖啡吧', 'url': 'https://ops-coffee.com'} &lt;class 'dict'&gt;
 &gt;&gt;&gt; 
 &gt;&gt;&gt; 
 &gt;&gt;&gt; 
@@ -145,7 +145,7 @@
 &gt;&gt;&gt; 
 &gt;&gt;&gt; b2 = literal_eval(data2)
 &gt;&gt;&gt; print(b2, type(b2))
-{'title': '运维咖啡吧', 'url': 'https://ops-coffee.cn'} &lt;class 'dict'&gt;
+{'title': '运维咖啡吧', 'url': 'https://ops-coffee.com'} &lt;class 'dict'&gt;
 &gt;&gt;&gt; 
 &gt;&gt;&gt; </code></pre>
 
@@ -194,11 +194,11 @@ ValueError: malformed node or string: &lt;_ast.Call object at 0x7f3b192a24a8&gt;
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/python/p2p-investment-and-technical-implementation.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/python/p2p-investment-and-technical-implementation.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>python如何帮我在投资中获取更高收益</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/python/how-to-create-system-command-using-argparse.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/python/how-to-create-system-command-using-argparse.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>用Python写个Linux系统命令</span>
                 <span class="pagination-arrow">→</span>
             </a>

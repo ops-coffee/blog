@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="OneTerm, 开源堡垒机, Web终端, 数据互通, 页面统一, 优化建议" />
   <meta name="description" content="本文从个人使用角度出发，提出了优化OneTerm开源堡垒机使用体验的几点建议，包括Web终端的用户界面改进、数据互通的简化以及页面操作的统一，旨在提升用户体验并回馈社区。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>用了两周开源堡垒机OneTerm，我有一些建议</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/suggestion-for-open-source-jumpserver-oneterm.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/suggestion-for-open-source-jumpserver-oneterm.html" />
   <meta property="og:title" content="用了两周开源堡垒机OneTerm，我有一些建议" />
   <meta property="og:description" content="本文从个人使用角度出发，提出了优化OneTerm开源堡垒机使用体验的几点建议，包括Web终端的用户界面改进、数据互通的简化以及页面操作的统一，旨在提升用户体验并回馈社区。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/suggestion-for-open-source-jumpserver-oneterm.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/suggestion-for-open-source-jumpserver-oneterm.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "用了两周开源堡垒机OneTerm，我有一些建议",
     "description": "本文从个人使用角度出发，提出了优化OneTerm开源堡垒机使用体验的几点建议，包括Web终端的用户界面改进、数据互通的简化以及页面操作的统一，旨在提升用户体验并回馈社区。",
-    "url": "https://blog.ops-coffee.cns/suggestion-for-open-source-jumpserver-oneterm.html",
+    "url": "https://blog.ops-coffee.coms/suggestion-for-open-source-jumpserver-oneterm.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/suggestion-for-open-source-jumpserver-oneterm.html"
+      "@id": "https://blog.ops-coffee.coms/suggestion-for-open-source-jumpserver-oneterm.html"
     }
   }
   </script>
@@ -115,14 +115,14 @@
     <div class="container">
         <h1 id="art-title">用了两周开源堡垒机OneTerm，我有一些建议</h1>
 
-        <p>上一篇文章分享了一款<a href="https://blog.ops-coffee.cn/s/veops-open-source-jumpserver-oneterm" target="_blank">简洁且强大的开源堡垒机OneTerm</a>，功能完善，代码简单，GO语言开发，用来学习很合适，拿来自用也没问题。堡垒机该有的核心功能基本都有了，方便与自有系统集成，我使用了两周，功能上没有什么大问题，但仍然发现了一些有待提升的地方，这篇文章从我个人使用的角度来写下我自己觉得有哪些是可以优化的，仅一家之言，官方觉得有道理可以采纳，也算回馈社区，觉得说错了也不必较真哈，毕竟我个人认知有限</p>
+        <p>上一篇文章分享了一款<a href="https://blog.ops-coffee.com/s/veops-open-source-jumpserver-oneterm" target="_blank">简洁且强大的开源堡垒机OneTerm</a>，功能完善，代码简单，GO语言开发，用来学习很合适，拿来自用也没问题。堡垒机该有的核心功能基本都有了，方便与自有系统集成，我使用了两周，功能上没有什么大问题，但仍然发现了一些有待提升的地方，这篇文章从我个人使用的角度来写下我自己觉得有哪些是可以优化的，仅一家之言，官方觉得有道理可以采纳，也算回馈社区，觉得说错了也不必较真哈，毕竟我个人认知有限</p>
 <h2 id="web">Web终端</h2>
 <p>我们平常使用堡垒机最多的功能应该就是登陆系统控制台，OneTerm支持Linux终端使用，也能通过配置在客户端上使用，不过这些都比较麻烦，我们平常用的最多的还是Web控制台，那Web控制台的使用体验就十分重要了，OneTerm的Web终端连接在工作台页面</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0323.01.png" /></p>
 <p>这个页面上点内容比较多，有我的资产、最近回话和个人信息，我个人觉得Web连接是个十分重要点功能，连接资产点页面应该简洁，只包含我的资产这块的内容即可，左侧目录树，右侧主机，点击连接直接打开web终端，还有就是突出最重要的「连接」按钮，而弱化是否可连接的状态显示，这里总感觉那个绿色的「连接」状态是可以点击的</p>
 <p>堡垒机可以支持多个不同的账号登陆连接，这个比我之前设计的好多了，我之前写的堡垒机没考虑过多账号登陆的问题，支持多账号登陆显然更好，不过当一个主机只配置了一个登陆账号时就没必要弹出账号选择框了，直接连接即可，只在主机配置多个登陆账号时弹框让用户选择登陆账号，简化使用逻辑</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0323.02.png" /></p>
-<p>OneTerm的Web终端是新开一个浏览器标签显示的，最大化了内容区域，不过似乎有些小bug，例如不会随着浏览器窗口的改变自动调整终端的展示大小，就是自动resize操作，我之前自己写WebSSH的时候处理过<a href="https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-kubernetes-ssh-resize" target="_blank">终端窗口自适应Resize</a>的问题，应该是类似的，终端窗口除了这个bug外，还有一些可以优化的地方，例如新的Tab页面Title最好改成主机的IP或名称，这样让我明确的知道打开的这个窗口是哪个主机的，不然一次连接的主机多了很容易出错</p>
+<p>OneTerm的Web终端是新开一个浏览器标签显示的，最大化了内容区域，不过似乎有些小bug，例如不会随着浏览器窗口的改变自动调整终端的展示大小，就是自动resize操作，我之前自己写WebSSH的时候处理过<a href="https://blog.ops-coffee.com/webssh/jumpserver-web-terminal-kubernetes-ssh-resize" target="_blank">终端窗口自适应Resize</a>的问题，应该是类似的，终端窗口除了这个bug外，还有一些可以优化的地方，例如新的Tab页面Title最好改成主机的IP或名称，这样让我明确的知道打开的这个窗口是哪个主机的，不然一次连接的主机多了很容易出错</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0323.03.png" /></p>
 <p>其实更好的处理方式我觉得是一个页面多标签的形式，而非开多个页面，多页面间频繁切换还是非常麻烦的。这个页面可以参考Xshell或是MobaXterm之类成熟的SSH客户端，左侧目录树，显示所有目录及主机信息，右侧多标签显示操作窗口，使用体验比较好，并且也符合大众的操作习惯</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0323.04.png" /></p>
@@ -158,11 +158,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/veops-open-source-jumpserver-oneterm.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/veops-open-source-jumpserver-oneterm.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>开源推荐 | 简洁且强大的开源堡垒机OneTerm</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/cloudflare-monitor-dashboard-by-graphql-python-api.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/cloudflare-monitor-dashboard-by-graphql-python-api.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>构建好用的Cloudflare监控大盘</span>
                 <span class="pagination-arrow">→</span>
             </a>

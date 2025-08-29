@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="域名管理系统, 域名查询, 域名变更, 域名巡检, 域名安全, SEO优化, 域名管理失控, 域名盘点, 域名证书, 域名资源绑定" />
   <meta name="description" content="本文介绍了我们如何设计和实现一个域名管理系统，以解决因域名管理失控带来的安全问题。系统包括三个主要部分：查询、变更和巡检，确保域名的全面管理和安全性。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>运维自动化之域名系统</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/devops-domain-record-certificate.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/devops-domain-record-certificate.html" />
   <meta property="og:title" content="运维自动化之域名系统" />
   <meta property="og:description" content="本文介绍了我们如何设计和实现一个域名管理系统，以解决因域名管理失控带来的安全问题。系统包括三个主要部分：查询、变更和巡检，确保域名的全面管理和安全性。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/devops-domain-record-certificate.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/devops-domain-record-certificate.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "运维自动化之域名系统",
     "description": "本文介绍了我们如何设计和实现一个域名管理系统，以解决因域名管理失控带来的安全问题。系统包括三个主要部分：查询、变更和巡检，确保域名的全面管理和安全性。",
-    "url": "https://blog.ops-coffee.cns/devops-domain-record-certificate.html",
+    "url": "https://blog.ops-coffee.coms/devops-domain-record-certificate.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/devops-domain-record-certificate.html"
+      "@id": "https://blog.ops-coffee.coms/devops-domain-record-certificate.html"
     }
   }
   </script>
@@ -122,7 +122,7 @@
 <p><img alt="" loading="lazy" src="/static/images/2023/1020.01.png" /></p>
 <p>除了域名的数据也要能够获取全量的解析记录数据，包含域名记录、类型、线路、记录值、状态、TTL时间等解析记录相关的基础数据。这些数据我们可以通过域名提供商的API获取到，难度不大</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/1020.02.png" /></p>
-<p>当有了这些基础域名解析数据后，就可以通过<a href="https://blog.ops-coffee.cn/devops/cloud.html" target="_blank">多云系统</a>获取到域名解析所对应的基础资源，可能是云主机、可能是负载均衡、可能是CDN、可能是DDOS、也可能是WAF，但无论是什么，我们都可以通过详尽的基础资源数据库来匹配。这一点对于我们做域名盘点非常有用，如果能匹配到资源且资源的状态正常的话那大概率域名依然在使用，如果匹配不到资源或者是匹配到资源已非正常使用状态，那么域名也大概率不在使用了</p>
+<p>当有了这些基础域名解析数据后，就可以通过<a href="https://blog.ops-coffee.com/devops/cloud.html" target="_blank">多云系统</a>获取到域名解析所对应的基础资源，可能是云主机、可能是负载均衡、可能是CDN、可能是DDOS、也可能是WAF，但无论是什么，我们都可以通过详尽的基础资源数据库来匹配。这一点对于我们做域名盘点非常有用，如果能匹配到资源且资源的状态正常的话那大概率域名依然在使用，如果匹配不到资源或者是匹配到资源已非正常使用状态，那么域名也大概率不在使用了</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/1020.03.png" /></p>
 <p>当然这里可以展示所有域名解析相关的数据，而不仅仅是域名解析关联的资源，例如后边会提到的域名变更记录数据、域名标记情况或是域名解析HTTPS数据等等，丰富域名解析关联数据，让域名解析不再孤立</p>
 <h2 id="_2">变更</h2>
@@ -152,11 +152,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/devops-kubernetes-docker-jenkins.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/devops-kubernetes-docker-jenkins.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>运维自动化之容器系统分享</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/django-celery-beat-queues-priority.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/django-celery-beat-queues-priority.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Celery多队列解决生产环境下的任务优先级问题</span>
                 <span class="pagination-arrow">→</span>
             </a>

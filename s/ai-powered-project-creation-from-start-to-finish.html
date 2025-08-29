@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="AI编程工具, RSS阅读器, Trae, Cursor, Windsurf, AI辅助编程, RSS技术, AI项目实现, AI工具对比, AI开发环境, Builder模式, AI效率提升, AI问题解决, AI上下文理解, AI未来趋势" />
   <meta name="description" content="本文详细介绍了如何使用AI工具Trae从零开始创建一个简约的RSS阅读器，讨论了AI在编程领域的应用，工具的优缺点，以及在项目过程中遇到的问题和解决经验。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>全程使用 AI 从 0 到 1 写了个小工具</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/ai-powered-project-creation-from-start-to-finish.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/ai-powered-project-creation-from-start-to-finish.html" />
   <meta property="og:title" content="全程使用 AI 从 0 到 1 写了个小工具" />
   <meta property="og:description" content="本文详细介绍了如何使用AI工具Trae从零开始创建一个简约的RSS阅读器，讨论了AI在编程领域的应用，工具的优缺点，以及在项目过程中遇到的问题和解决经验。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/ai-powered-project-creation-from-start-to-finish.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/ai-powered-project-creation-from-start-to-finish.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "全程使用 AI 从 0 到 1 写了个小工具",
     "description": "本文详细介绍了如何使用AI工具Trae从零开始创建一个简约的RSS阅读器，讨论了AI在编程领域的应用，工具的优缺点，以及在项目过程中遇到的问题和解决经验。",
-    "url": "https://blog.ops-coffee.cns/ai-powered-project-creation-from-start-to-finish.html",
+    "url": "https://blog.ops-coffee.coms/ai-powered-project-creation-from-start-to-finish.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/ai-powered-project-creation-from-start-to-finish.html"
+      "@id": "https://blog.ops-coffee.coms/ai-powered-project-creation-from-start-to-finish.html"
     }
   }
   </script>
@@ -119,18 +119,18 @@
 <p>好长时间没写技术方面的文章了，主要的原因是AI的发展实在太快太快，尤其是从去年ChatGPT的普及到今年DeepSeek的爆火，AI的世界可谓是三天一个小变化五天一个大版本，AI的能力每天都在以惊人的速度成长。就我自己而言，现在无论遇到什么问题，几乎都在向AI寻求答案，已经很久没有使用传统搜索引擎了，在这种状况之下，我不禁在想，我所写的那些文章所介绍的那一点皮毛，究竟还能产生多大的价值和意义。没有想清楚，所以迟迟也没有动笔</p>
 <p>AI在各个领域都有着迅猛的发展，至于编程更甚，尤其是Cursor的问世，让许多不懂技术不懂编程的人也跃跃欲试，经常在网上看到零基础小白使用AI几小时写个APP的文章，虽然我也经常用AI来解决程序问题，但大都是写个脚本或者实现代码片段，确实很好用，但对于只用AI从0到1完整实现个项目还没体验过，本着体验过才有发言权的原则，我决定亲自去试试。恰好最近在整理RSS，于是就想通过AI来写一个简单的RSS阅读器，以满足我自己琐碎时间的阅读需求</p>
 <p>RSS是一种基于XML格式的网络内容订阅技术，其核心功能是帮助用户集中获取多个网站或平台的最新更新，无需逐个访问原始页面即可跟踪信息源，RSS通过生成标准的XML文件（即Feed）描述网站内容更新，用户使用RSS阅读器订阅这些Feed后，阅读器会定期抓取更新并集中展示标题、摘要、发布时间及原文链接。RSS是非常古老的技术，但对于喜欢阅读独立博客或是周刊之类内容的我来说很好用，成熟的RSS阅读器也有很多，但个人觉得大都很重，需要安装APP或是有一堆其他不相干的功能，我只需要最简单的聚合阅读即可。于是全程使用AI，我只提问+确认，不手工创建一个文件，不手动编写一行代码，一个简单的RSS阅读器就做成了，效果如下</p>
-<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0227.01.png" /></p>
-<p>你也可以直接点击：<a href="https://rss.ops-coffee.cn" target="_blank">简约RSS阅读器</a>在线体验，微信公众号读者点击文末阅读原文跳转</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2025/0227.01.png" /></p>
+<p>你也可以直接点击：<a href="https://rss.ops-coffee.com" target="_blank">简约RSS阅读器</a>在线体验，微信公众号读者点击文末阅读原文跳转</p>
 <h2 id="_2">工具</h2>
 <p>整个项目的实现我用到的AI辅助编程工具是Trae，而不是更为流行Cursor或Windsurf。Cursor、Windsurf和Trae与其他AI编程工具的核心差异在于全局代码理解与项目级应用能力，它们通过底层技术架构实现了对完整项目代码的深度解析，而非局限于单文件或片段级补全。在这三个工具中，从个人的使用效果和大众的口碑来看，Cursor无疑是其中的佼佼者，至于不选Cursor的原因只有一个，那就是Cursor收费，20美金/月的费用着实用不起，尽管有免费的额度，但完全不够用，不选Windsurf的原因也是一样，它要比Cursor便宜一点，15美金/月，而Trae目前面向个人开发者是免费的</p>
 <p>Trae是由字节跳动推出的针对海外市场的AI原生集成开发环境IDE，深度集成Claude等AI模型，旨在通过智能化工具链提升开发者效率，其核心功能包括智能代码生成与优化、多模态交互、Builder模式与协作开发、原生中文支持与本地化适配等。Trae是基于VSCode开发的，所以与vscode生态兼容，界面也基本一致</p>
-<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0227.02.png" /></p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2025/0227.02.png" /></p>
 <p>其中必须要提一下它的Builder模式，Builder模式可以实现全自动的项目构建，从文件创建到代码编写，再到问题排查及Bug修复等都可以自动完成，例如输入“开发图片压缩工具”可生成包含命令行接口与GUI的完整应用。我的RSS阅读器就是在这个模式下完成的</p>
 <h2 id="_3">过程</h2>
 <p>Trae使用比较简单，尤其是在Builder全自动模式，只需要打开一个空的文件夹作为项目根目录即可，之后就可以向它提交需求了，例如我向Trae提出的第一个需求</p>
-<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0227.03.png" /></p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2025/0227.03.png" /></p>
 <p>提交之后Trae会根据你的问题逐个分析，并生成对应的文件及代码，生成的代码也会标注出文件以及添加/删除的代码行数，点击审查可以看到详细的变更内容，同时还会列出本次实现的具体功能列表，最后会告诉你本次变更的文件数量，需要你拒绝或者是接受，你如果确认没有问题则点击底部的“全部接受”按钮，本次变更的代码就会直接应用到</p>
-<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/0227.04.png" /></p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2025/0227.04.png" /></p>
 <p>因为是纯静态的页面，我就在项目目录下通过python启动了一个简易的http服务，然后浏览器访问查看实现效果，如果哪里对效果不满意，或是有哪些bug，都可以直接在对话框里接着向Trae提需求，同样的Trae会进行一系列的分析，给你修复/优化后的代码，就这样循环往复，直到所有效果都满意为止</p>
 <h2 id="_4">问题</h2>
 <p>这个项目总共应该花了我超过8个小时的时间，从开始到目前上线的这个版本，进行了上百次的对话，我自己没有写一行代码，没有做一点调整，只是提出需求/问题，让AI解决，我点确认按钮，然后查看实现效果。优势自不必说，太多太多了，让不懂技术的人也能仅凭想法实现产品，已经是降维打击，那这里仅分享几个遇到的问题</p>
@@ -160,11 +160,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/2024-WeChat-official-accounts-data-share.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/2024-WeChat-official-accounts-data-share.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>2024年微信公众号收到赞赏6487.50¥</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/ai-powered-seo-automation-for-tdk-generation.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/ai-powered-seo-automation-for-tdk-generation.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>AI 实践｜零成本生成SEO友好的TDK落地方案</span>
                 <span class="pagination-arrow">→</span>
             </a>

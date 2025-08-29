@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Github Pages, Netlify, 静态网站托管, CDN加速, 自定义域名, HTTPS, SEO, 网站速度优化" />
   <meta name="description" content="本文对比了Github Pages和Netlify的静态网站托管服务，介绍了Netlify如何通过CDN加速提升网站国内访问速度，并详细说明了如何将Github仓库与Netlify绑定以实现自动发布和自定义域名设置。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Github Pages访问太慢？通过Netlify免费加速</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/blog-website-github-pages-vs-netlify.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/blog-website-github-pages-vs-netlify.html" />
   <meta property="og:title" content="Github Pages访问太慢？通过Netlify免费加速" />
   <meta property="og:description" content="本文对比了Github Pages和Netlify的静态网站托管服务，介绍了Netlify如何通过CDN加速提升网站国内访问速度，并详细说明了如何将Github仓库与Netlify绑定以实现自动发布和自定义域名设置。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/blog-website-github-pages-vs-netlify.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/blog-website-github-pages-vs-netlify.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Github Pages访问太慢？通过Netlify免费加速",
     "description": "本文对比了Github Pages和Netlify的静态网站托管服务，介绍了Netlify如何通过CDN加速提升网站国内访问速度，并详细说明了如何将Github仓库与Netlify绑定以实现自动发布和自定义域名设置。",
-    "url": "https://blog.ops-coffee.cns/blog-website-github-pages-vs-netlify.html",
+    "url": "https://blog.ops-coffee.coms/blog-website-github-pages-vs-netlify.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/blog-website-github-pages-vs-netlify.html"
+      "@id": "https://blog.ops-coffee.coms/blog-website-github-pages-vs-netlify.html"
     }
   }
   </script>
@@ -118,7 +118,7 @@
         <blockquote>
 <p>github pages vs netlify</p>
 </blockquote>
-<p>Github Pages为Github提供的一项静态站点托管服务，它直接从Github仓库获取静态文件进行发布，然后提供一个<code>github.io</code>的二级域名供用户访问，支持绑定自定义域名，支持开启HTTPS，开启HTTPS会自动申请证书同时在证书过期前自动续签，这一切都是<strong>免费</strong>的，使用极其简单，只需要将你的静态文件提交到Github，然后开启Pages服务即可，<a href="https://blog.ops-coffee.cn" target="_blank">我的博客</a>就托管于Github Pages</p>
+<p>Github Pages为Github提供的一项静态站点托管服务，它直接从Github仓库获取静态文件进行发布，然后提供一个<code>github.io</code>的二级域名供用户访问，支持绑定自定义域名，支持开启HTTPS，开启HTTPS会自动申请证书同时在证书过期前自动续签，这一切都是<strong>免费</strong>的，使用极其简单，只需要将你的静态文件提交到Github，然后开启Pages服务即可，<a href="https://blog.ops-coffee.com" target="_blank">我的博客</a>就托管于Github Pages</p>
 <p>Github Pages免费且稳定的服务让我可以专注内容，而无需考虑成本及维护的问题，非常方便广受好评，但其最大的一个问题就是国内访问速度很慢，如何简单快速又低成本的解决这个问题呢？这里介绍一个服务：Netlify</p>
 <p>Netlify是一家提供静态网站托管的综合平台，支持自动从Github等仓库拉取代码并构建成静态网站进行发布，同时也支持自定义域名，自动申请SSL证书等功能，更为重要的是自动启用<strong>CDN加速</strong>，国内访问速度要快很多</p>
 <p>以下分别是Github Pages和Netlify两个平台同一项目请求速度的对比图</p>
@@ -157,7 +157,7 @@
 <p>国内也有类似于Github pages这样的服务，例如Gitee和Coding提供的pages服务，在速度方面要有不少的优势，但稳定性欠佳，且可能会面临层层审查域名备案等问题</p>
 <p>如果你的域名有备案，项目又是纯静态的话还可以考虑直接托管在国内的一些对象存储服务上，例如七牛云、腾讯云等，然后开启CDN加速，效果也不错，并且大多都有免费流量可以使用</p>
 <p>Github Pages和Netlify这种免费且可高度自定义的方案，在满足我们个性化需求的同时，省去了维护成本和资金压力，可以让站点活得更久，从而让我们把重点放在持续不断的输出内容，形成良性循环，赶紧试试吧</p>
-<p>最后，如果对于我的博客实现方案感兴趣，这篇文章有介绍和源码：<a href="https://blog.ops-coffee.cn/s/build-static-blog-with-django-github-pages.html" target="_blank">利用Django徒手写个静态页面生成工具</a>，如果辛辛苦苦写的文章没什么人访问，或许这个可以帮你：<a href="https://blog.ops-coffee.cn/s/googole-search-analytics-adsense-blog-site-seo" target="_blank">Google搜索成最大入口，简单谈下个人博客的SEO</a></p>
+<p>最后，如果对于我的博客实现方案感兴趣，这篇文章有介绍和源码：<a href="https://blog.ops-coffee.com/s/build-static-blog-with-django-github-pages.html" target="_blank">利用Django徒手写个静态页面生成工具</a>，如果辛辛苦苦写的文章没什么人访问，或许这个可以帮你：<a href="https://blog.ops-coffee.com/s/googole-search-analytics-adsense-blog-site-seo" target="_blank">Google搜索成最大入口，简单谈下个人博客的SEO</a></p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
@@ -168,11 +168,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/understanding-encoding-and-fixing-mojibake.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/understanding-encoding-and-fixing-mojibake.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>关于编码你必须知道的知识和技巧</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/system-design-principles-and-optimization-strategies.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/system-design-principles-and-optimization-strategies.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>从知乎宕机说起，闲聊设计原则与优化方法</span>
                 <span class="pagination-arrow">→</span>
             </a>

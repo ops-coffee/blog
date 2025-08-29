@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Select2, JQuery插件, 下拉列表, 前端组件, 远程数据加载, 本地数据加载, 多选支持, SEO友好" />
   <meta name="description" content="本文详细介绍了Select2插件的基本使用、高级功能以及如何优化select元素，支持单选、多选、分组显示、列表检索、远程获取数据等，帮助开发者在前端开发中更高效地使用Select2插件。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>前端插件之Select2使用</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnfrontend/front-end-components-javascript-jquery-select2.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comfrontend/front-end-components-javascript-jquery-select2.html" />
   <meta property="og:title" content="前端插件之Select2使用" />
   <meta property="og:description" content="本文详细介绍了Select2插件的基本使用、高级功能以及如何优化select元素，支持单选、多选、分组显示、列表检索、远程获取数据等，帮助开发者在前端开发中更高效地使用Select2插件。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnfrontend/front-end-components-javascript-jquery-select2.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comfrontend/front-end-components-javascript-jquery-select2.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "前端插件之Select2使用",
     "description": "本文详细介绍了Select2插件的基本使用、高级功能以及如何优化select元素，支持单选、多选、分组显示、列表检索、远程获取数据等，帮助开发者在前端开发中更高效地使用Select2插件。",
-    "url": "https://blog.ops-coffee.cnfrontend/front-end-components-javascript-jquery-select2.html",
+    "url": "https://blog.ops-coffee.comfrontend/front-end-components-javascript-jquery-select2.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnfrontend/front-end-components-javascript-jquery-select2.html"
+      "@id": "https://blog.ops-coffee.comfrontend/front-end-components-javascript-jquery-select2.html"
     }
   }
   </script>
@@ -118,7 +118,7 @@
         <blockquote>
 <p>工欲善其事，必先利其器</p>
 </blockquote>
-<p>本系列文章介绍我在运维系统开发过程中用到的那些顺手的前端插件，上一篇文章介绍了<a href="https://blog.ops-coffee.cn/frontend/front-end-components-bootstrap-dual-listbox" target="_blank">bootstrap-duallistbox</a>这个插件的使用，这一篇开始Select2的征服之旅</p>
+<p>本系列文章介绍我在运维系统开发过程中用到的那些顺手的前端插件，上一篇文章介绍了<a href="https://blog.ops-coffee.com/frontend/front-end-components-bootstrap-dual-listbox" target="_blank">bootstrap-duallistbox</a>这个插件的使用，这一篇开始Select2的征服之旅</p>
 <p>Select2是一款基于JQuery的下拉列表插件，主要用来优化select，支持单选和多选，同时也支持分组显示、列表检索、远程获取数据等众多好用的功能</p>
 <p>项目地址：<a href="https://select2.org/" target="_blank">https://select2.org/</a></p>
 <h2 id="_1">基本使用</h2>
@@ -217,12 +217,12 @@ $('#id_select2_demo2').select2({
 <pre class="codehilite"><code>data: function (params) {
     return {
       search: params.term,
-      site: &quot;https://ops-coffee.cn&quot;
+      site: &quot;https://ops-coffee.com&quot;
     };
 },</code></pre>
 
 
-<p>那么当你输入<code>OPS</code>时，服务端接受到的完整参数就是<code>/sdata.json?search=OPS&amp;site=https://ops-coffee.cn</code></p>
+<p>那么当你输入<code>OPS</code>时，服务端接受到的完整参数就是<code>/sdata.json?search=OPS&amp;site=https://ops-coffee.com</code></p>
 <p><strong>results: data：</strong> 定义了后台返回的数据，其中<code>data</code>为select2能够识别的格式，如果后端返回的格式不是select2能够识别的格式，例如下边这样</p>
 <pre class="codehilite"><code>{
     &quot;state&quot;: 1, 
@@ -310,7 +310,7 @@ $(&quot;#id_select2_demo4&quot;).prop('disabled',true);;</code></pre>
 
 <p>动态添加select的option</p>
 <pre class="codehilite"><code>$('#add').click(function() {
-    var _html = '&lt;option value=&quot;9&quot; selected&gt;ops-coffee.cn&lt;/option&gt;';
+    var _html = '&lt;option value=&quot;9&quot; selected&gt;ops-coffee.com&lt;/option&gt;';
     $('#id_select2_demo1').append(_html).trigger('change.select2');
     $('#id_select2_demo1').select2(&quot;open&quot;);
 })</code></pre>
@@ -320,7 +320,7 @@ $(&quot;#id_select2_demo4&quot;).prop('disabled',true);;</code></pre>
 <p><strong>.select2("open")：</strong> 打开select，<code>open</code>改为<code>close</code>可动态关闭select，改为<code>destroy</code>可销毁select2，恢复select默认样式</p>
 <h2 id="demo">完整Demo</h2>
 <p>为了方便大家学习，我写了个完整的demo，你可以在线查看效果或下载代码应用到自己的项目中</p>
-<p>在线Demo地址：<a href="https://demo.ops-coffee.cn/select2/" target="_blank">https://demo.ops-coffee.cn/select2/</a></p>
+<p>在线Demo地址：<a href="https://demo.ops-coffee.com/select2/" target="_blank">https://demo.ops-coffee.com/select2/</a></p>
 <p>Github源码地址：<a href="https://github.com/ops-coffee/demo/tree/master/select2" target="_blank">https://github.com/ops-coffee/demo/tree/master/select2</a></p>
 
         <div>
@@ -332,11 +332,11 @@ $(&quot;#id_select2_demo4&quot;).prop('disabled',true);;</code></pre>
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/frontend/front-end-components-bootstrap-dual-listbox.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/frontend/front-end-components-bootstrap-dual-listbox.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>前端插件之Bootstrap Dual Listbox使用</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/frontend/front-end-components-jquery-datatables-1.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/frontend/front-end-components-jquery-datatables-1.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>前端插件之Datatables使用--上篇</span>
                 <span class="pagination-arrow">→</span>
             </a>

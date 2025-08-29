@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Nginx配置, 多域名配置, 多站点配置, 虚拟主机, 账号密码验证, 列目录, 默认站点, 禁止IP访问, 反向代理, keepalive, 404跳转" />
   <meta name="description" content="本文介绍了Nginx中常见的实用配置，包括多域名配置、多站点配置、账号验证、列目录、默认站点、反向代理、keepalive设置以及404页面自动跳转等，帮助你更好地管理和优化Nginx服务器。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Nginx的几个常用配置和技巧</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/nginx-optimized-practical-configurations.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/nginx-optimized-practical-configurations.html" />
   <meta property="og:title" content="Nginx的几个常用配置和技巧" />
   <meta property="og:description" content="本文介绍了Nginx中常见的实用配置，包括多域名配置、多站点配置、账号验证、列目录、默认站点、反向代理、keepalive设置以及404页面自动跳转等，帮助你更好地管理和优化Nginx服务器。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/nginx-optimized-practical-configurations.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/nginx-optimized-practical-configurations.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Nginx的几个常用配置和技巧",
     "description": "本文介绍了Nginx中常见的实用配置，包括多域名配置、多站点配置、账号验证、列目录、默认站点、反向代理、keepalive设置以及404页面自动跳转等，帮助你更好地管理和优化Nginx服务器。",
-    "url": "https://blog.ops-coffee.cns/nginx-optimized-practical-configurations.html",
+    "url": "https://blog.ops-coffee.coms/nginx-optimized-practical-configurations.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/nginx-optimized-practical-configurations.html"
+      "@id": "https://blog.ops-coffee.coms/nginx-optimized-practical-configurations.html"
     }
   }
   </script>
@@ -121,7 +121,7 @@
 <h2 id="_1">一个站点配置多个域名</h2>
 <pre class="codehilite"><code>server {
     listen       80;
-    server_name  ops-coffee.cn b.ops-coffee.cn;
+    server_name  ops-coffee.com b.ops-coffee.com;
 }</code></pre>
 
 
@@ -129,7 +129,7 @@
 <h2 id="_2">一个服务配置多个站点</h2>
 <pre class="codehilite"><code>server {
     listen       80;
-    server_name  a.ops-coffee.cn;
+    server_name  a.ops-coffee.com;
 
     location / {
         root /home/project/pa;
@@ -139,7 +139,7 @@
 
 server {
     listen       80;
-    server_name  ops-coffee.cn b.ops-coffee.cn;
+    server_name  ops-coffee.com b.ops-coffee.com;
 
     location / {
         root /home/project/pb;
@@ -149,7 +149,7 @@ server {
 
 server {
     listen       80;
-    server_name  c.ops-coffee.cn;
+    server_name  c.ops-coffee.com;
 
     location / {
         root /home/project/pc;
@@ -181,7 +181,7 @@ print crypt($pw,$pw).&quot;\n&quot;;</code></pre>
 
 
 <p>使用方法：</p>
-<pre class="codehilite"><code># perl pwd.pl ops-coffee.cn
+<pre class="codehilite"><code># perl pwd.pl ops-coffee.com
 opf8BImqCAXww
 # echo &quot;admin:opf8BImqCAXww&quot; &gt; key/auth.key</code></pre>
 
@@ -225,7 +225,7 @@ opf8BImqCAXww
 <p>可能有一些未备案的域名或者你不希望的域名将服务器地址指向了你的服务器，这时候就会对你的站点造成一定的影响，需要禁止IP或未配置的域名访问，我们利用上边所说的default规则，将默认流量都转到404去</p>
 <p>上边这个方法比较粗暴，当然你也可以配置下所有未配置的地址访问时直接301重定向到你的网站去，也能为你的网站带来一定的流量</p>
 <pre class="codehilite"><code>server {
-    rewrite ^/(.*)$ https://ops-coffee.cn/$1    permanent;
+    rewrite ^/(.*)$ https://ops-coffee.com/$1    permanent;
 }</code></pre>
 
 
@@ -281,7 +281,7 @@ http://domain/ops-coffee/action/abc   --&gt;     http://192.168.106.135:8181/act
 
 <h2 id="nginx-upstreamkeepalive">nginx upstream开启keepalive</h2>
 <pre class="codehilite"><code>upstream tomcat {
-    server ops-coffee.cn:8080;
+    server ops-coffee.com:8080;
     keepalive 1024;
 }
 
@@ -322,11 +322,11 @@ server {
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/django-channels-websocket-devops-02.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/django-channels-websocket-devops-02.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Django使用Channels实现WebSocket--下篇</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/why-do-I-want-to-write-for-WeChat-official-account.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/why-do-I-want-to-write-for-WeChat-official-account.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>我为什么要写微信公众号</span>
                 <span class="pagination-arrow">→</span>
             </a>

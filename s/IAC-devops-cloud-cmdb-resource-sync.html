@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="多云系统, 资源同步, 云帐号, 同步任务, 周期任务, 资源管理, 关系管理, 同步日志, Celery监控, 资源拓扑" />
   <meta name="description" content="本文详细介绍了如何在多云环境下实现资源同步的逻辑，包括云帐号的新建、周期任务的创建、资源同步的具体实现以及同步日志的记录。通过伪代码和流程图展示了资源同步的每个步骤，帮助读者理解多云环境中资源同步的处理逻辑。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>多云系统之资源同步过程解析</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/IAC-devops-cloud-cmdb-resource-sync.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/IAC-devops-cloud-cmdb-resource-sync.html" />
   <meta property="og:title" content="多云系统之资源同步过程解析" />
   <meta property="og:description" content="本文详细介绍了如何在多云环境下实现资源同步的逻辑，包括云帐号的新建、周期任务的创建、资源同步的具体实现以及同步日志的记录。通过伪代码和流程图展示了资源同步的每个步骤，帮助读者理解多云环境中资源同步的处理逻辑。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/IAC-devops-cloud-cmdb-resource-sync.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/IAC-devops-cloud-cmdb-resource-sync.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "多云系统之资源同步过程解析",
     "description": "本文详细介绍了如何在多云环境下实现资源同步的逻辑，包括云帐号的新建、周期任务的创建、资源同步的具体实现以及同步日志的记录。通过伪代码和流程图展示了资源同步的每个步骤，帮助读者理解多云环境中资源同步的处理逻辑。",
-    "url": "https://blog.ops-coffee.cns/IAC-devops-cloud-cmdb-resource-sync.html",
+    "url": "https://blog.ops-coffee.coms/IAC-devops-cloud-cmdb-resource-sync.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/IAC-devops-cloud-cmdb-resource-sync.html"
+      "@id": "https://blog.ops-coffee.coms/IAC-devops-cloud-cmdb-resource-sync.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">多云系统之资源同步过程解析</h1>
 
-        <p><a href="https://blog.ops-coffee.cn/s/cmp-multi-cloud-cmdb-system-terraform.html" target="_blank">多云系统</a>主要是用来统一多云资源实现集中管理，同时基于关联关系来构建资源拓扑，为上层业务提供清晰准确的基础数据。到目前为止已接入国内外十多个主要云厂商下数十种云资源，构建了完整的本地资源数据库。前边写过三篇文章分别介绍了多云系统的三个核心功能：<a href="https://blog.ops-coffee.cn/s/cmp-multi-cloud-configuration-resource-management.html" target="_blank">多云配置</a>、<a href="https://blog.ops-coffee.cn/s/cmp-resource-management-in-multicloud-system.html" target="_blank">资源管理</a>和<a href="https://blog.ops-coffee.cn/s/cmp-multi-cloud-relationship-management.html" target="_blank">关系管理</a>。<a href="https://blog.ops-coffee.cn/s/I-created-a-paid-WeChat-group" target="_blank">微信群</a>里有小伙伴想要更深入的了解下资源同步的处理逻辑，于是便有了这篇文章，记录下我是如何实现多云环境下的资源同步的</p>
+        <p><a href="https://blog.ops-coffee.com/s/cmp-multi-cloud-cmdb-system-terraform.html" target="_blank">多云系统</a>主要是用来统一多云资源实现集中管理，同时基于关联关系来构建资源拓扑，为上层业务提供清晰准确的基础数据。到目前为止已接入国内外十多个主要云厂商下数十种云资源，构建了完整的本地资源数据库。前边写过三篇文章分别介绍了多云系统的三个核心功能：<a href="https://blog.ops-coffee.com/s/cmp-multi-cloud-configuration-resource-management.html" target="_blank">多云配置</a>、<a href="https://blog.ops-coffee.com/s/cmp-resource-management-in-multicloud-system.html" target="_blank">资源管理</a>和<a href="https://blog.ops-coffee.com/s/cmp-multi-cloud-relationship-management.html" target="_blank">关系管理</a>。<a href="https://blog.ops-coffee.com/s/I-created-a-paid-WeChat-group" target="_blank">微信群</a>里有小伙伴想要更深入的了解下资源同步的处理逻辑，于是便有了这篇文章，记录下我是如何实现多云环境下的资源同步的</p>
 <p>整体逻辑如下：新建云帐号--&gt;触发Signals自动创建周期任务--&gt;周期任务定时触发同步任务<code>sync_resources</code>执行--&gt;<code>sync_resources</code>会循环云帐号下要同步的资源然后调用<code>sync_resource</code>方法逐个资源类型同步--&gt;<code>sync_resource</code>方法调用<code>sync</code>方法同步资源--&gt;<code>sync</code>方法根据传入的资源类型调用不同的资源同步方法--&gt;资源同步方法进行资源同步的操作同时记录同步过程日志</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0130.05.png" /></p>
 <p>接下来具体看下每一步都做了啥，为了让大家有更清晰的理解，会以伪代码的方式呈现</p>
@@ -143,7 +143,7 @@ def cloud_account_post(instance, created, **kwargs):
         )</code></pre>
 
 
-<p>若想临时关闭同步任务的话可以将自动同步间隔改为0，或者在队列状态页面上选择相应的任务关闭同步，同时在队列状态页面还能查看所有的计划任务以及Celery下Worker的状态，这个我上篇文章<a href="https://blog.ops-coffee.cn/s/python-django-celery-monitor-not-flower" target="_blank">监控Celery不一定非要使用Flower</a>有专程的讲过</p>
+<p>若想临时关闭同步任务的话可以将自动同步间隔改为0，或者在队列状态页面上选择相应的任务关闭同步，同时在队列状态页面还能查看所有的计划任务以及Celery下Worker的状态，这个我上篇文章<a href="https://blog.ops-coffee.com/s/python-django-celery-monitor-not-flower" target="_blank">监控Celery不一定非要使用Flower</a>有专程的讲过</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0130.02.png" /></p>
 <p>Signals创建的周期任务会根据设置的自动同步时间间隔周期调用<code>sync_resources</code>方法，<code>sync_resources</code>方法接收两个参数用户以及云帐号的主键ID，根据主键找到对应的云帐号，循环云帐号下配置的同步资源类型然后调用<code>sync_resource</code>方法</p>
 <pre class="codehilite"><code>def sync_resources(user, pk):
@@ -269,11 +269,11 @@ def cloud_account_post(instance, created, **kwargs):
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/python-django-celery-monitor-not-flower.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/python-django-celery-monitor-not-flower.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>监控Celery不一定非要使用Flower</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/Increase-the-price-of-paid-WeChat-group.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/Increase-the-price-of-paid-WeChat-group.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>付费微信群的入群费用提高了</span>
                 <span class="pagination-arrow">→</span>
             </a>

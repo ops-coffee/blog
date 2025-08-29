@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="脚本健壮性, 脚本设计, 异常处理, 日志记录, 脚本风格, USAGE函数, 幂等性, 单例执行, SEO, 任务系统" />
   <meta name="description" content="本文深入探讨了脚本健壮性的重要性以及如何在设计脚本时遵循最佳实践，包括脚本风格、异常处理、日志记录等，以确保脚本的可靠性和可重复执行性。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>简洁的脚本编写规范</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/script-robustness-and-best-practices.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/script-robustness-and-best-practices.html" />
   <meta property="og:title" content="简洁的脚本编写规范" />
   <meta property="og:description" content="本文深入探讨了脚本健壮性的重要性以及如何在设计脚本时遵循最佳实践，包括脚本风格、异常处理、日志记录等，以确保脚本的可靠性和可重复执行性。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/script-robustness-and-best-practices.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/script-robustness-and-best-practices.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "简洁的脚本编写规范",
     "description": "本文深入探讨了脚本健壮性的重要性以及如何在设计脚本时遵循最佳实践，包括脚本风格、异常处理、日志记录等，以确保脚本的可靠性和可重复执行性。",
-    "url": "https://blog.ops-coffee.cns/script-robustness-and-best-practices.html",
+    "url": "https://blog.ops-coffee.coms/script-robustness-and-best-practices.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/script-robustness-and-best-practices.html"
+      "@id": "https://blog.ops-coffee.coms/script-robustness-and-best-practices.html"
     }
   }
   </script>
@@ -117,7 +117,7 @@
 
         <p>脚本健壮性是脚本设计考虑的重要因素。很多脚本编写时只考虑到一些正常执行路径，里面各种条件都满足的情况下，脚本能正常执行。条件不满足时，容易出错，导致故障</p>
 <p>脚本设计应该是一个闭环，从开始执行到最终执行完成是可预期的。脚本依赖的条件，执行时会进行检测，不满足则抛异常，脚本执行的结果应该返回正确的状态，执行出错时有通知机制</p>
-<p><a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">Probius任务系统</a>依靠命令或脚本来实现不同的操作，脚本是任务系统的核心之一，理论上任务系统不限制脚本的类型，可以是shell、python或者go等等，前提是脚本所要运行的主机上要有脚本的运行环境</p>
+<p><a href="https://blog.ops-coffee.com/s/devops-task-probius-cicd-system.html" target="_blank">Probius任务系统</a>依靠命令或脚本来实现不同的操作，脚本是任务系统的核心之一，理论上任务系统不限制脚本的类型，可以是shell、python或者go等等，前提是脚本所要运行的主机上要有脚本的运行环境</p>
 <h2 id="_1">基本规范</h2>
 <p>脚本编写需要遵循以下基本的规范</p>
 <ol>
@@ -184,7 +184,7 @@ echo 1</code></pre>
 <li>返回正确的状态</li>
 </ol>
 <p>在命令执行完成后，会根据命令的返回状态也就是<code>$?</code>的值来判断命令是否执行成功，当<code>$?</code>为<code>0</code>时表示执行成功，否则表示执行失败，如果是执行的脚本时，需要在脚本最后明确脚本返回状态，shell脚本可以在脚本执行成功时通过exit指定退出状态，例如</p>
-<pre class="codehilite"><code>ls /ops-coffee.cn &amp;&amp;\
+<pre class="codehilite"><code>ls /ops-coffee.com &amp;&amp;\
 exit 0 ||\
 exit 1</code></pre>
 
@@ -192,7 +192,7 @@ exit 1</code></pre>
 <p>而对于python脚本则可以借助<code>sys.exit</code>这样写</p>
 <pre class="codehilite"><code>import sys
 
-if 'www' in 'ops-coffee.cn':
+if 'www' in 'ops-coffee.com':
   sys.exit(0)
 else:
   sys.exit(1)</code></pre>
@@ -209,11 +209,11 @@ else:
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/devops-tools-review-two-years-later.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/devops-tools-review-two-years-later.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>再聊我们自研的那些Devops工具</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/devops-task-system-manual-approval.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/devops-task-system-manual-approval.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>任务系统之手动审批</span>
                 <span class="pagination-arrow">→</span>
             </a>

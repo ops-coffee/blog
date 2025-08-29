@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Probius, 自定义任务系统, Kubernetes, CI/CD, 运维, WebSSH, Kubernetes Dashboard" />
   <meta name="description" content="本文详细介绍了Probius自定义任务系统与Kubernetes的集成，包括如何通过Probius管理Kubernetes的Deployment、Namespace等资源，以及如何通过WebSSH进行Pod操作，从而替代传统的Kubernetes Dashboard。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Probius+Kubernetes任务系统如虎添翼</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/devops-task-probius-kubernetes-integration.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/devops-task-probius-kubernetes-integration.html" />
   <meta property="og:title" content="Probius+Kubernetes任务系统如虎添翼" />
   <meta property="og:description" content="本文详细介绍了Probius自定义任务系统与Kubernetes的集成，包括如何通过Probius管理Kubernetes的Deployment、Namespace等资源，以及如何通过WebSSH进行Pod操作，从而替代传统的Kubernetes Dashboard。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/devops-task-probius-kubernetes-integration.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/devops-task-probius-kubernetes-integration.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Probius+Kubernetes任务系统如虎添翼",
     "description": "本文详细介绍了Probius自定义任务系统与Kubernetes的集成，包括如何通过Probius管理Kubernetes的Deployment、Namespace等资源，以及如何通过WebSSH进行Pod操作，从而替代传统的Kubernetes Dashboard。",
-    "url": "https://blog.ops-coffee.cns/devops-task-probius-kubernetes-integration.html",
+    "url": "https://blog.ops-coffee.coms/devops-task-probius-kubernetes-integration.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/devops-task-probius-kubernetes-integration.html"
+      "@id": "https://blog.ops-coffee.coms/devops-task-probius-kubernetes-integration.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">Probius+Kubernetes任务系统如虎添翼</h1>
 
-        <p>Probius是一款自定义任务引擎，可以灵活方便的处理日常运维中的各种任务，我们所有的CI/CD任务都通过Probius来完成的，这篇文章<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">Probius：一个功能强大的自定义任务系统</a>对其有详细的介绍，之前通过Probius更新Kubernetes的Deployment是通过脚本的方式来完成的，脚本大概像这样</p>
+        <p>Probius是一款自定义任务引擎，可以灵活方便的处理日常运维中的各种任务，我们所有的CI/CD任务都通过Probius来完成的，这篇文章<a href="https://blog.ops-coffee.com/s/devops-task-probius-cicd-system.html" target="_blank">Probius：一个功能强大的自定义任务系统</a>对其有详细的介绍，之前通过Probius更新Kubernetes的Deployment是通过脚本的方式来完成的，脚本大概像这样</p>
 <pre class="codehilite"><code>if [ $# != 2 ];then
     echo &quot;USAGE: $0 PROJ ENVT&quot;
     exit 1
@@ -170,11 +170,11 @@ exit 1</code></pre>
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/django-ansible-devops-web-automation.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/django-ansible-devops-web-automation.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Django+Ansible构建任务中心思路</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/probius-kubernetes-pod-monitoring-integration.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/probius-kubernetes-pod-monitoring-integration.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Probius+Prometheus通过API集成POD监控</span>
                 <span class="pagination-arrow">→</span>
             </a>

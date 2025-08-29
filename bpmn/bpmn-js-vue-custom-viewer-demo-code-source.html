@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="bpmn-js, 流程编辑器, Viewer模式, Vue, 流程图, 自定义颜色, 屏幕自适应, 拖动" />
   <meta name="description" content="本文介绍了如何使用bpmn-js的Viewer模式进行流程图的展示，包括基本使用、屏幕自适应、自定义颜色设置、拖动功能等，并提供了详细的代码示例和配置步骤。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>最好用的流程编辑器bpmn-js系列之Viewer</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnbpmn/bpmn-js-vue-custom-viewer-demo-code-source.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.combpmn/bpmn-js-vue-custom-viewer-demo-code-source.html" />
   <meta property="og:title" content="最好用的流程编辑器bpmn-js系列之Viewer" />
   <meta property="og:description" content="本文介绍了如何使用bpmn-js的Viewer模式进行流程图的展示，包括基本使用、屏幕自适应、自定义颜色设置、拖动功能等，并提供了详细的代码示例和配置步骤。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnbpmn/bpmn-js-vue-custom-viewer-demo-code-source.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.combpmn/bpmn-js-vue-custom-viewer-demo-code-source.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "最好用的流程编辑器bpmn-js系列之Viewer",
     "description": "本文介绍了如何使用bpmn-js的Viewer模式进行流程图的展示，包括基本使用、屏幕自适应、自定义颜色设置、拖动功能等，并提供了详细的代码示例和配置步骤。",
-    "url": "https://blog.ops-coffee.cnbpmn/bpmn-js-vue-custom-viewer-demo-code-source.html",
+    "url": "https://blog.ops-coffee.combpmn/bpmn-js-vue-custom-viewer-demo-code-source.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnbpmn/bpmn-js-vue-custom-viewer-demo-code-source.html"
+      "@id": "https://blog.ops-coffee.combpmn/bpmn-js-vue-custom-viewer-demo-code-source.html"
     }
   }
   </script>
@@ -118,7 +118,7 @@
         <blockquote>
 <p>最好用的流程编辑器bpmn-js系列文章</p>
 </blockquote>
-<p>上一篇文章<a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-modeler-demo-code-source" target="_blank">『最好用的流程编辑器bpmn-js系列之Modeler』</a>介绍了bpmn-js的modeler模式下的一些开发配置，这篇文章将会介绍Viewer模式的使用</p>
+<p>上一篇文章<a href="https://blog.ops-coffee.com/bpmn/bpmn-js-vue-custom-modeler-demo-code-source" target="_blank">『最好用的流程编辑器bpmn-js系列之Modeler』</a>介绍了bpmn-js的modeler模式下的一些开发配置，这篇文章将会介绍Viewer模式的使用</p>
 <p>以下演示代码基于上一节搭建好的vue环境，使用bpmn版本为当前最新版7.3.0</p>
 <h2 id="_1">基本使用</h2>
 <p>Viewer的使用与Modeler并无太大区别，示例代码如下</p>
@@ -352,7 +352,7 @@ export { CustomModeler, CustomViewer };</code></pre>
 <p>并将init初始化方法中的<code>BpmnViewer</code>替换为<code>CustomViewer</code>，然后刷新页面就会发现流程图可以拖动啦</p>
 <h2 id="_5">写在最后</h2>
 <p>接触bpmn-js不久，且第一次用VUE，边学边写，文章难免出错，各位多多包含。想要打造一个好用的适合自己的流程编辑器，需要了解的内容比较多，bpmn-js会分多篇文章来介绍，欢迎关注</p>
-<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.cn" target="_blank">https://bpmn.ops-coffee.cn</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
+<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.com" target="_blank">https://bpmn.ops-coffee.com</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
@@ -363,11 +363,11 @@ export { CustomModeler, CustomViewer };</code></pre>
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-modeler-demo-code-source.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/bpmn/bpmn-js-vue-custom-modeler-demo-code-source.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>最好用的流程编辑器bpmn-js系列之Modeler</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-palette-demo-code-source.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/bpmn/bpmn-js-vue-custom-palette-demo-code-source.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>最好用的流程编辑器bpmn-js系列之Palette</span>
                 <span class="pagination-arrow">→</span>
             </a>

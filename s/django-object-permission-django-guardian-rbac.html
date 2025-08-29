@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Django权限管理, Django-guardian, 对象权限控制, Django权限扩展, Django权限分配, Django授权" />
   <meta name="description" content="本文详细介绍了Django-guardian的安装配置、权限分配、权限去除、根据用户和对象获取权限、以及如何在模板和视图中使用guardian进行权限管理，帮助你在各种场景下更好地管理Django权限。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Django Object Permission之Django-guardian使用详解</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/django-object-permission-django-guardian-rbac.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/django-object-permission-django-guardian-rbac.html" />
   <meta property="og:title" content="Django Object Permission之Django-guardian使用详解" />
   <meta property="og:description" content="本文详细介绍了Django-guardian的安装配置、权限分配、权限去除、根据用户和对象获取权限、以及如何在模板和视图中使用guardian进行权限管理，帮助你在各种场景下更好地管理Django权限。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/django-object-permission-django-guardian-rbac.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/django-object-permission-django-guardian-rbac.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Django Object Permission之Django-guardian使用详解",
     "description": "本文详细介绍了Django-guardian的安装配置、权限分配、权限去除、根据用户和对象获取权限、以及如何在模板和视图中使用guardian进行权限管理，帮助你在各种场景下更好地管理Django权限。",
-    "url": "https://blog.ops-coffee.cns/django-object-permission-django-guardian-rbac.html",
+    "url": "https://blog.ops-coffee.coms/django-object-permission-django-guardian-rbac.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/django-object-permission-django-guardian-rbac.html"
+      "@id": "https://blog.ops-coffee.coms/django-object-permission-django-guardian-rbac.html"
     }
   }
   </script>
@@ -118,8 +118,8 @@
         <blockquote>
 <p>Guardian详细用法介绍，助你玩转各种场景下的Django权限管理</p>
 </blockquote>
-<p><a href="https://blog.ops-coffee.cn/s/django-contrib-auth-permissions-system.html" target="_blank">Django默认权限机制介绍及实践</a>文章中讲到Django默认的权限分配最小粒度是<strong>表</strong>，也就是说一旦我们给了用户这个表的修改权限，那么用户就可以修改表里的所有数据，这在某些情况下是无法满足需求的，例如对于一个Article文章表来说，我们规定用户只能修改自己的文章，而不能修改别人的文章，Django的默认权限机制就无法做到</p>
-<p>那该如何实现上述需求呢？<a href="https://blog.ops-coffee.cn/s/extending-django-permissions-custom-solutions.html" target="_blank">Django内置权限扩展案例</a>文章就给了实现的方法，在Article表新加字段来标识谁有修改的权限即可，试想如果我们有很多表都需要类似的权限控制呢？就需要不断的来添加字段标识权限，这种方案的弊端马上显现，那么有没有一种更为优雅的方案来解决呢？</p>
+<p><a href="https://blog.ops-coffee.com/s/django-contrib-auth-permissions-system.html" target="_blank">Django默认权限机制介绍及实践</a>文章中讲到Django默认的权限分配最小粒度是<strong>表</strong>，也就是说一旦我们给了用户这个表的修改权限，那么用户就可以修改表里的所有数据，这在某些情况下是无法满足需求的，例如对于一个Article文章表来说，我们规定用户只能修改自己的文章，而不能修改别人的文章，Django的默认权限机制就无法做到</p>
+<p>那该如何实现上述需求呢？<a href="https://blog.ops-coffee.com/s/extending-django-permissions-custom-solutions.html" target="_blank">Django内置权限扩展案例</a>文章就给了实现的方法，在Article表新加字段来标识谁有修改的权限即可，试想如果我们有很多表都需要类似的权限控制呢？就需要不断的来添加字段标识权限，这种方案的弊端马上显现，那么有没有一种更为优雅的方案来解决呢？</p>
 <p>基于对象的权限控制就是很好的方法，他的权限控制粒度为表中的<strong>对象</strong>，可以给每一个对象赋予权限，<code>Django-guardian</code>便是基于Django的原生逻辑扩展出来的对象权限控制方案，他扩展了Django的默认权限方案，从而使Django的权限控制机制更加完善</p>
 <h2 id="_1">安装配置</h2>
 <p><code>django-guardian</code>当前的最新版本是v2.2.0，支持django2.1以上版本，包括django3.0，依赖python版本3.5+，以下演示代码均基于django3.0.2</p>
@@ -181,23 +181,23 @@
         )</code></pre>
 
 
-<p>如果想把name为<code>dev-ops-coffee-build</code>的CommonTask赋权给name为<code>dev@ops-coffee.cn</code>的用户，可以这样处理</p>
+<p>如果想把name为<code>dev-ops-coffee-build</code>的CommonTask赋权给name为<code>dev@ops-coffee.com</code>的用户，可以这样处理</p>
 <pre class="codehilite"><code># 获取任务对象
 &gt;&gt;&gt; from engine.models import CommonTask
 &gt;&gt;&gt; task = CommonTask.objects.get(name='dev-ops-coffee-build')
 
 # 获取用户对象
 &gt;&gt;&gt; from accounts.models import User
-&gt;&gt;&gt; user = User.objects.get(username='dev@ops-coffee.cn')
+&gt;&gt;&gt; user = User.objects.get(username='dev@ops-coffee.com')
 
-# 确认用户dev@ops-coffee.cn对任务dev-ops-coffee-build无权限
+# 确认用户dev@ops-coffee.com对任务dev-ops-coffee-build无权限
 &gt;&gt;&gt; user.has_perm('engine.commontask_run', task)
 False
 
 # 给用户赋权
 &gt;&gt;&gt; from guardian.shortcuts import assign_perm
 &gt;&gt;&gt; assign_perm('commontask_run', user, task)
-&lt;UserObjectPermission: dev-ops-coffee-build | dev@ops-coffee.cn | commontask_run&gt;</code></pre>
+&lt;UserObjectPermission: dev-ops-coffee-build | dev@ops-coffee.com | commontask_run&gt;</code></pre>
 
 
 <p>通过<code>assign_perm</code>可以给用户赋权，<code>assign_perm</code>接收三个参数，分别为<code>perm</code>、<code>user_or_group</code>以及<code>object</code></p>
@@ -214,7 +214,7 @@ True</code></pre>
 
 <p>对于group组授权，操作类似</p>
 <pre class="codehilite"><code># 获取用户对象
-&gt;&gt;&gt; user = User.objects.get(username='qa@ops-coffee.cn')
+&gt;&gt;&gt; user = User.objects.get(username='qa@ops-coffee.com')
 
 # 获取组对象
 &gt;&gt;&gt; from django.contrib.auth.models import Group
@@ -223,7 +223,7 @@ True</code></pre>
 # 给用户加入组
 &gt;&gt;&gt; user.groups.add(group)
 
-# 先确认下用户qa@ops-coffee.cn对任务dev-ops-coffee.cn无权限
+# 先确认下用户qa@ops-coffee.com对任务dev-ops-coffee.com无权限
 &gt;&gt;&gt; user.has_perm('engine.commontask_run', task)
 False
 
@@ -247,7 +247,7 @@ False</code></pre>
 <p>就像这样<code>assign_perm</code>可以同时给多个用户赋权</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; task =  CommonTask.objects.get(name='dev-ops-coffee-build')
 &gt;&gt;&gt; assign_perm('engine.commontask_run', User.objects.filter(id__in=[3,4]), task)
-[&lt;UserObjectPermission: dev-ops-coffee-build | test@ops-coffee.cn | commontask_run&gt;, &lt;UserObjectPermission: dev-ops-coffee-build | dev@ops-coffee.cn | commontask_run&gt;]</code></pre>
+[&lt;UserObjectPermission: dev-ops-coffee-build | test@ops-coffee.com | commontask_run&gt;, &lt;UserObjectPermission: dev-ops-coffee-build | dev@ops-coffee.com | commontask_run&gt;]</code></pre>
 
 
 <p>却不能同时去除多个用户的权限，以下用法会报错</p>
@@ -258,22 +258,22 @@ Traceback (most recent call last):
 ValueError: The QuerySet value for an exact lookup must be limited to one result using slicing.</code></pre>
 
 
-<p>一个清除权限的例子如下，以下例子会清除用户<code>dev@ops-coffee.cn</code>对CommonTask表下所有对象<code>engine.commontask_run</code>的权限</p>
+<p>一个清除权限的例子如下，以下例子会清除用户<code>dev@ops-coffee.com</code>对CommonTask表下所有对象<code>engine.commontask_run</code>的权限</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; from guardian.shortcuts import remove_perm
 &gt;&gt;&gt;
-&gt;&gt;&gt; remove_perm('engine.commontask_run', User.objects.get(username='dev@ops-coffee.cn'), CommonTask.objects.all())
+&gt;&gt;&gt; remove_perm('engine.commontask_run', User.objects.get(username='dev@ops-coffee.com'), CommonTask.objects.all())
 (3, {'guardian.UserObjectPermission': 3})</code></pre>
 
 
 <p>当然第三个参数object是可以不用写的，意思也是清除整个model的权限，与以下用法效果一样</p>
-<pre class="codehilite"><code>&gt;&gt;&gt; remove_perm('engine.commontask_run', User.objects.get(username='dev@ops-coffee.cn'))</code></pre>
+<pre class="codehilite"><code>&gt;&gt;&gt; remove_perm('engine.commontask_run', User.objects.get(username='dev@ops-coffee.com'))</code></pre>
 
 
 <h2 id="_4">根据用户和对象获取权限</h2>
 <p><code>get_perms</code>方法可以根据用户或组以及对象来获取权限，接收两个参数<code>user_or_group</code>实例以及对象实例</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; from guardian.shortcuts import get_perms
 
-&gt;&gt;&gt; get_perms(User.objects.get(username='dev@ops-coffee.cn'), task)
+&gt;&gt;&gt; get_perms(User.objects.get(username='dev@ops-coffee.com'), task)
 ['commontask_run']</code></pre>
 
 
@@ -282,22 +282,22 @@ ValueError: The QuerySet value for an exact lookup must be limited to one result
 <p>先来准备数据</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; task =  CommonTask.objects.get(name='dev-ops-coffee-build')
 &gt;&gt;&gt;
-&gt;&gt;&gt; u1 = User.objects.get(username='dev@ops-coffee.cn')
-&gt;&gt;&gt; u2 = User.objects.get(username='qa@ops-coffee.cn')
+&gt;&gt;&gt; u1 = User.objects.get(username='dev@ops-coffee.com')
+&gt;&gt;&gt; u2 = User.objects.get(username='qa@ops-coffee.com')
 &gt;&gt;&gt;
 &gt;&gt;&gt; group = Group.objects.get(id=1)
 &gt;&gt;&gt;
 # 赋予用户u1对task对象有commontask_run的权限
 &gt;&gt;&gt; assign_perm('commontask_run', u1, task)
-&lt;UserObjectPermission: dev-ops-coffee-build | dev@ops-coffee.cn | commontask_run&gt;
+&lt;UserObjectPermission: dev-ops-coffee-build | dev@ops-coffee.com | commontask_run&gt;
 
 # 赋予用户u2对task对象有commontask_change的权限
 &gt;&gt;&gt; assign_perm('commontask_change', u2, task)
-&lt;UserObjectPermission: dev-ops-coffee-build | qa@ops-coffee.cn | commontask_change&gt;
+&lt;UserObjectPermission: dev-ops-coffee-build | qa@ops-coffee.com | commontask_change&gt;
 &gt;&gt;&gt;
 
-# 把用户test@ops-coffee.cn加入到组group
-&gt;&gt;&gt; User.objects.get(username='test@ops-coffee.cn').groups.add(group)
+# 把用户test@ops-coffee.com加入到组group
+&gt;&gt;&gt; User.objects.get(username='test@ops-coffee.com').groups.add(group)
 
 # 赋予组group对task对象有commontask_select的权限
 &gt;&gt;&gt; assign_perm('commontask_select', group, task)
@@ -309,35 +309,35 @@ ValueError: The QuerySet value for an exact lookup must be limited to one result
 <pre class="codehilite"><code>&gt;&gt;&gt; from guardian.shortcuts import get_users_with_perms
 &gt;&gt;&gt;
 &gt;&gt;&gt; get_users_with_perms(task)
-&lt;QuerySet [&lt;User: dev@ops-coffee.cn&gt;, &lt;User: qa@ops-coffee.cn&gt;, &lt;User: test@ops-coffee.cn&gt;]&gt;</code></pre>
+&lt;QuerySet [&lt;User: dev@ops-coffee.com&gt;, &lt;User: qa@ops-coffee.com&gt;, &lt;User: test@ops-coffee.com&gt;]&gt;</code></pre>
 
 
 <p>这里发现superuser用户并没有在最终的用户列表里，如果我们想让superuser用户也包含在内，可以设置参数<code>with_superusers=True</code></p>
 <pre class="codehilite"><code>&gt;&gt;&gt; get_users_with_perms(task, with_superusers=True)
-&lt;QuerySet [&lt;User: admin@163.com&gt;, &lt;User: dev@ops-coffee.cn&gt;, &lt;User: qa@ops-coffee.cn&gt;, &lt;User: test@ops-coffee.cn&gt;]&gt;</code></pre>
+&lt;QuerySet [&lt;User: admin@163.com&gt;, &lt;User: dev@ops-coffee.com&gt;, &lt;User: qa@ops-coffee.com&gt;, &lt;User: test@ops-coffee.com&gt;]&gt;</code></pre>
 
 
 <p>以上输出结果展示了所有具有权限的用户，如果我们想要查看用户具有的权限，可以设置参数<code>attach_perms=True</code>，返回的结构是以用户为key权限为value的一个字典，看起来清晰明了</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; get_users_with_perms(task, with_superusers=True, attach_perms=True)
-{&lt;User: admin@163.com&gt;: ['commontask_change', 'commontask_run', 'commontask_select'], &lt;User: dev@ops-coffee.cn&gt;: ['commontask_run',
- 'commontask_select'], &lt;User: qa@ops-coffee.cn&gt;: ['commontask_change', 'commontask_run'], &lt;User: test@ops-coffee.cn&gt;: ['commontask_select']}</code></pre>
+{&lt;User: admin@163.com&gt;: ['commontask_change', 'commontask_run', 'commontask_select'], &lt;User: dev@ops-coffee.com&gt;: ['commontask_run',
+ 'commontask_select'], &lt;User: qa@ops-coffee.com&gt;: ['commontask_change', 'commontask_run'], &lt;User: test@ops-coffee.com&gt;: ['commontask_select']}</code></pre>
 
 
 <p>如果我们仅想查看具有某个权限的用户，可以设置<code>only_with_perms_in</code>参数，例如我们只想查看对象所有具有<code>commontask_change</code>权限的用户</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; get_users_with_perms(task, with_superusers=True, only_with_perms_in=['commontask_change'])
-&lt;QuerySet [&lt;User: admin@163.com&gt;, &lt;User: qa@ops-coffee.cn&gt;]&gt;</code></pre>
+&lt;QuerySet [&lt;User: admin@163.com&gt;, &lt;User: qa@ops-coffee.com&gt;]&gt;</code></pre>
 
 
-<p>默认情况下用户所数组如果具有权限的话也会返回，例如上边的我们把用户<code>test@ops-coffee.cn</code>加入到了group，然后给group赋予了权限，那么用户也就具有了相应的权限，如果我们只想查看直接赋予用户的权限，而并非间接通过group取得的权限用户列表，我们可以设置参数<code>with_group_users=False</code>，此参数默认为True</p>
+<p>默认情况下用户所数组如果具有权限的话也会返回，例如上边的我们把用户<code>test@ops-coffee.com</code>加入到了group，然后给group赋予了权限，那么用户也就具有了相应的权限，如果我们只想查看直接赋予用户的权限，而并非间接通过group取得的权限用户列表，我们可以设置参数<code>with_group_users=False</code>，此参数默认为True</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; get_users_with_perms(task, with_superusers=True, with_group_users=False)
-&lt;QuerySet [&lt;User: admin@163.com&gt;, &lt;User: dev@ops-coffee.cn&gt;, &lt;User: qa@ops-coffee.cn&gt;]&gt;</code></pre>
+&lt;QuerySet [&lt;User: admin@163.com&gt;, &lt;User: dev@ops-coffee.com&gt;, &lt;User: qa@ops-coffee.com&gt;]&gt;</code></pre>
 
 
 <p>与<code>get_users_with_perms</code>方法相类似的是<code>get_groups_with_perms</code>方法，但<code>get_groups_with_perms</code>要简单许多，只能接收两个参数<code>object</code>和<code>attach_perms</code></p>
 <h2 id="_6">根据用户和权限获取对象</h2>
 <p>当我们给对象赋予权限后，很多时候我们都需要根据用户和权限来获取对象列表，此时可以通过<code>get_objects_for_user</code>方法来实现</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; from guardian.shortcuts import get_objects_for_user
-&gt;&gt;&gt; user = User.objects.get(username='dev@ops-coffee.cn')
+&gt;&gt;&gt; user = User.objects.get(username='dev@ops-coffee.com')
 &gt;&gt;&gt; 
 &gt;&gt;&gt; get_objects_for_user(user, 'engine.commontask_run')
 &lt;QuerySet [&lt;CommonTask: Dev-Coffee-Web-发布&gt;, &lt;CommonTask: Qa-Coffee-Web-发布&gt;, &lt;CommonTask: dev-ops-coffee-build&gt;]&gt;</code></pre>
@@ -410,11 +410,11 @@ def commontask_delete_view(request, pk):
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/django-model-update-save-method-validation.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/django-model-update-save-method-validation.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Django model重写save方法及update踩坑记录</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/devops-task-probius-cicd-system.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Probius：一个功能强大的自定义任务系统</span>
                 <span class="pagination-arrow">→</span>
             </a>

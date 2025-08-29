@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Web终端, 颜色输出, 日志大小限制, ansi_up.js, xterm.js, OOM预防, 系统优化" />
   <meta name="description" content="本文探讨了如何在Web页面上实现带有颜色的终端输出，并解决了由于日志过大导致的性能问题，提出并实现了日志大小限制的解决方案。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>从ansi_up到xterm提升了几十倍性能</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/ansi-up-js-to-xterm-js-performance.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/ansi-up-js-to-xterm-js-performance.html" />
   <meta property="og:title" content="从ansi_up到xterm提升了几十倍性能" />
   <meta property="og:description" content="本文探讨了如何在Web页面上实现带有颜色的终端输出，并解决了由于日志过大导致的性能问题，提出并实现了日志大小限制的解决方案。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/ansi-up-js-to-xterm-js-performance.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/ansi-up-js-to-xterm-js-performance.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "从ansi_up到xterm提升了几十倍性能",
     "description": "本文探讨了如何在Web页面上实现带有颜色的终端输出，并解决了由于日志过大导致的性能问题，提出并实现了日志大小限制的解决方案。",
-    "url": "https://blog.ops-coffee.cns/ansi-up-js-to-xterm-js-performance.html",
+    "url": "https://blog.ops-coffee.coms/ansi-up-js-to-xterm-js-performance.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/ansi-up-js-to-xterm-js-performance.html"
+      "@id": "https://blog.ops-coffee.coms/ansi-up-js-to-xterm-js-performance.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">从ansi_up到xterm提升了几十倍性能</h1>
 
-        <p>无论是<a href="https://blog.ops-coffee.cn/devops/task.html" target="_blank">任务系统</a>还是<a href="https://blog.ops-coffee.cn/devops/ansible.html" target="_blank">作业系统</a>都会去执行linux命令或脚本，命令或脚本的输出也会实时展示在Web页面上，在终端中执行命令或脚本可以输出颜色，主要是因为这些有颜色的文字周围包含了颜色相关的ANSI码，例如：<code>\033[31m运维咖啡吧\033[0m</code></p>
+        <p>无论是<a href="https://blog.ops-coffee.com/devops/task.html" target="_blank">任务系统</a>还是<a href="https://blog.ops-coffee.com/devops/ansible.html" target="_blank">作业系统</a>都会去执行linux命令或脚本，命令或脚本的输出也会实时展示在Web页面上，在终端中执行命令或脚本可以输出颜色，主要是因为这些有颜色的文字周围包含了颜色相关的ANSI码，例如：<code>\033[31m运维咖啡吧\033[0m</code></p>
 <p><img alt="" loading="lazy" src="/static/images/2023/1206.01.png" /></p>
 <p>如何在Web页面上输出时同样展示颜色呢，这里我用到了<code>ansi_up.js</code>，ansi_up是一个简单易用的Javascript库，可将包含ANSI颜色转义码的文本转换为HTML。纯前端插件使用起来确实简单，只依赖一个js文件，示例代码如下：</p>
 <pre class="codehilite"><code>&lt;script src=&quot;../ansi_up.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
@@ -170,11 +170,11 @@ if len(old_log) &gt; 2 * 1024 * 1024 or len(new_log) &gt; 2 * 1024 * 1024:
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/django-tenant-rbac-auth-permission.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/django-tenant-rbac-auth-permission.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>权限管理之多租户隔离授权</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/five-years-later-over-10000-followers.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/five-years-later-over-10000-followers.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>五年之后超过10000订阅者</span>
                 <span class="pagination-arrow">→</span>
             </a>

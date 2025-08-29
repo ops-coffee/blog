@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="多云管理, 资源管理, 全局搜索, 资源列表, 动态规则, 业务关系, 资源池" />
   <meta name="description" content="本文详细介绍了多云管理系统中的资源管理功能，包括全局搜索、资源列表和动态规则的使用，帮助用户高效管理和维护云资源。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>多云系统之资源管理</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/cmp-resource-management-in-multicloud-system.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/cmp-resource-management-in-multicloud-system.html" />
   <meta property="og:title" content="多云系统之资源管理" />
   <meta property="og:description" content="本文详细介绍了多云管理系统中的资源管理功能，包括全局搜索、资源列表和动态规则的使用，帮助用户高效管理和维护云资源。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/cmp-resource-management-in-multicloud-system.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/cmp-resource-management-in-multicloud-system.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "多云系统之资源管理",
     "description": "本文详细介绍了多云管理系统中的资源管理功能，包括全局搜索、资源列表和动态规则的使用，帮助用户高效管理和维护云资源。",
-    "url": "https://blog.ops-coffee.cns/cmp-resource-management-in-multicloud-system.html",
+    "url": "https://blog.ops-coffee.coms/cmp-resource-management-in-multicloud-system.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/cmp-resource-management-in-multicloud-system.html"
+      "@id": "https://blog.ops-coffee.coms/cmp-resource-management-in-multicloud-system.html"
     }
   }
   </script>
@@ -115,8 +115,8 @@
     <div class="container">
         <h1 id="art-title">多云系统之资源管理</h1>
 
-        <p>前边两篇文章分别讲了我们多云管理系统中的<a href="https://blog.ops-coffee.cn/s/cmp-multi-cloud-relationship-management.html" target="_blank">关系管理</a>和<a href="https://blog.ops-coffee.cn/s/cmp-multi-cloud-configuration-resource-management.html" target="_blank">多云配置</a>，这篇文章来讲下多云管理系统中的另一个核心功能：资源管理，在多云系统中资源管理主要负责资源的查询展示以及资源与关系的管理</p>
-<p>在上篇文章<a href="https://blog.ops-coffee.cn/s/cmp-multi-cloud-configuration-resource-management.html" target="_blank">多云配置</a>中有讲到所有云上同步下来的资源都位于资源池，资源池实际上就是个虚拟的池子，资源池内的资源是没有任何关系属性，由于我们所有资源都是基于项目去隔离的，也就是说用户只能查看自己所属项目下的资源，不是自己的项目无法查看使用，所以默认情况下资源池内的资源是查不到的，仅能在全局搜索、动态规则和资源列表的添加资源里查得到</p>
+        <p>前边两篇文章分别讲了我们多云管理系统中的<a href="https://blog.ops-coffee.com/s/cmp-multi-cloud-relationship-management.html" target="_blank">关系管理</a>和<a href="https://blog.ops-coffee.com/s/cmp-multi-cloud-configuration-resource-management.html" target="_blank">多云配置</a>，这篇文章来讲下多云管理系统中的另一个核心功能：资源管理，在多云系统中资源管理主要负责资源的查询展示以及资源与关系的管理</p>
+<p>在上篇文章<a href="https://blog.ops-coffee.com/s/cmp-multi-cloud-configuration-resource-management.html" target="_blank">多云配置</a>中有讲到所有云上同步下来的资源都位于资源池，资源池实际上就是个虚拟的池子，资源池内的资源是没有任何关系属性，由于我们所有资源都是基于项目去隔离的，也就是说用户只能查看自己所属项目下的资源，不是自己的项目无法查看使用，所以默认情况下资源池内的资源是查不到的，仅能在全局搜索、动态规则和资源列表的添加资源里查得到</p>
 <p><img alt="" loading="lazy" src="/static/images/2022/0525.03.png" /></p>
 <p>下面就围绕全局搜索、资源列表和动态规则来聊下资源管理</p>
 <h2 id="_1">全局搜索</h2>
@@ -125,7 +125,7 @@
 <h2 id="_2">资源列表</h2>
 <p>多云系统旨在提供清晰、准确、易用的资源数据，通过关联关系可以构建清晰的资源数据，而资源列表就为这种清晰的资源关系提供了界面展示</p>
 <p><img alt="" loading="lazy" src="/static/images/2022/0610.02.png" /></p>
-<p>在<a href="https://blog.ops-coffee.cn/s/cmp-multi-cloud-relationship-management.html" target="_blank">关系管理</a>文章中提到了多云的三种关联关系，资源列表是基于我们最常使用的业务关系来展示的，左侧为业务关系树，右侧为具体的资源，默认展示业务下的所有资源，点击关系树节点可以查看对应节点下的资源，同时也提供了分类及模糊搜索以快速检索资源数据</p>
+<p>在<a href="https://blog.ops-coffee.com/s/cmp-multi-cloud-relationship-management.html" target="_blank">关系管理</a>文章中提到了多云的三种关联关系，资源列表是基于我们最常使用的业务关系来展示的，左侧为业务关系树，右侧为具体的资源，默认展示业务下的所有资源，点击关系树节点可以查看对应节点下的资源，同时也提供了分类及模糊搜索以快速检索资源数据</p>
 <p>节点下资源的添加提供了两种方式，其一是资源列表页面右上角的添加按钮，可以添加所需的资源并给资源打标签，通过这种方式一次只能添加一条资源，另一种资源的添加方式是借助于接下来要讲的动态规则来实现资源的批量添加</p>
 <p><img alt="" loading="lazy" src="/static/images/2022/0610.03.png" /></p>
 <p>在资源列表里也可以对资源进行编辑和删除，由于资源属性都是固定从云上同步的，所以不提供修改，仅能编辑资源的业务属性及TAG，资源下线资源列表里并不会直接删除，会标记过期，需要用户手动删除，这也是为了保证资源列表内的所有资源都是经过确认的，为资源的准确提供保障</p>
@@ -152,11 +152,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/cmp-multi-cloud-configuration-resource-management.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/cmp-multi-cloud-configuration-resource-management.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>多云系统之多云配置</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/cmp-multi-cloud-cmdb-system-terraform.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/cmp-multi-cloud-cmdb-system-terraform.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>运维自动化之多云系统分享</span>
                 <span class="pagination-arrow">→</span>
             </a>

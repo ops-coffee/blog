@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Django Celery, 定时任务, 周期任务, 异步任务, 任务调度, Celery框架, Django集成, 任务队列, 动态添加任务, 计划任务, 任务引擎, Probius, 任务执行, 任务管理, Python任务调度, 周期执行任务, 定时执行任务, 任务队列配置, 任务调度器, 数据库调度" />
   <meta name="description" content="本文详细介绍了如何在Django项目中使用django-celery实现定时任务和周期任务，包括安装配置、异步调用、周期任务和动态添加任务等内容，帮助你轻松将定时任务功能集成到自研的运维系统中。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Django动态添加定时任务之django-celery的使用</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/dynamic-task-django-celery-integration-guide.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/dynamic-task-django-celery-integration-guide.html" />
   <meta property="og:title" content="Django动态添加定时任务之django-celery的使用" />
   <meta property="og:description" content="本文详细介绍了如何在Django项目中使用django-celery实现定时任务和周期任务，包括安装配置、异步调用、周期任务和动态添加任务等内容，帮助你轻松将定时任务功能集成到自研的运维系统中。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/dynamic-task-django-celery-integration-guide.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/dynamic-task-django-celery-integration-guide.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Django动态添加定时任务之django-celery的使用",
     "description": "本文详细介绍了如何在Django项目中使用django-celery实现定时任务和周期任务，包括安装配置、异步调用、周期任务和动态添加任务等内容，帮助你轻松将定时任务功能集成到自研的运维系统中。",
-    "url": "https://blog.ops-coffee.cns/dynamic-task-django-celery-integration-guide.html",
+    "url": "https://blog.ops-coffee.coms/dynamic-task-django-celery-integration-guide.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/dynamic-task-django-celery-integration-guide.html"
+      "@id": "https://blog.ops-coffee.coms/dynamic-task-django-celery-integration-guide.html"
     }
   }
   </script>
@@ -115,9 +115,9 @@
     <div class="container">
         <h1 id="art-title">Django动态添加定时任务之django-celery的使用</h1>
 
-        <p>定时任务和周期任务在我们日常工作中应用广泛，例如定时发布、周期巡检等，通常我们会借助Linux下的Crontab来实现，但如何将这一功能搬进我们自研的运维系统呢？借助django-celery即可轻松完成，本篇文章就通过<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">自定义任务引擎Probius</a>中计划任务的实现来介绍django-celery的使用</p>
+        <p>定时任务和周期任务在我们日常工作中应用广泛，例如定时发布、周期巡检等，通常我们会借助Linux下的Crontab来实现，但如何将这一功能搬进我们自研的运维系统呢？借助django-celery即可轻松完成，本篇文章就通过<a href="https://blog.ops-coffee.com/s/devops-task-probius-cicd-system.html" target="_blank">自定义任务引擎Probius</a>中计划任务的实现来介绍django-celery的使用</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1229.01.gif" /></p>
-<p>Celery是基于Python开发的一个分布式任务队列框架，主要用来实现异步任务，具体介绍和用法可以看我之前写的这篇文章：<a href="https://blog.ops-coffee.cn/s/devops-task-django-celery-setup-guide.html" target="_blank">Django配置Celery执行异步任务和定时任务</a>，Django本身不支持异步，要想实现异步的话借助Celery是个不错的选择，上边这篇文章就提供了django集成celery的方法，但其配置稍微复杂，且不支持动态添加定时任务，django-celery的出现很好的解决了这个问题</p>
+<p>Celery是基于Python开发的一个分布式任务队列框架，主要用来实现异步任务，具体介绍和用法可以看我之前写的这篇文章：<a href="https://blog.ops-coffee.com/s/devops-task-django-celery-setup-guide.html" target="_blank">Django配置Celery执行异步任务和定时任务</a>，Django本身不支持异步，要想实现异步的话借助Celery是个不错的选择，上边这篇文章就提供了django集成celery的方法，但其配置稍微复杂，且不支持动态添加定时任务，django-celery的出现很好的解决了这个问题</p>
 <p>django-celery为django提供了celery集成，同时支持将结果存储在django的orm或cache中，最重要的是支持从数据库动态读取计划任务并执行，这也就是说我们只需要将需要执行的加护任务插入数据库，django-celery就可以自动发现并执行了，接下来就具体看下如何实现</p>
 <h2 id="_1">安装配置</h2>
 <p>1.安装<code>django-celery</code></p>
@@ -186,7 +186,7 @@ platforms.C_FORCE_ROOT = True</code></pre>
 
 @shared_task
 def welcome():
-    print('Welcome to ops-coffee.cn')
+    print('Welcome to ops-coffee.com')
 
     return True</code></pre>
 
@@ -221,7 +221,7 @@ def index(request):
 }</code></pre>
 
 
-<p>以上配置详细的解释可以看文章：<a href="https://blog.ops-coffee.cn/s/devops-task-django-celery-setup-guide.html" target="_blank">Django配置Celery执行异步任务和定时任务</a></p>
+<p>以上配置详细的解释可以看文章：<a href="https://blog.ops-coffee.com/s/devops-task-django-celery-setup-guide.html" target="_blank">Django配置Celery执行异步任务和定时任务</a></p>
 <p>3.最后启动beat</p>
 <pre class="codehilite"><code>python manage.py celery beat -l info</code></pre>
 
@@ -241,7 +241,7 @@ USE_TZ = False</code></pre>
 <p>至此已经可以添加周期任务或定时任务了，但操作方式比较麻烦，还需要改动配置文件，说好的动态添加呢，别急这就来了，打开数据库会看到几张以<code>djcelery_</code>开头的表</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1229.02.png" /></p>
 <p>其中对于动态添加计划任务有用的是计划任务时间定义表<code>djcelery_crontabschedule</code>，循环任务时间定义表<code>djcelery_crontabschedule</code>，以及任务表<code>djcelery_periodictask</code></p>
-<p>只需要在对应的表里插入数据就ok了，以我在<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">自定义任务引擎Probius</a>中的使用为例，前端会传递时间到view，view中关于定时任务的的大概处理逻辑如下</p>
+<p>只需要在对应的表里插入数据就ok了，以我在<a href="https://blog.ops-coffee.com/s/devops-task-probius-cicd-system.html" target="_blank">自定义任务引擎Probius</a>中的使用为例，前端会传递时间到view，view中关于定时任务的的大概处理逻辑如下</p>
 <pre class="codehilite"><code>from djcelery.models import CrontabSchedule, PeriodicTask
 
 with transaction.atomic():
@@ -288,11 +288,11 @@ with transaction.atomic():
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/company-annual-party-luxury-outing-2020.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/company-annual-party-luxury-outing-2020.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>裸心堡归来，你可能从未见过如此豪横的阳光普照奖</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/sadmin-django-common-application.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/sadmin-django-common-application.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Sadmin：打造私有Django公共库实现代码复用</span>
                 <span class="pagination-arrow">→</span>
             </a>

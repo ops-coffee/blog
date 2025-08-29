@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="bpmn-js, 流程编辑器, Palette, 自定义工具栏, 隐藏图标, 自定义shape, BPMN, Vue" />
   <meta name="description" content="本文详细介绍了如何在bpmn-js中隐藏和自定义工具栏Palette的高级用法，包括如何隐藏不需要的图标、如何完全自定义Palette以添加新的shape，并提供了详细的代码示例和操作步骤，帮助读者打造一个更适合自己的流程编辑器。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>最好用的流程编辑器bpmn-js系列之Palette</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnbpmn/bpmn-js-vue-custom-palette-demo-code-source.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.combpmn/bpmn-js-vue-custom-palette-demo-code-source.html" />
   <meta property="og:title" content="最好用的流程编辑器bpmn-js系列之Palette" />
   <meta property="og:description" content="本文详细介绍了如何在bpmn-js中隐藏和自定义工具栏Palette的高级用法，包括如何隐藏不需要的图标、如何完全自定义Palette以添加新的shape，并提供了详细的代码示例和操作步骤，帮助读者打造一个更适合自己的流程编辑器。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnbpmn/bpmn-js-vue-custom-palette-demo-code-source.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.combpmn/bpmn-js-vue-custom-palette-demo-code-source.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "最好用的流程编辑器bpmn-js系列之Palette",
     "description": "本文详细介绍了如何在bpmn-js中隐藏和自定义工具栏Palette的高级用法，包括如何隐藏不需要的图标、如何完全自定义Palette以添加新的shape，并提供了详细的代码示例和操作步骤，帮助读者打造一个更适合自己的流程编辑器。",
-    "url": "https://blog.ops-coffee.cnbpmn/bpmn-js-vue-custom-palette-demo-code-source.html",
+    "url": "https://blog.ops-coffee.combpmn/bpmn-js-vue-custom-palette-demo-code-source.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnbpmn/bpmn-js-vue-custom-palette-demo-code-source.html"
+      "@id": "https://blog.ops-coffee.combpmn/bpmn-js-vue-custom-palette-demo-code-source.html"
     }
   }
   </script>
@@ -128,7 +128,7 @@
 
 <h2 id="shape_1">自定义shape</h2>
 <p>为了编辑方便，我想在palette上添加一个shape该如何操作呢？这里我们需要自定义Palette，自定义Palette有两种方式可以选择，第一种就是基于默认的Palette来修改，第二种就是完全写个新的Palette来替代默认的Palette，第一种只能在默认的Palette上添加shape，而不能修改或删除，比较鸡肋我们就直接放弃了，来看下完全自定义Palette该如何实现</p>
-<p>以下代码基于我们之前搭建好的代码框架，具体可看文章<a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-base-usage-demo-code-source" target="_blank">『最好用的流程编辑器bpmn-js系列之基本使用』</a>，</p>
+<p>以下代码基于我们之前搭建好的代码框架，具体可看文章<a href="https://blog.ops-coffee.com/bpmn/bpmn-js-vue-base-usage-demo-code-source" target="_blank">『最好用的流程编辑器bpmn-js系列之基本使用』</a>，</p>
 <p>1.在<code>components</code>目录下新建<code>customBpmn</code>目录，在<code>customBpmn</code>目录下新建<code>custom</code>目录，每层目录下都新建<code>index.js</code>文件，最终目录结构如下</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1110.01.png" /></p>
 <p>2.在custom目录下新建<code>CustomPalette.js</code>文件，内容如下</p>
@@ -343,7 +343,7 @@ export default {
 
 <h2 id="_1">写在最后</h2>
 <p>接触bpmn-js不久，且第一次用VUE，边学边写，文章难免出错，各位多多包含。想要打造一个好用的适合自己的流程编辑器，需要了解的内容比较多，bpmn-js会分多篇文章来介绍，欢迎关注</p>
-<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.cn" target="_blank">https://bpmn.ops-coffee.cn</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
+<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.com" target="_blank">https://bpmn.ops-coffee.com</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
@@ -354,11 +354,11 @@ export default {
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-viewer-demo-code-source.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/bpmn/bpmn-js-vue-custom-viewer-demo-code-source.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>最好用的流程编辑器bpmn-js系列之Viewer</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-modeling-api-cn.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/bpmn/bpmn-js-modeling-api-cn.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>bpmn.js Modeling API 列表</span>
                 <span class="pagination-arrow">→</span>
             </a>

@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Proxy代理管理系统, Nginx配置, DevOps工具, 代理服务器, Web管理, 自动化配置, 黑白名单, 证书管理" />
   <meta name="description" content="本文介绍了一个基于Nginx的Proxy代理管理系统，旨在简化Nginx配置与管理，通过Web界面自动生成Nginx配置文件，支持实例管理、证书管理和黑白名单，显著提升了配置效率和管理便利性。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Proxy：简单小巧又强大好用的代理系统</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/nginx-proxy-management-system-devops.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/nginx-proxy-management-system-devops.html" />
   <meta property="og:title" content="Proxy：简单小巧又强大好用的代理系统" />
   <meta property="og:description" content="本文介绍了一个基于Nginx的Proxy代理管理系统，旨在简化Nginx配置与管理，通过Web界面自动生成Nginx配置文件，支持实例管理、证书管理和黑白名单，显著提升了配置效率和管理便利性。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/nginx-proxy-management-system-devops.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/nginx-proxy-management-system-devops.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Proxy：简单小巧又强大好用的代理系统",
     "description": "本文介绍了一个基于Nginx的Proxy代理管理系统，旨在简化Nginx配置与管理，通过Web界面自动生成Nginx配置文件，支持实例管理、证书管理和黑白名单，显著提升了配置效率和管理便利性。",
-    "url": "https://blog.ops-coffee.cns/nginx-proxy-management-system-devops.html",
+    "url": "https://blog.ops-coffee.coms/nginx-proxy-management-system-devops.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/nginx-proxy-management-system-devops.html"
+      "@id": "https://blog.ops-coffee.coms/nginx-proxy-management-system-devops.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">Proxy：简单小巧又强大好用的代理系统</h1>
 
-        <p>之前的文章介绍了许多我们在用的DevOps相关的工具系统，例如：<a href="https://blog.ops-coffee.cn/s/devops-alodi-temporary-environment-system.html" target="_blank">方便创建多套运行环境的Alodi</a>，<a href="https://blog.ops-coffee.cn/s/devops-config-center-kerrigan-implementation.html" target="_blank">对运维友好的配置中心Kerrigan</a>，<a href="https://blog.ops-coffee.cn/s/devops-task-probius-cicd-system.html" target="_blank">强大的自定义任务引擎Probius</a>以及<a href="https://blog.ops-coffee.cn/s/sql-inception-overmind-automation-archery-yearning-bytebase.html" target="_blank">专注于数据库自动化的overmind</a>等等，这篇文章介绍一个非常简单但却十分好用的系统，Proxy代理管理系统</p>
+        <p>之前的文章介绍了许多我们在用的DevOps相关的工具系统，例如：<a href="https://blog.ops-coffee.com/s/devops-alodi-temporary-environment-system.html" target="_blank">方便创建多套运行环境的Alodi</a>，<a href="https://blog.ops-coffee.com/s/devops-config-center-kerrigan-implementation.html" target="_blank">对运维友好的配置中心Kerrigan</a>，<a href="https://blog.ops-coffee.com/s/devops-task-probius-cicd-system.html" target="_blank">强大的自定义任务引擎Probius</a>以及<a href="https://blog.ops-coffee.com/s/sql-inception-overmind-automation-archery-yearning-bytebase.html" target="_blank">专注于数据库自动化的overmind</a>等等，这篇文章介绍一个非常简单但却十分好用的系统，Proxy代理管理系统</p>
 <p>代理系统类似于Kubernetes里Ingress的角色，位于下层服务与上层用户之间，作用与公有云的负载均衡LB一致，基于Nginx构建，主要使用Upstream模块</p>
 <h2 id="_1">系统由来</h2>
 <p>为什么会需要这么个系统？来讲讲我们的场景和逻辑</p>
@@ -132,7 +132,7 @@
 <p>证书模块可以用来管理所有用到的HTTPS证书，每一个证书都会在服务器上创建对应的crt和key文件，方便在实例中引用，对于证书的更新也只需要更新这一个地方就可以了，更新完成之后会自动reload以保证生效</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1203.02.png" /></p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1203.03.png" /></p>
-<p>黑白名单模块对应与Nginx的ACL设置，通过allow和deny来实现黑名单禁止访问，白名单允许访问，原理与证书管理差不多，都是根据输入内容生成对应的文件保存到服务器上，生成配置文件用到了jinja2，我的博客也是同样的方法生成的，可以看这篇文章来了解：<a href="https://blog.ops-coffee.cn/s/build-static-blog-with-django-github-pages.html" target="_blank">利用Django徒手写个静态页面生成工具</a>，黑白名单最终在实例里以include的方式引入</p>
+<p>黑白名单模块对应与Nginx的ACL设置，通过allow和deny来实现黑名单禁止访问，白名单允许访问，原理与证书管理差不多，都是根据输入内容生成对应的文件保存到服务器上，生成配置文件用到了jinja2，我的博客也是同样的方法生成的，可以看这篇文章来了解：<a href="https://blog.ops-coffee.com/s/build-static-blog-with-django-github-pages.html" target="_blank">利用Django徒手写个静态页面生成工具</a>，黑白名单最终在实例里以include的方式引入</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1203.04.png" /></p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1203.05.png" /></p>
 <p>无论是证书还是黑白名单最终都是为实例也就是Nginx的Server服务的，对于作为代理的Server配置很简单，下方是一个模板</p>
@@ -142,7 +142,7 @@
 
 server {
     listen       443;
-    server_name  blog.ops-coffee.cn ;
+    server_name  blog.ops-coffee.com ;
 
     ssl                  on;
     ssl_certificate      ssl/1.crt;
@@ -169,12 +169,12 @@ server {
 <p>根据平时的使用经验，可能有多个域名使用同一个代理，所以提交的数据还有个别名。同时高级配置里还支持用户输入自定义的Nginx配置，这些自定义的Nginx配置会自动填充到Server中，这样就能方便的实现更加复杂的需求，例如修改上传文件大小限制、开启websocket支持、甚至是根据URI的代理等</p>
 <p>对于实例更多的信息可以在实例详情页面查看</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1203.09.png" /></p>
-<p>注意右上角有个“日志”按钮，系统还集成了查看日志的功能，通过websocket去监听日志文件，实时的输出到页面上，方便排错，Websocket实时获取日志文件之前写过一篇文章有介绍，<a href="https://blog.ops-coffee.cn/s/django-channels-websocket-devops-02.html" target="_blank">可以点这个链接查看</a>，不过我在Proxy里使用的有所简化，没有用到Celery，更轻便</p>
+<p>注意右上角有个“日志”按钮，系统还集成了查看日志的功能，通过websocket去监听日志文件，实时的输出到页面上，方便排错，Websocket实时获取日志文件之前写过一篇文章有介绍，<a href="https://blog.ops-coffee.com/s/django-channels-websocket-devops-02.html" target="_blank">可以点这个链接查看</a>，不过我在Proxy里使用的有所简化，没有用到Celery，更轻便</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1203.10.png" /></p>
 <h2 id="_3">额外收获</h2>
 <p>Proxy原本用来管理需要对外开放访问的项目，但为了统一的管理，逐渐的把所有的代理都迁移进了Proxy，这样做不仅管理起来更为方便，而且无形中还提供了一个查询团队所有域名的入口，团队现在维护了超过100+项目，并不是每个人都能准确的记住每个项目各个环境的域名，而通过Proxy就可以方便的查询</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1203.06.png" /></p>
-<p>在Proxy应用后，对于域名的管理也简单了不少，原本DNS上有几百条xxx.ops-coffee.cn的域名分别指向了不同的IP，现在也简单多了，只需要创建一条*.ops-coffee.cn的泛域名解析指向到Proxy的地址即可</p>
+<p>在Proxy应用后，对于域名的管理也简单了不少，原本DNS上有几百条xxx.ops-coffee.com的域名分别指向了不同的IP，现在也简单多了，只需要创建一条*.ops-coffee.com的泛域名解析指向到Proxy的地址即可</p>
 <p>Proxy虽然是个非常简单的小工具，但带来的便利却并不简单~</p>
 
         <div>
@@ -186,11 +186,11 @@ server {
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/self-selected-fund-assistant-chrome-plugins.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/self-selected-fund-assistant-chrome-plugins.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>插件推荐 | 如果你在关注基金，一定要看看这个开源的插件</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/company-annual-party-luxury-outing-2020.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/company-annual-party-luxury-outing-2020.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>裸心堡归来，你可能从未见过如此豪横的阳光普照奖</span>
                 <span class="pagination-arrow">→</span>
             </a>

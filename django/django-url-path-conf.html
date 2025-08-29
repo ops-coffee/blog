@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Django, URLConf, 路由, 视图映射, Django路径, Django正则路径, URL重定向, Django视图" />
   <meta name="description" content="本文详细介绍了Django中URLConf的使用，包括如何通过path和re_path配置URL路由，如何在视图和模板中使用URL，以及如何进行URL重定向。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Django URL常见用法及配置介绍</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cndjango/django-url-path-conf.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comdjango/django-url-path-conf.html" />
   <meta property="og:title" content="Django URL常见用法及配置介绍" />
   <meta property="og:description" content="本文详细介绍了Django中URLConf的使用，包括如何通过path和re_path配置URL路由，如何在视图和模板中使用URL，以及如何进行URL重定向。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cndjango/django-url-path-conf.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comdjango/django-url-path-conf.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Django URL常见用法及配置介绍",
     "description": "本文详细介绍了Django中URLConf的使用，包括如何通过path和re_path配置URL路由，如何在视图和模板中使用URL，以及如何进行URL重定向。",
-    "url": "https://blog.ops-coffee.cndjango/django-url-path-conf.html",
+    "url": "https://blog.ops-coffee.comdjango/django-url-path-conf.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cndjango/django-url-path-conf.html"
+      "@id": "https://blog.ops-coffee.comdjango/django-url-path-conf.html"
     }
   }
   </script>
@@ -141,7 +141,7 @@ urlpatterns = [
 <p><code>path()</code>有四个参数，两个必须参数：route和view，两个可选参数kwargs和name</p>
 <h4 id="route">route</h4>
 <p>route是一个匹配URL的准则，当Django响应一个请求时，它会从urlpatterns的第一项开始，按顺序依次匹配列表中的项，直到找到匹配的项</p>
-<p>route匹配准则跟请求Method或是请求参数或是域名都没有关系，例如URLconf在处理请求<code>https://ops-coffee.cn/monitor/</code>时，它会尝试匹配<code>monitor/</code>，处理请求<code>https://ops-coffee.cn/monitor/?start=0&amp;length=10</code>时，也只会尝试匹配<code>monitor/</code></p>
+<p>route匹配准则跟请求Method或是请求参数或是域名都没有关系，例如URLconf在处理请求<code>https://ops-coffee.com/monitor/</code>时，它会尝试匹配<code>monitor/</code>，处理请求<code>https://ops-coffee.com/monitor/?start=0&amp;length=10</code>时，也只会尝试匹配<code>monitor/</code></p>
 <h4 id="view">view</h4>
 <p>当Django找到了一个匹配的route，就会调用这个特定的视图函数，并传入一个<code>HttpRequest</code>对象作为第一个参数</p>
 <h4 id="kwargs">kwargs</h4>
@@ -222,7 +222,7 @@ def login(request):
     return redirect('/index/')
 
 def goto(request):
-    return redirect('https://blog.ops-coffee.cn')
+    return redirect('https://blog.ops-coffee.com')
 
 def logout(request):
     return redirect(reverse('accounts:logout-url'))</code></pre>
@@ -256,11 +256,11 @@ path('', RedirectView.as_view(url='/dashboard/'), name='index-url'),</code></pre
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/django/django-model-manytomany-field.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/django/django-model-manytomany-field.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Django Model关联关系之ManyToManyField</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/django/django-template-config.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/django/django-template-config.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Django Template常见用法及配置介绍</span>
                 <span class="pagination-arrow">→</span>
             </a>

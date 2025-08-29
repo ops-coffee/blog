@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Python, 反射, 交换变量, 可迭代对象解包, 深复制, 浅复制, with语句, 装饰器, 字典, 字符串格式化, lambda函数, reversed函数, map函数, filter函数, 生成器函数, partial函数, try...else, signal" />
   <meta name="description" content="本文继续总结了Python中的一些简单又好用的特性和用法，包括反射、交换变量、可迭代对象解包、深浅复制、with语句、装饰器、字典、字符串格式化、lambda函数、reversed函数、map函数、filter函数、生成器函数、partial函数、try...else语句以及signal模块的用法，适合Python初学者和中级开发者参考。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>继续总结Python中那些简单好用的用法</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnpython/python-simple-and-user-friendly-features-2.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.compython/python-simple-and-user-friendly-features-2.html" />
   <meta property="og:title" content="继续总结Python中那些简单好用的用法" />
   <meta property="og:description" content="本文继续总结了Python中的一些简单又好用的特性和用法，包括反射、交换变量、可迭代对象解包、深浅复制、with语句、装饰器、字典、字符串格式化、lambda函数、reversed函数、map函数、filter函数、生成器函数、partial函数、try...else语句以及signal模块的用法，适合Python初学者和中级开发者参考。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnpython/python-simple-and-user-friendly-features-2.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.compython/python-simple-and-user-friendly-features-2.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "继续总结Python中那些简单好用的用法",
     "description": "本文继续总结了Python中的一些简单又好用的特性和用法，包括反射、交换变量、可迭代对象解包、深浅复制、with语句、装饰器、字典、字符串格式化、lambda函数、reversed函数、map函数、filter函数、生成器函数、partial函数、try...else语句以及signal模块的用法，适合Python初学者和中级开发者参考。",
-    "url": "https://blog.ops-coffee.cnpython/python-simple-and-user-friendly-features-2.html",
+    "url": "https://blog.ops-coffee.compython/python-simple-and-user-friendly-features-2.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnpython/python-simple-and-user-friendly-features-2.html"
+      "@id": "https://blog.ops-coffee.compython/python-simple-and-user-friendly-features-2.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">继续总结Python中那些简单好用的用法</h1>
 
-        <p>上一篇文章<a href="https://blog.ops-coffee.cn/python/python-simple-and-user-friendly-features" target="_blank">Python中那些简单又好用的特性和用法</a>发出后，群里的小伙伴又给补充了几个好用的用法，结合生产实用经验汇总整理如下，各位看官如有需要请自取</p>
+        <p>上一篇文章<a href="https://blog.ops-coffee.com/python/python-simple-and-user-friendly-features" target="_blank">Python中那些简单又好用的特性和用法</a>发出后，群里的小伙伴又给补充了几个好用的用法，结合生产实用经验汇总整理如下，各位看官如有需要请自取</p>
 <p>1.反射，反射是一种机制，可以在运行时获取、检查和修改对象的属性和方法。Python提供了一些内置的函数和属性，可以用于实现反射操作</p>
 <p>dir()函数：返回对象的所有属性和方法的列表</p>
 <pre class="codehilite"><code>class MyClass:
@@ -145,7 +145,7 @@ print(name)</code></pre>
         self.age = 25
 
 my_obj = MyClass()
-setattr(my_obj, &quot;name&quot;, &quot;blog.ops-coffee.cn&quot;)
+setattr(my_obj, &quot;name&quot;, &quot;blog.ops-coffee.com&quot;)
 print(my_obj.name)</code></pre>
 
 
@@ -405,7 +405,7 @@ send_event2()  # 执行事件2</code></pre>
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/python/python-simple-and-user-friendly-features.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/python/python-simple-and-user-friendly-features.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Python中那些简单又好用的特性和用法</span>
             </a>

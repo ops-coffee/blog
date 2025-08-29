@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="任务系统, 项目优化, 部署方式, 系统设计, 项目经验, 开发分享, 优化实践" />
   <meta name="description" content="本文分享了作者在新公司负责的第一个项目——任务系统的设计与优化经验，介绍了系统的设计思路、使用方法及其特点，并展望了未来的优化方向。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>运维自动化之任务系统分享</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/share-task-system-design-and-optimization.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/share-task-system-design-and-optimization.html" />
   <meta property="og:title" content="运维自动化之任务系统分享" />
   <meta property="og:description" content="本文分享了作者在新公司负责的第一个项目——任务系统的设计与优化经验，介绍了系统的设计思路、使用方法及其特点，并展望了未来的优化方向。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/share-task-system-design-and-optimization.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/share-task-system-design-and-optimization.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "运维自动化之任务系统分享",
     "description": "本文分享了作者在新公司负责的第一个项目——任务系统的设计与优化经验，介绍了系统的设计思路、使用方法及其特点，并展望了未来的优化方向。",
-    "url": "https://blog.ops-coffee.cns/share-task-system-design-and-optimization.html",
+    "url": "https://blog.ops-coffee.coms/share-task-system-design-and-optimization.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/share-task-system-design-and-optimization.html"
+      "@id": "https://blog.ops-coffee.coms/share-task-system-design-and-optimization.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">运维自动化之任务系统分享</h1>
 
-        <p>或许你读过我之前的文章，知道我在去年底<a href="https://blog.ops-coffee.cn/r/resign-after-10-years-at-company.html" target="_blank">从上一家公司离职</a>，今年初加入了新公司，进入新公司负责的第一个项目就是优化之前发布部署方式，根据之前的经验设计并开发了任务系统，任务系统在2月底上线到现在已经稳定运行了两个多月的时间，得领导和同事们的全力支持相关项目都已接入，使用效果还不错。</p>
+        <p>或许你读过我之前的文章，知道我在去年底<a href="https://blog.ops-coffee.com/r/resign-after-10-years-at-company.html" target="_blank">从上一家公司离职</a>，今年初加入了新公司，进入新公司负责的第一个项目就是优化之前发布部署方式，根据之前的经验设计并开发了任务系统，任务系统在2月底上线到现在已经稳定运行了两个多月的时间，得领导和同事们的全力支持相关项目都已接入，使用效果还不错。</p>
 <p>为推动任务系统落地，给小伙伴们介绍任务系统的设计思路、使用方法、系统特点以帮助小伙伴们能深入理解及顺畅使用非常必要，所以在项目开发完成后组织了一次分享，分享系统设计的思路和使用方法，这里整理了相关内容，希望对感兴趣的小伙伴能有启发和帮助</p>
 <p>这个分享在2月份系统初期版本开发完成时，随着大家的不断使用，当下已经进行了诸多的优化，随着使用的广泛和深入期待遇到更多的问题，解决更多的问题</p>
 <p><img alt="" loading="lazy" src="/static/images/2022/0222.01.png" /></p>
@@ -152,11 +152,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/rpa-data-work-weixin-send-message.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/rpa-data-work-weixin-send-message.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>疫情在家帮老婆提升下工作效率</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/cmp-multi-cloud-relationship-management.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/cmp-multi-cloud-relationship-management.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>多云系统之关系管理</span>
                 <span class="pagination-arrow">→</span>
             </a>

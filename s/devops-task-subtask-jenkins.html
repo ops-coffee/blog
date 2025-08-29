@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Jenkins集成, 任务系统, Jenkins子任务, 发布部署, API集成, 运维管理" />
   <meta name="description" content="本文介绍了如何将Jenkins集成到任务系统中，通过Jenkins的API实现子任务的执行与管理，提升发布部署流程的效率和便捷性，同时支持实时日志输出和任务终止功能。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>任务系统之Jenkins子任务</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/devops-task-subtask-jenkins.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/devops-task-subtask-jenkins.html" />
   <meta property="og:title" content="任务系统之Jenkins子任务" />
   <meta property="og:description" content="本文介绍了如何将Jenkins集成到任务系统中，通过Jenkins的API实现子任务的执行与管理，提升发布部署流程的效率和便捷性，同时支持实时日志输出和任务终止功能。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/devops-task-subtask-jenkins.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/devops-task-subtask-jenkins.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "任务系统之Jenkins子任务",
     "description": "本文介绍了如何将Jenkins集成到任务系统中，通过Jenkins的API实现子任务的执行与管理，提升发布部署流程的效率和便捷性，同时支持实时日志输出和任务终止功能。",
-    "url": "https://blog.ops-coffee.cns/devops-task-subtask-jenkins.html",
+    "url": "https://blog.ops-coffee.coms/devops-task-subtask-jenkins.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/devops-task-subtask-jenkins.html"
+      "@id": "https://blog.ops-coffee.coms/devops-task-subtask-jenkins.html"
     }
   }
   </script>
@@ -125,24 +125,24 @@
 <p>以上介绍了我们为什么需要将Jenkins集成进任务系统，同时也简单说明了将Jenkins的Job集成进任务系统通过任务系统执行的优势，那么接下来讲讲我们是如何将Jenkins集成进任务系统的，其实也很简单，借助于Jenkins完善的API</p>
 <p>Jenkins没有统一的API入口，而是采用了<code>{url}/api</code>的API样式，其中<code>{url}</code>代表Jenkins资源的URL，常见的Jenkins资源包括：站点、Job和Build，可以通过不同级别的URL地址查看到当前级别的API信息，例如：</p>
 <ul>
-<li>节点管理: https://jenkins.ops-coffee.cn/computer/api/</li>
-<li>认证管理: https://jenkins.ops-coffee.cn/credentials/api/</li>
-<li>插件管理: https://jenkins.ops-coffee.cn/pluginManager/api/</li>
+<li>节点管理: https://jenkins.ops-coffee.com/computer/api/</li>
+<li>认证管理: https://jenkins.ops-coffee.com/credentials/api/</li>
+<li>插件管理: https://jenkins.ops-coffee.com/pluginManager/api/</li>
 </ul>
-<p>结果支持两种返回格式，分别是JSON和XML，通过加不同的URL后缀来实现，例如：<code>https://jenkins.ops-coffee.cn/computer/api/json</code>返回json格式的数据，<code>https://jenkins.ops-coffee.cn/computer/api/xml</code>则返回xml格式的数据</p>
+<p>结果支持两种返回格式，分别是JSON和XML，通过加不同的URL后缀来实现，例如：<code>https://jenkins.ops-coffee.com/computer/api/json</code>返回json格式的数据，<code>https://jenkins.ops-coffee.com/computer/api/xml</code>则返回xml格式的数据</p>
 <p>接入Jenkins子任务需要用到如下几个API：</p>
 <ol>
 <li>获取Job列表</li>
 </ol>
 <p>获取Job列表使用GET方法</p>
-<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/api/json</code></pre>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.com/api/json</code></pre>
 
 
 <ol>
 <li>获取Job详情</li>
 </ol>
 <p>获取Job详情使用Get方法</p>
-<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/api/json</code></pre>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/api/json</code></pre>
 
 
 <p>同时Job详情页面同时也能获取到Job所需要的参数</p>
@@ -150,11 +150,11 @@
 <li>执行Job</li>
 </ol>
 <p>执行Job通过POST方法，分为带参数和不带参数两个API，其中不带参数使用</p>
-<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/build</code></pre>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/build</code></pre>
 
 
 <p>带参数使用</p>
-<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/buildWithParameters?namespace=dev&amp;branch=master</code></pre>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/buildWithParameters?namespace=dev&amp;branch=master</code></pre>
 
 
 <p>执行完Job后，需要获取到Job的BuildID，<strong>BuildID可以通过从返回结果header</strong>的<code>Location</code>里获取</p>
@@ -162,21 +162,21 @@
 <li>获取Build输出</li>
 </ol>
 <p>获取Build的Console输出使用GET方法，通过Build的Console输出我们可以实时获取Job的执行情况</p>
-<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/{build-id}/logText/progressiveText</code></pre>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/{build-id}/logText/progressiveText</code></pre>
 
 
 <ol>
 <li>获取Build详情</li>
 </ol>
 <p>获取Build的详情使用GET方法，通过Build详情里的<code>result</code>能知道Job的执行状态及结果</p>
-<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/{build-id}/api/json</code></pre>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/{build-id}/api/json</code></pre>
 
 
 <ol>
 <li>停止Job执行</li>
 </ol>
 <p>停止Job执行使用POST方法，当Job执行的过程中不及我们预期需要紧急停止Job执行时需要借助此API来完成</p>
-<pre class="codehilite"><code>https://jenkins.ops-coffee.cn/job/{job-name}/{build-id}/stop</code></pre>
+<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/{build-id}/stop</code></pre>
 
 
 <p>整个Jenkins子任务的集成我们主要用到了这几个API，关于Jenkins的API认证用到了最基本的AuthBase方式，一个完整的获取JobList的例子如下</p>
@@ -210,11 +210,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/devops-automation-journey-team-learning.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/devops-automation-journey-team-learning.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>带一群伙伴写一款软件</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/python-markdown-extend-loading-lazy.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/python-markdown-extend-loading-lazy.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>个人博客优化之图片懒加载探索</span>
                 <span class="pagination-arrow">→</span>
             </a>

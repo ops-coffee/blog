@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="SVN, OpenLDAP, 认证, Apache, LDAP集成, 账号统一认证, Debian, Subversion" />
   <meta name="description" content="本文详细介绍了如何在Debian8.4系统环境下，通过Apache2.4和Subversion集成OpenLDAP实现账号的统一认证，包括LDAP模块的启用、vhost配置的修改以及LDAP服务器认证过程的解析。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>LDAP落地实战（二）：SVN集成OpenLDAP认证</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnldap/openldap-sso-auth-svn-apache-basic.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comldap/openldap-sso-auth-svn-apache-basic.html" />
   <meta property="og:title" content="LDAP落地实战（二）：SVN集成OpenLDAP认证" />
   <meta property="og:description" content="本文详细介绍了如何在Debian8.4系统环境下，通过Apache2.4和Subversion集成OpenLDAP实现账号的统一认证，包括LDAP模块的启用、vhost配置的修改以及LDAP服务器认证过程的解析。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnldap/openldap-sso-auth-svn-apache-basic.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comldap/openldap-sso-auth-svn-apache-basic.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "LDAP落地实战（二）：SVN集成OpenLDAP认证",
     "description": "本文详细介绍了如何在Debian8.4系统环境下，通过Apache2.4和Subversion集成OpenLDAP实现账号的统一认证，包括LDAP模块的启用、vhost配置的修改以及LDAP服务器认证过程的解析。",
-    "url": "https://blog.ops-coffee.cnldap/openldap-sso-auth-svn-apache-basic.html",
+    "url": "https://blog.ops-coffee.comldap/openldap-sso-auth-svn-apache-basic.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnldap/openldap-sso-auth-svn-apache-basic.html"
+      "@id": "https://blog.ops-coffee.comldap/openldap-sso-auth-svn-apache-basic.html"
     }
   }
   </script>
@@ -145,7 +145,7 @@ To activate the new configuration, you need to run:
 </ol>
 <pre class="codehilite"><code>&lt;Virtualhost *:8088&gt;
     DocumentRoot /home/svn/repos/
-    ServerName svn.ops-coffee.cn
+    ServerName svn.ops-coffee.com
 
     &lt;Location /ne/&gt;
         DAV svn
@@ -161,7 +161,7 @@ To activate the new configuration, you need to run:
         # use LDAP auth
         AuthBasicProvider ldap
         AuthLDAPBindAuthoritative on
-        AuthLDAPURL &quot;ldap://ldap.ops-coffee.cn/dc=ops-coffee,dc=cn?uid?sub?(objectclass=*)&quot;
+        AuthLDAPURL &quot;ldap://ldap.ops-coffee.com/dc=ops-coffee,dc=cn?uid?sub?(objectclass=*)&quot;
         AuthLDAPBindDN &quot;uid=authz,ou=Public,dc=ops-coffee,dc=cn&quot;
         AuthLDAPBindPassword &quot;ImNVZODT884&quot;
 
@@ -223,11 +223,11 @@ To activate the new configuration, you need to run:
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/ldap/lightweight-directory-access-protocol-sso.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/ldap/lightweight-directory-access-protocol-sso.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>LDAP落地实战（一）：OpenLDAP部署及管理维护</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/ldap/openldap-sso-auth-gitlab-389-devops.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/ldap/openldap-sso-auth-gitlab-389-devops.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>LDAP落地实战（三）：GitLab集成OpenLDAP认证</span>
                 <span class="pagination-arrow">→</span>
             </a>

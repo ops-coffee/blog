@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="bpmn-js, 流程编辑器, ContextPad, 自定义, Vue, Vuex, BPMN, 流程图" />
   <meta name="description" content="本文详细介绍了如何在Vue环境中自定义BPMN.js的ContextPad，展示了如何通过Vuex管理状态，并在流程图中实现节点属性的动态更新。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>最好用的流程编辑器bpmn-js系列之ContextPad</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnbpmn/bpmn-js-vue-custom-contextpad-demo-code-source.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.combpmn/bpmn-js-vue-custom-contextpad-demo-code-source.html" />
   <meta property="og:title" content="最好用的流程编辑器bpmn-js系列之ContextPad" />
   <meta property="og:description" content="本文详细介绍了如何在Vue环境中自定义BPMN.js的ContextPad，展示了如何通过Vuex管理状态，并在流程图中实现节点属性的动态更新。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnbpmn/bpmn-js-vue-custom-contextpad-demo-code-source.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.combpmn/bpmn-js-vue-custom-contextpad-demo-code-source.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "最好用的流程编辑器bpmn-js系列之ContextPad",
     "description": "本文详细介绍了如何在Vue环境中自定义BPMN.js的ContextPad，展示了如何通过Vuex管理状态，并在流程图中实现节点属性的动态更新。",
-    "url": "https://blog.ops-coffee.cnbpmn/bpmn-js-vue-custom-contextpad-demo-code-source.html",
+    "url": "https://blog.ops-coffee.combpmn/bpmn-js-vue-custom-contextpad-demo-code-source.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnbpmn/bpmn-js-vue-custom-contextpad-demo-code-source.html"
+      "@id": "https://blog.ops-coffee.combpmn/bpmn-js-vue-custom-contextpad-demo-code-source.html"
     }
   }
   </script>
@@ -118,7 +118,7 @@
         <blockquote>
 <p>最好用的流程编辑器bpmn-js系列文章</p>
 </blockquote>
-<p>上一篇文章<a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-vue-custom-palette-demo-code-source" target="_blank">『最好用的流程编辑器bpmn-js系列之Palette』</a>介绍了modeler模式下如何自定义左侧工具栏Palette，这篇文章将会介绍如果自定义ContextPad</p>
+<p>上一篇文章<a href="https://blog.ops-coffee.com/bpmn/bpmn-js-vue-custom-palette-demo-code-source" target="_blank">『最好用的流程编辑器bpmn-js系列之Palette』</a>介绍了modeler模式下如何自定义左侧工具栏Palette，这篇文章将会介绍如果自定义ContextPad</p>
 <p>以下演示代码基于上一节搭建好的vue环境，使用bpmn版本为当前最新版7.3.0</p>
 <h2 id="contextpad">自定义ContextPad</h2>
 <p>自定义ContextPad与自定义Palette一样，有两种方式可以选择，第一种就是基于默认的ContextPad来修改，第二种就是完全写个新的ContextPad来替代默认的ContextPad，同样的这里就下完全自定义ContextPad，因为与自定义Palette高度相似，这里以具体代码为主</p>
@@ -447,8 +447,8 @@ if (
 
 <p>获取store里的值然后通过<code>modeling.updateLabel</code>方法来更新节点的名称，至此问题完美解决</p>
 <h2 id="_2">写在最后</h2>
-<p>接触bpmn-js不久，且第一次用VUE，边学边写，文章难免出错，各位多多包含。bmpn系列的文章已经写了六篇，至此我们的使用已经基本到此，感谢各位小伙伴的支持。除了这几篇文章外，我还创建了BPMN的主页：<a href="https://blog.ops-coffee.cn/bpmn" target="_blank">https://blog.ops-coffee.cn/bpmn</a>内容更为丰富，包含了一些这系列文章中没有的内容，例如API列表、ICON列表等，欢迎查看</p>
-<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.cn" target="_blank">https://bpmn.ops-coffee.cn</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
+<p>接触bpmn-js不久，且第一次用VUE，边学边写，文章难免出错，各位多多包含。bmpn系列的文章已经写了六篇，至此我们的使用已经基本到此，感谢各位小伙伴的支持。除了这几篇文章外，我还创建了BPMN的主页：<a href="https://blog.ops-coffee.com/bpmn" target="_blank">https://blog.ops-coffee.com/bpmn</a>内容更为丰富，包含了一些这系列文章中没有的内容，例如API列表、ICON列表等，欢迎查看</p>
+<p>部分小伙伴对流程编辑器不了解，或是对BPMN不了解，我搭建了个在线的Demo: <a href="https://bpmn.ops-coffee.com" target="_blank">https://bpmn.ops-coffee.com</a>，点击链接即可轻松体验，建议PC端打开效果更好</p>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
@@ -459,11 +459,11 @@ if (
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-modeling-api-cn.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/bpmn/bpmn-js-modeling-api-cn.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>bpmn.js Modeling API 列表</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/bpmn/bpmn-js-minimap.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/bpmn/bpmn-js-minimap.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>最好用的流程编辑器bpmn-js系列之minimap</span>
                 <span class="pagination-arrow">→</span>
             </a>

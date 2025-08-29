@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Logstash, HDFS, 数据处理, ELK, Kafka, Elasticsearch, 数据收集, 插件, webhdfs, 时区问题" />
   <meta name="description" content="本文详解如何利用Logstash将日志数据从Kafka写入HDFS，包括插件安装、配置hosts、logstash配置、启动logstash及常见问题解决方案，特别针对时区问题提供了解决方案，并展示了如何同时输出数据到ES和HDFS。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Logstash读取Kafka数据写入HDFS详解</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnelk/elasticsearch-logstash-kafka-webhdfs.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comelk/elasticsearch-logstash-kafka-webhdfs.html" />
   <meta property="og:title" content="Logstash读取Kafka数据写入HDFS详解" />
   <meta property="og:description" content="本文详解如何利用Logstash将日志数据从Kafka写入HDFS，包括插件安装、配置hosts、logstash配置、启动logstash及常见问题解决方案，特别针对时区问题提供了解决方案，并展示了如何同时输出数据到ES和HDFS。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnelk/elasticsearch-logstash-kafka-webhdfs.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comelk/elasticsearch-logstash-kafka-webhdfs.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Logstash读取Kafka数据写入HDFS详解",
     "description": "本文详解如何利用Logstash将日志数据从Kafka写入HDFS，包括插件安装、配置hosts、logstash配置、启动logstash及常见问题解决方案，特别针对时区问题提供了解决方案，并展示了如何同时输出数据到ES和HDFS。",
-    "url": "https://blog.ops-coffee.cnelk/elasticsearch-logstash-kafka-webhdfs.html",
+    "url": "https://blog.ops-coffee.comelk/elasticsearch-logstash-kafka-webhdfs.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnelk/elasticsearch-logstash-kafka-webhdfs.html"
+      "@id": "https://blog.ops-coffee.comelk/elasticsearch-logstash-kafka-webhdfs.html"
     }
   }
   </script>
@@ -207,9 +207,9 @@ output {
            &quot;http_user_agent&quot; =&gt; &quot;Mozilla/5.0 (iPhone; CPU iPhone OS 10_2 like Mac OS X) AppleWebKit/602.3.12 (KHTML, like Gecko) Mobile/14C92 Safari/601.1 wechatdevtools/1.02.1902010 MicroMessenger/6.7.3 Language/zh_CN webview/ token/e7b92168159736c30401a55589317d8c&quot;,
                &quot;remote_addr&quot; =&gt; &quot;172.18.101.0&quot;,
                     &quot;status&quot; =&gt; 200,
-              &quot;http_referer&quot; =&gt; &quot;https://ops-coffee.cn/wx02935bb29080a7b4/devtools/page-frame.html&quot;,
+              &quot;http_referer&quot; =&gt; &quot;https://ops-coffee.com/wx02935bb29080a7b4/devtools/page-frame.html&quot;,
     &quot;upstream_response_time&quot; =&gt; &quot;0.056&quot;,
-                      &quot;host&quot; =&gt; &quot;ops-coffee.cn&quot;,
+                      &quot;host&quot; =&gt; &quot;ops-coffee.com&quot;,
                &quot;request_uri&quot; =&gt; &quot;/api/community/v2/news/list&quot;,
               &quot;request_time&quot; =&gt; 0.059,
            &quot;upstream_status&quot; =&gt; &quot;200&quot;,
@@ -264,11 +264,11 @@ output {
 <h2 id="hdfshost">HDFS记录多了时间和host字段</h2>
 <p>在没有指定codec的情况下，logstash会给每一条日志添加时间和host字段，例如：</p>
 <p>源日志格式为</p>
-<pre class="codehilite"><code>ops-coffee.cn | 192.168.105.91 | 19/Mar/2019:14:28:07 +0800 | GET / HTTP/1.1 | 304 | 0 | - | 0.000</code></pre>
+<pre class="codehilite"><code>ops-coffee.com | 192.168.105.91 | 19/Mar/2019:14:28:07 +0800 | GET / HTTP/1.1 | 304 | 0 | - | 0.000</code></pre>
 
 
 <p>经过logstash处理后多了时间和host字段</p>
-<pre class="codehilite"><code>2019-03-19T06:28:07.510Z %{host}  ops-coffee.cn | 192.168.105.91 | 19/Mar/2019:14:28:07 +0800 | GET / HTTP/1.1 | 304 | 0 | - | 0.000</code></pre>
+<pre class="codehilite"><code>2019-03-19T06:28:07.510Z %{host}  ops-coffee.com | 192.168.105.91 | 19/Mar/2019:14:28:07 +0800 | GET / HTTP/1.1 | 304 | 0 | - | 0.000</code></pre>
 
 
 <p>如果不需要我们可以指定最终的format只取message，解决方法为在output中添加如下配置：</p>
@@ -342,11 +342,11 @@ output {
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/elk/common-system-project-java-log-collect.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/elk/common-system-project-java-log-collect.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>ELK日志系统之通用应用程序日志接入方案</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/elk/elasticsearch-logstash-filebeat-registry.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/elk/elasticsearch-logstash-filebeat-registry.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Filebeat的Registry文件解读</span>
                 <span class="pagination-arrow">→</span>
             </a>

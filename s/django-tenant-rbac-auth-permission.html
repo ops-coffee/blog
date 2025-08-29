@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="权限管理, RBAC, 资源隔离, Django, 项目授权, 全局授权" />
   <meta name="description" content="本文介绍了如何设计并实现一个基于RBAC和资源隔离的权限管理系统，探讨了全局授权与项目授权的结合，以及如何在Django框架下实现这些功能。文章还详细描述了实际应用中的授权问题及解决方案，如多租户模式下的资源管理、项目权限的自助化管理等。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>权限管理之多租户隔离授权</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/django-tenant-rbac-auth-permission.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/django-tenant-rbac-auth-permission.html" />
   <meta property="og:title" content="权限管理之多租户隔离授权" />
   <meta property="og:description" content="本文介绍了如何设计并实现一个基于RBAC和资源隔离的权限管理系统，探讨了全局授权与项目授权的结合，以及如何在Django框架下实现这些功能。文章还详细描述了实际应用中的授权问题及解决方案，如多租户模式下的资源管理、项目权限的自助化管理等。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/django-tenant-rbac-auth-permission.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/django-tenant-rbac-auth-permission.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "权限管理之多租户隔离授权",
     "description": "本文介绍了如何设计并实现一个基于RBAC和资源隔离的权限管理系统，探讨了全局授权与项目授权的结合，以及如何在Django框架下实现这些功能。文章还详细描述了实际应用中的授权问题及解决方案，如多租户模式下的资源管理、项目权限的自助化管理等。",
-    "url": "https://blog.ops-coffee.cns/django-tenant-rbac-auth-permission.html",
+    "url": "https://blog.ops-coffee.coms/django-tenant-rbac-auth-permission.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/django-tenant-rbac-auth-permission.html"
+      "@id": "https://blog.ops-coffee.coms/django-tenant-rbac-auth-permission.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">权限管理之多租户隔离授权</h1>
 
-        <p>想要做好权限管理，并不是一件容易的事情，既要考虑授权的粒度保证安全，也要考虑授权的方式足够便捷。之前有篇文章<a href="https://blog.ops-coffee.cn/s/djanbo-auth-permission-system-design.html" target="_blank">权限管理系统设计</a>介绍过我们的权限设计，整体上是采用RBAC+资源隔离的方式，仅对小部分非常敏感的数据再通过对象授权的方式做管控。在实际的使用中也验证了这样的授权方式非常有效，尤其是多租户模式-基于项目的资源隔离，授权方式足够便捷，同时也有一定的粒度控制，毕竟大多数的情况下我们都是基于项目在管理资源，那基于项目去授权资源就很合适了</p>
+        <p>想要做好权限管理，并不是一件容易的事情，既要考虑授权的粒度保证安全，也要考虑授权的方式足够便捷。之前有篇文章<a href="https://blog.ops-coffee.com/s/djanbo-auth-permission-system-design.html" target="_blank">权限管理系统设计</a>介绍过我们的权限设计，整体上是采用RBAC+资源隔离的方式，仅对小部分非常敏感的数据再通过对象授权的方式做管控。在实际的使用中也验证了这样的授权方式非常有效，尤其是多租户模式-基于项目的资源隔离，授权方式足够便捷，同时也有一定的粒度控制，毕竟大多数的情况下我们都是基于项目在管理资源，那基于项目去授权资源就很合适了</p>
 <p><img alt="" loading="lazy" src="/static/images/2022/0309.05.png" /></p>
 <p>这样的授权方案没有问题，但是在授权方式上不够完善，不完善的地方主要是在RBAC的授权上，由于后端采用Django框架，RBAC的授权就使用了Django的Auth模块来实现，只是把Group替换成了Role的概念，这样就是User属于Group/Role，Group拥有权限，从而用户也就有了相应的权限。但这里有一个问题，默认的Group没有资源隔离的Project标识，这就导致了授权是全局的，例如我给用户A授予了主机查看的权限，他加入项目A就能查看项目A下的主机，此时加入项目B同样就会拥有项目B下资源查看的权限，这显然是不合适的，需要能做到按项目的授权</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/1202.01.png" /></p>
@@ -138,11 +138,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/domain-entry-full-network-trace-link.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/domain-entry-full-network-trace-link.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>从入口域名开始探索全链路自动化拓扑</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/ansi-up-js-to-xterm-js-performance.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/ansi-up-js-to-xterm-js-performance.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>从ansi_up到xterm提升了几十倍性能</span>
                 <span class="pagination-arrow">→</span>
             </a>

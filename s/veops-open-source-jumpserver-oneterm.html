@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="OneTerm, 开源堡垒机, 运维自动化, 堡垒机系统, 维易科技, SSH, VPC, RDP, 会话审计, 资产管理, 网关, 日志审计" />
   <meta name="description" content="本文详细介绍了维易科技开源的堡垒机系统OneTerm，包括其资产管理、网关功能、安全措施、终端操作、会话审计、日志审计等核心功能，并探讨了其在运维工作中的应用和优势。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>开源推荐 | 简洁且强大的开源堡垒机OneTerm</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/veops-open-source-jumpserver-oneterm.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/veops-open-source-jumpserver-oneterm.html" />
   <meta property="og:title" content="开源推荐 | 简洁且强大的开源堡垒机OneTerm" />
   <meta property="og:description" content="本文详细介绍了维易科技开源的堡垒机系统OneTerm，包括其资产管理、网关功能、安全措施、终端操作、会话审计、日志审计等核心功能，并探讨了其在运维工作中的应用和优势。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/veops-open-source-jumpserver-oneterm.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/veops-open-source-jumpserver-oneterm.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "开源推荐 | 简洁且强大的开源堡垒机OneTerm",
     "description": "本文详细介绍了维易科技开源的堡垒机系统OneTerm，包括其资产管理、网关功能、安全措施、终端操作、会话审计、日志审计等核心功能，并探讨了其在运维工作中的应用和优势。",
-    "url": "https://blog.ops-coffee.cns/veops-open-source-jumpserver-oneterm.html",
+    "url": "https://blog.ops-coffee.coms/veops-open-source-jumpserver-oneterm.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/veops-open-source-jumpserver-oneterm.html"
+      "@id": "https://blog.ops-coffee.coms/veops-open-source-jumpserver-oneterm.html"
     }
   }
   </script>
@@ -116,8 +116,8 @@
         <h1 id="art-title">开源推荐 | 简洁且强大的开源堡垒机OneTerm</h1>
 
         <p>在运维的日常工作中，登陆服务器操作不可避免，为了更安全的管控服务器，但凡有点规模的公司都会上线堡垒机系统，堡垒机能够做到事前授权、事中监控、事后审计，同时也可以满足等保合规要求。提到堡垒机，大伙第一时间能够想到的可能是JumpServer，JumpServer经过了多年的发展已经十分的稳定和成熟，是非常优秀的开源项目，被大家广泛所熟知，所以我今天就不写JumpServer了，介绍另一个最近体验到的亮点颇多的开源堡垒机：OneTerm</p>
-<p>OneTerm基于4A理念，即认证(Authen)、授权(Authorize)、账号(Account)、审计(Audit)设计开发，是维易科技开源的第二款运维自动化产品，之前开源的CMDB系统就广受好评，我也深入体验了，收获颇多，在我自己收获的同时也专门写了篇文章<a href="https://blog.ops-coffee.cn/s/veops-open-source-cmdb-devops" target="_blank">「灵活多变功能强大的CMDB」</a>介绍分享，以回馈开源社区。这一次看维易又开源了堡垒机系统OneTerm，我也体验了一下，虽然项目开源不久，有一些不尽完善的地方，但整体完整度很高，无论是生产使用还是自己学习都比较合适</p>
-<p>关于堡垒机，我之前也有开发过，还写过<a href="https://blog.ops-coffee.cn/webssh/" target="_blank">一系列的文章</a>来介绍堡垒机的实现方式和技术要点，这篇文章就结合我之前的堡垒机开发和使用经验，来介绍下这个开源的堡垒机系统</p>
+<p>OneTerm基于4A理念，即认证(Authen)、授权(Authorize)、账号(Account)、审计(Audit)设计开发，是维易科技开源的第二款运维自动化产品，之前开源的CMDB系统就广受好评，我也深入体验了，收获颇多，在我自己收获的同时也专门写了篇文章<a href="https://blog.ops-coffee.com/s/veops-open-source-cmdb-devops" target="_blank">「灵活多变功能强大的CMDB」</a>介绍分享，以回馈开源社区。这一次看维易又开源了堡垒机系统OneTerm，我也体验了一下，虽然项目开源不久，有一些不尽完善的地方，但整体完整度很高，无论是生产使用还是自己学习都比较合适</p>
+<p>关于堡垒机，我之前也有开发过，还写过<a href="https://blog.ops-coffee.com/webssh/" target="_blank">一系列的文章</a>来介绍堡垒机的实现方式和技术要点，这篇文章就结合我之前的堡垒机开发和使用经验，来介绍下这个开源的堡垒机系统</p>
 <h2 id="_1">系统介绍</h2>
 <h3 id="_2">资产管理</h3>
 <p>堡垒机主要就是对服务器进行操作，资产管理主要是对服务器的增删改查和授权等管理，是堡垒机的基础。支持基于资产树来管理，支持批量授权，支持批量修改连接协议</p>
@@ -187,11 +187,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/devops-task-subtask-api-postman-apipost.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/devops-task-subtask-api-postman-apipost.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>任务系统之API子任务</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/suggestion-for-open-source-jumpserver-oneterm.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/suggestion-for-open-source-jumpserver-oneterm.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>用了两周开源堡垒机OneTerm，我有一些建议</span>
                 <span class="pagination-arrow">→</span>
             </a>

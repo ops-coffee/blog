@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Alodi, WebSSH, Kubernetes, Django Channels, xterm.js, 系统集成, 实时数据流" />
   <meta name="description" content="本文详细介绍了如何在Alodi系统中集成WebSSH功能，包括涉及的Kubernetes Stream、Django Channels和xterm.js技术，以及实现过程中的代码细节和前端页面的配置。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Django实现WebSSH操作Kubernetes Pod</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnwebssh/jumpserver-kubernetes-web-terminal-ssh-stream.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comwebssh/jumpserver-kubernetes-web-terminal-ssh-stream.html" />
   <meta property="og:title" content="Django实现WebSSH操作Kubernetes Pod" />
   <meta property="og:description" content="本文详细介绍了如何在Alodi系统中集成WebSSH功能，包括涉及的Kubernetes Stream、Django Channels和xterm.js技术，以及实现过程中的代码细节和前端页面的配置。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnwebssh/jumpserver-kubernetes-web-terminal-ssh-stream.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comwebssh/jumpserver-kubernetes-web-terminal-ssh-stream.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Django实现WebSSH操作Kubernetes Pod",
     "description": "本文详细介绍了如何在Alodi系统中集成WebSSH功能，包括涉及的Kubernetes Stream、Django Channels和xterm.js技术，以及实现过程中的代码细节和前端页面的配置。",
-    "url": "https://blog.ops-coffee.cnwebssh/jumpserver-kubernetes-web-terminal-ssh-stream.html",
+    "url": "https://blog.ops-coffee.comwebssh/jumpserver-kubernetes-web-terminal-ssh-stream.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnwebssh/jumpserver-kubernetes-web-terminal-ssh-stream.html"
+      "@id": "https://blog.ops-coffee.comwebssh/jumpserver-kubernetes-web-terminal-ssh-stream.html"
     }
   }
   </script>
@@ -118,7 +118,7 @@
         <blockquote>
 <p>优秀的系统都是根据反馈逐渐完善出来的</p>
 </blockquote>
-<p>上篇文章介绍了我们为了应对安全和多分支频繁测试的问题而开发了一套Alodi系统，Alodi可以通过一个按钮快速构建一套测试环境，生成一个临时访问地址，详细信息可以看这一篇文章：<a href="https://blog.ops-coffee.cn/s/create-test-environment-with-aloid-system.html" target="_blank">Alodi：为了保密我开发了一个系统</a></p>
+<p>上篇文章介绍了我们为了应对安全和多分支频繁测试的问题而开发了一套Alodi系统，Alodi可以通过一个按钮快速构建一套测试环境，生成一个临时访问地址，详细信息可以看这一篇文章：<a href="https://blog.ops-coffee.com/s/create-test-environment-with-aloid-system.html" target="_blank">Alodi：为了保密我开发了一个系统</a></p>
 <p>系统上线后，SSH登陆控制台成了一个迫切的需求，Kubernetes的Dashboard控制台虽然有WebSSH的功能，但却没办法跟Alodi系统相结合，决定在Alodi中集成WebSSH的功能，先来看看最后实现的效果吧</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/1016.gif" /></p>
 <h2 id="_1">涉及技术</h2>
@@ -184,7 +184,7 @@ pod_name = data.items[0].metadata.name</code></pre>
 <p><code>list_namespaced_pod</code>会列出namespace下所有pod的详细信息，这里传了两个参数，第一个<code>namespace</code>是必须的，表示我们要列出pod的namespace，第二个<code>label_selector</code>非必须，表示可以通过设置的标签过滤namespace下的pod，由于我们在创建的时候给每个deployment都添加了唯一的<code>app=RAND</code>的标签，所以这里可以过滤出来我们项目所对应的pod</p>
 <p>一个deployment可能对应多个pod，获取到的<code>data.items</code>包含了所有的pod信息，为一个list列表，可根据需要取到对应pod的name</p>
 <h2 id="django-channels">Django Channels</h2>
-<p>之前有两篇文章详细介绍过Django Channels，不了解的可以先查看：<a href="[Django使用Channels实现WebSocket--上篇](https://blog.ops-coffee.cn/s/django-channels-websocket-devops-01.html)" target="_blank">Django使用Channels实现WebSocket--上篇</a>和<a href="[Django使用Channels实现WebSocket--下篇](https://blog.ops-coffee.cn/s/django-channels-websocket-devops-02.html)" target="_blank">Django使用Channels实现WebSocket--下篇</a>，最重要的两部分代码如下</p>
+<p>之前有两篇文章详细介绍过Django Channels，不了解的可以先查看：<a href="[Django使用Channels实现WebSocket--上篇](https://blog.ops-coffee.com/s/django-channels-websocket-devops-01.html)" target="_blank">Django使用Channels实现WebSocket--上篇</a>和<a href="[Django使用Channels实现WebSocket--下篇](https://blog.ops-coffee.com/s/django-channels-websocket-devops-02.html)" target="_blank">Django使用Channels实现WebSocket--下篇</a>，最重要的两部分代码如下</p>
 <p>routing代码：</p>
 <pre class="codehilite"><code>from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
@@ -328,7 +328,7 @@ kubectl exec -i -t $1 env COLUMNS=$COLUMNS LINES=$LINES TERM=$TERM bash</code></
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>文章列表</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/webssh/jumpserver-web-terminal-kubernetes-ssh-resize.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/webssh/jumpserver-web-terminal-kubernetes-ssh-resize.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Kubernetes WebSSH终端窗口自适应Resize</span>
                 <span class="pagination-arrow">→</span>
             </a>

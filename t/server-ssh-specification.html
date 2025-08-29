@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="SSH密钥管理, 服务器安全, 密钥生成, RSA密钥, 密钥备份" />
   <meta name="description" content="本文提供了服务器SSH密钥管理的规范，包括密钥使用说明、生成方法及使用场景，确保服务器安全并有效管理SSH密钥。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>服务器SSH密钥管理规范</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnt/server-ssh-specification.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comt/server-ssh-specification.html" />
   <meta property="og:title" content="服务器SSH密钥管理规范" />
   <meta property="og:description" content="本文提供了服务器SSH密钥管理的规范，包括密钥使用说明、生成方法及使用场景，确保服务器安全并有效管理SSH密钥。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnt/server-ssh-specification.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comt/server-ssh-specification.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "服务器SSH密钥管理规范",
     "description": "本文提供了服务器SSH密钥管理的规范，包括密钥使用说明、生成方法及使用场景，确保服务器安全并有效管理SSH密钥。",
-    "url": "https://blog.ops-coffee.cnt/server-ssh-specification.html",
+    "url": "https://blog.ops-coffee.comt/server-ssh-specification.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnt/server-ssh-specification.html"
+      "@id": "https://blog.ops-coffee.comt/server-ssh-specification.html"
     }
   }
   </script>
@@ -135,7 +135,7 @@ Enter same passphrase again:
 Your identification has been saved in /home/ops-coffee/.ssh/id_rsa.
 Your public key has been saved in /home/ops-coffee/.ssh/id_rsa.pub.
 The key fingerprint is:
-21:d2:db:70:05:44:7d:c0:4a:1e:94:bd:8e:19:cd:09 ops-coffee@onlinegame.ops-coffee.cn
+21:d2:db:70:05:44:7d:c0:4a:1e:94:bd:8e:19:cd:09 ops-coffee@onlinegame.ops-coffee.com
 The key's randomart image is:
 +--[ RSA 2048]----+
 |       +=*o.     |
@@ -152,7 +152,7 @@ The key's randomart image is:
 
 <p>生成的公钥格式如下：</p>
 <pre class="codehilite"><code>ops-coffee@onlinegame:~$ cat ~/.ssh/id_rsa.pub 
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCrxA9WuM/cTLiQ06Fj/DnygPeBz3Mka3dt/tmxIK5T1hmHceurD6eZ6x0K/hOhsJVZb3AXdAQyeLYLXtKF9r5xoo1idmSoxrLa+YWedFcCy2rjnrKPeSwhlIJoHhJNqUzm3+JLyZLzK5cTqbXibHWKjPU/s4hgZ2LItbb+zbqB9jgzWf70QQ03jRf9T82TFjjZLrptghwmINpC7LfYfkKQy9Gi9KyIm0OhqkIwq5epoXEOU87Vw5ZXXMqNwdk3yO/e0mil8gXHxOt+YoQCLjNC2Ydc+uPdX86GEINlUXaHT7NRZGJN5J79fh83qi7pSYstqGNWOmQjw0VWjPtKL2Gr ops-coffee@onlinegame.ops-coffee.cn</code></pre>
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCrxA9WuM/cTLiQ06Fj/DnygPeBz3Mka3dt/tmxIK5T1hmHceurD6eZ6x0K/hOhsJVZb3AXdAQyeLYLXtKF9r5xoo1idmSoxrLa+YWedFcCy2rjnrKPeSwhlIJoHhJNqUzm3+JLyZLzK5cTqbXibHWKjPU/s4hgZ2LItbb+zbqB9jgzWf70QQ03jRf9T82TFjjZLrptghwmINpC7LfYfkKQy9Gi9KyIm0OhqkIwq5epoXEOU87Vw5ZXXMqNwdk3yO/e0mil8gXHxOt+YoQCLjNC2Ydc+uPdX86GEINlUXaHT7NRZGJN5J79fh83qi7pSYstqGNWOmQjw0VWjPtKL2Gr ops-coffee@onlinegame.ops-coffee.com</code></pre>
 
 
 <h2 id="_3">密钥使用场景</h2>
@@ -174,7 +174,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCrxA9WuM/cTLiQ06Fj/DnygPeBz3Mka3dt/tmxIK5T
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>文章列表</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/t/remove-github-commit-log.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/t/remove-github-commit-log.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>清除github所有历史提交记录的方法</span>
                 <span class="pagination-arrow">→</span>
             </a>

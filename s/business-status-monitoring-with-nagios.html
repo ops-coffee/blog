@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Nagios, 业务监控, 监控系统, 业务状态, API监控, 网络监控, 监控部署, 监控报警, 监控配置, 监控插件" />
   <meta name="description" content="本文介绍了如何使用Nagios监控业务状态，探讨了传统监控系统的不足以及如何通过Nagios弥补业务状态监控的缺失，详细讲解了Nagios的部署与配置，以及如何通过Nagios插件实现更及时的监控报警。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>使用Nagios打造专业的业务状态监控</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/business-status-monitoring-with-nagios.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/business-status-monitoring-with-nagios.html" />
   <meta property="og:title" content="使用Nagios打造专业的业务状态监控" />
   <meta property="og:description" content="本文介绍了如何使用Nagios监控业务状态，探讨了传统监控系统的不足以及如何通过Nagios弥补业务状态监控的缺失，详细讲解了Nagios的部署与配置，以及如何通过Nagios插件实现更及时的监控报警。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/business-status-monitoring-with-nagios.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/business-status-monitoring-with-nagios.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "使用Nagios打造专业的业务状态监控",
     "description": "本文介绍了如何使用Nagios监控业务状态，探讨了传统监控系统的不足以及如何通过Nagios弥补业务状态监控的缺失，详细讲解了Nagios的部署与配置，以及如何通过Nagios插件实现更及时的监控报警。",
-    "url": "https://blog.ops-coffee.cns/business-status-monitoring-with-nagios.html",
+    "url": "https://blog.ops-coffee.coms/business-status-monitoring-with-nagios.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/business-status-monitoring-with-nagios.html"
+      "@id": "https://blog.ops-coffee.coms/business-status-monitoring-with-nagios.html"
     }
   }
   </script>
@@ -274,21 +274,21 @@ else {
     use                     generic-service
     host_name               localhost
     service_description     web_project_01
-    check_command           check_http!ops-coffee.cn -S
+    check_command           check_http!ops-coffee.com -S
 }
 
 define service{
     use                     generic-service
     host_name               localhost
     service_description     web_project_02
-    check_command           check_http!ops-coffee.cn -S -u / -e 200
+    check_command           check_http!ops-coffee.com -S -u / -e 200
 }
 
 define service{
     use                     generic-service
     host_name               localhost
     service_description     web_project_03
-    check_command           check_http!ops-coffee.cn -S -u /action/health -k &quot;sign:e5dhn&quot;
+    check_command           check_http!ops-coffee.com -S -u /action/health -k &quot;sign:e5dhn&quot;
 }</code></pre>
 
 
@@ -402,11 +402,11 @@ define contactgroup{
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/small-team-etcd-confd-configuration-center.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/small-team-etcd-confd-configuration-center.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Etcd安全配置之Basic Auth认证</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/django-model-to-dict-methods.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/django-model-to-dict-methods.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Django model转字典的几种方法</span>
                 <span class="pagination-arrow">→</span>
             </a>

@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Django JSONField, Django 3.1更新, JSONField使用方法, 数据库JSON支持, JSONField查询, MariaDB JSON支持, MySQL JSON支持, PostgreSQL JSON支持, SQLite JSON支持, Oracle JSON支持, Django models, Django forms, JSONField数据库查询, JSONField NULL处理, Django JSONField示例, JSONField数据库兼容性, JSONField查询方法, Django JSONField错误处理, SQL NULL vs JSON NULL" />
   <meta name="description" content="本文详细介绍了Django最新版v3.1中新增的JSONField功能，包括其使用方法、数据库支持情况、查询技巧以及SQLite不支持JSONFields时的解决方案。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Django ORM中原生JSONField的使用方法</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/django-jsonfield-usage-and-updates.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/django-jsonfield-usage-and-updates.html" />
   <meta property="og:title" content="Django ORM中原生JSONField的使用方法" />
   <meta property="og:description" content="本文详细介绍了Django最新版v3.1中新增的JSONField功能，包括其使用方法、数据库支持情况、查询技巧以及SQLite不支持JSONFields时的解决方案。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/django-jsonfield-usage-and-updates.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/django-jsonfield-usage-and-updates.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Django ORM中原生JSONField的使用方法",
     "description": "本文详细介绍了Django最新版v3.1中新增的JSONField功能，包括其使用方法、数据库支持情况、查询技巧以及SQLite不支持JSONFields时的解决方案。",
-    "url": "https://blog.ops-coffee.cns/django-jsonfield-usage-and-updates.html",
+    "url": "https://blog.ops-coffee.coms/django-jsonfield-usage-and-updates.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/django-jsonfield-usage-and-updates.html"
+      "@id": "https://blog.ops-coffee.coms/django-jsonfield-usage-and-updates.html"
     }
   }
   </script>
@@ -159,7 +159,7 @@ class Hero(models.Model):
 
 <h2 id="jsonfield_1">JSONField查询</h2>
 <p>Json字段的查询方法，通过下边这个示例演示说明</p>
-<pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.create(name='ops-coffee.cn', data={
+<pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.create(name='ops-coffee.com', data={
 ...     'age': 12,
 ...     'group': {
 ...         'name': 'ow1',
@@ -169,52 +169,52 @@ class Hero(models.Model):
 ...         ]
 ...     }
 ... })
-&lt;Hero: ops-coffee.cn&gt;
+&lt;Hero: ops-coffee.com&gt;
 &gt;&gt;&gt; Hero.objects.create(name='ops-coffee', data={'age':16})
 &lt;Hero: ops-coffee&gt;</code></pre>
 
 
 <p>当想要查询<code>age</code>为<code>12</code>的数据时可以这样查询</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__age=12)
-&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;</code></pre>
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;</code></pre>
 
 
 <p>当想要查询<code>group</code>的<code>name</code>为<code>ow1</code>的数据时可以这样查询</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__group__name='ow1')
-&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;</code></pre>
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;</code></pre>
 
 
 <p>当想要查询<code>group</code>下<code>skill</code>中第一个数据的<code>name</code>值为<code>swim</code>的数据时可以这样查询</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__group__skill__0__name='swim')
-&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;</code></pre>
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;</code></pre>
 
 
 <p>当想要查找包含<code>group</code>键的所有数据时，可以通过<code>has_key</code>来实现</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__has_key='group')
-&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;</code></pre>
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;</code></pre>
 
 
 <p>当想要查找同时包含<code>group</code>键和<code>age</code>键的所有数据时，可以通过<code>has_keys</code>来实现</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__has_keys=['group','age'])
-&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;</code></pre>
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;</code></pre>
 
 
 <p>当想要查找包含<code>group</code>键或者<code>age</code>键的所有数据时，可以通过<code>has_any_keys</code>来实现</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__has_any_keys=['group','age'])
-&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;, &lt;Hero: ops-coffee&gt;]&gt;</code></pre>
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;, &lt;Hero: ops-coffee&gt;]&gt;</code></pre>
 
 
 <p>当想一次性查找包含<code>age</code>为<code>12</code>且<code>group</code>的<code>name</code>为<code>ow1</code>的数据时，可以通过<code>contains</code>来实现</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__contains={'age':12,'group': {'name': 'ow1'}})
-&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;</code></pre>
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;</code></pre>
 
 
 <p>JSONField除了支持以上查询方式外，对于ORM所提供的大部分其他查询方式同样支持，例如<code>icontains</code>,<code>endswith</code>,<code>iendswith</code>,<code>iexact</code>,<code>regex</code>,<code>iregex</code>, <code>startswith</code>,<code>istartswith</code>,<code>lt</code>,<code>lte</code>,<code>gt</code>,<code>gte</code>，使用起来也是非常方便</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__age__lte=12)
-&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;
 &gt;&gt;&gt;
 &gt;&gt;&gt; Hero.objects.filter(data__group__name__startswith='ow')
-&lt;QuerySet [&lt;Hero: ops-coffee.cn&gt;]&gt;</code></pre>
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;</code></pre>
 
 
 <h2 id="sqlite3">SQLite3报错处理</h2>
@@ -234,11 +234,11 @@ class Hero(models.Model):
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/django-login-required-middleware.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/django-login-required-middleware.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>Django全局启用登陆验证login_required</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/fire-financial-freedom-data-driven-perspective.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/fire-financial-freedom-data-driven-perspective.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>以数据的方式告诉你财务自由提前退休并没有那么难</span>
                 <span class="pagination-arrow">→</span>
             </a>

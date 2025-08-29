@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Ace.js, 前端代码编辑器, JavaScript编辑器, 语法高亮, 代码编辑器配置, 前端插件, SEO友好" />
   <meta name="description" content="本文详细介绍了Ace.js，一个强大且易用的前端代码编辑器，支持多种语言的语法高亮和丰富的功能配置，适合用于替换传统的textarea标签，提升网页端代码编辑体验。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>最好用的web端代码文本编辑器ACE</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnfrontend/front-end-components-javascript-jquery-ace-js.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comfrontend/front-end-components-javascript-jquery-ace-js.html" />
   <meta property="og:title" content="最好用的web端代码文本编辑器ACE" />
   <meta property="og:description" content="本文详细介绍了Ace.js，一个强大且易用的前端代码编辑器，支持多种语言的语法高亮和丰富的功能配置，适合用于替换传统的textarea标签，提升网页端代码编辑体验。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnfrontend/front-end-components-javascript-jquery-ace-js.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comfrontend/front-end-components-javascript-jquery-ace-js.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "最好用的web端代码文本编辑器ACE",
     "description": "本文详细介绍了Ace.js，一个强大且易用的前端代码编辑器，支持多种语言的语法高亮和丰富的功能配置，适合用于替换传统的textarea标签，提升网页端代码编辑体验。",
-    "url": "https://blog.ops-coffee.cnfrontend/front-end-components-javascript-jquery-ace-js.html",
+    "url": "https://blog.ops-coffee.comfrontend/front-end-components-javascript-jquery-ace-js.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnfrontend/front-end-components-javascript-jquery-ace-js.html"
+      "@id": "https://blog.ops-coffee.comfrontend/front-end-components-javascript-jquery-ace-js.html"
     }
   }
   </script>
@@ -118,10 +118,10 @@
         <blockquote>
 <p>使用足够简单，功能足够强大，体验足够优秀</p>
 </blockquote>
-<p>之前有一个系列文章介绍我在运维系统开发过程中用到的那些顺手的前端插件，总共发了四篇文章介绍了三个非常棒的插件，分别是<a href="https://blog.ops-coffee.cn/frontend/front-end-components-bootstrap-dual-listbox" target="_blank">bootstrap-duallistbox</a>、<a href="https://blog.ops-coffee.cn/frontend/front-end-components-javascript-jquery-select2" target="_blank">select2</a>和<a href="https://blog.ops-coffee.cn/frontend/front-end-components-jquery-datatables-2" target="_blank">datatables</a>，今天再更此系列，让好东西让更多的人知道，受益！</p>
+<p>之前有一个系列文章介绍我在运维系统开发过程中用到的那些顺手的前端插件，总共发了四篇文章介绍了三个非常棒的插件，分别是<a href="https://blog.ops-coffee.com/frontend/front-end-components-bootstrap-dual-listbox" target="_blank">bootstrap-duallistbox</a>、<a href="https://blog.ops-coffee.com/frontend/front-end-components-javascript-jquery-select2" target="_blank">select2</a>和<a href="https://blog.ops-coffee.com/frontend/front-end-components-jquery-datatables-2" target="_blank">datatables</a>，今天再更此系列，让好东西让更多的人知道，受益！</p>
 <p>本次介绍ace.js，这是一个用JavaScript编写的独立代码编辑器。支持超过120种语言的语法高亮，超过20个不同风格的主题，同时还支持实时语法检查，自定义快捷键绑定，代码折叠，搜索替换，自动缩进等等功能</p>
 <p>项目地址为：https://ace.c9.io</p>
-<p>我主要用它来替换表单中的textarea标签，以及实现在网页上修改文件的展示，例如之前<a href="https://blog.ops-coffee.cn/s/devops-config-center-kerrigan-implementation.html" target="_blank">配置中心Kerrigan</a>文章中讲到的web端修改配置文件就用了ace</p>
+<p>我主要用它来替换表单中的textarea标签，以及实现在网页上修改文件的展示，例如之前<a href="https://blog.ops-coffee.com/s/devops-config-center-kerrigan-implementation.html" target="_blank">配置中心Kerrigan</a>文章中讲到的web端修改配置文件就用了ace</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/0117.01.png" /></p>
 <h2 id="_1">基本使用</h2>
 <p>这个项目引入非常简单，只需要引入一个ace.js文件即可，然后实例化即可</p>
@@ -179,11 +179,11 @@ var editor = ace.edit(&quot;content&quot;);</code></pre>
 <p>这在特性我实现SQL查询的功能中有用到，如果查询框内有多条SQL，可以选择其中一条SQL进行查询</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/0117.02.png" /></p>
 <p>通过<code>setValue</code>可以给编辑器初始化数据</p>
-<pre class="codehilite"><code>editor.getSession().setValue(&quot;ops-coffee.cn&quot;)</code></pre>
+<pre class="codehilite"><code>editor.getSession().setValue(&quot;ops-coffee.com&quot;)</code></pre>
 
 
 <p>当你想往编辑器插入数据时，可以通过<code>insert</code>在光标处插入数据</p>
-<pre class="codehilite"><code>editor.insert('ops-coffee.cn')</code></pre>
+<pre class="codehilite"><code>editor.insert('ops-coffee.com')</code></pre>
 
 
 <p>通过<code>getLength</code>可以获取到编辑器内数据的总行数</p>
@@ -234,11 +234,11 @@ var editor = ace.edit(&quot;content&quot;);</code></pre>
 
 
 <p>通过<code>replace</code>可以对<strong>当前</strong><code>find</code>查找到的字符串进行替换</p>
-<pre class="codehilite"><code>editor.replace('ops-coffee.cn'); </code></pre>
+<pre class="codehilite"><code>editor.replace('ops-coffee.com'); </code></pre>
 
 
 <p>而通过<code>replaceAll</code>则可以对<code>find</code>查找到的所有内容替换</p>
-<pre class="codehilite"><code>editor.replaceAll('ops-coffee.cn');</code></pre>
+<pre class="codehilite"><code>editor.replaceAll('ops-coffee.com');</code></pre>
 
 
 <p>需要注意的是，无论是<code>replace</code>还是<code>replaceAll</code>都需要配合<code>find</code>一起使用</p>
@@ -294,11 +294,11 @@ editor.getSession().on('change', function(){
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/frontend/front-end-components-jquery-datatables-2.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/frontend/front-end-components-jquery-datatables-2.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>前端插件之Datatables使用--下篇</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/frontend/jS-automatically-generates-letter-avatar.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/frontend/jS-automatically-generates-letter-avatar.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>使用JS自动生成文字头像</span>
                 <span class="pagination-arrow">→</span>
             </a>

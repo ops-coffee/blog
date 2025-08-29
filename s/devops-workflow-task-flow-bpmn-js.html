@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="运维自动化, 任务系统, BPMN, 流程编排, 任务执行, 可视化" />
   <meta name="description" content="本文详细介绍了如何在运维自动化平台中重构任务系统，提高任务执行的可视化和用户交互体验，遵循BPMN规范并使用bpmn-js进行流程编排和执行。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>任务系统之任务流程可视化</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/devops-workflow-task-flow-bpmn-js.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/devops-workflow-task-flow-bpmn-js.html" />
   <meta property="og:title" content="任务系统之任务流程可视化" />
   <meta property="og:description" content="本文详细介绍了如何在运维自动化平台中重构任务系统，提高任务执行的可视化和用户交互体验，遵循BPMN规范并使用bpmn-js进行流程编排和执行。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/devops-workflow-task-flow-bpmn-js.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/devops-workflow-task-flow-bpmn-js.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "任务系统之任务流程可视化",
     "description": "本文详细介绍了如何在运维自动化平台中重构任务系统，提高任务执行的可视化和用户交互体验，遵循BPMN规范并使用bpmn-js进行流程编排和执行。",
-    "url": "https://blog.ops-coffee.cns/devops-workflow-task-flow-bpmn-js.html",
+    "url": "https://blog.ops-coffee.coms/devops-workflow-task-flow-bpmn-js.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/devops-workflow-task-flow-bpmn-js.html"
+      "@id": "https://blog.ops-coffee.coms/devops-workflow-task-flow-bpmn-js.html"
     }
   }
   </script>
@@ -123,7 +123,7 @@
 <h2 id="bpmn">BPMN</h2>
 <p>我们的任务流设计基本遵循了BPMN规范，BPMN是由业务流程管理倡议组织BPMI开发的一套标准的业务流程建模符号规范，旨在为用户提供一套容易理解的标准符号，这些符号作为BPMN的基础元素，将业务流程建模简单化、图形化，将复杂的建模过程视觉化，便于所有业务相关人员的理解和使用</p>
 <p>BPMN的核心价值在于其统一标准，业务相关者都按照这个标准来绘制业务流程图，能够减少各方对于流程图的理解歧义，从而达到高效协作的目的。市面上的很多流程系统都遵循这个规范，只要遵循规范，那大家的理解和使用成本就会小很多，我们的流程实现上也基本遵循这个规范，并进行了一定的简化，更加符合大众的使用习惯</p>
-<p>在流程编排和渲染上，我们使用了前端组件<code>bpmn-js</code>，<code>bpmn-js</code>是基于BPMN标准实现的一套渲染工具包和web建模器，使用十分广泛，也特别好用，我之前写过<a href="https://blog.ops-coffee.cn/bpmn/" target="_blank">一系列的文章介绍BPMN</a>这个组件，感兴趣的可以深入去看看</p>
+<p>在流程编排和渲染上，我们使用了前端组件<code>bpmn-js</code>，<code>bpmn-js</code>是基于BPMN标准实现的一套渲染工具包和web建模器，使用十分广泛，也特别好用，我之前写过<a href="https://blog.ops-coffee.com/bpmn/" target="_blank">一系列的文章介绍BPMN</a>这个组件，感兴趣的可以深入去看看</p>
 <h2 id="_1">流程编排</h2>
 <p>我们基于<code>bpmn-js</code>进行了自定义改造，简化了流程编排的操作，主要包含三个核心元素：任务、网关和事件</p>
 <p><strong>任务：</strong> 对应任务系统中的子任务，代表实际执行的内容，有很多不同的类型，例如命令、脚本、Ansible-Playbook、Jenkins-Job、通知、审批等</p>
@@ -152,11 +152,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/devops-cmdb-resource-auto-manage-sync-agent.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/devops-cmdb-resource-auto-manage-sync-agent.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>资产纳管的三种方式介绍</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/devops-cmdb-cloud-monitor-domain-task-billing.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/devops-cmdb-cloud-monitor-domain-task-billing.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>运维自动化系统各模块介绍</span>
                 <span class="pagination-arrow">→</span>
             </a>

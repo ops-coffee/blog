@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Django, Cache缓存, 日志截断, 任务系统, 缓存超时, Redis" />
   <meta name="description" content="本文详细介绍了一个在Django任务系统中由于缓存超时导致的日志截断问题的发现、分析和解决过程。通过设置缓存TIMEOUT参数为None，确保缓存键值不过期，从而避免日志截断问题。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>使用Django Cache引发的Bug处理</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/django-redis-cache-log-truncation-issue.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/django-redis-cache-log-truncation-issue.html" />
   <meta property="og:title" content="使用Django Cache引发的Bug处理" />
   <meta property="og:description" content="本文详细介绍了一个在Django任务系统中由于缓存超时导致的日志截断问题的发现、分析和解决过程。通过设置缓存TIMEOUT参数为None，确保缓存键值不过期，从而避免日志截断问题。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/django-redis-cache-log-truncation-issue.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/django-redis-cache-log-truncation-issue.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "使用Django Cache引发的Bug处理",
     "description": "本文详细介绍了一个在Django任务系统中由于缓存超时导致的日志截断问题的发现、分析和解决过程。通过设置缓存TIMEOUT参数为None，确保缓存键值不过期，从而避免日志截断问题。",
-    "url": "https://blog.ops-coffee.cns/django-redis-cache-log-truncation-issue.html",
+    "url": "https://blog.ops-coffee.coms/django-redis-cache-log-truncation-issue.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/django-redis-cache-log-truncation-issue.html"
+      "@id": "https://blog.ops-coffee.coms/django-redis-cache-log-truncation-issue.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">使用Django Cache引发的Bug处理</h1>
 
-        <p>两年前写过一篇文章<a href="https://blog.ops-coffee.cn/s/devops-task-optimization-django-cache.html" target="_blank">Django开发中使用Cache缓存提升10倍效率</a>用来解决任务系统执行任务慢的问题，也就是在这个方案中引入了Django的Cache缓存系统，从此之后任务系统运行稳定，没再遇到其他问题。在加入新公司之后重新设计任务系统时依然沿用了这个方案，到现在新公司任务系统上线运行了近一年的时间，也稳定跑了跑了几千个任务没出现问题，这几天突然有小伙伴跟我反馈，任务日志被截断，没有显示全</p>
+        <p>两年前写过一篇文章<a href="https://blog.ops-coffee.com/s/devops-task-optimization-django-cache.html" target="_blank">Django开发中使用Cache缓存提升10倍效率</a>用来解决任务系统执行任务慢的问题，也就是在这个方案中引入了Django的Cache缓存系统，从此之后任务系统运行稳定，没再遇到其他问题。在加入新公司之后重新设计任务系统时依然沿用了这个方案，到现在新公司任务系统上线运行了近一年的时间，也稳定跑了跑了几千个任务没出现问题，这几天突然有小伙伴跟我反馈，任务日志被截断，没有显示全</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/0113.01.png" /></p>
 <p>任务系统在之前一直运行稳定没有出现过日志截断的问题，我在想是不是最近更新了什么内容导致的bug，于是又运行了几个测试任务都正常。那大概率就是程序有bug，在某些特殊的情况下会触发，往往这种问题是最难解决的，我先仔细的去看了下代码，并没有发现什么问题，核心代码如下</p>
 <pre class="codehilite"><code>class Logger:
@@ -169,7 +169,7 @@ cache.set(self.key, old_log + details) if old_log else cache.set(self.key, detai
 <p>代码中在执行set操作时并没有指定key的过期时间，我原本以为不设置就是永不过期，看来跟我的想法不一致，于是测试了一下，果然如果不设置过期时间的话并不是永不过期，而是有大约300秒也就是5分钟的默认过期时间，那就可以解释为什么长时间的sleep会导致日志截断了</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; from django.core.cache import cache
 &gt;&gt;&gt;
-&gt;&gt;&gt; cache.set('site', 'ops-coffee.cn')
+&gt;&gt;&gt; cache.set('site', 'ops-coffee.com')
 True
 &gt;&gt;&gt; cache.ttl('site')
 293</code></pre>
@@ -190,11 +190,11 @@ True
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/why-build-custom-cloud-monitoring-system.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/why-build-custom-cloud-monitoring-system.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>多云监控告警系统的优势</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/devops-cloud-ansible-task-webui-tower-awx-web.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/devops-cloud-ansible-task-webui-tower-awx-web.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>运维自动化之作业系统分享</span>
                 <span class="pagination-arrow">→</span>
             </a>

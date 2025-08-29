@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="WebSocket, Django Channels, 实时通信, 全双工通信, 聊天室, 异步, ASGI, Channels Layer, Redis" />
   <meta name="description" content="本文详细介绍了如何使用WebSocket和Django Channels构建实时应用，特别是聊天室功能。通过集成Channels框架，Django不仅支持HTTP协议，还能支持WebSocket等多种协议。文章还讲解了如何使用Channels Layer实现多人聊天，并提供了异步代码实现以提升性能。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Django使用Channels实现WebSocket--上篇</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/django-channels-websocket-devops-01.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/django-channels-websocket-devops-01.html" />
   <meta property="og:title" content="Django使用Channels实现WebSocket--上篇" />
   <meta property="og:description" content="本文详细介绍了如何使用WebSocket和Django Channels构建实时应用，特别是聊天室功能。通过集成Channels框架，Django不仅支持HTTP协议，还能支持WebSocket等多种协议。文章还讲解了如何使用Channels Layer实现多人聊天，并提供了异步代码实现以提升性能。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/django-channels-websocket-devops-01.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/django-channels-websocket-devops-01.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Django使用Channels实现WebSocket--上篇",
     "description": "本文详细介绍了如何使用WebSocket和Django Channels构建实时应用，特别是聊天室功能。通过集成Channels框架，Django不仅支持HTTP协议，还能支持WebSocket等多种协议。文章还讲解了如何使用Channels Layer实现多人聊天，并提供了异步代码实现以提升性能。",
-    "url": "https://blog.ops-coffee.cns/django-channels-websocket-devops-01.html",
+    "url": "https://blog.ops-coffee.coms/django-channels-websocket-devops-01.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/django-channels-websocket-devops-01.html"
+      "@id": "https://blog.ops-coffee.coms/django-channels-websocket-devops-01.html"
     }
   }
   </script>
@@ -365,7 +365,7 @@ class ChatConsumer(WebsocketConsumer):
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            &quot;hosts&quot;: [('ops-coffee.cn', 6379)],
+            &quot;hosts&quot;: [('ops-coffee.com', 6379)],
         },
     },
 }</code></pre>
@@ -380,9 +380,9 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 &gt;&gt;&gt; channel_layer = channels.layers.get_channel_layer()
 &gt;&gt;&gt;
 &gt;&gt;&gt; from asgiref.sync import async_to_sync
-&gt;&gt;&gt; async_to_sync(channel_layer.send)('test_channel',{'site':'https://ops-coffee.cn'})
+&gt;&gt;&gt; async_to_sync(channel_layer.send)('test_channel',{'site':'https://ops-coffee.com'})
 &gt;&gt;&gt; async_to_sync(channel_layer.receive)('test_channel')
-{'site': 'https://ops-coffee.cn'}
+{'site': 'https://ops-coffee.com'}
 &gt;&gt;&gt;</code></pre>
 
 
@@ -510,11 +510,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/wechat-miniapp-development-journey.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/wechat-miniapp-development-journey.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>没有基础也能写个小程序</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/django-channels-websocket-devops-02.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/django-channels-websocket-devops-02.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Django使用Channels实现WebSocket--下篇</span>
                 <span class="pagination-arrow">→</span>
             </a>

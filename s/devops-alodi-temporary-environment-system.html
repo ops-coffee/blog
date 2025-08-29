@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Alodi, 临时环境, 测试环境, Django, Celery, Kubernetes, Docker, 域名绑定, WebSSH, 环境销毁" />
   <meta name="description" content="Alodi是一个用于快速生成临时测试环境的系统，支持随机域名生成、域名绑定、容器操作和环境销毁等功能，极大地简化了测试流程，节省了时间和资源。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Alodi：环境创建从未如此简单</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/devops-alodi-temporary-environment-system.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/devops-alodi-temporary-environment-system.html" />
   <meta property="og:title" content="Alodi：环境创建从未如此简单" />
   <meta property="og:description" content="Alodi是一个用于快速生成临时测试环境的系统，支持随机域名生成、域名绑定、容器操作和环境销毁等功能，极大地简化了测试流程，节省了时间和资源。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/devops-alodi-temporary-environment-system.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/devops-alodi-temporary-environment-system.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Alodi：环境创建从未如此简单",
     "description": "Alodi是一个用于快速生成临时测试环境的系统，支持随机域名生成、域名绑定、容器操作和环境销毁等功能，极大地简化了测试流程，节省了时间和资源。",
-    "url": "https://blog.ops-coffee.cns/devops-alodi-temporary-environment-system.html",
+    "url": "https://blog.ops-coffee.coms/devops-alodi-temporary-environment-system.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/devops-alodi-temporary-environment-system.html"
+      "@id": "https://blog.ops-coffee.coms/devops-alodi-temporary-environment-system.html"
     }
   }
   </script>
@@ -118,7 +118,7 @@
         <blockquote>
 <p>一个满足你各种想象的快速方便生成临时环境的系统</p>
 </blockquote>
-<p>在<a href="https://blog.ops-coffee.cn/s/create-test-environment-with-aloid-system.html" target="_blank">『Alodi：为了保密我开发了一个系统』</a>文章中有讲到我们开发了一个系统用来快速生成临时测试环境，短短三个月已有数百个环境被创建，简化了工作，节省了时间，同时也受到了小伙伴们的肯定，本篇文章介绍一下Alodi的实现原理，以及更新的功能</p>
+<p>在<a href="https://blog.ops-coffee.com/s/create-test-environment-with-aloid-system.html" target="_blank">『Alodi：为了保密我开发了一个系统』</a>文章中有讲到我们开发了一个系统用来快速生成临时测试环境，短短三个月已有数百个环境被创建，简化了工作，节省了时间，同时也受到了小伙伴们的肯定，本篇文章介绍一下Alodi的实现原理，以及更新的功能</p>
 <h2 id="_1">实现目的</h2>
 <p>Alodi主要的目的是以最简单快速的方式来创建一个测试环境，同时生成一个随机的临时访问地址提供访问</p>
 <p>创建一个环境究竟有多简单呢？就像下边这样：选择项目--&gt;点击“创建环境”--&gt;输入Tag--&gt;点击“Build&amp;Deploy”--&gt;等待创建完成</p>
@@ -126,7 +126,7 @@
 <p>创建完成之后，可以在部署列表里找到创建环境的任务，在这里可以直接通过域名访问新创建的环境，或进行一些管理，例如创建过程中的日志查看，容器Log查看，进入容器终端排错，绑定新域名，或是销毁环境</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/0103.png" /></p>
 <h2 id="_2">创建过程</h2>
-<p>创建临时环境通过<a href="https://blog.ops-coffee.cn/s/devops-task-django-celery-setup-guide.html" target="_blank">Django的Celery</a>来异步完成，同时通过<a href="https://blog.ops-coffee.cn/s/django-channels-websocket-devops-02.html" target="_blank">Django的Channels</a>来建立WebSocket通道实时获取任务日志输出</p>
+<p>创建临时环境通过<a href="https://blog.ops-coffee.com/s/devops-task-django-celery-setup-guide.html" target="_blank">Django的Celery</a>来异步完成，同时通过<a href="https://blog.ops-coffee.com/s/django-channels-websocket-devops-02.html" target="_blank">Django的Channels</a>来建立WebSocket通道实时获取任务日志输出</p>
 <p>相同部署发布流程的项目会编写统一的模板，例如JavaWeb项目会编写一个适合所有JavaWeb项目的模板，NodeJS项目会编写一个适合所有NodeJS项目的模板，创建临时环境实际上就是通过Celery执行了一个任务模板</p>
 <p>任务模板内定义了这个任务要做的事情，大体上包含以下内容：创建临时目录--&gt;拉代码--&gt;编译--&gt;生成DOCKERFILE--&gt;打包Docker镜像--&gt;上传镜像到私有仓库--&gt;创建Kubernetes资源--&gt;检查Pod状态--&gt;完成</p>
 <p>每一次任务都会生成一个全新的环境，一个全新的域名，所以无论有多少个版本多少个用户在并行测试都<strong>不会相互影响</strong></p>
@@ -141,10 +141,10 @@
 <p>这两种方案都不是很好，新建DNS还需要用户都修改自己的DNS指向到新DNS，而绑定hosts无疑会增加使用成本，那该如何处理呢？</p>
 <p><strong>DNS泛域名解析</strong>，利用通配符<code>*</code>来做次级域名以实现所有的次级域名均指向同一IP地址</p>
 <p>在内部DNS上创建一条匹配所有的次级域名的记录，指向到Kubernetes的Ingress服务器，例如</p>
-<pre class="codehilite"><code>*.ops-coffee.cn -&gt; 192.168.107.143</code></pre>
+<pre class="codehilite"><code>*.ops-coffee.com -&gt; 192.168.107.143</code></pre>
 
 
-<p>这样无论生成任何<code>xxx.ops-coffee.cn</code>的域名都可以请求到Kubernetes的Ingress，然后Ingress转发请求到对应的service，最终到pod，完美的解决了这个问题</p>
+<p>这样无论生成任何<code>xxx.ops-coffee.com</code>的域名都可以请求到Kubernetes的Ingress，然后Ingress转发请求到对应的service，最终到pod，完美的解决了这个问题</p>
 <h2 id="_4">域名绑定</h2>
 <p>解决了域名访问的问题，还面临另外一个问题就是用户有需求绑定生产域名进行测试，因为有一些第三方平台，例如微信分享等是有域名白名单的，只有白名单内的域名可以进行操作，这种情况下生成的临时域名就无法使用了，需要支持绑定生产域名进行测试</p>
 <p>Alodi系统内绑定新域名也非常简单，只需要点击“绑定新域名”按钮，填写对应的域名提交就好</p>
@@ -155,7 +155,7 @@
 <p>毕竟是测试环境，出现问题是难免的，一旦有问题用户就需要拉日志，甚至是登陆系统debug排查</p>
 <p>应用内的日志有接入ELK系统，容器的启动日志Alodi系统也提供查看功能，点击“Log”按钮即可查看</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/0103.03.png" /></p>
-<p>Log查看通过调用Kubernetes API的<code>read_namespaced_pod_log</code>方法来实现，Kubernetes的API比较多，鉴于篇幅不在文章中细说，有整理一份文档：<a href="https://blog.ops-coffee.cn/t/Kubernetes-Python-API-Demo.html" target="_blank">Kubernetes Python API中文使用说明</a></p>
+<p>Log查看通过调用Kubernetes API的<code>read_namespaced_pod_log</code>方法来实现，Kubernetes的API比较多，鉴于篇幅不在文章中细说，有整理一份文档：<a href="https://blog.ops-coffee.com/t/Kubernetes-Python-API-Demo.html" target="_blank">Kubernetes Python API中文使用说明</a></p>
 <p>SSH进入Pod容器也给集成到了Alodi系统中，之前有一篇文章专门介绍：<a href="https://mp.weixin.qq.com/s/FHDyvHsh-oO1cn7AXk_4WA" target="_blank">Django实现WebSSH操作Kubernetes Pod</a>，有很多小伙伴按照文章内容实现了集成</p>
 <h2 id="_6">销毁环境</h2>
 <p>Alodi系统希望用户能够快速创建环境，用完销毁环境，不长时间占用资源，所以设计了定期销毁和用户主动销毁策略，定期销毁是会销毁超过n天没有使用的环境，而主动销毁只需要点击“点击销毁”按钮即可</p>
@@ -171,11 +171,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/can-privacy-protection-platforms-really-protect-privacy.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/can-privacy-protection-platforms-really-protect-privacy.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>告诉你如何关闭腾讯广告定向投放</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/google-search-analytics-adsense-blog-site-seo.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/google-search-analytics-adsense-blog-site-seo.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Google搜索成最大入口，简单谈下个人博客的SEO</span>
                 <span class="pagination-arrow">→</span>
             </a>

@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="造轮子, 测试环境, Aloid系统, Django, subprocess, kubernetes-api, 临时环境, 保密性" />
   <meta name="description" content="本文介绍了一个名为Aloid的系统，该系统可以快速生成具有一定有效期的临时测试环境，保护保密性内容。文章详细探讨了项目的技术实现，包括使用Django框架、subprocess模块进行系统命令执行，以及通过kubernetes-api与Kubernetes集群交互。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Alodi：为了保密我开发了一个系统</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/create-test-environment-with-aloid-system.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/create-test-environment-with-aloid-system.html" />
   <meta property="og:title" content="Alodi：为了保密我开发了一个系统" />
   <meta property="og:description" content="本文介绍了一个名为Aloid的系统，该系统可以快速生成具有一定有效期的临时测试环境，保护保密性内容。文章详细探讨了项目的技术实现，包括使用Django框架、subprocess模块进行系统命令执行，以及通过kubernetes-api与Kubernetes集群交互。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/create-test-environment-with-aloid-system.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/create-test-environment-with-aloid-system.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Alodi：为了保密我开发了一个系统",
     "description": "本文介绍了一个名为Aloid的系统，该系统可以快速生成具有一定有效期的临时测试环境，保护保密性内容。文章详细探讨了项目的技术实现，包括使用Django框架、subprocess模块进行系统命令执行，以及通过kubernetes-api与Kubernetes集群交互。",
-    "url": "https://blog.ops-coffee.cns/create-test-environment-with-aloid-system.html",
+    "url": "https://blog.ops-coffee.coms/create-test-environment-with-aloid-system.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/create-test-environment-with-aloid-system.html"
+      "@id": "https://blog.ops-coffee.coms/create-test-environment-with-aloid-system.html"
     }
   }
   </script>
@@ -121,7 +121,7 @@
 <p>咖啡君维护了几十个不同类型项目，其中有相当一部分项目是对保密性有很高要求的，也就是说下个版本要上线的内容是不能提前泄露的，就像苹果新产品的介绍网站决不允许在产品发布之前流出一样，这种保密内容除了在制度上加以约束外，还需要一些技术手段来保障</p>
 <p>本次要介绍的Aloid系统就对保密有着一定的作用，这个系统的主要作用是快速生成临时环境，这个临时环境会有一定的有效期，过期自动清除，当然你也可以手动清除，同时这个环境会有唯一的<strong>随机</strong>访问地址，只有知道这个随机地址的人才能访问</p>
 <h2 id="_1">涉及技术</h2>
-<p>整个项目基于Django构建，前后端<strong>框架代码</strong>可以通过<a href="https://blog.ops-coffee.cn/s/django-security-password-table-database-rsa.html" target="_blank">这篇文章</a>获取，通过框架代码可以快速构建项目，添加自己需要的功能，需要说明的是框架代码并非这个项目源码</p>
+<p>整个项目基于Django构建，前后端<strong>框架代码</strong>可以通过<a href="https://blog.ops-coffee.com/s/django-security-password-table-database-rsa.html" target="_blank">这篇文章</a>获取，通过框架代码可以快速构建项目，添加自己需要的功能，需要说明的是框架代码并非这个项目源码</p>
 <h3 id="subprocess">subprocess</h3>
 <p>编译部署难免要跟系统命令打交道，在调研了几种python执行系统命令的方法后选择了<code>subprocess</code>，subprocess作为<code>os.system</code>和<code>os.popen</code>的替代模块，功能更为强大，且为python自带模块，不需额外安装，使用方便</p>
 <p>在需要频繁执行系统命令的情况下，可以写一个类似下边这样的方法封装命令执行和返回输出，使代码简洁易读</p>
@@ -167,7 +167,7 @@ class KubeApi:
                     spec=client.V1PodSpec(
                         containers=[client.V1Container(
                             name=RAND,
-                            image=&quot;k8s-harbor.ops-coffee.cn/alodi/&quot; + RAND,
+                            image=&quot;k8s-harbor.ops-coffee.com/alodi/&quot; + RAND,
                             env=[{&quot;name&quot;: &quot;ENVT&quot;, &quot;value&quot;: ENVT}, {&quot;name&quot;: &quot;PROJ&quot;, &quot;value&quot;: PROJ}],
                             ports=[client.V1ContainerPort(container_port=80)],
                         )]
@@ -232,11 +232,11 @@ class KubeApi:
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/mysql-explain-output-slow-queries.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/mysql-explain-output-slow-queries.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>MySQL EXPLAIN结果集分析 - 附带大量案例</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/specifications-mysql-development-guidelines.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/specifications-mysql-development-guidelines.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>建议收藏 | 专业的MySQL开发规范</span>
                 <span class="pagination-arrow">→</span>
             </a>

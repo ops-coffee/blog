@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="上海疫情, 居家办公, 信息收集, 蔬菜礼包, 企业微信API, 在线问卷, 信息确认" />
   <meta name="description" content="在上海疫情期间，许多公司转为居家办公，物资短缺问题凸显。文章详细介绍了如何通过在线问卷和企业微信API，高效地收集和确认员工信息，以实现精准物资派送，展现了公司在疫情期间对员工的关怀与支持。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>疫情在家帮老婆提升下工作效率</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/rpa-data-work-weixin-send-message.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/rpa-data-work-weixin-send-message.html" />
   <meta property="og:title" content="疫情在家帮老婆提升下工作效率" />
   <meta property="og:description" content="在上海疫情期间，许多公司转为居家办公，物资短缺问题凸显。文章详细介绍了如何通过在线问卷和企业微信API，高效地收集和确认员工信息，以实现精准物资派送，展现了公司在疫情期间对员工的关怀与支持。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/rpa-data-work-weixin-send-message.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/rpa-data-work-weixin-send-message.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "疫情在家帮老婆提升下工作效率",
     "description": "在上海疫情期间，许多公司转为居家办公，物资短缺问题凸显。文章详细介绍了如何通过在线问卷和企业微信API，高效地收集和确认员工信息，以实现精准物资派送，展现了公司在疫情期间对员工的关怀与支持。",
-    "url": "https://blog.ops-coffee.cns/rpa-data-work-weixin-send-message.html",
+    "url": "https://blog.ops-coffee.coms/rpa-data-work-weixin-send-message.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/rpa-data-work-weixin-send-message.html"
+      "@id": "https://blog.ops-coffee.coms/rpa-data-work-weixin-send-message.html"
     }
   }
   </script>
@@ -175,7 +175,7 @@ class WorkWeixinApi:
 
 
 if __name__ == '__main__':
-    for line in open(&quot;ops-coffee.cn.csv&quot;): 
+    for line in open(&quot;ops-coffee.com.csv&quot;): 
         id, name, email, phone, street, address = line.split(',')
 
         state, code, data = WorkWeixinApi().send_message(
@@ -189,8 +189,8 @@ if __name__ == '__main__':
 
 
 <p>csv文件的内容大概像这样</p>
-<pre class="codehilite"><code>01,韦小宝,andy@ops-coffee.cn,15866668888,张江镇,张江路115弄40号
-01,张无忌,jason@ops-coffee.cn,15866668888,张江镇,张江路115弄41号</code></pre>
+<pre class="codehilite"><code>01,韦小宝,andy@ops-coffee.com,15866668888,张江镇,张江路115弄40号
+01,张无忌,jason@ops-coffee.com,15866668888,张江镇,张江路115弄41号</code></pre>
 
 
 <p>数据脚本都准备好了，然后直接执行，相关的人就只收到了包含自己信息的通知</p>
@@ -207,11 +207,11 @@ if __name__ == '__main__':
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/django-auth-permission-system-design.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/django-auth-permission-system-design.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>权限管理系统设计</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/share-task-system-design-and-optimization.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/share-task-system-design-and-optimization.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>运维自动化之任务系统分享</span>
                 <span class="pagination-arrow">→</span>
             </a>

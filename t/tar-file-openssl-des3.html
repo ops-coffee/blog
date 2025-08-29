@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Linux, tar, openssl, DES3加密, 命令行, 文件压缩, 文件加密" />
   <meta name="description" content="本文详细解释了如何在Linux环境下使用tar命令压缩文件并使用openssl进行DES3加密，包括命令的每个参数的具体含义和使用方法。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>Openssl Des3对压缩文件进行加密命令详解</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnt/tar-file-openssl-des3.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comt/tar-file-openssl-des3.html" />
   <meta property="og:title" content="Openssl Des3对压缩文件进行加密命令详解" />
   <meta property="og:description" content="本文详细解释了如何在Linux环境下使用tar命令压缩文件并使用openssl进行DES3加密，包括命令的每个参数的具体含义和使用方法。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnt/tar-file-openssl-des3.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comt/tar-file-openssl-des3.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Openssl Des3对压缩文件进行加密命令详解",
     "description": "本文详细解释了如何在Linux环境下使用tar命令压缩文件并使用openssl进行DES3加密，包括命令的每个参数的具体含义和使用方法。",
-    "url": "https://blog.ops-coffee.cnt/tar-file-openssl-des3.html",
+    "url": "https://blog.ops-coffee.comt/tar-file-openssl-des3.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnt/tar-file-openssl-des3.html"
+      "@id": "https://blog.ops-coffee.comt/tar-file-openssl-des3.html"
     }
   }
   </script>
@@ -149,12 +149,12 @@ tar -cvf  - WMG_Back_&quot;$Today&quot;|openssl des3 -salt -k hY91gd3GJAAfghECle
 </ul>
 <p>两部分之前用<code>|</code>隔开，<code>|</code>作为连接符连接两个命令，表示以前边命令的输出为后边命令的输入，也就是以前边命令的结果作为后便命令处理的内容，</p>
 <p>openssl des3加密命令实际上应该是这样的</p>
-<pre class="codehilite"><code>openssl des3 -salt -k ops-coffee.cn -in file.tar -out file.tar.des3</code></pre>
+<pre class="codehilite"><code>openssl des3 -salt -k ops-coffee.com -in file.tar -out file.tar.des3</code></pre>
 
 
 <p>需要用<code>-in</code>传入一个要加密的文件，而用了<code>|</code>连接符后默认会将前一个命令的输出结果作为<code>-in</code>的内容</p>
 <p>如果需要解密，可以使用下边这个命令</p>
-<pre class="codehilite"><code>openssl des3 -d -salt -k ops-coffee.cn -in file.tar.des3 -out file.tar</code></pre>
+<pre class="codehilite"><code>openssl des3 -d -salt -k ops-coffee.com -in file.tar.des3 -out file.tar</code></pre>
 
         <div>
           <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
@@ -165,11 +165,11 @@ tar -cvf  - WMG_Back_&quot;$Today&quot;|openssl des3 -salt -k hY91gd3GJAAfghECle
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/t/django-model-field-comment.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/t/django-model-field-comment.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>django model字段添加备注Comment</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/t/debian8-jessie-install-java8.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/t/debian8-jessie-install-java8.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>Debian 8 Jessie安装Java8</span>
                 <span class="pagination-arrow">→</span>
             </a>

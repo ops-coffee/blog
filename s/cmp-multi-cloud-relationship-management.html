@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="多云管理, 资源关系管理, 业务关系, 标签关系, 位置关系, 云技术, 云资源管理" />
   <meta name="description" content="本文详细介绍了多云管理系统中的关系管理设计，包括位置关系、业务关系和标签关系，帮助读者理解如何在多云环境中有效管理云资源。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>多云系统之关系管理</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/cmp-multi-cloud-relationship-management.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/cmp-multi-cloud-relationship-management.html" />
   <meta property="og:title" content="多云系统之关系管理" />
   <meta property="og:description" content="本文详细介绍了多云管理系统中的关系管理设计，包括位置关系、业务关系和标签关系，帮助读者理解如何在多云环境中有效管理云资源。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/cmp-multi-cloud-relationship-management.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/cmp-multi-cloud-relationship-management.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "多云系统之关系管理",
     "description": "本文详细介绍了多云管理系统中的关系管理设计，包括位置关系、业务关系和标签关系，帮助读者理解如何在多云环境中有效管理云资源。",
-    "url": "https://blog.ops-coffee.cns/cmp-multi-cloud-relationship-management.html",
+    "url": "https://blog.ops-coffee.coms/cmp-multi-cloud-relationship-management.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/cmp-multi-cloud-relationship-management.html"
+      "@id": "https://blog.ops-coffee.coms/cmp-multi-cloud-relationship-management.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">多云系统之关系管理</h1>
 
-        <p>继<a href="https://blog.ops-coffee.cn/devops/task.html" target="_blank">任务系统落地</a>之后，接着又开始了多云系统的设计与开发，目前初期版本已完成，这篇文章来聊下关于多云系统的关系管理设计</p>
+        <p>继<a href="https://blog.ops-coffee.com/devops/task.html" target="_blank">任务系统落地</a>之后，接着又开始了多云系统的设计与开发，目前初期版本已完成，这篇文章来聊下关于多云系统的关系管理设计</p>
 <p>首先说说多云管理，什么是多云管理？随着云技术的发展，现在绝大多数的主机/数据库等基础资源已经全都跑在了云上，无论是阿里云、腾讯云之类的公有云，还是基于openstack、Kubernetes等构建的私有云，抑或是多个不同云环境融合下的混合云，对于云本身及云上资源的管理统称为多云管理，这里的多云指的是多云环境多云厂商多云账号多云区域多云资源</p>
 <p>多云系统的主要工作就是统一多云资源实现集中管理，同时基于关联关系来构建清晰的资源拓扑，为上层业务提供准确的基础数据。这里的核心功能主要有三个，分别是多云配置、资源管理和关系管理，其他两个功能后续再聊这里先聊下至关重要的关系管理</p>
 <p><img alt="" loading="lazy" src="/static/images/2022/0521.01.png" /></p>
@@ -144,11 +144,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/share-task-system-design-and-optimization.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/share-task-system-design-and-optimization.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>运维自动化之任务系统分享</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/cmp-multi-cloud-configuration-resource-management.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/cmp-multi-cloud-configuration-resource-management.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>多云系统之多云配置</span>
                 <span class="pagination-arrow">→</span>
             </a>

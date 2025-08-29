@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="VECMDB, 高级配置, 正则校验, 字体, 预定义值, 计算属性, 数据校验, 数据展示, 动态计算, CMDB" />
   <meta name="description" content="本文详细介绍了VECMDB的高级配置功能，包括正则校验、字体、预定义值和计算属性。这些配置能够帮助用户更好地管理和展示数据，提升数据准确性和使用便利性。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>开源｜维易CMDB详解之模型高级配置</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnveops/oneops-cmdb-ci-types-configure-advanced.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comveops/oneops-cmdb-ci-types-configure-advanced.html" />
   <meta property="og:title" content="开源｜维易CMDB详解之模型高级配置" />
   <meta property="og:description" content="本文详细介绍了VECMDB的高级配置功能，包括正则校验、字体、预定义值和计算属性。这些配置能够帮助用户更好地管理和展示数据，提升数据准确性和使用便利性。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnveops/oneops-cmdb-ci-types-configure-advanced.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comveops/oneops-cmdb-ci-types-configure-advanced.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "开源｜维易CMDB详解之模型高级配置",
     "description": "本文详细介绍了VECMDB的高级配置功能，包括正则校验、字体、预定义值和计算属性。这些配置能够帮助用户更好地管理和展示数据，提升数据准确性和使用便利性。",
-    "url": "https://blog.ops-coffee.cnveops/oneops-cmdb-ci-types-configure-advanced.html",
+    "url": "https://blog.ops-coffee.comveops/oneops-cmdb-ci-types-configure-advanced.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnveops/oneops-cmdb-ci-types-configure-advanced.html"
+      "@id": "https://blog.ops-coffee.comveops/oneops-cmdb-ci-types-configure-advanced.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">开源｜维易CMDB详解之模型高级配置</h1>
 
-        <p>上一篇文章<a href="https://blog.ops-coffee.cn/veops/oneops-cmdb-ci-types-configure-base" target="_blank">维易CMDB详解之模型基础配置</a>介绍了VECMDB动态模型的基本配置，仅仅是这些基础的配置已经能够感受到动态模型的强大，但不仅仅止于这些基础，高级配置则更为强大。高级配置中的几个配置分别对应了属性值的校验、展示、定义和计算四个方面，灵活性很高。大概的配置作用如下</p>
+        <p>上一篇文章<a href="https://blog.ops-coffee.com/veops/oneops-cmdb-ci-types-configure-base" target="_blank">维易CMDB详解之模型基础配置</a>介绍了VECMDB动态模型的基本配置，仅仅是这些基础的配置已经能够感受到动态模型的强大，但不仅仅止于这些基础，高级配置则更为强大。高级配置中的几个配置分别对应了属性值的校验、展示、定义和计算四个方面，灵活性很高。大概的配置作用如下</p>
 <ul>
 <li>
 <p><code>正则校验</code>是对用户输入内容的审核，最大程度的避免错误或无效数据写入</p>
@@ -132,10 +132,10 @@
 </ul>
 <p>接下来我们一个一个的来详细看看这些配置的具体用法</p>
 <h3 id="_1">正则校验</h3>
-<p>模型属性基础配置中有个<code>数据类型</code>的配置，可以对录入的数据做一些简单限制，例如选择整数类型，则录入数据只能为整数，选择时间类型，则录入数据只能为时间，这些只能从数据类型方面做限制，如果我们想要限制用户输入的内容必须以<code>@ops-coffee.cn</code>结尾，这该如何处理呢？</p>
+<p>模型属性基础配置中有个<code>数据类型</code>的配置，可以对录入的数据做一些简单限制，例如选择整数类型，则录入数据只能为整数，选择时间类型，则录入数据只能为时间，这些只能从数据类型方面做限制，如果我们想要限制用户输入的内容必须以<code>@ops-coffee.com</code>结尾，这该如何处理呢？</p>
 <p>此时就用到了高级模型配置<code>正则校验</code>，正则校验可以为模型属性配置正则校验规则，用户在录入数据时会先去校验是否匹配正则规则，如果匹配才能成功录入，否则录入失败。正则校验可以确保用户录入的数据符合特定的格式要求，提高数据准确性，十分有用</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0606.01.png" /></p>
-<p>VECMDB的正则校验很贴心的内置了一些常用的校验规则，例如手机号码、身份证号、IP地址、邮箱等，如果你想要限制的数据格式是内置的这些，那只需要选择对应的规则即可，如果你的格式要求内置的规则无法满足，也可以选择自定义的方式，自己写正则表达式来校验，例如我上边的需求内容必须以<code>@ops-coffee.cn</code>结尾，就可以通过写自定义正则表达式<code>.+@ops-coffee.cn</code>来满足。这里还贴心的给了测试表单，方便测试正则表达式是否与预期一致，提高正则表达式的准确性</p>
+<p>VECMDB的正则校验很贴心的内置了一些常用的校验规则，例如手机号码、身份证号、IP地址、邮箱等，如果你想要限制的数据格式是内置的这些，那只需要选择对应的规则即可，如果你的格式要求内置的规则无法满足，也可以选择自定义的方式，自己写正则表达式来校验，例如我上边的需求内容必须以<code>@ops-coffee.com</code>结尾，就可以通过写自定义正则表达式<code>.+@ops-coffee.com</code>来满足。这里还贴心的给了测试表单，方便测试正则表达式是否与预期一致，提高正则表达式的准确性</p>
 <p>严格的数据校验能够确保录入数据符合预期，降低数据错误或无效的概率，这个特别重要，尤其是对于CMDB这种基础数据，要为上层业务服务，数据错误直接影响上层业务，所以要尽可能保证CMDB基础数据的完整并准确</p>
 <h3 id="_2">字体</h3>
 <p>VECMDB可以配置属性数据展示时的字体和颜色，主要包括是否加粗、是否斜体、是否加下划线以及显示颜色</p>
@@ -148,7 +148,7 @@
 <p><img alt="" loading="lazy" src="/static/images/2024/0606.03.png" /></p>
 <p>在添加定义的值时，同时也能给定义值添加图标、字体、颜色等配置，十分灵活，这样在录入数据时就能通过下来框来选择定义的值，在录入数据之后进行展示时也同样会以定义好的样式来展示</p>
 <h4 id="webhook">Webhook</h4>
-<p>如果你需要从其他的API获取数据作为录入数据时的可选属性值，那就需要用到<code>预定义值</code>里的<code>Webhook</code>类型。Webhook可以在录入数据时去API取数据，并填充到Select下拉框以供选择。例如我们需要获取的应用信息需要请求URL：<code>https://api.ops-coffee.cn/commons/info/</code>来获取，就可以配置如下Webhook</p>
+<p>如果你需要从其他的API获取数据作为录入数据时的可选属性值，那就需要用到<code>预定义值</code>里的<code>Webhook</code>类型。Webhook可以在录入数据时去API取数据，并填充到Select下拉框以供选择。例如我们需要获取的应用信息需要请求URL：<code>https://api.ops-coffee.com/commons/info/</code>来获取，就可以配置如下Webhook</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0606.05.png" /></p>
 <p>Webhook的使用需要了解一点API请求的知识，首先是选择请求方法，目前支持GET、PUT、POST和DELETE方法，其实是填写请求的URL，再次是填写请求所需的Parameters/Body/Header，如果请求地址有认证也可以选择Authorization配置，支持Basic/Bearer/APIKey/OAuth2.0四种认证方式</p>
 <p>预定义值为列表格式，所以API返回的结果最好直接为列表，例如：<code>{"data": ['value1', 'value2', 'value3']}</code>，那就在过滤规则中填写<code>data</code>即可，如果返回的结果与这个格式不符，有多层嵌套的情况，那还能够用<code>##</code>分隔嵌套来格式化结果为列表，例如解析规则为：<code>k1##k2</code>，则能够解析API请求返回的结果格式为：<code>{k1: [{k2: 1}, {k2: 2}]}</code>, 最终解析结果为：<code>[1, 2]</code></p>
@@ -220,11 +220,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/veops/oneops-cmdb-ci-types-configure-base.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/veops/oneops-cmdb-ci-types-configure-base.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>开源｜维易CMDB详解之模型基础配置</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/veops/oneops-cmdb-ci-types-configure-relationship.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/veops/oneops-cmdb-ci-types-configure-relationship.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>开源｜维易CMDB详解之模型关联关系</span>
                 <span class="pagination-arrow">→</span>
             </a>

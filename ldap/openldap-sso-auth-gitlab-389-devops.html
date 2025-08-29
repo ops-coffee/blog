@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="GitLab, OpenLDAP, LDAP集成, GitLab认证, 版本控制" />
   <meta name="description" content="本文详细介绍了如何在GitLab中集成OpenLDAP，实现账号认证，包括配置文件修改和重要参数解释，以及常见错误处理。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>LDAP落地实战（三）：GitLab集成OpenLDAP认证</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnldap/openldap-sso-auth-gitlab-389-devops.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comldap/openldap-sso-auth-gitlab-389-devops.html" />
   <meta property="og:title" content="LDAP落地实战（三）：GitLab集成OpenLDAP认证" />
   <meta property="og:description" content="本文详细介绍了如何在GitLab中集成OpenLDAP，实现账号认证，包括配置文件修改和重要参数解释，以及常见错误处理。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnldap/openldap-sso-auth-gitlab-389-devops.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comldap/openldap-sso-auth-gitlab-389-devops.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "LDAP落地实战（三）：GitLab集成OpenLDAP认证",
     "description": "本文详细介绍了如何在GitLab中集成OpenLDAP，实现账号认证，包括配置文件修改和重要参数解释，以及常见错误处理。",
-    "url": "https://blog.ops-coffee.cnldap/openldap-sso-auth-gitlab-389-devops.html",
+    "url": "https://blog.ops-coffee.comldap/openldap-sso-auth-gitlab-389-devops.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnldap/openldap-sso-auth-gitlab-389-devops.html"
+      "@id": "https://blog.ops-coffee.comldap/openldap-sso-auth-gitlab-389-devops.html"
     }
   }
   </script>
@@ -128,7 +128,7 @@ servers:
   main: 
     label: 'LDAP'
 
-    host: 'ldap.ops-coffee.cn'
+    host: 'ldap.ops-coffee.com'
     port: 389
     uid: 'uid'
     method: 'plain'
@@ -183,11 +183,11 @@ servers:
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/ldap/openldap-sso-auth-svn-apache-basic.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/ldap/openldap-sso-auth-svn-apache-basic.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>LDAP落地实战（二）：SVN集成OpenLDAP认证</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/ldap/openldap-sso-auth-jenkins-plugins-devops.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/ldap/openldap-sso-auth-jenkins-plugins-devops.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>LDAP落地实战（四）：Jenkins集成OpenLDAP认证</span>
                 <span class="pagination-arrow">→</span>
             </a>

@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="Datatables, 前端插件, 数据加载, DOM操作, 服务器端处理, API调用, Ajax异步获取数据, 结果数据处理" />
   <meta name="description" content="本文详细介绍了Datatables插件的高级用法，包括从不同数据源获取数据、修改数据呈现方式、操作DOM改变页面功能、开启服务端数据处理以及API调用等功能，帮助开发者更灵活地使用Datatables插件。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>前端插件之Datatables使用--下篇</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cnfrontend/front-end-components-jquery-datatables-2.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.comfrontend/front-end-components-jquery-datatables-2.html" />
   <meta property="og:title" content="前端插件之Datatables使用--下篇" />
   <meta property="og:description" content="本文详细介绍了Datatables插件的高级用法，包括从不同数据源获取数据、修改数据呈现方式、操作DOM改变页面功能、开启服务端数据处理以及API调用等功能，帮助开发者更灵活地使用Datatables插件。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cnfrontend/front-end-components-jquery-datatables-2.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.comfrontend/front-end-components-jquery-datatables-2.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "前端插件之Datatables使用--下篇",
     "description": "本文详细介绍了Datatables插件的高级用法，包括从不同数据源获取数据、修改数据呈现方式、操作DOM改变页面功能、开启服务端数据处理以及API调用等功能，帮助开发者更灵活地使用Datatables插件。",
-    "url": "https://blog.ops-coffee.cnfrontend/front-end-components-jquery-datatables-2.html",
+    "url": "https://blog.ops-coffee.comfrontend/front-end-components-jquery-datatables-2.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cnfrontend/front-end-components-jquery-datatables-2.html"
+      "@id": "https://blog.ops-coffee.comfrontend/front-end-components-jquery-datatables-2.html"
     }
   }
   </script>
@@ -118,7 +118,7 @@
         <blockquote>
 <p>工欲善其事，必先利其器</p>
 </blockquote>
-<p>本系列文章介绍我在运维系统开发过程中用到的那些顺手的前端插件，上一篇文章介绍了<a href="https://blog.ops-coffee.cn/frontend/front-end-components-jquery-datatables-1" target="_blank">Datatables插件</a>的基本使用，这一篇文章作为上一篇的延续，会介绍Databases的一些高级用法，例如从不同的数据源获取数据、修改数据最终呈现方式、操作Dom改变页面功能、开启服务端数据处理等</p>
+<p>本系列文章介绍我在运维系统开发过程中用到的那些顺手的前端插件，上一篇文章介绍了<a href="https://blog.ops-coffee.com/frontend/front-end-components-jquery-datatables-1" target="_blank">Datatables插件</a>的基本使用，这一篇文章作为上一篇的延续，会介绍Databases的一些高级用法，例如从不同的数据源获取数据、修改数据最终呈现方式、操作Dom改变页面功能、开启服务端数据处理等</p>
 <h2 id="_1">数据加载</h2>
 <p>上篇文章中的所有数据都是直接渲染的html中的table数据，datatables还支持其他几种数据源，以方便实现更灵活的控制</p>
 <h3 id="_2">从数组中获取</h3>
@@ -126,8 +126,8 @@
 
 $(document).ready(function() {
     var dataSet = [
-      [&quot;3&quot;,&quot;https://ops-coffee.cn&quot;,&quot;2018-07-03&quot;],
-      [&quot;9&quot;,&quot;https://demo.ops-coffee.cn&quot;, &quot;2019-08-06&quot;],
+      [&quot;3&quot;,&quot;https://ops-coffee.com&quot;,&quot;2018-07-03&quot;],
+      [&quot;9&quot;,&quot;https://demo.ops-coffee.com&quot;, &quot;2019-08-06&quot;],
     ];
 
     $('#myTable-x').DataTable({
@@ -164,8 +164,8 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     var dataSet = [
-      {&quot;Id&quot;:&quot;3&quot;,&quot;Site&quot;:&quot;https://ops-coffee.cn&quot;,&quot;Date&quot;:&quot;2018-07-03&quot;},
-      {&quot;Id&quot;:&quot;9&quot;,&quot;Site&quot;:&quot;https://demo.ops-coffee.cn&quot;,&quot;Date&quot;:&quot;2019-08-06&quot;},
+      {&quot;Id&quot;:&quot;3&quot;,&quot;Site&quot;:&quot;https://ops-coffee.com&quot;,&quot;Date&quot;:&quot;2018-07-03&quot;},
+      {&quot;Id&quot;:&quot;9&quot;,&quot;Site&quot;:&quot;https://demo.ops-coffee.com&quot;,&quot;Date&quot;:&quot;2019-08-06&quot;},
     ];
 
     $('#myTable-x').DataTable({
@@ -190,8 +190,8 @@ $(document).ready(function() {
 
     $('#myTable-x').dataTable({
       data: [
-        new dataSet(&quot;3&quot;, &quot;https://ops-coffee.cn&quot;, &quot;2018-07-03&quot;),
-        new dataSet(&quot;9&quot;, &quot;https://demo.ops-coffee.cn&quot;, &quot;2019-08-06&quot;),
+        new dataSet(&quot;3&quot;, &quot;https://ops-coffee.com&quot;, &quot;2018-07-03&quot;),
+        new dataSet(&quot;9&quot;, &quot;https://demo.ops-coffee.com&quot;, &quot;2019-08-06&quot;),
       ],
       columns: [
           {&quot;data&quot;: &quot;id&quot;, &quot;title&quot;:&quot;Id&quot;},
@@ -234,7 +234,7 @@ $(document).ready(function() {
 
 
 <p>render后边跟了个函数，每当数据表需要获取列中某个单元格的数据时<code>render</code>函数都会执行，且函数可能会被执行多次，函数默认接收三个参数，意思分别是：</p>
-<p><strong>data：</strong> 单元格的具体数据，例如<code>https://ops-coffee.cn</code></p>
+<p><strong>data：</strong> 单元格的具体数据，例如<code>https://ops-coffee.com</code></p>
 <p><strong>type：</strong> 标识了这一次调用的请求类型，会有<code>filter</code>、<code>display</code>、<code>type</code>、<code>sort</code></p>
 <p><strong>row：</strong> 这一行的完整数据源，如果像Demo示例传了对象数据，那么可以通过<code>row.site</code>获取到这一行site列的数据</p>
 <p>拿到参数进行一系列的处理后可以通过<code>return</code>返回最终想要展示的内容</p>
@@ -352,12 +352,12 @@ columns[i][search][value]：告诉服务器某些列的具体搜索条件</code>
     &quot;data&quot;: [
         {
             &quot;id&quot;: 3,
-            &quot;site&quot;: &quot;https://ops-coffee.cn&quot;,
+            &quot;site&quot;: &quot;https://ops-coffee.com&quot;,
             &quot;date&quot;: &quot;2018-07-03&quot;
         },
         {
             &quot;id&quot;: 9,
-            &quot;site&quot;: &quot;https://demo.ops-coffee.cn&quot;,
+            &quot;site&quot;: &quot;https://demo.ops-coffee.com&quot;,
             &quot;date&quot;: &quot;2019-08-06&quot;
         }
         // 省略其他结果
@@ -381,16 +381,16 @@ table.page(2).draw(false)</code></pre>
 <p><strong>page(2)：</strong> page为分页方法，后边的2表示跳转到第几页，可以是一个数字，也可以是<code>first</code>、<code>next</code>、<code>previous</code>、<code>last</code>这样的字符串，当为数字时要从0算起，例如示例中为2实际上是跳转到了第3页</p>
 <p><strong>draw(false)：</strong> 对表格进行重绘以实现表格更新的显示，大多数的api操作都不会直接更新在页面上，所以需要调用下<code>draw</code>，默认情况下重绘后分页会被重置回到第一页，当设置为<code>false</code>时分页不会被重置</p>
 <h3 id="_10">搜索某列</h3>
-<p>搜索第2列包含<code>ops-coffee.cn</code>的行</p>
+<p>搜索第2列包含<code>ops-coffee.com</code>的行</p>
 <pre class="codehilite"><code>var tablx = $('#myTable').dataTable()
 
-tablx.api().column(1).search('ops-coffee.cn').draw()</code></pre>
+tablx.api().column(1).search('ops-coffee.com').draw()</code></pre>
 
 
 <p>首先需要注意这个例子中的API调用使用了<code>.api()</code>，这是因为上一个例子在初始化时用了<code>.DataTable()</code>而这个例子初始化时用了<code>.dataTable()</code>，仅仅是d字母大小写的区别而已，但意义确不同，前者直接返回API实例，后者返回的是jQuery实例</p>
 <h4 id="_11">精确搜索</h4>
-<p>默认情况下搜索时模糊匹配的，例如你搜索<code>ops-coffee.cn</code>，会把<code>blog.ops-coffee.cn</code>、<code>nav.ops-coffee.cn</code>之类的都搜索出来，如果想要精确匹配，仅搜索完全匹配<code>ops-coffee.cn</code>的结果，则需要借助于正则表达式来实现</p>
-<pre class="codehilite"><code>tablx.api().column(1).search('^ops-coffee.cn$', true, false).draw()</code></pre>
+<p>默认情况下搜索时模糊匹配的，例如你搜索<code>ops-coffee.com</code>，会把<code>blog.ops-coffee.com</code>、<code>nav.ops-coffee.com</code>之类的都搜索出来，如果想要精确匹配，仅搜索完全匹配<code>ops-coffee.com</code>的结果，则需要借助于正则表达式来实现</p>
+<pre class="codehilite"><code>tablx.api().column(1).search('^ops-coffee.com$', true, false).draw()</code></pre>
 
 
 <p>search接收4个参数，分别是：input、regex、smart、caseInsen，每个参数的解释如下</p>
@@ -432,7 +432,7 @@ tablx.api().column(1).search('ops-coffee.cn').draw()</code></pre>
 </table>
 <h2 id="demo">完整Demo</h2>
 <p>为了方便大家学习，我写了个完整的demo，你可以在线查看效果或下载代码应用到自己的项目中</p>
-<p>在线Demo地址：<a href="https://demo.ops-coffee.cn/datatables/" target="_blank">https://demo.ops-coffee.cn/datatables/</a></p>
+<p>在线Demo地址：<a href="https://demo.ops-coffee.com/datatables/" target="_blank">https://demo.ops-coffee.com/datatables/</a></p>
 <p>Github源码地址：<a href="https://github.com/ops-coffee/demo/tree/master/datatables" target="_blank">https://github.com/ops-coffee/demo/tree/master/datatables</a></p>
 
         <div>
@@ -444,11 +444,11 @@ tablx.api().column(1).search('ops-coffee.cn').draw()</code></pre>
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/frontend/front-end-components-jquery-datatables-1.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/frontend/front-end-components-jquery-datatables-1.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>前端插件之Datatables使用--上篇</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/frontend/front-end-components-javascript-jquery-ace-js.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/frontend/front-end-components-javascript-jquery-ace-js.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>最好用的web端代码文本编辑器ACE</span>
                 <span class="pagination-arrow">→</span>
             </a>

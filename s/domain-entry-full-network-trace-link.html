@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="运维自动化, 域名系统, 全链路自动化, 系统拓扑构建, APM监控, 子网, 名称, 关系树" />
   <meta name="description" content="本文介绍了如何从域名系统出发，通过基础资源数据实现全链路自动化的系统拓扑构建，探讨了子网、名称、关系树等方法在数据流转关系获取中的应用，并提出了一些不完善之处供探讨。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>从入口域名开始探索全链路自动化拓扑</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/domain-entry-full-network-trace-link.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/domain-entry-full-network-trace-link.html" />
   <meta property="og:title" content="从入口域名开始探索全链路自动化拓扑" />
   <meta property="og:description" content="本文介绍了如何从域名系统出发，通过基础资源数据实现全链路自动化的系统拓扑构建，探讨了子网、名称、关系树等方法在数据流转关系获取中的应用，并提出了一些不完善之处供探讨。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/domain-entry-full-network-trace-link.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/domain-entry-full-network-trace-link.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "从入口域名开始探索全链路自动化拓扑",
     "description": "本文介绍了如何从域名系统出发，通过基础资源数据实现全链路自动化的系统拓扑构建，探讨了子网、名称、关系树等方法在数据流转关系获取中的应用，并提出了一些不完善之处供探讨。",
-    "url": "https://blog.ops-coffee.cns/domain-entry-full-network-trace-link.html",
+    "url": "https://blog.ops-coffee.coms/domain-entry-full-network-trace-link.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/domain-entry-full-network-trace-link.html"
+      "@id": "https://blog.ops-coffee.coms/domain-entry-full-network-trace-link.html"
     }
   }
   </script>
@@ -115,7 +115,7 @@
     <div class="container">
         <h1 id="art-title">从入口域名开始探索全链路自动化拓扑</h1>
 
-        <p><a href="https://blog.ops-coffee.cn/s/devops-domain-record-certificate" target="_blank">运维自动化之域名系统</a>的文章发出去之后，有小伙伴问既然拿到了域名及所有基础资源数据，那能不能从入口域名开始实现全链路自动化的系统拓扑构建？全链路的系统拓扑构建需要知道链路上所有节点之间的数据流转关系，之前在落地APM监控时有接触过，APM通过代码埋点拿到链路节点之间的数据流转关系，而流转关系仅通过基础资源是没有办法获取的，除非人工维护，人工往往不靠谱，代码埋点成本又太高，还是要从这些基础资源数据出发，寻求简洁点自动化解决方案。今天刚好有空就简单想了下这个问题，初步实现，效果如下</p>
+        <p><a href="https://blog.ops-coffee.com/s/devops-domain-record-certificate" target="_blank">运维自动化之域名系统</a>的文章发出去之后，有小伙伴问既然拿到了域名及所有基础资源数据，那能不能从入口域名开始实现全链路自动化的系统拓扑构建？全链路的系统拓扑构建需要知道链路上所有节点之间的数据流转关系，之前在落地APM监控时有接触过，APM通过代码埋点拿到链路节点之间的数据流转关系，而流转关系仅通过基础资源是没有办法获取的，除非人工维护，人工往往不靠谱，代码埋点成本又太高，还是要从这些基础资源数据出发，寻求简洁点自动化解决方案。今天刚好有空就简单想了下这个问题，初步实现，效果如下</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/1201.png" /></p>
 <p>这篇文章就简单介绍一下我的实现方案，并不完美，甚至还有很多问题，欢迎探讨。这里有个前提就是无法通过埋点拿数据</p>
 <p>域名可能指向到负载均衡、服务器、CDN、高防或者是CNAME到其他的域名，有一部分数据流转关系我们是确定的，那就是域名到服务器这一段，以上图域名指向负载均衡为例，域名到负载均衡的解析是固定的，然后可以通过负载均衡拿到监听器的数据，再通过监听器就能获取监听器下挂的服务器。再往下服务器究竟使用了哪些中间件我们就没办法获取了，如何知道接下来的数据链路呢？这里提供几个思路</p>
@@ -128,7 +128,7 @@
 <p>例如如下命名：project-environment-service-name。同一项目同一环境同一服务不同资源的命名仅有最后一部分不同，那就可以遍历资源，获取到相同命名规则的资源，也能继续进行下一级的自动拓扑</p>
 <p>这种方式的准确率取决于命名的规范程度</p>
 <h2 id="_3">关系树</h2>
-<p>如果以上两种都没有，那还可以通过服务树来获取，我们在构建<a href="https://blog.ops-coffee.cn/devops/cloud.html" target="_blank">多云系统</a>时确定，所有资源都隶属于服务树上的某个节点，服务树往往是规范的，那获取与服务器同一服务树节点下的其他资源也是属于同一个业务，之间的数据流向几乎也是确定的</p>
+<p>如果以上两种都没有，那还可以通过服务树来获取，我们在构建<a href="https://blog.ops-coffee.com/devops/cloud.html" target="_blank">多云系统</a>时确定，所有资源都隶属于服务树上的某个节点，服务树往往是规范的，那获取与服务器同一服务树节点下的其他资源也是属于同一个业务，之间的数据流向几乎也是确定的</p>
 <p>这种方式的话就要求你的服务树是规范的</p>
 <p>很明显，虽然可以通过以上几种方式来获取最后一段的关系数据，但都不够准确，尤其是在业务逻辑比较复杂的情况下，仅是做个参考而已。几个小时的时间从思考到编码实现，有很多不完善的地方，此文也就抛砖引玉</p>
 
@@ -141,11 +141,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/programmer-search-engine-devv-ai.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/programmer-search-engine-devv-ai.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>神器推荐 | 最懂程序员的新一代AI搜索引擎</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/django-tenant-rbac-auth-permission.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/django-tenant-rbac-auth-permission.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>权限管理之多租户隔离授权</span>
                 <span class="pagination-arrow">→</span>
             </a>
