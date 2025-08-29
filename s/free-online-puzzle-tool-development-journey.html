@@ -7,17 +7,17 @@
   <meta name="applicable-device" content="pc,mobile">
   <meta name="keywords" content="免费在线拼图工具, AI辅助开发, Gemini模型, 无需登录, 移动端兼容, 图片视区平移, 自定义边框, 添加文字, 添加箭头, 完全免费" />
   <meta name="description" content="这篇文章讲述了一个免费在线拼图工具的开发过程，从解决个人需求到逐渐完善功能，最终成为一个完全免费、无需登录的工具。通过AI辅助开发，实现了多种创新功能，如移动端兼容、图片视区平移等，展现了AI时代的创作可能性。" />
-  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.cn/feed.xml" />
-  <link rel="stylesheet" href="https://blog.ops-coffee.cn/static/posts/css/ops-coffee.min.css" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
 
   <!-- Begin SEO tag -->
   <title>借免费拼图工具诞生的故事分享下使用AI编程的经验</title>
   <meta property="og:locale" content="zh_CN" />
   <meta property="og:site_name" content="运维咖啡吧" />
-  <meta property="og:url" content="https://blog.ops-coffee.cns/free-online-puzzle-tool-development-journey.html" />
+  <meta property="og:url" content="https://blog.ops-coffee.coms/free-online-puzzle-tool-development-journey.html" />
   <meta property="og:title" content="借免费拼图工具诞生的故事分享下使用AI编程的经验" />
   <meta property="og:description" content="这篇文章讲述了一个免费在线拼图工具的开发过程，从解决个人需求到逐渐完善功能，最终成为一个完全免费、无需登录的工具。通过AI辅助开发，实现了多种创新功能，如移动端兼容、图片视区平移等，展现了AI时代的创作可能性。" />
-  <link rel="canonical" href="https://blog.ops-coffee.cns/free-online-puzzle-tool-development-journey.html" />
+  <link rel="canonical" href="https://blog.ops-coffee.coms/free-online-puzzle-tool-development-journey.html" />
 
   <script type="application/ld+json">
   {
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "借免费拼图工具诞生的故事分享下使用AI编程的经验",
     "description": "这篇文章讲述了一个免费在线拼图工具的开发过程，从解决个人需求到逐渐完善功能，最终成为一个完全免费、无需登录的工具。通过AI辅助开发，实现了多种创新功能，如移动端兼容、图片视区平移等，展现了AI时代的创作可能性。",
-    "url": "https://blog.ops-coffee.cns/free-online-puzzle-tool-development-journey.html",
+    "url": "https://blog.ops-coffee.coms/free-online-puzzle-tool-development-journey.html",
     "author": {
       "@type": "Person",
       "name": "运维咖啡吧"
@@ -35,12 +35,12 @@
       "name": "运维咖啡吧",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://blog.ops-coffee.cn/favicon.ico"
+        "url": "https://blog.ops-coffee.com/favicon.ico"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://blog.ops-coffee.cns/free-online-puzzle-tool-development-journey.html"
+      "@id": "https://blog.ops-coffee.coms/free-online-puzzle-tool-development-journey.html"
     }
   }
   </script>
@@ -115,21 +115,21 @@
     <div class="container">
         <h1 id="art-title">借免费拼图工具诞生的故事分享下使用AI编程的经验</h1>
 
-        <p>在过去的短短三天里，我经历了一场奇妙的创作之旅。这一切都要从周六发出的这一篇<a href="https://blog.ops-coffee.cn/s/free-for-dev-free-services-for-developers.html" target="_blank">「我珍藏的免费服务清单，在这个GitHub项目面前不值一提」</a>文章说起</p>
+        <p>在过去的短短三天里，我经历了一场奇妙的创作之旅。这一切都要从周六发出的这一篇<a href="https://blog.ops-coffee.com/s/free-for-dev-free-services-for-developers.html" target="_blank">「我珍藏的免费服务清单，在这个GitHub项目面前不值一提」</a>文章说起</p>
 <p>虽然我们已经在上海居住了十几年，但家里的亲戚却少有来过的，最近恰遇小学放假，姐姐带小外甥来看看大上海，时间很紧不会多呆，考虑到这火辣的天气，在跟小朋友沟通过之后决定周六带他们去蹦床乐园玩儿，主要是两个小朋友进去玩儿，我这身板根本蹦不动，就在外边做好后勤工作，毕竟是游乐场所，很吵，闲来无聊就想着写篇文章打发下时间，于是动笔</p>
-<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/20050702.01.jpg" /></p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2025/20050702.01.jpg" /></p>
 <p>文章没有问题，但因为文章里需要配一张拼图，翻了很久都没有找到一个趁手好用的工具，要么登录要么花钱，我都不想，于是便有了自己造个轮子的想法。周日起床开始动手，由于我自己并不怎么懂前端，再加上现在AI已经这么强大，自然而然的就想到了Vibe Coding，我出想法和思路，编码的事情就交给AI了，用了最近常用的Gemini 2.5 Pro模型，从早到晚，高强度的对话了几个小时，凌晨时分，一个我自己满意的拼图版本终于上线了</p>
-<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/20250701.01.png" /></p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2025/20250701.01.png" /></p>
 <p>这个版本只有两个核心的功能：<strong>布局拼图</strong>和<strong>长图拼接</strong>，布局拼图主要是根据给定的布局拼出好看的图片，内置了几十种布局，非常丰富，许多布局还是其他拼图软件收费的，支持边框拖动、拖拽换位、边框间距、圆角调节等等基础功能，而长图拼接则较为简单，主要就是可以拼长图，支持横向和纵向，解决了拼图下载清晰度不够的问题</p>
 <p>虽说这些功能其他的拼图软件也有，不过自己造的必须有自己的优势，不用下载APP打开网页就能用、完全免费、不用登录直接下载，同时因为是纯前端实现，没有后端服务，不存在数据上传问题，对用户隐私十分友好，更加安全</p>
-<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/20250701.02.png" /></p>
-<p>时间来到周一，高强度的使用了这个拼图工具，同时还发现并修复了一些BUG，优化了使用体验，让它变得更好用。我不甘于新造的轮子只有我自己使用，于是写了篇文章<a href="https://blog.ops-coffee.cn/s/free-puzzle-tool-no-login-hd-download.html" target="_blank">一个纯粹的在线拼图工具，完全免费不用登录</a>向大家介绍了这个工具，同时还发给了<a href="https://blog.ops-coffee.cn/s/Increase-the-price-of-paid-WeChat-group.html" target="_blank">咖啡吧的朋友们</a>试用</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2025/20250701.02.png" /></p>
+<p>时间来到周一，高强度的使用了这个拼图工具，同时还发现并修复了一些BUG，优化了使用体验，让它变得更好用。我不甘于新造的轮子只有我自己使用，于是写了篇文章<a href="https://blog.ops-coffee.com/s/free-puzzle-tool-no-login-hd-download.html" target="_blank">一个纯粹的在线拼图工具，完全免费不用登录</a>向大家介绍了这个工具，同时还发给了<a href="https://blog.ops-coffee.com/s/Increase-the-price-of-paid-WeChat-group.html" target="_blank">咖啡吧的朋友们</a>试用</p>
 <p>除了好用之外还得到了一些BUG反馈及优化建议，都很中肯，于是就继续与AI对话，在周二上线了一个新版本，修复BUG增加功能，首先解决了移动端无法使用的问题，<strong>全面兼容移动端</strong>，移动端的使用体验变得像PC端一样丝滑，其次新增了<strong>图片视区平移</strong>功能，你可以自己决定某张图片展示的视觉区域，还上线了<strong>背景图片</strong>功能，背景不在是单纯的颜色，拼图也可以有创意，除此之外还优化了上传逻辑、PC端侧边折叠、新增交互提示等等，使用体验更上一层</p>
-<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/20050702.02.png" /></p>
-<p>新版本上线后比较兴奋，即兴又写了篇短文介绍：<a href="https://blog.ops-coffee.cn/s/free-puzzle-tool-update-mobile-and-panning.html" target="_blank">「一个纯粹的免费在线拼图工具，它进化了！」</a>，同样的文章发出后又收到了不少朋友的反馈，能不能增加16:10的比例配置？边框能不能自定义调整，像拍立得一样下方留白？能否在拼图上添加文字？添加的文字能不能添加箭头指向？好吧，这些功能通通安排，只要AI能实现我就能上线，好在AI足够强大，这些功能全都一一上线了：<strong>添加文字</strong>、<strong>添加箭头</strong>、<strong>自定义边框</strong>，其实还不止这些，我还为这个项目做了个Landing Page，也同样交给了Gemini，基于这两天我们的交互，它非常准确且快速的做出了这个页面，我看了下，十分精准还好看</p>
-<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/20050702.03.png" /></p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2025/20050702.02.png" /></p>
+<p>新版本上线后比较兴奋，即兴又写了篇短文介绍：<a href="https://blog.ops-coffee.com/s/free-puzzle-tool-update-mobile-and-panning.html" target="_blank">「一个纯粹的免费在线拼图工具，它进化了！」</a>，同样的文章发出后又收到了不少朋友的反馈，能不能增加16:10的比例配置？边框能不能自定义调整，像拍立得一样下方留白？能否在拼图上添加文字？添加的文字能不能添加箭头指向？好吧，这些功能通通安排，只要AI能实现我就能上线，好在AI足够强大，这些功能全都一一上线了：<strong>添加文字</strong>、<strong>添加箭头</strong>、<strong>自定义边框</strong>，其实还不止这些，我还为这个项目做了个Landing Page，也同样交给了Gemini，基于这两天我们的交互，它非常准确且快速的做出了这个页面，我看了下，十分精准还好看</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2025/20050702.03.png" /></p>
 <p>尤其是这块内容，真的做到了我心里</p>
-<p><img alt="" loading="lazy" src="https://static.ops-coffee.cn/static/images/2025/20050702.04.png" /></p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2025/20050702.04.png" /></p>
 <h2 id="_1">经验</h2>
 <p>整个工具的开发我没有写一行代码，全程都是Gemini，我输出想法，由它来实现，完了我测试，我告诉他哪里有问题或者哪里待优化，它继续修改，我继续测试如此往复，最终造就了这个工具。所以说，AI时代了，即便是你不懂编程，只要有好的想法、清晰的思维和逻辑，也一样能够上线好用的产品</p>
 <p>如何更好的与AI交互，我觉得首先就是你自己要十分清楚你想要什么，并能通过语言表达出来，要AI能够理解，尽量说的详细。几点经验分享</p>
@@ -143,7 +143,7 @@
 <p>经验给你，欢迎补充</p>
 <h2 id="_2">结语</h2>
 <p>从一个解决个人麻烦的小工具，到如今这个趋于完善的系统平台，整个过程充满了探索的乐趣。我把它分享出来，不仅是分享一个工具，更是分享一种在AI时代下全新的创作可能性，我不知道它的终点在哪，但只要还有能被解决的痛点，只要大家还有新的奇思妙想，这场有趣的对话和进化，就会继续下去</p>
-<p>工具地址： <a href="https://img.ops-coffee.cn" target="_blank">https://img.ops-coffee.cn</a></p>
+<p>工具地址： <a href="https://img.ops-coffee.com" target="_blank">https://img.ops-coffee.com</a></p>
 <p>欢迎你来体验它的第三次进化，也期待在留言区看到你的想法和创意</p>
 
         <div>
@@ -155,11 +155,11 @@
         <hr>
 
         <div class="pagination">
-            <a href="https://blog.ops-coffee.cn/s/free-puzzle-tool-update-mobile-and-panning.html" class="pagination-item prev-page">
+            <a href="https://blog.ops-coffee.com/s/free-puzzle-tool-update-mobile-and-panning.html" class="pagination-item prev-page">
                 <span class="pagination-arrow">←</span>
                 <span class="pagination-text">上一篇：<br>一个纯粹的免费在线拼图工具，它进化了！</span>
             </a>
-            <a href="https://blog.ops-coffee.cn/s/new-version-free-puzzle-tool-update.html" class="pagination-item next-page">
+            <a href="https://blog.ops-coffee.com/s/new-version-free-puzzle-tool-update.html" class="pagination-item next-page">
                 <span class="pagination-text">下一篇：<br>周一才上线的网站，单单今天已经超过1000访问了</span>
                 <span class="pagination-arrow">→</span>
             </a>
