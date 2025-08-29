@@ -1,173 +1,173 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
-  <id>https://blog.ops-coffee.cn</id>
+  <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-08-28T11:20:34.806249+08:00</updated>
+  <updated>2025-08-29T11:41:59.935077+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
-  <link href="https://blog.ops-coffee.cn" rel="alternate"/>
-  <link href="https://blog.ops-coffee.cn/atom.xml" rel="self"/>
+  <link href="https://blog.ops-coffee.com" rel="alternate"/>
+  <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day17-zhangzhou-dongshan.html</id>
+    <id>https://blog.ops-coffee.com/s/2025-summer-coastal-road-trip-day18-zhangzhou-dongshan-zuoer.html</id>
+    <title>久违的暑假｜沿海自驾DAY18 - 左耳</title>
+    <updated>2025-08-29T11:41:59.935077+08:00</updated>
+    <link href="https://blog.ops-coffee.com/s/2025-summer-coastal-road-trip-day18-zhangzhou-dongshan-zuoer.html"/>
+    <summary>在2025年的沿海自驾游中，作者在苏峰山与南门湾度过了难忘的一天，体验了美丽的环岛公路、古朴的岩雅古村和电影取景地南门湾，同时享受了海边的宁静与美食。</summary>
+    <published>2025-08-29T11:41:59.914196+08:00</published>
+  </entry>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day17-zhangzhou-dongshan.html</id>
     <title>久违的暑假｜沿海自驾DAY17 - 东山</title>
     <updated>2025-08-28T11:20:34.806249+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day17-zhangzhou-dongshan.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day17-zhangzhou-dongshan.html"/>
     <summary>本文记录了从漳州到东山岛的沿海自驾游行程，途经六鳌半岛和古雷半岛，探索了金銮湾和苏峰山的美景，体验了当地的渔业文化和不期而遇的人情味。</summary>
     <published>2025-08-28T11:20:34.797628+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day16-zhangzhou-longhai.html</id>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day16-zhangzhou-longhai.html</id>
     <title>久违的暑假｜沿海自驾DAY16 - 龙海</title>
     <updated>2025-08-27T10:13:01.467318+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day16-zhangzhou-longhai.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day16-zhangzhou-longhai.html"/>
     <summary>从漳州出发，沿着G228国道自驾前往东山岛，途经美丽的岛美村和镇海角，探索火山岩地貌和原始海景，享受沿海自驾的乐趣与美景。</summary>
     <published>2025-08-27T10:12:49.080979+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day15-zhangzhou-gucheng.html</id>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day15-zhangzhou-gucheng.html</id>
     <title>久违的暑假｜沿海自驾DAY15 - 漳州</title>
     <updated>2025-08-26T12:47:37.492986+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day15-zhangzhou-gucheng.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day15-zhangzhou-gucheng.html"/>
     <summary/>
     <published>2025-08-26T12:47:37.477265+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day14-xiamen-jiageng.html</id>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day14-xiamen-jiageng.html</id>
     <title>久违的暑假｜沿海自驾DAY14 - 嘉庚</title>
     <updated>2025-08-25T10:38:57.496202+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day14-xiamen-jiageng.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day14-xiamen-jiageng.html"/>
     <summary/>
     <published>2025-08-25T10:38:57.489831+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day13-xiamen-jimei.html</id>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day13-xiamen-jimei.html</id>
     <title>久违的暑假｜沿海自驾DAY13 - 集美</title>
     <updated>2025-08-24T13:13:05.892539+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day13-xiamen-jimei.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day13-xiamen-jimei.html"/>
     <summary>文章记录了在厦门的图书馆、博物馆及集美学村的游览经历，体验了图书馆的静谧、博物馆的历史文化以及集美学村的中西合璧建筑，感受了厦门的文化魅力。</summary>
     <published>2025-08-24T13:13:05.883987+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day12-xiamen-budao.html</id>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day12-xiamen-budao.html</id>
     <title>久违的暑假｜沿海自驾DAY12 - 步道</title>
     <updated>2025-08-24T11:05:46.396491+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day12-xiamen-budao.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day12-xiamen-budao.html"/>
     <summary>在厦门山海步道徒步，体验云海线和林海线的独特魅力，穿过山间与水系，感受城市与自然的完美结合，是一次难忘的旅行经历。</summary>
     <published>2025-08-23T15:28:25.164997+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day11-xiamen-shatan.html</id>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day11-xiamen-shatan.html</id>
     <title>久违的暑假｜沿海自驾DAY11 - 沙滩</title>
     <updated>2025-08-22T04:02:40.186727+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day11-xiamen-shatan.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day11-xiamen-shatan.html"/>
     <summary>2025年暑假，厦门环岛骑行成为了最佳旅行体验。文章详细记录了从环岛东路到白城沙滩的骑行经历，以及在演武大桥观景平台欣赏厦门湾美景的难忘时刻。</summary>
     <published>2025-08-22T04:02:40.177343+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day10-xiamen-huandao.html</id>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day10-xiamen-huandao.html</id>
     <title>久违的暑假｜沿海自驾DAY10 - 厦门</title>
     <updated>2025-08-21T10:35:40.456409+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day10-xiamen-huandao.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day10-xiamen-huandao.html"/>
     <summary>2025暑假沿海自驾的第十天，探索了厦门的沿海风光与历史文化。骑行环岛路，感受海风与椰林，参观大嶝岛上的金门县政府旧址，体验厦门的浪漫与松弛。</summary>
     <published>2025-08-21T10:35:40.440901+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day9-quanzhou-jinjiang.html</id>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day9-quanzhou-jinjiang.html</id>
     <title>久违的暑假｜沿海自驾DAY9 - 晋江</title>
     <updated>2025-08-20T10:54:59.286456+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day9-quanzhou-jinjiang.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day9-quanzhou-jinjiang.html"/>
     <summary>在泉州沿海自驾的第九天，探索了永宁古城的历史文化与番仔楼，意外发现了安平桥的宏伟，以及石井镇的郑成功文化，展现了泉州丰富的历史与自然景观。</summary>
     <published>2025-08-20T10:54:26.982002+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day8-quanzhou-shishi.html</id>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day8-quanzhou-shishi.html</id>
     <title>久违的暑假｜沿海自驾DAY8 - 石狮</title>
     <updated>2025-08-19T10:47:22.948958+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day8-quanzhou-shishi.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day8-quanzhou-shishi.html"/>
     <summary>探索泉州洛阳桥的历史与建造技术，体验福建海滨的宁静与美丽，感受渔村生活与海滨风光的独特魅力。</summary>
     <published>2025-08-19T10:46:43.719985+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day7-quanzhou-shaolin.html</id>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day7-quanzhou-shaolin.html</id>
     <title>久违的暑假｜沿海自驾DAY7 - 少林</title>
     <updated>2025-08-18T10:51:10.672922+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day7-quanzhou-shaolin.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day7-quanzhou-shaolin.html"/>
     <summary>探索泉州少林寺的历史与文化，体验南少林武术的独特魅力，并在夜晚漫步泉州古城，感受东西湖的宁静与美丽，享受一个人的旅行时光。</summary>
     <published>2025-08-18T10:49:49.529746+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day6-quanzhou-xunpu.html</id>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day6-quanzhou-xunpu.html</id>
     <title>久违的暑假｜沿海自驾DAY6 - 蟳埔</title>
     <updated>2025-08-17T15:46:48.156563+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day6-quanzhou-xunpu.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day6-quanzhou-xunpu.html"/>
     <summary>探索泉州第六天，体验通淮关岳庙、清净寺、天后宫等历史文化景点，品尝当地美食如姜母鸭、海蛎煎，并感受晋江边的夜晚氛围。</summary>
     <published>2025-08-17T15:43:21.391961+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day5-quanzhou-gucheng.html</id>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day5-quanzhou-gucheng.html</id>
     <title>久违的暑假｜沿海自驾DAY5 - 古城</title>
     <updated>2025-08-16T10:20:39.202058+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day5-quanzhou-gucheng.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day5-quanzhou-gucheng.html"/>
     <summary>探索泉州古城的历史文化与非遗遗产，体验清源山晚茶、参观开元寺和泉州府文庙，品尝当地美食如沙茶面，欣赏非遗木偶戏，感受古城的独特魅力。</summary>
     <published>2025-08-16T10:20:39.192594+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/s/2025-summer-coastal-road-trip-day4-quanzhou-xijie.html</id>
+    <id>https://blog.ops-coffee.com/s/2025-summer-coastal-road-trip-day4-quanzhou-xijie.html</id>
     <title>久违的暑假｜沿海自驾DAY4 - 泉州</title>
     <updated>2025-08-15T08:19:02.136596+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/s/2025-summer-coastal-road-trip-day4-quanzhou-xijie.html"/>
+    <link href="https://blog.ops-coffee.com/s/2025-summer-coastal-road-trip-day4-quanzhou-xijie.html"/>
     <summary>探索泉州西街、开元寺和清源山，体验闽南特色美食和夜茶文化，感受泉州的独特魅力与生活格调。</summary>
     <published>2025-08-15T08:15:18.233694+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day3-dongtou.html</id>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day3-dongtou.html</id>
     <title>久违的暑假｜沿海自驾DAY3 - 洞头</title>
     <updated>2025-08-14T09:27:42.879098+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day3-dongtou.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day3-dongtou.html"/>
     <summary>2025暑假沿海自驾第三天，探索温岭石塘的海利村与最美渔村，体验山顶TUTU咖啡馆的270°海景，随后前往洞头风景区，感受七彩洞头村的滨海生活气息。</summary>
     <published>2025-08-14T09:26:06.886986+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day2-wenlingshitang.html</id>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day2-wenlingshitang.html</id>
     <title>久违的暑假｜沿海自驾DAY2 - 温岭</title>
     <updated>2025-08-13T06:58:32.187269+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day2-wenlingshitang.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day2-wenlingshitang.html"/>
     <summary>从绍兴到温岭的沿海自驾之旅，探索了104国道上的自然美景和温岭石塘的海利村，欣赏了最美的渔村风光和壮观的海景，是一次令人难忘的旅程。</summary>
     <published>2025-08-13T00:02:00.704762+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day1-departure.html</id>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day1-departure.html</id>
     <title>久违的暑假｜沿海自驾DAY1 - 出发</title>
     <updated>2025-08-12T08:36:04.791377+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/2025-summer-coastal-road-trip-day1-departure.html"/>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day1-departure.html"/>
     <summary>2025年暑期自驾出发啦</summary>
     <published>2025-08-12T07:08:43.132532+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/s/collage-maker-tool-gets-sponsored-after-one-month-launch.html</id>
+    <id>https://blog.ops-coffee.com/s/collage-maker-tool-gets-sponsored-after-one-month-launch.html</id>
     <title>上线仅一个月，免费拼图工具收到赞助啦</title>
     <updated>2025-08-11T21:34:31.938616+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/s/collage-maker-tool-gets-sponsored-after-one-month-launch.html"/>
+    <link href="https://blog.ops-coffee.com/s/collage-maker-tool-gets-sponsored-after-one-month-launch.html"/>
     <summary>从一个解决个人麻烦的想法，到服务成千上万用户的拼图工具，再到收到第一笔收入，这段历程充满意义。发现这个免费、无广告的在线拼图工具的成长故事。</summary>
     <published>2025-08-09T19:44:49.134487+08:00</published>
   </entry>
   <entry>
-    <id>https://blog.ops-coffee.cn/r/city-china-zhejiang-shaoxing-xinchang-yanbangshibadu.html</id>
+    <id>https://blog.ops-coffee.com/r/city-china-zhejiang-shaoxing-xinchang-yanbangshibadu.html</id>
     <title>新昌｜从十八渡到十九峰，夏日徒步玩水的绝佳线路</title>
     <updated>2025-08-07T14:30:25.107357+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/r/city-china-zhejiang-shaoxing-xinchang-yanbangshibadu.html"/>
+    <link href="https://blog.ops-coffee.com/r/city-china-zhejiang-shaoxing-xinchang-yanbangshibadu.html"/>
     <summary>探索绍兴嵊州的盐帮十八渡和穿岩十九峰，体验徒步与玩水的乐趣，感受山野之美，品味嵊州小吃，享受两天的完美旅行。</summary>
     <published>2025-08-07T14:15:18.539306+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.cn/s/collage-maker-another-milestone-passing-200k.html</id>
-    <title>又是一个里程碑，轻松超过200k</title>
-    <updated>2025-07-30T01:23:07.600339+08:00</updated>
-    <link href="https://blog.ops-coffee.cn/s/collage-maker-another-milestone-passing-200k.html"/>
-    <summary>在线拼图工具访问量突破200k！了解其背后的故事与最新更新，包括高清下载优化、工具栏动态调整及全球化支持，体验完全免费、高清下载的在线拼图工具。</summary>
-    <published>2025-07-24T22:41:26.117960+08:00</published>
   </entry>
 </feed>
