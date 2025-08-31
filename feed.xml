@@ -8,7 +8,14 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Custom CMS v1.0</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 30 Aug 2025 21:05:12 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 31 Aug 2025 15:01:58 +0800</lastBuildDate>
+    <item>
+      <title>久违的暑假｜沿海自驾DAY20 - 诏安</title>
+      <link>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day20-zhangzhou-zhaoan.html</link>
+      <description>从东山岛出发，探索漳州诏安的特色美食贼婆面与南峰凉茶，感受生活气息浓郁的诏安小城。随后前往潮州，迎接韩江的夕阳美景，继续美食之旅。</description>
+      <guid isPermaLink="false">https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day20-zhangzhou-zhaoan.html</guid>
+      <pubDate>Sun, 31 Aug 2025 15:01:58 +0800</pubDate>
+    </item>
     <item>
       <title>久违的暑假｜沿海自驾DAY19 - 澳角</title>
       <link>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day19-zhangzhou-dongshan-aojiao.html</link>
@@ -139,13 +146,6 @@
       <description>2025年暑期自驾出发啦</description>
       <guid isPermaLink="false">https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day1-departure.html</guid>
       <pubDate>Tue, 12 Aug 2025 07:08:43 +0800</pubDate>
-    </item>
-    <item>
-      <title>上线仅一个月，免费拼图工具收到赞助啦</title>
-      <link>https://blog.ops-coffee.com/s/collage-maker-tool-gets-sponsored-after-one-month-launch.html</link>
-      <description>从一个解决个人麻烦的想法，到服务成千上万用户的拼图工具，再到收到第一笔收入，这段历程充满意义。发现这个免费、无广告的在线拼图工具的成长故事。</description>
-      <guid isPermaLink="false">https://blog.ops-coffee.com/s/collage-maker-tool-gets-sponsored-after-one-month-launch.html</guid>
-      <pubDate>Sat, 09 Aug 2025 19:44:49 +0800</pubDate>
     </item>
   </channel>
 </rss>
