@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-09-01T14:01:35.004810+08:00</updated>
+  <updated>2025-09-02T13:26:34.182427+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day22-chaozhou-chengqiang.html</id>
+    <title>久违的暑假｜沿海自驾DAY22 - 城墙</title>
+    <updated>2025-09-02T13:26:34.182427+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day22-chaozhou-chengqiang.html"/>
+    <summary>在潮州的第二天，探索了历史悠久的西湖公园和壮丽的古城墙，体验了当地的美食如芝麻茶和白粥，感受了潮州独特的文化氛围和自然风光。</summary>
+    <published>2025-09-02T13:26:13.421273+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day21-chaozhou-gucheng.html</id>
     <title>久违的暑假｜沿海自驾DAY21 - 潮州</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day3-dongtou.html"/>
     <summary>2025暑假沿海自驾第三天，探索温岭石塘的海利村与最美渔村，体验山顶TUTU咖啡馆的270°海景，随后前往洞头风景区，感受七彩洞头村的滨海生活气息。</summary>
     <published>2025-08-14T09:26:06.886986+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day2-wenlingshitang.html</id>
-    <title>久违的暑假｜沿海自驾DAY2 - 温岭</title>
-    <updated>2025-08-13T06:58:32.187269+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day2-wenlingshitang.html"/>
-    <summary>从绍兴到温岭的沿海自驾之旅，探索了104国道上的自然美景和温岭石塘的海利村，欣赏了最美的渔村风光和壮观的海景，是一次令人难忘的旅程。</summary>
-    <published>2025-08-13T00:02:00.704762+08:00</published>
   </entry>
 </feed>
