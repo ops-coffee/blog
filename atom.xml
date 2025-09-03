@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-09-02T13:26:34.182427+08:00</updated>
+  <updated>2025-09-03T10:02:27.671708+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day23-chaozhou-hangong.html</id>
+    <title>久违的暑假｜沿海自驾DAY23 - 韩公</title>
+    <updated>2025-09-03T10:02:27.671708+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day23-chaozhou-hangong.html"/>
+    <summary>在潮州深度游，体验本地生活，参观韩文公祠和开元寺泰佛殿，骑行凤凰洲，品尝潮州特色美食如牛肉粿条和十八曲鱼饺，感受潮州的独特魅力。</summary>
+    <published>2025-09-03T10:02:27.662532+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day22-chaozhou-chengqiang.html</id>
     <title>久违的暑假｜沿海自驾DAY22 - 城墙</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day4-quanzhou-xijie.html"/>
     <summary>探索泉州西街、开元寺和清源山，体验闽南特色美食和夜茶文化，感受泉州的独特魅力与生活格调。</summary>
     <published>2025-08-15T08:15:18.233694+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day3-dongtou.html</id>
-    <title>久违的暑假｜沿海自驾DAY3 - 洞头</title>
-    <updated>2025-08-14T09:27:42.879098+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day3-dongtou.html"/>
-    <summary>2025暑假沿海自驾第三天，探索温岭石塘的海利村与最美渔村，体验山顶TUTU咖啡馆的270°海景，随后前往洞头风景区，感受七彩洞头村的滨海生活气息。</summary>
-    <published>2025-08-14T09:26:06.886986+08:00</published>
   </entry>
 </feed>
