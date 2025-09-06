@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-09-05T12:52:17.447788+08:00</updated>
+  <updated>2025-09-06T12:57:23.443766+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day26-shantou-kaibu.html</id>
+    <title>久违的暑假｜沿海自驾DAY26 - 开埠</title>
+    <updated>2025-09-06T12:57:23.443766+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day26-shantou-kaibu.html"/>
+    <summary>在汕头市区探索独特风情，体验潮人码头、小公园开埠区、老妈宫戏台等地标，品尝地道的梅汁水果和鹅肉饭，感受汕头的历史与文化。</summary>
+    <published>2025-09-06T12:57:23.424300+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day25-shantou-lundu.html</id>
     <title>久违的暑假｜沿海自驾DAY25 - 汕头</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day7-quanzhou-shaolin.html"/>
     <summary>探索泉州少林寺的历史与文化，体验南少林武术的独特魅力，并在夜晚漫步泉州古城，感受东西湖的宁静与美丽，享受一个人的旅行时光。</summary>
     <published>2025-08-18T10:49:49.529746+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day6-quanzhou-xunpu.html</id>
-    <title>久违的暑假｜沿海自驾DAY6 - 蟳埔</title>
-    <updated>2025-08-17T15:46:48.156563+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day6-quanzhou-xunpu.html"/>
-    <summary>探索泉州第六天，体验通淮关岳庙、清净寺、天后宫等历史文化景点，品尝当地美食如姜母鸭、海蛎煎，并感受晋江边的夜晚氛围。</summary>
-    <published>2025-08-17T15:43:21.391961+08:00</published>
   </entry>
 </feed>
