@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-09-10T11:09:11.860206+08:00</updated>
+  <updated>2025-09-11T11:54:19.679639+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day31-shanwei-lufeng-jinxiang.html</id>
+    <title>久违的暑假｜沿海自驾DAY31 - 陆丰</title>
+    <updated>2025-09-11T11:54:19.679639+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day31-shanwei-lufeng-jinxiang.html"/>
+    <summary>记录2025年暑期沿海自驾第31天的行程，从隆江镇品尝正宗猪脚饭到金厢银滩欣赏日落，沿途经过南澳岛、靖海古城墙、水月宫等地，感受沿海公路的美丽风景。</summary>
+    <published>2025-09-11T11:53:48.215345+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day30-jieyang-huilai-longjiang.html</id>
     <title>久违的暑假｜沿海自驾DAY30 - 隆江</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day12-xiamen-budao.html"/>
     <summary>在厦门山海步道徒步，体验云海线和林海线的独特魅力，穿过山间与水系，感受城市与自然的完美结合，是一次难忘的旅行经历。</summary>
     <published>2025-08-23T15:28:25.164997+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day11-xiamen-shatan.html</id>
-    <title>久违的暑假｜沿海自驾DAY11 - 沙滩</title>
-    <updated>2025-08-22T04:02:40.186727+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day11-xiamen-shatan.html"/>
-    <summary>2025年暑假，厦门环岛骑行成为了最佳旅行体验。文章详细记录了从环岛东路到白城沙滩的骑行经历，以及在演武大桥观景平台欣赏厦门湾美景的难忘时刻。</summary>
-    <published>2025-08-22T04:02:40.177343+08:00</published>
   </entry>
 </feed>
