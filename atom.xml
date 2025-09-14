@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-09-13T12:04:56.041268+08:00</updated>
+  <updated>2025-09-14T13:11:55.601597+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day34-shanwei-ermalu.html</id>
+    <title>久违的暑假｜沿海自驾DAY34 - 汕尾</title>
+    <updated>2025-09-14T13:11:55.601597+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day34-shanwei-ermalu.html"/>
+    <summary>2025年夏季沿海自驾游第34天，探索汕尾的红海湾与品清湖，感受蓝天白云下的美丽海滩，体验汕尾的美食文化，尤其是二马路美食街的丰富选择。</summary>
+    <published>2025-09-14T13:11:55.586226+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day33-shanwei-honghaiwan.html</id>
     <title>久违的暑假｜沿海自驾DAY33 - 红海湾</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day15-zhangzhou-gucheng.html"/>
     <summary/>
     <published>2025-08-26T12:47:37.477265+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day14-xiamen-jiageng.html</id>
-    <title>久违的暑假｜沿海自驾DAY14 - 嘉庚</title>
-    <updated>2025-08-25T10:38:57.496202+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day14-xiamen-jiageng.html"/>
-    <summary/>
-    <published>2025-08-25T10:38:57.489831+08:00</published>
   </entry>
 </feed>
