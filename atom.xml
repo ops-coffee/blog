@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-09-15T12:15:11.244167+08:00</updated>
+  <updated>2025-09-16T11:19:22.556464+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day36-huizhou-shuangyuewan-chonglang.html</id>
+    <title>久违的暑假｜沿海自驾DAY36 - 冲浪</title>
+    <updated>2025-09-16T11:19:22.556464+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day36-huizhou-shuangyuewan-chonglang.html"/>
+    <summary>探索惠州双月湾的红海湾，感受其风浪与自然之美，体验冲浪乐趣，游览海龟湾及双月湾观景台，尽享沿海自驾的乐趣与美景。</summary>
+    <published>2025-09-16T11:19:22.537980+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day35-huizhou-shuangyuewan.html</id>
     <title>久违的暑假｜沿海自驾DAY35 - 双月湾</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day17-zhangzhou-dongshan.html"/>
     <summary>本文记录了从漳州到东山岛的沿海自驾游行程，途经六鳌半岛和古雷半岛，探索了金銮湾和苏峰山的美景，体验了当地的渔业文化和不期而遇的人情味。</summary>
     <published>2025-08-28T11:20:34.797628+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day16-zhangzhou-longhai.html</id>
-    <title>久违的暑假｜沿海自驾DAY16 - 龙海</title>
-    <updated>2025-08-27T10:13:01.467318+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day16-zhangzhou-longhai.html"/>
-    <summary>从漳州出发，沿着G228国道自驾前往东山岛，途经美丽的岛美村和镇海角，探索火山岩地貌和原始海景，享受沿海自驾的乐趣与美景。</summary>
-    <published>2025-08-27T10:12:49.080979+08:00</published>
   </entry>
 </feed>
