@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-09-21T16:14:37.300908+08:00</updated>
+  <updated>2025-09-22T12:12:35.538012+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day42-dongguan-songshanhu.html</id>
+    <title>久违的暑假｜沿海自驾DAY42 - 东莞</title>
+    <updated>2025-09-22T12:12:35.538012+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day42-dongguan-songshanhu.html"/>
+    <summary>从深圳到广州的自驾旅程，雨中游览松山湖，错过华为欧洲小镇，与久违的广州朋友聚会，享受温暖的情谊与旅途中的每一刻。</summary>
+    <published>2025-09-22T12:12:35.527953+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day41-shenzhen-tiezaishan.html</id>
     <title>久违的暑假｜沿海自驾DAY41 - 情谊</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day23-chaozhou-hangong.html"/>
     <summary>在潮州深度游，体验本地生活，参观韩文公祠和开元寺泰佛殿，骑行凤凰洲，品尝潮州特色美食如牛肉粿条和十八曲鱼饺，感受潮州的独特魅力。</summary>
     <published>2025-09-03T10:02:27.662532+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day22-chaozhou-chengqiang.html</id>
-    <title>久违的暑假｜沿海自驾DAY22 - 城墙</title>
-    <updated>2025-09-02T13:26:34.182427+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day22-chaozhou-chengqiang.html"/>
-    <summary>在潮州的第二天，探索了历史悠久的西湖公园和壮丽的古城墙，体验了当地的美食如芝麻茶和白粥，感受了潮州独特的文化氛围和自然风光。</summary>
-    <published>2025-09-02T13:26:13.421273+08:00</published>
   </entry>
 </feed>
