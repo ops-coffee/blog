@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-09-25T13:04:30.434309+08:00</updated>
+  <updated>2025-09-26T12:00:57.961213+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day46-qingyuan-beijiang.html</id>
+    <title>久违的暑假｜沿海自驾DAY46 - 北江</title>
+    <updated>2025-09-26T12:00:57.961213+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day46-qingyuan-beijiang.html"/>
+    <summary>从英德出发，沿北江一路自驾至韶关，途经G240国道和020乡道，欣赏北江画卷与喀斯特地貌的壮丽景色，体验京广铁路的繁忙与北江的宁静。</summary>
+    <published>2025-09-26T12:00:57.940761+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day45-qingyuan-yingde.html</id>
     <title>久违的暑假｜沿海自驾DAY45 - 英德</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day27-shantou-haian.html"/>
     <summary>这篇游记记录了作者在汕头的美食探索与东海岸的自然风光体验，包括品尝粿汁、鹅肉饭和肠粉，以及在东海岸的海堤路上欣赏海景和享受海风的惬意时光。</summary>
     <published>2025-09-07T11:20:58.218127+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day26-shantou-kaibu.html</id>
-    <title>久违的暑假｜沿海自驾DAY26 - 开埠</title>
-    <updated>2025-09-06T12:57:23.443766+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day26-shantou-kaibu.html"/>
-    <summary>在汕头市区探索独特风情，体验潮人码头、小公园开埠区、老妈宫戏台等地标，品尝地道的梅汁水果和鹅肉饭，感受汕头的历史与文化。</summary>
-    <published>2025-09-06T12:57:23.424300+08:00</published>
   </entry>
 </feed>
