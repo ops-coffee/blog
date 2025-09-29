@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-09-28T10:12:14.767923+08:00</updated>
+  <updated>2025-09-29T15:13:18.718297+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day49-shaoguan-danxiashan.html</id>
+    <title>久违的暑假｜沿海自驾DAY49 - 丹霞山</title>
+    <updated>2025-09-29T15:13:18.718297+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day49-shaoguan-danxiashan.html"/>
+    <summary>探索丹霞山的核心景区——阳元石与长老峰，体验云崖栈道、九九天梯的惊险，欣赏嘉遁亭与观日亭的壮丽风景，感受大自然的鬼斧神工。</summary>
+    <published>2025-09-29T15:13:18.688089+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day48-shaoguan-shaoyanglou.html</id>
     <title>久违的暑假｜沿海自驾DAY48 - 韶阳楼</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day30-jieyang-huilai-longjiang.html"/>
     <summary>这篇游记记录了作者从南澳岛到隆江镇的自驾旅程，探索了南澳岛的环岛公路和靖海古城墙，并品尝了隆江猪脚饭的发源地美食。</summary>
     <published>2025-09-10T11:08:55.667457+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day29-shantou-nanao-hengchuan.html</id>
-    <title>久违的暑假｜沿海自驾DAY29 - 横穿</title>
-    <updated>2025-09-09T11:25:26.808592+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day29-shantou-nanao-hengchuan.html"/>
-    <summary>在南澳岛的第29天，探索了南澳岛的另一面，从沿海公路到穿山公路，体验了不同的风景和文化，包括青澳湾、北回归线纪念塔等景点。</summary>
-    <published>2025-09-09T11:25:26.794070+08:00</published>
   </entry>
 </feed>
