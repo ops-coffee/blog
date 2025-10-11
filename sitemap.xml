@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
  <loc>https://blog.ops-coffee.com</loc>
- <lastmod>2025-10-10</lastmod>
+ <lastmod>2025-10-11</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/friends.html</loc>
@@ -10,7 +10,7 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/china/jiangxi/ganzhou.html</loc>
- <lastmod>2025-10-10</lastmod>
+ <lastmod>2025-10-11</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/china/guangdong/shaoguan.html</loc>
@@ -94,7 +94,7 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/2025-summer.html</loc>
- <lastmod>2025-10-10</lastmod>
+ <lastmod>2025-10-11</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/img-comments.html</loc>
@@ -367,6 +367,10 @@
 <url>
  <loc>https://blog.ops-coffee.com/tag/Devops/index.html</loc>
  <lastmod>2020-10-27</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day53-ganzhou-bajing.html</loc>
+ <lastmod>2025-10-11</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day52-ganzhou-bowuguan.html</loc>
