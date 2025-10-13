@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>运维咖啡吧博客后台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+  <!-- 顶部导航栏 -->
+  <nav class="bg-white shadow fixed top-0 left-0 w-full z-50">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="text-2xl font-bold text-gray-900"><i class="fas fa-coffee mr-2"></i>运维咖啡吧后台</div>
+      <div class="space-x-4">
+        <a href="https://blog.ops-coffee.com/s/python-django-blog-admin-dashboard-tools.html" target="_blank" class="text-gray-700 hover:text-blue-600 font-medium transition"><i class="fas fa-book mr-1"></i>介绍</a>
+        <a href="https://blog.ops-coffee.com" target="_blank" class="text-gray-700 hover:text-blue-600 font-medium transition"><i class="fas fa-desktop mr-1"></i>DEMO</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 顶部 Hero 区 -->
+  <header class="bg-white shadow pt-24">
+    <div class="container mx-auto px-6 py-20 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">运维咖啡吧博客后台应用</h1>
+      <p class="text-gray-700 mb-8 text-lg md:text-xl">
+        简洁好看、功能丰富、性能强大、成本极低、自动发布、SEO友好——助你轻松管理博客，提升工作效率。
+      </p>
+      <a href="https://mbd.pub/o/bread/YZWTk51saw==" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition inline-flex items-center justify-center">
+        <i class="fas fa-shopping-cart mr-2"></i>早鸟购买 ¥299
+      </a>
+    </div>
+  </header>
+
+  <!-- 特色功能区 -->
+  <section class="py-20">
+    <div class="container mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center mb-12">应用优势</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <!-- 简洁好看 -->
+        <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-2 text-center">
+          <i class="fas fa-paint-brush text-blue-500 text-4xl mb-4"></i>
+          <h3 class="text-xl font-semibold mb-3">简洁好看</h3>
+          <p class="text-gray-700">界面清爽美观，默认模板延续运维咖啡吧风格，同时支持自定义基础模板，轻松打造个性化后台。</p>
+        </div>
+
+        <!-- 功能丰富 -->
+        <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-2 text-center">
+          <i class="fas fa-cogs text-green-500 text-4xl mb-4"></i>
+          <h3 class="text-xl font-semibold mb-3">功能丰富</h3>
+          <p class="text-gray-700">支持文章、页面、分类、友链等全部核心功能，满足日常博客管理的各种需求。</p>
+        </div>
+
+        <!-- 性能强大 -->
+        <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-2 text-center">
+          <i class="fas fa-bolt text-yellow-500 text-4xl mb-4"></i>
+          <h3 class="text-xl font-semibold mb-3">性能强大</h3>
+          <p class="text-gray-700">后台占用资源极低，发布后生成纯静态 HTML 文件，访问速度快，体验流畅。</p>
+        </div>
+
+        <!-- 成本极低 -->
+        <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-2 text-center">
+          <i class="fas fa-dollar-sign text-purple-500 text-4xl mb-4"></i>
+          <h3 class="text-xl font-semibold mb-3">成本极低</h3>
+          <p class="text-gray-700">可使用 GitHub Pages 免费托管，结合 Cloudflare R2 图床，实现零成本发布博客。</p>
+        </div>
+
+        <!-- 自动发布 -->
+        <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-2 text-center">
+          <i class="fas fa-upload text-red-500 text-4xl mb-4"></i>
+          <h3 class="text-xl font-semibold mb-3">自动发布</h3>
+          <p class="text-gray-700">本地编写博客后，一键推送到 GitHub Pages 自动生成静态页面，免去手动操作，提高效率。</p>
+        </div>
+
+        <!-- SEO友好 -->
+        <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-2 text-center">
+          <i class="fas fa-search text-teal-500 text-4xl mb-4"></i>
+          <h3 class="text-xl font-semibold mb-3">SEO友好</h3>
+          <p class="text-gray-700">纯静态页面发布，对搜索引擎非常友好，帮助博客内容获得更高曝光。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 购买区 -->
+  <section id="pricing" class="py-20 bg-gray-100">
+    <div class="container mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center mb-12">购买方案</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+
+        <!-- 早鸟优惠 -->
+        <div class="bg-white p-10 rounded-xl shadow text-center border border-blue-500">
+          <h3 class="text-2xl font-semibold mb-4"><i class="fas fa-bolt mr-2"></i>早鸟优惠</h3>
+          <p class="text-4xl font-bold text-blue-600 mb-4">¥299</p>
+          <a href="https://mbd.pub/o/bread/YZWTk51saw==" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition inline-flex items-center justify-center mb-4">
+            <i class="fas fa-shopping-cart mr-2"></i>立即购买
+          </a>
+          <p class="text-gray-700 text-sm">早鸟价仅限前100名用户，限时优惠。</p>
+        </div>
+
+        <!-- 标准版本 -->
+        <div class="bg-white p-10 rounded-xl shadow text-center border border-gray-200">
+          <h3 class="text-2xl font-semibold mb-4"><i class="fas fa-tag mr-2"></i>标准版本</h3>
+          <p class="text-4xl font-bold text-gray-800 mb-4">¥699</p>
+          <a href="https://mbd.pub/o/bread/YZWTk51saw==" target="_blank" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-8 rounded-lg transition inline-flex items-center justify-center mb-4">
+            <i class="fas fa-shopping-cart mr-2"></i>立即购买
+          </a>
+          <p class="text-gray-700 text-sm">标准版本，享受完整功能与永久使用权。</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

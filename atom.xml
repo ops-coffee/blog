@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-10-12T16:16:10.859659+08:00</updated>
+  <updated>2025-10-13T14:41:15.498265+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day55-yingtan-longhushan.html</id>
+    <title>久违的暑假｜沿海自驾DAY55 - 鹰潭</title>
+    <updated>2025-10-13T14:41:15.498265+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day55-yingtan-longhushan.html"/>
+    <summary>从江西抚州到鹰潭的自驾之旅，探索了龙虎山的道教文化，游览了上清古镇，品尝了地道的牛骨粉，体验了不一样的江西风情。</summary>
+    <published>2025-10-13T14:40:28.282443+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day54-fuzhou-wenchangli.html</id>
     <title>久违的暑假｜沿海自驾DAY54 - 抚州</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day36-huizhou-shuangyuewan-chonglang.html"/>
     <summary>探索惠州双月湾的红海湾，感受其风浪与自然之美，体验冲浪乐趣，游览海龟湾及双月湾观景台，尽享沿海自驾的乐趣与美景。</summary>
     <published>2025-09-16T11:19:22.537980+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day35-huizhou-shuangyuewan.html</id>
-    <title>久违的暑假｜沿海自驾DAY35 - 双月湾</title>
-    <updated>2025-09-15T12:15:11.244167+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day35-huizhou-shuangyuewan.html"/>
-    <summary>在金町湾的细沙滩上漫步，探索双月湾的美丽晚霞和海鲜美食。享受夏日沿海自驾游的宁静与美好，体验金町湾和双月湾的独特魅力。</summary>
-    <published>2025-09-15T12:15:11.228169+08:00</published>
   </entry>
 </feed>
