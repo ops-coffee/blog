@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-10-13T14:41:15.498265+08:00</updated>
+  <updated>2025-10-14T13:55:59.689909+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day56-shangrao-xinjiang.html</id>
+    <title>久违的暑假｜沿海自驾DAY56 - 上饶</title>
+    <updated>2025-10-14T13:55:59.689909+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day56-shangrao-xinjiang.html"/>
+    <summary>从鹰潭到上饶的沿海自驾之旅，体验龙潭湖公园的宁静与美丽，品尝当地美食如黄老头小炒黄牛肉，参观上饶博物馆和双塔公园，感受江西的自然与文化魅力。</summary>
+    <published>2025-10-14T13:55:59.672117+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day55-yingtan-longhushan.html</id>
     <title>久违的暑假｜沿海自驾DAY55 - 鹰潭</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day37-huizhou-dayawan-tangping.html"/>
     <summary>本文记录了2025暑假沿海自驾游的第37天，探访了巽寮湾、稔山镇和大亚湾，体验了市井气息的稔山市场，探索了大亚湾的美丽海岸线，并了解了惠州的海景房和躺平文化。</summary>
     <published>2025-09-17T13:38:39.299291+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day36-huizhou-shuangyuewan-chonglang.html</id>
-    <title>久违的暑假｜沿海自驾DAY36 - 冲浪</title>
-    <updated>2025-09-16T11:19:22.556464+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day36-huizhou-shuangyuewan-chonglang.html"/>
-    <summary>探索惠州双月湾的红海湾，感受其风浪与自然之美，体验冲浪乐趣，游览海龟湾及双月湾观景台，尽享沿海自驾的乐趣与美景。</summary>
-    <published>2025-09-16T11:19:22.537980+08:00</published>
   </entry>
 </feed>
