@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-10-17T13:23:29.248208+08:00</updated>
+  <updated>2025-10-22T12:38:56.454078+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/s/free-online-collage-maker-tool-chrome-extension-plugin.html</id>
+    <title>好拼｜免费在线拼图工具上架谷歌商店啦</title>
+    <updated>2025-10-22T12:38:56.454078+08:00</updated>
+    <link href="https://blog.ops-coffee.com/s/free-online-collage-maker-tool-chrome-extension-plugin.html"/>
+    <summary>本文介绍了「好拼」免费在线拼图工具的核心功能和最新更新，包括布局拼图和长图拼接，以及新增的Chrome插件，旨在为用户提供更简单、自然的创作体验。</summary>
+    <published>2025-10-22T12:35:00.292035+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day59-rv-life-cost-summary.html</id>
     <title>久违的暑假｜一人一车沿海自驾两个月总结</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day41-shenzhen-tiezaishan.html"/>
     <summary>在深圳体验了一场美妙的早茶，品尝了繁楼的多款广式点心，随后与朋友一起轻松爬上铁仔山，俯瞰深圳的城市风光，感受这座年轻城市的活力与包容。</summary>
     <published>2025-09-21T16:14:15.111118+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day40-shenzhen-shenzhenwan.html</id>
-    <title>久违的暑假｜沿海自驾DAY40 - 深圳</title>
-    <updated>2025-09-20T19:14:01.706845+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day40-shenzhen-shenzhenwan.html"/>
-    <summary>探索深圳湾公园的美丽沿海徒步路线，体验红树林的生态环境，观察候鸟迁徙，乘坐双层巴士游览城市风光，感受深圳的独特魅力。</summary>
-    <published>2025-09-20T19:14:01.696974+08:00</published>
   </entry>
 </feed>
