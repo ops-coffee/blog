@@ -1,5 +1,12 @@
 [
   {
+    "url": "https://blog.ops-coffee.com/s/domain-cert-management-system-challenges-and-solutions.html",
+    "title": "支持私有化本地部署｜域名证书管理系统白皮书",
+    "content": "从实际需求出发，落地中大型企业域名证书管理系统。已免费开放，支持私有化部署",
+    "keywords": "域名管理, DNS管理, 多云环境, DevOps, 容器化, 安全合规, 资产可见性, 流程自动化, 证书管理, 风险管理",
+    "date": "2025-10-28"
+  },
+  {
     "url": "https://blog.ops-coffee.com/s/free-online-collage-maker-tool-haopin-pro-introduction.html",
     "title": "好拼｜本地私有化部署免费在线拼图工具",
     "content": "好拼是一款免费的在线拼图工具，现已上架Chrome和Edge插件商店，支持在线网页、PWA和浏览器插件三种使用方式，简洁方便，欢迎体验。",

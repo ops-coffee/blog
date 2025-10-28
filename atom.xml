@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-10-24T10:50:58.262228+08:00</updated>
+  <updated>2025-10-28T10:11:06.514282+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/s/domain-cert-management-system-challenges-and-solutions.html</id>
+    <title>支持私有化本地部署｜域名证书管理系统白皮书</title>
+    <updated>2025-10-28T10:11:06.514282+08:00</updated>
+    <link href="https://blog.ops-coffee.com/s/domain-cert-management-system-challenges-and-solutions.html"/>
+    <summary>从实际需求出发，落地中大型企业域名证书管理系统。已免费开放，支持私有化部署</summary>
+    <published>2025-10-28T10:10:27.141605+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/s/free-online-collage-maker-tool-haopin-pro-introduction.html</id>
     <title>好拼｜本地私有化部署免费在线拼图工具</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day43-guangzhou-zhujiang.html"/>
     <summary>沿海自驾Day43，探访广州珠江沿岸与沙面岛，欣赏广州塔与海心沙的独特城市天际线，感受沙面岛的历史文化氛围，体验广州的历史与现代交融之美。</summary>
     <published>2025-09-23T17:40:18.232900+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day42-dongguan-songshanhu.html</id>
-    <title>久违的暑假｜沿海自驾DAY42 - 东莞</title>
-    <updated>2025-09-22T12:12:35.538012+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day42-dongguan-songshanhu.html"/>
-    <summary>从深圳到广州的自驾旅程，雨中游览松山湖，错过华为欧洲小镇，与久违的广州朋友聚会，享受温暖的情谊与旅途中的每一刻。</summary>
-    <published>2025-09-22T12:12:35.527953+08:00</published>
   </entry>
 </feed>
