@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-10-28T10:11:06.514282+08:00</updated>
+  <updated>2025-11-03T09:07:17.933625+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/s/free-online-image-processing-tools-simple-yet-professional.html</id>
+    <title>无需登录简洁好用｜推荐几个免费在线图片处理工具</title>
+    <updated>2025-11-03T09:07:17.933625+08:00</updated>
+    <link href="https://blog.ops-coffee.com/s/free-online-image-processing-tools-simple-yet-professional.html"/>
+    <summary>探索一系列完全免费的在线图片处理工具，包括拼图、压缩、裁剪、头像制作、去水印等功能，无需登录，安全隐私，体验友好，满足各种图片处理需求。</summary>
+    <published>2025-11-03T09:03:12.182148+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/s/domain-cert-management-system-challenges-and-solutions.html</id>
     <title>支持私有化本地部署｜域名证书管理系统白皮书</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day44-qingyuan-fogang.html"/>
     <summary>在佛冈县的上岳古村，探索了具有深厚文化底蕴的岭南古村落，感受了朱熹后裔的历史传承。随后在民安小镇体验了当地生活，等待台风的到来，度过了一个宁静的夜晚。</summary>
     <published>2025-09-24T12:48:42.423838+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day43-guangzhou-zhujiang.html</id>
-    <title>久违的暑假｜沿海自驾DAY43 - 广州</title>
-    <updated>2025-09-23T17:40:18.241987+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day43-guangzhou-zhujiang.html"/>
-    <summary>沿海自驾Day43，探访广州珠江沿岸与沙面岛，欣赏广州塔与海心沙的独特城市天际线，感受沙面岛的历史文化氛围，体验广州的历史与现代交融之美。</summary>
-    <published>2025-09-23T17:40:18.232900+08:00</published>
   </entry>
 </feed>

@@ -8,7 +8,14 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Custom CMS v1.0</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 28 Oct 2025 10:11:06 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 03 Nov 2025 09:07:17 +0800</lastBuildDate>
+    <item>
+      <title>无需登录简洁好用｜推荐几个免费在线图片处理工具</title>
+      <link>https://blog.ops-coffee.com/s/free-online-image-processing-tools-simple-yet-professional.html</link>
+      <description>探索一系列完全免费的在线图片处理工具，包括拼图、压缩、裁剪、头像制作、去水印等功能，无需登录，安全隐私，体验友好，满足各种图片处理需求。</description>
+      <guid isPermaLink="false">https://blog.ops-coffee.com/s/free-online-image-processing-tools-simple-yet-professional.html</guid>
+      <pubDate>Mon, 03 Nov 2025 09:03:12 +0800</pubDate>
+    </item>
     <item>
       <title>支持私有化本地部署｜域名证书管理系统白皮书</title>
       <link>https://blog.ops-coffee.com/s/domain-cert-management-system-challenges-and-solutions.html</link>
@@ -141,13 +148,6 @@
       <description>在佛冈县的上岳古村，探索了具有深厚文化底蕴的岭南古村落，感受了朱熹后裔的历史传承。随后在民安小镇体验了当地生活，等待台风的到来，度过了一个宁静的夜晚。</description>
       <guid isPermaLink="false">https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day44-qingyuan-fogang.html</guid>
       <pubDate>Wed, 24 Sep 2025 12:48:42 +0800</pubDate>
-    </item>
-    <item>
-      <title>久违的暑假｜沿海自驾DAY43 - 广州</title>
-      <link>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day43-guangzhou-zhujiang.html</link>
-      <description>沿海自驾Day43，探访广州珠江沿岸与沙面岛，欣赏广州塔与海心沙的独特城市天际线，感受沙面岛的历史文化氛围，体验广州的历史与现代交融之美。</description>
-      <guid isPermaLink="false">https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day43-guangzhou-zhujiang.html</guid>
-      <pubDate>Tue, 23 Sep 2025 17:40:18 +0800</pubDate>
     </item>
   </channel>
 </rss>

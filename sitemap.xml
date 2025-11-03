@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
  <loc>https://blog.ops-coffee.com</loc>
- <lastmod>2025-10-28</lastmod>
+ <lastmod>2025-11-03</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/friends.html</loc>
@@ -391,6 +391,10 @@
 <url>
  <loc>https://blog.ops-coffee.com/tag/Devops/index.html</loc>
  <lastmod>2020-10-27</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.com/s/free-online-image-processing-tools-simple-yet-professional.html</loc>
+ <lastmod>2025-11-03</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/s/domain-cert-management-system-challenges-and-solutions.html</loc>
