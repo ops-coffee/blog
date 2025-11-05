@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-11-03T09:07:17.933625+08:00</updated>
+  <updated>2025-11-05T17:11:58.537593+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/s/free-online-collage-maker-tool-google-seo-top-success.html</id>
+    <title>SEO｜谷歌搜索关键词排名第一，复盘我做对了什么</title>
+    <updated>2025-11-05T17:11:58.537593+08:00</updated>
+    <link href="https://blog.ops-coffee.com/s/free-online-collage-maker-tool-google-seo-top-success.html"/>
+    <summary>通过一个真正好用的免费在线拼图工具，结合公开构建和用户反馈，无需刻意SEO却意外获得高排名。本文分享了这一SEO成功的关键因素。</summary>
+    <published>2025-11-05T17:11:07.876604+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/s/free-online-image-processing-tools-simple-yet-professional.html</id>
     <title>无需登录简洁好用｜推荐几个免费在线图片处理工具</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day45-qingyuan-yingde.html"/>
     <summary>2025暑期沿海自驾游的第45天，沿北江行驶，途经清远、英德，探索上岳古村，欣赏岭南建筑，体验G240国道的北江画卷美景，记录了一段难忘的自驾旅程。</summary>
     <published>2025-09-25T13:04:30.420400+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day44-qingyuan-fogang.html</id>
-    <title>久违的暑假｜沿海自驾DAY44 - 佛冈</title>
-    <updated>2025-09-24T12:48:42.436186+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day44-qingyuan-fogang.html"/>
-    <summary>在佛冈县的上岳古村，探索了具有深厚文化底蕴的岭南古村落，感受了朱熹后裔的历史传承。随后在民安小镇体验了当地生活，等待台风的到来，度过了一个宁静的夜晚。</summary>
-    <published>2025-09-24T12:48:42.423838+08:00</published>
   </entry>
 </feed>
