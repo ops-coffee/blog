@@ -1,5 +1,12 @@
 [
   {
+    "url": "https://blog.ops-coffee.com/s/ansible-job-platform-modern-it-automation.html",
+    "title": "私有部署｜基于Ansible的运维自动化作业平台",
+    "content": "Ansible Job Platform addresses key IT automation challenges with a centralized, secure, and scalable solution. It integrates CMDB, security credentials, automation orchestration, and job scheduling, ensuring transparency and compliance.",
+    "keywords": "Ansible Job Platform, IT automation, DevOps, CMDB, Ansible Playbook, Celery, Django, SSH security, automation challenges, job scheduling, automation security, Ansible inventory management, private key management, audit compliance, automation service, cloud native, automation scalability",
+    "date": "2025-11-12"
+  },
+  {
     "url": "https://blog.ops-coffee.com/s/free-online-collage-maker-tool-google-seo-top-success.html",
     "title": "SEO｜谷歌搜索关键词排名第一，复盘我做对了什么",
     "content": "通过一个真正好用的免费在线拼图工具，结合公开构建和用户反馈，无需刻意SEO却意外获得高排名。本文分享了这一SEO成功的关键因素。",
