@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
  <loc>https://blog.ops-coffee.com</loc>
- <lastmod>2025-11-18</lastmod>
+ <lastmod>2025-11-20</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/friends.html</loc>
@@ -399,6 +399,10 @@
 <url>
  <loc>https://blog.ops-coffee.com/tag/Devops/index.html</loc>
  <lastmod>2020-10-27</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.com/s/free-online-collage-maker-tool-custom-layout.html</loc>
+ <lastmod>2025-11-20</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/s/ansible-job-platform-modern-it-automation.html</loc>
