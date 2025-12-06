@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-11-20T15:55:29.467937+08:00</updated>
+  <updated>2025-12-06T19:07:18.598597+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/city-china-anhui-xuancheng-guangde-zhuxianghualang.html</id>
+    <title>广德｜竹乡画廊风景道上的独行者</title>
+    <updated>2025-12-06T19:07:18.598597+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/city-china-anhui-xuancheng-guangde-zhuxianghualang.html"/>
+    <summary>从上海出发，途经广德，探索竹乡画廊的美丽秋景与深厚文化，体验广德的独特美食与自然风光，感受深秋自驾的多彩皖南之旅。</summary>
+    <published>2025-12-06T19:05:08.859141+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/s/free-online-collage-maker-tool-custom-layout.html</id>
     <title>好拼｜免费在线拼图工具重大更新，自定义布局上线</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day48-shaoguan-shaoyanglou.html"/>
     <summary>探索韶关的美丽风光，从韶阳楼的壮丽景色到丹霞山的自然奇观，感受韶关的历史文化和独特魅力。</summary>
     <published>2025-09-28T10:11:49.220273+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day47-shaoguan-fengcai.html</id>
-    <title>久违的暑假｜沿海自驾DAY47 - 韶关</title>
-    <updated>2025-09-27T13:38:46.704480+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day47-shaoguan-fengcai.html"/>
-    <summary>在韶关自驾游的第47天，探索了马坝人石峡遗址和百年东街。深入了解马坝人的历史，欣赏韶关的自然美景和文化遗产，感受韶关的独特魅力。</summary>
-    <published>2025-09-27T13:38:46.679183+08:00</published>
   </entry>
 </feed>

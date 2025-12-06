@@ -2,11 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
  <loc>https://blog.ops-coffee.com</loc>
- <lastmod>2025-12-01</lastmod>
+ <lastmod>2025-12-06</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/friends.html</loc>
  <changefreq>monthly</changefreq>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.com/travel/china/anhui/xuancheng.html</loc>
+ <lastmod>2025-12-06</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/img-custom-layout.html</loc>
@@ -202,7 +206,7 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/china/anhui.html</loc>
- <lastmod>2025-03-13</lastmod>
+ <lastmod>2025-12-06</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/china/zhejiang.html</loc>
@@ -258,7 +262,7 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travels.html</loc>
- <lastmod>2025-10-17</lastmod>
+ <lastmod>2025-12-06</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/search.html</loc>
@@ -399,6 +403,10 @@
 <url>
  <loc>https://blog.ops-coffee.com/tag/Devops/index.html</loc>
  <lastmod>2020-10-27</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.com/r/city-china-anhui-xuancheng-guangde-zhuxianghualang.html</loc>
+ <lastmod>2025-12-06</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/s/free-online-collage-maker-tool-custom-layout.html</loc>
