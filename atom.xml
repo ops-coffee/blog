@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-12-06T19:07:18.598597+08:00</updated>
+  <updated>2025-12-11T12:17:11.290834+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/city-china-shanghai-chongming-changxingdao.html</id>
+    <title>长兴岛｜1小时直达！上海周末出游好去处</title>
+    <updated>2025-12-11T12:17:11.290834+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/city-china-shanghai-chongming-changxingdao.html"/>
+    <summary>今年上海的冬天似乎特别暖和，趁着好天气，带家人去了长兴岛郊野公园和长江第一滩。这里不仅有美丽的自然风光，还有丰富的户外活动，是周末放松的好去处。</summary>
+    <published>2025-12-11T12:17:11.278460+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-anhui-xuancheng-guangde-zhuxianghualang.html</id>
     <title>广德｜竹乡画廊风景道上的独行者</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day49-shaoguan-danxiashan.html"/>
     <summary>探索丹霞山的核心景区——阳元石与长老峰，体验云崖栈道、九九天梯的惊险，欣赏嘉遁亭与观日亭的壮丽风景，感受大自然的鬼斧神工。</summary>
     <published>2025-09-29T15:13:18.688089+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day48-shaoguan-shaoyanglou.html</id>
-    <title>久违的暑假｜沿海自驾DAY48 - 韶阳楼</title>
-    <updated>2025-09-28T10:12:14.767923+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day48-shaoguan-shaoyanglou.html"/>
-    <summary>探索韶关的美丽风光，从韶阳楼的壮丽景色到丹霞山的自然奇观，感受韶关的历史文化和独特魅力。</summary>
-    <published>2025-09-28T10:11:49.220273+08:00</published>
   </entry>
 </feed>

@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
  <loc>https://blog.ops-coffee.com</loc>
- <lastmod>2025-12-06</lastmod>
+ <lastmod>2025-12-11</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/friends.html</loc>
@@ -202,7 +202,7 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/china/shanghai.html</loc>
- <lastmod>2025-02-05</lastmod>
+ <lastmod>2025-12-11</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/china/anhui.html</loc>
@@ -403,6 +403,10 @@
 <url>
  <loc>https://blog.ops-coffee.com/tag/Devops/index.html</loc>
  <lastmod>2020-10-27</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.com/r/city-china-shanghai-chongming-changxingdao.html</loc>
+ <lastmod>2025-12-11</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/r/city-china-anhui-xuancheng-guangde-zhuxianghualang.html</loc>
