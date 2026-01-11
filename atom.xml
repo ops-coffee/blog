@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2025-12-12T11:33:38.273180+08:00</updated>
+  <updated>2026-01-11T18:44:47.106961+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/city-china-zhejiang-jinhua-pujiang-songxi.html</id>
+    <title>浦江｜元旦假期，我们去了一个你可能没有听过的小城</title>
+    <updated>2026-01-11T18:44:47.106961+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/city-china-zhejiang-jinhua-pujiang-songxi.html"/>
+    <summary>2026元旦，探索金华浦江的小众文化与美食，体验龙德寺塔的千年历史、江南第一家的孝义家风、嵩溪古村的传统文化以及潘周家村的一根面非遗技艺。</summary>
+    <published>2026-01-11T18:44:47.007704+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/s/second-sponsorship-received-for-collage-tool.html</id>
     <title>好拼｜免费在线拼图工具又收到赞助啦</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day51-ganzhou-dayu-meiguan.html"/>
     <summary>在2025年暑假的第五十一天，作者探索了梅关古道，体验了古代交通要道的历史和文化，同时欣赏了赣州和大余县的自然与人文景观。</summary>
     <published>2025-10-09T17:09:42.982448+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day50-shaoguan-renhua.html</id>
-    <title>久违的暑假｜沿海自驾DAY50 - 仁化</title>
-    <updated>2025-09-30T11:58:16.140933+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day50-shaoguan-renhua.html"/>
-    <summary>从丹霞山出发，探访仁化县城与南雄市，体验锦江美景、古镇风情及美食，感受粤港澳大湾区的独特魅力。</summary>
-    <published>2025-09-30T11:58:16.132704+08:00</published>
   </entry>
 </feed>
