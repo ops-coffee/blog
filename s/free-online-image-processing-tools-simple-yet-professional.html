@@ -48,16 +48,14 @@
 </head>
 
 <body>
-  <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-hidden="true">
+  <div class="header">
+    <div class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </div> 
 
-  <header class="site-topbar">
-    <div class="container topbar-inner">
-      <label class="menu-button" for="nav-toggle" aria-label="打开菜单" role="button" tabindex="0">
-        &#9776; <span class="menu-title">运维咖啡吧</span>
-      </label>
-
-      <nav class="site-nav" aria-label="主导航">
-        <ul class="site-nav-list">
+    <div class="container">
+      <nav class="header-site">
+        <ul>
           <li><a href="/">首页</a></li>
             <li class="has-submenu">
               <a href="#" target="_self">运维</a>
@@ -102,64 +100,9 @@
         </ul>
       </nav>
     </div>
-  </header>
+  </div>
 
-  <label for="nav-toggle" class="drawer-overlay" aria-hidden="true"></label>
-
-  <aside class="site-drawer" aria-label="移动端菜单">
-    <div class="drawer-head">
-      <label class="drawer-close" for="nav-toggle" aria-label="关闭菜单">×</label>
-      <div class="drawer-brand">运维咖啡吧</div>
-    </div>
-
-    <nav class="drawer-nav">
-      <ul class="drawer-list">
-        <li><a href="/">首页</a></li>
-          <li class="drawer-group">
-            <div class="drawer-group-title">运维</div>
-            <ul class="drawer-sub">
-              <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
-              <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
-              <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
-            </ul>
-          </li>
-          <li class="drawer-group">
-            <div class="drawer-group-title">开发</div>
-            <ul class="drawer-sub">
-              <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
-              <li><a href="/tag/Python/" target="_self">Python</a></li>
-              <li><a href="/tag/Django/" target="_self">Django</a></li>
-              <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
-              <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
-              <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
-            </ul>
-          </li>
-          <li><a href="/devops/index.html" target="_self">运维平台</a></li>
-          <li class="drawer-group">
-            <div class="drawer-group-title">这是生活</div>
-            <ul class="drawer-sub">
-              <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
-              <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
-              <li><a href="/life/writing.html" target="_self">写作相关</a></li>
-              <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
-            </ul>
-          </li>
-          <li class="drawer-group">
-            <div class="drawer-group-title">房车旅行</div>
-            <ul class="drawer-sub">
-              <li><a href="/rv.html" target="_self">房车体验</a></li>
-              <li><a href="/travels.html" target="_self">旅行游记</a></li>
-              <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
-            </ul>
-          </li>
-          <li><a href="/tag/index.html" target="_self">标签</a></li>
-          <li><a href="/archive.html" target="_self">归档</a></li>
-        <li class="drawer-search"><a href="/search.html" target="_self">🔍 搜索</a></li>
-      </ul>
-    </nav>
-  </aside>
-
-  <header class="site-hero">
+  <header>
     <div class="container">
       <a href="/">
         <div class="name">运维咖啡吧</div>
@@ -168,15 +111,10 @@
     </div>
   </header>
 
-  <main id="content-wrap" role="main">
-  <div class="container">
-    <main id="main-content" class="post">
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">无需登录简洁好用｜推荐几个免费在线图片处理工具</h1>
 
-      <header class="post-header">
-        <h1 id="art-title" class="post-title">无需登录简洁好用｜推荐几个免费在线图片处理工具</h1>
-      </header>
-
-      <article class="post-content">
         <p>之前开发了一个<a href="https://img.ops-coffee.com/" target="_blank">「免费在线拼图工具-好拼」</a>，因简洁好用得到了不少朋友的喜欢，同时也收到了许多的新需求，有需要去水印的，有需要制作正方形/圆形头像的，还有要图片压缩的等等</p>
 <p>虽然这些工具市面上有很多，但大都不太好用，要么是需要登录，要么有功能限制，要么是需要付费，或者是不够稳定，每当需要使用时，我们不得不临时在搜索引擎里翻找，好不容易找到一个中意的，用完赶紧收藏，可下次再想用，网站却已无法打开，诸如此类的问题，着实影响心情和效率</p>
 <h2 id="_1">工具</h2>
@@ -214,30 +152,27 @@
 <p>以上这些工具全部都是纯前端实现的，纯前端实现的劣势是效果可能不会那么好，尤其是对于去水印这种功能，受限于客户端的算法和算力。但优势会更多，例如纯前端实现，所有数据都是在用户本地处理，不会向服务器发送任何数据，安全隐私，没有泄露风险</p>
 <p>同时更为重要的是，纯前端实现，可以借助于我之前介绍过的<a href="https://blog.ops-coffee.com/s/free-services-for-website-deployment.html" target="_blank">一些列免费服务</a>，能够做到网站以极低的成本长时间稳定运行，如果不出意外的话，网站一旦上线，至少能用<strong>十年</strong>不下线</p>
 <p>放心收藏，欢迎反馈，让我们一起做出更好的产品</p>
-      </article>
 
-      <footer class="post-footer">
-        <ul class="post-meta">
-          <li class="post-meta-item">
-            <a class="post-meta-link" href="/s/free-online-image-processing-tools-simple-yet-professional.html">📅 2025-11-03</a>
-          </li>
-        </ul>
+        <div>
+          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
+            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/free-online-image-processing-tools-simple-yet-professional.html">📅 2025-11-03</a></li>
+          </ul>
+        </div>
 
-        <hr class="post-divider">
+        <hr>
 
-        <nav class="pagination" aria-label="文章分页">
-          <a href="https://blog.ops-coffee.com/s/domain-cert-management-system-challenges-and-solutions.html" class="pagination-item prev-page">
-            <span class="pagination-arrow">←</span>
-            <span class="pagination-text">上一篇：<br>支持私有化本地部署｜域名证书管理系统白皮书</span>
-          </a>
-          <a href="https://blog.ops-coffee.com/s/free-online-collage-maker-tool-google-seo-top-success.html" class="pagination-item next-page">
-            <span class="pagination-text">下一篇：<br>SEO｜谷歌搜索关键词排名第一，复盘我做对了什么</span>
-            <span class="pagination-arrow">→</span>
-          </a>
-        </nav>
+        <div class="pagination">
+            <a href="https://blog.ops-coffee.com/s/domain-cert-management-system-challenges-and-solutions.html" class="pagination-item prev-page">
+                <span class="pagination-arrow">←</span>
+                <span class="pagination-text">上一篇：<br>支持私有化本地部署｜域名证书管理系统白皮书</span>
+            </a>
+            <a href="https://blog.ops-coffee.com/s/free-online-collage-maker-tool-google-seo-top-success.html" class="pagination-item next-page">
+                <span class="pagination-text">下一篇：<br>SEO｜谷歌搜索关键词排名第一，复盘我做对了什么</span>
+                <span class="pagination-arrow">→</span>
+            </a>
+        </div>
 
-        <section class="post-comments">
-          <div>
+        <div>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
          data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
@@ -253,30 +188,26 @@
             data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
     </script>
 </div>
-        </section>
 
-        <section class="post-extend">
-          <div class="nav-cell">
+        <div class="nav-cell">
     <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
     <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
 </div>
-        </section>
-      </footer>
 
-    </main>
+    </div>
   </div>
-  </main>
 
   <footer class="footer">
-    <div class="container footer-inner">
+    <div class="container">
       <div class="copy"> © ops-coffee</div>
+
       <div class="link">
         <a href="/comments.html" title="给我留言" target="_blank">留言</a>
         <a href="/friends.html" title="友情链接" target="_blank">友链</a>
       </div>
     </div>
   </footer>
-
+  
   <!-- Umami -->
 <script defer src="https://umami.ops-coffee.cn/script.js" data-website-id="248e61f0-c324-444e-a56d-bf97ee44a8fc"></script>
 
