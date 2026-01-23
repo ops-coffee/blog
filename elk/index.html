@@ -48,14 +48,16 @@
 </head>
 
 <body>
-  <div class="header">
-    <div class="menu-button">&#9776; 
-        <span class="menu-title">运维咖啡吧</span>
-    </div> 
+  <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-hidden="true">
 
-    <div class="container">
-      <nav class="header-site">
-        <ul>
+  <header class="site-topbar">
+    <div class="container topbar-inner">
+      <label class="menu-button" for="nav-toggle" aria-label="打开菜单" role="button" tabindex="0">
+        &#9776; <span class="menu-title">运维咖啡吧</span>
+      </label>
+
+      <nav class="site-nav" aria-label="主导航">
+        <ul class="site-nav-list">
           <li><a href="/">首页</a></li>
             <li class="has-submenu">
               <a href="#" target="_self">运维</a>
@@ -100,9 +102,64 @@
         </ul>
       </nav>
     </div>
-  </div>
+  </header>
 
-  <header>
+  <label for="nav-toggle" class="drawer-overlay" aria-hidden="true"></label>
+
+  <aside class="site-drawer" aria-label="移动端菜单">
+    <div class="drawer-head">
+      <label class="drawer-close" for="nav-toggle" aria-label="关闭菜单">×</label>
+      <div class="drawer-brand">运维咖啡吧</div>
+    </div>
+
+    <nav class="drawer-nav">
+      <ul class="drawer-list">
+        <li><a href="/">首页</a></li>
+          <li class="drawer-group">
+            <div class="drawer-group-title">运维</div>
+            <ul class="drawer-sub">
+              <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+              <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+              <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+            </ul>
+          </li>
+          <li class="drawer-group">
+            <div class="drawer-group-title">开发</div>
+            <ul class="drawer-sub">
+              <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+              <li><a href="/tag/Python/" target="_self">Python</a></li>
+              <li><a href="/tag/Django/" target="_self">Django</a></li>
+              <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+              <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+              <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+            </ul>
+          </li>
+          <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+          <li class="drawer-group">
+            <div class="drawer-group-title">这是生活</div>
+            <ul class="drawer-sub">
+              <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+              <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+              <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+              <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+            </ul>
+          </li>
+          <li class="drawer-group">
+            <div class="drawer-group-title">房车旅行</div>
+            <ul class="drawer-sub">
+              <li><a href="/rv.html" target="_self">房车体验</a></li>
+              <li><a href="/travels.html" target="_self">旅行游记</a></li>
+              <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+            </ul>
+          </li>
+          <li><a href="/tag/index.html" target="_self">标签</a></li>
+          <li><a href="/archive.html" target="_self">归档</a></li>
+        <li class="drawer-search"><a href="/search.html" target="_self">🔍 搜索</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <header class="site-hero">
     <div class="container">
       <a href="/">
         <div class="name">运维咖啡吧</div>
@@ -111,7 +168,7 @@
     </div>
   </header>
 
-  <div id="content-wrap">
+  <main id="content-wrap" role="main">
 
   <div class="container">
     <p style="text-align:center"><img alt="" src="/static/images/2019/0628.elk.png"></p>
@@ -204,19 +261,18 @@
 </div>
   </div>
 
-  </div>
+  </main>
 
   <footer class="footer">
-    <div class="container">
+    <div class="container footer-inner">
       <div class="copy"> © ops-coffee</div>
-
       <div class="link">
         <a href="/comments.html" title="给我留言" target="_blank">留言</a>
         <a href="/friends.html" title="友情链接" target="_blank">友链</a>
       </div>
     </div>
   </footer>
-  
+
   <!-- Umami -->
 <script defer src="https://umami.ops-coffee.cn/script.js" data-website-id="248e61f0-c324-444e-a56d-bf97ee44a8fc"></script>
 
