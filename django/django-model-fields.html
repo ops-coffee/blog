@@ -48,10 +48,11 @@
 </head>
 
 <body>
-  <div class="header">
-    <div class="menu-button">&#9776; 
+  <div class="top-nav">
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-button">&#9776; 
         <span class="menu-title">运维咖啡吧</span>
-    </div> 
+    </label> 
 
     <div class="container">
       <nav class="header-site">
@@ -210,8 +211,8 @@ class MyUUIDModel(models.Model):
 <p>一个用于存储原始二进制数据的字段，很少用，二进制数据也不建议存储在数据库中</p>
 
         <div>
-          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
-            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/django/django-model-fields.html">📅 2022-08-02</a></li>
+          <ul class="article-meta">
+            <li><a href="/django/django-model-fields.html">📅 2022-08-02</a></li>
           </ul>
         </div>
 
@@ -249,6 +250,7 @@ class MyUUIDModel(models.Model):
     <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
     <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
 </div>
+
     </div>
   </div>
 

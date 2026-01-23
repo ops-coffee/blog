@@ -48,10 +48,11 @@
 </head>
 
 <body>
-  <div class="header">
-    <div class="menu-button">&#9776; 
+  <div class="top-nav">
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-button">&#9776; 
         <span class="menu-title">运维咖啡吧</span>
-    </div> 
+    </label> 
 
     <div class="container">
       <nav class="header-site">
@@ -213,9 +214,9 @@ result.forget()</code></pre>
 <p><code>inspect</code>更关注Celery的Worker运行情况，而<code>AsyncResult</code>则更关注于Celery的任务运行状态，通过两者的配合就能更好的掌握周期/定时/异步任务的执行情况了，通过监控功能的开发也对Celery有了更深的了解，同时<a href="https://blog.ops-coffee.com/devops" target="_blank">运维自动化平台</a>也变得更加完善</p>
 
         <div>
-          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
-            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/python-django-celery-monitor-not-flower.html">📅 2024-01-26</a></li>
-<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Celery/">🏷️ Celery</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/监控/">🏷️ 监控</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+          <ul class="article-meta">
+            <li><a href="/s/python-django-celery-monitor-not-flower.html">📅 2024-01-26</a></li>
+<li><a href="/tag/Django/">🏷️ Django</a></li><li><a href="/tag/Celery/">🏷️ Celery</a></li><li><a href="/tag/监控/">🏷️ 监控</a></li><li><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
         </div>
 
         <hr>
@@ -252,6 +253,7 @@ result.forget()</code></pre>
     <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
     <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
 </div>
+
     </div>
   </div>
 

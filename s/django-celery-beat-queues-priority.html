@@ -48,10 +48,11 @@
 </head>
 
 <body>
-  <div class="header">
-    <div class="menu-button">&#9776; 
+  <div class="top-nav">
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-button">&#9776; 
         <span class="menu-title">运维咖啡吧</span>
-    </div> 
+    </label> 
 
     <div class="container">
       <nav class="header-site">
@@ -146,9 +147,9 @@ celery -A devops worker -n priority.%h -Q priority --loglevel=warning</code></pr
 <p>至此，问题解决。当然除了解决优先级的问题外，对于自动化运维系统的更新和维护也有了一定的优化，资源同步任务的更新只需要重启消费celery的worker即可，对任务将没有影响，一举两得</p>
 
         <div>
-          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
-            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/django-celery-beat-queues-priority.html">📅 2023-11-20</a></li>
-<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Celery/">🏷️ Celery</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+          <ul class="article-meta">
+            <li><a href="/s/django-celery-beat-queues-priority.html">📅 2023-11-20</a></li>
+<li><a href="/tag/Django/">🏷️ Django</a></li><li><a href="/tag/Celery/">🏷️ Celery</a></li><li><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
         </div>
 
         <hr>
@@ -185,6 +186,7 @@ celery -A devops worker -n priority.%h -Q priority --loglevel=warning</code></pr
     <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
     <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
 </div>
+
     </div>
   </div>
 

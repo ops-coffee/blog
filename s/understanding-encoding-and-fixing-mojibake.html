@@ -48,10 +48,11 @@
 </head>
 
 <body>
-  <div class="header">
-    <div class="menu-button">&#9776; 
+  <div class="top-nav">
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-button">&#9776; 
         <span class="menu-title">运维咖啡吧</span>
-    </div> 
+    </label> 
 
     <div class="container">
       <nav class="header-site">
@@ -216,9 +217,9 @@ Wed Mar  4 19:06:05 HKT 2020</code></pre>
 <p>iconv模块在rsync的3.0以后版本中才支持，用法为<code>--iconv=&lt;LOCAL&gt;,&lt;REMOTE&gt;</code>，需要注意的是，本地两个目录之间同步时LOCAL表示的是源目录的文件名编码，通过网络同步时LOCAL表示本地编码</p>
 
         <div>
-          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
-            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/understanding-encoding-and-fixing-mojibake.html">📅 2020-03-04</a></li>
-<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/系统运维/">🏷️ 系统运维</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+          <ul class="article-meta">
+            <li><a href="/s/understanding-encoding-and-fixing-mojibake.html">📅 2020-03-04</a></li>
+<li><a href="/tag/系统运维/">🏷️ 系统运维</a></li><li><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
         </div>
 
         <hr>
@@ -255,6 +256,7 @@ Wed Mar  4 19:06:05 HKT 2020</code></pre>
     <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
     <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
 </div>
+
     </div>
   </div>
 

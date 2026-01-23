@@ -48,10 +48,11 @@
 </head>
 
 <body>
-  <div class="header">
-    <div class="menu-button">&#9776; 
+  <div class="top-nav">
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-button">&#9776; 
         <span class="menu-title">运维咖啡吧</span>
-    </div> 
+    </label> 
 
     <div class="container">
       <nav class="header-site">
@@ -232,9 +233,9 @@ def ops_coffee_view(request):
 <p>至此，Django的默认权限系统介绍完成，默认权限在小型项目中能满足大部分的需求，如果对权限控制有更高的要求可以关注前文中介绍的<code>django-guardian</code>项目或自己实现</p>
 
         <div>
-          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
-            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/django-contrib-auth-permissions-system.html">📅 2019-09-27</a></li>
-<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+          <ul class="article-meta">
+            <li><a href="/s/django-contrib-auth-permissions-system.html">📅 2019-09-27</a></li>
+<li><a href="/tag/Django/">🏷️ Django</a></li><li><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
         </div>
 
         <hr>
@@ -271,6 +272,7 @@ def ops_coffee_view(request):
     <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
     <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
 </div>
+
     </div>
   </div>
 

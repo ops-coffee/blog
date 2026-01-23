@@ -48,10 +48,11 @@
 </head>
 
 <body>
-  <div class="header">
-    <div class="menu-button">&#9776; 
+  <div class="top-nav">
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-button">&#9776; 
         <span class="menu-title">运维咖啡吧</span>
-    </div> 
+    </label> 
 
     <div class="container">
       <nav class="header-site">
@@ -177,9 +178,9 @@ python3 manage.py migrate</code></pre>
 <p>以上操作完成可以正常使用，但此时原Model还未删除，原数据库表也还存在，可以保持这个状态运行一段时间，若无异常则可以删除原Model，同步至线上应用数据库更新，彻底删掉原数据库表，至此一个完整的Model迁移工作结束</p>
 
         <div>
-          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
-            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/django-move-model-to-another-app.html">📅 2023-07-12</a></li>
-<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Django/">🏷️ Django</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+          <ul class="article-meta">
+            <li><a href="/s/django-move-model-to-another-app.html">📅 2023-07-12</a></li>
+<li><a href="/tag/Django/">🏷️ Django</a></li><li><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
         </div>
 
         <hr>
@@ -216,6 +217,7 @@ python3 manage.py migrate</code></pre>
     <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
     <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
 </div>
+
     </div>
   </div>
 

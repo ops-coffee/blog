@@ -48,10 +48,11 @@
 </head>
 
 <body>
-  <div class="header">
-    <div class="menu-button">&#9776; 
+  <div class="top-nav">
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-button">&#9776; 
         <span class="menu-title">运维咖啡吧</span>
-    </div> 
+    </label> 
 
     <div class="container">
       <nav class="header-site">
@@ -212,8 +213,8 @@
 <p>通过编写代码来构建计算属性需要特别注意的是<strong>代码要确保没有格式和语法错误</strong>，最好在其他地方编辑好代码测试过没有问题，再拷贝进来，以避免出错。目前无论是通过代码来预定义值还是计算属性，都不太容易进行测试，如果发现预期不符，最好的方式就是去翻看<code>error</code>日志，如果官方给加一个类似于<code>正则校验</code>一样的测试框可以测试的话那就相当完美了</p>
 
         <div>
-          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
-            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/veops/oneops-cmdb-ci-types-configure-advanced.html">📅 2024-06-11</a></li>
+          <ul class="article-meta">
+            <li><a href="/veops/oneops-cmdb-ci-types-configure-advanced.html">📅 2024-06-11</a></li>
           </ul>
         </div>
 
@@ -251,6 +252,7 @@
     <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
     <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
 </div>
+
     </div>
   </div>
 

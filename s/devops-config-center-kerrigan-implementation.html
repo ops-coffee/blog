@@ -48,10 +48,11 @@
 </head>
 
 <body>
-  <div class="header">
-    <div class="menu-button">&#9776; 
+  <div class="top-nav">
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-button">&#9776; 
         <span class="menu-title">运维咖啡吧</span>
-    </div> 
+    </label> 
 
     <div class="container">
       <nav class="header-site">
@@ -237,9 +238,9 @@ def migrate_notify_post(instance, created, **kwargs):
 <p>最后再回顾一下整个配置中心的工作流程，配置管理员通过Kerrigan来添加或修改配置文件，Kerrigan记录修改，同时将修改同步至etcd，客户端上的confd服务在检测到etcd对应key的数据发生变化时，会自动拉取数据覆盖至本地配置文件，然后配合<code>check_cmd</code>和<code>reload_cmd</code>指令对配置文件进行检查和重载，更多细节原理回顾文章<a href="https://blog.ops-coffee.com/s/configuration-center-setup-and-management.html" target="_blank">『中小团队落地配置中心详解』</a></p>
 
         <div>
-          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
-            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/devops-config-center-kerrigan-implementation.html">📅 2019-12-23</a></li>
-<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+          <ul class="article-meta">
+            <li><a href="/s/devops-config-center-kerrigan-implementation.html">📅 2019-12-23</a></li>
+<li><a href="/tag/Devops/">🏷️ Devops</a></li><li><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
         </div>
 
         <hr>
@@ -276,6 +277,7 @@ def migrate_notify_post(instance, created, **kwargs):
     <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
     <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
 </div>
+
     </div>
   </div>
 

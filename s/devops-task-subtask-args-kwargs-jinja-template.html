@@ -48,10 +48,11 @@
 </head>
 
 <body>
-  <div class="header">
-    <div class="menu-button">&#9776; 
+  <div class="top-nav">
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-button">&#9776; 
         <span class="menu-title">运维咖啡吧</span>
-    </div> 
+    </label> 
 
     <div class="container">
       <nav class="header-site">
@@ -182,9 +183,9 @@ stdout_args('标准输出的内容')</code></pre>
 <p>实现结果参数的传递非常重要，能让任务系统更加的灵活和强大，尤其是与<a href="https://blog.ops-coffee.com/s/devops-task-subtask-api-postman-apipost" target="_blank">API类型子任务</a>相结合，低代码，实现各种复杂的场景，例如我们现在唯一还在使用的第三方运维系统JumpServer的自动化管理，用户所属项目改变自动给JumpServer下相应的资源授权、用户离职自动禁用JumpServer用户等等</p>
 
         <div>
-          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
-            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/devops-task-subtask-args-kwargs-jinja-template.html">📅 2024-05-14</a></li>
-<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/任务系统/">🏷️ 任务系统</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+          <ul class="article-meta">
+            <li><a href="/s/devops-task-subtask-args-kwargs-jinja-template.html">📅 2024-05-14</a></li>
+<li><a href="/tag/Devops/">🏷️ Devops</a></li><li><a href="/tag/任务系统/">🏷️ 任务系统</a></li><li><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
         </div>
 
         <hr>
@@ -221,6 +222,7 @@ stdout_args('标准输出的内容')</code></pre>
     <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
     <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
 </div>
+
     </div>
   </div>
 

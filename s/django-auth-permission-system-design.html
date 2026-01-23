@@ -48,10 +48,11 @@
 </head>
 
 <body>
-  <div class="header">
-    <div class="menu-button">&#9776; 
+  <div class="top-nav">
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-button">&#9776; 
         <span class="menu-title">运维咖啡吧</span>
-    </div> 
+    </label> 
 
     <div class="container">
       <nav class="header-site">
@@ -143,9 +144,9 @@
 <p>RBAC：用户赋予角色，角色赋予模块操作的权限，则用户拥有对应模块的权限，资源隔离：用户隶属项目，项目拥有资源的权限，则用户继承对应资源的权限，两者结合的最终结果就是<strong>用户仅对自己所在项目的资源拥有部分模块操作的权限</strong></p>
 
         <div>
-          <ul style="display: inline-block;padding: 0;margin: 0 0 0.5em;color: #999;">
-            <li style="display: inline-block;margin: 0 1em 0 0;"><a href="/s/django-auth-permission-system-design.html">📅 2022-03-09</a></li>
-<li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/Devops/">🏷️ Devops</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/任务系统/">🏷️ 任务系统</a></li><li style="display: inline-block;margin: 0 1em 0 0;"><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
+          <ul class="article-meta">
+            <li><a href="/s/django-auth-permission-system-design.html">📅 2022-03-09</a></li>
+<li><a href="/tag/Devops/">🏷️ Devops</a></li><li><a href="/tag/任务系统/">🏷️ 任务系统</a></li><li><a href="/tag/关于技术/">🏷️ 关于技术</a></li>          </ul>
         </div>
 
         <hr>
@@ -182,6 +183,7 @@
     <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
     <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
 </div>
+
     </div>
   </div>
 
