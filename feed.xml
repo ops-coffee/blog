@@ -8,7 +8,14 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Custom CMS v1.0</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 22 Jan 2026 14:07:35 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 14 Mar 2026 11:14:08 +0800</lastBuildDate>
+    <item>
+      <title>一个集记账、基金、股票于一体的APP</title>
+      <link>https://blog.ops-coffee.com/s/ai-coding-integrated-finance-app.html</link>
+      <description>利用AI技术开发的财务管理APP，集记账、基金、股票于一体，简化财务管理流程，支持多账本、基金实时估值、股票持仓成本计算，提供云同步和多平台支持。</description>
+      <guid isPermaLink="false">https://blog.ops-coffee.com/s/ai-coding-integrated-finance-app.html</guid>
+      <pubDate>Sat, 14 Mar 2026 11:12:01 +0800</pubDate>
+    </item>
     <item>
       <title>2025年度总结｜生活篇</title>
       <link>https://blog.ops-coffee.com/r/2025-year-in-review-travel-and-life-moments.html</link>
@@ -141,13 +148,6 @@
       <description>赣州Day53旅行记，探索福寿沟博物馆、赣州古城墙、郁孤台等地标，体验赣南客家文化，记录一家三口的愉快旅程。</description>
       <guid isPermaLink="false">https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day53-ganzhou-bajing.html</guid>
       <pubDate>Sat, 11 Oct 2025 16:48:48 +0800</pubDate>
-    </item>
-    <item>
-      <title>久违的暑假｜沿海自驾DAY52 - 相聚</title>
-      <link>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day52-ganzhou-bowuguan.html</link>
-      <description>在2025暑假沿海自驾游的第52天，作者从梅关古道来到赣州，探索了赣州博物馆和江南宋城，体验了赣州的历史文化和美食，与家人共享旅程的温馨。</description>
-      <guid isPermaLink="false">https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day52-ganzhou-bowuguan.html</guid>
-      <pubDate>Fri, 10 Oct 2025 15:01:58 +0800</pubDate>
     </item>
   </channel>
 </rss>
