@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
  <loc>https://blog.ops-coffee.com</loc>
- <lastmod>2026-03-14</lastmod>
+ <lastmod>2026-03-21</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/friends.html</loc>
@@ -174,7 +174,7 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/china/jiangsu/suzhou.html</loc>
- <lastmod>2025-02-05</lastmod>
+ <lastmod>2026-03-21</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/china/zhejiang/zhoushan.html</loc>
@@ -262,7 +262,7 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travels.html</loc>
- <lastmod>2026-01-12</lastmod>
+ <lastmod>2026-03-21</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/search.html</loc>
@@ -403,6 +403,10 @@
 <url>
  <loc>https://blog.ops-coffee.com/tag/Devops/index.html</loc>
  <lastmod>2020-10-27</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.com/r/city-china-jiangsu-suzhou-miduishan-wangshan.html</loc>
+ <lastmod>2026-03-21</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/s/ai-coding-integrated-finance-app.html</loc>
