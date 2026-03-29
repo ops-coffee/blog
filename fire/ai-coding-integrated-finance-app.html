@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="记账APP, 基金管理, 股票管理, 财务管理, AI编程, 财务管家, Flutter开发, 云同步, 资产总览, APP下载" />
+  <meta name="description" content="利用AI技术开发的财务管理APP，集记账、基金、股票于一体，简化财务管理流程，支持多账本、基金实时估值、股票持仓成本计算，提供云同步和多平台支持。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>一个集记账、基金、股票于一体的APP</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.comfire/ai-coding-integrated-finance-app.html" />
+  <meta property="og:title" content="一个集记账、基金、股票于一体的APP" />
+  <meta property="og:description" content="利用AI技术开发的财务管理APP，集记账、基金、股票于一体，简化财务管理流程，支持多账本、基金实时估值、股票持仓成本计算，提供云同步和多平台支持。" />
+  <link rel="canonical" href="https://blog.ops-coffee.comfire/ai-coding-integrated-finance-app.html" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "一个集记账、基金、股票于一体的APP",
+    "description": "利用AI技术开发的财务管理APP，集记账、基金、股票于一体，简化财务管理流程，支持多账本、基金实时估值、股票持仓成本计算，提供云同步和多平台支持。",
+    "url": "https://blog.ops-coffee.comfire/ai-coding-integrated-finance-app.html",
+    "author": {
+      "@type": "Person",
+      "name": "运维咖啡吧"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "运维咖啡吧",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://blog.ops-coffee.com/favicon.ico"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://blog.ops-coffee.comfire/ai-coding-integrated-finance-app.html"
+    }
+  }
+  </script>
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="top-nav">
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </label> 
+
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">产品</a>
+              <ul class="sub-menu">
+                <li><a href="/img.html" target="_self">拼图工具</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self" aria-label="搜索">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">一个集记账、基金、股票于一体的APP</h1>
+
+        <p>平常会用记账软件记账，会通过支付宝查看基金，还会通过交易软件查看股票，来回切换麻烦不说，APP反应还慢，想看的内容入口也深，各种的麻烦。一直想找一个可以集记账、基金、股票于一天的APP，但始终没有找到满意的，曾经也想自己写一个，但奈何能力有限，对APP开发那是一窍不通，作罢</p>
+<p>如今AI编程十分成熟，完全可以借助AI把自己的想法落地，于是我又Vibe-Coding了一个专属于我的财务管理APP，记账、基金、股票，一个应用全搞定</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2026/0314.01.jpg" /></p>
+<h2 id="_1">功能</h2>
+<p>每一块的功能都很简单，但贴合我的需求</p>
+<p>记账：收入、支出、转账，三步记一笔，支持多账本、多账户，分类和预算可自定义，有报表统计，也支持报销管理，花销和结余一目了然</p>
+<p>基金：自选基金列表，添加自己关注的基金，看实时估值和涨跌幅，持仓成本、收益、收益率集中展示，带走势图，支持基金数据导入导出</p>
+<p>股票：自选股票，记录买入成本与数量，自动算持仓成本、浮动盈亏和收益率。与基金放在同一入口，和记账一起构成资产总览，一屏看清现金、基金、股票总资产</p>
+<p>基于flutter开发，可以打包成web、android、ios、macos、windows等多种版本，还借助于赛博菩萨cloudflare实现了数据云同步</p>
+<h2 id="_2">下载</h2>
+<p>国内安卓应用市场上架都需要企业资质，原本APP也只是为了满足我自己需求的一个小工具，所以暂时没考虑上架应用市场，如果你感兴趣有同样需求的话，我打包好的android和macos安装包提供下载使用，地址在这里：</p>
+<p>财务管家：<a href="https://fire.ops-coffee.com" target="_blank">https://fire.ops-coffee.com</a></p>
+<p>这个地址打开是应用的web版本，PC端右侧会有安装包的下载，但移动端打开的话为了兼顾使用体验，安装包下载按钮会隐藏，所以想要下载安装包的话请PC端打开地址。另外web端功能不全，部分接口限制，导致基金板块使用会有问题，所以仅作参考吧，还是APP为主</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2026/0314.02.png" /></p>
+<p>对于持苹果手机想要体验的用户，暂时没有办法支持。应用要上架苹果应用商店的话需要Apple开发者账号，开发者账号99美金每年，如果用的人多，会上架苹果应用商店，但会收费，毕竟有成本在。有没有天使用户，现在仅需9.9元即可锁定终身会员，上线即兑换，本篇文章赞赏即可</p>
+<h2 id="_3">后记</h2>
+<p>一年前我在Vibe-Coding<a href="https://img.ops-coffee.com/" target="_blank">「免费在线拼图工具-好拼」</a>时，还会考虑选用自己熟悉的编程语言，AI输出的代码我还回去看，有一些复杂的场景还需要我主动介入。但当我再来写这个财务管家APP，编程语言是AI选的，开发框架也是AI确认的，编码过程也全部无条件的信任了AI，AI输出的代码已经不会去看了，也看不懂，但这丝毫没有影响开发出一个我满意的APP</p>
+<p>AI发展太快了，尤其是在编程方向，可以预见的到未来编程将会变成一种技能，像使用word、excel一样，所有人都能轻松掌握，这不是科幻的想象，这正在以肉眼可见的速度在发生，无法改变，积极拥抱吧</p>
+
+        <div>
+          <ul class="article-meta">
+            <li><a href="/fire/ai-coding-integrated-finance-app.html">📅 2026-03-14</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="pagination">
+            <a href="/archive.html" class="pagination-item prev-page">
+                <span class="pagination-arrow">←</span>
+                <span class="pagination-text">上一篇：<br>文章列表</span>
+            </a>
+            <a href="/archive.html" class="pagination-item next-page">
+                <span class="pagination-text">下一篇：<br>文章列表</span>
+                <span class="pagination-arrow">→</span>
+            </a>
+        </div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div class="nav-cell">
+    <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+    <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+</div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami -->
+<script defer src="https://umami.ops-coffee.cn/script.js" data-website-id="248e61f0-c324-444e-a56d-bf97ee44a8fc"></script>
+
+<!-- Google Adsense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8944257246828217" crossorigin="anonymous"></script>
+</body>
+</html>
