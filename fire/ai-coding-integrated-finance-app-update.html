@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="记账APP, 基金APP, 股票APP, 集成财务管理, 应用体验优化, 安卓应用下载, 苹果应用上架, 会员机制, 早鸟价, 云同步功能" />
+  <meta name="description" content="这篇文章分享了一个集记账、基金、股票于一体的APP的使用体验，介绍了其优化后的流畅体验、下载方式（包括安卓和苹果的规划），以及会员机制，特别是早鸟价和终身会员的特权。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>那个集记账、基金、股票于一体的APP有了新进展</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.comfire/ai-coding-integrated-finance-app-update.html" />
+  <meta property="og:title" content="那个集记账、基金、股票于一体的APP有了新进展" />
+  <meta property="og:description" content="这篇文章分享了一个集记账、基金、股票于一体的APP的使用体验，介绍了其优化后的流畅体验、下载方式（包括安卓和苹果的规划），以及会员机制，特别是早鸟价和终身会员的特权。" />
+  <link rel="canonical" href="https://blog.ops-coffee.comfire/ai-coding-integrated-finance-app-update.html" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "那个集记账、基金、股票于一体的APP有了新进展",
+    "description": "这篇文章分享了一个集记账、基金、股票于一体的APP的使用体验，介绍了其优化后的流畅体验、下载方式（包括安卓和苹果的规划），以及会员机制，特别是早鸟价和终身会员的特权。",
+    "url": "https://blog.ops-coffee.comfire/ai-coding-integrated-finance-app-update.html",
+    "author": {
+      "@type": "Person",
+      "name": "运维咖啡吧"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "运维咖啡吧",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://blog.ops-coffee.com/favicon.ico"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://blog.ops-coffee.comfire/ai-coding-integrated-finance-app-update.html"
+    }
+  }
+  </script>
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="top-nav">
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </label> 
+
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">产品</a>
+              <ul class="sub-menu">
+                <li><a href="/img.html" target="_self">拼图工具</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self" aria-label="搜索">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">那个集记账、基金、股票于一体的APP有了新进展</h1>
+
+        <p>两周前，我Vibe-Coding了一个集记账、基金、股票于一体的APP，这个APP本身是为了解决我的一个痛点：记账、看基金、查股票，都得点开好几个App，来回切换麻烦不说，APP反应还慢，想看的内容入口也深，各种的麻烦</p>
+<p>APP写完我个人用起来很顺手，兴奋之余就写了篇文章<a href="https://blog.ops-coffee.com/fire/ai-coding-integrated-finance-app.html" target="_blank">「一个集记账、基金、股票于一体的 APP」</a>分享，没想到得到了不少朋友的关注，单单微信公众号上这篇文章的阅读量也已近两万，留言和私信里不少朋友表示有同样痛点，也真的去下载试用，还给提了不少改进建议</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2026/0329.01.jpg" /></p>
+<p>于是快马加鞭，修复了一些大家提到的BUG，并对应用的完整性和稳定性做了不少优化，无论是日常记账、还是看基金估值、亦或是查股票盈亏，体验上都比之前顺畅了不少。具体改动就不逐条罗列了，若你已经下载安装，强烈建议你升级到最新版本，若你还没试过，也推荐你下载试用下，看看是否满足你的需求</p>
+<h2 id="_1">下载</h2>
+<p>国内安卓应用市场上架比较麻烦，需要企业资质，以及软著等等，暂时未考虑上架，提供安卓安装包下载地址如下：</p>
+<p>财务管家：<a href="https://fire.ops-coffee.com" target="_blank">https://fire.ops-coffee.com</a></p>
+<p>苹果这边已经在规划<strong>申请开发者账号并上架 App Store</strong>，有进展会跟大家同步，可以期待下</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2026/0329.03.jpg" /></p>
+<h2 id="_2">会员</h2>
+<p>应用上架及维护都有成本，所以打算引入会员机制，以支持后续的开发和维护。上篇文章里写了天使用户，9.9元锁定终身会员，已经有不少朋友支持，感谢金主们真金白银的支持，正是你们让这款APP上架应用商店成为了可能，也是你们让这个APP有了持续维护下去的动力</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2026/0329.02.png" /></p>
+<p>9块9是天使用户的特权，这个费用肯定是没有办法覆盖成本的，正式上架后，预计终身会员价格会在99元左右，当下应用还未上架前会有<strong>早鸟价29.9</strong>，早鸟仍是买断制，一次付费，永久使用。对已经9块9买断的用户，也无需担心，不需要补差价，也没有任何功能限制，终身会员特权依旧保留</p>
+<p>当下即便是<strong>不买会员也能正常使用</strong>除了云同步之外的所有功能，没有限制。云同步有额外云端计算和存储成本在，所以是付费后才有的特权，主要是为了防止数据丢失，以及在不同设备间迁移数据时方便些，没有这个需求的可以忽略</p>
+<h2 id="_3">后记</h2>
+<p>之前做过很多免费应用，口碑都不错，例如<a href="https://img.ops-coffee.com/" target="_blank">免费在线拼图工具-好拼</a>等等。第一次做付费应用，诚惶诚恐，让一个开发者主动去要钱，总是有心理负担，但考虑到成本和后续维护，以及应用长期健康的发展，收费是必须的，但我会尽量克制，有始有终</p>
+
+        <div>
+          <ul class="article-meta">
+            <li><a href="/fire/ai-coding-integrated-finance-app-update.html">📅 2026-03-29</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="pagination">
+            <a href="https://blog.ops-coffee.com/fire/ai-coding-integrated-finance-app.html" class="pagination-item prev-page">
+                <span class="pagination-arrow">←</span>
+                <span class="pagination-text">上一篇：<br>一个集记账、基金、股票于一体的APP</span>
+            </a>
+            <a href="/archive.html" class="pagination-item next-page">
+                <span class="pagination-text">下一篇：<br>文章列表</span>
+                <span class="pagination-arrow">→</span>
+            </a>
+        </div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div class="nav-cell">
+    <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+    <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+</div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami -->
+<script defer src="https://umami.ops-coffee.cn/script.js" data-website-id="248e61f0-c324-444e-a56d-bf97ee44a8fc"></script>
+
+<!-- Google Adsense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8944257246828217" crossorigin="anonymous"></script>
+</body>
+</html>
