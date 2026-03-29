@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2026-03-28T20:00:16.639330+08:00</updated>
+  <updated>2026-03-29T11:15:44.210185+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/fire/ai-coding-integrated-finance-app-update.html</id>
+    <title>那个集记账、基金、股票于一体的APP有了新进展</title>
+    <updated>2026-03-29T11:15:44.210185+08:00</updated>
+    <link href="https://blog.ops-coffee.com/fire/ai-coding-integrated-finance-app-update.html"/>
+    <summary>这篇文章分享了一个集记账、基金、股票于一体的APP的使用体验，介绍了其优化后的流畅体验、下载方式（包括安卓和苹果的规划），以及会员机制，特别是早鸟价和终身会员的特权。</summary>
+    <published>2026-03-29T11:15:44.205730+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-jiangsu-suzhou-jinjihu.html</id>
     <title>苏州｜用一天时间，走完一整个金鸡湖</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day56-shangrao-xinjiang.html"/>
     <summary>从鹰潭到上饶的沿海自驾之旅，体验龙潭湖公园的宁静与美丽，品尝当地美食如黄老头小炒黄牛肉，参观上饶博物馆和双塔公园，感受江西的自然与文化魅力。</summary>
     <published>2025-10-14T13:55:59.672117+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day55-yingtan-longhushan.html</id>
-    <title>久违的暑假｜沿海自驾DAY55 - 鹰潭</title>
-    <updated>2025-10-13T14:41:15.498265+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day55-yingtan-longhushan.html"/>
-    <summary>从江西抚州到鹰潭的自驾之旅，探索了龙虎山的道教文化，游览了上清古镇，品尝了地道的牛骨粉，体验了不一样的江西风情。</summary>
-    <published>2025-10-13T14:40:28.282443+08:00</published>
   </entry>
 </feed>
