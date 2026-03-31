@@ -8,7 +8,14 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Custom CMS v1.0</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 29 Mar 2026 11:15:44 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 31 Mar 2026 19:38:14 +0800</lastBuildDate>
+    <item>
+      <title>纠结了一下，还是把钱给退了</title>
+      <link>https://blog.ops-coffee.com/fire/integrated-finance-refund-ethics-app-update.html</link>
+      <description>一位用户购买了APP的终身会员，虽然他不知道有更便宜的早鸟价，作者还是决定退还差价。文章还介绍了APP的最新更新和下载信息。</description>
+      <guid isPermaLink="false">https://blog.ops-coffee.com/fire/integrated-finance-refund-ethics-app-update.html</guid>
+      <pubDate>Tue, 31 Mar 2026 19:37:32 +0800</pubDate>
+    </item>
     <item>
       <title>那个集记账、基金、股票于一体的APP有了新进展</title>
       <link>https://blog.ops-coffee.com/fire/ai-coding-integrated-finance-app-update.html</link>
@@ -141,13 +148,6 @@
       <description>本次沿海自驾的第57天，挑战难度极大的三清山徒步。从外双溪索道开始，历经西海岸、阳光海岸、南清园等景区，感受三清山的壮丽与秀美，体验高空栈道的惊险与震撼。</description>
       <guid isPermaLink="false">https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day57-shangrao-sanqingshan.html</guid>
       <pubDate>Wed, 15 Oct 2025 11:56:56 +0800</pubDate>
-    </item>
-    <item>
-      <title>久违的暑假｜沿海自驾DAY56 - 上饶</title>
-      <link>https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day56-shangrao-xinjiang.html</link>
-      <description>从鹰潭到上饶的沿海自驾之旅，体验龙潭湖公园的宁静与美丽，品尝当地美食如黄老头小炒黄牛肉，参观上饶博物馆和双塔公园，感受江西的自然与文化魅力。</description>
-      <guid isPermaLink="false">https://blog.ops-coffee.com/r/2025-summer-coastal-road-trip-day56-shangrao-xinjiang.html</guid>
-      <pubDate>Tue, 14 Oct 2025 13:55:59 +0800</pubDate>
     </item>
   </channel>
 </rss>
