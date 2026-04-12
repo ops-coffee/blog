@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="财务管家, 记账APP, 基金管理, 股票管理, 债务管理, 私募基金, 美股, 港股, 云同步, iOS上架" />
+  <meta name="description" content="这款集记账、基金、股票于一体的财务管家APP近期更新，新增债务管理、私募基金支持、美股港股市场接入，并优化底层体验。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>那个集记账、基金、股票于一体的APP，又往前迈了一大步</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.comfire/expense-funds-stock-integrated-finance-app.html" />
+  <meta property="og:title" content="那个集记账、基金、股票于一体的APP，又往前迈了一大步" />
+  <meta property="og:description" content="这款集记账、基金、股票于一体的财务管家APP近期更新，新增债务管理、私募基金支持、美股港股市场接入，并优化底层体验。" />
+  <link rel="canonical" href="https://blog.ops-coffee.comfire/expense-funds-stock-integrated-finance-app.html" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "那个集记账、基金、股票于一体的APP，又往前迈了一大步",
+    "description": "这款集记账、基金、股票于一体的财务管家APP近期更新，新增债务管理、私募基金支持、美股港股市场接入，并优化底层体验。",
+    "url": "https://blog.ops-coffee.comfire/expense-funds-stock-integrated-finance-app.html",
+    "author": {
+      "@type": "Person",
+      "name": "运维咖啡吧"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "运维咖啡吧",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://blog.ops-coffee.com/favicon.ico"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://blog.ops-coffee.comfire/expense-funds-stock-integrated-finance-app.html"
+    }
+  }
+  </script>
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="top-nav">
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </label> 
+
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">产品</a>
+              <ul class="sub-menu">
+                <li><a href="/img.html" target="_self">拼图工具</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self" aria-label="搜索">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">那个集记账、基金、股票于一体的APP，又往前迈了一大步</h1>
+
+        <p>从<a href="https://blog.ops-coffee.com/fire/ai-coding-integrated-finance-app.html" target="_blank">「一个集记账、基金、股票于一体的APP」</a>开始，到<a href="https://blog.ops-coffee.com/fire/ai-coding-integrated-finance-app-update.html" target="_blank">「那个集记账、基金、股票于一体的APP有了新进展」</a>里聊会员与早鸟价，再到<a href="https://blog.ops-coffee.com/fire/integrated-finance-refund-ethics-app-update.html" target="_blank">「纠结了一下，还是把钱给退了」</a>里同步分组、云同步和iOS账号申请的波折，这一点一点的变化，让我有了做<a href="https://img.ops-coffee.com" target="_blank">免费在线拼图工具</a>时的感觉，不断的听取大家的建议，不断的完善产品，不断的跟大家交流和汇报，逐步打磨，让它变得越来越好</p>
+<p>虽然现在文章没有做拼图工具时发的频繁，但关于产品的打磨一直没有拉下，这段时间功能上又补了几块拼图，底层也顺了一遍，今天更新一篇，算是给关注这个「财务管家」的朋友们做个阶段性汇报</p>
+<h2 id="_1">介绍</h2>
+<p>先简单的介绍下这个应用，让首次打开的朋友，有个直观的了解。这是一个集记账、基金、股票管理于一体的APP，主打一站式管理财务，主要源于我自己的需求：不想来回切换几个APP，也不想在几个地方记同样的东西，所以，记账、基金、股票这三块功能，我都放在一个应用里了</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2026/0412.01.jpg" /></p>
+<h2 id="_2">更新</h2>
+<p>这次除了在记账、基金、股票这三块都有了不小的变化外，底层也做了大量的优化</p>
+<p>首先是记账，记账这块原本偏日常流水：收入、支出、转账、预算，够用，但生活里还有一类钱很磨人，借入和借出。以前要么记在备注里，要么另开表格，时间一长就散，心里也没底</p>
+<p>现在把<strong>债务管理</strong>补上了：可以分别管理<strong>借入</strong>和<strong>借出</strong>，谁、多少、什么时候、还了多少、还剩多少，都能留在同一条链路里，和账本、账户放在一起看，不至于账上很平衡，人情里很糊涂</p>
+<p>其次是基金，基金模块除了公募自选、估值、收益这些老能力之外，这次把<strong>私募基金</strong>的管理也纳进来了，有些朋友的资产结构里，私募本来就是一块不小的拼图，以前只能在外面单独记，现在至少可以在同一个应用里对齐视角</p>
+<p>再次是股票，股票这边之前更偏A股自选与成本收益的计算思路。这次把<strong>美股、港股</strong>市场也接进来了：关注的范围更广，持仓结构更完整，和基金、记账放在一起做总览时，也更像一张像样的家庭资产负债表</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2026/0412.02.jpg" /></p>
+<p>最后是体验和稳定性上，这一版除了功能，我把更多时间花在了<strong>底层优化</strong>上：同步、缓存、异常场景、列表渲染这些并不会被用户感知的到的地方，陆续收了一遍。整体感受就是：日常打开、切换、滚动，比之前更跟手，也少了一些莫名其妙的卡顿</p>
+<p>前端这边也做了一轮<strong>视觉与交互的统一</strong>：间距、字号层级、模块之间的气质尽量拉齐，不是换一套花皮肤，而是让它看起来更像同一个产品，而不是三块功能硬拼在一起</p>
+<h2 id="ios">IOS</h2>
+<p>苹果这边终于往前推进了一大步：<strong>开发者账号已经申请下来</strong>，iOS版本正在走上架流程。第一次上架，这里有很多细节，目前还没完全理顺，不过钱都花了，上架肯定是要的</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2026/0412.03.png" /></p>
+<p>再等等吧，应该还要点时间，或许会先考虑测试版</p>
+<h2 id="_3">会员</h2>
+<p>说实话，走到上架这一步，成本就不再是说说而已了：开发者年费、审核与维护、同步与云端资源，都是实打实的支出。之前早鸟29.9是我尽量克制的定价，结合接下来的节奏，我把<strong>终身会员的早鸟价</strong>调整为<strong>39.9元</strong>，希望能让这件事更可持续一些</p>
+<p>几个大家最关心的点，我照旧说清楚：1. 已经9.9天使用户买断的，不需要补差价，也没有任何功能限制，这点不变，2. 已经按早鸟价29.9买断的，同样不需要补差价，权益照旧，3. 正式上线后，终身会员预计会在<strong>128</strong>左右。早鸟仍是<strong>一次付费，终身使用</strong>的买断思路，只是窗口会越来越窄，后续逐步提高，直至最终IOS版本上线恢复正常价格</p>
+<p>当然当下<strong>不买会员也能正常使用</strong>除云同步外的功能，没有任何其他限制，云同步仍有额外成本，所以继续作为会员特权，主要给需要多端迁移、怕丢数据的朋友</p>
+<h2 id="_4">下载</h2>
+<p>国内安卓应用市场上架比较麻烦，需要企业资质，以及软著等等，暂时未考虑上架，提供安卓安装包下载地址如下：</p>
+<p>财务管家：<a href="https://fire.ops-coffee.com" target="_blank">https://fire.ops-coffee.com</a></p>
+<h2 id="_5">后记</h2>
+<p>AI把编程的门槛降低了很多，但想要做出一款好用的产品依然不容易，没有捷径，就是要靠不断的打磨，与用户在一起，最终能做好靠的肯定是责任，而非运气</p>
+
+        <div>
+          <ul class="article-meta">
+            <li><a href="/fire/expense-funds-stock-integrated-finance-app.html">📅 2026-04-12</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="pagination">
+            <a href="https://blog.ops-coffee.com/fire/integrated-finance-refund-ethics-app-update.html" class="pagination-item prev-page">
+                <span class="pagination-arrow">←</span>
+                <span class="pagination-text">上一篇：<br>纠结了一下，还是把钱给退了</span>
+            </a>
+            <a href="/archive.html" class="pagination-item next-page">
+                <span class="pagination-text">下一篇：<br>文章列表</span>
+                <span class="pagination-arrow">→</span>
+            </a>
+        </div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div class="nav-cell">
+    <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+    <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+</div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami -->
+<script defer src="https://umami.ops-coffee.cn/script.js" data-website-id="248e61f0-c324-444e-a56d-bf97ee44a8fc"></script>
+
+<!-- Google Adsense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8944257246828217" crossorigin="anonymous"></script>
+</body>
+</html>
