@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
  <loc>https://blog.ops-coffee.com</loc>
- <lastmod>2026-04-12</lastmod>
+ <lastmod>2026-04-19</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/friends.html</loc>
@@ -407,6 +407,10 @@
 <url>
  <loc>https://blog.ops-coffee.com/tag/Devops/index.html</loc>
  <lastmod>2020-10-27</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.com/fire/financial-manager-app-update-and-ios-test-progress.html</loc>
+ <lastmod>2026-04-19</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/fire/expense-funds-stock-integrated-finance-app.html</loc>
