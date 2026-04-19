@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="财务管家APP, 分红管理, 存钱计划, iOS测试, 记账, 基金管理, 股票管理, 云同步, 安卓下载, VIP会员" />
+  <meta name="description" content="财务管家APP本周更新了分红管理和存钱计划功能，iOS测试对VIP用户开放。安卓用户可直接下载安装，会员享受云同步等所有功能。" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>那个集记账、基金、股票于一体的APP，IOS测试上线</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.comfire/financial-manager-app-update-and-ios-test-progress.html" />
+  <meta property="og:title" content="那个集记账、基金、股票于一体的APP，IOS测试上线" />
+  <meta property="og:description" content="财务管家APP本周更新了分红管理和存钱计划功能，iOS测试对VIP用户开放。安卓用户可直接下载安装，会员享受云同步等所有功能。" />
+  <link rel="canonical" href="https://blog.ops-coffee.comfire/financial-manager-app-update-and-ios-test-progress.html" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "那个集记账、基金、股票于一体的APP，IOS测试上线",
+    "description": "财务管家APP本周更新了分红管理和存钱计划功能，iOS测试对VIP用户开放。安卓用户可直接下载安装，会员享受云同步等所有功能。",
+    "url": "https://blog.ops-coffee.comfire/financial-manager-app-update-and-ios-test-progress.html",
+    "author": {
+      "@type": "Person",
+      "name": "运维咖啡吧"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "运维咖啡吧",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://blog.ops-coffee.com/favicon.ico"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://blog.ops-coffee.comfire/financial-manager-app-update-and-ios-test-progress.html"
+    }
+  }
+  </script>
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="top-nav">
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </label> 
+
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">产品</a>
+              <ul class="sub-menu">
+                <li><a href="/img.html" target="_self">拼图工具</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self" aria-label="搜索">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">那个集记账、基金、股票于一体的APP，IOS测试上线</h1>
+
+        <p>又一周没有更新财务管家APP的动向了，趁着周末有点时间，写篇文章给关心这个应用的朋友们同步下，同步下这周做了哪些更新，有了哪些变化，顺便聊聊 iOS 测试的最新动向</p>
+<p>上一篇里介绍了新加入的债务、私募、美股、港股，已经有部分朋友体验了，还给提了一些优化的建议，基本上我也都在这一周内优化上线了，除此之外，本周还上线了两个新功能，主要是<strong>分红管理</strong>和<strong>存钱计划</strong></p>
+<h2 id="_1">介绍</h2>
+<p>还是给第一次点进来的朋友一句话交代下：这是一个集<strong>记账、基金、股票</strong>管理于一体的 APP，主打一站式财务管理，省得在几个应用之间来回切、重复记</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2026/0419.01.jpg" /></p>
+<h2 id="_2">更新</h2>
+<h3 id="1">1. 分红管理</h3>
+<p>之前基金和股票里缺少了分红管理，这就导致基金和股票的收益少了很重要的一块拼图，这就导致分红累计拿了多少、对本金回本有没有帮助、还剩多少没靠分红摊回来，常常是一笔糊涂账，这一版把分红管理做进来了，基金和股票都支持。你可以按笔记录分红到账，应用会自动帮你把账算清楚，展示也很直观：累计分红、摊平了多少本金、还剩多少没靠分红回本，一目了然</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2026/0419.02.jpg" /></p>
+<h3 id="2">2. 存钱计划</h3>
+<p>很多朋友有存钱的习惯，我刷抖音的时候也经常看到36期存钱法之类的短视频介绍，APP上线后有好几个朋友私信我希望增加存钱管理的能力，这一版上线了存钱计划。存钱计划内置了多种常见方法，例如灵活存钱、定额存钱、12 存单法、36 存单法、灵活存单、52 周、365 天等，你可以按自己的习惯选一种开跑。列表里看总进度，详情里看每一笔存钱记录，像 12 存单这类带节奏的方法，还用网格把每一期「该存、已存」摊开，更像一张贴在手机里的存钱路线图，清晰直观</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2026/0419.03.jpg" /></p>
+<h2 id="ios">iOS</h2>
+<p>苹果应用商店这条线终于又往前挪了一步：iOS 版本可以申请测试了</p>
+<p>不过目前仅对 VIP 用户开放申请，普通用户还要再晚一点。主要是测试名额、沟通成本、以及问题反馈链路都更可控，先把早期支持者的体验兜住，跑稳了再逐步放开，对大家也更负责任一些。后续如果扩大范围，我会再同步更新</p>
+<p>安卓侧照旧，可以直接从官网下载安装。安卓端的用户注册审核也给去掉了，现在你可以直接通过APP注册账号，没有审核了，注册之后直接就能登录，除了云同步之外其他的所有功能，目前仍然没有任何限制，可以尽情探索</p>
+<h2 id="_3">下载</h2>
+<p>国内安卓应用市场上架比较麻烦，需要企业资质，以及软著等等，暂时未考虑上架，提供安卓安装包下载地址如下：</p>
+<p>哇咔财务管家：<a href="https://fire.ops-coffee.com" target="_blank">https://fire.ops-coffee.com</a></p>
+<h2 id="_4">会员</h2>
+<p>目前仍有早鸟价优惠，终身VIP会员仅需<strong>39.9</strong>元，会员能使用APP的所有能力，没有任何限制，包括<strong>云同步</strong>功能，使用云同步数据稳定性和安全性将会更有保障</p>
+<p>当然当下<strong>不买会员也能正常使用</strong>除云同步外的功能，没有任何其他限制，欢迎下载体验</p>
+
+        <div>
+          <ul class="article-meta">
+            <li><a href="/fire/financial-manager-app-update-and-ios-test-progress.html">📅 2026-04-19</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="pagination">
+            <a href="https://blog.ops-coffee.com/fire/expense-funds-stock-integrated-finance-app.html" class="pagination-item prev-page">
+                <span class="pagination-arrow">←</span>
+                <span class="pagination-text">上一篇：<br>那个集记账、基金、股票于一体的APP，又往前迈了一大步</span>
+            </a>
+            <a href="/archive.html" class="pagination-item next-page">
+                <span class="pagination-text">下一篇：<br>文章列表</span>
+                <span class="pagination-arrow">→</span>
+            </a>
+        </div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div class="nav-cell">
+    <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+    <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+</div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami -->
+<script defer src="https://umami.ops-coffee.cn/script.js" data-website-id="248e61f0-c324-444e-a56d-bf97ee44a8fc"></script>
+
+<!-- Google Adsense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8944257246828217" crossorigin="anonymous"></script>
+</body>
+</html>
