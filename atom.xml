@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2026-04-26T19:40:50.412300+08:00</updated>
+  <updated>2026-05-07T21:15:02.190671+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/fund-5-year-from-50-percent-loss-to-profit.html</id>
+    <title>我买基金从不亏钱</title>
+    <updated>2026-05-07T21:15:02.190671+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/fund-5-year-from-50-percent-loss-to-profit.html"/>
+    <summary>这是一篇酝酿了超过5年的复盘</summary>
+    <published>2026-05-07T21:12:51.527414+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-jiangsu-wuxi-yixing-tuanjiu.html</id>
     <title>游记｜在宜兴度过一个平淡的假期</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/s/free-online-collage-maker-tool-haopin-pro-introduction.html"/>
     <summary>好拼是一款免费的在线拼图工具，现已上架Chrome和Edge插件商店，支持在线网页、PWA和浏览器插件三种使用方式，简洁方便，欢迎体验。</summary>
     <published>2025-10-24T10:28:04.592529+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/s/free-online-collage-maker-tool-chrome-extension-plugin.html</id>
-    <title>好拼｜免费在线拼图工具上架谷歌商店啦</title>
-    <updated>2025-10-22T12:38:56.454078+08:00</updated>
-    <link href="https://blog.ops-coffee.com/s/free-online-collage-maker-tool-chrome-extension-plugin.html"/>
-    <summary>本文介绍了「好拼」免费在线拼图工具的核心功能和最新更新，包括布局拼图和长图拼接，以及新增的Chrome插件，旨在为用户提供更简单、自然的创作体验。</summary>
-    <published>2025-10-22T12:35:00.292035+08:00</published>
   </entry>
 </feed>
