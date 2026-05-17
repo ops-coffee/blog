@@ -2,11 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
  <loc>https://blog.ops-coffee.com</loc>
- <lastmod>2026-05-07</lastmod>
+ <lastmod>2026-05-17</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/friends.html</loc>
  <changefreq>monthly</changefreq>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.com/travel/2026-suichang.html</loc>
+ <lastmod>2026-05-17</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/china/jiangsu/wuxi.html</loc>
@@ -214,7 +218,7 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/china/zhejiang.html</loc>
- <lastmod>2025-10-16</lastmod>
+ <lastmod>2026-05-17</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/china/jiangsu.html</loc>
@@ -266,7 +270,7 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travels.html</loc>
- <lastmod>2026-04-26</lastmod>
+ <lastmod>2026-05-17</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/search.html</loc>
@@ -411,6 +415,10 @@
 <url>
  <loc>https://blog.ops-coffee.com/tag/Devops/index.html</loc>
  <lastmod>2020-10-27</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-01.html</loc>
+ <lastmod>2026-05-17</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/r/fund-5-year-from-50-percent-loss-to-profit.html</loc>
