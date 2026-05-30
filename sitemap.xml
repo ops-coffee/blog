@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
  <loc>https://blog.ops-coffee.com</loc>
- <lastmod>2026-05-21</lastmod>
+ <lastmod>2026-05-30</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/friends.html</loc>
@@ -10,7 +10,7 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/2026-suichang.html</loc>
- <lastmod>2026-05-21</lastmod>
+ <lastmod>2026-05-30</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/china/jiangsu/wuxi.html</loc>
@@ -415,6 +415,10 @@
 <url>
  <loc>https://blog.ops-coffee.com/tag/Devops/index.html</loc>
  <lastmod>2020-10-27</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-summary.html</loc>
+ <lastmod>2026-05-30</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-05.html</loc>
