@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2026-05-30T19:11:39.573839+08:00</updated>
+  <updated>2026-06-13T13:13:24.738268+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/city-china-jiangsu-suzhou-kunshan-mingjingdang.html</id>
+    <title>明镜荡｜上海出发一小时的宝藏湖荡露营地</title>
+    <updated>2026-06-13T13:13:24.738268+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/city-china-jiangsu-suzhou-kunshan-mingjingdang.html"/>
+    <summary/>
+    <published>2026-06-13T13:13:24.648857+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-summary.html</id>
     <title>丽水遂昌｜三个人，自驾五天，花费1800元，总结推荐</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/city-china-shanghai-chongming-changxingdao.html"/>
     <summary>今年上海的冬天似乎特别暖和，趁着好天气，带家人去了长兴岛郊野公园和长江第一滩。这里不仅有美丽的自然风光，还有丰富的户外活动，是周末放松的好去处。</summary>
     <published>2025-12-11T12:17:11.278460+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/city-china-anhui-xuancheng-guangde-zhuxianghualang.html</id>
-    <title>广德｜竹乡画廊风景道上的独行者</title>
-    <updated>2025-12-06T19:07:18.598597+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/city-china-anhui-xuancheng-guangde-zhuxianghualang.html"/>
-    <summary>从上海出发，途经广德，探索竹乡画廊的美丽秋景与深厚文化，体验广德的独特美食与自然风光，感受深秋自驾的多彩皖南之旅。</summary>
-    <published>2025-12-06T19:05:08.859141+08:00</published>
   </entry>
 </feed>
