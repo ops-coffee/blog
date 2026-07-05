@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2026-06-13T13:13:24.738268+08:00</updated>
+  <updated>2026-07-05T18:08:22.039467+08:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/city-china-zhejiang-hangzhou-jiande-yanzhougucheng.html</id>
+    <title>游记｜吹17度江风，吃地道豆腐包，建德3天2晚散漫自驾</title>
+    <updated>2026-07-05T18:08:22.039467+08:00</updated>
+    <link href="https://blog.ops-coffee.com/r/city-china-zhejiang-hangzhou-jiande-yanzhougucheng.html"/>
+    <summary/>
+    <published>2026-07-05T18:08:22.016429+08:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-jiangsu-suzhou-kunshan-mingjingdang.html</id>
     <title>明镜荡｜上海出发一小时的宝藏湖荡露营地</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/s/second-sponsorship-received-for-collage-tool.html"/>
     <summary>拼图工具与AI文生图工具合作，实现双赢。拼图工具免费、无水印、高清下载，支持Chrome和Edge插件，深受用户喜爱。</summary>
     <published>2025-12-12T11:32:29.602907+08:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/city-china-shanghai-chongming-changxingdao.html</id>
-    <title>长兴岛｜1小时直达！上海周末出游好去处</title>
-    <updated>2025-12-11T12:17:11.290834+08:00</updated>
-    <link href="https://blog.ops-coffee.com/r/city-china-shanghai-chongming-changxingdao.html"/>
-    <summary>今年上海的冬天似乎特别暖和，趁着好天气，带家人去了长兴岛郊野公园和长江第一滩。这里不仅有美丽的自然风光，还有丰富的户外活动，是周末放松的好去处。</summary>
-    <published>2025-12-11T12:17:11.278460+08:00</published>
   </entry>
 </feed>
