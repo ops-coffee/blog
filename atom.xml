@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2026-07-05T18:08:22.039467+08:00</updated>
+  <updated>2026-07-05T18:08:22.039467+00:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -13,161 +13,161 @@
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-zhejiang-hangzhou-jiande-yanzhougucheng.html</id>
     <title>游记｜吹17度江风，吃地道豆腐包，建德3天2晚散漫自驾</title>
-    <updated>2026-07-05T18:08:22.039467+08:00</updated>
+    <updated>2026-07-05T18:08:22.039467+00:00</updated>
     <link href="https://blog.ops-coffee.com/r/city-china-zhejiang-hangzhou-jiande-yanzhougucheng.html"/>
     <summary/>
-    <published>2026-07-05T18:08:22.016429+08:00</published>
+    <published>2026-07-05T18:08:22.016429+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-jiangsu-suzhou-kunshan-mingjingdang.html</id>
     <title>明镜荡｜上海出发一小时的宝藏湖荡露营地</title>
-    <updated>2026-06-13T13:13:24.738268+08:00</updated>
+    <updated>2026-06-13T13:13:24.738268+00:00</updated>
     <link href="https://blog.ops-coffee.com/r/city-china-jiangsu-suzhou-kunshan-mingjingdang.html"/>
     <summary/>
-    <published>2026-06-13T13:13:24.648857+08:00</published>
+    <published>2026-06-13T13:13:24.648857+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-summary.html</id>
     <title>丽水遂昌｜三个人，自驾五天，花费1800元，总结推荐</title>
-    <updated>2026-05-30T19:11:39.573839+08:00</updated>
+    <updated>2026-05-30T19:11:39.573839+00:00</updated>
     <link href="https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-summary.html"/>
     <summary/>
-    <published>2026-05-30T19:11:39.567740+08:00</published>
+    <published>2026-05-30T19:11:39.567740+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-05.html</id>
     <title>遂昌｜躲避人潮的五一自驾Day5 - 独山</title>
-    <updated>2026-05-21T20:47:19.371637+08:00</updated>
+    <updated>2026-05-21T20:47:19.371637+00:00</updated>
     <link href="https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-05.html"/>
     <summary/>
-    <published>2026-05-21T20:47:19.348518+08:00</published>
+    <published>2026-05-21T20:47:19.348518+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-04.html</id>
     <title>遂昌｜躲避人潮的五一自驾Day4 - 焦滩</title>
-    <updated>2026-05-20T21:37:42.203177+08:00</updated>
+    <updated>2026-05-20T21:37:42.203177+00:00</updated>
     <link href="https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-04.html"/>
     <summary/>
-    <published>2026-05-20T21:37:42.192536+08:00</published>
+    <published>2026-05-20T21:37:42.192536+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-03.html</id>
     <title>遂昌｜躲避人潮的五一自驾Day3 - 杜鹃</title>
-    <updated>2026-05-19T20:00:04.820392+08:00</updated>
+    <updated>2026-05-19T20:00:04.820392+00:00</updated>
     <link href="https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-03.html"/>
     <summary/>
-    <published>2026-05-19T20:00:04.808899+08:00</published>
+    <published>2026-05-19T20:00:04.808899+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-02.html</id>
     <title>遂昌｜躲避人潮的五一自驾Day2 - 桃源</title>
-    <updated>2026-05-18T18:56:20.841004+08:00</updated>
+    <updated>2026-05-18T18:56:20.841004+00:00</updated>
     <link href="https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-02.html"/>
     <summary/>
-    <published>2026-05-18T18:56:20.815085+08:00</published>
+    <published>2026-05-18T18:56:20.815085+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-01.html</id>
     <title>遂昌｜躲避人潮的五一自驾Day1 - 盲盒</title>
-    <updated>2026-05-17T14:37:49.899505+08:00</updated>
+    <updated>2026-05-17T14:37:49.899505+00:00</updated>
     <link href="https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-01.html"/>
     <summary/>
-    <published>2026-05-17T14:37:49.860940+08:00</published>
+    <published>2026-05-17T14:37:49.860940+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/fund-5-year-from-50-percent-loss-to-profit.html</id>
     <title>我买基金从不亏钱</title>
-    <updated>2026-05-07T21:15:02.190671+08:00</updated>
+    <updated>2026-05-07T21:15:02.190671+00:00</updated>
     <link href="https://blog.ops-coffee.com/r/fund-5-year-from-50-percent-loss-to-profit.html"/>
     <summary>这是一篇酝酿了超过5年的复盘</summary>
-    <published>2026-05-07T21:12:51.527414+08:00</published>
+    <published>2026-05-07T21:12:51.527414+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-jiangsu-wuxi-yixing-tuanjiu.html</id>
     <title>游记｜在宜兴度过一个平淡的假期</title>
-    <updated>2026-04-26T19:40:50.412300+08:00</updated>
+    <updated>2026-04-26T19:40:50.412300+00:00</updated>
     <link href="https://blog.ops-coffee.com/r/city-china-jiangsu-wuxi-yixing-tuanjiu.html"/>
     <summary/>
-    <published>2026-04-26T19:39:27.753444+08:00</published>
+    <published>2026-04-26T19:39:27.753444+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/fire/financial-manager-app-update-and-ios-test-progress.html</id>
     <title>那个集记账、基金、股票于一体的APP，IOS测试上线</title>
-    <updated>2026-04-19T16:46:22.039669+08:00</updated>
+    <updated>2026-04-19T16:46:22.039669+00:00</updated>
     <link href="https://blog.ops-coffee.com/fire/financial-manager-app-update-and-ios-test-progress.html"/>
     <summary>财务管家APP本周更新了分红管理和存钱计划功能，iOS测试对VIP用户开放。安卓用户可直接下载安装，会员享受云同步等所有功能。</summary>
-    <published>2026-04-19T16:46:22.030238+08:00</published>
+    <published>2026-04-19T16:46:22.030238+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/fire/expense-funds-stock-integrated-finance-app.html</id>
     <title>那个集记账、基金、股票于一体的APP，又往前迈了一大步</title>
-    <updated>2026-04-12T14:44:11.921182+08:00</updated>
+    <updated>2026-04-12T14:44:11.921182+00:00</updated>
     <link href="https://blog.ops-coffee.com/fire/expense-funds-stock-integrated-finance-app.html"/>
     <summary>这款集记账、基金、股票于一体的财务管家APP近期更新，新增债务管理、私募基金支持、美股港股市场接入，并优化底层体验。</summary>
-    <published>2026-04-12T14:40:39.300001+08:00</published>
+    <published>2026-04-12T14:40:39.300001+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/fire/integrated-finance-refund-ethics-app-update.html</id>
     <title>纠结了一下，还是把钱给退了</title>
-    <updated>2026-03-31T19:38:14.810128+08:00</updated>
+    <updated>2026-03-31T19:38:14.810128+00:00</updated>
     <link href="https://blog.ops-coffee.com/fire/integrated-finance-refund-ethics-app-update.html"/>
     <summary>一位用户购买了APP的终身会员，虽然他不知道有更便宜的早鸟价，作者还是决定退还差价。文章还介绍了APP的最新更新和下载信息。</summary>
-    <published>2026-03-31T19:37:32.500894+08:00</published>
+    <published>2026-03-31T19:37:32.500894+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/fire/ai-coding-integrated-finance-app-update.html</id>
     <title>那个集记账、基金、股票于一体的APP有了新进展</title>
-    <updated>2026-03-29T11:15:44.210185+08:00</updated>
+    <updated>2026-03-29T11:15:44.210185+00:00</updated>
     <link href="https://blog.ops-coffee.com/fire/ai-coding-integrated-finance-app-update.html"/>
     <summary>这篇文章分享了一个集记账、基金、股票于一体的APP的使用体验，介绍了其优化后的流畅体验、下载方式（包括安卓和苹果的规划），以及会员机制，特别是早鸟价和终身会员的特权。</summary>
-    <published>2026-03-29T11:15:44.205730+08:00</published>
+    <published>2026-03-29T11:15:44.205730+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-jiangsu-suzhou-jinjihu.html</id>
     <title>苏州｜用一天时间，走完一整个金鸡湖</title>
-    <updated>2026-03-28T20:00:16.639330+08:00</updated>
+    <updated>2026-03-28T20:00:16.639330+00:00</updated>
     <link href="https://blog.ops-coffee.com/r/city-china-jiangsu-suzhou-jinjihu.html"/>
     <summary>在短暂的上海春天里，周末选择到苏州金鸡湖感受摩登与自然的完美融合。金鸡湖不仅是5A级景区，还有著名地标东方之门和浪漫的月光码头，适合家庭一日游，充满活力与美景。</summary>
-    <published>2026-03-28T20:00:16.628028+08:00</published>
+    <published>2026-03-28T20:00:16.628028+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-jiangsu-suzhou-miduishan-wangshan.html</id>
     <title>游记｜周末去了一趟苏州，找到了春天最舒服的打开方式</title>
-    <updated>2026-03-21T18:54:33.218256+08:00</updated>
+    <updated>2026-03-21T18:54:33.218256+00:00</updated>
     <link href="https://blog.ops-coffee.com/r/city-china-jiangsu-suzhou-miduishan-wangshan.html"/>
     <summary>本文记录了作者在苏州的春日徒步旅行，主要游览了米堆山和旺山，体验了太湖的美景和永慧禅寺的文化氛围，适合家庭和新手徒步爱好者的春日踏青活动。</summary>
-    <published>2026-03-21T18:33:46.351821+08:00</published>
+    <published>2026-03-21T18:33:46.351821+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/fire/ai-coding-integrated-finance-app.html</id>
     <title>一个集记账、基金、股票于一体的APP</title>
-    <updated>2026-03-29T09:07:20.995054+08:00</updated>
+    <updated>2026-03-29T09:07:20.995054+00:00</updated>
     <link href="https://blog.ops-coffee.com/fire/ai-coding-integrated-finance-app.html"/>
     <summary>利用AI技术开发的财务管理APP，集记账、基金、股票于一体，简化财务管理流程，支持多账本、基金实时估值、股票持仓成本计算，提供云同步和多平台支持。</summary>
-    <published>2026-03-14T11:12:01.645292+08:00</published>
+    <published>2026-03-14T11:12:01.645292+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/2025-year-in-review-travel-and-life-moments.html</id>
     <title>2025年度总结｜生活篇</title>
-    <updated>2026-01-22T14:07:35.070201+08:00</updated>
+    <updated>2026-01-22T14:07:35.070201+00:00</updated>
     <link href="https://blog.ops-coffee.com/r/2025-year-in-review-travel-and-life-moments.html"/>
     <summary>2025年回顾：从嘉兴海盐的烟火诗意到广德竹乡画廊的宁静，记录了一年的旅行与房车生活，捕捉生活中的温暖瞬间，帮助校准未来的方向。</summary>
-    <published>2026-01-22T14:07:35.058667+08:00</published>
+    <published>2026-01-22T14:07:35.058667+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-zhejiang-jinhua-pujiang-songxi.html</id>
     <title>浦江｜元旦假期，我们去了一个你可能没有听过的小城</title>
-    <updated>2026-01-11T18:44:47.106961+08:00</updated>
+    <updated>2026-01-11T18:44:47.106961+00:00</updated>
     <link href="https://blog.ops-coffee.com/r/city-china-zhejiang-jinhua-pujiang-songxi.html"/>
     <summary>2026元旦，探索金华浦江的小众文化与美食，体验龙德寺塔的千年历史、江南第一家的孝义家风、嵩溪古村的传统文化以及潘周家村的一根面非遗技艺。</summary>
-    <published>2026-01-11T18:44:47.007704+08:00</published>
+    <published>2026-01-11T18:44:47.007704+00:00</published>
   </entry>
   <entry>
     <id>https://blog.ops-coffee.com/s/second-sponsorship-received-for-collage-tool.html</id>
     <title>好拼｜免费在线拼图工具又收到赞助啦</title>
-    <updated>2025-12-12T11:33:38.273180+08:00</updated>
+    <updated>2025-12-12T11:33:38.273180+00:00</updated>
     <link href="https://blog.ops-coffee.com/s/second-sponsorship-received-for-collage-tool.html"/>
     <summary>拼图工具与AI文生图工具合作，实现双赢。拼图工具免费、无水印、高清下载，支持Chrome和Edge插件，深受用户喜爱。</summary>
-    <published>2025-12-12T11:32:29.602907+08:00</published>
+    <published>2025-12-12T11:32:29.602907+00:00</published>
   </entry>
 </feed>
