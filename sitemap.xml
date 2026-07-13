@@ -2,11 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
  <loc>https://blog.ops-coffee.com</loc>
- <lastmod>2026-07-05</lastmod>
+ <lastmod>2026-07-13</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/friends.html</loc>
  <changefreq>monthly</changefreq>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.com/travel/2026-southwest.html</loc>
+ <lastmod>2026-07-12</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/2026-suichang.html</loc>
@@ -270,7 +274,7 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travels.html</loc>
- <lastmod>2026-07-05</lastmod>
+ <lastmod>2026-07-12</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/search.html</loc>
@@ -415,6 +419,10 @@
 <url>
  <loc>https://blog.ops-coffee.com/tag/Devops/index.html</loc>
  <lastmod>2020-10-27</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.com/r/2026-southwest-road-trip-01-luoci.html</loc>
+ <lastmod>2026-07-12</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/r/city-china-zhejiang-hangzhou-jiande-yanzhougucheng.html</loc>

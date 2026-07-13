@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2026-07-05T18:08:22.039467+00:00</updated>
+  <updated>2026-07-12T03:54:06.921844+00:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/2026-southwest-road-trip-01-luoci.html</id>
+    <title>向云端｜西南自驾01 - 裸辞</title>
+    <updated>2026-07-12T03:54:06.921844+00:00</updated>
+    <link href="https://blog.ops-coffee.com/r/2026-southwest-road-trip-01-luoci.html"/>
+    <summary/>
+    <published>2026-07-12T03:54:06.921819+00:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/city-china-zhejiang-hangzhou-jiande-yanzhougucheng.html</id>
     <title>游记｜吹17度江风，吃地道豆腐包，建德3天2晚散漫自驾</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/city-china-zhejiang-jinhua-pujiang-songxi.html"/>
     <summary>2026元旦，探索金华浦江的小众文化与美食，体验龙德寺塔的千年历史、江南第一家的孝义家风、嵩溪古村的传统文化以及潘周家村的一根面非遗技艺。</summary>
     <published>2026-01-11T18:44:47.007704+00:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/s/second-sponsorship-received-for-collage-tool.html</id>
-    <title>好拼｜免费在线拼图工具又收到赞助啦</title>
-    <updated>2025-12-12T11:33:38.273180+00:00</updated>
-    <link href="https://blog.ops-coffee.com/s/second-sponsorship-received-for-collage-tool.html"/>
-    <summary>拼图工具与AI文生图工具合作，实现双赢。拼图工具免费、无水印、高清下载，支持Chrome和Edge插件，深受用户喜爱。</summary>
-    <published>2025-12-12T11:32:29.602907+00:00</published>
   </entry>
 </feed>
