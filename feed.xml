@@ -8,7 +8,13 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Custom CMS v1.0</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 21 Jul 2026 01:35:35 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 25 Jul 2026 03:19:40 +0000</lastBuildDate>
+    <item>
+      <title>向云端｜西南自驾03 - 景德镇</title>
+      <link>https://blog.ops-coffee.com/r/2026-southwest-road-trip-03-jingdezhen.html</link>
+      <guid isPermaLink="false">https://blog.ops-coffee.com/r/2026-southwest-road-trip-03-jingdezhen.html</guid>
+      <pubDate>Sat, 25 Jul 2026 03:19:40 +0000</pubDate>
+    </item>
     <item>
       <title>向云端｜西南自驾02 - 婺源</title>
       <link>https://blog.ops-coffee.com/r/2026-southwest-road-trip-02-wuyuan.html</link>
@@ -130,13 +136,6 @@
       <description>利用AI技术开发的财务管理APP，集记账、基金、股票于一体，简化财务管理流程，支持多账本、基金实时估值、股票持仓成本计算，提供云同步和多平台支持。</description>
       <guid isPermaLink="false">https://blog.ops-coffee.com/fire/ai-coding-integrated-finance-app.html</guid>
       <pubDate>Sat, 14 Mar 2026 11:12:01 +0000</pubDate>
-    </item>
-    <item>
-      <title>2025年度总结｜生活篇</title>
-      <link>https://blog.ops-coffee.com/r/2025-year-in-review-travel-and-life-moments.html</link>
-      <description>2025年回顾：从嘉兴海盐的烟火诗意到广德竹乡画廊的宁静，记录了一年的旅行与房车生活，捕捉生活中的温暖瞬间，帮助校准未来的方向。</description>
-      <guid isPermaLink="false">https://blog.ops-coffee.com/r/2025-year-in-review-travel-and-life-moments.html</guid>
-      <pubDate>Thu, 22 Jan 2026 14:07:35 +0000</pubDate>
     </item>
   </channel>
 </rss>
