@@ -2,15 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
  <loc>https://blog.ops-coffee.com</loc>
- <lastmod>2026-08-01</lastmod>
+ <lastmod>2026-08-02</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/friends.html</loc>
  <changefreq>monthly</changefreq>
 </url>
 <url>
+ <loc>https://blog.ops-coffee.com/travel/china/hunan/huaihua.html</loc>
+ <lastmod>2026-08-02</lastmod>
+</url>
+<url>
  <loc>https://blog.ops-coffee.com/travel/2026-southwest.html</loc>
- <lastmod>2026-08-01</lastmod>
+ <lastmod>2026-08-02</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/2026-suichang.html</loc>
@@ -42,7 +46,7 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/china/jiangxi/shangrao.html</loc>
- <lastmod>2025-10-15</lastmod>
+ <lastmod>2026-08-02</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/blog.html</loc>
@@ -98,7 +102,7 @@
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/china/hunan.html</loc>
- <lastmod>2025-09-01</lastmod>
+ <lastmod>2026-08-02</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/travel/china/jiangxi.html</loc>
@@ -419,6 +423,10 @@
 <url>
  <loc>https://blog.ops-coffee.com/tag/Devops/index.html</loc>
  <lastmod>2020-10-27</lastmod>
+</url>
+<url>
+ <loc>https://blog.ops-coffee.com/r/2026-southwest-road-trip-06-zhijiang.html</loc>
+ <lastmod>2026-08-02</lastmod>
 </url>
 <url>
  <loc>https://blog.ops-coffee.com/r/2026-southwest-road-trip-05-changsha.html</loc>
