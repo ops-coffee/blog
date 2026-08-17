@@ -8,7 +8,13 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Custom CMS v1.0</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 15 Aug 2026 04:09:46 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 17 Aug 2026 09:38:30 +0000</lastBuildDate>
+    <item>
+      <title>哇咔财务管家，正式上架 Apple Store 啦</title>
+      <link>https://blog.ops-coffee.com/fire/wakaka-finance-app-listed-app-store.html</link>
+      <guid isPermaLink="false">https://blog.ops-coffee.com/fire/wakaka-finance-app-listed-app-store.html</guid>
+      <pubDate>Mon, 17 Aug 2026 09:38:30 +0000</pubDate>
+    </item>
     <item>
       <title>向云端｜西南自驾10 - 下司</title>
       <link>https://blog.ops-coffee.com/r/2026-southwest-road-trip-10-xiasi.html</link>
@@ -123,12 +129,6 @@
       <description>这是一篇酝酿了超过5年的复盘</description>
       <guid isPermaLink="false">https://blog.ops-coffee.com/r/fund-5-year-from-50-percent-loss-to-profit.html</guid>
       <pubDate>Thu, 07 May 2026 21:12:51 +0000</pubDate>
-    </item>
-    <item>
-      <title>游记｜在宜兴度过一个平淡的假期</title>
-      <link>https://blog.ops-coffee.com/r/city-china-jiangsu-wuxi-yixing-tuanjiu.html</link>
-      <guid isPermaLink="false">https://blog.ops-coffee.com/r/city-china-jiangsu-wuxi-yixing-tuanjiu.html</guid>
-      <pubDate>Sun, 26 Apr 2026 19:39:27 +0000</pubDate>
     </item>
   </channel>
 </rss>

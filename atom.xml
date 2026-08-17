@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2026-08-15T04:09:46.777413+00:00</updated>
+  <updated>2026-08-17T09:38:30.383938+00:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/fire/wakaka-finance-app-listed-app-store.html</id>
+    <title>哇咔财务管家，正式上架 Apple Store 啦</title>
+    <updated>2026-08-17T09:38:30.383938+00:00</updated>
+    <link href="https://blog.ops-coffee.com/fire/wakaka-finance-app-listed-app-store.html"/>
+    <summary/>
+    <published>2026-08-17T09:38:30.383909+00:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/r/2026-southwest-road-trip-10-xiasi.html</id>
     <title>向云端｜西南自驾10 - 下司</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/fund-5-year-from-50-percent-loss-to-profit.html"/>
     <summary>这是一篇酝酿了超过5年的复盘</summary>
     <published>2026-05-07T21:12:51.527414+00:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/city-china-jiangsu-wuxi-yixing-tuanjiu.html</id>
-    <title>游记｜在宜兴度过一个平淡的假期</title>
-    <updated>2026-04-26T19:40:50.412300+00:00</updated>
-    <link href="https://blog.ops-coffee.com/r/city-china-jiangsu-wuxi-yixing-tuanjiu.html"/>
-    <summary/>
-    <published>2026-04-26T19:39:27.753444+00:00</published>
   </entry>
 </feed>
