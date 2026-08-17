@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -147,8 +148,8 @@
         group_id =&gt; &quot;groupA&quot;
         codec =&gt; &quot;json&quot;
     }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>以上为logstash消费kafka集群的配置，其中加入了<code>group_id</code>参数，<code>group_id</code>是一个的字符串，唯一标识一个group，具有相同<code>group_id</code>的consumer构成了一个consumer group，这样启动多个logstash进程，只需要保证<code>group_id</code>一致就能达到logstash高可用的目的，一个logstash挂掉同一Group内的logstash可以继续消费</p>
 <p>除了高可用外同一Group内的多个Logstash可以同时消费kafka内topic的数据，从而提高logstash的处理能力，但需要注意的是消费kafka数据时，每个consumer最多只能使用一个partition，当一个Group内consumer的数量大于partition的数量时，<strong>只有等于partition个数的consumer能同时消费</strong>，其他的consumer处于等待状态</p>
@@ -156,14 +157,14 @@
 <h2 id="kafka-partition">kafka partition</h2>
 <p>kafka中partition数量可以在创建topic时指定：</p>
 <pre class="codehilite"><code># bin/kafka-topics.sh --zookeeper 127.0.0.1:2181 --create --topic ops_coffee --partitions 3
-Created topic &quot;ops_coffee&quot;.</code></pre>
-
+Created topic &quot;ops_coffee&quot;.
+</code></pre>
 
 <p><strong>--partitions：</strong> 指定分区数，如果不指定默认会使用配置文件中<code>num.partitions</code>配置的数量</p>
 <p>也可以手动修改partition的数量：</p>
 <pre class="codehilite"><code># bin/kafka-topics.sh --alter --zookeeper 127.0.0.1:2181 --partitions 5 --topic ops_coffee
-Adding partitions succeeded!</code></pre>
-
+Adding partitions succeeded!
+</code></pre>
 
 <p>注意partition的数量只能增加不能减少</p>
 <p>如果想要知道topic的partition信息，可以通过以下命令查看topic详情：</p>
@@ -171,8 +172,8 @@ Adding partitions succeeded!</code></pre>
 Topic:ops_coffee    PartitionCount:3    ReplicationFactor:2 Configs:
     Topic: ops_coffee   Partition: 0    Leader: 1   Replicas: 1,2   Isr: 1,2
     Topic: ops_coffee   Partition: 1    Leader: 2   Replicas: 2,3   Isr: 2,3
-    Topic: ops_coffee   Partition: 2    Leader: 3   Replicas: 3,1   Isr: 3,1</code></pre>
-
+    Topic: ops_coffee   Partition: 2    Leader: 3   Replicas: 3,1   Isr: 3,1
+</code></pre>
 
 <p>至此对kafka consumer group有了更深入的了解，可以在具体的使用中游刃有余</p>
 

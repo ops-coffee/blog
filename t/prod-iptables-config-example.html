@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -123,7 +124,7 @@
         <h1 id="art-title">生产环境下的IPTABLES标准配置</h1>
 
         <p>Iptables防火墙对于服务器的安全来说至关重要，这里列出生产使用的Iptables配置以供参考</p>
-<pre class="codehilite"><code class="language-bash linenums">#!/bin/bash
+<pre class="codehilite"><code>#!/bin/bash
 #last update date:2016/06/28
 IPTABLES=&quot;/sbin/iptables&quot;
 
@@ -148,12 +149,13 @@ $IPTABLES -A INPUT -s 192.168.106.153 -p tcp --dport 32200 -j ACCEPT
 $IPTABLES -I INPUT -s 192.168.0.0/16 -p tcp --dport 80 -j ACCEPT
 
 # all drop
-$IPTABLES -A INPUT -j DROP</code></pre>
-
+$IPTABLES -A INPUT -j DROP
+</code></pre>
 
 <p>通常我会将服务器上的脚本文件统一存放于<code>/home/scripts/</code>目录下，并配置其开机自动启动</p>
 <pre class="codehilite"><code># cat /etc/rc.local
-/bin/bash /home/scripts/iptables.sh</code></pre>
+/bin/bash /home/scripts/iptables.sh
+</code></pre>
 
         <div>
           <ul class="article-meta">

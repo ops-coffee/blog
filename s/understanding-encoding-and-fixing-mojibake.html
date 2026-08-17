@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -169,8 +170,8 @@
 <pre class="codehilite"><code>    0101   010010   010110 (最前边的0便是unicode不足，用0代替)
 1110xxxx 10xxxxxx 10xxxxxx (模板，由于3字节，所以是上边第三行)
 ------------------------------------------------------------------
-11100101 10010010 10010110 (结果，UTF-8的二进制值)</code></pre>
-
+11100101 10010010 10010110 (结果，UTF-8的二进制值)
+</code></pre>
 
 <p>根据上边的计算结果得出运维咖啡吧的<code>咖</code>字UTF-8编码是<code>111001011001001010010110</code>，转换为16进制为<code>E59296</code></p>
 <p>这便是Unicode与UTF-8的区别，UTF-8可变长就是这么可变长的，对于英文字母来说UTF-8只占一个字节，而对于汉字来说他可能就占了3个字节</p>
@@ -178,8 +179,8 @@
 <p>从上边的编码介绍中我们已经知道了不同编码的存在，那么想要查看一个文件，就必须知道他的编码方式，用错误的编码方式打开文件就会出现乱码。</p>
 <p>linux下可以通过<code>file</code>命令查看文件的编码方式</p>
 <pre class="codehilite"><code># file ops-coffee.com 
-ops-coffee.com: UTF-8 Unicode text</code></pre>
-
+ops-coffee.com: UTF-8 Unicode text
+</code></pre>
 
 <p>工作中我们在XSHELL之类的终端中查看文件时出现的乱码就是系统或文件保存的中文编码与终端设置的编码不一致，从而导致解码错误。这里涉及到三方编码：</p>
 <ol>
@@ -203,22 +204,22 @@ root@ops-coffee:~# export LANG=en_US.UTF-8
 root@ops-coffee:~# echo $LANG
 en_US.UTF-8
 root@ops-coffee:~# date
-Wed Mar  4 19:01:21 HKT 2020</code></pre>
-
+Wed Mar  4 19:01:21 HKT 2020
+</code></pre>
 
 <p>运维脚本中，我们希望所有系统执行相同命令的时候输出的结果一致，不要因为字符集不同而产生不同的结果，那么如可处理呢？在命令前添加<code>LC_ALL=C</code></p>
 <pre class="codehilite"><code>root@ops-coffee:~# date
 2020年 03月 04日 星期三 19:05:58 HKT
 root@ops-coffee:~# 
 root@ops-coffee:~# LC_ALL=C date
-Wed Mar  4 19:06:05 HKT 2020</code></pre>
-
+Wed Mar  4 19:06:05 HKT 2020
+</code></pre>
 
 <p>这里之所以用<code>LC_ALL</code>是因为在LOCALE标准中，<code>LC_ALL</code>优先级最高：<code>LC_ALL&gt;LC_*&gt;LANG</code></p>
 <p>2.批量转换文件名编码</p>
 <p>有时候我们会遇到文件名或者目录名乱码的问题，尤其是在不同类型系统之间传输时，可以借助<code>rsync</code>实现批量转换文件名或目录名的编码</p>
-<pre class="codehilite"><code>rsync -av --iconv=GBK,UTF8 /www/ /nav/</code></pre>
-
+<pre class="codehilite"><code>rsync -av --iconv=GBK,UTF8 /www/ /nav/
+</code></pre>
 
 <p>iconv模块在rsync的3.0以后版本中才支持，用法为<code>--iconv=&lt;LOCAL&gt;,&lt;REMOTE&gt;</code>，需要注意的是，本地两个目录之间同步时LOCAL表示的是源目录的文件名编码，通过网络同步时LOCAL表示本地编码</p>
 

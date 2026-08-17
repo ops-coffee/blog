@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -132,8 +133,8 @@
 <h2 id="_2">插件安装</h2>
 <p>插件安装比较简单，直接使用内置命令即可</p>
 <pre class="codehilite"><code># cd /home/opt/tools/logstash-6.6.2
-# ./bin/logstash-plugin install logstash-output-webhdfs</code></pre>
-
+# ./bin/logstash-plugin install logstash-output-webhdfs
+</code></pre>
 
 <h2 id="hosts">配置hosts</h2>
 <p>HDFS集群内通过主机名进行通信所以logstash所在的主机需要配置hadoop集群的hosts信息</p>
@@ -141,12 +142,12 @@
 192.168.107.154 master01
 192.168.107.155 slave01
 192.168.107.156 slave02
-192.168.107.157 slave03</code></pre>
-
+192.168.107.157 slave03
+</code></pre>
 
 <p>如果不配置host信息，可能会报下边的错</p>
-<pre class="codehilite"><code>[WARN ][logstash.outputs.webhdfs ] Failed to flush outgoing items</code></pre>
-
+<pre class="codehilite"><code>[WARN ][logstash.outputs.webhdfs ] Failed to flush outgoing items
+</code></pre>
 
 <h2 id="logstash">logstash配置</h2>
 <p>kafka里边的源日志格式可以参考这片文章：<a href="/elk/elasticsearch-logstash-rsyslog-nginx" target="_blank">ELK日志系统之使用Rsyslog快速方便的收集Nginx日志</a></p>
@@ -184,8 +185,8 @@ output {
         codec =&gt; &quot;json&quot;
     }
     stdout { codec =&gt; rubydebug }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>logstash配置文件分为三部分：input、filter、output</p>
 <p><strong>input</strong>指定源在哪里，我们是从kafka取数据，这里就写kafka集群的配置信息，配置解释：
@@ -205,8 +206,8 @@ output {
 </ul>
 <p>webhdfs还有一些其他的参数例如<code>compression</code>,<code>flush_size</code>,<code>standby_host</code>,<code>standby_port</code>等可查看<a href="https://www.elastic.co/guide/en/logstash/current/plugins-outputs-webhdfs.html" target="_blank">官方文档</a>了解详细用法</p>
 <h2 id="logstash_1">启动logstash</h2>
-<pre class="codehilite"><code># bin/logstash -f config/indexer_rsyslog_nginx.conf</code></pre>
-
+<pre class="codehilite"><code># bin/logstash -f config/indexer_rsyslog_nginx.conf
+</code></pre>
 
 <p>因为logstash配置中开了<code>stdout</code>输出，所以能在控制台看到格式化的数据，如下：</p>
 <pre class="codehilite"><code>{
@@ -229,13 +230,13 @@ output {
                 &quot;index.hour&quot; =&gt; &quot;19&quot;,
             &quot;request_method&quot; =&gt; &quot;POST&quot;,
              &quot;upstream_addr&quot; =&gt; &quot;127.0.0.1:8181&quot;
-}</code></pre>
-
+}
+</code></pre>
 
 <p>查看hdfs发现数据已经按照定义好的路径正常写入</p>
 <pre class="codehilite"><code>$ hadoop fs -ls /logs/nginx/20190318/19.log
--rw-r--r--   3 hadmin supergroup       7776 2019-03-18 19:07 /logs/nginx/20190318/19.log</code></pre>
-
+-rw-r--r--   3 hadmin supergroup       7776 2019-03-18 19:07 /logs/nginx/20190318/19.log
+</code></pre>
 
 <p>至此kafka到hdfs数据转储完成</p>
 <h1 id="_3">遇到的坑</h1>
@@ -261,28 +262,28 @@ output {
     ruby {
         code =&gt; &quot;event.set('index.hour', event.get('time_local').time.localtime.strftime('%H'))&quot;
     }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>output的path中配置如下</p>
-<pre class="codehilite"><code>path =&gt; &quot;/logs/nginx/%{index.date}/%{index.hour}.log&quot;</code></pre>
-
+<pre class="codehilite"><code>path =&gt; &quot;/logs/nginx/%{index.date}/%{index.hour}.log&quot;
+</code></pre>
 
 <h2 id="hdfshost">HDFS记录多了时间和host字段</h2>
 <p>在没有指定codec的情况下，logstash会给每一条日志添加时间和host字段，例如：</p>
 <p>源日志格式为</p>
-<pre class="codehilite"><code>ops-coffee.com | 192.168.105.91 | 19/Mar/2019:14:28:07 +0800 | GET / HTTP/1.1 | 304 | 0 | - | 0.000</code></pre>
-
+<pre class="codehilite"><code>ops-coffee.com | 192.168.105.91 | 19/Mar/2019:14:28:07 +0800 | GET / HTTP/1.1 | 304 | 0 | - | 0.000
+</code></pre>
 
 <p>经过logstash处理后多了时间和host字段</p>
-<pre class="codehilite"><code>2019-03-19T06:28:07.510Z %{host}  ops-coffee.com | 192.168.105.91 | 19/Mar/2019:14:28:07 +0800 | GET / HTTP/1.1 | 304 | 0 | - | 0.000</code></pre>
-
+<pre class="codehilite"><code>2019-03-19T06:28:07.510Z %{host}  ops-coffee.com | 192.168.105.91 | 19/Mar/2019:14:28:07 +0800 | GET / HTTP/1.1 | 304 | 0 | - | 0.000
+</code></pre>
 
 <p>如果不需要我们可以指定最终的format只取message，解决方法为在output中添加如下配置：</p>
 <pre class="codehilite"><code>codec =&gt; line {
     format =&gt; &quot;%{message}&quot;
-}</code></pre>
-
+}
+</code></pre>
 
 <h1 id="outputeshdfs">同时output到ES和HDFS</h1>
 <p>在实际应用中我们需要同时将日志数据写入ES和HDFS，那么可以直接用下边的配置来处理</p>
@@ -325,16 +326,16 @@ output {
         path =&gt; &quot;/logs/nginx/%{index.date}/%{index.hour}.log&quot;
         codec =&gt; &quot;json&quot;
     }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>这里我使用logstash的date插件将日志中的"time_local"字段直接替换为了@timestamp，这样做有什么好处呢？</p>
 <p>logstash默认生成的@timestamp字段记录的时间是logstash接收到消息的时间，这个时间可能与日志产生的时间不同，而我们往往需要关注的时间是日志产生的时间，且在ELK架构中Kibana日志输出的默认顺序就是按照@timestamp来排序的，所以往往我们需要将默认的@timestamp替换成日志产生的时间，替换方法就用到了date插件，date插件的用法如下</p>
 <pre class="codehilite"><code>date {  
     match =&gt; [&quot;time_local&quot;,&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;]
     target =&gt; &quot;@timestamp&quot;
-}</code></pre>
-
+}
+</code></pre>
 
 <p>match：匹配日志中的时间字段，这里为time_local</p>
 <p>target：将match匹配到的时间戳存储到给定的字段中，默认不指定的话就存到@timestamp字段</p>

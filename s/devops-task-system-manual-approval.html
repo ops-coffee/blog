@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -146,8 +147,8 @@
 
     # 调用celery任务异步执行
     run_task.delay(tasklog.id)
-    return 1, '任务正在执行中，请稍后查看状态', tasklog.id</code></pre>
-
+    return 1, '任务正在执行中，请稍后查看状态', tasklog.id
+</code></pre>
 
 <p>在<code>run_task</code>中会先获取tasklog，然后拿到tasklog关联的模板，从模板里取出全部子任务，循环执行，直到全部执行成功</p>
 <pre class="codehilite"><code>@shared_task
@@ -168,8 +169,8 @@ def run_task(tid):
     tasklog.state = 1
     tasklog.save()
 
-    return True, 'success'</code></pre>
-
+    return True, 'success'
+</code></pre>
 
 <p>一个任务流实际上就是启动了一个celery异步任务去运行，异步任务内通过for循环依次执行子任务，而对于这种模式来说想要加入可以中断执行的手动审批任务就比较困难了</p>
 <h2 id="celery_1">多Celery任务</h2>
@@ -190,8 +191,8 @@ def run_task(tid):
 
         # 调用任务执行函数执行任务
         state, message, tid = task_run(request, task, args)
-        return JsonResponse({'state': state, 'message': message, 'tid': tid})</code></pre>
-
+        return JsonResponse({'state': state, 'message': message, 'tid': tid})
+</code></pre>
 
 <p><code>task_run</code>函数则会进行参数校验，数据入库等等一系列的逻辑处理，然后传给了<code>exec_subtask</code>函数去处理</p>
 <pre class="codehilite"><code>def task_run(request, task, args):
@@ -207,8 +208,8 @@ def run_task(tid):
     )
 
     exec_subtask(tasklog)
-    return 1, '任务正在执行中，请稍后查看状态', tasklog.id</code></pre>
-
+    return 1, '任务正在执行中，请稍后查看状态', tasklog.id
+</code></pre>
 
 <p><code>exec_subtask</code>函数则会获取下一步要执行的子任务，然后交给名为<code>run_subtask</code>的Celery任务去异步执行</p>
 <pre class="codehilite"><code>def exec_subtask(tasklog, subtasklog=None):
@@ -236,8 +237,8 @@ def run_task(tid):
     next_subtask.celery_task_id = celery_task
     next_subtask.save()
 
-    return True, 'Next'</code></pre>
-
+    return True, 'Next'
+</code></pre>
 
 <p><code>run_subtask</code>则会判断任务类型，如果是命令或脚本之类的任务则会自动执行，如果是审批就发送审批通知并中止任务执行</p>
 <pre class="codehilite"><code>@shared_task
@@ -266,8 +267,8 @@ def run_subtask(tid):
     # 最后继续交给exec_subtask去循环执行剩余子任务
     exec_subtask(subtasklog.tasklog, subtasklog)
 
-    return True, 'Subtask Done, Next Subtask'</code></pre>
-
+    return True, 'Subtask Done, Next Subtask'
+</code></pre>
 
 <p>此时有审批权限的用户会收到审批通知，在页面上可以对任务进行审批</p>
 <p><img alt="" loading="lazy" src="/static/images/2022/0226.05.png" /></p>
@@ -292,8 +293,8 @@ def run_subtask(tid):
             _t.tasklog.state = 12
             _t.tasklog.save()
 
-        return JsonResponse({&quot;state&quot;: 1, &quot;message&quot;: &quot;审批完成&quot;})</code></pre>
-
+        return JsonResponse({&quot;state&quot;: 1, &quot;message&quot;: &quot;审批完成&quot;})
+</code></pre>
 
 <p>至此整个审批任务流完成了，对于以上代码只保留了主线逻辑，做了大量精简，所以不要吹毛求疵了，主要目的是介绍清楚逻辑，你有收获吗</p>
 

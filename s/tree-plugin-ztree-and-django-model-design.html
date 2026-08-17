@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -157,8 +158,8 @@
     ];
 
     $.fn.zTree.init($(&quot;#treeDemo&quot;), setting, zNodes);
-&lt;/script&gt;</code></pre>
-
+&lt;/script&gt;
+</code></pre>
 
 <p><code>$.fn.zTree.init</code>初始化树，这里需要三个参数，第一个参数是加载树结构的Jquery对象，<code>setting</code>为ztree的各种配置参数，<code>zNodes</code>为ztree的具体数据</p>
 <p>zTree的配置采用json的格式，按照配置类型分为了界面配置<code>view</code>，数据配置<code>data</code>，编辑配置<code>edit</code>，复选框配置<code>check</code>，异步加载配置<code>async</code>以及各种回调函数配置<code>callback</code>，配置丰富且强大</p>
@@ -191,8 +192,8 @@
           ]
       }
   ]
-}];</code></pre>
-
+}];
+</code></pre>
 
 <p>标准模式数据结构复杂但父子关系清晰，简单模式数据则相反，示例中我们使用了简单数据模式，需要配置simpleData的<code>enable</code>属性为true</p>
 <p>完成以上配置后可以看到页面效果如下</p>
@@ -204,8 +205,8 @@
         max_length=128, unique=True, verbose_name='名称')
     parent = models.ForeignKey(
         'self', on_delete=models.PROTECT, db_constraint=False,
-        null=True, blank=True, verbose_name='父部门')</code></pre>
-
+        null=True, blank=True, verbose_name='父部门')
+</code></pre>
 
 <p>ForeignKey第一个参数用<code>self</code>就表示自关联，自己关联自己，还有两个Foreignkey的重要参数解释如下：</p>
 <p><strong>on_delete：</strong> 控制当外键引用的对象被删除时指定的SQL约束行为</p>
@@ -228,8 +229,8 @@ class MyModel(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET(get_sentinel_user),
-    )</code></pre>
-
+    )
+</code></pre>
 
 <p>这个案例的意思是当删除外键字段user有关联时调用<code>get_sentinel_user</code>方法，这个方法会返回一个username为deleted的实例</p>
 <p><strong>db_constraint：</strong> 控制是否在数据库中为此外键创建约束，默认为True。在数据库中创建外键约束是<strong>数据库规范中明令禁止</strong>的行为，那么我们可以设置<code>db_constraint</code>为<code>False</code>从而不在数据库层面创建约束，但同样可以使用Django为Foreignkey提供的各种关联查询</p>
@@ -245,8 +246,8 @@ class MyModel(models.Model):
         } for x in mList
     ]
 
-    return render(request, 'tree.html', {'data': _data})</code></pre>
-
+    return render(request, 'tree.html', {'data': _data})
+</code></pre>
 
 <p>注意在前端使用时需要用<code>{{data|safe}}</code>的方式，添加<code>|safe</code>主要是因为Django为了安全默认会对HTML、JS等语法标签进行转义，但我们所传给前端的数据不希望转义可以通过添加<code>|safe</code>来实现</p>
 <h2 id="demo">完整Demo</h2>

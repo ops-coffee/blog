@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -154,8 +155,8 @@
     next_subtask.celery_task_id = celery_task
     next_subtask.save()
 
-    return True, 'Next'</code></pre>
-
+    return True, 'Next'
+</code></pre>
 
 <p>而对于并行任务，只需要每次取多个同时执行就好了，想清楚了这个逻辑接下来就是定义每次取多个的规则了，继续从执行顺序下手，执行顺序不一样可以排序依次串行执行，而如果实行顺序一样了那不就自然可以理解为并行执行嘛，逻辑通了就改代码，代码上只需要多一层判断，判断下是否有与当前要执行的子任务相同执行顺序的子任务，如果有就一并执行，逻辑仍然在<code>exec_subtask</code>函数里</p>
 <pre class="codehilite"><code>def exec_subtask(tasklog, subtasklog=None):
@@ -204,8 +205,8 @@
         next_subtask.celery_task_id = celery_task
         next_subtask.save()
 
-    return True, 'Next'</code></pre>
-
+    return True, 'Next'
+</code></pre>
 
 <p>想清楚了执行逻辑，对于代码修改并不算复杂，当在模板里把IOS更新和安卓更新两个子任务执行顺序改成一样时再执行就看到他们两个同时开始执行了</p>
 <p><img alt="" loading="lazy" src="/static/images/2022/0227.04.png" /></p>

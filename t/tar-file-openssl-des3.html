@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -136,8 +137,8 @@ tar -cvf  - WMG_Back_&quot;$Today&quot;|openssl des3 -salt -k hY91gd3GJAAfghECle
 能详细解释一下吗？
 
 致力于明天:
-谢谢</code></pre>
-
+谢谢
+</code></pre>
 
 <p>详细解释如下：</p>
 <p>这个命令主要分为两部分</p>
@@ -156,12 +157,13 @@ tar -cvf  - WMG_Back_&quot;$Today&quot;|openssl des3 -salt -k hY91gd3GJAAfghECle
 </ul>
 <p>两部分之前用<code>|</code>隔开，<code>|</code>作为连接符连接两个命令，表示以前边命令的输出为后边命令的输入，也就是以前边命令的结果作为后便命令处理的内容，</p>
 <p>openssl des3加密命令实际上应该是这样的</p>
-<pre class="codehilite"><code>openssl des3 -salt -k ops-coffee.com -in file.tar -out file.tar.des3</code></pre>
-
+<pre class="codehilite"><code>openssl des3 -salt -k ops-coffee.com -in file.tar -out file.tar.des3
+</code></pre>
 
 <p>需要用<code>-in</code>传入一个要加密的文件，而用了<code>|</code>连接符后默认会将前一个命令的输出结果作为<code>-in</code>的内容</p>
 <p>如果需要解密，可以使用下边这个命令</p>
-<pre class="codehilite"><code>openssl des3 -d -salt -k ops-coffee.com -in file.tar.des3 -out file.tar</code></pre>
+<pre class="codehilite"><code>openssl des3 -d -salt -k ops-coffee.com -in file.tar.des3 -out file.tar
+</code></pre>
 
         <div>
           <ul class="article-meta">

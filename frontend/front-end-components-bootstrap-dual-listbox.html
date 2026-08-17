@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -140,8 +141,8 @@
 
 &lt;!-- 加载bootstrap-dualllistbox --&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;static/bootstrap-duallistbox/bootstrap-duallistbox.css&quot;&gt;
-&lt;script src=&quot;static/bootstrap-duallistbox/jquery.bootstrap-duallistbox.js&quot;&gt;&lt;/script&gt;</code></pre>
-
+&lt;script src=&quot;static/bootstrap-duallistbox/jquery.bootstrap-duallistbox.js&quot;&gt;&lt;/script&gt;
+</code></pre>
 
 <ol>
 <li>加载duallistbox插件</li>
@@ -158,8 +159,8 @@
 
 &lt;script&gt;
     var selectorx = $('select[name=&quot;groups&quot;]').bootstrapDualListbox();
-&lt;/script&gt;</code></pre>
-
+&lt;/script&gt;
+</code></pre>
 
 <ol>
 <li>完成以上两步可以看到页面效果如下</li>
@@ -180,8 +181,8 @@
     infoText: '共{0}个组',
     infoTextFiltered: '搜索到{0}个组 ,共{1}个组',
     infoTextEmpty: '列表为空',
-});</code></pre>
-
+});
+</code></pre>
 
 <p>以上配置都比较简单，对照中文就能知晓意思，不做过多解释，另外有几个支持的参数说明如下：</p>
 <p><strong>infoText：</strong> 除了设置字符串外还可设置为<code>false</code>，当设置为<code>false</code>时可隐藏这段信息</p>
@@ -191,25 +192,25 @@
 <p><strong>selectedFilter：</strong> 已选中的默认规则，与<code>noSelectedFilter</code>类似</p>
 <h2 id="_3">使用进阶</h2>
 <p>获取已选择的值</p>
-<pre class="codehilite"><code>selectorx.val()</code></pre>
-
+<pre class="codehilite"><code>selectorx.val()
+</code></pre>
 
 <p>获取select插件对象</p>
-<pre class="codehilite"><code>selectorx.bootstrapDualListbox('getContainer')</code></pre>
-
+<pre class="codehilite"><code>selectorx.bootstrapDualListbox('getContainer')
+</code></pre>
 
 <p>刷新插件元素用户界面</p>
-<pre class="codehilite"><code>selectorx.bootstrapDualListbox('refresh');</code></pre>
-
+<pre class="codehilite"><code>selectorx.bootstrapDualListbox('refresh');
+</code></pre>
 
 <p>删除bootstrap-duallistbox插件，恢复select原样</p>
-<pre class="codehilite"><code>selectorx.bootstrapDualListbox('destroy');</code></pre>
-
+<pre class="codehilite"><code>selectorx.bootstrapDualListbox('destroy');
+</code></pre>
 
 <p>动态添加select的option</p>
 <pre class="codehilite"><code>selectorx.append('&lt;option value=&quot;9&quot; selected&gt;ops-coffee.com&lt;/option&gt;');
-selectorx.bootstrapDualListbox('refresh');</code></pre>
-
+selectorx.bootstrapDualListbox('refresh');
+</code></pre>
 
 <p>注意：<strong>上文中的所有selectorx都为加载duallistbox时实例化的select对象</strong></p>
 <h2 id="demo">完整Demo</h2>

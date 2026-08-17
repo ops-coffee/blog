@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -124,22 +125,23 @@
 
         <p>更新源的方式主要有两种</p>
 <h2 id="_1">临时更新</h2>
-<pre class="codehilite"><code># pip3 install -r requirements.txt -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com</code></pre>
-
+<pre class="codehilite"><code># pip3 install -r requirements.txt -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
+</code></pre>
 
 <h2 id="_2">永久更新</h2>
 <p>永久修改，需要修改文件，文件位置<code>~/.pip/pip.conf</code>，内容如下</p>
 <pre class="codehilite"><code>[global]
 index-url = http://pypi.douban.com/simple
 [install]
-trusted-host=pypi.douban.com</code></pre>
-
+trusted-host=pypi.douban.com
+</code></pre>
 
 <h3 id="ali">ali源配置</h3>
 <p>如果不想使用豆瓣的源，可以使用阿里的，配置如下</p>
 <pre class="codehilite"><code>[global]
 index-url = http://mirrors.aliyun.com/pypi/simple/
-trusted-host = mirrors.aliyun.com</code></pre>
+trusted-host = mirrors.aliyun.com
+</code></pre>
 
         <div>
           <ul class="article-meta">

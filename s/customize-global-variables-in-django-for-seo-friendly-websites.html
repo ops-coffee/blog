@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -142,20 +143,20 @@
             ],
         },
     },
-]</code></pre>
-
+]
+</code></pre>
 
 <p>其中<code>BACKENDS</code>指定了Djanog默认使用的模版引擎，默认的是Django自己开发的<code>DjangoTemplates</code>，当然你也可以替换成功能更为强大的<code>jinja2</code>，<code>DIRS</code>指定了项目中模板文件的位置，<code>APP_DIRS</code>配置是否开启在已安装的app下查找template，<code>OPTIONS</code>则指定template的后端设置</p>
 <p>之所以可以在模板中使用<code>request</code>的奥秘便隐藏在<code>context_processors</code>下，这个配置指定了Django渲染时执行的Python路径列表。<strong>当模板在渲染时，会执行<code>context_processors</code>列表中的所有函数，并将结果与上下文的context进行合并</strong>，也就是说模板接收到的参数除了<code>render</code>返回的<code>context</code>外，还有以上这个列表执行返回的结果</p>
 <p><code>django.template.context_processors.request</code>函数返回的字典中包含了<code>request</code></p>
 <pre class="codehilite"><code>def request(request):
-    return {'request': request}</code></pre>
-
+    return {'request': request}
+</code></pre>
 
 <p>所以如下这样一个view，即便是返回结果中没有返回<code>request</code>，我们依然可以在<code>setting.html</code>模版中使用<code>request.user</code></p>
 <pre class="codehilite"><code>def setting(request):
-    return render(request, 'setting.html', {})</code></pre>
-
+    return render(request, 'setting.html', {})
+</code></pre>
 
 <p>同样的我们可以直接在模板中使用<code>perms.opscoffee.select_user</code>来判断用户是否拥有相应的权限，而不需要在view中返回<code>perms</code>，这也是因为<code>django.contrib.auth.context_processors.auth</code>返回了<code>perms</code></p>
 <pre class="codehilite"><code>def auth(request):
@@ -175,8 +176,8 @@
     return {
         'user': user,
         'perms': PermWrapper(user),
-    }</code></pre>
-
+    }
+</code></pre>
 
 <p>类似<code>request</code>和<code>perms</code>这些在所有模板中都可以调用的变量，可以看作是django的全局变量了</p>
 <h2 id="_1">如何自定义全局变量</h2>
@@ -192,8 +193,8 @@ def site(request):
     site_name = site_name.first().value if site_name else ''
     site_title = site_title.first().value if site_title else ''
 
-    return {'site': {'site_name': site_name, 'site_title': site_title}}</code></pre>
-
+    return {'site': {'site_name': site_name, 'site_title': site_title}}
+</code></pre>
 
 <p>然后在<code>TEMPLATES</code>的<code>context_processors</code>写上对应的路径</p>
 <pre class="codehilite"><code>TEMPLATES = [
@@ -206,8 +207,8 @@ def site(request):
             ],
         },
     },
-]</code></pre>
-
+]
+</code></pre>
 
 <p>最后就可以在模板中通过<code>site.site_title</code>来获取站点title，以及通过<code>site.site_name</code>获取站点名称</p>
 <pre class="codehilite"><code>&lt;head&gt;
@@ -221,8 +222,8 @@ def site(request):
       &lt;/a&gt;
     &lt;/header&gt;
   &lt;/div&gt;
-&lt;/body&gt;</code></pre>
-
+&lt;/body&gt;
+</code></pre>
 
 <p>至此，问题顺利解决</p>
 

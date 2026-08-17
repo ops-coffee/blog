@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -139,8 +140,8 @@ cd ${DOCKER_DIR} &amp;&amp;\
 export KUBECONFIG=/root/.kube/config &amp;&amp;\
 kubectl set image deployment/${ENVT}-${PROJ} ${ENVT}-${PROJ}=${IMAGE_NAME} -n ${ENVT} &amp;&amp;\
 exit 0 ||\
-exit 1</code></pre>
-
+exit 1
+</code></pre>
 
 <p>直接通过<code>kubectl</code>命令来更新，这就需要在Probius服务器上安装kubectl并打通整个集群，这种方式仅是能用但不够优雅，并且对于开发测试环境，在部署完成后有查看日志及登录系统排错的需求，这就需要借助<code>Kubernetes-Dashboard</code>来完成，多个系统相互关联跳转增加了使用成本，同时Dashboard的权限也不好控制，所以我就考虑是否可以让Kubernetes以插件的形式集成进Probius系统，用户在Probius系统内完成部署，同时也可以在Probius系统查看Kubernetes的相关信息甚至通过WebSSH登陆，彻底抛弃掉Kubernetes的Dashboard，看上去很完美，正好最近打算升级下Kubernetes集群版本，于是就趁此机会花了几天时间来实现了</p>
 <h2 id="kubernetes">Kubernetes子任务</h2>

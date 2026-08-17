@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -132,19 +133,19 @@
 <h1 id="_2">项目集成</h1>
 <p>editor.md编辑器的使用非常简单，只需如下几步</p>
 <p><strong>github下载软件放到项目内，这里我放在static/plugins下</strong></p>
-<pre class="codehilite"><code>git pull https://github.com/pandao/editor.md.git</code></pre>
-
+<pre class="codehilite"><code>git pull https://github.com/pandao/editor.md.git
+</code></pre>
 
 <p><strong>页面引入css、js文件</strong></p>
 <pre class="codehilite"><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/plugins/editor.md/css/editormd.min.css&quot;&gt;
 
 // 依赖jquery，自行引入或参考demo
-&lt;script src=&quot;/static/plugins/editor.md/js/editormd.min.js&quot;&gt;&lt;/script&gt;</code></pre>
-
+&lt;script src=&quot;/static/plugins/editor.md/js/editormd.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
 
 <p><strong>创建一个DOM容器来容纳编辑器</strong></p>
-<pre class="codehilite"><code>&lt;div id=&quot;editormd&quot;&gt;&lt;/div&gt;</code></pre>
-
+<pre class="codehilite"><code>&lt;div id=&quot;editormd&quot;&gt;&lt;/div&gt;
+</code></pre>
 
 <p><strong>通过editormd方法来实例化容器</strong></p>
 <pre class="codehilite"><code>var testEditor = editormd(&quot;editormd&quot;, {
@@ -195,8 +196,8 @@
         //this.resize(&quot;100%&quot;, 640);
     }
 
-});</code></pre>
-
+});
+</code></pre>
 
 <p>editor.md提供了很多配置参数可以用了配置编辑器，根据自己环境选择使用，具体参考官方文档</p>
 <p>这里配置了图片上传的三个参数imageUpload、imageFormats、imageUploadURL，在下边图片上传的地方会用到</p>
@@ -213,8 +214,8 @@
 &lt;script type=&quot;text/javascript&quot; src=&quot;/static/plugins/editor.md/lib/sequence-diagram.min.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;/static/plugins/editor.md/lib/flowchart.min.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;/static/plugins/editor.md/lib/jquery.flowchart.min.js&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;/static/plugins/editor.md/js/editormd.min.js&quot;&gt;&lt;/script&gt;</code></pre>
-
+&lt;script type=&quot;text/javascript&quot; src=&quot;/static/plugins/editor.md/js/editormd.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
 
 <p><strong>初始化DOM容器</strong></p>
 <pre class="codehilite"><code>&lt;div id=&quot;editormd-view&quot;&gt;
@@ -225,8 +226,8 @@
 
 # 图片示例
 ![扫码关注查看更多原创文章](/static/img/qrcode.jpg)&lt;/textarea&gt;
-&lt;/div&gt;</code></pre>
-
+&lt;/div&gt;
+</code></pre>
 
 <p><strong>实例化</strong></p>
 <pre class="codehilite"><code>&lt;script type=&quot;text/javascript&quot;&gt;
@@ -240,8 +241,8 @@ $(function () {
     sequenceDiagram: true  // 默认不解析
   });
 });
-&lt;/script&gt;</code></pre>
-
+&lt;/script&gt;
+</code></pre>
 
 <p><img alt="" loading="lazy" src="/static/images/2019/0124.02.png" /></p>
 <h1 id="_4">图片上传</h1>
@@ -252,8 +253,8 @@ $(function () {
     success : &quot;状态码0或1&quot;, //0表示上传失败;1表示上传成功
     message : &quot;提示信息&quot;, //上传成功或失败返回的信息
     url     : &quot;图片地址&quot; //上传成功时才返回
-}</code></pre>
-
+}
+</code></pre>
 
 <p><strong>先编写一个upload的函数来处理上传，最终返回上边的json格式数据即可</strong></p>
 <pre class="codehilite"><code>@csrf_exempt
@@ -287,13 +288,13 @@ def upload(request):
 
         return JsonResponse(data)
     else:
-        return JsonResponse({'state': 0, 'message': 'Not support method or Can not get file'})</code></pre>
-
+        return JsonResponse({'state': 0, 'message': 'Not support method or Can not get file'})
+</code></pre>
 
 <p>由于前端页面采用post方式上传，会遇到CSRF问题导致403，这里我们通过添加装饰器@csrf_exempt来取消CSRF验证</p>
 <p><strong>接着添加一个url地址指向这个view</strong></p>
-<pre class="codehilite"><code>path('api/upload/', upload, name='api-upload-url'),</code></pre>
-
+<pre class="codehilite"><code>path('api/upload/', upload, name='api-upload-url'),
+</code></pre>
 
 <p>上边我们已经配置过editormd上传图片相关的image参数了，就可以直接通过编辑器工具栏上的上传图片图标上传图片到服务器本地</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/0124.03.png" /></p>

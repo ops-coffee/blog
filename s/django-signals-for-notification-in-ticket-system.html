@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -149,8 +150,8 @@
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     create_user = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name='创建用户')
 
-    state = models.IntegerField(choices=STATE, default=1, verbose_name='工单状态')</code></pre>
-
+    state = models.IntegerField(choices=STATE, default=1, verbose_name='工单状态')
+</code></pre>
 
 <p>Ticket工单表有一个state字段标识当前工单状态，这个状态会随着工单的进行而改变，每当工单状态改变时就需要发送通知给相应的用户，例如工单创建时，需要发送给创建者一个工单创建成功的通知，同时发送给审核者一个待审核的通知</p>
 <h1 id="_2">通知</h1>
@@ -203,8 +204,8 @@
                     reciever_list=[_u] + self.dba_list,
                 )
             except Exception as e:
-                print('Error:' + str(e))</code></pre>
-
+                print('Error:' + str(e))
+</code></pre>
 
 <p>以上的代码可以看出来写了很多重复的try代码，并且当状态越多，if判断越复杂时重复的代码也会越来越多，有没有更简洁的方式呢？</p>
 <p>看看下边的代码，维护一个状态字典，然后用一个if判断就可以实现上边一堆if的代码写法，是不是就简洁了很多</p>
@@ -251,8 +252,8 @@
                     reciever_list=_list[i]['reciever_list']
                 )
             except Exception as e:
-                print('Error:' +str(e))</code></pre>
-
+                print('Error:' +str(e))
+</code></pre>
 
 <p>在构造字典的时候采用了状态做key，通知变量做value，同时一个状态可能会产生多个不同的通知，所以value采用列表的方式，这样即可轻松实现一个状态多条通知，每条通知都可以发给不同的人，有不同的主题，不同的内容。</p>
 <h1 id="signals">Signals</h1>
@@ -319,8 +320,8 @@ def migrate_notify_init(instance, **kwargs):
 @receiver(signals.post_save, sender=Ticket)
 def migrate_notify_post(instance, created, **kwargs):
     if created or instance.old_state != instance.state:
-        Notify().migration(instance.id)</code></pre>
-
+        Notify().migration(instance.id)
+</code></pre>
 
 <p>这里用到了两个signal，<code>post_init</code>和<code>post_save</code></p>
 <p>在model初始化之后通过<code>post_init</code>信号获取到state的值作为初始状态值，在每次model执行save方法后调用<code>post_save</code>信号获取到新的状态值，对两次状态值做比较如果不一致则表示状态有更新发送通知</p>
@@ -334,12 +335,12 @@ class WorkflowConfig(AppConfig):
     name = 'workflow'
 
     def ready(self):
-        import workflow.signals</code></pre>
-
+        import workflow.signals
+</code></pre>
 
 <p>config2：<code>workflow/__init__.py</code></p>
-<pre class="codehilite"><code>default_app_config = 'workflow.apps.WorkflowConfig'</code></pre>
-
+<pre class="codehilite"><code>default_app_config = 'workflow.apps.WorkflowConfig'
+</code></pre>
 
 <p>绑定成功后就可以在每次工单状态发生变化时发送邮件了</p>
 

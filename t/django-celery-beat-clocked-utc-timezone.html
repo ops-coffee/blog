@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -129,8 +130,8 @@
 <h2 id="_2">产生环境</h2>
 <pre class="codehilite"><code># pip3 list | grep celery
 celery                      5.2.7
-django-celery-beat          2.2.1</code></pre>
-
+django-celery-beat          2.2.1
+</code></pre>
 
 <p>实际上涉及到的版本较多，不止我这里这个版本会出现，我测试了其他一些版本也都有这个问题，官方没修复</p>
 <h2 id="_3">解决方案</h2>
@@ -144,8 +145,8 @@ django-celery-beat          2.2.1</code></pre>
     def __init__(self, clocked_time, nowfun=None, app=None):
         &quot;&quot;&quot;Initialize clocked.&quot;&quot;&quot;
         self.clocked_time = maybe_make_aware(clocked_time)
-        super().__init__(nowfun=nowfun, app=app)</code></pre>
-
+        super().__init__(nowfun=nowfun, app=app)
+</code></pre>
 
 <p>改为：</p>
 <pre class="codehilite"><code>class clocked(schedules.BaseSchedule):
@@ -160,8 +161,8 @@ django-celery-beat          2.2.1</code></pre>
         self.clocked_time = make_aware(clocked_time)
 
         # self.clocked_time = maybe_make_aware(clocked_time)
-        super().__init__(nowfun=nowfun, app=app)</code></pre>
-
+        super().__init__(nowfun=nowfun, app=app)
+</code></pre>
 
 <p>问题即可解决</p>
 

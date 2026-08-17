@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -173,7 +174,7 @@
 <hr />
 <p>接下来我们利用<code>pre-commit</code>每次提交前检查是否符合上边定义的规范，具体配置如下</p>
 <p>1.我们先创建pre-commit的hook脚本，内容如下</p>
-<pre class="codehilite"><code class="language-bash linenums">#!/bin/bash
+<pre class="codehilite"><code>#!/bin/bash
 REPOS=&quot;$1&quot;
 TXN=&quot;$2&quot;
 
@@ -184,16 +185,16 @@ LOGFORMAT=&quot;\[(.+)\]\[(dev|bug|misc)\](.+)$&quot;
 # 判断提交log与预设的规则是否匹配
 [[ ${LOGMSG} =~ ${LOGFORMAT} ]] || exit 1
 
-exit 0</code></pre>
-
+exit 0
+</code></pre>
 
 <p>LOGFORMAT为我们根据规范写的正则表达式，符合<code>[xxx][(dev|bug|misc)]xxx</code>这样的规则即可</p>
 <p>通过svnlook命令拿到本次提交的log记录，然后与预设的正则进行匹配，通过则继续往下走，不通过则直接退出状态1</p>
 <p>最终exit退出状态为0时则表示全部规则验证通过，进行后续的代码提交操作，非0时表示验证失败</p>
 <p>可以在hook脚本中写多条不同的验证规则，每条规则不通过时返回不同的状态码，这样后续不通过就知道哪里验证失败了，例如检测提交的文件名不能包含有空格，不然就exit 2等</p>
 <p>2.别忘了给hook脚本加上可执行权限</p>
-<pre class="codehilite"><code># chmod +x /home/svn/repos/ops-coffee/hooks/pre-commit</code></pre>
-
+<pre class="codehilite"><code># chmod +x /home/svn/repos/ops-coffee/hooks/pre-commit
+</code></pre>
 
 <p>这样就ok了，很简单，再提交log时就会按照定义的规则来判断，如果判断不通过则直接报错'Commit blocked by pre-commit hook'让你重新写log</p>
 <p><img alt="" loading="lazy" src="/static/images/2018/1227.02.png" /></p>
@@ -232,15 +233,15 @@ if [ $AUTHOR == merge ];then
     curl -H &quot;Authorization:Token 3w2290j02baa1xb8cemec35k8b&quot; &quot;https://ops-coffee.com/api/deploy?p=${REPERTORY}&amp;v=${REV}&quot;
 else
     mail -s &quot;SVN 更新通知：系统版本号【$REV】&quot; leader@ops-coffee.com &lt; $LOGFILE
-fi</code></pre>
-
+fi
+</code></pre>
 
 <p>通过svnlook命令获取到提交者、LOG、更新内容的数据，然后将数据拼装成邮件的正文，以便下边发送邮件</p>
 <p>然后if判断提交者是不是merge，如果是则通过curl命令调用deploy的API，API会根据所传的两个参数v:仓库名和p:版本号将代码发布到对应项目的生产环境上，如果不是则发送邮件通知</p>
 <p>以上为演示代码，生产环境的发布各位根据自己实际情况调整</p>
 <p>2.同样不要忘了给脚本添加可执行权限</p>
-<pre class="codehilite"><code># chmod +x /home/svn/repos/ops-coffee/hooks/post-commit</code></pre>
-
+<pre class="codehilite"><code># chmod +x /home/svn/repos/ops-coffee/hooks/post-commit
+</code></pre>
 
 <p>这样就ok了，每次代码提交（合并）之后就会判断是哪个账号的提交，确定是发送邮件通知还是直接部署上线</p>
 

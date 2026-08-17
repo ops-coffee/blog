@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -147,8 +148,8 @@ def cloud_account_post(instance, created, **kwargs):
                 &quot;enabled&quot;: 1 if int(instance.interval) else 0,
                 &quot;interval&quot;: _c
             }
-        )</code></pre>
-
+        )
+</code></pre>
 
 <p>若想临时关闭同步任务的话可以将自动同步间隔改为0，或者在队列状态页面上选择相应的任务关闭同步，同时在队列状态页面还能查看所有的计划任务以及Celery下Worker的状态，这个我上篇文章<a href="https://blog.ops-coffee.com/s/python-django-celery-monitor-not-flower" target="_blank">监控Celery不一定非要使用Flower</a>有专程的讲过</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0130.02.png" /></p>
@@ -162,8 +163,8 @@ def cloud_account_post(instance, created, **kwargs):
     for resource in instance.resource.all():
         sync_resource.delay(user, pk, resource.id)
 
-    return True</code></pre>
-
+    return True
+</code></pre>
 
 <p><code>sync_resource</code>方法接收用户、云帐号的主键ID以及云资源类型ID三个参数，根据云帐号的主键ID确定要同步的云帐号，根据资源类型ID确定要同步的资源类型，向<code>CloudSyncLog</code>表写入一条数据作为同步日志，同时初始化同步记录状态为进行中Running，调用<code>SyncResources().sync()</code>进行具体的资源同步，通过<code>CloudSyncLogger</code>来记录同步过程的详情</p>
 <pre class="codehilite"><code>def sync_resource(user, pk, resource_id):
@@ -187,8 +188,8 @@ def cloud_account_post(instance, created, **kwargs):
     success, data = SyncResources(_t.id).sync(resource.id)
     CloudSyncLogger(_t.id, 1 if success else 0).add(data + '\n')
 
-    return True, '{} 同步 {}'.format(resource.name, '成功' if success else '失败')</code></pre>
-
+    return True, '{} 同步 {}'.format(resource.name, '成功' if success else '失败')
+</code></pre>
 
 <p>这里之所以会将<code>sync_resources</code>和<code>sync_resource</code>方法分开，主要是<code>sync_resources</code>方法只能一次全部同步云帐号下所有配置同步的资源，而在某些情况下用户需要单独同步某个账号下的某个资源类型，例如我们在修改了云上资源后希望立刻看到资源的属性变化，此时需要手动同步某个账号下的某个资源</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0130.03.png" /></p>
@@ -215,8 +216,8 @@ def cloud_account_post(instance, created, **kwargs):
         else:
             return False, '暂不支持当前资源类型的数据同步'
 
-        return state, message</code></pre>
-
+        return state, message
+</code></pre>
 
 <p>对于云上已经删除的资源，同步时可能并不会更新资源属性及状态，所以在资源同步完成后，需要判断下资源的同步状态，若资源同步成功则调用方法<code>set_expired</code>来修改长时间未更新的资源状态为已过期，保证本地资源状态准确，当然根据你的需要也可以通过<code>set_expired</code>方法直接删除长时间未更新的资源</p>
 <p>而对于资源同步方法<code>sync_vpc</code>，会循环所有Region，然后获取Region下的所有数据，通过<code>update_or_create</code>方法来新建或者修改资源数据，在这个过程中不断的记录同步过程日志，一个简单的示例如下</p>
@@ -260,8 +261,8 @@ def cloud_account_post(instance, created, **kwargs):
         if self.cloud_account.cloud.name == 'Ucloud':
             pass
 
-    return True, '本次一共同步了 {} 个区域下的 {} 个实例'.format(total_regions, total_instances)</code></pre>
-
+    return True, '本次一共同步了 {} 个区域下的 {} 个实例'.format(total_regions, total_instances)
+</code></pre>
 
 <p>所有资源的所有同步过程都可以通过详细的日志记录来查看，当然因为同步日志也记录了云厂商、资源类型和同步状态，也可以根据这些维度来过滤查看具体厂商具体资源具体状态的同步情况</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0130.04.png" /></p>

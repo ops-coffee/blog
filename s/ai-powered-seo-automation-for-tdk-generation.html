@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -132,8 +133,8 @@
 <p>首先去<a href="https://cloud.siliconflow.cn/i/tqPo40nB" target="_blank">注册平台账号</a>并登录，登录之后点击页面左侧的API密钥-新建API密钥，填写描述信息了之后就创建了一个API密钥</p>
 <p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2025/0304.02.png" /></p>
 <p>然后就可以调用API传入文章内容+需求让他生成数据，硅基流动它不是具体的某个模型，而是提供了一个模型市场，这个模型市场里的模型都可以调用，部分模型支持openai库进行调用，这样就比较方便，我们通过python调用，需要Python版本高于3.7.1，在调用之前先安装openai库，执行如下命令：</p>
-<pre class="codehilite"><code>pip install --upgrade openai</code></pre>
-
+<pre class="codehilite"><code>pip install --upgrade openai
+</code></pre>
 
 <p>安装完成后，就可以调用，一个简单的调用示例如下：</p>
 <pre class="codehilite"><code>import json  
@@ -160,8 +161,8 @@ def generate_seo_data(content):
         return json.loads(response.choices[0].message.content)
     except Exception as e:
         print(&quot;Error generating SEO data:&quot;, str(e))
-        return {&quot;slug&quot;: &quot;&quot;, &quot;title&quot;: &quot;&quot;, &quot;keywords&quot;: [], &quot;description&quot;: &quot;&quot;}</code></pre>
-
+        return {&quot;slug&quot;: &quot;&quot;, &quot;title&quot;: &quot;&quot;, &quot;keywords&quot;: [], &quot;description&quot;: &quot;&quot;}
+</code></pre>
 
 <p>把代码里的<code>api_key</code>替换成第一步里生成的key，稍微调整下content的内容就可以为你所用。输出的结果就是这样的</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; blog = Blog.objects.get(title='运维自动化系统各模块介绍')
@@ -177,8 +178,8 @@ def generate_seo_data(content):
 ['运维自动化', '资产管理', '容器管理', '监控告警', '作业系统', '任务系统', '域名管理', '备份系统', '数据库服务', '费用中心', '审计中心', '用户管理']
 &gt;&gt;&gt; 
 &gt;&gt;&gt; seo_data.get('description')
-'本文从整体视角介绍了一个较为完善的运维自动化系统包含的主要功能模块，包括工作台、资产管理、容器管理、监控告警、作业系统、任务系统、域名管理、备份系统、数据库服务、费用中心、审计中心和用户管理，详细解析每个模块如何解决实际运维中的问题。</code></pre>
-
+'本文从整体视角介绍了一个较为完善的运维自动化系统包含的主要功能模块，包括工作台、资产管理、容器管理、监控告警、作业系统、任务系统、域名管理、备份系统、数据库服务、费用中心、审计中心和用户管理，详细解析每个模块如何解决实际运维中的问题。
+</code></pre>
 
 <p>然后我只需要把这些输出的数据保存到数据库，会自动触发页面生成方法并上传，整个流程就完成了</p>
 <h2 id="_2">后记</h2>

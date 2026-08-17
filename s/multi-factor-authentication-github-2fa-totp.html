@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -223,8 +224,8 @@ if __name__ == &quot;__main__&quot;:
     # 等待几秒钟，然后尝试再次验证相同的token（应该失败）
     time.sleep(31)  # 等待超过TOTP的时间步（默认30秒）
     if not verify_totp_token(totp, token):
-        print(&quot;Same TOTP Token verification failed as expected (expired).&quot;)</code></pre>
-
+        print(&quot;Same TOTP Token verification failed as expected (expired).&quot;)
+</code></pre>
 
 <p>代码很简单，可以直接移植到自己的项目中使用</p>
 <h2 id="github2fa">Github开启2FA</h2>

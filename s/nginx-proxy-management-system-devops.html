@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -167,8 +168,8 @@ server {
     }
 
     access_log  /home/logs/nginx/11.log  main;
-}</code></pre>
-
+}
+</code></pre>
 
 <p>从这个模板里可以看出，我们大概需要如下一些信息，域名<code>server_name</code>、开放端口<code>listen</code>、是否开启<code>ssl</code>以及SSL的证书和密钥、是否有<code>acl</code>白名单以及白名单的地址、是否需要<code>auth_base</code>认证以及账号密码这几类信息，于是对于新建实例我们就需要如下这些信息</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1203.07.png" /></p>

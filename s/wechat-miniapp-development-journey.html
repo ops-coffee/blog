@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -164,8 +165,8 @@
         }
     ]
   }
-})</code></pre>
-
+})
+</code></pre>
 
 <p>模板渲染时用到了循环标签<code>wx:for</code>，可以读取JS变量的列表值，然后通过<code>{{item}}</code>拿到列表中的每个对象，再通过<code>{{item.key}}</code>拿到对象的值</p>
 <pre class="codehilite"><code>&lt;view bindtap=&quot;toChild&quot; data-blog=&quot;{{item}}&quot; class=&quot;cu-item shadow&quot; wx:for=&quot;{{Blogs}}&quot; wx:key&gt;
@@ -180,8 +181,8 @@
     &lt;/view&gt;
   &lt;/view&gt;
 &lt;/view&gt;
-&lt;/view&gt;</code></pre>
-
+&lt;/view&gt;
+</code></pre>
 
 <h2 id="_4">后端取数据</h2>
 <p>考虑到文章可能会随时增加，将数据直接写在JS里边并不友好，每次变更还要重新发布审核，所以从后端接口读取数据才是最好的方式，但考虑到成本问题没必要专门写个后端程序来处理，直接将内容存json，提供https访问即可</p>
@@ -200,8 +201,8 @@
         })
       }
     })
-}</code></pre>
-
+}
+</code></pre>
 
 <h2 id="_5">页面跳转</h2>
 <p>点击列表内容跳转到详情页该怎么实现呢？</p>
@@ -209,12 +210,12 @@
 <pre class="codehilite"><code>&lt;navigator open-type=&quot;navigate&quot; url=&quot;/pages/index/detail/detail?data={{item}}&quot; class=&quot;cu-item shadow&quot; wx:for=&quot;{{Blog}}&quot; wx:key&gt;
     &lt;view class=&quot;title&quot;&gt;{{item.title}}&lt;/view&gt;
     ...
-&lt;/navigator&gt;</code></pre>
-
+&lt;/navigator&gt;
+</code></pre>
 
 <p>或者通过<code>bindtap</code>事件触发<code>wx.navigateTo</code>实现跳转，<code>data-blog</code>可以指定bindtap事件参数，从而在JS中获取</p>
-<pre class="codehilite"><code>&lt;view bindtap=&quot;toChild&quot; data-blog=&quot;{{item}}&quot; class=&quot;cu-item shadow&quot; wx:for=&quot;{{Blogs}}&quot; wx:key&gt;</code></pre>
-
+<pre class="codehilite"><code>&lt;view bindtap=&quot;toChild&quot; data-blog=&quot;{{item}}&quot; class=&quot;cu-item shadow&quot; wx:for=&quot;{{Blogs}}&quot; wx:key&gt;
+</code></pre>
 
 <pre class="codehilite"><code>toChild(event) {
     var blog = event.currentTarget.dataset.blog;
@@ -222,8 +223,8 @@
     wx.navigateTo({
       url: '/pages/index/blog/blog'
     })
-}</code></pre>
-
+}
+</code></pre>
 
 <h2 id="_6">本地存储</h2>
 <p>当点击列表内容跳转到详情页，正常的做法应该是去后台请求文章的详情以渲染详情页面，但这里我需要展示的内容列表页已经存在了，无需再次请求就找了个偷懒的做法，在用户点击列表内容时，把这篇文章的详细信息利用<code>wx.setStorageSync</code>存储在本地</p>
@@ -233,8 +234,8 @@
     wx.setStorageSync(
       'blog',blog
     );
-}</code></pre>
-
+}
+</code></pre>
 
 <p>然后在详情页加载时利用<code>wx.getStorageSync</code>取出来渲染到页面</p>
 <pre class="codehilite"><code>onLoad: function (option) {
@@ -243,13 +244,13 @@
     this.setData({
       blog:blog
     })
-},</code></pre>
-
+},
+</code></pre>
 
 <h2 id="_7">关联公众号</h2>
 <p>小程序提供关联公众号的功能，需要先在小程序后台：设置-&gt;关注公众号中开启公众号关注组件，然后在页面的相应地方添加上如下代码就可以像文章详情页最下边一样出来个关联公众号的组件</p>
-<pre class="codehilite"><code>&lt;official-account&gt;&lt;/official-account&gt;</code></pre>
-
+<pre class="codehilite"><code>&lt;official-account&gt;&lt;/official-account&gt;
+</code></pre>
 
 <p>但访问时可能会发现打开详情页并没有出现关联公众号的组件，这个主要是因为并非所有的情况下都会展示，只有用对了姿势才能看到，官方文档有更多介绍，目前还没有办法彻底解决看不到的问题</p>
 <h2 id="_8">页面分享</h2>
@@ -259,8 +260,8 @@
       title: '运维咖啡吧',
       path: '/pages/index/list/list'
     }
-}</code></pre>
-
+}
+</code></pre>
 
 <h1 id="_9">源码地址</h1>
 <p>长按文末二维码关注微信公众号【运维咖啡吧】回复"03"可获取源码地址，期待你的到来</p>

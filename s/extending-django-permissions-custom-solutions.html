@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -158,8 +159,8 @@
     read_groups = models.ManyToManyField(Group, related_name='read', verbose_name='读权限')
     write_groups = models.ManyToManyField(Group, related_name='write', verbose_name='写权限')
 
-    description = models.TextField(null=True, verbose_name='备注')</code></pre>
-
+    description = models.TextField(null=True, verbose_name='备注')
+</code></pre>
 
 <p>model确定了，接下来我们分三部分详细介绍下权限验证的具体实现</p>
 <h2 id="_3">列表页权限控制</h2>
@@ -178,8 +179,8 @@
             for group in _user_groups:
                 _lists = _lists | group.read.all()
 
-        return render(request, 'overmind/mysql.index.html', {'request': request, 'lPage': _lists})</code></pre>
-
+        return render(request, 'overmind/mysql.index.html', {'request': request, 'lPage': _lists})
+</code></pre>
 
 <p>实现的思路是：获取登录用户的所有组，然后循环查询每个组有读取权限的数据库实例，最后把每个组有权限读的数据库实例进行合并返回</p>
 <p>获取登录用户的所有组用到了ManyToMany的查询方法：<code>request.user.groups.all()</code></p>
@@ -210,8 +211,8 @@
                     if mysql.project_id == int(project) and mysql.environment == int(environment):
                         _jsondata[mysql.id] = mysql.database
 
-        return JsonResponse(_jsondata)</code></pre>
-
+        return JsonResponse(_jsondata)
+</code></pre>
 
 <p>实现思路与上边类似，只是多了一步根据项目和环境再进行判断</p>
 <p>需要根据group去反查都有哪些DB实例包含了该组，这里用到了M2M的related_name属性：<code>group.read.all()</code></p>
@@ -236,8 +237,8 @@
     # 用户组和DB权限组取交集，有则表示有权限，否则没有权限
     group_list = list(set(_user_groups).intersection(set(_mysql_groups)))
 
-    return False if len(group_list) == 0 else True</code></pre>
-
+    return False if len(group_list) == 0 else True
+</code></pre>
 
 <p>实现思路是：根据传入的第三个用户参数，来获取到用户所有的组，然后根据传入的第一个参数类型读取或写入和第二个参数DB实例来获取到有权限的所有组，然后对两个组取交集，交集不为空则表示有权限，为空则没有</p>
 <p>M2M的<code>.all()</code>取出来的结果是个list，两个list取交集的方法为：<code>list(set(list-A).intersection(set(list-B)))</code></p>
@@ -249,8 +250,8 @@
 
         # 检查用户是否有DB的查询权限
         if check_permission('read', _host, request.user) == False:
-            return JsonResponse({'state': 0, 'message': '当前用户没有查询此DB的权限'})</code></pre>
-
+            return JsonResponse({'state': 0, 'message': '当前用户没有查询此DB的权限'})
+</code></pre>
 
 <h1 id="_6">写在最后</h1>
 <ol>

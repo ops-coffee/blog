@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -167,8 +168,8 @@ class KubeApi:
                              _preload_content=False
                              )
 
-        return cont_stream</code></pre>
-
+        return cont_stream
+</code></pre>
 
 <p>这里的pod name可以通过<code>list_namespaced_pod</code>方法获取，代码如下：</p>
 <pre class="codehilite"><code>def get_deployment_pod(self, RAND):
@@ -185,8 +186,8 @@ class KubeApi:
         return False, 'Get Deployment: ' + str(e)
 
 state, data = self.get_deployment_pod(RAND)
-pod_name = data.items[0].metadata.name</code></pre>
-
+pod_name = data.items[0].metadata.name
+</code></pre>
 
 <p><code>list_namespaced_pod</code>会列出namespace下所有pod的详细信息，这里传了两个参数，第一个<code>namespace</code>是必须的，表示我们要列出pod的namespace，第二个<code>label_selector</code>非必须，表示可以通过设置的标签过滤namespace下的pod，由于我们在创建的时候给每个deployment都添加了唯一的<code>app=RAND</code>的标签，所以这里可以过滤出来我们项目所对应的pod</p>
 <p>一个deployment可能对应多个pod，获取到的<code>data.items</code>包含了所有的pod信息，为一个list列表，可根据需要取到对应pod的name</p>
@@ -205,8 +206,8 @@ application = ProtocolTypeRouter({
             re_path(r'^pod/(?P&lt;name&gt;\w+)', SSHConsumer),
         ])
     ),
-})</code></pre>
-
+})
+</code></pre>
 
 <p>正则匹配所有以<code>pod</code>开头的websocket连接，都交由名为<code>SSHConsumer</code>的Consumer处理，Consumer代码如下：</p>
 <pre class="codehilite"><code>from channels.generic.websocket import WebsocketConsumer
@@ -247,8 +248,8 @@ class SSHConsumer(WebsocketConsumer):
         self.stream.write_stdin('exit\r')
 
     def receive(self, text_data):
-        self.stream.write_stdin(text_data)</code></pre>
-
+        self.stream.write_stdin(text_data)
+</code></pre>
 
 <p>WebSSH可以看作是一个最简单的websocket长连接，每个连接建立后都是独立的，不会跟其他连接共享数据，所以这里不需要用到Group</p>
 <p>当连接建立时通过<code>self.scope</code>获取到url中的name，传给Kubernetes API，同时会新起一个线程不断循环是否有新数据产生，如果有则发送给websocket</p>
@@ -302,14 +303,14 @@ class SSHConsumer(WebsocketConsumer):
     };
   };
 &lt;/script&gt;
-&lt;/html&gt;</code></pre>
-
+&lt;/html&gt;
+</code></pre>
 
 <p><code>term.open</code>初始化一个Terminal</p>
 <p><code>term.on</code>会将输入的内容全部实时的传递给后端</p>
 <p>xterm.js有一个fullscreen的插件，引入之后可以配置fullscreen，否则可能页面只有一部分terminal窗口</p>
 <p>目前仍然遇到一个窗口大小无法调整的问题没有解决，初步判断是后端Kubernetes传回的数据决定的，查询了相关资料，找到<code>kubectl</code>命令可以通过添加<code>COLUMNS</code>和<code>LINES</code>的env来设置</p>
-<pre class="codehilite"><code class="language-sh linenums">#!/bin/sh
+<pre class="codehilite"><code>#!/bin/sh
 if [ &quot;$1&quot; = &quot;&quot; ]; then
   echo &quot;Usage: kshell &lt;pod&gt;&quot;
   exit 1
@@ -317,8 +318,8 @@ fi
 COLUMNS=`tput cols`
 LINES=`tput lines`
 TERM=xterm
-kubectl exec -i -t $1 env COLUMNS=$COLUMNS LINES=$LINES TERM=$TERM bash</code></pre>
-
+kubectl exec -i -t $1 env COLUMNS=$COLUMNS LINES=$LINES TERM=$TERM bash
+</code></pre>
 
 <p>但Kubernetes Python API的Stream没有找到配置的地方，如果你知道，麻烦告诉我</p>
 

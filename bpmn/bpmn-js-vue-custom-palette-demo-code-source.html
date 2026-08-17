@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -130,8 +131,8 @@
 <p>左侧工具栏Palette有些图标我用不到，那该如何隐藏呢？最简单的方法就是直接找到对应的class，通过css隐藏，例如我不需要创建数据存储，可以通过下边的代码隐藏</p>
 <pre class="codehilite"><code>.bpmn-icon-data-store {
   display: none;
-}</code></pre>
-
+}
+</code></pre>
 
 <h2 id="shape_1">自定义shape</h2>
 <p>为了编辑方便，我想在palette上添加一个shape该如何操作呢？这里我们需要自定义Palette，自定义Palette有两种方式可以选择，第一种就是基于默认的Palette来修改，第二种就是完全写个新的Palette来替代默认的Palette，第一种只能在默认的Palette上添加shape，而不能修改或删除，比较鸡肋我们就直接放弃了，来看下完全自定义Palette该如何实现</p>
@@ -250,8 +251,8 @@ PaletteProvider.prototype.getPaletteEntries = function (element) {
       &quot;创建排他网关&quot;
     )
   };
-};</code></pre>
-
+};
+</code></pre>
 
 <p>这段代码的意思相信各位前端的大佬比我理解的要深刻，就不过多介绍了，Platte展示的shape就是最后return输出的那个字典数据定义的，一个shape对应的数据格式如下：</p>
 <pre class="codehilite"><code>&quot;lasso-tool&quot;: {
@@ -263,8 +264,8 @@ PaletteProvider.prototype.getPaletteEntries = function (element) {
       lassoTool.activateSelection(event);
     }
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>其中key为这个shape的名称，value为这个shape定义的一些属性，主要有四个：</p>
 <ul>
@@ -280,8 +281,8 @@ PaletteProvider.prototype.getPaletteEntries = function (element) {
 export default {
   __init__: [&quot;paletteProvider&quot;],
   paletteProvider: [&quot;type&quot;, CustomPalette],
-};</code></pre>
-
+};
+</code></pre>
 
 <p>4.在<code>customModeler/index.js</code>文件中编写自定义的<code>CustomModeler</code>类</p>
 <pre class="codehilite"><code>import inherits from &quot;inherits&quot;;
@@ -302,8 +303,8 @@ CustomModeler.prototype._modules = [].concat(CustomModeler.prototype._modules, [
   CustomModule
 ]);
 
-export { CustomModeler };</code></pre>
-
+export { CustomModeler };
+</code></pre>
 
 <p>5.在页面上引用自定义的<code>CustomModeler</code>以替代原本引用的<code>BpmnModeler</code>类，这样就能用到我们自定义的Palette啦</p>
 <pre class="codehilite"><code>import { xmlStr } from &quot;../mock/xmlStrPreview&quot;;
@@ -329,8 +330,8 @@ export default {
       }
     }
   }
-};</code></pre>
-
+};
+</code></pre>
 
 <p>最终效果如下：</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1110.02.png" /></p>
@@ -345,8 +346,8 @@ export default {
     &quot;Create IntermediateThrowEvent&quot;,
     { eventDefinitionType: &quot;bpmn:TimerEventDefinition&quot; }
   )
-};</code></pre>
-
+};
+</code></pre>
 
 <h2 id="_1">写在最后</h2>
 <p>接触bpmn-js不久，且第一次用VUE，边学边写，文章难免出错，各位多多包含。想要打造一个好用的适合自己的流程编辑器，需要了解的内容比较多，bpmn-js会分多篇文章来介绍，欢迎关注</p>

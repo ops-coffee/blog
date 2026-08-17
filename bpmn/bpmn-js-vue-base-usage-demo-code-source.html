@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -183,29 +184,29 @@
   &lt;/script&gt;
 &lt;/body&gt;
 
-&lt;/html&gt;</code></pre>
-
+&lt;/html&gt;
+</code></pre>
 
 <p>浏览器访问会出现如下一个流程编辑器，可以在这里进行流程的编辑</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/0908.01.png" /></p>
 <p>bpmn-js有两种模式：Modeler模式和Viewer模式，在Modeler模式下可以对流程图进行编辑，而Viewer模式则不能，仅作为展示用</p>
 <p>viewer模式相对简单，无需引入CSS文件，只需引入一个JS即可</p>
-<pre class="codehilite"><code>&lt;script src=&quot;https://unpkg.com/bpmn-js@7.3.0/dist/bpmn-viewer.development.js&quot;&gt;&lt;/script&gt;</code></pre>
-
+<pre class="codehilite"><code>&lt;script src=&quot;https://unpkg.com/bpmn-js@7.3.0/dist/bpmn-viewer.development.js&quot;&gt;&lt;/script&gt;
+</code></pre>
 
 <p>通常在流程执行阶段的展示用Viewer模式，配合节点颜色设置让用户清晰的看到当前流程的执行过程和状态</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/0908.02.png" /></p>
 <h2 id="vue">VUE中使用</h2>
 <p>更多的时候我们可能会在VUE项目中使用，为了展示清晰，这里先通过vue-cli脚手架创建一个vue项目</p>
 <pre class="codehilite"><code>vue create ops-coffee-bpmn
-cd ops-coffee-bpmn</code></pre>
-
+cd ops-coffee-bpmn
+</code></pre>
 
 <p>原始的目录结构大概是这个样子的</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/0908.03.png" /></p>
 <p>安装bpmn-js</p>
-<pre class="codehilite"><code>npm install bpmn-js --save</code></pre>
-
+<pre class="codehilite"><code>npm install bpmn-js --save
+</code></pre>
 
 <p>安装完成后就可以开始使用bpmn-js了，首先要引入bpmn-js的CSS，修改<code>src/main.js</code>文件</p>
 <pre class="codehilite"><code>import Vue from &quot;vue&quot;;
@@ -224,8 +225,8 @@ new Vue({
   router,
   store,
   render: h =&gt; h(App)
-}).$mount(&quot;#app&quot;);</code></pre>
-
+}).$mount(&quot;#app&quot;);
+</code></pre>
 
 <p>然后编写<code>bpmn-modeler.vue</code>文件，文件位于<code>src/views/bpmn-modeler.vue</code></p>
 <pre class="codehilite"><code>&lt;template&gt;
@@ -281,8 +282,8 @@ export default {
   width: 100%;
   height: 100%;
 }
-&lt;/style&gt;</code></pre>
-
+&lt;/style&gt;
+</code></pre>
 
 <p>这里引入了一个外部变量<code>xmlStr</code>，这个变量主要用来存放BPMN的XML数据，这里创建对应的<code>src/mock/xmlStr.js</code>文件</p>
 <pre class="codehilite"><code>export var xmlStr = `&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
@@ -297,8 +298,8 @@ export default {
     &lt;/bpmndi:BPMNShape&gt;
   &lt;/bpmndi:BPMNPlane&gt;
 &lt;/bpmndi:BPMNDiagram&gt;
-&lt;/bpmn2:definitions&gt;`;</code></pre>
-
+&lt;/bpmn2:definitions&gt;`;
+</code></pre>
 
 <p>最后修改<code>src/router/index.js</code>文件添加路由</p>
 <pre class="codehilite"><code>const routes = [
@@ -307,14 +308,14 @@ export default {
     name: &quot;编辑模式&quot;,
     component: () =&gt; import(&quot;../views/bpmn-modeler.vue&quot;)
   },
-];</code></pre>
-
+];
+</code></pre>
 
 <p>然后访问页面，就可看到流程编辑器，进行流程编辑等操作</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/0908.04.png" /></p>
 <p>以上为Modeler模式，如果想用Viewer模式的话，也非常简单，仅需将引入的<code>Modeler</code>改为<code>Viewer</code>即可</p>
-<pre class="codehilite"><code>import BpmnViewer from &quot;bpmn-js/lib/Viewer&quot;;</code></pre>
-
+<pre class="codehilite"><code>import BpmnViewer from &quot;bpmn-js/lib/Viewer&quot;;
+</code></pre>
 
 <h2 id="_2">概念名词</h2>
 <p>在使用bpmn-js的过程中，经常会出现一些名词，了解他们有利于我们后续的使用和开发</p>

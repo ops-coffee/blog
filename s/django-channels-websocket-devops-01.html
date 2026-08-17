@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -147,14 +148,14 @@
         - settings.py
         - urls.py
         - wsgi.py
-    - manage.py</code></pre>
-
+    - manage.py
+</code></pre>
 
 <ol>
 <li>安装channels</li>
 </ol>
-<pre class="codehilite"><code>pip install channels==2.1.7</code></pre>
-
+<pre class="codehilite"><code>pip install channels==2.1.7
+</code></pre>
 
 <ol>
 <li>修改settings.py文件，</li>
@@ -166,8 +167,8 @@ INSTALLED_APPS = [
 ]
 
 # 指定ASGI的路由地址
-ASGI_APPLICATION = 'webapp.routing.application'</code></pre>
-
+ASGI_APPLICATION = 'webapp.routing.application'
+</code></pre>
 
 <p>channels运行于ASGI协议上，ASGI的全名是Asynchronous Server Gateway Interface。它是区别于Django使用的WSGI协议 的一种异步服务网关接口协议，正是因为它才实现了websocket</p>
 <p><strong>ASGI_APPLICATION</strong> 指定主路由的位置为webapp下的routing.py文件中的application</p>
@@ -178,8 +179,8 @@ ASGI_APPLICATION = 'webapp.routing.application'</code></pre>
 
 application = ProtocolTypeRouter({
     # 暂时为空，下文填充
-})</code></pre>
-
+})
+</code></pre>
 
 <ol>
 <li>运行Django项目</li>
@@ -192,8 +193,8 @@ System check identified no issues (0 silenced).
 April 12, 2019 - 17:44:52
 Django version 2.2, using settings 'webapp.settings'
 Starting ASGI/Channels version 2.1.7 development server at http://0.0.0.0:80/
-Quit the server with CTRL-BREAK.</code></pre>
-
+Quit the server with CTRL-BREAK.
+</code></pre>
 
 <p>仔细观察上边的输出会发现Django启动中的<code>Starting development server</code>已经变成了<code>Starting ASGI/Channels version 2.1.7 development server</code>，这表明项目已经由django使用的WSGI协议转换为了Channels使用的ASGI协议</p>
 <p>至此Django已经基本集成了Channels框架</p>
@@ -208,8 +209,8 @@ Quit the server with CTRL-BREAK.</code></pre>
     - apps.py
     - models.py
     - tests.py
-    - views.py</code></pre>
-
+    - views.py
+</code></pre>
 
 <p>我们构建一个标准的Django聊天页面，相关代码如下</p>
 <p>url:</p>
@@ -218,15 +219,15 @@ from chat.views import chat
 
 urlpatterns = [
     path('chat', chat, name='chat-url')
-]</code></pre>
-
+]
+</code></pre>
 
 <p>view:</p>
 <pre class="codehilite"><code>from django.shortcuts import render
 
 def chat(request):
-    return render(request, 'chat/index.html')</code></pre>
-
+    return render(request, 'chat/index.html')
+</code></pre>
 
 <p>template:</p>
 <pre class="codehilite"><code>{% extends &quot;base.html&quot; %}
@@ -235,8 +236,8 @@ def chat(request):
   &lt;textarea class=&quot;form-control&quot; id=&quot;chat-log&quot; disabled rows=&quot;20&quot;&gt;&lt;/textarea&gt;&lt;br/&gt;
   &lt;input class=&quot;form-control&quot; id=&quot;chat-message-input&quot; type=&quot;text&quot;/&gt;&lt;br/&gt;
   &lt;input class=&quot;btn btn-success btn-block&quot; id=&quot;chat-message-submit&quot; type=&quot;button&quot; value=&quot;Send&quot;/&gt;
-{% endblock %}</code></pre>
-
+{% endblock %}
+</code></pre>
 
 <p>通过上边的代码一个简单的web聊天页面构建完成了，访问页面大概样子如下：</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/0416.01.jpeg" /></p>
@@ -254,14 +255,14 @@ application = ProtocolTypeRouter({
             chat.routing.websocket_urlpatterns
         )
     ),
-})</code></pre>
-
+})
+</code></pre>
 
 <p><strong>ProtocolTypeRouter：</strong> ASIG支持多种不同的协议，在这里可以指定特定协议的路由信息，我们只使用了websocket协议，这里只配置websocket即可</p>
 <p><strong>AuthMiddlewareStack：</strong> django的channels封装了django的auth模块，使用这个配置我们就可以在consumer中通过下边的代码获取到用户的信息</p>
 <pre class="codehilite"><code>def connect(self):
-    self.user = self.scope[&quot;user&quot;]</code></pre>
-
+    self.user = self.scope[&quot;user&quot;]
+</code></pre>
 
 <p><code>self.scope</code>类似于django中的request，包含了请求的type、path、header、cookie、session、user等等有用的信息</p>
 <p><strong>URLRouter：</strong> 指定路由文件的路径，也可以直接将路由信息写在这里，代码中配置了路由文件的路径，会去chat下的routeing.py文件中查找websocket_urlpatterns，<code>chat/routing.py</code>内容如下</p>
@@ -270,8 +271,8 @@ from chat.consumers import ChatConsumer
 
 websocket_urlpatterns = [
     path('ws/chat/', ChatConsumer),
-]</code></pre>
-
+]
+</code></pre>
 
 <p>routing.py路由文件跟django的url.py功能类似，语法也一样，意思就是访问<code>ws/chat/</code>都交给<code>ChatConsumer</code>处理</p>
 <ol>
@@ -293,8 +294,8 @@ class ChatConsumer(WebsocketConsumer):
 
         self.send(text_data=json.dumps({
             'message': message
-        }))</code></pre>
-
+        }))
+</code></pre>
 
 <p>这里是个最简单的同步websocket consumer类，connect方法在连接建立时触发，disconnect在连接关闭时触发，receive方法会在收到消息后触发。整个ChatConsumer类会将所有收到的消息加上“运维咖啡吧：”的前缀发送给客户端</p>
 <ol>
@@ -340,8 +341,8 @@ class ChatConsumer(WebsocketConsumer):
     messageInputDom.value = '';
   };
 &lt;/script&gt;
-{% endblock %}</code></pre>
-
+{% endblock %}
+</code></pre>
 
 <p>WebSocket对象一个支持四个消息：onopen，onmessage，oncluse和onerror，我们这里用了两个onmessage和onclose</p>
 <p><strong>onopen：</strong> 当浏览器和websocket服务端连接成功后会触发onopen消息</p>
@@ -362,8 +363,8 @@ class ChatConsumer(WebsocketConsumer):
 <ol>
 <li>官方推荐使用redis作为channel layer，所以先安装channels_redis</li>
 </ol>
-<pre class="codehilite"><code>pip install channels_redis==2.3.3</code></pre>
-
+<pre class="codehilite"><code>pip install channels_redis==2.3.3
+</code></pre>
 
 <ol>
 <li>然后修改settings.py添加对layer的支持</li>
@@ -375,8 +376,8 @@ class ChatConsumer(WebsocketConsumer):
             &quot;hosts&quot;: [('ops-coffee.com', 6379)],
         },
     },
-}</code></pre>
-
+}
+</code></pre>
 
 <p>添加channel之后我们可以通过以下命令检查通道层是否能够正常工作</p>
 <pre class="codehilite"><code>&gt;python manage.py shell
@@ -390,8 +391,8 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 &gt;&gt;&gt; async_to_sync(channel_layer.send)('test_channel',{'site':'https://ops-coffee.com'})
 &gt;&gt;&gt; async_to_sync(channel_layer.receive)('test_channel')
 {'site': 'https://ops-coffee.com'}
-&gt;&gt;&gt;</code></pre>
-
+&gt;&gt;&gt;
+</code></pre>
 
 <ol>
 <li>consumer做如下修改引入channel layer</li>
@@ -440,8 +441,8 @@ class ChatConsumer(WebsocketConsumer):
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             'message': message
-        }))</code></pre>
-
+        }))
+</code></pre>
 
 <p>这里我们设置了一个固定的房间名作为Group name，所有的消息都会发送到这个Group里边，当然你也可以通过参数的方式将房间名传进来作为Group name，从而建立多个Group，这样可以实现仅同房间内的消息互通</p>
 <p>当我们启用了channel layer之后，所有与consumer之间的通信将会变成异步的，所以必须使用<code>async_to_sync</code></p>
@@ -495,8 +496,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'message': message
-        }))</code></pre>
-
+        }))
+</code></pre>
 
 <p>其实异步的代码跟之前的差别不大，只有几个小区别：</p>
 <p>ChatConsumer由<code>WebsocketConsumer</code>修改为了<code>AsyncWebsocketConsumer</code></p>

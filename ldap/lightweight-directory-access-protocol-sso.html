@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -148,20 +149,20 @@
 <h2 id="openldap_1">部署OpenLDAP</h2>
 <p>部署环境：Debian 8.4</p>
 <p>1.安装OpenLDAP,OpenLDAP服务端程序叫slapd</p>
-<pre class="codehilite"><code># apt-get install -y slapd</code></pre>
-
+<pre class="codehilite"><code># apt-get install -y slapd
+</code></pre>
 
 <p>2.安装完成之后，会自动生成一个OpenLDAP的系统账号</p>
 <pre class="codehilite"><code># cat /etc/passwd
-openldap:x:110:115:OpenLDAP Server Account,,,:/var/lib/ldap:/bin/false</code></pre>
-
+openldap:x:110:115:OpenLDAP Server Account,,,:/var/lib/ldap:/bin/false
+</code></pre>
 
 <p>3.生成OpenLDAP管理员账号的密码（后边修改配置文件需要使用）</p>
 <pre class="codehilite"><code># slappasswd
 New password: 
 Re-enter new password: 
-{SSHA}TpWoSebaT5gKy2Y3EHmZh+Wc0hJaFp7y</code></pre>
-
+{SSHA}TpWoSebaT5gKy2Y3EHmZh+Wc0hJaFp7y
+</code></pre>
 
 <p>4.新建OpenLDAP配置文件</p>
 <pre class="codehilite"><code># cp /usr/share/slapd/slapd.conf /etc/ldap/
@@ -170,8 +171,8 @@ Re-enter new password:
 # slaptest -f /etc/ldap/slapd.conf 
 5ad9b19d /etc/ldap/slapd.conf: line 105: rootdn is always granted unlimited privileges.
 5ad9b19d /etc/ldap/slapd.conf: line 122: rootdn is always granted unlimited privileges.
-config file testing succeeded</code></pre>
-
+config file testing succeeded
+</code></pre>
 
 <p>配置文件重要参数说明（需要自己修改的，其他未提到的可以不修改）：</p>
 <ul>
@@ -187,18 +188,18 @@ config file testing succeeded</code></pre>
 # slaptest -f /etc/ldap/slapd.conf -F /etc/ldap/slapd.d/
 
 # 给新生成的配置文件赋予OpenLdap的权限
-# chown -R openldap.openldap /etc/ldap/slapd.d/</code></pre>
-
+# chown -R openldap.openldap /etc/ldap/slapd.d/
+</code></pre>
 
 <p>6.重启OpenLdap</p>
-<pre class="codehilite"><code># /etc/init.d/slapd restart</code></pre>
-
+<pre class="codehilite"><code># /etc/init.d/slapd restart
+</code></pre>
 
 <h2 id="acl">ACL权限控制</h2>
 <p>ACL访问指令的格式：</p>
 <pre class="codehilite"><code>access to [what]
-    by [who] [control]</code></pre>
-
+    by [who] [control]
+</code></pre>
 
 <p>简单解释：通过access to约束我们访问的范围（what），通过by设定哪个用户（who）有什么权限（control）</p>
 <p>ACL的详细配置还是比较复杂的，可以看下下边参考文档的第三篇，写的比较详细，这里都不再赘述。</p>
@@ -228,13 +229,13 @@ access to attrs=userPassword,shadowLastChange
 access to *
         by dn=&quot;cn=admin,dc=163,dc=com&quot; write
         by dn.children=&quot;ou=Admin,dc=163,dc=com&quot; write
-        by * read</code></pre>
-
+        by * read
+</code></pre>
 
 <h2 id="_3">备份和还原</h2>
 <h3 id="_4">备份</h3>
-<pre class="codehilite"><code># ldapsearch -x -b &quot;dc=163,dc=com&quot; -D &quot;uid=authz,ou=Public,dc=163,dc=com&quot; -w &quot;AzdfD863M4&quot; &gt; ldap.20180626.ldif</code></pre>
-
+<pre class="codehilite"><code># ldapsearch -x -b &quot;dc=163,dc=com&quot; -D &quot;uid=authz,ou=Public,dc=163,dc=com&quot; -w &quot;AzdfD863M4&quot; &gt; ldap.20180626.ldif
+</code></pre>
 
 <p>参数说明：</p>
 <ul>
@@ -245,8 +246,8 @@ access to *
 </ul>
 <p>authz账号要有<code>"dc=163,dc=com"</code>的查询权限</p>
 <h3 id="_5">还原</h3>
-<pre class="codehilite"><code># ldapadd -x -c -D &quot;cn=admin,dc=163,dc=com&quot; -w &quot;smile&quot; -f ldap.20180626.ldif</code></pre>
-
+<pre class="codehilite"><code># ldapadd -x -c -D &quot;cn=admin,dc=163,dc=com&quot; -w &quot;smile&quot; -f ldap.20180626.ldif
+</code></pre>
 
 <p>参数说明：</p>
 <ul>
@@ -259,12 +260,12 @@ access to *
 <h2 id="ldap-account-manager">ldap-account-manager</h2>
 <h3 id="_6">安装</h3>
 <p>1.安装ldap-account-management</p>
-<pre class="codehilite"><code># apt-get install ldap-account-manager</code></pre>
-
+<pre class="codehilite"><code># apt-get install ldap-account-manager
+</code></pre>
 
 <p>2.浏览器访问</p>
-<pre class="codehilite"><code>http://ip/lam</code></pre>
-
+<pre class="codehilite"><code>http://ip/lam
+</code></pre>
 
 <h3 id="_7">配置</h3>
 <p>lam的所有配置都可以在web端配置，不需要去服务器上修改一行代码，这个太好用了。</p>

@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -136,8 +137,8 @@
     ...
 
     exechost = models.CharField(max_length=64, default='localhost', verbose_name='执行主机')
-    execuser = models.ForeignKey(ExecUser, null=True, on_delete=models.PROTECT, db_constraint=False)</code></pre>
-
+    execuser = models.ForeignKey(ExecUser, null=True, on_delete=models.PROTECT, db_constraint=False)
+</code></pre>
 
 <p>exechost默认为Localhost，execuser默认为空，现有需求：当exechost不为localhost时，他必须符合<code>ip:port</code>的格式，且execuser不能为空。这是一个比较复杂的校验方式，我们可以通过重写save方法来处理</p>
 <pre class="codehilite"><code>class TempTask(models.Model):
@@ -151,28 +152,29 @@
             if not self.execuser:
                 raise ValidationError('当执行主机存在时执行用户不能为空')
 
-        super().save(*args, **kwargs)</code></pre>
-
+        super().save(*args, **kwargs)
+</code></pre>
 
 <p>我们可以在save函数内执行各种自定义逻辑，但需要注意的是，最后必须要调用<code>super().save()</code>方法来保证执行了父类的<code>save()</code>，这样才能保证数据写入了数据库。</p>
 <p>这样在当我们执行create语句插入数据的时候就会先去执行save中的校验方法进行校验了</p>
-<pre class="codehilite"><code>TempTask.objects.create(**postdata)</code></pre>
-
+<pre class="codehilite"><code>TempTask.objects.create(**postdata)
+</code></pre>
 
 <h2 id="update">update踩坑</h2>
 <p>就当我以为一切都要结束准备起身冲杯咖啡的时候，我发现新加数据可以正常进行校验，但更新数据却不行，更新的代码如下：</p>
-<pre class="codehilite"><code>TempTask.objects.filter(id=pk).update(**postdata)</code></pre>
-
+<pre class="codehilite"><code>TempTask.objects.filter(id=pk).update(**postdata)
+</code></pre>
 
 <p>经过一番查找发现了问题所在，官方文档中有这么一句话</p>
-<pre class="codehilite"><code>Unfortunately, there isn’t a workaround when creating or updating objects in bulk, since none of save(), pre_save, and post_save are called.</code></pre>
-
+<pre class="codehilite"><code>Unfortunately, there isn’t a workaround when creating or updating objects in bulk, since none of save(), pre_save, and post_save are called.
+</code></pre>
 
 <p>也就是说，<strong>当使用查询集批量更新对象时，将不会为每个对象调用save()方法</strong>，连<code>pre_save</code>和<code>post_save</code>也不会被调用。与<code>save()</code>类似的还有model的<code>delete()</code>方法，当批量删除的时候，同样不会调用model的<code>delete()</code>方法，但delete是可以使用<code>pre_delete</code>或<code>post_delete</code>信号的</p>
 <p>解决这个问题的方法很简单，那就是将更新的代码换成下边这种，保证调用到save方法</p>
 <pre class="codehilite"><code>_t = TempTask.objects.get(id=pk)
 _t.__dict__.update(**postdata)
-_t.save()</code></pre>
+_t.save()
+</code></pre>
 
         <div>
           <ul class="article-meta">

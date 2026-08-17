@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -237,8 +238,8 @@ ContextPadProvider.prototype.getContextPadEntries = function (element) {
   });
 
   return actions;
-};</code></pre>
-
+};
+</code></pre>
 
 <p>主要思路依然是构建最终输出的字段数据，可以根据不同类型的shape添加不同的ContextPad，以上代码就是默认所有shape都有删除按钮，然后给<code>UserTask</code>类型的shape和连线都添加了一个名为“属性”的按钮</p>
 <p>同样的这里所需要的shape数据也可以参考上篇文章最后给出的那两个Github源码链接</p>
@@ -248,8 +249,8 @@ ContextPadProvider.prototype.getContextPadEntries = function (element) {
 export default {
   __init__: [&quot;contextPadProvider&quot;],
   contextPadProvider: [&quot;type&quot;, CustomContextPadProvider]
-};</code></pre>
-
+};
+</code></pre>
 
 <p>这里只有自定义<code>ContextPad</code>的配置，如果你是想在自定义<code>Palette</code>的基础上再自定义<code>ContextPad</code>的话，将以上代码与原本的内容整合即可</p>
 <p>3.在<code>customModeler/index.js</code>文件中编写自定义的<code>CustomModeler</code>类</p>
@@ -271,8 +272,8 @@ CustomViewer.prototype._modules = [].concat(Viewer.prototype._modules, [
   MoveCanvasModule
 ]);
 
-export { CustomViewer };</code></pre>
-
+export { CustomViewer };
+</code></pre>
 
 <p>同样的如果你想在自定义<code>Palette</code>的基础上再自定义<code>ContextPad</code>，则在之前的代码基础上与以上代码整合</p>
 <p>4.在页面上引用自定义的<code>CustomModeler</code>以替代原本引用的<code>BpmnModeler</code>类，这样就能用到我们自定义的Palette啦</p>
@@ -299,8 +300,8 @@ export default {
       }
     }
   }
-};</code></pre>
-
+};
+</code></pre>
 
 <p>最终效果如下：</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1111.01.png" /></p>
@@ -326,8 +327,8 @@ export default {
   actions: {}
 };
 
-export default bpmn;</code></pre>
-
+export default bpmn;
+</code></pre>
 
 <p>想要了解以上代码的意思，我们需要先了解下Vuex的基本思想：当我们在页面上点击了一个按钮，它会触发一个<code>action</code>，<code>action</code>随后会执行一个<code>mutation</code>，<code>mutation</code>会去改变<code>state</code>，当<code>state</code>改变后页面就能根据<code>state</code>来进行相应的处理了</p>
 <p>然后再来看上边的代码，用到了Vuex基本思想里边的<code>state</code>和<code>mutations</code>，其中<code>state</code>为单一状态树，简单理解为我们定义的变量，全局变量，其他组件可以获取的到的变量，而想要修改<code>state</code>里定义的变量就必须通过<code>mutations</code>来实现，<code>mutations</code>就定义了两个事件来对应修改state里的两个变量</p>
@@ -346,16 +347,16 @@ export default new Vuex.Store({
   mutations: {},
   actions: {},
   modules: { bpmn }
-});</code></pre>
-
+});
+</code></pre>
 
 <p>4.在<code>main.js</code>中引入store</p>
 <pre class="codehilite"><code>import store from &quot;./store&quot;;
 
 new Vue({
   store
-}).$mount(&quot;#app&quot;);</code></pre>
-
+}).$mount(&quot;#app&quot;);
+</code></pre>
 
 <p>以上就定义好了store，接下来就是使用store了，首先需要处理的是，当点击ContextPad里的“属性”按钮时，修改store里<code>nodeVisible</code>和<code>nodeInfo</code>值</p>
 <p>5.修改<code>CustomContextPadProvider.js</code>文件，给action添加<code>click</code>方法，<code>click</code>方法修改store里定义的state</p>
@@ -378,8 +379,8 @@ if (
       }
     }
   });
-}</code></pre>
-
+}
+</code></pre>
 
 <p>对store的修改只能通过<code>store.commit</code>来实现</p>
 <p>6.最后在页面中就可以借助<code>computed</code>和<code>watch</code>来实现对store里数据的获取以及对页面的处理</p>
@@ -425,8 +426,8 @@ if (
   watch: {
     task(val) {}
   }
-};</code></pre>
-
+};
+</code></pre>
 
 <p>最终实现的效果如下</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1111.03.png" /></p>
@@ -449,8 +450,8 @@ if (
     },
     deep: true
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>获取store里的值然后通过<code>modeling.updateLabel</code>方法来更新节点的名称，至此问题完美解决</p>
 <h2 id="_2">写在最后</h2>

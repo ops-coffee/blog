@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -138,8 +139,8 @@ class Project(TimeBaseModel):
     chinese_name = models.CharField(max_length=32, unique=True, verbose_name='中文名称')
 
     def __str__(self):
-        return self.english_name</code></pre>
-
+        return self.english_name
+</code></pre>
 
 <h3 id="db_table">db_table</h3>
 <p>定义数据库中表的名字，默认为app lale</p>
@@ -155,25 +156,25 @@ class Customer(models.Model):
         indexes = [
             models.Index(fields=['last_name', 'first_name']),
             models.Index(fields=['first_name'], name='first_name_idx'),
-        ]</code></pre>
-
+        ]
+</code></pre>
 
 <h3 id="index_together">index_together</h3>
 <p>联合索引</p>
-<pre class="codehilite"><code>index_together = [&quot;pub_date&quot;, &quot;deadline&quot;]</code></pre>
-
+<pre class="codehilite"><code>index_together = [&quot;pub_date&quot;, &quot;deadline&quot;]
+</code></pre>
 
 <p>以上表示pub_date和deadline会创建联合索引</p>
 <h3 id="unique_together">unique_together</h3>
 <p>联合唯一</p>
-<pre class="codehilite"><code>unique_together = ('parent', 'name',)</code></pre>
-
+<pre class="codehilite"><code>unique_together = ('parent', 'name',)
+</code></pre>
 
 <p>以上表示parent和name两个字段联合唯一，也就是说数据库表里不会出现两条parent和name都相同的数据</p>
 <h3 id="ordering">ordering</h3>
 <p>对象的默认排序，用于获取对象列表时</p>
-<pre class="codehilite"><code>ordering = ['-pub_date', 'author']</code></pre>
-
+<pre class="codehilite"><code>ordering = ['-pub_date', 'author']
+</code></pre>
 
 <p>以上表示先按照<code>pub_date</code>降序，然后按照<code>author</code>升序</p>
 <h3 id="permissions">permissions</h3>
@@ -181,18 +182,18 @@ class Customer(models.Model):
 <pre class="codehilite"><code>permissions = (
     (&quot;relation_select&quot;, &quot;业务关系查看权限&quot;),
     (&quot;relation_change&quot;, &quot;业务关系修改权限&quot;),
-)</code></pre>
-
+)
+</code></pre>
 
 <h3 id="default_permissions">default_permissions</h3>
 <p>默认值为('add', 'change', 'delete', 'view') 。如果我们不需要任何默认的权限，可以将其设置为空列表</p>
-<pre class="codehilite"><code>default_permissions = ()</code></pre>
-
+<pre class="codehilite"><code>default_permissions = ()
+</code></pre>
 
 <h3 id="app_label">app_label</h3>
 <p>如果在<code>INSTALLED_APPS</code>中定义了一个应用程序之外的模型，它必须声明属于哪个应用程序</p>
-<pre class="codehilite"><code>app_label = 'myapp'</code></pre>
-
+<pre class="codehilite"><code>app_label = 'myapp'
+</code></pre>
 
 <h3 id="verbose_name">verbose_name</h3>
 <p>对象的可读名称，单数</p>
@@ -229,8 +230,8 @@ class Customer(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(check=models.Q(age__gte=18), name='age_gte_18'),
-        ]</code></pre>
-
+        ]
+</code></pre>
 
 <h3 id="label">label</h3>
 <p>只读，返回<code>app_label.object_name</code></p>

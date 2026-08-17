@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -129,8 +130,8 @@ Connection closed by 20.205.243.166 port 22
 fatal: Could not read from remote repository.
 
 Please make sure you have the correct access rights
-and the repository exists.</code></pre>
-
+and the repository exists.
+</code></pre>
 
 <p>此时我们可以通过配置SSH代理来保障网络通畅，添加<code>~/.ssh/config</code>文件，配置如下内容</p>
 <pre class="codehilite"><code># cat ~/.ssh/config
@@ -138,11 +139,12 @@ Host github.com
     User git
     Hostname github.com
     Port 22
-    ProxyCommand nc -v -x localhost:7890 %h %p</code></pre>
-
+    ProxyCommand nc -v -x localhost:7890 %h %p
+</code></pre>
 
 <p>ProxyCommand依赖nc，服务器上需要提前安装nc</p>
-<pre class="codehilite"><code># apt-get install ncat</code></pre>
+<pre class="codehilite"><code># apt-get install ncat
+</code></pre>
 
         <div>
           <ul class="article-meta">

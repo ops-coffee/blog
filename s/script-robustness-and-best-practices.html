@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -162,8 +163,8 @@
 <pre class="codehilite"><code>if [ $# != 3 ];then
     echo &quot;USAGE: $0 PROJ ENVT TAG&quot;
     exit 1
-fi</code></pre>
-
+fi
+</code></pre>
 
 <p>使用方法应位于脚本开头位置</p>
 <ol>
@@ -175,8 +176,8 @@ fi</code></pre>
 fi
 
 cd /tmp/ops-coffee/ &amp;&amp;\
-echo &quot;tmp file.&quot; &gt; dena.txt</code></pre>
-
+echo &quot;tmp file.&quot; &gt; dena.txt
+</code></pre>
 
 <ol>
 <li>校验命令执行结果</li>
@@ -184,8 +185,8 @@ echo &quot;tmp file.&quot; &gt; dena.txt</code></pre>
 <p>脚本是由若干命令组成的，脚本编写时应确保每一条命令都符合预期，在脚本中推荐使用<code>&amp;&amp;</code>和<code>||</code>运算符</p>
 <pre class="codehilite"><code>ps -ef | grep java | grep -v grep | wc -l &amp;&amp;\
 echo 0 ||\
-echo 1</code></pre>
-
+echo 1
+</code></pre>
 
 <ol>
 <li>返回正确的状态</li>
@@ -193,8 +194,8 @@ echo 1</code></pre>
 <p>在命令执行完成后，会根据命令的返回状态也就是<code>$?</code>的值来判断命令是否执行成功，当<code>$?</code>为<code>0</code>时表示执行成功，否则表示执行失败，如果是执行的脚本时，需要在脚本最后明确脚本返回状态，shell脚本可以在脚本执行成功时通过exit指定退出状态，例如</p>
 <pre class="codehilite"><code>ls /ops-coffee.com &amp;&amp;\
 exit 0 ||\
-exit 1</code></pre>
-
+exit 1
+</code></pre>
 
 <p>而对于python脚本则可以借助<code>sys.exit</code>这样写</p>
 <pre class="codehilite"><code>import sys
@@ -202,8 +203,8 @@ exit 1</code></pre>
 if 'www' in 'ops-coffee.com':
   sys.exit(0)
 else:
-  sys.exit(1)</code></pre>
-
+  sys.exit(1)
+</code></pre>
 
 <p>其他语言类似</p>
 

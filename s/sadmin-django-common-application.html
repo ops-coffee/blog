@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -151,8 +152,8 @@
 class ProductDetail(RetrieveUpdateDestroyView):
     model = Product
     permission = {'get': 'workflow.product_select', 'put': 'workflow.product_change',
-                  'delete': 'workflow.product_delete'}</code></pre>
-
+                  'delete': 'workflow.product_delete'}
+</code></pre>
 
 <p>几行代码便可以让后端处理对数据库的增删改查，同时返回固定格式的json数据，而对于前端页面就没有太多的规范了，按照喜好怎么设计都可以</p>
 <p><img alt="" loading="lazy" src="/static/images/2021/0813.06.png" /></p>

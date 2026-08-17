@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -126,8 +127,8 @@
 <p>1.确保settings.py文件有以下三个配置</p>
 <pre class="codehilite"><code>STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)</code></pre>
-
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+</code></pre>
 
 <p>2.在urls中添加如下配置</p>
 <pre class="codehilite"><code>from django.views import static
@@ -136,11 +137,12 @@ from django.urls import path, re_path, include
 
 urlpatterns = [
     re_path('static/(?P&lt;path&gt;.*)$', static.serve, {'document_root': settings.STATIC_ROOT}),
-]</code></pre>
-
+]
+</code></pre>
 
 <p>3.控制台下执行collectstatic命令收集静态文件</p>
-<pre class="codehilite"><code># python manage.py collectstatic</code></pre>
+<pre class="codehilite"><code># python manage.py collectstatic
+</code></pre>
 
         <div>
           <ul class="article-meta">

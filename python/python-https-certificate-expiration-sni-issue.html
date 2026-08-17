@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -144,18 +145,18 @@ def get_expire(domain):
         return False, 500, str(e)
 
 if __name__ == '__main__':
-    print(get_expire('blog.ops-coffee.com'))</code></pre>
-
+    print(get_expire('blog.ops-coffee.com'))
+</code></pre>
 
 <pre class="codehilite"><code>root@ops-coffee.com:~# python ops-coffee.py
-(True, 200, {'expire_time': '2021-08-29 12:00:00', 'expire_days': 309})</code></pre>
-
+(True, 200, {'expire_time': '2021-08-29 12:00:00', 'expire_days': 309})
+</code></pre>
 
 <p>咦？还真的是我错了！代码很简单，应该不会有逻辑BUG，那就可能是<code>openssl</code>获取到的数据就有问题，于是直接通过<code>openssl</code>命令来验证，果然是，命令返回与代码返回过期时间一致，都是2021年8月29日</p>
 <pre class="codehilite"><code>root@ops-coffee.com:~# echo | openssl s_client -connect &quot;blog.ops-coffee.com&quot;:443 2&gt;/dev/null | openssl x509 -noout -dates
 notBefore=Aug 28 00:00:00 2020 GMT
-notAfter=Aug 29 12:00:00 2021 GMT</code></pre>
-
+notAfter=Aug 29 12:00:00 2021 GMT
+</code></pre>
 
 <p>看来真的是我错了，啪啪打脸，究竟会是哪里的问题？这时我想到了SNI，那么什么是SNI，SNI又有什么作用呢</p>
 <p>SNI：Server Name Indication，服务名称标识，是一项用于改善SSL/TLS的技术，在SSLv3/TLSv1中被启用。它允许客户端在发起SSL握手请求时提交请求的Host信息，使得服务器能够切换到正确的域并返回相应的证书</p>
@@ -163,8 +164,8 @@ notAfter=Aug 29 12:00:00 2021 GMT</code></pre>
 <p>也就是说当客户端没有发送SNI信息，且请求的服务器上部署了多个HTTPS服务时，得到的证书信息可能就是错误的，为了验证猜想，我在<code>openssl</code>命令中添加了<code>servername</code>选项，再次查看返回的结果，过期时间2021年10月22日</p>
 <pre class="codehilite"><code>root@ops-coffee.com:~# echo | openssl s_client -servername blog.ops-coffee.com -connect &quot;blog.ops-coffee.com&quot;:443 2&gt;/dev/null | openssl x509 -noout -dates
 notBefore=Oct 23 00:00:00 2020 GMT
-notAfter=Oct 22 23:59:59 2021 GMT</code></pre>
-
+notAfter=Oct 22 23:59:59 2021 GMT
+</code></pre>
 
 <p>又跟小伙伴确认了一下，确认了以上的猜想，确实是SNI的问题，破案了</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1023.03.png" /></p>
@@ -188,8 +189,8 @@ def get_expire(domain):
         return False, 500, str(e)
 
 if __name__ == '__main__':
-    print(get_expire('blog.ops-coffee.com'))</code></pre>
-
+    print(get_expire('blog.ops-coffee.com'))
+</code></pre>
 
 <p>重要的是<code>server_hostname</code>参数，在请求时带上hostname标识，就能得到正确的结果啦</p>
 

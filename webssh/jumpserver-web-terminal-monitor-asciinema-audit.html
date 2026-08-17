@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -132,13 +133,13 @@
 <p>通过上边两篇文章的阅读，我们已经知道了Asciinema录像文件主要由两部分组成：header头和IO流数据</p>
 <p>header头位于文件的第一行，定义了这个录像的版本、宽高、开始时间、环境变量等参数，我们可以在websocket连接创建时将这些参数按照需要的格式写入到文件</p>
 <p>header头数据如下，只有开头一行，是一个字典形式</p>
-<pre class="codehilite"><code>{&quot;version&quot;: 2, &quot;width&quot;: 213, &quot;height&quot;: 55, &quot;timestamp&quot;: 1574155029.1815443, &quot;env&quot;: {&quot;SHELL&quot;: &quot;/bin/bash&quot;, &quot;TERM&quot;: &quot;xterm-256color&quot;}, &quot;title&quot;: &quot;ops-coffee&quot;}</code></pre>
-
+<pre class="codehilite"><code>{&quot;version&quot;: 2, &quot;width&quot;: 213, &quot;height&quot;: 55, &quot;timestamp&quot;: 1574155029.1815443, &quot;env&quot;: {&quot;SHELL&quot;: &quot;/bin/bash&quot;, &quot;TERM&quot;: &quot;xterm-256color&quot;}, &quot;title&quot;: &quot;ops-coffee&quot;}
+</code></pre>
 
 <p>整个录像文件除了第一行的header头部分，剩下的就都是输入输出的IO流数据，从websocket连接建立开始，随着操作的进行，IO流数据是不断增加的，直到整个websocket长连接的结束，那就需要在整个WebSSH交互的过程中不断的往录像文件追加输入输出的内容</p>
 <p>IO流数据如下，每一行一条，列表形式，分别表示操作时间，输入或输出（这里我们为了方便就写固定字符串输出），IO数据</p>
-<pre class="codehilite"><code>[0.2341010570526123, &quot;o&quot;, &quot;Last login: Tue Nov 19 17:11:30 2019 from 192.168.105.91\r\r\n&quot;]</code></pre>
-
+<pre class="codehilite"><code>[0.2341010570526123, &quot;o&quot;, &quot;Last login: Tue Nov 19 17:11:30 2019 from 192.168.105.91\r\r\n&quot;]
+</code></pre>
 
 <p>似乎很完美，按照上边的思路录像文件就应该没有问题了，但还有一些细节需要处理</p>
 <p>首先是需要历史连接列表，在这个列表里可以看到什么时间，哪个用户连接了哪台主机，当然也需要提供回放功能，新建一张表来记录这些信息</p>
@@ -151,8 +152,8 @@
     filename = models.CharField(max_length=128, verbose_name='录像文件名称')
 
     def __str__(self):
-        return self.host</code></pre>
-
+        return self.host
+</code></pre>
 
 <p>其次还需要考虑的一个问题是header和后续IO数据流要写入同一个文件，这就需要在整个websocket的连接过程中有一个<strong>固定</strong>的文件名可被读取，这里我使用了主机+用户+当前时间作为文件名，同一用户在同一时间不能多次连接同一主机，这样可保证文件名不重复，同时避免操作写入错误的录像文件，文件名在websocket建立时初始化</p>
 <pre class="codehilite"><code>def __init__(self, host, user, websocket):
@@ -160,8 +161,8 @@
     self.user = user
 
     self.time = time.time()
-    self.filename = '%s.%s.%d.cast' % (host, user, self.time)</code></pre>
-
+    self.filename = '%s.%s.%d.cast' % (host, user, self.time)
+</code></pre>
 
 <p>IO流数据会持续不断的写入文件，这里以一个独立的方法来处理写入</p>
 <pre class="codehilite"><code>def record(self, type, data):
@@ -181,8 +182,8 @@
     else:
         iodata = [time.time() - self.time, 'o', data]
         with open(RECORD_DIR + self.filename, 'a', buffering=1) as f:
-            f.write((json.dumps(iodata) + '\n'))</code></pre>
-
+            f.write((json.dumps(iodata) + '\n'))
+</code></pre>
 
 <p>record接收两个参数type和data，type标识本次写入的是header头还是IO流，data则是具体的数据</p>
 <p>header只需要执行一次写入，所以将其放在ssh的connect方法中，只在ssh连接建立时执行一次，在执行header写入时同时往数据库插入新的历史记录数据</p>
@@ -202,8 +203,8 @@
             &quot;TERM&quot;: term
         },
         &quot;title&quot;: &quot;ops-coffee&quot;
-    })</code></pre>
-
+    })
+</code></pre>
 
 <p>IO流数据则需要与返回给前端的数据保持一致，这样就能保证前端显示什么录像就播放什么了，所以所有需要返回前端数据的地方都同时写入录像文件即可</p>
 <p>调用record方法写入io流数据</p>
@@ -238,8 +239,8 @@ def _ssh_to_ws(self):
         self.websocket.send(json.dumps(message))
         self.record('iodata', str(e))
 
-        self.close()</code></pre>
-
+        self.close()
+</code></pre>
 
 <p>由于命令执行与返回都是多线程的操作，这就会导致在写入文件时出现文件乱序影响播放的问题，典型的操作有vim、top等，通过加锁<code>self.lock</code>可以顺利解决</p>
 <p>最后历史记录页面，当用户点击播放按钮时，调用js弹出播放窗口</p>
@@ -263,8 +264,8 @@ function play(host,user,time,file) {
   )
 
   $('#modalForm').modal('show');
-}</code></pre>
-
+}
+</code></pre>
 
 <p>asciinema-player标签的详细参数介绍可以看这篇文章<a href="https://blog.ops-coffee.com/s/asciinema-recording-errors-and-corrections.html" target="_blank">『Asciinema文章勘误及Web端使用介绍』</a></p>
 <h2 id="_2">演示与总结</h2>

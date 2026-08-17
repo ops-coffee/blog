@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -157,8 +158,8 @@
 <p>1.添加root用户</p>
 <pre class="codehilite"><code># etcdctl user add root
 New password: 12345
-User root created</code></pre>
-
+User root created
+</code></pre>
 
 <p>2.创建root账号后，root默认有root角色，对所有KV有读写权限</p>
 <pre class="codehilite"><code># etcdctl user get root
@@ -170,8 +171,8 @@ Role: root
 KV Read:
     /*
 KV Write:
-    /*</code></pre>
-
+    /*
+</code></pre>
 
 <p>3.开启auth认证</p>
 <pre class="codehilite"><code># etcdctl auth enable
@@ -180,8 +181,8 @@ Authentication Enabled
 开启权限认证后默认会多一个guest的角色
 # etcdctl --username root:12345 role list
 guest
-root</code></pre>
-
+root
+</code></pre>
 
 <p>4.添加非root账号，一个authz的账号，一个readx的账号</p>
 <pre class="codehilite"><code># etcdctl --username root:12345 user add authz
@@ -190,32 +191,32 @@ User authz created
 
 # etcdctl --username root:12345 user add readx
 New password: 
-User readx created</code></pre>
-
+User readx created
+</code></pre>
 
 <p>5.添加角色，一个rootConf的角色，一个readConf的角色</p>
 <pre class="codehilite"><code># etcdctl --username root:12345 role add rootConf
 Role rootConf created
 
 # etcdctl --username root:12345 role add readConf
-Role readConf created</code></pre>
-
+Role readConf created
+</code></pre>
 
 <p>6.为角色授权，readConf角色对/conf有只读权限，rootConf角色对/conf有读写权限</p>
 <pre class="codehilite"><code># etcdctl --username root:12345 role grant --read --path /conf/* readConf
 Role readConf updated
 
 # etcdctl --username root:12345 role grant --readwrite --path /conf/* rootConf
-Role rootConf updated</code></pre>
-
+Role rootConf updated
+</code></pre>
 
 <p>7.给用户分配角色，authz账号分配rootConf角色，readx账号分配readConf角色</p>
 <pre class="codehilite"><code># etcdctl --username root:12345 user grant --roles rootConf authz
 User authz updated
 
 # etcdctl --username root:12345 user grant --roles readConf readx
-User readx updated</code></pre>
-
+User readx updated
+</code></pre>
 
 <p>8.查看用户所拥有的角色</p>
 <pre class="codehilite"><code># etcdctl --username root:12345 user get authz
@@ -224,27 +225,27 @@ Roles:  rootConf
 
 # etcdctl --username root:12345 user get readx
 User: readx
-Roles:  readConf</code></pre>
-
+Roles:  readConf
+</code></pre>
 
 <p>这样readx账号就对/conf下的所有文件有了只读权限，authz对/conf下的所有文件有了读写权限</p>
 <h1 id="_4">常用命令</h1>
 <p>有一些命令上边没有介绍到，会用得到的如下：</p>
 <p>1.关闭认证</p>
-<pre class="codehilite"><code># etcdctl --username root:12345 auth disable</code></pre>
-
+<pre class="codehilite"><code># etcdctl --username root:12345 auth disable
+</code></pre>
 
 <p>2.删除用户</p>
-<pre class="codehilite"><code># etcdctl --username root:12345 user remove userx</code></pre>
-
+<pre class="codehilite"><code># etcdctl --username root:12345 user remove userx
+</code></pre>
 
 <p>3.用户撤销角色</p>
-<pre class="codehilite"><code># etcdctl --username root:12345 user revoke rolex</code></pre>
-
+<pre class="codehilite"><code># etcdctl --username root:12345 user revoke rolex
+</code></pre>
 
 <p>4.修改用户密码</p>
-<pre class="codehilite"><code># etcdctl --username root:12345 user passwd</code></pre>
-
+<pre class="codehilite"><code># etcdctl --username root:12345 user passwd
+</code></pre>
 
 <p>同时还有删除角色、撤销角色权限可参看上边用户相关操作</p>
 <h1 id="_5">踩坑记录</h1>

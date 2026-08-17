@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -145,8 +146,8 @@
 <pre class="codehilite"><code>TAILF = {
     1: '/ops/coffee/error.log',
     2: '/ops/coffee/access.log',
-}</code></pre>
-
+}
+</code></pre>
 
 <h2 id="web">基础Web页面搭建</h2>
 <p>假设你已经创建好了一个叫tailf的app，并添加到了settings.py的INSTALLED_APPS中，app的目录结构大概如下</p>
@@ -158,8 +159,8 @@
     - apps.py
     - models.py
     - tests.py
-    - views.py</code></pre>
-
+    - views.py
+</code></pre>
 
 <p>依然先构建一个标准的Django页面，相关代码如下</p>
 <p>url:</p>
@@ -173,8 +174,8 @@ urlpatterns = [
 
     path('login', LoginView.as_view(template_name='login.html'), name='login-url'),
     path('logout', LogoutView.as_view(template_name='login.html'), name='logout-url'),
-]</code></pre>
-
+]
+</code></pre>
 
 <p>因为我们规定只有通过登录的用户才能查看日志，所以引入Django自带的LoginView，logoutView帮助我们快速构建Login，Logout功能</p>
 <p>指定了登录模板使用<code>login.html</code>，它就是一个标准的登录页面，post传入username和password两个参数即可，不贴代码了</p>
@@ -188,8 +189,8 @@ from django.contrib.auth.decorators import login_required
 @login_required(login_url='/login')
 def tailf(request):
     logDict = settings.TAILF
-    return render(request, 'tailf/index.html', {&quot;logDict&quot;: logDict})</code></pre>
-
+    return render(request, 'tailf/index.html', {&quot;logDict&quot;: logDict})
+</code></pre>
 
 <p>引入了<code>login_required</code>装饰器，来判断用户是否登录，未登录就给跳到<code>/login</code>登录页面</p>
 <p><strong>logDict</strong> 去setting里取我们定义好的<code>TAILF</code>字典赋值，并传递给前端</p>
@@ -214,8 +215,8 @@ def tailf(request):
 &lt;div class=&quot;col-sm-12&quot;&gt;
   &lt;textarea class=&quot;form-control&quot; id=&quot;chat-log&quot; disabled rows=&quot;20&quot;&gt;&lt;/textarea&gt;
 &lt;/div&gt;
-{% endblock %}</code></pre>
-
+{% endblock %}
+</code></pre>
 
 <p>前端拿到<code>TAILF</code>后通过循环的方式填充到select选择框下，因为数据是字典格式，使用<code>logDict.items</code>的方式可以循环出字典的key和value</p>
 <p>这样一个日志监听页面就完成了，但还无法实现日志的监听，继续往下</p>
@@ -239,8 +240,8 @@ application = ProtocolTypeRouter({
             re_path(r'^ws/tailf/(?P&lt;id&gt;\d+)/$', TailfConsumer),
         ])
     )
-})</code></pre>
-
+})
+</code></pre>
 
 <p>直接将路由信息写入到了<code>URLRouter</code>里，注意路由信息的外层多了一个list，区别于上一篇中介绍的写路由文件路径的方式</p>
 <p>页面需要将监听的日志文件传递给后端，我们使用routing正则<code>P&lt;id&gt;\d+</code>传文件ID给后端程序，后端程序拿到ID之后根据settings中指定的<code>TAILF</code>解析出日志路径</p>
@@ -270,8 +271,8 @@ class TailfConsumer(WebsocketConsumer):
     def send_message(self, event):
         self.send(text_data=json.dumps({
             &quot;message&quot;: event[&quot;message&quot;]
-        }))</code></pre>
-
+        }))
+</code></pre>
 
 <p>这里使用Channels的单通道模式，每一个新连接都会启用一个新的channel，彼此互不影响，可以随意终止任何一个监听日志的请求</p>
 <p><strong>connect</strong> </p>
@@ -280,15 +281,15 @@ class TailfConsumer(WebsocketConsumer):
 <p><strong>disconnect</strong> </p>
 <p>当websocket连接断开的时候我们需要终止Celery的Task执行，以清除celery的资源占用</p>
 <p>终止Celery任务使用到<code>revoke</code>指令，采用如下代码来实现</p>
-<pre class="codehilite"><code>self.result.revoke(terminate=True)</code></pre>
-
+<pre class="codehilite"><code>self.result.revoke(terminate=True)
+</code></pre>
 
 <p>注意<code>self.result</code>是一个result对象，而非id</p>
 <p>参数<code>terminate=True</code>的意思是是否立即终止Task，为True时无论Task是否正在执行都立即终止，为False（默认）时需要等待Task运行结束之后才会终止，我们使用了While循环不设置为True就永远不会终止了</p>
 <p>终止Celery任务的另外一种方法是：</p>
 <pre class="codehilite"><code>from webapp.celery import app
-app.control.revoke(result.id, terminate=True)</code></pre>
-
+app.control.revoke(result.id, terminate=True)
+</code></pre>
 
 <p><strong>send_message</strong> </p>
 <p>方便我们通过Django的view或者Celery的task调用给channel发送消息，官方也比较推荐这种方式</p>
@@ -329,8 +330,8 @@ def tailf(id, channel_name):
                 else:
                     time.sleep(0.5)
     except Exception as e:
-        print(e)</code></pre>
-
+        print(e)
+</code></pre>
 
 <p>这里边主要涉及到Channels中另一个非常重要的点：<strong>从Channels的外部发送消息给Channel</strong></p>
 <p>其实<a href="https://blog.ops-coffee.com/s/django-channels-websocket-devops-01.html" target="_blank">上篇文章</a>中检查通道层是否能够正常工作的时候使用的方法就是从外部给Channel通道发消息的示例，本文的具体代码如下</p>
@@ -340,8 +341,8 @@ def tailf(id, channel_name):
         &quot;type&quot;: &quot;send.message&quot;,
         &quot;message&quot;: &quot;微信公众号【运维咖啡吧】原创 版权所有 &quot; + str(line)
     }
-)</code></pre>
-
+)
+</code></pre>
 
 <p><strong>channel_name</strong> 对应于传递给这个任务的channel_name，发送消息给这个名字的channel</p>
 <p><strong>type</strong> 对应于我们Channels的TailfConsumer类中的<code>send_message</code>方法，将方法中的<code>_</code>换成<code>.</code>即可</p>
@@ -353,8 +354,8 @@ def tailf(id, channel_name):
         'type': 'chat.message',
         'message': '欢迎关注公众号【运维咖啡吧】'
     }
-)</code></pre>
-
+)
+</code></pre>
 
 <p>只需要将发送单channel的<code>send</code>改为<code>group_send</code>，<code>channel_name</code>改为<code>group_name</code>即可</p>
 <p>需要特别注意的是：<strong>使用了channel layer之后一定要通过async_to_sync来异步执行</strong></p>
@@ -383,8 +384,8 @@ def tailf(id, channel_name):
     } else {
       toastr.warning('请选择要监听的日志文件')
     }
-  }</code></pre>
-
+  }
+</code></pre>
 
 <p><a href="https://blog.ops-coffee.com/s/django-channels-websocket-devops-01.html" target="_blank">上一篇文章</a>中有详细介绍过websocket的消息类型，这里不多介绍了</p>
 <p>至此我们一个日志监听页面完成了，包含了完整的监听功能，但还无法终止，接着看下面的内容</p>
@@ -398,8 +399,8 @@ def tailf(id, channel_name):
     window.chatSocket.onclose = function(e) {
       toastr.success('已终止日志监听！')
     };
-  }</code></pre>
-
+  }
+</code></pre>
 
 <p>至此我们包含完善功能的Tailf日志监听、终止页面就全部完成了</p>
 <h1 id="_3">写在最后</h1>

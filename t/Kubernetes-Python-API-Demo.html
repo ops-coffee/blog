@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -130,11 +131,11 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: admin-user
-  namespace: kube-system</code></pre>
+  namespace: kube-system
+</code></pre>
 
-
-<pre class="codehilite"><code>kubectl create -f CreateServiceAccount.yaml</code></pre>
-
+<pre class="codehilite"><code>kubectl create -f CreateServiceAccount.yaml
+</code></pre>
 
 <h3 id="_2">用户授权</h3>
 <pre class="codehilite"><code>vi RoleBinding.yaml
@@ -149,20 +150,20 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: admin-user
-  namespace: kube-system</code></pre>
+  namespace: kube-system
+</code></pre>
 
-
-<pre class="codehilite"><code>kubectl create -f RoleBinding.yaml</code></pre>
-
+<pre class="codehilite"><code>kubectl create -f RoleBinding.yaml
+</code></pre>
 
 <h3 id="token_1">获取Token</h3>
-<pre class="codehilite"><code>kubectl describe secret $(kubectl get secret -n kube-system | grep ^admin-user | awk '{print $1}') -n kube-system | grep -E '^token'| awk '{print $2}'</code></pre>
-
+<pre class="codehilite"><code>kubectl describe secret $(kubectl get secret -n kube-system | grep ^admin-user | awk '{print $1}') -n kube-system | grep -E '^token'| awk '{print $2}'
+</code></pre>
 
 <h2 id="kubernetes-python-sdk">安装kubernetes python sdk</h2>
 <h3 id="_3">模块安装</h3>
-<pre class="codehilite"><code>pip install kubernetes</code></pre>
-
+<pre class="codehilite"><code>pip install kubernetes
+</code></pre>
 
 <h3 id="demo">测试demo</h3>
 <pre class="codehilite"><code>from kubernetes import client, config
@@ -179,8 +180,8 @@ client.Configuration.set_default(configuration)
 
 k8s_api_obj  = client.CoreV1Api(client.ApiClient(configuration))
 ret = k8s_api_obj.list_namespaced_pod(&quot;dev&quot;)
-print(ret)</code></pre>
-
+print(ret)
+</code></pre>
 
 <h2 id="_4">接口操作案例</h2>
 <h3 id="namespace">创建namespace</h3>
@@ -207,8 +208,8 @@ body = {
 }
 
 ret = k8s_api_obj.create_namespace(body=body)
-print (ret)</code></pre>
-
+print (ret)
+</code></pre>
 
 <h3 id="namespace_1">删除namespace</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md" target="_blank">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md</a></p>
@@ -229,8 +230,8 @@ body = client.V1DeleteOptions()
 body.api_version = &quot;v1&quot;
 body.grace_period_seconds = 0
 ret = k8s_api_obj.delete_namespace(&quot;test123&quot;, body=body)
-print(ret)</code></pre>
-
+print(ret)
+</code></pre>
 
 <h3 id="namespace_2">查看namespace列表</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#list_namespace" target="_blank">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#list_namespace</a></p>
@@ -254,8 +255,8 @@ try:
     for  namespace in api_response.items:
         print(namespace.metadata.name)
 except ApiException as e:
-    print(&quot;Exception when calling CoreV1Api-&gt;list_namespace: %s\n&quot; % e)</code></pre>
-
+    print(&quot;Exception when calling CoreV1Api-&gt;list_namespace: %s\n&quot; % e)
+</code></pre>
 
 <h3 id="pod">创建pod</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md" target="_blank">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md</a></p>
@@ -276,8 +277,8 @@ body=eval(&quot;{'kind': 'Deployment', 'spec': {'replicas': 1, 'template': {'spe
 erPort': 80}]}]}, 'metadata': {'labels': {'app': 'nginx-deployment'}}}, 'selector': {'matchLabels': {'app': 'nginx-deployment'}}}, 'apiVersion': 'apps/v1beta2', 'metadata': {'labels': {'app': 'nginx-deployment'}, 'namespace': 'default', 'name': 'nginx-deployment'}}&quot;)
 
 resp = k8s_api_obj.create_namespaced_deployment(body=body, namespace=&quot;default&quot;)
-print(resp)</code></pre>
-
+print(resp)
+</code></pre>
 
 <h3 id="pod_1">删除pod</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md#delete_namespaced_deployment" target="_blank">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md#delete_namespaced_deployment</a></p>
@@ -301,8 +302,8 @@ resp = k8s_api_obj.delete_namespaced_deployment(name=&quot;nginx-deployment&quot
                                                        propagation_policy='Foreground',
                                                        grace_period_seconds=0)
                                                )
-print(resp)</code></pre>
-
+print(resp)
+</code></pre>
 
 <h3 id="pod_2">更新pod</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md#patch_namespaced_deployment" target="_blank">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md#patch_namespaced_deployment</a></p>
@@ -328,8 +329,8 @@ resp = k8s_api_obj.patch_namespaced_deployment(
                 namespace=&quot;default&quot;,
                 body=body
             )
-print(resp)</code></pre>
-
+print(resp)
+</code></pre>
 
 <h3 id="pod_3">查询pod</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#list_namespaced_pod" target="_blank">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#list_namespaced_pod</a></p>
@@ -347,8 +348,8 @@ client.Configuration.set_default(configuration)
 
 k8s_api_obj  = client.CoreV1Api()
 resp = k8s_api_obj.list_namespaced_pod(&quot;default&quot;, label_selector=&quot;app=&quot; + &quot;nginx-deployment&quot;)
-print(resp)</code></pre>
-
+print(resp)
+</code></pre>
 
 <h3 id="svc">创建svc</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#create_namespaced_service" target="_blank">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#create_namespaced_service</a></p>
@@ -372,8 +373,8 @@ try:
     api_response = k8s_api_obj.create_namespaced_service(namespace , body)
     print(api_response)
 except ApiException as e:
-    print(&quot;Exception when calling CoreV1Api-&gt;create_namespaced_service: %s\n&quot; % e)</code></pre>
-
+    print(&quot;Exception when calling CoreV1Api-&gt;create_namespaced_service: %s\n&quot; % e)
+</code></pre>
 
 <h3 id="svc_1">删除svc</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#delete_namespaced_service" target="_blank">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#delete_namespaced_service</a></p>
@@ -398,8 +399,8 @@ try:
     api_response = k8s_api_obj.delete_namespaced_service(name, namespace,body,  grace_period_seconds=grace_period_seconds)
     print(api_response)
 except ApiException as e:
-    print(&quot;Exception when calling CoreV1Api-&gt;delete_namespaced_service: %s\n&quot; % e)</code></pre>
-
+    print(&quot;Exception when calling CoreV1Api-&gt;delete_namespaced_service: %s\n&quot; % e)
+</code></pre>
 
 <h3 id="pod_4">pod列表</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md#list_namespaced_deployment" target="_blank">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/AppsV1beta2Api.md#list_namespaced_deployment</a></p>
@@ -422,8 +423,8 @@ try:
     for deployment in api_response.items:
         print(deployment.metadata.name)
 except ApiException as e:
-    print(&quot;Exception when calling AppsV1beta2Api-&gt;list_namespaced_deployment: %s\n&quot; % e)</code></pre>
-
+    print(&quot;Exception when calling AppsV1beta2Api-&gt;list_namespaced_deployment: %s\n&quot; % e)
+</code></pre>
 
 <h3 id="configmap">创建ConfigMap</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#create_namespaced_config_map" target="_blank">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#create_namespaced_config_map</a></p>
@@ -455,8 +456,8 @@ t: true\ n json.overwrite_keys: true\ noutput.elasticsearch: \n hosts: [&quot;xx
 
 resp = k8s_api_obj.create_namespaced_config_map(
                 body=body, namespace=&quot;default&quot;)
-print(resp)</code></pre>
-
+print(resp)
+</code></pre>
 
 <h3 id="configmap_1">删除ConfigMap</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#delete_namespaced_config_map" target="_blank">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#delete_namespaced_config_map</a></p>
@@ -478,8 +479,8 @@ resp = k8s_api_obj.delete_namespaced_config_map(
                 namespace=&quot;default&quot;,
                 body=client.V1DeleteOptions()
             )
-print(resp)</code></pre>
-
+print(resp)
+</code></pre>
 
 <h3 id="configmap_2">查看ConfigMap</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#list_namespaced_config_map" target="_blank">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#list_namespaced_config_map</a></p>
@@ -502,8 +503,8 @@ try:
     for config_map in  api_response.items:
         print(config_map.metadata.name)
 except ApiException as e:
-    print(&quot;Exception when calling CoreV1Api-&gt;list_namespaced_config_map: %s\n&quot; % e)</code></pre>
-
+    print(&quot;Exception when calling CoreV1Api-&gt;list_namespaced_config_map: %s\n&quot; % e)
+</code></pre>
 
 <h3 id="node">获取Node节点信息</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#read_node" target="_blank">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#read_node</a></p>
@@ -527,8 +528,8 @@ try:
     api_response = k8s_api_obj.read_node(name, exact=exact, export=export)
     print(api_response)
 except ApiException as e:
-    print(&quot;Exception when calling CoreV1Api-&gt;read_node: %s\n&quot; % e)</code></pre>
-
+    print(&quot;Exception when calling CoreV1Api-&gt;read_node: %s\n&quot; % e)
+</code></pre>
 
 <h3 id="node_1">获取Node状态信息</h3>
 <p>官方文档：<a href="https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#read_node_status" target="_blank">https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CoreV1Api.md#read_node_status</a></p>
@@ -550,8 +551,8 @@ try:
     api_response = k8s_api_obj.read_node_status(name, pretty=True)
     print(api_response)
 except ApiException as e:
-    print(&quot;Exception when calling CoreV1Api-&gt;read_node_status: %s\n&quot; % e)</code></pre>
-
+    print(&quot;Exception when calling CoreV1Api-&gt;read_node_status: %s\n&quot; % e)
+</code></pre>
 
 <p>Kubernetes Python Api应用文章推荐阅读：</p>
 <ul>

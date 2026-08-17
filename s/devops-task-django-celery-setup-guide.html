@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -136,12 +137,12 @@
 <p>我的异步使用场景为项目上线：前端web上有个上线按钮，点击按钮后发请求给后端，后端执行上线过程要5分钟，后端在接收到请求后把任务放入队列异步执行，同时马上返回给前端一个任务执行中的结果。若果没有异步执行会怎么样呢？同步的情况就是执行过程中前端一直在等后端返回结果，页面转呀转的就转超时了。</p>
 <h2 id="_2">异步任务配置</h2>
 <p>1.安装RabbitMQ，这里我们使用RabbitMQ作为broker，安装完成后默认启动了，也不需要其他任何配置</p>
-<pre class="codehilite"><code># apt-get install rabbitmq-server</code></pre>
-
+<pre class="codehilite"><code># apt-get install rabbitmq-server
+</code></pre>
 
 <p>2.安装celery</p>
-<pre class="codehilite"><code># pip3 install celery</code></pre>
-
+<pre class="codehilite"><code># pip3 install celery
+</code></pre>
 
 <p>3.celery用在django项目中，django项目目录结构(简化)如下</p>
 <pre class="codehilite"><code>website/
@@ -161,8 +162,8 @@
     |-- __init__.py
     |-- settings.py
     |-- urls.py
-    `-- wsgi.py</code></pre>
-
+    `-- wsgi.py
+</code></pre>
 
 <p>4.创建<code>website/celery.py</code>主文件</p>
 <pre class="codehilite"><code>from __future__ import absolute_import, unicode_literals
@@ -188,8 +189,8 @@ platforms.C_FORCE_ROOT = True
 
 @app.task(bind=True)
 def debug_task(self):
-    print('Request: {0!r}'.format(self.request))</code></pre>
-
+    print('Request: {0!r}'.format(self.request))
+</code></pre>
 
 <p>5.在<code>website/__init__.py</code>文件中增加如下内容，确保django启动的时候这个app能够被加载到</p>
 <pre class="codehilite"><code>from __future__ import absolute_import
@@ -198,8 +199,8 @@ def debug_task(self):
 # Django starts so that shared_task will use this app.
 from .celery import app as celery_app
 
-__all__ = ['celery_app']</code></pre>
-
+__all__ = ['celery_app']
+</code></pre>
 
 <p>6.各应用创建tasks.py文件，这里为<code>deploy/tasks.py</code></p>
 <pre class="codehilite"><code>from __future__ import absolute_import
@@ -207,8 +208,8 @@ from celery import shared_task
 
 @shared_task
 def add(x, y):
-    return x + y</code></pre>
-
+    return x + y
+</code></pre>
 
 <ul>
 <li><strong>注意tasks.py必须建在各app的根目录下，且只能叫tasks.py，不能随意命名</strong></li>
@@ -217,8 +218,8 @@ def add(x, y):
 <pre class="codehilite"><code>from deploy.tasks import add
 
 def post(request):
-    result = add.delay(2, 3)</code></pre>
-
+    result = add.delay(2, 3)
+</code></pre>
 
 <ul>
 <li>使用函数名.delay()即可使函数异步执行</li>
@@ -227,8 +228,8 @@ def post(request):
 <li>如果任务抛出一个异常，使用<code>result.traceback</code>可以获取原始的回溯信息</li>
 </ul>
 <p>8.启动celery</p>
-<pre class="codehilite"><code># celery -A website worker -l info</code></pre>
-
+<pre class="codehilite"><code># celery -A website worker -l info
+</code></pre>
 
 <p>9.这样在调用post这个方法时，里边的add就可以异步处理了</p>
 <h1 id="_3">定时任务</h1>
@@ -249,8 +250,8 @@ app.conf.update(
             'schedule': crontab(hour=4, minute=30, day_of_week=1),
         }
     }
-)</code></pre>
-
+)
+</code></pre>
 
 <ul>
 <li>
@@ -285,12 +286,12 @@ app.conf.update(
 <p>2.<code>deploy/tasks.py</code>文件添加report方法：</p>
 <pre class="codehilite"><code>@shared_task
 def report():
-    return 5</code></pre>
-
+    return 5
+</code></pre>
 
 <p>3.启动celery beat，celery启动了一个beat进程一直在不断的判断是否有任务需要执行</p>
-<pre class="codehilite"><code># celery -A website beat -l info</code></pre>
-
+<pre class="codehilite"><code># celery -A website beat -l info
+</code></pre>
 
 <h1 id="tips">Tips</h1>
 <p>1.如果你同时使用了异步任务和计划任务，有一种更简单的启动方式<code>celery -A website worker -b -l info</code>，可同时启动worker和beat</p>
@@ -298,8 +299,8 @@ def report():
 <pre class="codehilite"><code># redis做MQ配置
 app = Celery('website', backend='redis', broker='redis://localhost')
 # rabbitmq做MQ配置
-app = Celery('website', backend='amqp', broker='amqp://admin:admin@localhost')</code></pre>
-
+app = Celery('website', backend='amqp', broker='amqp://admin:admin@localhost')
+</code></pre>
 
 <p>3.celery不能用root用户启动的话需要在主配置文件中添加<code>platforms.C_FORCE_ROOT = True</code></p>
 <p>4.celery在长时间运行后可能出现内存泄漏，需要添加配置<code>CELERYD_MAX_TASKS_PER_CHILD = 10</code>，表示每个worker执行了多少个任务就死掉</p>

@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -154,8 +155,8 @@
     {&quot;key&quot;: &quot;status_code&quot;, &quot;type&quot;: &quot;状态码&quot;, &quot;value&quot;: [&quot;200&quot;], &quot;operator&quot;: &quot;匹配&quot;}, 
     {&quot;key&quot;: &quot;name&quot;, &quot;type&quot;: &quot;响应体&quot;, &quot;value&quot;: &quot;main&quot;, &quot;operator&quot;: &quot;等于&quot;}
   ]
-}</code></pre>
-
+}
+</code></pre>
 
 <p>后端加解密的方法可以参考文章<a href="https://blog.ops-coffee.com/s/django-password-management-encryption-decryption.html" target="_blank">Model字段加密的优雅实现</a>，Request请求则比较简单</p>
 <pre class="codehilite"><code># 不同的认证类型使用不同的请求方式
@@ -174,8 +175,8 @@ else:
     response = requests.request(method, url, params=parameters, headers=headers, cookies=cookies, data=body)
 
 # 解析Response结果判断是否成功
-......</code></pre>
-
+......
+</code></pre>
 
 <p>API创建完成后就可以添加子任务，添加了子任务就可以将子任务添加到模板，最后创建任务并执行了，执行结果实时输出</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0223.05.png" /></p>

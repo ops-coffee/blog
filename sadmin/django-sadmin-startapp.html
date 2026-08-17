@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -123,8 +124,8 @@
         <h1 id="art-title">基于Sadmin新建APP</h1>
 
         <p>1.Start APP, Create a new app named coffee</p>
-<pre class="codehilite"><code>python manage.py startapp coffee</code></pre>
-
+<pre class="codehilite"><code>python manage.py startapp coffee
+</code></pre>
 
 <p>2.Installed APP, Edit <code>settings.py</code>，insert <code>coffee</code> to <code>INSTALLED_APPS</code></p>
 <pre class="codehilite"><code>INSTALLED_APPS = [
@@ -133,8 +134,8 @@
     'sadmin.accounts',
     'sadmin.project',
     'coffee',
-]</code></pre>
-
+]
+</code></pre>
 
 <p>3.Add Model, Add <code>Production</code> model to  coffee/models.py file</p>
 <pre class="codehilite"><code>from django.db import models
@@ -152,8 +153,8 @@ class Production(UserBaseModel):
         permissions = (
             (&quot;production_select&quot;, &quot;产品查看权限&quot;),
             (&quot;production_change&quot;, &quot;产品修改权限&quot;),
-        )</code></pre>
-
+        )
+</code></pre>
 
 <p>4.Add View, Add <code>ProductionList</code> and <code>ProductionDetail</code> class to coffee/views.py file</p>
 <pre class="codehilite"><code>from sadmin.commons.options import ListCreateView, RetrieveUpdateDestroyView
@@ -166,8 +167,8 @@ class ProductionList(ListCreateView):
 
 class ProductionDetail(RetrieveUpdateDestroyView):
     model = Tag
-    permission = {'get': 'coffee.production_select', 'put': 'coffee.production_change', 'delete': 'coffee.production_change'}</code></pre>
-
+    permission = {'get': 'coffee.production_select', 'put': 'coffee.production_change', 'delete': 'coffee.production_change'}
+</code></pre>
 
 <p>5.Add Template, edit coffee/templates/coffee/production.index.html file</p>
 <pre class="codehilite"><code>{% extends &quot;base.html&quot; %}
@@ -331,8 +332,8 @@ class ProductionDetail(RetrieveUpdateDestroyView):
     }
   });
 &lt;/script&gt;
-{% endblock %}</code></pre>
-
+{% endblock %}
+</code></pre>
 
 <p>6.Add URL, Add <code>production/</code> and <code>production/&lt;int:pk&gt;/</code> URL to coffee/views.py file</p>
 <pre class="codehilite"><code>from . import views
@@ -341,8 +342,8 @@ from django.urls import path
 urlpatterns = [
     path('production/', views.ProductionInstanceList.as_view(), name='production-list-url'),
     path('production/&lt;int:pk&gt;/', views.ProductionInstanceDetail.as_view(), name='production-detail-url'),
-]</code></pre>
-
+]
+</code></pre>
 
 <p>Insert coffee path to webapp/urls.py file</p>
 <pre class="codehilite"><code>from django.urls import path, include, re_path
@@ -350,13 +351,13 @@ urlpatterns = [
 urlpatterns = [
     ...
     path('coffee/', include('coffee.urls')),
-]</code></pre>
-
+]
+</code></pre>
 
 <p>7.Makemigrations &amp; Migrate</p>
 <pre class="codehilite"><code>python manage.py makemigrations
-python manage.py migrate</code></pre>
-
+python manage.py migrate
+</code></pre>
 
 <p>8.Runserver</p>
 

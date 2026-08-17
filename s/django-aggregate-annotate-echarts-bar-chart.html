@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -144,22 +145,22 @@
 <pre class="codehilite"><code>class Employee(models.Model):
     name = models.CharField(max_length=32, verbose_name='姓名')
     age = models.IntegerField(verbose_name='年龄')
-    salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='薪资')</code></pre>
-
+    salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='薪资')
+</code></pre>
 
 <p>想要获取员工的工资总额，我们可以这样写</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; from django.db.models import Sum
 
 &gt;&gt;&gt; Employee.objects.aggregate(Sum('salary'))
-{'salary__sum': Decimal('5000.00')}</code></pre>
-
+{'salary__sum': Decimal('5000.00')}
+</code></pre>
 
 <p>想要同时获取员工的平均年龄、最大年龄和最小年龄，我们可以这样写</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; from django.db.models import Avg, Max, Min
 
 &gt;&gt;&gt; Employee.objects.aggregate(Avg('age'), Max('age'), Min('age'))
-{'age__avg': 23.333333333333332, 'age__max': 30, 'age__min': 18}</code></pre>
-
+{'age__avg': 23.333333333333332, 'age__max': 30, 'age__min': 18}
+</code></pre>
 
 <h3 id="annotate">annotate</h3>
 <p>annotate函数区别于aggregate函数的一个最重要的地方是annotate函数<strong>输出的结果是一个QuerySet对象</strong>，这个非常重要，aggregate函数最后输出的结果是个字典，也就不能再在字典的基础上进行QuerySet操作了，而annotate函数执行完成后输出QuerySet对象可以继续调用Django内置的filter、order_by等函数来完成更加复杂的查询计算操作</p>
@@ -169,34 +170,34 @@
     event_location = models.CharField(max_length=30)
 
     class Meta:
-        db_table = &quot;app_event_info&quot;</code></pre>
-
+        db_table = &quot;app_event_info&quot;
+</code></pre>
 
 <p>我们需要先对地点event_location进行group by：</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; _t = EventInfo.objects.values_list('event_location').annotate(Count('id'))
 
 # values_list可以获取evnet_location的元组列表。
-# values_list方法加个参数flat=True可以获取event_location的值列表。</code></pre>
-
+# values_list方法加个参数flat=True可以获取event_location的值列表。
+</code></pre>
 
 <p>group by之后我们就需要order by排序了，如果我们不知道order by的字段，我们可以通过query先查看group by生成的SQL语句</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; print(_t.query)
-SELECT &quot;app_event_info&quot;.&quot;event_location&quot;, COUNT(&quot;app_event_info&quot;.&quot;id&quot;) AS &quot;id__count&quot; FROM &quot;app_event_info&quot; GROUP BY &quot;app_event_info&quot;.&quot;event_location&quot;</code></pre>
-
+SELECT &quot;app_event_info&quot;.&quot;event_location&quot;, COUNT(&quot;app_event_info&quot;.&quot;id&quot;) AS &quot;id__count&quot; FROM &quot;app_event_info&quot; GROUP BY &quot;app_event_info&quot;.&quot;event_location&quot;
+</code></pre>
 
 <p>这个时候可以看到实际上输出的结果有一个叫<code>id__count</code>的字段表示地点的总数，那么我们就可以接着对地点总数进行排序了,因为是要倒叙，需要在字段名<code>id__count</code>前边加上<code>-</code>号来表示倒序</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; _x = _t.order_by('-id__count')
 &gt;&gt;&gt;
 &gt;&gt;&gt; print(_x.query)
-SELECT &quot;app_event_info&quot;.&quot;event_location&quot;, COUNT(&quot;app_event_info&quot;.&quot;id&quot;) AS &quot;id__count&quot; FROM &quot;app_event_info&quot; GROUP BY &quot;app_event_info&quot;.&quot;event_location&quot; ORDER BY &quot;id__count&quot; DESC</code></pre>
-
+SELECT &quot;app_event_info&quot;.&quot;event_location&quot;, COUNT(&quot;app_event_info&quot;.&quot;id&quot;) AS &quot;id__count&quot; FROM &quot;app_event_info&quot; GROUP BY &quot;app_event_info&quot;.&quot;event_location&quot; ORDER BY &quot;id__count&quot; DESC
+</code></pre>
 
 <p>最后limit取前二十，Django中limit可以直接通过QuerySet结果后加python的数组切片语法来实现，就像[0:20]（其中0可以省略）相当于limit 20一样，[10:20]意思为取第10到第20条数据</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; _y = _x[:20]
 &gt;&gt;&gt;
 &gt;&gt;&gt; print(_y.query)
-SELECT &quot;app_event_info&quot;.&quot;event_location&quot;, COUNT(&quot;app_event_info&quot;.&quot;id&quot;) AS &quot;id__count&quot; FROM &quot;app_event_info&quot; GROUP BY &quot;app_event_info&quot;.&quot;event_location&quot; ORDER BY &quot;id__count&quot; DESC LIMIT 20</code></pre>
-
+SELECT &quot;app_event_info&quot;.&quot;event_location&quot;, COUNT(&quot;app_event_info&quot;.&quot;id&quot;) AS &quot;id__count&quot; FROM &quot;app_event_info&quot; GROUP BY &quot;app_event_info&quot;.&quot;event_location&quot; ORDER BY &quot;id__count&quot; DESC LIMIT 20
+</code></pre>
 
 <p>上边的每一步我们都通过query打印了SQL，确定是我们想要的结果了。需求分析清楚，所有的关键点我们也都知道怎么处理了，那么接下来实现就水到渠成了。</p>
 <h1 id="_3">实现代码</h1>
@@ -209,8 +210,8 @@ urlpatterns = [
     path('echarts/', TemplateView.as_view(template_name='echarts.html'), name='echarts-url'),
 
     path('api/echarts/', echarts_data, name='api-echarts')
-]</code></pre>
-
+]
+</code></pre>
 
 <p>因为是前后端分离的，所以我这里用了两个url<code>echarts</code>和<code>api/echarts</code></p>
 <p><code>echarts</code>为前台访问地址，对应下边的html代码，通过ajax方式调用后端接口，所以这里直接用了TemplateView，不需要再写额外的view代码</p>
@@ -266,8 +267,8 @@ urlpatterns = [
     });
   &lt;/script&gt;
 &lt;/body&gt;
-&lt;/html&gt;</code></pre>
-
+&lt;/html&gt;
+</code></pre>
 
 <p>实例比较简单，抄的echarts官方示例，这里会看到echarts渲染图形实际上只需要X轴和Y轴两个数据变量，且都为list列表类型</p>
 <p>后端VIEW：</p>
@@ -284,8 +285,8 @@ def echarts_data(request):
         &quot;value&quot;: [i[1] for i in _x]
     }
 
-    return JsonResponse(jsondata)</code></pre>
-
+    return JsonResponse(jsondata)
+</code></pre>
 
 <p>最核心的那行group by + order by + limit的ORM拼接，我们上边已经详细的介绍过了，那么这里只需要在输出的结果中单独的把城市跟数量转成两个列表对应echarts里边需要的X轴Y轴数据就可以了</p>
 <p>最后访问url:https://ops-coffee.com/echarts 可以看到我们想要的结果</p>

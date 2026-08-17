@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -239,8 +240,8 @@ for i in range(1, 9999):
     except Exception as e:
         print(e)
 
-db.close()</code></pre>
-
+db.close()
+</code></pre>
 
 <h2 id="_5">数据处理及缓存</h2>
 <p>上边已经获取到了原始数据，接下来需要对原始数据进行清洗，取自己需要的今日待还及实时成交，并写入缓存，写入缓存的目的是公众号并发查询的情况下，直接去缓存取数据，减小对数据库的压力，这个脚本程序也放在计划任务里每分钟执行</p>
@@ -305,8 +306,8 @@ def cache_now_data():
         print('缓存操作异常：%s' %e)
 
 if __name__ == '__main__':
-    cache_now_data()</code></pre>
-
+    cache_now_data()
+</code></pre>
 
 <h2 id="_6">微信好友、群自动回复</h2>
 <p>我想看数据的时候如何去看呢？去服务器上执行下脚本这方式太low了吧，借助微信机器人，就像你跟朋友聊天一样，发消息“最新数据”，那他就立即回复最新消息给你，这个方式看起来不错，实现完成后有几个朋友觉得不错，也想看数据，那我干脆将这些需要看数据的朋友都拉倒一个群里吧，回复消息群里所有用户都看得到很方便了，技术实现主要借助了<code>itchat</code>模块（itchat主要通过网页版微信接口处理数据，网页版微信很多用户无法登陆了，也就没有办法使用itchat），代码如下</p>
@@ -336,8 +337,8 @@ def text_reply(msg):
 #itchat.send(message, toUserName='filehelper')
 
 itchat.auto_login(True, enableCmdQR=True)
-itchat.run(True)</code></pre>
-
+itchat.run(True)
+</code></pre>
 
 <h2 id="_7">微信公众号自动回复</h2>
 <p>设想一个应用场景，如果有很多人需要这个数据怎么处理呢？让他们都加一下我的微信或把他们都给加到一个群里固然可以，只是不够优雅，这里想到了微信公众号，当用户关注公众号后，回复“最新数据”可把最新数据自动回复给用户是不是就优雅很多了。然后就写了个机器人自动处理，主要借助<code>werobot</code>模块实现。</p>
@@ -352,8 +353,8 @@ from official.robot import robot
 
 urlpatterns = [
     path('robot/', make_view(robot)),
-]</code></pre>
-
+]
+</code></pre>
 
 <ul>
 <li>机器人程序</li>
@@ -402,8 +403,8 @@ def hello(message):
         else:
             return '请输入[ 最新数据 ]获取智享数据更新\n\n如有疑问可以回复[ 联系作者 ]与我联系'
     except Exception as e:
-        print(e)</code></pre>
-
+        print(e)
+</code></pre>
 
 <ul>
 <li>后台处理程序</li>
@@ -429,8 +430,8 @@ def get_now_data():
 
         return '''%s\n%s\n%s\n%s''' %(prev_time.strftime('%Y-%m-%d %H:%M'), daihuan, chengjiao, avg_hour_money)
     else:
-        return None</code></pre>
-
+        return None
+</code></pre>
 
 <h1 id="_8">总结</h1>
 <ol>

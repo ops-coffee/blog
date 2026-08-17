@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -143,8 +144,8 @@ class User(models.Model):
     group = models.ManyToManyField(Group, null=True, verbose_name='所属组')
 
     def __str__(self):
-        return self.username</code></pre>
-
+        return self.username
+</code></pre>
 
 <p>需求很简单就是分别把Group和User表中的数据转换成字典格式返回</p>
 <h1 id="_2">方法一：直接构建字典</h1>
@@ -157,8 +158,8 @@ class User(models.Model):
 ... }
 &gt;&gt;&gt; 
 &gt;&gt;&gt; print(dict)
-{'name': 'GroupA', 'id': 1}</code></pre>
-
+{'name': 'GroupA', 'id': 1}
+</code></pre>
 
 <p>这种方法的好处是方便控制最终返回字典value的格式，例如对于User表，我想返回最终的数据是id、创建时间、中文名、上级中文名、所属组名列表的话可以用下边的代码实现</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; _t = User.objects.get(id=2)
@@ -173,8 +174,8 @@ class User(models.Model):
 &gt;&gt;&gt; 
 &gt;&gt;&gt; print(dict)
 {'fullname': '运维咖啡吧', 'group': ['GroupA', 'GroupC', 'GroupE'], 'create_time': '2018-10-12 21:20:19', 'id': 2, 'leader': '公众号'}
-&gt;&gt;&gt; </code></pre>
-
+&gt;&gt;&gt; 
+</code></pre>
 
 <p>缺点也很明显，就是如果一个model字段很多且不需要转换value格式的时候需要写大量冗余的代码，这种问题怎么解决呢？且看下边的方法介绍</p>
 <h1 id="dict">方法二：<strong>dict</strong></h1>
@@ -183,8 +184,8 @@ class User(models.Model):
 {'id': 1, 'name': 'GroupA', '_state': &lt;django.db.models.base.ModelState object at 0x7f68612daef0&gt;}
 &gt;&gt;&gt; 
 &gt;&gt;&gt; User.objects.get(id=1).__dict__
-{'is_active': True, '_state': &lt;django.db.models.base.ModelState object at 0x7f68612fa0b8&gt;, 'id': 1, 'username': 'ops@163.com', 'leader_id': None, 'fullname': '公众号', 'update_time': datetime.datetime(2018, 10, 12, 17, 49, 35, 504141), 'create_time': datetime.datetime(2018, 10, 12, 16, 9, 7, 813660)}</code></pre>
-
+{'is_active': True, '_state': &lt;django.db.models.base.ModelState object at 0x7f68612fa0b8&gt;, 'id': 1, 'username': 'ops@163.com', 'leader_id': None, 'fullname': '公众号', 'update_time': datetime.datetime(2018, 10, 12, 17, 49, 35, 504141), 'create_time': datetime.datetime(2018, 10, 12, 16, 9, 7, 813660)}
+</code></pre>
 
 <p>这种方法优点就是写法简单，容易理解，代码量还少</p>
 <p>但会发现多了个没用的<code>_state</code>字段，同时Foreignkey字段名多了<code>_id</code>，也没有ManyToManyField字段的数据，且不能按需显示输出，当我只需要其中几个字段时会有大量冗余数据</p>
@@ -194,22 +195,22 @@ class User(models.Model):
 {'name': 'GroupA', 'id': 1}
 &gt;&gt;&gt; 
 &gt;&gt;&gt; model_to_dict(User.objects.get(id=2))
-{'leader': 1, 'is_active': True, 'username': 'ops-coffee@163.com', 'fullname': '运维咖啡吧', 'group': [&lt;Group: GroupA&gt;, &lt;Group: GroupC&gt;, &lt;Group: GroupE&gt;], 'id': 2}</code></pre>
-
+{'leader': 1, 'is_active': True, 'username': 'ops-coffee@163.com', 'fullname': '运维咖啡吧', 'group': [&lt;Group: GroupA&gt;, &lt;Group: GroupC&gt;, &lt;Group: GroupE&gt;], 'id': 2}
+</code></pre>
 
 <p>这种方法能满足大部分的需求，且输出也较为合理，同时还有两个参数<code>fields</code>和<code>exclude</code>来配置输出的字段，例如：</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; model_to_dict(User.objects.get(id=2), fields=['fullname','is_active'])
 {'is_active': True, 'fullname': '运维咖啡吧'}
 &gt;&gt;&gt; 
 &gt;&gt;&gt; model_to_dict(User.objects.get(id=2), exclude=['group','leader','id'])
-{'fullname': '运维咖啡吧', 'is_active': True, 'username': 'ops-coffee@163.com'}</code></pre>
-
+{'fullname': '运维咖啡吧', 'is_active': True, 'username': 'ops-coffee@163.com'}
+</code></pre>
 
 <p>但是会跳过有<code>editable=False</code>属性字段的展示，对于有<code>auto_now_add=True</code>和<code>auto_now=True</code>属性的datetime字段会默认添加<code>editable=False</code>隐藏属性，这也是上边两个time相关字段<code>create_time</code>和<code>update_time</code>转换成dict后不显示的原因，官方相关源码如下：</p>
 <pre class="codehilite"><code>for f in chain(opts.concrete_fields, opts.private_fields, opts.many_to_many):
     if not getattr(f, 'editable', False):
-        continue</code></pre>
-
+        continue
+</code></pre>
 
 <h1 id="to_dict">方法四：自定义to_dict</h1>
 <p>示例代码：</p>
@@ -238,8 +239,8 @@ class User(models.Model):
 
             data[f.name] = value
 
-        return data</code></pre>
-
+        return data
+</code></pre>
 
 <p>执行结果：</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; User.objects.get(id=2).to_dict()
@@ -249,8 +250,8 @@ class User(models.Model):
 {'is_active': True, 'fullname': '运维咖啡吧', 'create_time': '2018-10-12 21:20:19'}
 &gt;&gt;&gt; 
 &gt;&gt;&gt; User.objects.get(id=2).to_dict(exclude=['group','leader','id','create_time'])
-{'is_active': True, 'update_time': '2018-10-12 21:21:39', 'username': 'ops-coffee@163.com', 'fullname': '运维咖啡吧'}</code></pre>
-
+{'is_active': True, 'update_time': '2018-10-12 21:21:39', 'username': 'ops-coffee@163.com', 'fullname': '运维咖啡吧'}
+</code></pre>
 
 <p>拥有<code>model_to_dict</code>一样的便利性，同时也解决了不能输出time时间字段（editable=False）的问题，还能对value按照自己需要的格式输出，一举多得
 当然拥有便利性的同时需要自己实现<code>to_dict</code>的代码，增加了复杂度</p>

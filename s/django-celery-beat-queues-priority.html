@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -133,21 +134,21 @@
 
 CELERY_QUEUES = (
     Queue(&quot;priority&quot;, Exchange(&quot;priority&quot;), routing_key=&quot;priority&quot;),
-)</code></pre>
-
+)
+</code></pre>
 
 <p>然后添加一条路由策略将位于<code>englne.tasks</code>下的所有任务，也就是发布部署任务路由到队列<code>priority</code>中去处理，其他默认没有配置的任务将依然会由默认队列<code>celery</code>处理</p>
 <pre class="codehilite"><code>CELERY_ROUTES = {
     'engine.tasks.*': {&quot;queue&quot;: &quot;priority&quot;, &quot;routing_key&quot;: &quot;priority&quot;},
-}</code></pre>
-
+}
+</code></pre>
 
 <p>配置<code>engine.tasks.*</code>表示的是<code>engine.tasks</code>下的所有任务，当然也可以仅指定一条任务<code>engine.tasks.build</code>或者通过正则的方式<code>re.compile(r'(video|image)\.tasks\..*')</code>去匹配多条任务</p>
 <h3 id="_2">启动</h3>
 <p>这里要明白并不是我们起了名字叫<code>priority</code>它就是高优先级队列，我们自己定义的<code>priority</code>队列和默认的<code>celery</code>队列并没有优先级的区别，我们需要启动两个worker来分别消费这两个队列，这样就能做到单独处理了</p>
 <pre class="codehilite"><code>celery -A devops worker -n celery.%h -Q celery --loglevel=warning
-celery -A devops worker -n priority.%h -Q priority --loglevel=warning</code></pre>
-
+celery -A devops worker -n priority.%h -Q priority --loglevel=warning
+</code></pre>
 
 <p>其中通过<code>-Q</code>来指定队列名字，<code>-n</code>则定义新worker的名称，名称中的<code>%h</code>表示运行worker的包含域名的完整主机名称，除了<code>%h</code>外还可以用<code>%n</code>来表示主机名，或是<code>%d</code>表示domain域名。想要控制不同队列消费的进程数量的话可以通过<code>--concurrency</code>参数来灵活配置</p>
 <p>至此，问题解决。当然除了解决优先级的问题外，对于自动化运维系统的更新和维护也有了一定的优化，资源同步任务的更新只需要重启消费celery的worker即可，对任务将没有影响，一举两得</p>

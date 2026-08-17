@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -191,36 +192,37 @@ if __name__ == &quot;__main__&quot;:
         repos = res.fetch_del_repos_name(i)
         if repos:
             for repo in repos:
-                del_repos = res.fetch_del_repos(repo)</code></pre>
-
+                del_repos = res.fetch_del_repos(repo)
+</code></pre>
 
 <p>虽然删除了镜像但并不能释放磁盘空间，还需要如果进行垃圾回收操作才能释放存储空间清理，垃圾回收操作过程如下</p>
 <ol>
 <li>关闭Harbor服务</li>
 </ol>
-<pre class="codehilite"><code>cd /home/opt/tools/harbor &amp;&amp; docker-compose stop</code></pre>
-
+<pre class="codehilite"><code>cd /home/opt/tools/harbor &amp;&amp; docker-compose stop
+</code></pre>
 
 <ol>
 <li>运行GC回收容器释放磁盘空间</li>
 </ol>
-<pre class="codehilite"><code>docker run -it --name gc --rm --volumes-from registry vmware/registry:2.6.2-photon garbage-collect  /etc/registry/config.yml</code></pre>
-
+<pre class="codehilite"><code>docker run -it --name gc --rm --volumes-from registry vmware/registry:2.6.2-photon garbage-collect  /etc/registry/config.yml
+</code></pre>
 
 <p>运行以上命令会直接清除已删除的镜像，若想要先查看要清理的镜像，可以加上<code>--dry-run</code>参数</p>
-<pre class="codehilite"><code>docker run -it --name gc --rm --volumes-from registry vmware/registry-photon:v2.6.2-v1.5.0 garbage-collect --dry-run /etc/registry/config.yml</code></pre>
-
+<pre class="codehilite"><code>docker run -it --name gc --rm --volumes-from registry vmware/registry-photon:v2.6.2-v1.5.0 garbage-collect --dry-run /etc/registry/config.yml
+</code></pre>
 
 <ol>
 <li>启动Harbor服务</li>
 </ol>
-<pre class="codehilite"><code>docker-compose up -d</code></pre>
-
+<pre class="codehilite"><code>docker-compose up -d
+</code></pre>
 
 <h2 id="harbor_1">找回Harbor管理员账号密码</h2>
 <p>忘记Harbor管理员密码，可以在<code>harbor.cfg</code>初始化文件中找回</p>
 <pre class="codehilite"><code># vi harbor.cfg
-harbor_admin_password = ops-coffee.com</code></pre>
+harbor_admin_password = ops-coffee.com
+</code></pre>
 
         <div>
           <ul class="article-meta">

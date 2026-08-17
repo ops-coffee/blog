@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -131,8 +132,8 @@
         self.age = 25
 
 my_obj = MyClass()
-print(dir(my_obj))</code></pre>
-
+print(dir(my_obj))
+</code></pre>
 
 <p>getattr()函数：获取对象的属性或方法</p>
 <pre class="codehilite"><code>class MyClass:
@@ -142,8 +143,8 @@ print(dir(my_obj))</code></pre>
 
 my_obj = MyClass()
 name = getattr(my_obj, &quot;name&quot;)
-print(name)</code></pre>
-
+print(name)
+</code></pre>
 
 <p>setattr()函数：设置对象的属性或方法</p>
 <pre class="codehilite"><code>class MyClass:
@@ -153,8 +154,8 @@ print(name)</code></pre>
 
 my_obj = MyClass()
 setattr(my_obj, &quot;name&quot;, &quot;blog.ops-coffee.com&quot;)
-print(my_obj.name)</code></pre>
-
+print(my_obj.name)
+</code></pre>
 
 <p>hasattr()函数：检查对象是否具有指定的属性或方法</p>
 <pre class="codehilite"><code>class MyClass:
@@ -164,8 +165,8 @@ print(my_obj.name)</code></pre>
 
 my_obj = MyClass()
 has_name = hasattr(my_obj, &quot;name&quot;)
-print(has_name)</code></pre>
-
+print(has_name)
+</code></pre>
 
 <p>这些函数和属性可以帮助你在运行时动态地访问和修改对象的属性和方法。反射为编写更灵活和通用的代码提供了一种机制，可以根据需要操作对象的属性和方法</p>
 <p>2.交换变量，这是一种非常常见和方便的操作，可以在需要时快速交换变量的值</p>
@@ -174,8 +175,8 @@ b = 20
 
 a, b = b, a
 
-print(a, b)  # 输出: 20 10</code></pre>
-
+print(a, b)  # 输出: 20 10
+</code></pre>
 
 <p>3.可迭代对象解包，它允许你将可迭代对象的元素解包到单独的变量中。这对于同时处理多个值非常有用</p>
 <pre class="codehilite"><code># 解包元组
@@ -184,8 +185,8 @@ print(a, b, c)   # 输出: 1 2 3
 
 # 解包列表
 x, y, z = [4, 5, 6]
-print(x, y, z)   # 输出: 4 5 6</code></pre>
-
+print(x, y, z)   # 输出: 4 5 6
+</code></pre>
 
 <p>4.深复制和浅复制，当处理复杂的数据结构时，深复制和浅复制允许你创建对象的副本。深复制会创建一个全新的对象，而浅复制会创建一个新对象，但共享内部数据。</p>
 <pre class="codehilite"><code>import copy
@@ -204,8 +205,8 @@ original_list[2][0] = 5
 
 print(original_list)   # 输出: [1, 2, [5, 4]]
 print(shallow_copy)    # 输出: [1, 2, [5, 4]]
-print(deep_copy)       # 输出: [1, 2, [3, 4]]</code></pre>
-
+print(deep_copy)       # 输出: [1, 2, [3, 4]]
+</code></pre>
 
 <p>5.with语句的多个上下文管理器：在一个with语句中，你可以同时使用多个上下文管理器，以便在代码块执行前后执行多个操作</p>
 <pre class="codehilite"><code>class CustomContextManager1:
@@ -224,13 +225,13 @@ class CustomContextManager2:
 
 # 使用多个上下文管理器
 with CustomContextManager1(), CustomContextManager2():
-    # 在这里执行一些操作</code></pre>
-
+    # 在这里执行一些操作
+</code></pre>
 
 <p>比较常用的是一次打开多个文件进行操作，例如同时打开文件1和文件2，读取文件1内容处理后写入文件2</p>
 <pre class="codehilite"><code>with open(&quot;file1.txt&quot;) as file1, open(&quot;file2.txt&quot;) as file2:
-    # 在这里可以使用file1和file2进行操作</code></pre>
-
+    # 在这里可以使用file1和file2进行操作
+</code></pre>
 
 <p>6.装饰器，通过装饰器来复用函数，简化操作</p>
 <pre class="codehilite"><code># 创建一个装饰器函数，用于计算函数执行时间
@@ -250,8 +251,8 @@ def calculate_time(func):
 def long_running_function():
     time.sleep(2)
 
-long_running_function()</code></pre>
-
+long_running_function()
+</code></pre>
 
 <p>7.使用字典来代替冗长的if/else判断，提升代码可读性</p>
 <pre class="codehilite"><code>def operation_add(a, b):
@@ -276,39 +277,39 @@ operations = {
 
 # 使用字典进行操作选择和调用相应的函数
 result = operations[&quot;multiply&quot;](2, 3)
-print(&quot;结果:&quot;, result)</code></pre>
-
+print(&quot;结果:&quot;, result)
+</code></pre>
 
 <p>8.字符串格式化，使用占位符和格式化字符串来构建新的字符串</p>
 <pre class="codehilite"><code>name = &quot;Alice&quot;
 age = 25
 message = &quot;My name is {} and I am {} years old.&quot;.format(name, age)
-# 输出: &quot;My name is Alice and I am 25 years old.&quot;</code></pre>
-
+# 输出: &quot;My name is Alice and I am 25 years old.&quot;
+</code></pre>
 
 <p>9.使用<code>lamba</code>函数进行简单的函数定义</p>
 <pre class="codehilite"><code>add = lambda x, y: x + y
 result = add(2, 3)
-# 输出: 5</code></pre>
-
+# 输出: 5
+</code></pre>
 
 <p>10.使用<code>reversed</code>函数反转可迭代对象</p>
 <pre class="codehilite"><code>numbers = [1, 2, 3, 4, 5]
 reversed_numbers = list(reversed(numbers))
-# 输出: [5, 4, 3, 2, 1]</code></pre>
-
+# 输出: [5, 4, 3, 2, 1]
+</code></pre>
 
 <p>11.使用<code>map</code>函数对可迭代对象中的每个元素应用指定的函数</p>
 <pre class="codehilite"><code>numbers = [1, 2, 3, 4, 5]
 squared_numbers = list(map(lambda x: x**2, numbers))
-# 输出: [1, 4, 9, 16, 25]</code></pre>
-
+# 输出: [1, 4, 9, 16, 25]
+</code></pre>
 
 <p>12.使用<code>filter</code>函数根据指定的条件筛选可迭代对象中的元素</p>
 <pre class="codehilite"><code>numbers = [1, 2, 3, 4, 5]
 even_numbers = list(filter(lambda x: x % 2 == 0, numbers))
-# 输出: [2, 4]</code></pre>
-
+# 输出: [2, 4]
+</code></pre>
 
 <p>13.生成器函数，使用<code>yield</code>关键字来生成一个值，并且在每次生成值后暂停执行，等待下一次调用</p>
 <pre class="codehilite"><code># 下面是一个简单的生成器函数示例，用于生成斐波那契数列
@@ -321,8 +322,8 @@ def fibonacci():
 fib = fibonacci()
 print(next(fib))  # 输出：0
 print(next(fib))  # 输出：1
-print(next(fib))  # 输出：1</code></pre>
-
+print(next(fib))  # 输出：1
+</code></pre>
 
 <p>生成器函数可以一次生成一个值，而不是一次生成所有值，这使得生成器函数非常适合处理大量数据或无限序列</p>
 <p>14.使用<code>functools</code>模块中的<code>partial</code>函数进行函数参数固定：partial函数可以固定函数的部分参数，生成一个新的函数</p>
@@ -335,8 +336,8 @@ square = partial(power, y=2)
 cube = partial(power, y=3)
 
 print(square(5))  # 输出 25
-print(cube(5))  # 输出 125</code></pre>
-
+print(cube(5))  # 输出 125
+</code></pre>
 
 <p>15.使用<code>try...else</code>语句在<code>try</code>块没有引发异常时执行特定的代码</p>
 <pre class="codehilite"><code>try:
@@ -347,8 +348,8 @@ except ZeroDivisionError:
     print(&quot;除数不能为零！&quot;)
 else:
     # 如果没有发生异常
-    print(&quot;结果为:&quot;, result)</code></pre>
-
+    print(&quot;结果为:&quot;, result)
+</code></pre>
 
 <p>类似的还有try...finally无论是否发生异常，都会执行</p>
 <pre class="codehilite"><code>try:
@@ -363,8 +364,8 @@ else:
     print(f.read())
 finally:
     # 无论是否发生异常，都会执行的清理代码
-    f.close()</code></pre>
-
+    f.close()
+</code></pre>
 
 <p>16.通过<code>signal</code>解耦代码</p>
 <pre class="codehilite"><code>import signal
@@ -398,8 +399,8 @@ def send_event2():
 
 # 执行事件
 send_event1()  # 执行事件1
-send_event2()  # 执行事件2</code></pre>
-
+send_event2()  # 执行事件2
+</code></pre>
 
 <p>两篇文章一共总结了32个用法，先这么多，欢迎大伙继续补充</p>
 

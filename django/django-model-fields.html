@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -161,8 +162,8 @@
 from django.db import models
 
 class MyUUIDModel(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)</code></pre>
-
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+</code></pre>
 
 <h3 id="emailfield">EmailField</h3>
 <p>一个CharField类型的字段，仅在数据校验时会检验存储的数据是否符合电子邮件格式</p>

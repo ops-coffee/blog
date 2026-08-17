@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -187,8 +188,8 @@ if __name__ == '__main__':
 
     for i in hostlist:
         print(Conn(i).cmd('docker pull %s' % image_url))
-        # 在镜像下载完成后进行更新容器的操作，代码类似省略了</code></pre>
-
+        # 在镜像下载完成后进行更新容器的操作，代码类似省略了
+</code></pre>
 
 <p>全部都是单线程操作，可想效率就不会很高，为什么不用多线程？主要还是考虑到服务的可用性，一台服务器更新完成再更新下一台服务器直到所有服务器更新完成，单线程滚动更新最大程度保证服务可用，如果同时所有服务器进行更新，那么服务重启过程中无法对外提供服务，系统会有宕机的风险，且当时项目规模都很小，忽略掉了这个时间的增加，随着项目越来越多，规模越来越大，不得不重新思考这块的优化</p>
 <p>引入多线程势在必行，那么多线程该如何应用呢？从服务整体可用性考虑，把下载镜像跟重启容器两个操作拆分，下载镜像不影响服务正常提供，完全可以采用多线程，这样整个下载镜像的时间将大大缩短，优化后代码如下：</p>
@@ -238,8 +239,8 @@ if __name__ == '__main__':
         alive_host.append(t.get_result())
     ## 多线程下载镜像结束
 
-    print('----&gt;本项目共有主机%d台，%d台主机下载镜像成功' % (len(hostlist), len(alive_host)))</code></pre>
-
+    print('----&gt;本项目共有主机%d台，%d台主机下载镜像成功' % (len(hostlist), len(alive_host)))
+</code></pre>
 
 <p>重启容器就不能这么简单粗暴的多线程同时重启了，上边也说了，同时重启就会有服务宕机的风险。线上服务器都有一定的冗余，不能同时重启那么可以分批重启嘛，每次重启多少？分析了流量情况，我们想到了一个算法，如果项目主机少于8台，那么就单线程滚动重启，也用不了太长时间，如果项目主机大于8台，那么用项目主机数/8向上取整，作为多线程重启的线程数多线程重启，这样差不多能保证项目里边有80%左右的主机一直对外提供服务，降低服务不可用的风险，优化后的代码如下：</p>
 <pre class="codehilite"><code>import threading
@@ -304,8 +305,8 @@ if __name__ == '__main__':
     for t in threads:
         smile_host.append(t.get_result())
 
-    print('----&gt;%d台主机更新成功' % (len(smile_host)))</code></pre>
-
+    print('----&gt;%d台主机更新成功' % (len(smile_host)))
+</code></pre>
 
 <p>经过以上优化我们实测后发现，一个28台主机的项目在优化前上线要花10分钟左右的时间，优化后只要2分钟左右，效率提高80%</p>
 <h1 id="_2">多环境下配置文件的处理</h1>
@@ -319,22 +320,22 @@ if __name__ == '__main__':
 COPY conf/run.sh     /run.sh
 COPY webapp /home/project/webapp
 
-CMD [&quot;/run.sh&quot;]</code></pre>
-
+CMD [&quot;/run.sh&quot;]
+</code></pre>
 
 <p>run.sh脚本如下：</p>
-<pre class="codehilite"><code class="language-bash linenums">#!/bin/bash
+<pre class="codehilite"><code>#!/bin/bash
 /etc/init.d/nginx start &amp;&amp; \
 sed -i &quot;s|/project/env/|/${PROJ}/${ENVT}/|g&quot; /etc/confd/conf.d/conf.toml &amp;&amp; \
 sed -i &quot;s|/project/env/|/${PROJ}/${ENVT}/|g&quot; /etc/confd/templates/conf.tmpl &amp;&amp; \
 confd -watch -backend etcd -node=http://192.168.107.101:2379 -node=http://192.168.107.102:2379 || \
-exit 1</code></pre>
-
+exit 1
+</code></pre>
 
 <p>Docker启动命令：</p>
 <pre class="codehilite"><code>'docker run -d --env ENVT=%s --env PROJ=%s --restart=always --name=%s -p 80:80 %s' % (
-    self.environment_name, self.project_name, self.project_name, self.image_url)</code></pre>
-
+    self.environment_name, self.project_name, self.project_name, self.image_url)
+</code></pre>
 
 <p>做到了一次镜像打包多环境共用，上线时也无需再走一次编译打包的流程，只需更新镜像重启容器即可，效率明显提高</p>
 <h1 id="_3">写在最后</h1>

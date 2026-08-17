@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -164,8 +165,8 @@ class FileRun:
                 return True, f.write(content)
 
         except Exception as e:
-            return False, str(e)</code></pre>
-
+            return False, str(e)
+</code></pre>
 
 <p>读取及写入文件的操作与Django的View没有太大的关系，所以这里我用了一个单独的类来处理，解释下其中的四个用法</p>
 <ol>
@@ -178,8 +179,8 @@ class FileRun:
 </ol>
 <pre class="codehilite"><code>state, data = FileRun().read()
 if state:
-    return(data)</code></pre>
-
+    return(data)
+</code></pre>
 
 <ol>
 <li>
@@ -191,8 +192,8 @@ if state:
 </ol>
 <h3 id="json">JSON格式化</h3>
 <p>为了展示好看且能实现语法错误提示，采用了<code>jsoneditor</code>插件，这是一个前端的插件，使用非常简单</p>
-<pre class="codehilite"><code>&lt;div class=&quot;col-sm-12&quot; id=&quot;jsoneditor&quot; style=&quot;height:620px&quot;&gt;&lt;/div&gt;</code></pre>
-
+<pre class="codehilite"><code>&lt;div class=&quot;col-sm-12&quot; id=&quot;jsoneditor&quot; style=&quot;height:620px&quot;&gt;&lt;/div&gt;
+</code></pre>
 
 <pre class="codehilite"><code>&lt;script src=&quot;/static/js/jsoneditor.min.js&quot;&gt;&lt;/script&gt;
 &lt;script&gt;
@@ -204,8 +205,8 @@ if state:
 
   // set json
   editor.set({{ data|safe }});
-&lt;/script&gt;</code></pre>
-
+&lt;/script&gt;
+</code></pre>
 
 <p><strong>JSON Editor</strong> 可以用来查看、编辑、格式化和验证JSON，支持多种模式，例如tree、code、text，当为tree模式时显示树状结构，当为text时显示纯文本，我们这里采用了code模式有行号和颜色，看起来更美观</p>
 <p><strong>safe</strong> django从view向template传递HTML数据的时候，为了防止html中包含恶意攻击的代码django默认不会渲染HTML，所以需要在template接收到html数据后添加<code>|safe</code>进行渲染</p>
@@ -273,8 +274,8 @@ kwargs = {
 
 _content = Template(tmpl).render(kwargs)
 with open(self.blogDir + '/index.html', 'w', encoding='utf8') as f:
-    f.write(_content)</code></pre>
-
+    f.write(_content)
+</code></pre>
 
 <p><strong>tmpl</strong> 定义了一个模版，模版内可以使用诸如<code>{{ title }}</code>这样的变量或是<code>{% if havet %}</code>这样的语法</p>
 <p><strong>kwargs</strong> 定义了一个字典，字典的内容用来替换模版中的变量，字典的key值与模版里边的变量做匹配，匹配到了就用字典的value填充模版</p>
@@ -305,8 +306,8 @@ class GitRun:
 
             return True, True
         except Exception as e:
-            return False, str(e)</code></pre>
-
+            return False, str(e)
+</code></pre>
 
 <p><strong>Repo()</strong> 选择已有的git仓库</p>
 <p><strong>git.add</strong> 添加本地修改到暂存区，<code>A=True</code>添加到暂存区时包含删除文件的修改</p>
@@ -320,8 +321,8 @@ from django.contrib.auth.views import LoginView, LogoutView
 urlpatterns = [
     path('login', LoginView.as_view(template_name='login.html'), name='login-url'),
     path('logout', LogoutView.as_view(template_name='login.html'), name='logout-url'),
-]</code></pre>
-
+]
+</code></pre>
 
 <p>从<code>django.contrib.auth.views</code>下导入<code>LoginView</code>和<code>LogoutView</code>，然后写两条url并指定自己的模版位置就可以使用django的登陆登出功能了，这在一些需要简单认证的系统中非常方便</p>
 <h2 id="_6">写在最后</h2>

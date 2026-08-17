@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -153,40 +154,40 @@
 /_cat/nodeattrs
 /_cat/repositories
 /_cat/snapshots/{repository}
-/_cat/templates</code></pre>
-
+/_cat/templates
+</code></pre>
 
 <h3 id="verbose">verbose显示指令的详细信息</h3>
-<pre class="codehilite"><code>GET _cat/health?v</code></pre>
-
+<pre class="codehilite"><code>GET _cat/health?v
+</code></pre>
 
 <h3 id="help">help显示指令返回参数的说明</h3>
-<pre class="codehilite"><code>GET _cat/health?help</code></pre>
-
+<pre class="codehilite"><code>GET _cat/health?help
+</code></pre>
 
 <h3 id="header">header选择要显示的列</h3>
-<pre class="codehilite"><code>GET _cat/count?h=timestamp,count</code></pre>
-
+<pre class="codehilite"><code>GET _cat/count?h=timestamp,count
+</code></pre>
 
 <h3 id="formatjsonyamltextsmilecbor">format设置返回内容的格式，支持json,yaml,text,smile,cbor</h3>
-<pre class="codehilite"><code>GET _cat/master?format=json&amp;pretty</code></pre>
-
+<pre class="codehilite"><code>GET _cat/master?format=json&amp;pretty
+</code></pre>
 
 <h3 id="sort">sort排序</h3>
-<pre class="codehilite"><code>GET _cat/indices?s=store.size:desc</code></pre>
-
+<pre class="codehilite"><code>GET _cat/indices?s=store.size:desc
+</code></pre>
 
 <h3 id="_1">可以多个参数一起使用，用&amp;连接</h3>
-<pre class="codehilite"><code>GET _cat/indices?v&amp;s=store.size:desc</code></pre>
-
+<pre class="codehilite"><code>GET _cat/indices?v&amp;s=store.size:desc
+</code></pre>
 
 <h2 id="cat_2">cat指令</h2>
 <h3 id="aliases">aliases</h3>
 <p>显示别名、过滤器、路由信息</p>
 <pre class="codehilite"><code>GET _cat/aliases?v
 
-alias index filter routing.index routing.search</code></pre>
-
+alias index filter routing.index routing.search
+</code></pre>
 
 <table>
 <thead>
@@ -225,8 +226,8 @@ alias index filter routing.index routing.search</code></pre>
 shards disk.indices disk.used disk.avail disk.total disk.percent host        ip          node
   1073        1.2tb     1.2tb    787.1gb      1.9tb           61 10.82.9.205 10.82.9.205 node01
   1072        1.2tb     1.2tb      1.2tb      2.4tb           50 10.82.9.207 10.82.9.207 node03
-  1073        1.2tb     1.2tb    787.4gb      1.9tb           61 10.82.9.206 10.82.9.206 node02</code></pre>
-
+  1073        1.2tb     1.2tb    787.4gb      1.9tb           61 10.82.9.206 10.82.9.206 node02
+</code></pre>
 
 <table>
 <thead>
@@ -279,8 +280,8 @@ shards disk.indices disk.used disk.avail disk.total disk.percent host        ip 
 <pre class="codehilite"><code>GET _cat/count?v
 
 epoch      timestamp count
-1558059594 10:19:54  7829577019</code></pre>
-
+1558059594 10:19:54  7829577019
+</code></pre>
 
 <table>
 <thead>
@@ -309,8 +310,8 @@ epoch      timestamp count
 <pre class="codehilite"><code>GET _cat/health?v
 
 epoch      timestamp cluster   status node.total node.data shards  pri relo init unassign pending_tasks max_task_wait_time active_shards_percent
-1558059496 10:18:16  ops_coffee green           7         5   5362 2681    0    0        0             0                  -                100.0%</code></pre>
-
+1558059496 10:18:16  ops_coffee green           7         5   5362 2681    0    0        0             0                  -                100.0%
+</code></pre>
 
 <table>
 <thead>
@@ -384,8 +385,8 @@ epoch      timestamp cluster   status node.total node.data shards  pri relo init
 
 health status index                                uuid                   pri rep docs.count docs.deleted store.size pri.store.size
 green  open   ops-coffee-slowlog-2019.04.08        5ARM1TgqTy-fGO8RlJC_Jg   5   1       7743            0     57.9mb         28.9mb
-green  open   ops-coffee-nginx-2019.04.09          1VdeScHaQda6CF_htRZz_A   5   1   81519329            0       52gb         25.8gb</code></pre>
-
+green  open   ops-coffee-nginx-2019.04.09          1VdeScHaQda6CF_htRZz_A   5   1   81519329            0       52gb         25.8gb
+</code></pre>
 
 <table>
 <thead>
@@ -442,8 +443,8 @@ green  open   ops-coffee-nginx-2019.04.09          1VdeScHaQda6CF_htRZz_A   5   
 <pre class="codehilite"><code>GET _cat/master?v
 
 id                     host        ip          node
-dkof1ouuT96BTQOR1xyDhQ 10.82.9.205 10.82.9.205 node01</code></pre>
-
+dkof1ouuT96BTQOR1xyDhQ 10.82.9.205 10.82.9.205 node01
+</code></pre>
 
 <table>
 <thead>
@@ -475,8 +476,8 @@ dkof1ouuT96BTQOR1xyDhQ 10.82.9.205 10.82.9.205 node01</code></pre>
 <p>显示node节点属性</p>
 <pre class="codehilite"><code>GET _cat/nodeattrs?v
 
-node host ip attr value</code></pre>
-
+node host ip attr value
+</code></pre>
 
 <table>
 <thead>
@@ -516,8 +517,8 @@ ip          heap.percent ram.percent cpu load_1m load_5m load_15m node.role mast
 10.82.9.205           50          99   6    2.32    2.82     3.37 mdi       *      node01
 10.82.9.206           71          99   6    3.24    4.02     4.35 mdi       -      node02
 10.82.9.208           25          94   3    0.40    0.42     0.36 i         -      node04
-10.82.9.132           70          99   7    1.51    2.28     2.57 di        -      node11</code></pre>
-
+10.82.9.132           70          99   7    1.51    2.28     2.57 di        -      node11
+</code></pre>
 
 <table>
 <thead>
@@ -573,8 +574,8 @@ ip          heap.percent ram.percent cpu load_1m load_5m load_15m node.role mast
 <p>显示正在等待的任务</p>
 <pre class="codehilite"><code>GET _cat/pending_tasks?v
 
-insertOrder timeInQueue priority source</code></pre>
-
+insertOrder timeInQueue priority source
+</code></pre>
 
 <table>
 <thead>
@@ -606,8 +607,8 @@ insertOrder timeInQueue priority source</code></pre>
 <p>显示每个运行插件节点的视图</p>
 <pre class="codehilite"><code>GET _cat/plugins?v
 
-name component version</code></pre>
-
+name component version
+</code></pre>
 
 <table>
 <thead>
@@ -636,8 +637,8 @@ name component version</code></pre>
 <pre class="codehilite"><code>GET _cat/recovery?v
 
 index                                shard time  type           stage source_host source_node target_host target_node repository snapshot files files_recovered files_percent files_total bytes      bytes_recovered bytes_percent bytes_total translog_ops translog_ops_recovered translog_ops_percent
-filebeat-docker-pay-2019.04.18       0     209ms peer           done  10.82.9.132 node11      10.82.9.207 node03      n/a        n/a      0     0               0.0%          0           0          0               0.0%          0           0            0                      100.0%</code></pre>
-
+filebeat-docker-pay-2019.04.18       0     209ms peer           done  10.82.9.132 node11      10.82.9.207 node03      n/a        n/a      0     0               0.0%          0           0          0               0.0%          0           0            0                      100.0%
+</code></pre>
 
 <table>
 <thead>
@@ -742,8 +743,8 @@ filebeat-docker-pay-2019.04.18       0     209ms peer           done  10.82.9.13
 <pre class="codehilite"><code>GET _cat/segments?v
 
 index                                shard prirep ip          segment generation docs.count docs.deleted     size size.memory committed searchable version compound
-filebeat-docker-pay-2019.04.18       0     r      10.82.9.207 _8cu         10830      19470            0   17.7mb       43546 true      true       7.2.1   false</code></pre>
-
+filebeat-docker-pay-2019.04.18       0     r      10.82.9.207 _8cu         10830      19470            0   17.7mb       43546 true      true       7.2.1   false
+</code></pre>
 
 <table>
 <thead>
@@ -816,8 +817,8 @@ filebeat-docker-pay-2019.04.18       0     r      10.82.9.207 _8cu         10830
 
 index                                shard prirep state       docs    store ip          node
 mysql-slowlog-2019.03.14             4     r      STARTED     1381    4.6mb 10.82.9.205 node01
-mysql-slowlog-2019.03.14             4     p      STARTED     1381    4.5mb 10.82.9.206 node02</code></pre>
-
+mysql-slowlog-2019.03.14             4     p      STARTED     1381    4.5mb 10.82.9.206 node02
+</code></pre>
 
 <table>
 <thead>
@@ -867,8 +868,8 @@ mysql-slowlog-2019.03.14             4     p      STARTED     1381    4.5mb 10.8
 
 node_name name                active queue rejected
 node10    bulk                     1     0        4
-node10    fetch_shard_started      0     0        0</code></pre>
-
+node10    fetch_shard_started      0     0        0
+</code></pre>
 
 <table>
 <thead>

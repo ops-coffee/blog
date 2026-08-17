@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -141,12 +142,12 @@
 <li>迁移数据测试</li>
 </ol>
 <p>迁移数据直接将原表数据导出，然后再新的表里导入即可，如果使用MySQL作为数据库，可以通过以下语句将原表<code>src_ops_coffee</code>内地数据迁移至目标表<code>dst_ops_coffee</code></p>
-<pre class="codehilite"><code>insert into dst_ops_coffee select * from src_ops_coffee;</code></pre>
-
+<pre class="codehilite"><code>insert into dst_ops_coffee select * from src_ops_coffee;
+</code></pre>
 
 <p>以上语句有个前提是原表<code>src_ops_coffee</code>和目标表<code>dst_ops_coffee</code>字段要一模一样，包括字段位置，当字段不同时，可以通过如下语句操作</p>
-<pre class="codehilite"><code>insert into dst_ops_coffee (id, create_time, update_time, instance_id, instance_name, instance_state) select id, create_time, update_time, instance_id, instance_name, instance_state from src_ops_coffee;</code></pre>
-
+<pre class="codehilite"><code>insert into dst_ops_coffee (id, create_time, update_time, instance_id, instance_name, instance_state) select id, create_time, update_time, instance_id, instance_name, instance_state from src_ops_coffee;
+</code></pre>
 
 <p>数据迁移完成就可以本地测试了，测试无异常就可以合并代码到更新到线上</p>
 <h2 id="_2">在线迁移</h2>
@@ -163,8 +164,8 @@
 </li>
 </ol>
 <pre class="codehilite"><code>python3 manage.py makemigrations
-python3 manage.py migrate</code></pre>
-
+python3 manage.py migrate
+</code></pre>
 
 <p>这一步会有大量的数据库变更，属于正常情况。如果有Foreignkey外键依赖，可能会有<code>foreign key constraint fails</code>的报错，主要是因为新表里没有数据导致的，此时我们只需要进行下一步迁移数据即可，等迁移数据完成，再来执行<code>migrate</code>即可顺利完成</p>
 <ol>

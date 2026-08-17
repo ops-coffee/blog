@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -155,8 +156,8 @@ RUN pip3 install --upgrade pip \
 COPY . .
 
 # 启动命令
-CMD [&quot;python3&quot;, &quot;/home/project/code/manage.py&quot;, &quot;runserver&quot;, &quot;0.0.0.0:8088&quot;]</code></pre>
-
+CMD [&quot;python3&quot;, &quot;/home/project/code/manage.py&quot;, &quot;runserver&quot;, &quot;0.0.0.0:8088&quot;]
+</code></pre>
 
 <p>然后在项目也就是Git仓库中创建一个<code>.github/workflows</code>目录，并在里面添加一个YAML格式的CI/CD工作流文件，就算是定义好GitHub Actions了。同样以我的项目为例，文件路径为<code>.github/workflows/docker-build-push.yml</code>，内容如下：</p>
 <pre class="codehilite"><code>name: Build and Push Docker Image
@@ -200,8 +201,8 @@ jobs:
           tags: |
             37bar/ops-coffee-blog:latest
             37bar/ops-coffee-blog:${{ steps.gitversion.outputs.sha_short }}
-          push: true</code></pre>
-
+          push: true
+</code></pre>
 
 <p>这个配置就实现了镜像的打包及上传，需要注意的是，上传镜像到DockerHub的话需要DockerHub的认证信息。这个认证可以从DockerHub获取，获取方法为：登录DockerHub -&gt; 右上角Account Settings -&gt; Personal access tokens -&gt; 点击Generate new token，就能生成新的Token</p>
 <p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2025/0624.02.png" /></p>

@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -141,13 +142,13 @@
 <p>除了多云同步的方式进行资源纳管之外，我们还提供了Agent，可以部署在服务器上以实现资源主动上报统一纳管，这种方式对于IDC之类没有提供API/SDK获取资源的方式来说非常有效，通过安装客户端Agent，自动上报云资源数据，这里只需要服务器安装Agent即可，Agent只要与服务器连通，则会自动上报资源数据到资源池，然后配合动态规则自动将资源归属到资源树节点，这个过程与多云到自动纳管逻辑一致</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/1105.05.png" /></p>
 <p>对于安装了Agent的服务器来说，除了资源先到资源池再配合动态规则自动归属到资源树节点的管理方式外，Agent还提供直接归属到资源树节点而不经过资源池的方式。这就涉及Agent的高级配置，Agent的配置文件默认只需要配置一个Server服务器的地址即可启动，像下边这样</p>
-<pre class="codehilite"><code>SERVER-ADDRESS: &quot;wss://agent-server.ops-coffee.com/api/v1/agent&quot;</code></pre>
-
+<pre class="codehilite"><code>SERVER-ADDRESS: &quot;wss://agent-server.ops-coffee.com/api/v1/agent&quot;
+</code></pre>
 
 <p>Agent启动之后会与Server建立连接，Server通过周期任务把Agent上报的资源入库，默认也是先进了资源池，但当Agent配置了参数<code>BIZ-ID</code>时，Server入库则首先去匹配<code>BIZ-ID</code>所对应的资源树节点是否存在，如果存在则直接给归属到资源树节点下，不存在则进资源池。这样的话，当用户明确知道自己的资源归属到哪个资源树节点时，则可以在Agent的配置文件中添加<code>BIZ-ID</code>配置，像下边这样</p>
 <pre class="codehilite"><code>SERVER-ADDRESS: &quot;wss://agent-server.ops-coffee.com/api/v1/agent&quot;
-BIZ-ID: &quot;37&quot;</code></pre>
-
+BIZ-ID: &quot;37&quot;
+</code></pre>
 
 <p>当Server入库数据时会先检查ID为37的资源树节点是否存在，如果存在则直接归属到节点，这样就实现了Agent直接归属到节点，而无需经过资源池的步骤，这样的话也就不需要动态规则自动匹配再归属到资源树节点了，更加方便</p>
 <h2 id="_2">手动添加</h2>

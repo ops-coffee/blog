@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -141,8 +142,8 @@ urlpatterns = [
 
     path('password/', PasswordList.as_view()),
     path('password/&lt;int:pk&gt;/', PasswordDetail.as_view()),
-]</code></pre>
-
+]
+</code></pre>
 
 <h2 id="path">path</h2>
 <p><code>path()</code>有四个参数，两个必须参数：route和view，两个可选参数kwargs和name</p>
@@ -173,27 +174,27 @@ urlpatterns = [
 </ul>
 <h2 id="re_path">re_path</h2>
 <p>使用<code>re_path</code>可以通过正则表达式去匹配复杂的URL，例如</p>
-<pre class="codehilite"><code>re_path('static/(?P&lt;path&gt;.*)$', static.serve, {'document_root': settings.STATIC_ROOT}, name='static'),</code></pre>
-
+<pre class="codehilite"><code>re_path('static/(?P&lt;path&gt;.*)$', static.serve, {'document_root': settings.STATIC_ROOT}, name='static'),
+</code></pre>
 
 <p>在 Python 正则表达式中，命名正则表达式组的语法是<code>(?P&lt;name&gt;pattern)</code>，其中name是组名，pattern是要匹配的模式。组名name可以省略，不过不推荐</p>
 <h2 id="_1">模板中使用</h2>
-<pre class="codehilite"><code>{% url 'monitor-list' %}</code></pre>
-
+<pre class="codehilite"><code>{% url 'monitor-list' %}
+</code></pre>
 
 <p>传递参数</p>
-<pre class="codehilite"><code>{% url 'monitor-detail' data.id %}</code></pre>
-
+<pre class="codehilite"><code>{% url 'monitor-detail' data.id %}
+</code></pre>
 
 <h2 id="view_1">View中使用</h2>
 <pre class="codehilite"><code>from django.urls import reverse
 
-reverse('index-url')</code></pre>
-
+reverse('index-url')
+</code></pre>
 
 <p>reverse支持添加动态参数，使用方法为：</p>
-<pre class="codehilite"><code>reverse('accounts:user-list', kwargs={'pk': id})</code></pre>
-
+<pre class="codehilite"><code>reverse('accounts:user-list', kwargs={'pk': id})
+</code></pre>
 
 <h2 id="viewurl">View中的URL重定向</h2>
 <p>URL重定向有两种方式，分别是<code>HttpResponseRedirect</code>、<code>redirect</code></p>
@@ -216,8 +217,8 @@ def login(request):
         return render(request, 'accounts/login.html', {
             'form': form,
             'next': _next = request.POST.get('next')
-        })</code></pre>
-
+        })
+</code></pre>
 
 <p>HttpResponseRedirect接收一个参数就是要重定向到的URL地址</p>
 <h3 id="redirect">redirect</h3>
@@ -232,25 +233,25 @@ def goto(request):
     return redirect('https://blog.ops-coffee.com')
 
 def logout(request):
-    return redirect(reverse('accounts:logout-url'))</code></pre>
-
+    return redirect(reverse('accounts:logout-url'))
+</code></pre>
 
 <p>redirect不仅能根据URL重定向，还可以根据对象或试图重定向</p>
 <pre class="codehilite"><code>def group(request):
     obj = Model.objects.get(id=1)
-    return redirect(obj)</code></pre>
-
+    return redirect(obj)
+</code></pre>
 
 <pre class="codehilite"><code>def login(request):
-    return redirect('some-view-name', name='coffee')</code></pre>
-
+    return redirect('some-view-name', name='coffee')
+</code></pre>
 
 <h2 id="urlurl">URL中的URL重定向</h2>
 <p>如果想在urls.py中直接配置URL重定向，可以通过如下方法</p>
 <pre class="codehilite"><code>from django.views.generic import RedirectView
 
-path('', RedirectView.as_view(url='/dashboard/'), name='index-url'),</code></pre>
-
+path('', RedirectView.as_view(url='/dashboard/'), name='index-url'),
+</code></pre>
 
 <p>以上的意思是将<code>/</code>重定向到<code>/dashboard</code></p>
 

@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -130,8 +131,8 @@
 class TaskList(ListCreateView):
     model = Task
     template = 'engine/task.index.html'
-    permission = {'get': 'engine.task_select', 'post': 'engine.task_change'}</code></pre>
-
+    permission = {'get': 'engine.task_select', 'post': 'engine.task_change'}
+</code></pre>
 
 <h5 id="_1">方法定义</h5>
 <p>接收两个方法，分别是<code>get</code>和<code>post</code></p>
@@ -166,8 +167,8 @@ class TaskList(ListCreateView):
     &quot;recordsTotal&quot;: _recordsTotalCount,
     &quot;recordsFiltered&quot;: eval(_queryset + '.count()'),
     &quot;data&quot;: _table_data
-}</code></pre>
-
+}
+</code></pre>
 
 <h5 id="_6">自定义函数</h5>
 <p>当查询条件比较复杂，通过<code>filter</code>无法满足需求时，可以使用<code>get_queryset</code>自定义方法来定义更为复杂的查询条件。<code>get_queryset</code>返回一个queryset的字符串，这个字符串会跟后续的查询条件等拼接</p>
@@ -180,24 +181,24 @@ class TaskList(ListCreateView):
     @staticmethod
     def get_queryset(request):
         tasks = [i.id for i in get_tasks_for_user(request)]
-        return 'self.model.objects.filter(task_id__in={})'.format(tasks)</code></pre>
-
+        return 'self.model.objects.filter(task_id__in={})'.format(tasks)
+</code></pre>
 
 <p>当权限定义比较复杂，通过<code>permission</code>无法满足需求时，可以使用<code>valid_permission</code>自定义方法来定义更为复杂的权限验证。<code>valid_permission</code>返回一个布尔值，根据这个布尔值来确定是否有权限，如果为True则有权限，为False则无权限</p>
 <pre class="codehilite"><code>class TaskDetail(RetrieveUpdateDestroyView):
     model = Task
 
     def valid_permission(self, request, pk):
-        return True if self.model.objects.get(id=pk) in get_tasks_for_user(request) else False</code></pre>
-
+        return True if self.model.objects.get(id=pk) in get_tasks_for_user(request) else False
+</code></pre>
 
 <h2 id="retrieveupdatedestroyview">RetrieveUpdateDestroyView</h2>
 <p>RetrieveUpdateDestroyView用来实现object（行）级别的操作，包括获取某条数据的详情、修改某条数据或时删除某条数据，分别对应了<code>get</code>、<code>put</code>和<code>delete</code>三个方法，用法如下：</p>
 <pre class="codehilite"><code>class TaskDetail(RetrieveUpdateDestroyView):
     model = Task
     template = 'engine/task.detail.html'
-    permission = {'get': 'engine.task_select', 'put': 'engine.task_change', 'delete': 'engine.task_change'}</code></pre>
-
+    permission = {'get': 'engine.task_select', 'put': 'engine.task_change', 'delete': 'engine.task_change'}
+</code></pre>
 
 <h5 id="_7">方法定义</h5>
 <p>接收三个方法，分别是<code>get</code>、<code>put</code>和<code>delete</code></p>

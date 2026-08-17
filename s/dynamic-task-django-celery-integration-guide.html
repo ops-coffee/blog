@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -128,15 +129,15 @@
 <p>django-celery为django提供了celery集成，同时支持将结果存储在django的orm或cache中，最重要的是支持从数据库动态读取计划任务并执行，这也就是说我们只需要将需要执行的加护任务插入数据库，django-celery就可以自动发现并执行了，接下来就具体看下如何实现</p>
 <h2 id="_1">安装配置</h2>
 <p>1.安装<code>django-celery</code></p>
-<pre class="codehilite"><code>pip install django-celery</code></pre>
-
+<pre class="codehilite"><code>pip install django-celery
+</code></pre>
 
 <p>2.<code>settings.py</code>的<code>INSTALLED_APPS</code>中加入<code>djcelery</code></p>
 <pre class="codehilite"><code>INSTALLED_APPS = [
     ...
     'djcelery',
-]</code></pre>
-
+]
+</code></pre>
 
 <p>3.<code>settings.py</code>中添加如下配置</p>
 <pre class="codehilite"><code>import djcelery
@@ -159,12 +160,12 @@ CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 from celery import platforms
 
 # 允许root 用户运行celery
-platforms.C_FORCE_ROOT = True</code></pre>
-
+platforms.C_FORCE_ROOT = True
+</code></pre>
 
 <p>4.启动celery</p>
-<pre class="codehilite"><code>python manage.py celery worker -l info</code></pre>
-
+<pre class="codehilite"><code>python manage.py celery worker -l info
+</code></pre>
 
 <p>至此就可以使用djcelery来处理异步任务了</p>
 <h2 id="_2">异步调用</h2>
@@ -184,8 +185,8 @@ platforms.C_FORCE_ROOT = True</code></pre>
         - settings.py
         - urls.py
         - wsgi.py
-    - manage.py</code></pre>
-
+    - manage.py
+</code></pre>
 
 <p>我们在名为<code>coffee</code>的app下添加文件<code>tasks.py</code>，<code>tasks.py</code>文件内容如下</p>
 <pre class="codehilite"><code>from celery import shared_task
@@ -195,8 +196,8 @@ platforms.C_FORCE_ROOT = True</code></pre>
 def welcome():
     print('Welcome to ops-coffee.com')
 
-    return True</code></pre>
-
+    return True
+</code></pre>
 
 <p>然后就可以在view或其他地方异步调用这个<code>welcome</code>函数了</p>
 <pre class="codehilite"><code>from django.http import JsonResponse
@@ -206,14 +207,14 @@ from coffee.tasks import welcome
 def index(request):
     welcome.delay()
 
-    return JsonResponse({&quot;state&quot;: 1, &quot;message&quot;: &quot;welcome&quot;})</code></pre>
-
+    return JsonResponse({&quot;state&quot;: 1, &quot;message&quot;: &quot;welcome&quot;})
+</code></pre>
 
 <h2 id="_3">周期任务</h2>
 <p>以上只是将任务变成了异步，如果我们想要周期执行<code>welcome</code>任务，该如何操作呢？</p>
 <p>1.首先需要执行<code>migrate</code>命令在数据库创建表</p>
-<pre class="codehilite"><code>python manage.py migrate</code></pre>
-
+<pre class="codehilite"><code>python manage.py migrate
+</code></pre>
 
 <p>2.然后修改<code>settings.py</code>文件中添加<code>CELERYBEAT_SCHEDULE</code>配置</p>
 <pre class="codehilite"><code>CELERYBEAT_SCHEDULE = {
@@ -225,24 +226,24 @@ def index(request):
         'task': 'coffee.tasks.welcome',
         'schedule': crontab(hour=17, minute=30),
     }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>以上配置详细的解释可以看文章：<a href="https://blog.ops-coffee.com/s/devops-task-django-celery-setup-guide.html" target="_blank">Django配置Celery执行异步任务和定时任务</a></p>
 <p>3.最后启动beat</p>
-<pre class="codehilite"><code>python manage.py celery beat -l info</code></pre>
-
+<pre class="codehilite"><code>python manage.py celery beat -l info
+</code></pre>
 
 <p>至此<code>welcome</code>任务就会在设置的时间执行了</p>
 <h3 id="_4">报错处理</h3>
 <p>PS: 启动beat时可能会有如下报错</p>
-<pre class="codehilite"><code>TypeError: can't subtract offset-naive and offset-aware datetimes</code></pre>
-
+<pre class="codehilite"><code>TypeError: can't subtract offset-naive and offset-aware datetimes
+</code></pre>
 
 <p>这主要是因为时区引起的，请修改时区相关的配置</p>
 <pre class="codehilite"><code>TIME_ZONE = 'Asia/Shanghai'
-USE_TZ = False</code></pre>
-
+USE_TZ = False
+</code></pre>
 
 <h2 id="_5">动态添加</h2>
 <p>至此已经可以添加周期任务或定时任务了，但操作方式比较麻烦，还需要改动配置文件，说好的动态添加呢，别急这就来了，打开数据库会看到几张以<code>djcelery_</code>开头的表</p>
@@ -275,8 +276,8 @@ with transaction.atomic():
         print('计划任务添加成功')
     except Exception as e:
         transaction.savepoint_rollback(save_id)
-        print('添加计划任务失败，错误原因：' + str(e))</code></pre>
-
+        print('添加计划任务失败，错误原因：' + str(e))
+</code></pre>
 
 <p>通过<code>with transaction.atomic()</code>创建一个事物，保证时间和任务都能同时添加成功，否则就回滚</p>
 <p>然后通过<code>get_or_create</code>方法去检索循环任务时间定义表<code>CrontabSchedule</code>，如果有就获取到实例，没有就创建</p>

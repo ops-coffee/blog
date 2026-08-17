@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -221,12 +222,12 @@
 
 output.kafka:
   hosts: [&quot;10.82.9.202:9092&quot;,&quot;10.82.9.203:9092&quot;,&quot;10.82.9.204:9092&quot;]
-  topic: filebeat_docker_java</code></pre>
-
+  topic: filebeat_docker_java
+</code></pre>
 
 <p><strong>Kafka接收到的数据格式</strong></p>
-<pre class="codehilite"><code>{&quot;@timestamp&quot;:&quot;2018-09-05T13:17:46.051Z&quot;,&quot;appname&quot;:&quot;app01&quot;,&quot;beat&quot;:{&quot;hostname&quot;:&quot;52fc9bef4575&quot;,&quot;name&quot;:&quot;52fc9bef4575&quot;,&quot;version&quot;:&quot;5.4.0&quot;},&quot;classname&quot;:&quot;com.domain.pay.service.ApiService&quot;,&quot;date&quot;:&quot;2018-09-05 21:17:45.953+0800&quot;,&quot;filename&quot;:&quot;ApiService.java&quot;,&quot;hostname&quot;:&quot;172.17.0.2&quot;,&quot;level&quot;:&quot;INFO&quot;,&quot;linenumber&quot;:285,&quot;message&quot;:&quot;param[{\&quot;email\&quot;:\&quot;TEST@163.COM\&quot;,\&quot;claimeeIP\&quot;:\&quot;123.191.2.75\&quot;,\&quot;AccountName\&quot;:\&quot;\&quot;}]&quot;,&quot;source&quot;:&quot;/home/logs/business.log&quot;,&quot;thread&quot;:&quot;Thread-11&quot;,&quot;timestamp&quot;:1536153465953,&quot;type&quot;:&quot;log&quot;}</code></pre>
-
+<pre class="codehilite"><code>{&quot;@timestamp&quot;:&quot;2018-09-05T13:17:46.051Z&quot;,&quot;appname&quot;:&quot;app01&quot;,&quot;beat&quot;:{&quot;hostname&quot;:&quot;52fc9bef4575&quot;,&quot;name&quot;:&quot;52fc9bef4575&quot;,&quot;version&quot;:&quot;5.4.0&quot;},&quot;classname&quot;:&quot;com.domain.pay.service.ApiService&quot;,&quot;date&quot;:&quot;2018-09-05 21:17:45.953+0800&quot;,&quot;filename&quot;:&quot;ApiService.java&quot;,&quot;hostname&quot;:&quot;172.17.0.2&quot;,&quot;level&quot;:&quot;INFO&quot;,&quot;linenumber&quot;:285,&quot;message&quot;:&quot;param[{\&quot;email\&quot;:\&quot;TEST@163.COM\&quot;,\&quot;claimeeIP\&quot;:\&quot;123.191.2.75\&quot;,\&quot;AccountName\&quot;:\&quot;\&quot;}]&quot;,&quot;source&quot;:&quot;/home/logs/business.log&quot;,&quot;thread&quot;:&quot;Thread-11&quot;,&quot;timestamp&quot;:1536153465953,&quot;type&quot;:&quot;log&quot;}
+</code></pre>
 
 <p><strong>Server端Logstash配置</strong></p>
 <pre class="codehilite"><code>input {
@@ -252,8 +253,8 @@ output {
         hosts =&gt; [&quot;10.82.9.205&quot;, &quot;10.82.9.206&quot;, &quot;10.82.9.207&quot;]
         index =&gt; &quot;filebeat-docker-java-%{+YYYY.MM.dd}&quot;
     }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>都是基础配置很简单，不做过多解释，通过以上简单的配置就能实现任何应用程序的日志收集</p>
 <h1 id="_4">日志展示</h1>

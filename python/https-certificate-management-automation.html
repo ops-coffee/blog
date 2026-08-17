@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -167,8 +168,8 @@ class DomainApi:
             return False, str(e)
 
 if __name__ == '__main__':
-    print(DomainApi().get_records('ops-coffee.com'))</code></pre>
-
+    print(DomainApi().get_records('ops-coffee.com'))
+</code></pre>
 
 <p>以上代码使用了阿里云提供的SDK，调用简单方便，最终返回请求状态及数据。<code>get_domains</code>方法可以获取到账号下的所有域名，<code>get_records</code>方法可以获取到域名下的所有解析记录，需要注意数据量大小，以确定是否需要分页查询</p>
 <h2 id="https">检查是否开启HTTPS</h2>
@@ -178,8 +179,8 @@ if __name__ == '__main__':
 try:
     session.get('https://' + domain)
 except Exception as e:
-    print(e)</code></pre>
-
+    print(e)
+</code></pre>
 
 <p>需要注意的是，如果批量扫描域名的话需要使用<code>session</code>模式，否则可能会因为链接过多而报错</p>
 <h2 id="_2">获取证书过期时间</h2>
@@ -200,8 +201,8 @@ def get_expire(domain):
         return False, 500, str(e)
 
 if __name__ == '__main__':
-    print(get_expire('blog.ops-coffee.com'))</code></pre>
-
+    print(get_expire('blog.ops-coffee.com'))
+</code></pre>
 
 <p>使用之前需要先安装<code>pyopenssl</code>模块，这里建议使用python3.6及以上版本，除了<code>get_notAfter</code>可以拿到证书过期时间外，还有以下方法能够获取到更多证书相关的信息：<code>get_notAfter</code>,<code>get_notBefore</code>,<code>get_pubkey</code>,<code>get_serial_number</code>,<code>get_signature_algorithm</code>,<code>get_subject</code>,<code>get_version</code>,<code>gmtime_adj_notAfter</code>,<code>gmtime_adj_notBefore</code>,<code>has_expired</code></p>
 <h2 id="_3">定时执行入库</h2>
@@ -210,8 +211,8 @@ if __name__ == '__main__':
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
     domain = models.CharField(max_length=64, verbose_name='一级域名')
-    jsondata = models.TextField(verbose_name='域名详情')</code></pre>
-
+    jsondata = models.TextField(verbose_name='域名详情')
+</code></pre>
 
 <p>数据库就三个字段，在每次执行完一轮扫码后都会将详细信息计入上表中</p>
 <pre class="codehilite"><code>jsondata = {
@@ -228,12 +229,12 @@ if __name__ == '__main__':
     'record_a_count': 23,
     'record_a_https_count': 19}
 
-Domain.objects.create(domain='ops-coffee.com', jsondata=jsondata)</code></pre>
-
+Domain.objects.create(domain='ops-coffee.com', jsondata=jsondata)
+</code></pre>
 
 <p>前端获取最新一条数据展示</p>
-<pre class="codehilite"><code>Domain.objects.filter(domain=domain).order_by('-create_time').first()</code></pre>
-
+<pre class="codehilite"><code>Domain.objects.filter(domain=domain).order_by('-create_time').first()
+</code></pre>
 
 <h2 id="_4">更新证书</h2>
 <p>证书更新是最繁琐的事情，因为涉及到多平台不同环境，每家公司情况可能都有不同，我们因为大量使用了SAAS服务，SAAS服务又提供有API，所以更新起来比较简单，调用API即</p>
@@ -260,8 +261,8 @@ Domain.objects.create(domain='ops-coffee.com', jsondata=jsondata)</code></pre>
 
 if __name__ == '__main__':
     state, code, data = LBCApi().update_cert(37, 'cert-ops-coffee-cn')
-    print(state, code, json.dumps(data))</code></pre>
-
+    print(state, code, json.dumps(data))
+</code></pre>
 
 <p>搞定收官！KPI++</p>
 

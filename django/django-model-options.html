@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -144,8 +145,8 @@ class User(models.Model):
         return {
             &quot;id&quot;: self.id,
             &quot;sex&quot;: self.get_sex_display(),
-        }</code></pre>
-
+        }
+</code></pre>
 
 <p>通常CHOICES选项的类型为元组，元组内有嵌套了元组，嵌套的元组定义数据，嵌套元组包含了两个数据，第一个数据为值，值会记录进数据库，第二个数据为可读的选项名称，可读的选项名称不会记录进数据库</p>
 <p>对于每一个设置了choices的模型字段，Django会添加一个方法来检索字段当前值的可读名称，用法是：<code>get_sex_display()</code>，其中<code>sex</code>为字段名称</p>
@@ -157,8 +158,8 @@ class User(models.Model):
 
 class User(models.Model):
     age = models.SmallIntegerField(default=18, verbose_name='年龄')
-    contact_info = JSONField(&quot;ContactInfo&quot;, default=contact_default)</code></pre>
-
+    contact_info = JSONField(&quot;ContactInfo&quot;, default=contact_default)
+</code></pre>
 
 <p>对于像ForeignKey这样映射到模型实例的字段，默认应该是它们引用的字段的值，而不是模型实例，ForeignKey引用字段的值默认是pk，如果设置过<code>to_field</code>，那引用字段字段的值将会变成<code>to_field</code>设置的字段值</p>
 <h3 id="unique">unique</h3>
@@ -169,8 +170,8 @@ class User(models.Model):
 <p>将其设置为DateField或DateTimeField的名称，要求该字段的日期字段值是唯一的</p>
 <pre class="codehilite"><code>def Article(models.Model):
     pub_date = models.DateField(auto_now_add=True, verbose_name='发布时间')
-    title = models.CharField(max_length=32, unique_for_date=pub_date, verbose_name='标题')</code></pre>
-
+    title = models.CharField(max_length=32, unique_for_date=pub_date, verbose_name='标题')
+</code></pre>
 
 <p>例如字段title有<code>unique_for_date=pub_date</code>配置，那么Django就不允许输入两条相同title和pub_date的记录</p>
 <h3 id="unique_for_month">unique_for_month</h3>

@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -148,8 +149,8 @@
 <p>这两种方案都不是很好，新建DNS还需要用户都修改自己的DNS指向到新DNS，而绑定hosts无疑会增加使用成本，那该如何处理呢？</p>
 <p><strong>DNS泛域名解析</strong>，利用通配符<code>*</code>来做次级域名以实现所有的次级域名均指向同一IP地址</p>
 <p>在内部DNS上创建一条匹配所有的次级域名的记录，指向到Kubernetes的Ingress服务器，例如</p>
-<pre class="codehilite"><code>*.ops-coffee.com -&gt; 192.168.107.143</code></pre>
-
+<pre class="codehilite"><code>*.ops-coffee.com -&gt; 192.168.107.143
+</code></pre>
 
 <p>这样无论生成任何<code>xxx.ops-coffee.com</code>的域名都可以请求到Kubernetes的Ingress，然后Ingress转发请求到对应的service，最终到pod，完美的解决了这个问题</p>
 <h2 id="_4">域名绑定</h2>

@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -148,8 +149,8 @@
 
         if self.state is not None:
             subtasklog.state = self.state
-            subtasklog.save()</code></pre>
-
+            subtasklog.save()
+</code></pre>
 
 <p>任务执行会不断的输出日志，这些日志就通过上边的<code>Logger</code>类写入数据库，以便前端可以及时读取实时展示，乍看上去并无不妥，但当短时间内日志产生量非常大时便会频繁读写数据库，数据库压力过大从而影响整个程序的执行效率。缓解数据库压力的有效方法就是加缓存</p>
 <p>其实当初在写这段代码的时候就考虑到了用缓存，之所以没有用的主要是因为：在项目设计的过程中我提倡尽量减少依赖，不过度设计，以实现需求为目标，尽量让项目简单，这样协作的小伙伴看起代码来不费劲，出了问题还容易查找原因。正常情况下任务的日质量都不大，数据库处理起来也不费劲，能满足需求，引入缓存势必要增加依赖，让项目更复杂，所以就没有加。但从上边的问题来看，数据库已无法满足需求，增加缓存就很有必要了</p>
@@ -163,8 +164,8 @@
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': '127.0.0.1:11211',
     }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>这里使用了<code>Memcached</code>作为缓存服务，<code>Memcached</code>是一个完全基于内存的缓存服务器，是<code>Django</code>原生支持的最快、最高效的缓存类型，其他还支持的缓存类型有</p>
 <ul>
@@ -180,8 +181,8 @@
 apt-get install memcached
 
 # 安装python连接memcached的包python-memcached
-pip install python-memcached</code></pre>
-
+pip install python-memcached
+</code></pre>
 
 <p>每个缓存后端都支持配置额外的参数，从而来控制缓存的行为，有效的参数如下：</p>
 <p><strong>TIMEOUT：</strong> 用于缓存的默认超时时间，以秒为单位，默认为300秒，当设置为<code>None</code>时表示永不过时，设置为<code>0</code>表示立刻过期不缓存</p>
@@ -195,8 +196,8 @@ pip install python-memcached</code></pre>
 &gt;&gt;&gt;
 &gt;&gt;&gt; cache.get('site', version=37)
 'ops-coffee.com'
-&gt;&gt;&gt;</code></pre>
-
+&gt;&gt;&gt;
+</code></pre>
 
 <p><strong>OPTIONS：</strong> 传递到缓存后端服务的参数，例如我要传递username、password等参数到后端的memcached服务，那么可以这样写</p>
 <pre class="codehilite"><code>CACHES = {
@@ -212,13 +213,13 @@ pip install python-memcached</code></pre>
             }
         }
     }
-}</code></pre>
-
+}
+</code></pre>
 
 <h3 id="_2">缓存访问</h3>
 <p>开启Django Cache配置后，就可以使用缓存服务了，基本用法如下</p>
-<pre class="codehilite"><code>&gt;&gt;&gt; from django.core.cache import cache</code></pre>
-
+<pre class="codehilite"><code>&gt;&gt;&gt; from django.core.cache import cache
+</code></pre>
 
 <p><strong>cache.set(key, value, timeout=DEFAULT_TIMEOUT, version=None)</strong></p>
 <p>其中<code>key</code>是一个字符串，<code>value</code>是一个认可picklable形式的python对象，<code>timeout</code>和<code>version</code>参数都是可选的，<code>timeout</code>默认为<code>CACHES</code>配置中相应后端的<code>timeout</code>参数，<code>version</code>为对应的版本，参考上边关于<code>VERSION</code>的解释</p>
@@ -226,16 +227,16 @@ pip install python-memcached</code></pre>
 &gt;&gt;&gt;
 &gt;&gt;&gt; cache.get('site')
 'ops-coffee.com'
-&gt;&gt;&gt;</code></pre>
-
+&gt;&gt;&gt;
+</code></pre>
 
 <p><strong>cache.get(key, default=None, version=None)</strong></p>
 <p>新的参数<code>default</code>的意思是，当请求的key不存在时，则返回<code>default</code>设置的这个值，而不是默认不存在返回的`None</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; cache.get('name')
 &gt;&gt;&gt;
 &gt;&gt;&gt; cache.get('name', 'has expired')
-'has expired'</code></pre>
-
+'has expired'
+</code></pre>
 
 <p><strong>cache.add(key, value, timeout=DEFAULT_TIMEOUT, version=None)</strong></p>
 <p>与<code>cache.set</code>类似，只是当add的key不存在时，则新建key，存在则不做任何操作</p>
@@ -248,8 +249,8 @@ False
 &gt;&gt;&gt; cache.add('name', '运维咖啡吧 博客')
 True
 &gt;&gt;&gt; cache.get('name')
-'运维咖啡吧 博客'</code></pre>
-
+'运维咖啡吧 博客'
+</code></pre>
 
 <p>新建成功则会返回True，否则返回False</p>
 <p><strong>cache.get_or_set(key, default, timeout=DEFAULT_TIMEOUT, version=None)</strong></p>
@@ -263,8 +264,8 @@ True
 &gt;&gt;&gt; cache.get_or_set('path', '/devops')
 '/devops'
 &gt;&gt;&gt; cache.get('path')
-'/devops'</code></pre>
-
+'/devops'
+</code></pre>
 
 <p><strong>cache.get_many(keys, version=None)</strong></p>
 <p>通过传入一个keys列表，以字典格式返回这些列表中key存在的缓存值</p>
@@ -272,34 +273,34 @@ True
 True
 &gt;&gt;&gt; cache.set('site', 'https://ops-coffee.com')
 &gt;&gt;&gt; cache.get_many(['site','name','path'])
-{'site': 'https://ops-coffee.com', 'name': '运维咖啡吧 博客'}</code></pre>
-
+{'site': 'https://ops-coffee.com', 'name': '运维咖啡吧 博客'}
+</code></pre>
 
 <p><strong>cache.set_many(dict, timeout)</strong></p>
 <p>通过传入字典，批量设置缓存</p>
-<pre class="codehilite"><code>&gt;&gt;&gt; cache.set_many({'site':'ops-coffee.com','name':'运维咖啡吧'})</code></pre>
-
+<pre class="codehilite"><code>&gt;&gt;&gt; cache.set_many({'site':'ops-coffee.com','name':'运维咖啡吧'})
+</code></pre>
 
 <p><strong>cache.delete(key, version=None)</strong></p>
 <p>删除一个key</p>
-<pre class="codehilite"><code>&gt;&gt;&gt; cache.delete('site')</code></pre>
-
+<pre class="codehilite"><code>&gt;&gt;&gt; cache.delete('site')
+</code></pre>
 
 <p><strong>cache.delete_many(keys, version=None)</strong></p>
 <p>批量删除key</p>
-<pre class="codehilite"><code>&gt;&gt;&gt; cache.delete_many(['site','name'])</code></pre>
-
+<pre class="codehilite"><code>&gt;&gt;&gt; cache.delete_many(['site','name'])
+</code></pre>
 
 <p><strong>cache.clear()</strong></p>
 <p>清空缓存，需要注意的是这会删除缓存里的所有key，可能包含一些并不是你设置的key</p>
-<pre class="codehilite"><code>&gt;&gt;&gt; cache.clear()</code></pre>
-
+<pre class="codehilite"><code>&gt;&gt;&gt; cache.clear()
+</code></pre>
 
 <p><strong>cache.touch(key, timeout=DEFAULT_TIMEOUT, version=None)</strong></p>
 <p>更新key的过期时间为timeout设置的值，timeout是可选的，如果不写则默认为<code>CACHES</code>设置的<code>TIMEOUT</code>值</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; cache.touch('site', 3)
-True</code></pre>
-
+True
+</code></pre>
 
 <p>更新成功则返回True，否则返回False</p>
 <p><strong>cache.incr(key, delta=1, version=None)</strong></p>
@@ -308,16 +309,16 @@ True</code></pre>
 &gt;&gt;&gt; cache.incr('num')
 2
 &gt;&gt;&gt; cache.incr('num', 10)
-12</code></pre>
-
+12
+</code></pre>
 
 <p><strong>cache.decr(key, delta=1, version=None)</strong></p>
 <p>与incr递增类似，decr为递减</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; cache.decr('num')
 11
 &gt;&gt;&gt; cache.decr('num', 5)
-6</code></pre>
-
+6
+</code></pre>
 
 <p><strong>cache.close()</strong></p>
 <p>如果缓存后端已经实现了close()方法，可以通过<code>cache.close()</code>关闭和缓存的连接</p>
@@ -350,8 +351,8 @@ True</code></pre>
             subtasklog.save()
 
             # 删除缓存
-            cache.delete(self.key)</code></pre>
-
+            cache.delete(self.key)
+</code></pre>
 
 <p>根据任务ID创建缓存key，这条任务下的所有Log都会先写入缓存中，当任务结束时再将缓存中的日志一把写入数据库，从而减轻数据库压力，执行效率得到了极大的提升</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/1026.03.png" /></p>

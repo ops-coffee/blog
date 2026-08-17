@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -143,8 +144,8 @@
     is_deleted = models.BooleanField(default=False, verbose_name='已删除')
 
     def __str__(self):
-        return self.name</code></pre>
-
+        return self.name
+</code></pre>
 
 <p>其中：<code>create_time</code>、<code>update_time</code>、<code>create_user</code>、<code>project</code>、<code>is_deleted</code>为保留字段，在数据的增删改查中无需过多关注，系统会自动处理</p>
 <h2 id="_2">保留函数</h2>
@@ -173,8 +174,8 @@
             'sortnum': self.sortnum,
             'exechost': self.exechost,
             'execuser': self.execuser.name if self.execuser else ''
-        }</code></pre>
-
+        }
+</code></pre>
 
 <p>最终返回的数据中将会额外包含template_id，subtask_id，subtask_rcmd，subtask_args四个TempTask原本并不包含的字段</p>
 

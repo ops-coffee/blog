@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -128,20 +129,20 @@
     'sadmin.commons',
     'sadmin.accounts',
     'sadmin.project',
-]</code></pre>
-
+]
+</code></pre>
 
 <p>2.Add custom MIDDLEWARE for operatrion log</p>
 <pre class="codehilite"><code>MIDDLEWARE = [
     ...
     'sadmin.commons.middleware.log.OperationLogMiddleware',
     'sadmin.commons.middleware.token.AuthTokenMiddleware',
-]</code></pre>
-
+]
+</code></pre>
 
 <p>3.Add "AUTH_USER_MODEL" to your setting.py</p>
-<pre class="codehilite"><code>AUTH_USER_MODEL = 'accounts.User'</code></pre>
-
+<pre class="codehilite"><code>AUTH_USER_MODEL = 'accounts.User'
+</code></pre>
 
 <p>4.Include the accounts URLconf in your project urls.py like this::</p>
 <pre class="codehilite"><code>from django.urls import path, include
@@ -153,8 +154,8 @@ urlpatterns = [
     path('commons/', include('sadmin.commons.urls')),
     path('accounts/', include('sadmin.accounts.urls')),
     path('project/', include('sadmin.project.urls')),
-]</code></pre>
-
+]
+</code></pre>
 
 <p>5.Run <code>python manage.py migrate</code> to create the models.</p>
 <p>6.Run <code>python manage.py createsuperuser</code> to create superusers</p>

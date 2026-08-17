@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -171,13 +172,13 @@
     |-- website #项目名
     |   |-- cache   #存放log等内容
     |   |-- docker  #打包docker镜像目录
-    |   |-- svn     #svn源代码目录</code></pre>
-
+    |   |-- svn     #svn源代码目录
+</code></pre>
 
 <ul>
 <li>简化过的主函数<code>main.py</code>如下（代码随机删除。。意思对就行吧）</li>
 </ul>
-<pre class="codehilite"><code class="language-python linenums">#!/usr/bin/env python
+<pre class="codehilite"><code>#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import argparse,sys
@@ -220,8 +221,8 @@ class M(object):
 
 if __name__ == '__main__':
     m = M()
-    m.main()</code></pre>
-
+    m.main()
+</code></pre>
 
 <ul>
 <li>modele下的模块函数，以maven编译模块为例</li>
@@ -244,8 +245,8 @@ if __name__ == '__main__':
             assert self.result == 0
         except AssertionError:
             print(&quot;\nMvn build error!\n&quot;)
-            sys.exit()  # 异常退出，这个再模块中非常重要</code></pre>
-
+            sys.exit()  # 异常退出，这个再模块中非常重要
+</code></pre>
 
 <h2 id="_4">使用方法</h2>
 <ul>
@@ -255,8 +256,8 @@ if __name__ == '__main__':
 
 # 第一个参数为项目名
 # 第二个参数为部署环境
-# 后边的参数就是要构建的模块组合</code></pre>
-
+# 后边的参数就是要构建的模块组合
+</code></pre>
 
 <ul>
 <li>Jenkins使用：</li>

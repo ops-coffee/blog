@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -134,8 +135,8 @@
     leader = models.ForeignKey('self', on_delete=models.PROTECT, verbose_name='直属领导')
 
     def __str__(self):
-        return self.username</code></pre>
-
+        return self.username
+</code></pre>
 
 <h4 id="on_delete">on_delete</h4>
 <p>on_delete的值主要有以下几个</p>
@@ -166,8 +167,8 @@
   `leader_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `accounts_user_leader_id_28d81690` (`leader_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8</code></pre>
-
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8
+</code></pre>
 
 <h2 id="_6">管理</h2>
 <p>以下演示代码参考如下表设计</p>
@@ -181,8 +182,8 @@ class Password(TimeBaseModel):
     user = models.CharField(max_length=32, verbose_name='账号')
     password = models.CharField(max_length=32, verbose_name='密码')
     contact = models.CharField(max_length=64, verbose_name='联系人')
-    note = models.TextField(max_length=64, verbose_name='备注')</code></pre>
-
+    note = models.TextField(max_length=64, verbose_name='备注')
+</code></pre>
 
 <h3 id="_7">新增</h3>
 <pre class="codehilite"><code>&gt;&gt;&gt; h1 = Host.objects.create(ip='192.168.3.1', port=22)
@@ -193,8 +194,8 @@ class Password(TimeBaseModel):
 &gt;&gt;&gt; h1.id
 29
 &gt;&gt;&gt; h2.id
-30</code></pre>
-
+30
+</code></pre>
 
 <pre class="codehilite"><code>&gt;&gt;&gt; p1 = Password.objects.create(host=h1, user='root', password='123', contact='fei.liu', note='')
 &gt;&gt;&gt;
@@ -204,32 +205,32 @@ class Password(TimeBaseModel):
 &gt;&gt;&gt; p1.host.id
 29
 &gt;&gt;&gt; p2.host.id
-30</code></pre>
-
+30
+</code></pre>
 
 <p>可以通过<strong>instance实例</strong>或<strong>instance_id</strong>两种方式来新增数据</p>
 <h3 id="_8">查询</h3>
 <p>正向查询</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; p = Password.objects.get(id=3)
 &gt;&gt;&gt; p.host.ip
-'192.168.3.1'</code></pre>
-
+'192.168.3.1'
+</code></pre>
 
 <p>反向查询</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; h = Host.objects.get(id=30)
 &gt;&gt;&gt; h.password_set.all()
-&lt;QuerySet [&lt;Password: Password object (5)&gt;]&gt;</code></pre>
-
+&lt;QuerySet [&lt;Password: Password object (5)&gt;]&gt;
+</code></pre>
 
 <p>related_name</p>
 <pre class="codehilite"><code>class Password(TimeBaseModel):
-    host = models.ForeignKey(Host, on_delete=models.CASCADE, related_name='users', verbose_name='主机')</code></pre>
-
+    host = models.ForeignKey(Host, on_delete=models.CASCADE, related_name='users', verbose_name='主机')
+</code></pre>
 
 <pre class="codehilite"><code>&gt;&gt;&gt; h = Host.objects.get(id=30)
 &gt;&gt;&gt; h.users.all()
-&lt;QuerySet [&lt;Password: root@192.168.3.2&gt;]&gt;</code></pre>
-
+&lt;QuerySet [&lt;Password: root@192.168.3.2&gt;]&gt;
+</code></pre>
 
 <p>当<code>related_name</code>配置存在时，则可以通过<code>related_name</code>定义的值进行查询</p>
 <h3 id="_9">修改</h3>
@@ -238,8 +239,8 @@ class Password(TimeBaseModel):
 &gt;&gt;&gt; p.save()
 &gt;&gt;&gt;
 &gt;&gt;&gt; p.host
-&lt;Host: 192.168.3.1&gt;</code></pre>
-
+&lt;Host: 192.168.3.1&gt;
+</code></pre>
 
 <pre class="codehilite"><code>&gt;&gt;&gt; h = Host.objects.get(id=30)
 &gt;&gt;&gt; h.ip
@@ -249,14 +250,15 @@ class Password(TimeBaseModel):
 &gt;&gt;&gt; p.save()
 &gt;&gt;&gt;
 &gt;&gt;&gt; p.host
-&lt;Host: 192.168.3.2&gt;</code></pre>
-
+&lt;Host: 192.168.3.2&gt;
+</code></pre>
 
 <p>同样的也能通过<strong>instance实例</strong>或<strong>instance_id</strong>两种方式来修改数据</p>
 <h3 id="_10">删除</h3>
 <pre class="codehilite"><code>&gt;&gt;&gt; p = Password.objects.get(id=5)
 &gt;&gt;&gt; p.delete()
-(1, {'cmdb.Password': 1})</code></pre>
+(1, {'cmdb.Password': 1})
+</code></pre>
 
         <div>
           <ul class="article-meta">

@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -147,12 +148,12 @@ self.ssh_channel = transport.open_session()
 self.ssh_channel.get_pty(term=term, width=cols, height=rows)
 
 # 激活终端，这样就可以正常登陆了
-self.ssh_channel.invoke_shell()</code></pre>
-
+self.ssh_channel.invoke_shell()
+</code></pre>
 
 <p>连接建立，可以通过如下方法给SSH通道发送数据</p>
-<pre class="codehilite"><code>self.ssh_channel.send(data)</code></pre>
-
+<pre class="codehilite"><code>self.ssh_channel.send(data)
+</code></pre>
 
 <p>当然SSH返回的数据也可以通过如下方法持续的输出给Websocket</p>
 <pre class="codehilite"><code>while not self.ssh_channel.exit_status_ready():
@@ -162,8 +163,8 @@ self.ssh_channel.invoke_shell()</code></pre>
         message = {'flag': 'success', 'message': data}
         self.websocket.send(json.dumps(message))
     else:
-        break</code></pre>
-
+        break
+</code></pre>
 
 <p>有了这些信息，结合<a href="https://blog.ops-coffee.com/webssh/jumpserver-kubernetes-web-terminal-ssh-stream" target="_blank">Django实现WebSSH操作Kubernetes Pod</a>的文章，实现WebSSH浏览器操作物理机或者虚拟机就不算困难了，完整的Consumer代码如下：</p>
 <pre class="codehilite"><code>import io
@@ -257,16 +258,16 @@ class SSHConsumer(WebsocketConsumer):
 
     def receive(self, text_data=None):
         text_data = json.loads(text_data)
-        self.ssh.shell(data=text_data.get('data', ''))</code></pre>
-
+        self.ssh.shell(data=text_data.get('data', ''))
+</code></pre>
 
 <h2 id="_1">动态调整终端窗口大小</h2>
 <p>看了<a href="https://blog.ops-coffee.com/webssh/jumpserver-web-terminal-kubernetes-ssh-resize" target="_blank">Kubernetes WebSSH终端窗口自适应Resize</a>文章，小伙伴又说了，你这只能在连接建立时确定终端窗口的大小，如果我中途调整了浏览器的大小，显示就乱了，这该怎么办？</p>
 <p>不要着急，接下来就让我们看看怎么让终端窗口随着浏览器大小的调整而改变，上边的文章中已经说过，终端窗口的大小需要浏览器和后端返回的Terminal大小保持一致，单单调整页面窗口大小或者后端返回的Terminal窗口大小都是不行的，那么从这两个方向来说明该如何动态调整窗口的大小</p>
 <p>首先<code>Paramiko</code>模块建立的SSH通道可以通过<code>resize_pty</code>来动态改变返回Terminal窗口的大小，使用方法如下：</p>
 <pre class="codehilite"><code>def resize_pty(self, cols, rows):
-    self.ssh_channel.resize_pty(width=cols, height=rows)</code></pre>
-
+    self.ssh_channel.resize_pty(width=cols, height=rows)
+</code></pre>
 
 <p>然后Django的Channels每次接收到前端发过来的数据时，判断一下窗口是否有变化，如果有变化则调用上边的方法动态改变Terminal输出窗口的大小</p>
 <p>我在实现时会给传过来的数据加个flag，如果flag是resize，则调用resize_pty的方法动态调整窗口大小，否则就正常调用执行命令的方法，代码如下：</p>
@@ -276,8 +277,8 @@ class SSHConsumer(WebsocketConsumer):
     if text_data.get('flag') == 'resize':
         self.ssh.resize_pty(cols=text_data['cols'], rows=text_data['rows'])
     else:
-        self.ssh.shell(data=text_data.get('data', ''))</code></pre>
-
+        self.ssh.shell(data=text_data.get('data', ''))
+</code></pre>
 
 <p>后端都搞定了，那么来看看前端如何处理吧</p>
 <p>首先有一个terminal_size的方法根据浏览器窗口大小除以每个字符所占用的大小计算出cols和rows的值，无论是xterm.js还是Paramiko都是根据这两个值来调整窗口大小的</p>
@@ -286,8 +287,8 @@ class SSHConsumer(WebsocketConsumer):
         cols: Math.floor($('#terminal').width() / 9),
         rows: Math.floor($(window).height() / 17),
     }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>然后通过<code>$(window).resize()</code>来检测浏览器窗口的变化，一旦发生变化，则发送一个带resize标记的数据给Django，同时传递的数据还有新的cols和rows</p>
 <pre class="codehilite"><code>// terminal resize
@@ -303,8 +304,8 @@ $(window).resize(function () {
 
     socket.send(send_data);
     term.resize(cols, rows)
-})</code></pre>
-
+})
+</code></pre>
 
 <p>最后通过<code>term.resize</code>来调整xterm渲染的窗口的大小</p>
 <p>这样一个完整的动态调整窗口大小的方案就完成了</p>

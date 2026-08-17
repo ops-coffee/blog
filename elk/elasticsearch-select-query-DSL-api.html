@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -137,8 +138,8 @@
   &quot;query&quot;:{
     &quot;match_all&quot;: {}
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <p><strong>/_search</strong> 查找整个ES中所有索引的内容</p>
 <p><strong>query</strong> 为查询关键字，类似的还有<code>aggs</code>为聚合关键字</p>
@@ -177,8 +178,8 @@
       ...省略其他的结果...
     ]
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <p><strong>took：</strong> 表示我们执行整个搜索请求消耗了多少毫秒</p>
 <p><strong>timed_out：</strong> 表示本次查询是否超时</p>
@@ -193,21 +194,21 @@
 <ol>
 <li>指定一个固定的索引，<code>ops-coffee-nginx-2019.05.15</code>为索引名字</li>
 </ol>
-<pre class="codehilite"><code>GET /ops-coffee-nginx-2019.05.15/_search</code></pre>
-
+<pre class="codehilite"><code>GET /ops-coffee-nginx-2019.05.15/_search
+</code></pre>
 
 <p>以上表示在<code>ops-coffee-nginx-2019.05.15</code>索引下查找数据</p>
 <ol>
 <li>指定多个固定索引，多个索引名字用逗号分割</li>
 </ol>
-<pre class="codehilite"><code>GET /ops-coffee-nginx-2019.05.15,ops-coffee-nginx-2019.05.14/_search</code></pre>
-
+<pre class="codehilite"><code>GET /ops-coffee-nginx-2019.05.15,ops-coffee-nginx-2019.05.14/_search
+</code></pre>
 
 <ol>
 <li>用*号匹配，在匹配到的所有索引下查找数据</li>
 </ol>
-<pre class="codehilite"><code>GET /ops-coffee-nginx-*/_search</code></pre>
-
+<pre class="codehilite"><code>GET /ops-coffee-nginx-*/_search
+</code></pre>
 
 <p>当然这里也可以用逗号分割多个匹配索引</p>
 <h2 id="_4">分页查询</h2>
@@ -221,8 +222,8 @@
   &quot;query&quot;:{
     &quot;match_all&quot;: {}
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>以上查询就表示查询<code>ops-coffee-nginx-2019.05.15</code>索引下的所有数据，并会在<code>hits</code>中显示第11到第15个文档的数据</p>
 <h2 id="_5">全文查询</h2>
@@ -236,8 +237,8 @@
       &quot;host&quot;:&quot;ops-coffee.com&quot;
     }
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <h3 id="multi_match">multi_match</h3>
 <p>在多个字段上执行相同的match查询，下边的例子就表示查询<code>host</code>或<code>http_referer</code>字段中包含<code>ops-coffee.com</code>的记录</p>
@@ -249,8 +250,8 @@
       &quot;fields&quot;:[&quot;host&quot;,&quot;http_referer&quot;]
     }
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <h3 id="query_string">query_string</h3>
 <p>可以在查询里边使用AND或者OR来完成复杂的查询，例如：</p>
@@ -262,8 +263,8 @@
       &quot;fields&quot;:[&quot;host&quot;]
     }
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>以上表示查找host为<code>a.ops-coffee.com</code>或者<code>b.ops-coffee.com</code>的所有记录</p>
 <p>也可以用下边这种方式组合更多的条件完成更复杂的查询请求</p>
@@ -274,8 +275,8 @@
       &quot;query&quot;:&quot;host:a.ops-coffee.com OR (host:b.ops-coffee.com AND status:403)&quot;
     }
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>以上表示查询（host为<code>a.ops-coffee.com</code>）或者是（host为<code>b.ops-coffee.com</code>且status为403）的所有记录</p>
 <p>与其像类似的还有个<strong>simple_query_string</strong>的关键字，可以将<code>query_string</code>中的AND或OR用<code>+</code>或<code>|</code>这样的符号替换掉</p>
@@ -290,8 +291,8 @@
       }
     }
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>term对输入的文本不进行分析，直接精确匹配输出结果，如果要同时匹配多个值可以使用<strong>terms</strong></p>
 <pre class="codehilite"><code>GET /ops-coffee-2019.05.14/_search
@@ -301,8 +302,8 @@
       &quot;status&quot;:[403,404]
     }
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <h3 id="range">range</h3>
 <p>range用来查询落在指定区间内的数字或者时间</p>
@@ -316,8 +317,8 @@
       }
     }
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>以上表示搜索所有状态为400到599之间的数据，这里的操作符主要有四个<code>gt</code>大于，<code>gte</code>大于等于，<code>lt</code>小于，<code>lte</code>小于等于</p>
 <p>当使用日期作为范围查询时，我们需要注意下日期的格式，官方支持的日期格式主要有两种</p>
@@ -335,8 +336,8 @@
       }
     }
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <ol>
 <li>日期字符串</li>
@@ -353,8 +354,8 @@
       }
     }
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>通常更推荐用这种日期字符串的方式，看起来比较清晰，日期格式可以按照自己的习惯输入，只需要<code>format</code>字段指定匹配的格式，如果格式有多个就用<code>||</code>分开，像例子中那样，不过我更推荐用同样的日期格式</p>
 <p>如果日期中缺少年月日这些内容，那么缺少的部分会用unix的开始时间（即1970年1月1日）填充，当你将<code>"format":"dd"</code>指定为格式时，那么<code>"gte":10</code>将被转换成<code>1970-01-10T00:00:00.000Z</code></p>
@@ -381,8 +382,8 @@
       }
     }
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>主要有四个关键字来组合查询之间的关系，分别为：</p>
 <p><strong>must：</strong> 类似于SQL中的AND，必须包含</p>

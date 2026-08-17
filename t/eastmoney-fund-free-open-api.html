@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -123,8 +124,8 @@
         <h1 id="art-title">天天基金免费开放数据API使用说明</h1>
 
         <h2 id="_1">实时涨跌</h2>
-<pre class="codehilite"><code>https://fundgz.1234567.com.cn/js/007345.js?v=20200908175500</code></pre>
-
+<pre class="codehilite"><code>https://fundgz.1234567.com.cn/js/007345.js?v=20200908175500
+</code></pre>
 
 <p>数字为基金代码，rt为时间戳</p>
 <pre class="codehilite"><code>jsonpgz({
@@ -135,12 +136,12 @@
   &quot;gsz&quot;: &quot;1.9717&quot;,
   &quot;gszzl&quot;: &quot;1.42&quot;,
   &quot;gztime&quot;: &quot;2020-09-18 15:00&quot;
-});</code></pre>
-
+});
+</code></pre>
 
 <h2 id="_2">基金列表</h2>
-<pre class="codehilite"><code>http://fund.eastmoney.com/js/fundcode_search.js</code></pre>
-
+<pre class="codehilite"><code>http://fund.eastmoney.com/js/fundcode_search.js
+</code></pre>
 
 <p>返回数据</p>
 <pre class="codehilite"><code>var r = [
@@ -158,16 +159,16 @@
     &quot;混合型&quot;,
     &quot;HUAXIACHENGZHANGHUNHE&quot;
   ]
-]</code></pre>
-
+]
+</code></pre>
 
 <h2 id="_3">基金详情</h2>
-<pre class="codehilite"><code>http://fund.eastmoney.com/pingzhongdata/007345.js?v=20200908175500</code></pre>
-
+<pre class="codehilite"><code>http://fund.eastmoney.com/pingzhongdata/007345.js?v=20200908175500
+</code></pre>
 
 <h2 id="_4">基金公司列表</h2>
-<pre class="codehilite"><code>http://fund.eastmoney.com/js/jjjz_gs.js</code></pre>
-
+<pre class="codehilite"><code>http://fund.eastmoney.com/js/jjjz_gs.js
+</code></pre>
 
 <p>返回数据</p>
 <pre class="codehilite"><code>var gs={
@@ -181,16 +182,16 @@
       &quot;招商基金&quot;
     ]
   ]
-}</code></pre>
-
+}
+</code></pre>
 
 <h2 id="_5">基金净值数据</h2>
-<pre class="codehilite"><code>http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz&amp;code=007345&amp;page=1&amp;per=20&amp;sdate=2020-09-01&amp;edate=2020-09-18</code></pre>
-
+<pre class="codehilite"><code>http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz&amp;code=007345&amp;page=1&amp;per=20&amp;sdate=2020-09-01&amp;edate=2020-09-18
+</code></pre>
 
 <h2 id="_6">基金增幅排名</h2>
-<pre class="codehilite"><code>http://fund.eastmoney.com/data/rankhandler.aspx?op=ph&amp;dt=kf&amp;ft=gp&amp;rs=&amp;gs=0&amp;sc=zzf&amp;st=desc&amp;sd=2016-03-29&amp;ed=2017-03-29&amp;qdii=&amp;tabSubtype=,,,,,&amp;pi=1&amp;pn=50&amp;dx=1&amp;v=0.6370068000914493</code></pre>
-
+<pre class="codehilite"><code>http://fund.eastmoney.com/data/rankhandler.aspx?op=ph&amp;dt=kf&amp;ft=gp&amp;rs=&amp;gs=0&amp;sc=zzf&amp;st=desc&amp;sd=2016-03-29&amp;ed=2017-03-29&amp;qdii=&amp;tabSubtype=,,,,,&amp;pi=1&amp;pn=50&amp;dx=1&amp;v=0.6370068000914493
+</code></pre>
 
 <p>ft： fund type类型 所有-all 股票型-gp 混合型-hh 债券型-zq 指数型-zs 保本型-bb QDII-qdii LOF-lof</p>
 <h2 id="_7">实时查看基金涨跌工具</h2>

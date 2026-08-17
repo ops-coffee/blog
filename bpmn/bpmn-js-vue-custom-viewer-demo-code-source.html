@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -171,14 +172,14 @@ export default {
     }
   }
 };
-&lt;/script&gt;</code></pre>
-
+&lt;/script&gt;
+</code></pre>
 
 <h2 id="_2">屏幕自适应</h2>
 <p>流程图渲染完成后可能会出现集中在画布左侧/右侧等情形，导致整体不够美观，通过<code>zoom</code>可以配置自适应画布，保证渲染图位于画布的中间位置</p>
 <pre class="codehilite"><code>const canvas = this.bpmnViewer.get(&quot;canvas&quot;);
-canvas.zoom(&quot;fit-viewport&quot;, &quot;auto&quot;);</code></pre>
-
+canvas.zoom(&quot;fit-viewport&quot;, &quot;auto&quot;);
+</code></pre>
 
 <h2 id="_3">自定义颜色设置</h2>
 <p>bpmn-js提供了三种修改颜色的方式，如果你想在Modeler（编辑）模式下修改颜色，推荐使用<code>setColor</code>方式，而Viewer（预览）模式则只能通过另外两种<code>overlay</code>和<code>Marker</code>方式来实现，以下为bpmn-js提供的三种修改颜色的方法</p>
@@ -189,8 +190,8 @@ canvas.zoom(&quot;fit-viewport&quot;, &quot;auto&quot;);</code></pre>
     background-color: green;
     opacity: 0.4;
     pointer-events: none;
-}</code></pre>
-
+}
+</code></pre>
 
 <p>然后修改节点颜色</p>
 <pre class="codehilite"><code>var overlays = viewer.get('overlays'),
@@ -210,8 +211,8 @@ overlays.add('Activity_0djl6l0', {
     left: 0
   },
   html: $overlayHtml
-});</code></pre>
-
+});
+</code></pre>
 
 <h3 id="marker">Marker +</h3>
 <p>Viewer模式下可用</p>
@@ -219,13 +220,13 @@ overlays.add('Activity_0djl6l0', {
 <pre class="codehilite"><code>.highlight .djs-visual &gt; :nth-child(1) {
     stroke: green !important;
     fill: rgba(0, 80, 0, 0.4) !important;
-}</code></pre>
-
+}
+</code></pre>
 
 <p>然后修改节点颜色</p>
 <pre class="codehilite"><code>var canvas = viewer.get('canvas');
-canvas.addMarker('Activity_0djl6l0', 'highlight');</code></pre>
-
+canvas.addMarker('Activity_0djl6l0', 'highlight');
+</code></pre>
 
 <h3 id="setcolor">setColor</h3>
 <p>Modeler模式下可用</p>
@@ -238,8 +239,8 @@ canvas.addMarker('Activity_0djl6l0', 'highlight');</code></pre>
       stroke: 'green',
       fill: 'rgba(0, 80, 0, 0.4)'
     });
-});</code></pre>
-
+});
+</code></pre>
 
 <h3 id="_4">我们的使用示例</h3>
 <p>Viewer预览模式下，后端传递过来的xml数据里包含了<code>run_state</code>的标记，标识当前节点的状态，需要根据这个状态给节点渲染上对应的颜色</p>
@@ -259,8 +260,8 @@ canvas.addMarker('Activity_0djl6l0', 'highlight');</code></pre>
 &lt;manualTask id=&quot;Activity_0qkzn5l&quot; name=&quot;手动节点&quot; run_state=&quot;7&quot;&gt;
   &lt;incoming&gt;Flow_17tttbw&lt;/incoming&gt;
   &lt;outgoing&gt;Flow_0h1ee5i&lt;/outgoing&gt;
-&lt;/manualTask&gt;</code></pre>
-
+&lt;/manualTask&gt;
+</code></pre>
 
 <p>在页面加载完xml后，调用setColor的方法来设置颜色</p>
 <pre class="codehilite"><code>setColor() {
@@ -284,8 +285,8 @@ canvas.addMarker('Activity_0djl6l0', 'highlight');</code></pre>
       }
     }
   });
-}</code></pre>
-
+}
+</code></pre>
 
 <p>设置颜色实际上就是通过<code>addMarker</code>方法给节点设置CSS，因为连线无需设置fill属性，对于连线有特殊的处理，对应的CSS如下</p>
 <pre class="codehilite"><code>&lt;style&gt;
@@ -315,8 +316,8 @@ canvas.addMarker('Activity_0djl6l0', 'highlight');</code></pre>
 .highlight-24 .djs-visual &gt; :nth-child(1) {
   stroke: red !important;
 }
-&lt;/style&gt;</code></pre>
-
+&lt;/style&gt;
+</code></pre>
 
 <p>最后渲染完成的样子如下，未来我们的<a href="https://mp.weixin.qq.com/s/eZX5qoJzuCSuLI98gSCtpw" target="_blank">【开源一站式DevOps平台CODO】</a>的流程图展示或许就长这个样子，期待一下吧</p>
 <p><img alt="" loading="lazy" src="/static/images/2020/0915.01.png" /></p>
@@ -327,8 +328,8 @@ canvas.addMarker('Activity_0djl6l0', 'highlight');</code></pre>
 <pre class="codehilite"><code>&quot;dependencies&quot;: {
     &quot;bpmn-js&quot;: &quot;^7.3.0&quot;,
     &quot;diagram-js&quot;: &quot;^5.0.0&quot;
-},</code></pre>
-
+},
+</code></pre>
 
 <p>编写自定义Viewer添加<code>ZoomScrollModule</code>和<code>MoveCanvasModule</code>模块来扩展默认Viewer的功能，自定义Viewer文件位于<code>src/components/customBpmn/index.js</code>下，内容如下</p>
 <pre class="codehilite"><code>import inherits from &quot;inherits&quot;;
@@ -349,12 +350,12 @@ CustomViewer.prototype._modules = [].concat(Viewer.prototype._modules, [
   MoveCanvasModule
 ]);
 
-export { CustomModeler, CustomViewer };</code></pre>
-
+export { CustomModeler, CustomViewer };
+</code></pre>
 
 <p>最后在页面中引用自定义Viewer</p>
-<pre class="codehilite"><code>import { CustomViewer } from &quot;../components/customBpmn&quot;;</code></pre>
-
+<pre class="codehilite"><code>import { CustomViewer } from &quot;../components/customBpmn&quot;;
+</code></pre>
 
 <p>并将init初始化方法中的<code>BpmnViewer</code>替换为<code>CustomViewer</code>，然后刷新页面就会发现流程图可以拖动啦</p>
 <h2 id="_5">写在最后</h2>

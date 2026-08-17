@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -137,19 +138,19 @@
 <p>asciinema的安装和使用都非常简单，一起来看看吧</p>
 <h2 id="_1">安装</h2>
 <p>asciinema为python开发，可以直接通过<code>apt-get</code>、<code>yum</code>或者<code>pip</code>进行安装</p>
-<pre class="codehilite"><code># apt-get install asciinema</code></pre>
-
+<pre class="codehilite"><code># apt-get install asciinema
+</code></pre>
 
 <p>安装完成后查看版本</p>
 <pre class="codehilite"><code># asciinema --version
-asciinema 2.0.2</code></pre>
-
+asciinema 2.0.2
+</code></pre>
 
 <p>asciinema有v1和v2两个版本，差异较大，咖啡君使用了v2，以下所有内容也基于v2演示</p>
 <p>asciinema有5个参数，分别为录制：<code>rec</code>，播放：<code>play</code>，以文件形式查看录制内容：<code>cat</code>，上传文件到asciinema.org网站：<code>upload</code>、asciinema.org账号认证：<code>auth</code>，本文主要说明<code>rec</code>和<code>play</code>的使用</p>
 <h2 id="_2">录制</h2>
-<pre class="codehilite"><code># asciinema rec ops-coffee.cast</code></pre>
-
+<pre class="codehilite"><code># asciinema rec ops-coffee.cast
+</code></pre>
 
 <p>有几个参数可以使用：</p>
 <p><strong><code>--stdin</code></strong> 表示启用标准输入录制，意思是通常情况下linux输入密码类的信息都不会显示，如果开启了这个选项，可以记录键盘输出的密码，但这个功能官方似乎还没有支持，加了后看不到效果</p>
@@ -164,8 +165,8 @@ asciinema 2.0.2</code></pre>
 <p><strong><code>-q</code></strong> 静默模式，加了此参数在进入录制或者退出录制时都没有提示</p>
 <p>输入<code>exit</code>或按<code>ctrl+D</code>组合键退出录制</p>
 <h2 id="_3">播放</h2>
-<pre class="codehilite"><code># asciinema play ops-coffee.cast </code></pre>
-
+<pre class="codehilite"><code># asciinema play ops-coffee.cast 
+</code></pre>
 
 <p>有两个参数可以使用：</p>
 <p><strong><code>-s</code></strong> 后边跟数字，表示用几倍的速度来播放录像</p>
@@ -178,8 +179,8 @@ asciinema 2.0.2</code></pre>
 [0.010014, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]
 [1.296458, &quot;o&quot;, &quot;exit&quot;]
 [1.976439, &quot;o&quot;, &quot;\r\n&quot;]
-[1.976532, &quot;o&quot;, &quot;exit\r\n&quot;]</code></pre>
-
+[1.976532, &quot;o&quot;, &quot;exit\r\n&quot;]
+</code></pre>
 
 <p>cast文件主要有两部分组成，位于第一行的一个字典，这里叫header</p>
 <pre class="codehilite"><code>{
@@ -192,13 +193,13 @@ asciinema 2.0.2</code></pre>
         &quot;TERM&quot;: &quot;linux&quot;
     },
     &quot;title&quot;: &quot;ops-coffee&quot;
-}</code></pre>
-
+}
+</code></pre>
 
 <p>header很简单，字段的意思分别为：version版本，width和height分别表示录制窗口的宽高，timestamp录制开始的时间戳，env录制时指定的<code>-e</code>参数设置，title录制时指定的<code>-t</code>参数设置</p>
 <p>接下来的都是固定格式的内容，实际上就是IO流信息</p>
-<pre class="codehilite"><code>[0.010014, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]</code></pre>
-
+<pre class="codehilite"><code>[0.010014, &quot;o&quot;, &quot;root@onlinegame:~# &quot;]
+</code></pre>
 
 <p>每一行都是由三部分组成的一个列表</p>
 <p>第一部分为一个浮点数，表示输入输出这一行内容所花的时间</p>
@@ -211,8 +212,8 @@ asciinema 2.0.2</code></pre>
 <p>非常简单，只需要在devuser用户的家目录下添加<code>.bash_profile</code>文件即可，内容如下：</p>
 <pre class="codehilite"><code>$ cat ~/.bash_profile 
 export LC_ALL=en_US.UTF-8
-/usr/local/bin/asciinema rec /tmp/$USER-$(date +%Y%m%d%H%M%S).log -q</code></pre>
-
+/usr/local/bin/asciinema rec /tmp/$USER-$(date +%Y%m%d%H%M%S).log -q
+</code></pre>
 
 <p>添加<code>export LC_ALL=en_US.UTF-8</code>的原因是有可能系统会报错<code>asciinema needs a UTF-8 native locale to run. Check the output of locale command.</code></p>
 <p><code>rec</code>命令进行录制时添加了<code>-q</code>参数，这样在进入或者退出时都不会有任何关于asciinema的提示，使用简单方便</p>

@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -149,8 +150,8 @@
     &quot;_default&quot;: {
         &quot;branch&quot;: &quot;main&quot;
     }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>这里定义了两个参数branch和environment，其中branch在<code>_helper</code>中定义了帮助信息，在<code>_default</code>中定义了默认值，而environment则通过<code>_select</code>定义为了选择值，选项包含dev、test和prod，required则表示默认选择为空</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0521.03.png" /></p>
@@ -171,8 +172,8 @@
         &quot;value&quot;: &quot;dev,test,prod&quot;,
         &quot;helper&quot;: &quot;&quot;
     }
-],</code></pre>
-
+],
+</code></pre>
 
 <p>列表里包含字典，每个字典一个参数，字典里定义参数的类型、默认值和帮助信息，简洁且清晰。然后渲染成表格的方式给用户填写</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0521.04.png" /></p>
@@ -225,8 +226,8 @@ def update_kwargs_format():
             task.kwargs = new_kwargs
             task.save()
         else:
-            print('==&gt;taskID: {}, taskName: {}, taskArgs: {}'.format(task.id, task.name, task.kwargs))</code></pre>
-
+            print('==&gt;taskID: {}, taskName: {}, taskArgs: {}'.format(task.id, task.name, task.kwargs))
+</code></pre>
 
 <p>线上更新流程就先通知大伙更新，然后停掉Celery任务进程防止任务执行，拉代码、运行数据结构变更脚本、启动Celery任务进程，最后线上测试验证</p>
 <p>一切OK，十分顺利</p>

@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -135,12 +136,12 @@ class Hero(models.Model):
     data = models.JSONField(null=True)
 
     def __str__(self):
-        return self.name</code></pre>
-
+        return self.name
+</code></pre>
 
 <p>通过<code>models.JSONField</code>可指定此字段为存储类型为JSON格式。<code>null=True</code>表示此字段可以为空，这个NULL指的是SQL NULL，如果想存储为JsonNULL，则可以使用<code>Value('null')</code>来实现</p>
-<pre class="codehilite"><code>Hero.objects.create(name='coffee', data=Value('null'))</code></pre>
-
+<pre class="codehilite"><code>Hero.objects.create(name='coffee', data=Value('null'))
+</code></pre>
 
 <p>SQL NULL与JsonNULL的区别主要在<code>is_null</code>的查询上不同，可以通过以下这个示例来理解下</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; from django.db.models import Value
@@ -161,8 +162,8 @@ class Hero(models.Model):
 &gt;&gt;&gt; Hero.objects.filter(data__isnull=True)
 &lt;QuerySet [&lt;Hero: ops&gt;]&gt;
 &gt;&gt;&gt; Hero.objects.filter(data__isnull=False)
-&lt;QuerySet [&lt;Hero: coffee&gt;]&gt;</code></pre>
-
+&lt;QuerySet [&lt;Hero: coffee&gt;]&gt;
+</code></pre>
 
 <h2 id="jsonfield_1">JSONField查询</h2>
 <p>Json字段的查询方法，通过下边这个示例演示说明</p>
@@ -178,56 +179,56 @@ class Hero(models.Model):
 ... })
 &lt;Hero: ops-coffee.com&gt;
 &gt;&gt;&gt; Hero.objects.create(name='ops-coffee', data={'age':16})
-&lt;Hero: ops-coffee&gt;</code></pre>
-
+&lt;Hero: ops-coffee&gt;
+</code></pre>
 
 <p>当想要查询<code>age</code>为<code>12</code>的数据时可以这样查询</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__age=12)
-&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;</code></pre>
-
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;
+</code></pre>
 
 <p>当想要查询<code>group</code>的<code>name</code>为<code>ow1</code>的数据时可以这样查询</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__group__name='ow1')
-&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;</code></pre>
-
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;
+</code></pre>
 
 <p>当想要查询<code>group</code>下<code>skill</code>中第一个数据的<code>name</code>值为<code>swim</code>的数据时可以这样查询</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__group__skill__0__name='swim')
-&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;</code></pre>
-
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;
+</code></pre>
 
 <p>当想要查找包含<code>group</code>键的所有数据时，可以通过<code>has_key</code>来实现</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__has_key='group')
-&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;</code></pre>
-
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;
+</code></pre>
 
 <p>当想要查找同时包含<code>group</code>键和<code>age</code>键的所有数据时，可以通过<code>has_keys</code>来实现</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__has_keys=['group','age'])
-&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;</code></pre>
-
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;
+</code></pre>
 
 <p>当想要查找包含<code>group</code>键或者<code>age</code>键的所有数据时，可以通过<code>has_any_keys</code>来实现</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__has_any_keys=['group','age'])
-&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;, &lt;Hero: ops-coffee&gt;]&gt;</code></pre>
-
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;, &lt;Hero: ops-coffee&gt;]&gt;
+</code></pre>
 
 <p>当想一次性查找包含<code>age</code>为<code>12</code>且<code>group</code>的<code>name</code>为<code>ow1</code>的数据时，可以通过<code>contains</code>来实现</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__contains={'age':12,'group': {'name': 'ow1'}})
-&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;</code></pre>
-
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;
+</code></pre>
 
 <p>JSONField除了支持以上查询方式外，对于ORM所提供的大部分其他查询方式同样支持，例如<code>icontains</code>,<code>endswith</code>,<code>iendswith</code>,<code>iexact</code>,<code>regex</code>,<code>iregex</code>, <code>startswith</code>,<code>istartswith</code>,<code>lt</code>,<code>lte</code>,<code>gt</code>,<code>gte</code>，使用起来也是非常方便</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; Hero.objects.filter(data__age__lte=12)
 &lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;
 &gt;&gt;&gt;
 &gt;&gt;&gt; Hero.objects.filter(data__group__name__startswith='ow')
-&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;</code></pre>
-
+&lt;QuerySet [&lt;Hero: ops-coffee.com&gt;]&gt;
+</code></pre>
 
 <h2 id="sqlite3">SQLite3报错处理</h2>
 <p>我在Windows下开发测试时，当<code>migrate</code>生成表的时候遇到了如下报错，这主要是因为SQLite不支持JSONFields导致的</p>
-<pre class="codehilite"><code>SQLite does not support JSONFields</code></pre>
-
+<pre class="codehilite"><code>SQLite does not support JSONFields
+</code></pre>
 
 <p>解决方法为：</p>
 <p>先去sqlite官网下载对应的DLL软件包<code>https://www.sqlite.org/download.html</code>，然后替换掉当前使用的<code>sqlite3.dll文件</code>。例如我的windows为64位版本，所以下载了<code>sqlite-dll-win64-x64-3320300.zip</code>这个软件包，本地python的安装路径为<code>C:\python36</code>，直接将<code>C:\python36\DLLs\sqlite3.dll</code>用下载的软件包里的<code>sqlite3.dll</code>文件替换，然后再次运行<code>migrate</code>顺利创建了数据库表</p>

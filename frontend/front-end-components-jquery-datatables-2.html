@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -145,14 +146,14 @@ $(document).ready(function() {
           { title: &quot;Date&quot; },
         ]
     })
-});</code></pre>
-
+});
+</code></pre>
 
 <p><strong>data：</strong> 指定数组</p>
 <p><strong>columns：</strong> 配置每一列的title</p>
 <p>注意：从数组中获取数据一定要有表头，如果没有则可能会报下边的错：</p>
-<pre class="codehilite"><code>Uncaught TypeError: Cannot read property 'aDataSort' of undefined</code></pre>
-
+<pre class="codehilite"><code>Uncaught TypeError: Cannot read property 'aDataSort' of undefined
+</code></pre>
 
 <p>解决方法就是datatables添加<code>columns</code>配置，或者写上table的thead</p>
 <pre class="codehilite"><code>&lt;table id=&quot;myTable-x&quot; class=&quot;display&quot; style=&quot;width:100%&quot;&gt;
@@ -163,8 +164,8 @@ $(document).ready(function() {
             &lt;th&gt;Date&lt;/th&gt;
         &lt;/tr&gt;
     &lt;/thead&gt;
-&lt;/table&gt;</code></pre>
-
+&lt;/table&gt;
+</code></pre>
 
 <h3 id="_3">从对象中获取</h3>
 <pre class="codehilite"><code>&lt;table id=&quot;myTable-x&quot; class=&quot;display&quot; style=&quot;width:100%&quot;&gt;&lt;/table&gt;
@@ -183,8 +184,8 @@ $(document).ready(function() {
           {&quot;data&quot;: &quot;Date&quot;, &quot;title&quot;: &quot;Date&quot;},
         ]
     })
-});</code></pre>
-
+});
+</code></pre>
 
 <p>使用对象数组，一定要配置columns的<code>data</code>，告诉DataTables每列对应的属性，<code>title</code>配置可选，添加title会给表格添加表头</p>
 <h3 id="_4">从实例中获取</h3>
@@ -206,8 +207,8 @@ $(document).ready(function() {
           {&quot;data&quot;: &quot;date&quot;, &quot;title&quot;:&quot;Date&quot;}
       ]
     });
-});</code></pre>
-
+});
+</code></pre>
 
 <h3 id="ajax">Ajax异步获取</h3>
 <p>Datatables还支持Ajax的方式异步加载数据，简单的方式是直接配置一个url地址即可</p>
@@ -215,8 +216,8 @@ $(document).ready(function() {
     $('#myTable-x').dataTable({
         &quot;ajax&quot;: 'sdata.json'
     });
-});</code></pre>
-
+});
+</code></pre>
 
 <p>ajax接收的数据可以是数组或者对象，注意<code>columns</code>的配置，可以对应参考前文两种格式数据的处理</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/0807.datatables02.png" /></p>
@@ -237,8 +238,8 @@ $(document).ready(function() {
             {&quot;data&quot;: &quot;date&quot;, &quot;title&quot;:&quot;Date&quot;}
         ]
     });
-});</code></pre>
-
+});
+</code></pre>
 
 <p>render后边跟了个函数，每当数据表需要获取列中某个单元格的数据时<code>render</code>函数都会执行，且函数可能会被执行多次，函数默认接收三个参数，意思分别是：</p>
 <p><strong>data：</strong> 单元格的具体数据，例如<code>https://ops-coffee.com</code></p>
@@ -264,8 +265,8 @@ $(document).ready(function() {
                '&lt;a href=&quot;#delete/'+row.id+'/&quot; class=&quot;btn btn-danger btn-sm&quot;&gt;删除&lt;/a&gt;'
       } 
     }   
-]</code></pre>
-
+]
+</code></pre>
 
 <p>最终呈现结果如下图</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/0807.datatables03.png" /></p>
@@ -281,8 +282,8 @@ $(document).ready(function() {
 <p>这些控件在datatables里可以通过配置<code>dom</code>来控制他们的显示位置，以及是否显示，默认的显示顺序是<code>lfrtip</code></p>
 <pre class="codehilite"><code>$('#myTable-x').dataTable({
     &quot;dom&quot;: 'lfrtip'
-})</code></pre>
-
+})
+</code></pre>
 
 <p>你如果不想显示某个控件，可以通过去掉<code>dom</code>配置项里对应的字母实现，同时Datatables支持四个自定义的标签，通过这四个标签可以方便的来修改DOM的展示</p>
 <p><code>&lt; &gt;</code> 尖括号就代表html里的div</p>
@@ -296,14 +297,14 @@ $(document).ready(function() {
 
 $(&quot;#add-btn.toolbar&quot;).html(
   '&lt;button href=&quot;#add&quot; class=&quot;btn btn-success btn-sm&quot;&gt; + 添加&lt;/button&gt;'
-)</code></pre>
-
+)
+</code></pre>
 
 <p>遇到样式问题，需要添加css</p>
 <pre class="codehilite"><code>&lt;style type=&quot;text/css&quot;&gt;
   .toolbar {float:left}
-&lt;/style&gt;</code></pre>
-
+&lt;/style&gt;
+</code></pre>
 
 <p>这样就完美实现了</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/0807.datatables04.png" /></p>
@@ -314,8 +315,8 @@ $(&quot;#add-btn.toolbar&quot;).html(
     &quot;serverSide&quot;: true,
     &quot;processing&quot;: true,
     &quot;ajax&quot;: '/api/site/data'
-})</code></pre>
-
+})
+</code></pre>
 
 <p><strong>serverSide：</strong> 为true时表示开启服务端处理模式</p>
 <p><strong>processing：</strong> 为true时会开启数据处理中的提示，非必须</p>
@@ -329,8 +330,8 @@ $(&quot;#add-btn.toolbar&quot;).html(
             d.type = 'ops-coffee';
         }
     }
-})</code></pre>
-
+})
+</code></pre>
 
 <p><strong>data：</strong> 可以在发送请求给后端时额外增加<code>type=ops-coffee</code>的参数</p>
 <h3 id="_7">发送到服务器端的参数</h3>
@@ -345,8 +346,8 @@ columns[i][data]：columns上定义的data属性值
 columns[i][name]：columns上定义的name属性值
 columns[i][searchable]：告诉服务器哪些列可以被搜索
 columns[i][orderable]：告诉服务器哪些列可以进行排序
-columns[i][search][value]：告诉服务器某些列的具体搜索条件</code></pre>
-
+columns[i][search][value]：告诉服务器某些列的具体搜索条件
+</code></pre>
 
 <p>如果需要后台分页，那么需要拿到<code>start</code>、<code>length</code>两个参数做相应的处理，</p>
 <p>如果有搜索的内容，那么需要拿到<code>serch[value]</code>参数做处理</p>
@@ -369,8 +370,8 @@ columns[i][search][value]：告诉服务器某些列的具体搜索条件</code>
         }
         // 省略其他结果
     ]
-}</code></pre>
-
+}
+</code></pre>
 
 <p><strong>draw：</strong> 客户端调用服务端次数标识，客户端传过来是什么原样返回回去即可，无需修改</p>
 <p><strong>recordsTotal：</strong> 数据总条数，没有过滤的数据总条数</p>
@@ -382,8 +383,8 @@ columns[i][search][value]：告诉服务器某些列的具体搜索条件</code>
 <p>跳转到第3页：</p>
 <pre class="codehilite"><code>var table = $('#myTable').DataTable()
 
-table.page(2).draw(false)</code></pre>
-
+table.page(2).draw(false)
+</code></pre>
 
 <p><strong>page(2)：</strong> page为分页方法，后边的2表示跳转到第几页，可以是一个数字，也可以是<code>first</code>、<code>next</code>、<code>previous</code>、<code>last</code>这样的字符串，当为数字时要从0算起，例如示例中为2实际上是跳转到了第3页</p>
 <p><strong>draw(false)：</strong> 对表格进行重绘以实现表格更新的显示，大多数的api操作都不会直接更新在页面上，所以需要调用下<code>draw</code>，默认情况下重绘后分页会被重置回到第一页，当设置为<code>false</code>时分页不会被重置</p>
@@ -391,14 +392,14 @@ table.page(2).draw(false)</code></pre>
 <p>搜索第2列包含<code>ops-coffee.com</code>的行</p>
 <pre class="codehilite"><code>var tablx = $('#myTable').dataTable()
 
-tablx.api().column(1).search('ops-coffee.com').draw()</code></pre>
-
+tablx.api().column(1).search('ops-coffee.com').draw()
+</code></pre>
 
 <p>首先需要注意这个例子中的API调用使用了<code>.api()</code>，这是因为上一个例子在初始化时用了<code>.DataTable()</code>而这个例子初始化时用了<code>.dataTable()</code>，仅仅是d字母大小写的区别而已，但意义确不同，前者直接返回API实例，后者返回的是jQuery实例</p>
 <h4 id="_11">精确搜索</h4>
 <p>默认情况下搜索时模糊匹配的，例如你搜索<code>ops-coffee.com</code>，会把<code>blog.ops-coffee.com</code>、<code>nav.ops-coffee.com</code>之类的都搜索出来，如果想要精确匹配，仅搜索完全匹配<code>ops-coffee.com</code>的结果，则需要借助于正则表达式来实现</p>
-<pre class="codehilite"><code>tablx.api().column(1).search('^ops-coffee.com$', true, false).draw()</code></pre>
-
+<pre class="codehilite"><code>tablx.api().column(1).search('^ops-coffee.com$', true, false).draw()
+</code></pre>
 
 <p>search接收4个参数，分别是：input、regex、smart、caseInsen，每个参数的解释如下</p>
 <table>

@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -140,28 +141,28 @@
 </ol>
 <h2 id="rsyslog_1">Rsyslog升级</h2>
 <p>1.添加rsyslog源的key</p>
-<pre class="codehilite"><code># apt-key adv --recv-keys --keyserver keys.gnupg.net AEF0CF8E</code></pre>
-
+<pre class="codehilite"><code># apt-key adv --recv-keys --keyserver keys.gnupg.net AEF0CF8E
+</code></pre>
 
 <p>2.添加rsyslog源地址</p>
 <pre class="codehilite"><code>echo &quot;deb http://debian.adiscon.com/v8-stable wheezy/&quot; &gt;&gt; /etc/apt/sources.list
-echo &quot;deb-src http://debian.adiscon.com/v8-stable wheezy/&quot; &gt;&gt; /etc/apt/sources.list</code></pre>
-
+echo &quot;deb-src http://debian.adiscon.com/v8-stable wheezy/&quot; &gt;&gt; /etc/apt/sources.list
+</code></pre>
 
 <p>3.升级rsyslog服务</p>
-<pre class="codehilite"><code># apt-get update &amp;&amp; apt-get -y install rsyslog</code></pre>
-
+<pre class="codehilite"><code># apt-get update &amp;&amp; apt-get -y install rsyslog
+</code></pre>
 
 <h2 id="omkafka">添加omkafka模块</h2>
 <p>1.安装编译工具，下边autoreconf需要用到，不然无法生成configure文件</p>
-<pre class="codehilite"><code># apt-get -y install pkg-config autoconf automake libtool unzip</code></pre>
-
+<pre class="codehilite"><code># apt-get -y install pkg-config autoconf automake libtool unzip
+</code></pre>
 
 <p>2.omkafka需要安装一堆的依赖包</p>
 <pre class="codehilite"><code># apt-get -y install libdbi-dev libmysqlclient-dev postgresql-client libpq-dev  libnet-dev   librdkafka-dev   libgrok-dev libgrok1 libgrok-dev libpcre3-dev libtokyocabinet-dev libglib2.0-dev  libmongo-client-dev  libhiredis-dev
 # apt-get -y install libestr-dev libfastjson-dev uuid-dev liblogging-stdlog-dev libgcrypt-dev
-# apt-get -y install flex bison librdkafka1 librdkafka-dev librdkafka1-dbg</code></pre>
-
+# apt-get -y install flex bison librdkafka1 librdkafka-dev librdkafka1-dbg
+</code></pre>
 
 <p>3.编译安装omkafka模块</p>
 <pre class="codehilite"><code># mkdir tmp &amp;&amp; cd tmp
@@ -170,8 +171,8 @@ echo &quot;deb-src http://debian.adiscon.com/v8-stable wheezy/&quot; &gt;&gt; /e
 # git pull git@github.com:VertiPub/omkafka.git
 
 # autoreconf -fvi
-# ./configure --sbindir=/usr/sbin --libdir=/usr/lib --enable-omkafka &amp;&amp; make &amp;&amp; make install &amp;&amp; cd ..</code></pre>
-
+# ./configure --sbindir=/usr/sbin --libdir=/usr/lib --enable-omkafka &amp;&amp; make &amp;&amp; make install &amp;&amp; cd ..
+</code></pre>
 
 <h2 id="rsyslognginx">Rsyslog收集nginx日志</h2>
 <h5 id="clientnginx">Client端Nginx配置</h5>
@@ -194,8 +195,8 @@ echo &quot;deb-src http://debian.adiscon.com/v8-stable wheezy/&quot; &gt;&gt; /e
 '}';
 
 
-access_log syslog:server=rsyslog.domain.com,facility=local7,tag=nginx_access_log,severity=info jsonlog;</code></pre>
-
+access_log syslog:server=rsyslog.domain.com,facility=local7,tag=nginx_access_log,severity=info jsonlog;
+</code></pre>
 
 <p>1.Nginx在<strong>v1.10之后</strong>的版本才支持syslog的方式处理日志，请确保你的Nginx版本高于1.10</p>
 <p>2.为了降低logstash的处理压力，同时也为了降低整个配置的复杂度，我们nginx的日志直接采用json格式</p>
@@ -231,8 +232,8 @@ if $inputname == &quot;imudp&quot; then {
         )
 }
 
-:rawmsg, contains, &quot;nginx_access_log&quot; ~</code></pre>
-
+:rawmsg, contains, &quot;nginx_access_log&quot; ~
+</code></pre>
 
 <p>1.在rsyslog.d目录下添加一个专门处理nginx日志的配置文件</p>
 <p>2.rsyslog配置文件重要配置解释如下：</p>
@@ -273,8 +274,8 @@ output {
         hosts =&gt; [&quot;10.82.9.205&quot;, &quot;10.82.9.206&quot;, &quot;10.82.9.207&quot;]
         index =&gt; &quot;rsyslog-nginx-%{+YYYY.MM.dd}&quot;
     }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>重要配置参数解释如下：</p>
 <ul>
@@ -287,13 +288,13 @@ output {
 <p>1.查看kafka是否有正常生成topic</p>
 <pre class="codehilite"><code># bin/kafka-topics.sh --list --zookeeper 127.0.0.1:2181
 __consumer_offsets
-rsyslog_nginx</code></pre>
-
+rsyslog_nginx
+</code></pre>
 
 <p>2.查看topic是否能正常接收日志</p>
 <pre class="codehilite"><code># bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic rsyslog_nginx
-{&quot;host&quot;: &quot;domain.com&quot;,&quot;server_addr&quot;: &quot;172.17.0.2&quot;,&quot;http_x_forwarded_for&quot;:&quot;58.52.198.68&quot;,&quot;remote_addr&quot;:&quot;10.120.89.84&quot;,&quot;time_local&quot;:&quot;28/Aug/2018:14:26:00 +0800&quot;,&quot;request_method&quot;:&quot;GET&quot;,&quot;request_uri&quot;:&quot;/&quot;,&quot;status&quot;:200,&quot;body_bytes_sent&quot;:1461,&quot;http_referer&quot;:&quot;-&quot;,&quot;http_user_agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36&quot;,&quot;upstream_addr&quot;:&quot;-&quot;,&quot;upstream_status&quot;:&quot;-&quot;,&quot;upstream_response_time&quot;:&quot;-&quot;,&quot;request_time&quot;:0.000}</code></pre>
-
+{&quot;host&quot;: &quot;domain.com&quot;,&quot;server_addr&quot;: &quot;172.17.0.2&quot;,&quot;http_x_forwarded_for&quot;:&quot;58.52.198.68&quot;,&quot;remote_addr&quot;:&quot;10.120.89.84&quot;,&quot;time_local&quot;:&quot;28/Aug/2018:14:26:00 +0800&quot;,&quot;request_method&quot;:&quot;GET&quot;,&quot;request_uri&quot;:&quot;/&quot;,&quot;status&quot;:200,&quot;body_bytes_sent&quot;:1461,&quot;http_referer&quot;:&quot;-&quot;,&quot;http_user_agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36&quot;,&quot;upstream_addr&quot;:&quot;-&quot;,&quot;upstream_status&quot;:&quot;-&quot;,&quot;upstream_response_time&quot;:&quot;-&quot;,&quot;request_time&quot;:0.000}
+</code></pre>
 
 <p>3.kibana添加index，查看Elasticsearch中是否有数据，如果前两步都正常，kibana搜不到index或index没有数据，多半是index名字写错了之类的基础问题，仔细检查</p>
 <h2 id="kibana">kibana查询展示</h2>

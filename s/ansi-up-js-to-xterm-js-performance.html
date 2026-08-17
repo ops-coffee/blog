@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -133,8 +134,8 @@
   var html = ansi_up.ansi_to_html(string);
 
   $('#J_details').append(html);
-&lt;/script&gt;</code></pre>
-
+&lt;/script&gt;
+</code></pre>
 
 <p>这么使用一直没有问题，直到刚刚，小伙伴跟我说，执行了一个作业，日志输出到一半开始报错，之后前端页面直接卡死无法使用，简单排查就定位到了问题，这个作业是去一组主机上过滤日志文件输出错误日志，错误日志太多执行结果较大，不过也就2MB，<code>ansi_up</code>性能有限已经无法渲染，问题定位到了，如何解决</p>
 <p>我先是查了<code>ansi_up</code>的文档，没有找到解决的方案，然后问了<a href="/s/programmer-search-engine-devv-ai" target="_blank">最懂程序员的AI搜索引擎</a>，他给了我答案</p>
@@ -154,15 +155,15 @@
       term.write('Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ')
     &lt;/script&gt;
   &lt;/body&gt;
-&lt;/html&gt;</code></pre>
-
+&lt;/html&gt;
+</code></pre>
 
 <p>通过<code>term.write</code>写数据，实际测试下来，一次性60MB的数据也能正常渲染，几十倍的性能提升，是真的强大。虽然这个问题解决了，渲染恢复了正常，但发现了更为严重的问题，作业执行过程中日志是先写入缓存的，日志输出太大会导致缓存被占满从而进程OOM，同时日志展示也不会分页，一次请求占用几十上百MB的内存，很快就导致系统OOM</p>
 <p>日志输出太多实际上就失去了意义，根本也看不过来，由于大量的数据传输，前端体验也会变差，还提升了系统OOM的风险，限制日志输出大小似乎成了最好的解决方式，说干就干，代码比较简单</p>
 <pre class="codehilite"><code># 输出日志超过2M则强制结束
 if len(old_log) &gt; 2 * 1024 * 1024 or len(new_log) &gt; 2 * 1024 * 1024:
-    details = '输出日志超大，当前作业已被系统强制结束'</code></pre>
-
+    details = '输出日志超大，当前作业已被系统强制结束'
+</code></pre>
 
 <p>判断下当前的日志记录大小以及新产生的日志大小是否超过2MB，如果超过则直接终止作业，同时提示用户调整</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/1206.03.png" /></p>

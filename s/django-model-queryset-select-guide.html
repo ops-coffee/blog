@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -136,8 +137,8 @@ User.objects.filter(name='运维咖啡吧')
 User.objects.exclude(name='运维咖啡吧')
 
 # 获取单条数据（有且仅有一条，id唯一），对应SQL：select * from User where id = 724
-User.objects.get(id=123)</code></pre>
-
+User.objects.get(id=123)
+</code></pre>
 
 <h1 id="_2">常用操作</h1>
 <pre class="codehilite"><code># 获取总数，对应SQL：select count(1) from User
@@ -167,8 +168,8 @@ User.objects.filter(name='运维咖啡吧').order_by('id')
 User.objects.filter(name='运维咖啡吧').order_by('-id')
 
 # 多级排序，order by，先按name进行正序排列，如果name一致则再按照id倒叙排列
-User.objects.filter(name='运维咖啡吧').order_by('name','-id')</code></pre>
-
+User.objects.filter(name='运维咖啡吧').order_by('name','-id')
+</code></pre>
 
 <h1 id="_3">进阶操作</h1>
 <pre class="codehilite"><code># limit，对应SQL：select * from User limit 3;
@@ -197,8 +198,8 @@ User.objects.values_list('username', flat=True)
 from django.db.models import Sum,Count,Max,Min,Avg
 
 User.objects.aggregate(Count(‘id’))
-User.objects.aggregate(Sum(‘age’))</code></pre>
-
+User.objects.aggregate(Sum(‘age’))
+</code></pre>
 
 <h1 id="_4">时间字段</h1>
 <pre class="codehilite"><code># 匹配日期，date
@@ -214,8 +215,8 @@ today = datetime.date.today()
 select = {'day': connection.ops.date_trunc_sql('day', 'create_time')}
 deploy_date_count = Task.objects.filter(
     create_time__range=(today - datetime.timedelta(days=7), today)
-).extra(select=select).values('day').annotate(number=Count('id'))</code></pre>
-
+).extra(select=select).values('day').annotate(number=Count('id'))
+</code></pre>
 
 <h1 id="q">Q 的使用</h1>
 <p>Q对象可以对关键字参数进行封装，从而更好的应用多个查询，可以组合&amp;(and)、|(or)、~(not)操作符。</p>
@@ -225,12 +226,12 @@ deploy_date_count = Task.objects.filter(
 User.objects.filter(
     Q(role__startswith='sre_'),
     Q(name='公众号') | Q(name='运维咖啡吧')
-)</code></pre>
-
+)
+</code></pre>
 
 <p>转换成SQL语句如下：</p>
-<pre class="codehilite"><code>select * from User where role like 'sre_%' and (name='公众号' or name='运维咖啡吧')</code></pre>
-
+<pre class="codehilite"><code>select * from User where role like 'sre_%' and (name='公众号' or name='运维咖啡吧')
+</code></pre>
 
 <p>通常更多的时候我们用Q来做搜索逻辑，比如前台搜索框输入一个字符，后台去数据库中检索标题或内容中是否包含</p>
 <pre class="codehilite"><code>_s = request.GET.get('search')
@@ -242,8 +243,8 @@ if _s:
         Q(content__icontains=_s)
     )
 
-return _t</code></pre>
-
+return _t
+</code></pre>
 
 <h1 id="foreignkey">外键：ForeignKey</h1>
 <ul>
@@ -255,24 +256,24 @@ return _t</code></pre>
 
 class User(models.Model):
     username = models.EmailField(max_length=255, unique=True)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE)</code></pre>
-
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+</code></pre>
 
 <ul>
 <li>正向查询:</li>
 </ul>
 <pre class="codehilite"><code># 查询用户的角色名
 _t = User.objects.get(username='运维咖啡吧')
-_t.role.name</code></pre>
-
+_t.role.name
+</code></pre>
 
 <ul>
 <li>反向查询：</li>
 </ul>
 <pre class="codehilite"><code># 查询角色下包含的所有用户
 _t = Role.objects.get(name='Role03')
-_t.user_set.all()</code></pre>
-
+_t.user_set.all()
+</code></pre>
 
 <ul>
 <li>另一种反向查询的方法：</li>
@@ -280,8 +281,8 @@ _t.user_set.all()</code></pre>
 <pre class="codehilite"><code>_t = Role.objects.get(name='Role03')
 
 # 这种方法比上一种_set的方法查询速度要快
-User.objects.filter(role=_t)</code></pre>
-
+User.objects.filter(role=_t)
+</code></pre>
 
 <ul>
 <li>第三种反向查询的方法：</li>
@@ -289,13 +290,13 @@ User.objects.filter(role=_t)</code></pre>
 <p>如果外键字段有<code>related_name</code>属性，例如models如下：</p>
 <pre class="codehilite"><code>class User(models.Model):
     username = models.EmailField(max_length=255, unique=True)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE,related_name='roleUsers')</code></pre>
-
+    role = models.ForeignKey(Role, on_delete=models.CASCADE,related_name='roleUsers')
+</code></pre>
 
 <p>那么可以直接用<code>related_name</code>属性取到某角色的所有用户</p>
 <pre class="codehilite"><code>_t = Role.objects.get(name = 'Role03')
-_t.roleUsers.all()</code></pre>
-
+_t.roleUsers.all()
+</code></pre>
 
 <h1 id="m2mmanytomanyfield">M2M：ManyToManyField</h1>
 <ul>
@@ -306,46 +307,46 @@ _t.roleUsers.all()</code></pre>
 
 class User(models.Model):
     username = models.CharField(max_length=255, unique=True)
-    groups = models.ManyToManyField(Group, related_name='groupUsers')</code></pre>
-
+    groups = models.ManyToManyField(Group, related_name='groupUsers')
+</code></pre>
 
 <ul>
 <li>正向查询:</li>
 </ul>
 <pre class="codehilite"><code># 查询用户隶属组
 _t = User.objects.get(username = '运维咖啡吧')
-_t.groups.all()</code></pre>
-
+_t.groups.all()
+</code></pre>
 
 <ul>
 <li>反向查询：</li>
 </ul>
 <pre class="codehilite"><code># 查询组包含用户
 _t = Group.objects.get(name = 'groupC')
-_t.user_set.all()</code></pre>
-
+_t.user_set.all()
+</code></pre>
 
 <p>同样M2M字段如果有<code>related_name</code>属性，那么可以直接用下边的方式反查</p>
 <pre class="codehilite"><code>_t = Group.objects.get(name = 'groupC')
-_t.groupUsers.all()</code></pre>
-
+_t.groupUsers.all()
+</code></pre>
 
 <h1 id="get_object_or_404">get_object_or_404</h1>
 <p>正常如果我们要去数据库里搜索某一条数据时，通常使用下边的方法：</p>
-<pre class="codehilite"><code>_t = User.objects.get(id=734)</code></pre>
-
+<pre class="codehilite"><code>_t = User.objects.get(id=734)
+</code></pre>
 
 <p>但当<code>id=724</code>的数据不存在时，程序将会抛出一个错误</p>
-<pre class="codehilite"><code>abcer.models.DoesNotExist: User matching query does not exist.</code></pre>
-
+<pre class="codehilite"><code>abcer.models.DoesNotExist: User matching query does not exist.
+</code></pre>
 
 <p>为了程序兼容和异常判断，我们可以使用下边两种方式:</p>
 <ul>
 <li>方式一：<code>get</code>改为<code>filter</code></li>
 </ul>
 <pre class="codehilite"><code>_t = User.objects.filter(id=724)
-# 取出_t之后再去判断_t是否存在</code></pre>
-
+# 取出_t之后再去判断_t是否存在
+</code></pre>
 
 <ul>
 <li>方式二：使用<code>get_object_or_404</code></li>
@@ -353,8 +354,8 @@ _t.groupUsers.all()</code></pre>
 <pre class="codehilite"><code>from django.shortcuts import get_object_or_404
 
 _t = get_object_or_404(User, id=724)
-# get_object_or_404方法，它会先调用django的get方法，如果查询的对象不存在的话，则抛出一个Http404的异常</code></pre>
-
+# get_object_or_404方法，它会先调用django的get方法，如果查询的对象不存在的话，则抛出一个Http404的异常
+</code></pre>
 
 <p>实现方法类似于下边这样：</p>
 <pre class="codehilite"><code>from django.http import Http404
@@ -362,13 +363,13 @@ _t = get_object_or_404(User, id=724)
 try:
     _t = User.objects.get(id=724)
 except User.DoesNotExist:
-    raise Http404</code></pre>
-
+    raise Http404
+</code></pre>
 
 <h1 id="get_or_create">get_or_create</h1>
 <p>顾名思义，查找一个对象如果不存在则创建，如下：</p>
-<pre class="codehilite"><code>object, created = User.objects.get_or_create(username='运维咖啡吧')</code></pre>
-
+<pre class="codehilite"><code>object, created = User.objects.get_or_create(username='运维咖啡吧')
+</code></pre>
 
 <p>返回一个由object和created组成的元组，其中object就是一个查询到的或者是被创建的对象，created是一个表示是否创建了新对象的布尔值</p>
 <p>实现方式类似于下边这样：</p>
@@ -382,8 +383,8 @@ exception User.DoesNoExist:
 
     created = True
 
-returen object, created</code></pre>
-
+returen object, created
+</code></pre>
 
 <h1 id="sql">执行原生SQL</h1>
 <p>Django中能用ORM的就用它ORM吧，不建议执行原生SQL，可能会有一些安全问题，如果实在是SQL太复杂ORM实现不了，那就看看下边执行原生SQL的方法，跟直接使用pymysql基本一致了</p>
@@ -393,8 +394,8 @@ with connection.cursor() as cursor:
     cursor.execute('select * from accounts_User')
     row = cursor.fetchall()
 
-return row</code></pre>
-
+return row
+</code></pre>
 
 <p>注意这里表名字要用<strong>app名+下划线+model名</strong>的方式</p>
 

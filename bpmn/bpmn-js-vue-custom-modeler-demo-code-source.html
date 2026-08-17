@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -131,12 +132,12 @@
 <p>文章开头先说一下我在写本系列教程中除了阅读部分源码和论坛外，还参考了很多网上的优秀文章，在此感谢这些无私的贡献者，目前网上大多数教程都是基于7.3.0之前的版本写的，在使用<code>importXML</code>等方法时用了如下callback的方式</p>
 <pre class="codehilite"><code>modeler.importXML(xml, (err, warnings) =&gt; {
   // ...
-});</code></pre>
-
+});
+</code></pre>
 
 <p>但当将bpmn-js我升级到了7.3.0之后，再使用上边的方式就会出现报错</p>
-<pre class="codehilite"><code>Error: Passing callbacks to importXML is deprecated and will be removed in a future major release.</code></pre>
-
+<pre class="codehilite"><code>Error: Passing callbacks to importXML is deprecated and will be removed in a future major release.
+</code></pre>
 
 <p>提示这种回调方式不建议使用，并且会在后续版本中移除，推荐如下这样的写法来代替</p>
 <pre class="codehilite"><code>try {
@@ -145,8 +146,8 @@
     console.log(warnings);
 } catch (err) {
     console.log(err.message, err.warnings);
-}</code></pre>
-
+}
+</code></pre>
 
 <p>除了<code>importXML</code>方法外，其他需要使用上边这种写法的还有<code>importDefinitions</code>、<code>open</code>、<code>saveXML</code>、<code>saveSVG</code>、<code>createDiagram</code></p>
 <h2 id="_1">撤销恢复</h2>
@@ -157,8 +158,8 @@
 &lt;/li&gt;
 &lt;li&gt;
   &lt;a href=&quot;javascript:&quot; class=&quot;active&quot; @click=&quot;handlerRedo&quot; title=&quot;恢复操作&quot;&gt;恢复&lt;/a&gt;
-&lt;/li&gt;</code></pre>
-
+&lt;/li&gt;
+</code></pre>
 
 <p>然后编写对应的方法</p>
 <pre class="codehilite"><code>handlerRedo() {
@@ -166,8 +167,8 @@
 },
 handlerUndo() {
   this.bpmnModeler.get(&quot;commandStack&quot;).undo();
-}</code></pre>
-
+}
+</code></pre>
 
 <h2 id="_2">放大缩小</h2>
 <p>当流程比较复杂，元素较多的时候，我们需要放大流程，关注于流程的某一块编辑，这时候就需要用到bpmn-js提供的<code>zoom</code>方法来实现流程图的放大缩小</p>
@@ -180,8 +181,8 @@ handlerUndo() {
 &lt;/li&gt;
 &lt;li&gt;
   &lt;a href=&quot;javascript:&quot; class=&quot;active&quot; @click=&quot;handlerZoom(0)&quot; title=&quot;还原&quot;&gt;还原&lt;/a&gt;
-&lt;/li&gt;</code></pre>
-
+&lt;/li&gt;
+</code></pre>
 
 <p>然后编写对应的方法<code>handlerZoom</code>来控制放大和缩小，放大缩小实际上是通过<code>zoom</code>方法来实现的，<code>zoom</code>方法接收一个num参数，这个参数为显示的比例，默认为1，放大就是增加这个值，缩小就是减小这个值，还原就是将这个值重置为1</p>
 <pre class="codehilite"><code>handlerZoom(radio) {
@@ -189,8 +190,8 @@ handlerUndo() {
   this.bpmnModeler.get(&quot;canvas&quot;).zoom(newScale);
 
   this.scale = newScale;
-}</code></pre>
-
+}
+</code></pre>
 
 <p>需要注意的是这里的<code>this.scale</code>就是默认值1，需要在data中定义这个变量</p>
 <h2 id="_3">快捷键</h2>
@@ -200,8 +201,8 @@ handlerUndo() {
   keyboard: {
     bindTo: window
   }
-});</code></pre>
-
+});
+</code></pre>
 
 <p>目前bpmn-js支持如下一些快捷键操作</p>
 <ul>
@@ -231,8 +232,8 @@ handlerUndo() {
   width: 100%;
   height: calc(100vh - 82px);
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-}</code></pre>
-
+}
+</code></pre>
 
 <h2 id="_5">功能禁用</h2>
 <p>如果你想修改或禁用bpmn-js的某些默认功能，例如你不想要左侧的工具栏Palette，则可以通过<code>additionalModules</code>选项来实现，<code>additionalModules</code>允许你使用自定义模块来修改或替换现有功能</p>
@@ -252,14 +253,14 @@ handlerUndo() {
         labelEditingProvider: [&quot;value&quot;, &quot;&quot;]
       }
     ]
-});</code></pre>
-
+});
+</code></pre>
 
 <p><a href="https://blog.ops-coffee.com/bpmn/bpmn-js-vue-base-usage-demo-code-source" target="_blank">bpmn-js基本使用</a>文章中我们讲到了bpmn-js有两个模式Modeler编辑模式和Vierer预览模式，实际上有很多小伙伴并不使用bpmn-js提供的Viewer模式，而是通过禁用以上这些组件来达到类似Viewer展示的模式</p>
 <h2 id="_6">监听绑定</h2>
 <p>很多时候我们需要监听用户的操作并给予相应的反馈，例如在<a href="https://blog.ops-coffee.com/bpmn/bpmn-js-vue-local-file-demo-code-source" target="_blank">bpmn-js本地文件</a>文章中关于监听变化下载文件的介绍中，我们需要监听到流程的变化，并实时将数据补充到a标签中，用到了如下代码</p>
-<pre class="codehilite"><code>this.bpmnModeler.on(&quot;commandStack.changed&quot;, opscoffee)</code></pre>
-
+<pre class="codehilite"><code>this.bpmnModeler.on(&quot;commandStack.changed&quot;, opscoffee)
+</code></pre>
 
 <p>这里的<code>bpmnModeler.on</code>就是个监听方法，能监听到流程的变化，除此之外bpmn-js还提供了<code>eventBus</code>来帮助我们做事件监听，用法如下</p>
 <pre class="codehilite"><code>export default {
@@ -297,8 +298,8 @@ handlerUndo() {
     }
   }
 };
-&lt;/script&gt;</code></pre>
-
+&lt;/script&gt;
+</code></pre>
 
 <p>在<code>createNewDiagram</code>渲染完成后调用<code>success</code>方法，<code>success</code>中添加了<code>addEventBusListener</code>监听方法，然后通过<code>eventBus.on</code>来实现对事件的监听，例如这里监听了<code>element.click</code>点击事件</p>
 <p>监听到事件后就很方便的进行后续的操作了，例如我想判断如果用户点击了<code>UserTask任务</code>，那么就打印任务id、type、name，则可以这样实现</p>
@@ -319,8 +320,8 @@ elementClick(e) {
       e.element.businessObject.name
     );
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <h2 id="_7">事件列表</h2>
 <p>那么究竟有哪些事件类型呢？我们可以通过<code>bpmnModeler.get("eventBus")</code>方法来获取，常用的有如下这些</p>
@@ -360,12 +361,12 @@ elementClick(e) {
 <h2 id="_8">获取节点</h2>
 <p>当我们需要获取流程中的节点时，可以使用如下方法来获取全部节点或检索指定类型的节点</p>
 <h3 id="_9">获取全部节点</h3>
-<pre class="codehilite"><code>bpmnModeler.get(&quot;elementRegistry&quot;).getAll()</code></pre>
-
+<pre class="codehilite"><code>bpmnModeler.get(&quot;elementRegistry&quot;).getAll()
+</code></pre>
 
 <h3 id="id">获取指定ID节点</h3>
-<pre class="codehilite"><code>bpmnModeler.get(&quot;elementRegistry&quot;).get(ID)</code></pre>
-
+<pre class="codehilite"><code>bpmnModeler.get(&quot;elementRegistry&quot;).get(ID)
+</code></pre>
 
 <h2 id="_10">修改节点</h2>
 <p>通过modeling的<code>updateProperties</code>方法可以修改节点属性，例如这里修改节点<code>name</code>为<code>ops-coffee.com</code></p>
@@ -377,8 +378,8 @@ const element = this.bpmnModeler
 
 modeling.updateProperties(element, {
   name: &quot;ops-coffee.com&quot;
-});</code></pre>
-
+});
+</code></pre>
 
 <h2 id="_11">写在最后</h2>
 <p>接触bpmn-js不久，且第一次用VUE，边学边写，文章难免出错，各位多多包含。想要打造一个好用的适合自己的流程编辑器，需要了解的内容比较多，bpmn-js会分多篇文章来介绍，下一篇介绍bpmn-js的Viewer模式下的节点颜色修改、鼠标拖动等内容，欢迎关注</p>

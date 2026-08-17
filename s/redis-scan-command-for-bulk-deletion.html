@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -126,16 +127,16 @@
 <p>还在用keys命令模糊匹配删除数据吗？这就是一颗随时爆炸的炸弹！</p>
 </blockquote>
 <p>Redis中没有批量删除特定前缀key的指令，但我们往往需要根据前缀来删除，那么究竟该怎么做呢？可能你一通搜索后会得到下边的答案</p>
-<pre class="codehilite"><code>redis-cli --raw keys &quot;ops-coffee-*&quot; | xargs redis-cli del</code></pre>
-
+<pre class="codehilite"><code>redis-cli --raw keys &quot;ops-coffee-*&quot; | xargs redis-cli del
+</code></pre>
 
 <p>直接在linux下通过redis的<code>keys</code>命令匹配到所有的key，然后调用系统命令xargs来删除，看似非常完美，实则风险巨大</p>
 <p>因为Redis的单线程服务模式，命令<code>keys</code>会阻塞正常的业务请求，如果你一次<code>keys</code>匹配的数量过多或者在<code>del</code>的时候遇到大key，都会直接导致业务的不可用，甚至造成redis宕机的风险</p>
 <p>所以我们在生产环境中应当避免使用上边的方法，那有什么优雅的方法来解决呢？SCAN！</p>
 <h2 id="scan">SCAN介绍及使用</h2>
 <p>Redis从2.8版本开始支持scan命令，SCAN命令的基本用法如下：</p>
-<pre class="codehilite"><code>SCAN cursor [MATCH pattern] [COUNT count]</code></pre>
-
+<pre class="codehilite"><code>SCAN cursor [MATCH pattern] [COUNT count]
+</code></pre>
 
 <p><strong>cursor：</strong> 游标，SCAN命令是一个基于游标的迭代器，SCAN命令每次被调用之后，都会向用户返回一个新的游标，用户在下次迭代时需要使用这个新游标作为SCAN命令的游标参数，以此来延续之前的迭代过程，直到服务器向用户返回值为0的游标时，一次完整的遍历过程就结束了</p>
 <p><strong>MATCH：</strong> 匹配规则，例如遍历以<code>ops-coffee-</code>开头的所有key可以写成<code>ops-coffee-*</code>，中间包含<code>-coffee-</code>的可以写成<code>*-coffee-*</code></p>
@@ -175,8 +176,8 @@
    16) &quot;ops-coffee-27&quot;
    17) &quot;ops-coffee-18&quot;
    18) &quot;ops-coffee-24&quot;
-   19) &quot;ops-coffee-17&quot;</code></pre>
-
+   19) &quot;ops-coffee-17&quot;
+</code></pre>
 
 <p>SCAN命令返回的是一个包含两个元素的数组，第一个数组元素是用于进行下一次迭代的新游标，而第二个数组元素则是一个数组，这个数组中包含了所有被迭代的元素</p>
 <p>上面这个例子的意思是扫描所有前缀为<code>ops-coffee-</code>的key</p>
@@ -184,8 +185,8 @@
 <p>第二次迭代使用的是第一次迭代时返回的游标，也即是命令回复第一个元素的值38，同时通过将COUNT选项的参数设置为1000，强制命令为本次迭代扫描更多元素</p>
 <p>在第二次调用SCAN命令时，命令返回了游标0，这表示迭代已经结束，整个数据集已经被完整遍历过了</p>
 <p>KEYS命令的时间复杂度为O(n)，而SCAN命令会将遍历操作分解成m次时间复杂度为O(1)的操作来执行，从而解决使用keys命令遍历大量数据而导致服务器阻塞的情况，使用下边的指令可以达到优雅删除的目的：</p>
-<pre class="codehilite"><code>redis-cli --scan --pattern &quot;ops-coffee-*&quot; | xargs -L 2000 redis-cli del</code></pre>
-
+<pre class="codehilite"><code>redis-cli --scan --pattern &quot;ops-coffee-*&quot; | xargs -L 2000 redis-cli del
+</code></pre>
 
 <p>其中<code>xargs -L</code>指令表示xargs一次读取的行数，也就是每次删除的key数量，一次读取太多xargs会报错</p>
 <h2 id="_1">其他几种数据结构的优雅删除</h2>
@@ -197,8 +198,8 @@
    3) &quot;v12&quot;
    4) &quot;v10&quot;
    5) &quot;v14&quot;
-   6) &quot;v1&quot;</code></pre>
-
+   6) &quot;v1&quot;
+</code></pre>
 
 <p>与SCAN命令不同的是这几个命令需要多加一个key的参数，例如上边的<code>ops-coffee</code></p>
 <p>对于一个大的set key，借助<code>sscan</code>使用下边的代码可以实现优雅的批量删除：</p>
@@ -211,8 +212,8 @@ def del_big_set_key(key_name):
     for key in r.sscan_iter(name=key_name, count=300):
         r.srem(key_name, key)
 
-del_big_set_key('ops-coffee')</code></pre>
-
+del_big_set_key('ops-coffee')
+</code></pre>
 
 <p>对于一个大的hash key，则可借助<code>hscan</code>使用下边的代码实现优雅的删除：</p>
 <pre class="codehilite"><code>import redis
@@ -224,8 +225,8 @@ def del_big_hash_key(key_name):
     for key in r.hscan_iter(name=key_name, count=300):
         r.hdel(key_name, key[0])
 
-del_big_hash_key('ops-coffee')</code></pre>
-
+del_big_hash_key('ops-coffee')
+</code></pre>
 
 <p>对于大的有序集合的删除就比较简单了，直接根据<code>zremrangebyrank</code>排行范围删除</p>
 <pre class="codehilite"><code>import redis
@@ -237,8 +238,8 @@ def del_big_sort_key(key_name):
         # 判断集合中是否有元素，如有有则删除排行0-99的元素
         r.zremrangebyrank(key_name, 0, 99)
 
-del_big_sort_key('ops-coffee')</code></pre>
-
+del_big_sort_key('ops-coffee')
+</code></pre>
 
 <p>big list大列表的删除可以参考上边这个方法，通过<code>llen</code>判断数量，然后<code>ltrim</code>移除范围内的元素，这里不赘述</p>
 <p>至此对于Redis的五中数据结构大key的优雅删除就全部实现了，生产环境择优使用~</p>

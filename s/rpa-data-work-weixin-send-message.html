@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -192,13 +193,13 @@ if __name__ == '__main__':
             ['%s' % email]
         )
 
-        print('%s 通知发送 %s, %s' %(name, '成功' if state and data.get('errcode') == 0 else '失败', data.get('errmsg')))</code></pre>
-
+        print('%s 通知发送 %s, %s' %(name, '成功' if state and data.get('errcode') == 0 else '失败', data.get('errmsg')))
+</code></pre>
 
 <p>csv文件的内容大概像这样</p>
 <pre class="codehilite"><code>01,韦小宝,andy@ops-coffee.com,15866668888,张江镇,张江路115弄40号
-01,张无忌,jason@ops-coffee.com,15866668888,张江镇,张江路115弄41号</code></pre>
-
+01,张无忌,jason@ops-coffee.com,15866668888,张江镇,张江路115弄41号
+</code></pre>
 
 <p>数据脚本都准备好了，然后直接执行，相关的人就只收到了包含自己信息的通知</p>
 <p><img alt="" loading="lazy" src="/static/images/2022/0401.02.png" /></p>

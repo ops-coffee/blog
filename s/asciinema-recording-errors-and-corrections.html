@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -129,8 +130,8 @@
 <p>在上一篇文章<a href="https://blog.ops-coffee.com/s/asciinema-webssh-terminal-recording-playback.html" target="_blank">Asciinema：你的所有操作都将被录制</a>中有两个地方表述有错误或瑕疵，这里更正一下</p>
 <p>第一个地方为录制时的参数<code>--stdin</code>，参数的意思是启用标准输入录制，原文中说看不到效果，可能官方还未支持，实际上官方已经支持了，且查看录制文件内容时可以看到区别，以下两个对比的例子来说明</p>
 <p>例一：执行下方的命令进行录制，录制开始之后执行ssh命令输入密码连接另一台主机</p>
-<pre class="codehilite"><code>asciinema rec ops-coffee.cast</code></pre>
-
+<pre class="codehilite"><code>asciinema rec ops-coffee.cast
+</code></pre>
 
 <p>执行<code>asciinema cat</code>命令查看执行命令</p>
 <pre class="codehilite"><code># asciinema cat ops-coffee.cast 
@@ -138,8 +139,8 @@ root@onlinegame:~# ssh root@192.168.106.192 ls ops-coffee.com
 root@192.168.106.192's password: 
 ops-coffee.com
 root@onlinegame:~# exit
-exit</code></pre>
-
+exit
+</code></pre>
 
 <p>打印录制的文件内容如下：</p>
 <pre class="codehilite"><code># cat ops-coffee.cast 
@@ -156,12 +157,12 @@ exit</code></pre>
 [5.582643, &quot;o&quot;, &quot;x&quot;]
 [5.838648, &quot;o&quot;, &quot;i&quot;]
 [6.03067, &quot;o&quot;, &quot;t&quot;]
-[6.759346, &quot;o&quot;, &quot;\r\nexit\r\n&quot;]</code></pre>
-
+[6.759346, &quot;o&quot;, &quot;\r\nexit\r\n&quot;]
+</code></pre>
 
 <p>例二：执行同样的命令，加上<code>--stdin</code>参数</p>
-<pre class="codehilite"><code>asciinema rec --stdin ops-coffee.1.cast</code></pre>
-
+<pre class="codehilite"><code>asciinema rec --stdin ops-coffee.1.cast
+</code></pre>
 
 <p>执行<code>asciinema cat</code>命令查看执行命令</p>
 <pre class="codehilite"><code># asciinema cat ops-coffee.1.cast 
@@ -169,8 +170,8 @@ root@onlinegame:~# ssh root@192.168.106.192 ls ops-coffee.com
 root@192.168.106.192's password: 
 ops-coffee.com
 root@onlinegame:~# exit
-exit</code></pre>
-
+exit
+</code></pre>
 
 <p>这次再看录制文件的内容：</p>
 <pre class="codehilite"><code># cat ops-coffee.1.cast
@@ -201,8 +202,8 @@ exit</code></pre>
 [7.686868, &quot;i&quot;, &quot;t&quot;]
 [7.68703, &quot;o&quot;, &quot;t&quot;]
 [7.87045, &quot;i&quot;, &quot;\r&quot;]
-[7.871348, &quot;o&quot;, &quot;\r\nexit\r\n&quot;]</code></pre>
-
+[7.871348, &quot;o&quot;, &quot;\r\nexit\r\n&quot;]
+</code></pre>
 
 <p>会发现在实际执行命令完全一致的情况下，录像文件与上一个没有加<code>--stdin</code>时的不一样，其中就多了输入密码的记录<code>smile</code></p>
 <p>且在asciinema文件IO流信息的第二个字段不仅有了<code>o</code>，还有<code>i</code>的出现，上一篇文章讲到<code>o</code>是一个固定字符串不知道作用，经过深入查询确认，IO信息流的第二个字段就是固定string字符串，且只会是<code>i</code>或<code>o</code>之间的一种，分别表示<code>stdin</code>标准输入或<code>stdout</code>标准输出</p>
@@ -222,8 +223,8 @@ exit</code></pre>
   ...
   &lt;script src=&quot;/asciinema-player.js&quot;&gt;&lt;/script&gt;
 &lt;/body&gt;
-&lt;/html&gt;</code></pre>
-
+&lt;/html&gt;
+</code></pre>
 
 <p>asciinema-player标签内可以添加如下一些属性：</p>
 <p><strong>cols：</strong> 播放终端的列数，默认为80，如果cast文件的header头有设置<code>width</code>，这里无需设置</p>
@@ -248,8 +249,8 @@ exit</code></pre>
     src=&quot;/static/record/ops-coffee.cast&quot; 
     speed=&quot;3&quot; idle-time-limit=&quot;2&quot; 
     poster=&quot;data:text/plain,\x1b[1;32m2019-11-18 16:26:18\x1b[1;0m用户\x1b[1;32madmin\x1b[1;0m连接主机\x1b[1;32m192.168.106.101:22\x1b[1;0m的录像记录&quot;&gt;
-&lt;/asciinema-player&gt;</code></pre>
-
+&lt;/asciinema-player&gt;
+</code></pre>
 
 <p>播放效果如下</p>
 <p><img alt="" loading="lazy" src="/static/images/2019/1118.gif" /></p>

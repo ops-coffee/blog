@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -138,8 +139,8 @@
 </ol>
 <h1 id="_2">迁移功能</h1>
 <p>数据库迁移主要是利用mysql的导入导出功能，核心的命令就一个</p>
-<pre class="codehilite"><code>mysqldump -h 10.82.9.19 -P 3306 -uops -pcoffee --default-character-set=utf8 --single-transaction --databases dbname | mysql -h 192.168.106.91 -P 3306 -uops -pcoffee --default-character-set=utf8 dbname</code></pre>
-
+<pre class="codehilite"><code>mysqldump -h 10.82.9.19 -P 3306 -uops -pcoffee --default-character-set=utf8 --single-transaction --databases dbname | mysql -h 192.168.106.91 -P 3306 -uops -pcoffee --default-character-set=utf8 dbname
+</code></pre>
 
 <p>以上命令是shell命令，在python下没有找到直接导入导出mysql数据的包，只能在python代码中调用shell命令，推荐使用subprocess模块，这个模块有着更加丰富的使用方法，方便获取最终的命令执行状态和输出结果，转换成完整的python类如下：</p>
 <pre class="codehilite"><code>from subprocess import Popen, PIPE
@@ -186,8 +187,8 @@ class Cmd():
             print(process_stdout[1].decode('utf8').strip())
 
 
-Cmd().migration()</code></pre>
-
+Cmd().migration()
+</code></pre>
 
 <p>这里采用了shell中的管道，管道用<code>|</code>符号分割两个命令，管道符前的命令正确输出作为管道符后命令的输入，好处是不需要生成单独的sql文件存放在磁盘上，也就不需要考虑文件删除，占用磁盘的问题，缺点是导出大的数据库时可能会造成OOM，这个要根据自身情况综合权衡。</p>
 <p>导数据属于耗时操作，在web中应异步执行，这里采用了Celery来处理，这篇文章<a href="https://blog.ops-coffee.com/s/devops-task-django-celery-setup-guide.html" target="_blank">Django配置Celery执行异步任务和定时任务</a>有详细介绍Django中Celery的使用</p>

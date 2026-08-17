@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -126,45 +127,46 @@
 <pre class="codehilite"><code>wget https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz
 tar xvf Python-3.6.8.tgz &amp;&amp; cd Python-3.6.8
 ./configure &amp;&amp; make &amp;&amp; make install &amp;&amp; cd ..
-python3.6 -V</code></pre>
-
+python3.6 -V
+</code></pre>
 
 <h2 id="_1">设置软链接</h2>
 <pre class="codehilite"><code>ln -s /usr/local/bin/python3.6 /usr/bin/python3
-ln -s /usr/local/bin/python3.6 /usr/bin/python</code></pre>
-
+ln -s /usr/local/bin/python3.6 /usr/bin/python
+</code></pre>
 
 <h2 id="pip">安装pip</h2>
 <pre class="codehilite"><code>wget https://bootstrap.pypa.io/get-pip.py
-python3 get-pip.py</code></pre>
-
+python3 get-pip.py
+</code></pre>
 
 <p>如果报错</p>
-<pre class="codehilite"><code>subprocess.CalledProcessError: Command '('lsb_release', '-a')' returned non-zero exit status 1.</code></pre>
-
+<pre class="codehilite"><code>subprocess.CalledProcessError: Command '('lsb_release', '-a')' returned non-zero exit status 1.
+</code></pre>
 
 <p>则删除</p>
-<pre class="codehilite"><code>rm /usr/bin/lsb_release</code></pre>
-
+<pre class="codehilite"><code>rm /usr/bin/lsb_release
+</code></pre>
 
 <h2 id="pip_1">修改pip源</h2>
 <p>默认pip安装软件时会从官方源安装，比较慢，可修改为国内的源，这里提供临时修改和永久修改两种修改方式</p>
 <p>临时修改，只需要添加<code>-i</code>参数</p>
-<pre class="codehilite"><code>pip install django -i https://pypi.tuna.tsinghua.edu.cn/simple</code></pre>
-
+<pre class="codehilite"><code>pip install django -i https://pypi.tuna.tsinghua.edu.cn/simple
+</code></pre>
 
 <p>永久修改，需要修改文件，文件位置<code>~/.pip/pip.conf</code>，内容如下</p>
 <pre class="codehilite"><code>[global]
 index-url = https://pypi.douban.com/simple
 [install]
-trusted-host=pypi.douban.com</code></pre>
-
+trusted-host=pypi.douban.com
+</code></pre>
 
 <h2 id="ali">ali源配置</h2>
 <p>如果不想使用豆瓣的源，可以使用阿里的，配置如下</p>
 <pre class="codehilite"><code>[global]
 index-url = http://mirrors.aliyun.com/pypi/simple/
-trusted-host = mirrors.aliyun.com</code></pre>
+trusted-host = mirrors.aliyun.com
+</code></pre>
 
         <div>
           <ul class="article-meta">

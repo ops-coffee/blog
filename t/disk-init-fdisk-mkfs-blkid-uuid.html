@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -160,26 +161,27 @@
 <p>修改<code>/etc/fstab</code>文件，使其开机自动挂载</p>
 </li>
 </ol>
-<pre class="codehilite"><code>UUID=09761a1c-c938-44e7-8e7d-dda5489971cf /data ext4 defaults 1 2</code></pre>
-
+<pre class="codehilite"><code>UUID=09761a1c-c938-44e7-8e7d-dda5489971cf /data ext4 defaults 1 2
+</code></pre>
 
 <h2 id="uuid">查看磁盘UUID值</h2>
-<pre class="codehilite"><code># blkid</code></pre>
-
+<pre class="codehilite"><code># blkid
+</code></pre>
 
 <h2 id="_3">格式化磁盘报错处理</h2>
 <p>报错：</p>
 <pre class="codehilite"><code># mkfs -t ext4 -c /dev/sdb1
 mke2fs 1.41.12 (17-May-2010)
-/dev/sdb1 is apparently in use by the system; will not make a filesystem here!</code></pre>
-
+/dev/sdb1 is apparently in use by the system; will not make a filesystem here!
+</code></pre>
 
 <p>处理：</p>
 <pre class="codehilite"><code># dmsetup status
 ddf1_4c5349202020202080862682000000004711471100001e78: 0 1462890496 linear
 ddf1_4c5349202020202080862682000000004711471100001e78p1: 0 1462878837 linear
 # dmsetup remove_all
-# mkfs -t ext4 -c /dev/sdb1</code></pre>
+# mkfs -t ext4 -c /dev/sdb1
+</code></pre>
 
         <div>
           <ul class="article-meta">

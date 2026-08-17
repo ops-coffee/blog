@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -142,49 +143,49 @@
 <li>获取Job列表</li>
 </ol>
 <p>获取Job列表使用GET方法</p>
-<pre class="codehilite"><code>https://jenkins.ops-coffee.com/api/json</code></pre>
-
+<pre class="codehilite"><code>https://jenkins.ops-coffee.com/api/json
+</code></pre>
 
 <ol>
 <li>获取Job详情</li>
 </ol>
 <p>获取Job详情使用Get方法</p>
-<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/api/json</code></pre>
-
+<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/api/json
+</code></pre>
 
 <p>同时Job详情页面同时也能获取到Job所需要的参数</p>
 <ol>
 <li>执行Job</li>
 </ol>
 <p>执行Job通过POST方法，分为带参数和不带参数两个API，其中不带参数使用</p>
-<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/build</code></pre>
-
+<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/build
+</code></pre>
 
 <p>带参数使用</p>
-<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/buildWithParameters?namespace=dev&amp;branch=master</code></pre>
-
+<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/buildWithParameters?namespace=dev&amp;branch=master
+</code></pre>
 
 <p>执行完Job后，需要获取到Job的BuildID，<strong>BuildID可以通过从返回结果header</strong>的<code>Location</code>里获取</p>
 <ol>
 <li>获取Build输出</li>
 </ol>
 <p>获取Build的Console输出使用GET方法，通过Build的Console输出我们可以实时获取Job的执行情况</p>
-<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/{build-id}/logText/progressiveText</code></pre>
-
+<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/{build-id}/logText/progressiveText
+</code></pre>
 
 <ol>
 <li>获取Build详情</li>
 </ol>
 <p>获取Build的详情使用GET方法，通过Build详情里的<code>result</code>能知道Job的执行状态及结果</p>
-<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/{build-id}/api/json</code></pre>
-
+<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/{build-id}/api/json
+</code></pre>
 
 <ol>
 <li>停止Job执行</li>
 </ol>
 <p>停止Job执行使用POST方法，当Job执行的过程中不及我们预期需要紧急停止Job执行时需要借助此API来完成</p>
-<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/{build-id}/stop</code></pre>
-
+<pre class="codehilite"><code>https://jenkins.ops-coffee.com/job/{job-name}/{build-id}/stop
+</code></pre>
 
 <p>整个Jenkins子任务的集成我们主要用到了这几个API，关于Jenkins的API认证用到了最基本的AuthBase方式，一个完整的获取JobList的例子如下</p>
 <pre class="codehilite"><code>class JenkinsAPI:
@@ -201,8 +202,8 @@
 
             return True, r.status_code, r.json()
         except Exception as e:
-            return False, 500, '获取Job List失败：' + str(e)</code></pre>
-
+            return False, 500, '获取Job List失败：' + str(e)
+</code></pre>
 
 <p>有了这些API我们就能轻松的将Jenkins集成进任务系统了，在任务系统中执行Jenkins的Job也是非常的简单和方便，实时日志输出，以及随时可以终止执行，体验与Jenkins无异了</p>
 <p><img alt="" loading="lazy" src="/static/images/2023/0428.03.png" /></p>

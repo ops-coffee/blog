@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -133,16 +134,16 @@
 <ol>
 <li>修改settings.py文件关闭DEBUG模式</li>
 </ol>
-<pre class="codehilite"><code>DEBUG = False</code></pre>
-
+<pre class="codehilite"><code>DEBUG = False
+</code></pre>
 
 <p>自定义错误页面在<code>Debug = True</code>时不生效</p>
 <ol>
 <li>创建错误页面，例如errors/403.html</li>
 </ol>
 <pre class="codehilite"><code>You Don't have permission !
-Please contact ops-coffee.com</code></pre>
-
+Please contact ops-coffee.com
+</code></pre>
 
 <ol>
 <li>view.py视图中创建自定义错误处理方法</li>
@@ -159,8 +160,8 @@ def page_not_found_view(request, exception, template_name='errors/404.html'):
     return render(request, template_name)
 
 def error_view(request, exception, template_name='errors/500.html'):
-    return render(request, template_name)</code></pre>
-
+    return render(request, template_name)
+</code></pre>
 
 <ol>
 <li>urls.py中添加错误行为由自定义程序处理</li>
@@ -168,7 +169,8 @@ def error_view(request, exception, template_name='errors/500.html'):
 <pre class="codehilite"><code>handler400 = 'webapp.views.bad_request_view'
 handler403 = 'webapp.views.permission_denied_view'
 handler404 = 'webapp.views.page_not_found_view'
-handler500 = 'webapp.views.error_view'</code></pre>
+handler500 = 'webapp.views.error_view'
+</code></pre>
 
         <div>
           <ul class="article-meta">

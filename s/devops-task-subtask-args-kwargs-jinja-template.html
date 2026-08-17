@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -130,12 +131,12 @@
 <p>首先是参数定义，还以上边的项目发布任务流中的打包为例，打包步骤执行完成后需要提取出来版本号数据，如果打包程序是python脚本，那可以通过获取python最终return出来的数据，那如果打包程序是个shell脚本呢？shell脚本无法return数据，这种情况下就需要找到一种相对通用的方法来准确获取数据，并完成最终的结果参数定义</p>
 <p>我们采用的方式是解析标准输出stdout的结果，无论是哪种类型的子任务都会有标准输出，如果想要定义结果参数给后续步骤使用，只需要按照固定的格式输出到标准输出即可，例如，我们定义所有符合这样到格式都是结果参数：<code>[[ var_name::var_value ]]</code>，双中括号包括，参数名和参数值之间用双冒号分割</p>
 <p>例如shell脚本中可以这样用：</p>
-<pre class="codehilite"><code>echo [[ name::运维咖啡吧 ]]</code></pre>
-
+<pre class="codehilite"><code>echo [[ name::运维咖啡吧 ]]
+</code></pre>
 
 <p>python脚本中则可以这样用：</p>
-<pre class="codehilite"><code>print('[[ site::blog.ops-coffee.com ]]')</code></pre>
-
+<pre class="codehilite"><code>print('[[ site::blog.ops-coffee.com ]]')
+</code></pre>
 
 <p>这样我们可以在子任务执行完成后通过解析标准输出stdout从而获取到这个步骤所定义的可以给后续步骤使用的变量</p>
 <pre class="codehilite"><code>def stdout_args(text: str):
@@ -146,23 +147,23 @@
 
     return {key.strip(): value.strip() for key, value in matches}
 
-stdout_args('标准输出的内容')</code></pre>
-
+stdout_args('标准输出的内容')
+</code></pre>
 
 <h2 id="_2">参数使用</h2>
 <p>参数定义完成了，再来聊聊如何使用，就是将子任务执行结果解析出来的参数，应用到其他需要用到的地方，例如用到脚本类型子任务的脚本里，或者是API类型子任务的Header中，再或者是通知类型子任务的通知内容中，所有可能用得到的地方都可以用</p>
 <p>这里我们采用了Jinja模板渲染的方式，所有想要使用参数的地方都使用<code>{{ var_name }}</code>来填充，例如：</p>
 <pre class="codehilite"><code>hello {{ name }}
-欢迎访问我的博客 {{ site }}</code></pre>
-
+欢迎访问我的博客 {{ site }}
+</code></pre>
 
 <p>这样我们只需要通过Jinja模板渲染就能完成参数名称和参数值的替换。不仅能够实现参数替换，同时还能利用JinJa模板的高级语法，做些判断循环之类的内容，使用更加灵活和强大</p>
 <pre class="codehilite"><code>def template_render(template_string, kwargs):
     env = Environment(loader=BaseLoader())
     template = env.from_string(template_string)
 
-    return template.render(kwargs)</code></pre>
-
+    return template.render(kwargs)
+</code></pre>
 
 <p>所有包含参数定义的地方都当作Jinja的模板传入<code>template_render</code>函数，获取渲染后的结果</p>
 <h2 id="_3">参数传递</h2>
@@ -176,12 +177,12 @@ stdout_args('标准输出的内容')</code></pre>
 <pre class="codehilite"><code>results = {
         'SUBTASK_{}_RESULT'.format(i.temptask.subtask.id): (i.results or {}) for i in
         tasklog.subtask_logs.filter(sortnum__lt=subtask_log.sortnum)
-    }</code></pre>
-
+    }
+</code></pre>
 
 <p>相应的在使用结果参数时，加上子任务标识即可</p>
-<pre class="codehilite"><code>hello {{ SUBTASK_37_RESULT.name }}</code></pre>
-
+<pre class="codehilite"><code>hello {{ SUBTASK_37_RESULT.name }}
+</code></pre>
 
 <p>至此问题完美解决</p>
 <h2 id="_5">写在最后</h2>

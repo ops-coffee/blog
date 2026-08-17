@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -126,14 +127,14 @@
 <p>django template默认支持几个模板标签，通过模板标签可以实现一些高级的功能，常用的模板标签有以下几个</p>
 <h3 id="extends">extends</h3>
 <p>extends为模板继承的标签，表示此模板扩展了父模板，通常在继承页面时使用，例如页面继承base模板</p>
-<pre class="codehilite"><code>{% extends &quot;base.html&quot; %}</code></pre>
-
+<pre class="codehilite"><code>{% extends &quot;base.html&quot; %}
+</code></pre>
 
 <h3 id="include">include</h3>
 <p>include为模板包含的标签，表示此模板会包含以下模板的内容，通常对于一些有公共模板元素的模板，将公共模板元素独立为一个模板，然后在其他模板中引用</p>
 <pre class="codehilite"><code>&lt;!-- 资源详情 --&gt;
-{% include &quot;carrier/instance.detail.html&quot; %}</code></pre>
-
+{% include &quot;carrier/instance.detail.html&quot; %}
+</code></pre>
 
 <p>include的子模板需要注意<strong>元素ID不要与当前模板重复</strong></p>
 <h3 id="block">block</h3>
@@ -141,8 +142,8 @@
 <pre class="codehilite"><code>{% block breadcrumb %}
   &lt;button class=&quot;btn btn-secondary&quot; onclick=&quot;exportUrl()&quot; id=&quot;id-export&quot;&gt;&lt;i class=&quot;fa fa-download&quot;&gt;&lt;/i&gt; 导出&lt;/button&gt;
   &lt;button class=&quot;btn btn-info&quot; onclick=&quot;openUrl()&quot; id=&quot;id-api&quot;&gt;&lt;i class=&quot;fa fa-link&quot;&gt;&lt;/i&gt; API&lt;/button&gt;
-{% endblock %}</code></pre>
-
+{% endblock %}
+</code></pre>
 
 <h3 id="for">for</h3>
 <p>模板中循环标签</p>
@@ -153,21 +154,22 @@
     &lt;td&gt;{{ item.grant_date | date:&quot;Y-m-d&quot; }}&lt;/td&gt;
     &lt;td&gt;{{ item.revoke_date }}&lt;/td&gt;
   &lt;/tr&gt;
-{% endfor %}</code></pre>
-
+{% endfor %}
+</code></pre>
 
 <p>模板中循环字典</p>
 <pre class="codehilite"><code>{% for k,v in dict.items %}
     {{ k }}
     {{ v }}
-{% endfor %}</code></pre>
-
+{% endfor %}
+</code></pre>
 
 <h3 id="if">if</h3>
 <p>模板中判断标签</p>
 <pre class="codehilite"><code>{% if perms.carrier.bucket_instance_change %}
   &lt;button class=&quot;btn btn-success&quot; type=&quot;button&quot; onclick=&quot;createForm()&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; 添加&lt;/button&gt;
-{% endif %}</code></pre>
+{% endif %}
+</code></pre>
 
         <div>
           <ul class="article-meta">

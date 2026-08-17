@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -128,50 +129,50 @@
 <p>在开始之前你只需要准备一台主机，Linux或MacOS系统，只要能安装docker即可。以下操作环境基于CentOS7</p>
 <h3 id="docker">安装Docker</h3>
 <p>1.更新系统包</p>
-<pre class="codehilite"><code>yum update -y</code></pre>
-
+<pre class="codehilite"><code>yum update -y
+</code></pre>
 
 <p>2.安装必要的依赖</p>
-<pre class="codehilite"><code>yum install -y yum-utils</code></pre>
-
+<pre class="codehilite"><code>yum install -y yum-utils
+</code></pre>
 
 <p>3.添加 Docker 的官方存储库</p>
-<pre class="codehilite"><code>yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</code></pre>
-
+<pre class="codehilite"><code>yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+</code></pre>
 
 <p>4.安装 Docker 引擎</p>
-<pre class="codehilite"><code>yum install -y docker-ce docker-ce-cli containerd.io</code></pre>
-
+<pre class="codehilite"><code>yum install -y docker-ce docker-ce-cli containerd.io
+</code></pre>
 
 <p>5.启动 Docker 并将其设置为开机启动</p>
 <pre class="codehilite"><code>systemctl start docker
-systemctl enable docker</code></pre>
-
+systemctl enable docker
+</code></pre>
 
 <h3 id="docker-compose-v2">安装 Docker Compose v2</h3>
 <p>1.安装 Docker Compose 插件</p>
-<pre class="codehilite"><code>yum install -y docker-compose-plugin</code></pre>
-
+<pre class="codehilite"><code>yum install -y docker-compose-plugin
+</code></pre>
 
 <p>2.验证 Docker Compose 是否安装成功</p>
-<pre class="codehilite"><code>docker compose version</code></pre>
-
+<pre class="codehilite"><code>docker compose version
+</code></pre>
 
 <h3 id="git">安装GIT</h3>
-<pre class="codehilite"><code>yum install git</code></pre>
-
+<pre class="codehilite"><code>yum install git
+</code></pre>
 
 <h2 id="_2">启动</h2>
 <p>1.创建项目目录</p>
 <pre class="codehilite"><code>mkdir /data
-cd /data</code></pre>
-
+cd /data
+</code></pre>
 
 <p>2.拉项目代码并启动</p>
 <pre class="codehilite"><code>git clone https://github.com/veops/cmdb.git
 cd cmdb/
-docker compose up -d</code></pre>
-
+docker compose up -d
+</code></pre>
 
 <h2 id="_3">访问</h2>
 <p>浏览器打开，输入<code>http://ip:8000</code>访问，默认账号密码分别为：</p>
@@ -301,8 +302,8 @@ volumes: # 第二部分为卷定义
 networks: # 第三部分为网络定义
   new: # 定义一个new桥接网络，用于各服务之间通信
     driver: bridge
-    name: cmdb_network</code></pre>
-
+    name: cmdb_network
+</code></pre>
 
 <p>总结以下就是启动了四个容器，分别是MySQL、Reids、后端API和前端UI，后端API启动前需要MySQL和Reids启动成功，而前端UI启动前需要后端API启动成功。定义了一个公共的网络保证四个容器之间可以互相通信，同时还定义了两个本地卷，保证MySQL和Reids数据的持久化，以确保容器在重启之后数据也不会丢失，对系统升级也十分友好</p>
 <h3 id="_5">本地卷</h3>
@@ -322,13 +323,13 @@ networks: # 第三部分为网络定义
         &quot;Options&quot;: null,
         &quot;Scope&quot;: &quot;local&quot;
     }
-]</code></pre>
-
+]
+</code></pre>
 
 <p>其中<code>Mountpoint</code>就是数据在宿主机本地的挂载点，可以直接查看其中的数据</p>
 <pre class="codehilite"><code># ls /var/lib/docker/volumes/cmdb_db-data/_data/
-auto.cnf  ca-key.pem  ca.pem  client-cert.pem  client-key.pem  cmdb  ib_buffer_pool  ib_logfile0  ib_logfile1  ibdata1  ibtmp1  mysql  performance_schema  private_key.pem  public_key.pem  server-cert.pem  server-key.pem  sys</code></pre>
-
+auto.cnf  ca-key.pem  ca.pem  client-cert.pem  client-key.pem  cmdb  ib_buffer_pool  ib_logfile0  ib_logfile1  ibdata1  ibtmp1  mysql  performance_schema  private_key.pem  public_key.pem  server-cert.pem  server-key.pem  sys
+</code></pre>
 
 <p>而Redis持久化在本地的数据也同样可以通过以上的方法查看</p>
 <pre class="codehilite"><code># docker volume inspect cmdb_cache-data
@@ -349,8 +350,8 @@ auto.cnf  ca-key.pem  ca.pem  client-cert.pem  client-key.pem  cmdb  ib_buffer_p
 ]
 #
 # ls /var/lib/docker/volumes/cmdb_cache-data/_data/
-dump.rdb</code></pre>
-
+dump.rdb
+</code></pre>
 
 <p>只有一个rdb数据文件。如果你在部署时遇到数据方面的问题，可以通过以上方法来查看本地的数据，或是直接命令行进入MySQL或者Reids去检查数据，当然更多的时候可能是数据初始化问题，所以更为有效的方法或许是使用如下命令重启docker-compose服务</p>
 <pre class="codehilite"><code># 关闭docker compose服务
@@ -363,8 +364,8 @@ dump.rdb</code></pre>
 # docker compose ps
 
 # 可选：检查docker compose容器日志
-# docker compose logs</code></pre>
-
+# docker compose logs
+</code></pre>
 
 <h3 id="_6">自定义网络</h3>
 <p>docker-compose服务启动后，可以通过<code>network</code>命令查看Docker的网络列表</p>
@@ -373,8 +374,8 @@ NETWORK ID     NAME           DRIVER    SCOPE
 17ec43fa34f8   bridge         bridge    local
 5dd2f0dd8033   cmdb_network   bridge    local
 75376eee7d8b   host           host      local
-deb75486f151   none           null      local</code></pre>
-
+deb75486f151   none           null      local
+</code></pre>
 
 <p>此时能看到一个名为<code>cmdb_network</code>的网络，如果你遇到了网络连通性问题，例如API连不上数据库等等，可以通过<code>network</code>命令查看网络的详细信息</p>
 <pre class="codehilite"><code># docker network inspect cmdb_network
@@ -440,8 +441,8 @@ deb75486f151   none           null      local</code></pre>
             &quot;com.docker.compose.version&quot;: &quot;2.27.0&quot;
         }
     }
-]</code></pre>
-
+]
+</code></pre>
 
 <p>这里输出了网络的详细信息，包括网络的配置、连接到该网络到容器等等，其中的<code>Containers</code>字段就记录了所有连接到此网络到容器，正常情况下会有四个，包含<code>cmdb-db</code>、<code>cmdb-cache</code>、<code>cmdb-api</code>和<code>cmdb-ui</code>，它们都被分配了合适的IP地址</p>
 <h3 id="_7">容器</h3>
@@ -451,8 +452,8 @@ NAME         IMAGE                                                    COMMAND   
 cmdb-api     registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.4.5   &quot;/bin/sh -c 'sed -i …&quot;   cmdb-api     10 minutes ago   Up 10 minutes             
 cmdb-cache   registry.cn-hangzhou.aliyuncs.com/veops/cmdb-cache:2.3   &quot;docker-entrypoint.s…&quot;   cmdb-cache   10 minutes ago   Up 10 minutes (healthy)   6379/tcp
 cmdb-db      registry.cn-hangzhou.aliyuncs.com/veops/cmdb-db:2.3      &quot;docker-entrypoint.s…&quot;   cmdb-db      10 minutes ago   Up 10 minutes (healthy)   33060/tcp, 0.0.0.0:23306-&gt;3306/tcp, :::23306-&gt;3306/tcp
-cmdb-ui      registry.cn-hangzhou.aliyuncs.com/veops/cmdb-ui:2.4.5    &quot;/docker-entrypoint.…&quot;   cmdb-ui      10 minutes ago   Up 10 minutes             0.0.0.0:8000-&gt;80/tcp, :::8000-&gt;80/tcp</code></pre>
-
+cmdb-ui      registry.cn-hangzhou.aliyuncs.com/veops/cmdb-ui:2.4.5    &quot;/docker-entrypoint.…&quot;   cmdb-ui      10 minutes ago   Up 10 minutes             0.0.0.0:8000-&gt;80/tcp, :::8000-&gt;80/tcp
+</code></pre>
 
 <p>最后就可以正常通过Web访问部署的CMDB服务了</p>
 <h2 id="_8">注意事项</h2>
@@ -462,55 +463,55 @@ cmdb-ui      registry.cn-hangzhou.aliyuncs.com/veops/cmdb-ui:2.4.5    &quot;/doc
  MYSQL_PORT=3306
  MYSQL_USER='cmdb'
  MYSQL_DATABASE='cmdb'
- MYSQL_PASSWORD='123456'</code></pre>
-
+ MYSQL_PASSWORD='123456'
+</code></pre>
 
 <p>可以看到默认的账号密码比较简单，如果我们想要修改的话，最好在第一次初始化之前就修改<code>.env</code>文件里的配置，这样的话在系统初始化时就会设置成新设置的账号密码，以提高系统安全性</p>
 <p>若你已经初始化了系统，还想要再修改账号密码的话，那就只能进入MySQL数据库进行修改了，同时修改过之后也要同时修改<code>.env</code>配置文件里的相关配置</p>
 <h2 id="_9">常见问题</h2>
 <h3 id="_10">数据库连接失败</h3>
 <p>数据库的配置记录在<code>.env</code>配置文件中，先检查数据库配置和环境变量是否正确，其次确认数据库服务正常启动并能接受连接</p>
-<pre class="codehilite"><code># docker exec -it cmdb-db mysql -u root -p$MYSQL_ROOT_PASSWORD</code></pre>
-
+<pre class="codehilite"><code># docker exec -it cmdb-db mysql -u root -p$MYSQL_ROOT_PASSWORD
+</code></pre>
 
 <p>最后检查自定义网络是否正常，通过之前给的<code>network</code>命令</p>
 <h3 id="_11">缓存连接失败</h3>
 <p>检查Redis服务是否正常运行并能接受连接</p>
-<pre class="codehilite"><code># docker exec -it cmdb-cache redis-cli ping</code></pre>
-
+<pre class="codehilite"><code># docker exec -it cmdb-cache redis-cli ping
+</code></pre>
 
 <p>其次也是检查自定义网络状态</p>
 <h3 id="api">API服务启动失败</h3>
 <p>先检查以来的MySQL和Reids服务是否正常，然后检查是否能正常连通MySQL和Redis</p>
 <pre class="codehilite"><code># docker exec -it cmdb-api /bin/sh -c &quot;ping cmdb-db&quot;
-# docker exec -it cmdb-api /bin/sh -c &quot;ping cmdb-cache&quot;</code></pre>
-
+# docker exec -it cmdb-api /bin/sh -c &quot;ping cmdb-cache&quot;
+</code></pre>
 
 <p>如果正常则检查API服务容器状态</p>
-<pre class="codehilite"><code># docker compose ps | grep cmdb-api</code></pre>
-
+<pre class="codehilite"><code># docker compose ps | grep cmdb-api
+</code></pre>
 
 <p>容器状态正常则检查gunicorn服务是否正常</p>
-<pre class="codehilite"><code># docker exec -it cmdb-api /bin/sh -c &quot;ps aux|grep -v grep|grep -v '1 root'|grep gunicorn&quot;</code></pre>
-
+<pre class="codehilite"><code># docker exec -it cmdb-api /bin/sh -c &quot;ps aux|grep -v grep|grep -v '1 root'|grep gunicorn&quot;
+</code></pre>
 
 <p>最后查看日志是否有报错</p>
-<pre class="codehilite"><code># docker compose logs cmdb-api</code></pre>
-
+<pre class="codehilite"><code># docker compose logs cmdb-api
+</code></pre>
 
 <h3 id="ui">UI服务无法访问</h3>
 <p>先确认依赖的API容器状态正常，然后检查依赖的API服务日志无报错，再然后检查是否能正常连通API容器</p>
-<pre class="codehilite"><code># docker exec -it cmdb-ui /bin/sh -c &quot;ping cmdb-api&quot;</code></pre>
-
+<pre class="codehilite"><code># docker exec -it cmdb-ui /bin/sh -c &quot;ping cmdb-api&quot;
+</code></pre>
 
 <p>如果都没有问题，则查看UI服务容器状态</p>
-<pre class="codehilite"><code># docker compose ps | grep cmdb-ui</code></pre>
-
+<pre class="codehilite"><code># docker compose ps | grep cmdb-ui
+</code></pre>
 
 <p>最后查看nginx配置及容器日志是否有报错</p>
 <pre class="codehilite"><code># docker exec -it cmdb-ui /bin/sh -c &quot;cd /etc/init.d &amp;&amp; nginx -t&quot;
-# docker compose logs cmdb-ui</code></pre>
-
+# docker compose logs cmdb-ui
+</code></pre>
 
 <p>对于成熟的开源项目，只要不是刚刚更新的新版本，那大概率都已经经过了许多用户的实际验证，项目本身出现问题的概率较低，如果我们遇到错误先考虑自己的环境及配置，按照以上解决思路，大概率能找到问题并解决。如果不行的话那就重启下docker-compose服务，还不行的话就重装吧</p>
 

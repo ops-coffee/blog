@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -163,8 +164,8 @@ worker_conf = app.control.inspect([worker]).conf()
 worker_reports = app.control.inspect([worker]).report()
 
 # 查询特定任务的信息
-task_info = app.control.inspect([worker]).query_task(task_id)</code></pre>
-
+task_info = app.control.inspect([worker]).query_task(task_id)
+</code></pre>
 
 <p>通过<code>inspect</code>可以查看celery整体以及单个worker的相关信息，例如首页的状态就是通过<code>ping</code>来实现的</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0125.02.png" /></p>
@@ -211,8 +212,8 @@ info = result.info
 result = result.get(timeout=10, propagate=False)
 
 # 忘记任务，将任务从结果存储中删除。一旦任务被遗忘，将无法查询其状态和结果
-result.forget()</code></pre>
-
+result.forget()
+</code></pre>
 
 <p>通过<code>AsyncResult</code>可以获取到任务执行的相关信息，对任务执行过程和结果都有很好的把控。不过这需要任务的ID，任务ID通常可以通过任务执行时获取，<code>ops_coffee_auto_notify_task.delay()</code>异步执行任务后返回的就是任务的ID。但对于任务的话我通常会单独记录任务执行的过程和状态，而不依赖Celery的结果记录，所以对于<code>AsyncResult</code>的需求并不强</p>
 <p>但平常需要开关系统内置的周期任务，此时就需要知道系统任务列表，通过获取<code>PeriodicTask</code>表的数据即可，同时通过修改<code>PeriodicTask</code>表的<code>enabled</code>字段值来达到开启或暂停的目的</p>

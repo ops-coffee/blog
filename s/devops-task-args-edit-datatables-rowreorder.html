@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -146,8 +147,8 @@
         &quot;helper&quot;: &quot;&quot;,
         &quot;hidden&quot;: false
     }
-],</code></pre>
-
+],
+</code></pre>
 
 <p>而对于前端代码的渲染则多加个<code>object.hidden</code>的判断即可</p>
 <h2 id="_2">属性修改</h2>
@@ -180,8 +181,8 @@
     &lt;td id=&quot;id-args-button&quot;&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-info btn-sm&quot; onclick=&quot;addParam()&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; 添加&lt;/button&gt;&lt;/td&gt;
   &lt;/tr&gt;
   &lt;/tfoot&gt;
-&lt;/table&gt;</code></pre>
-
+&lt;/table&gt;
+</code></pre>
 
 <p>当点击修改按钮时，则触发<code>editParam</code>函数将这行数据直接给填充进form表单，同时获取这行数据在datatables里的index，最后将原本的添加按钮给替换成保存</p>
 <pre class="codehilite"><code>function editParam(btn) {
@@ -197,8 +198,8 @@
   var rowIndex = table_params.row($(btn).closest('tr')).index();
 
   $('#id-args-button').html('&lt;button type=&quot;button&quot; class=&quot;btn btn-warning btn-sm&quot; onclick=&quot;addParam('+ rowIndex +')&quot;&gt;&lt;i class=&quot;fa fa-save&quot;&gt;&lt;/i&gt; 保存&lt;/button&gt;');
-}</code></pre>
-
+}
+</code></pre>
 
 <p>点击保存按钮则触发与新建同样的<code>addParam</code>函数，获取到form的数据，更新到表格中</p>
 <pre class="codehilite"><code>function addParam(rowIndex=null) {
@@ -230,8 +231,8 @@
     $(&quot;#param-name, #param-value, #param-helper&quot;).val(&quot;&quot;);
     $('#id-args-button').html('&lt;button type=&quot;button&quot; class=&quot;btn btn-info btn-sm&quot; onclick=&quot;addParam()&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; 添加&lt;/button&gt;');
   }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>参数修改也顺利完成</p>
 <h2 id="_3">位置拖动</h2>
@@ -255,8 +256,8 @@
         '&lt;button type=&quot;button&quot; class=&quot;btn btn-danger btn-sm&quot; onclick=&quot;deleteParam(this)&quot;&gt;&lt;i class=&quot;fa fa-trash&quot;&gt;&lt;/i&gt;&lt;/button&gt;' +
       '&lt;/div&gt;'
   ]).draw(false);
-})</code></pre>
-
+})
+</code></pre>
 
 <p>最终的效果就是参数增加了隐藏属性同时也可以修改属性或者拖动位置重新排序了</p>
 <p><img alt="" loading="lazy" src="/static/images/2024/0524.01.png" /></p>

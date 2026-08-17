@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -148,8 +149,8 @@ def runCmd(tid, msg, cmd):
         return p.returncode
     except Exception as e:
         print('----&gt;Shell Exec Error：%s' % str(e))
-        return 999</code></pre>
-
+        return 999
+</code></pre>
 
 <h3 id="kubernetes-api">kubernetes-api</h3>
 <p>所有环境跑在kubernetes之上，创建或销毁临时环境都需要与kubernetes做交互，我选择了使用kubernetes python sdk来完成</p>
@@ -207,8 +208,8 @@ class KubeApi:
 
             return True, &quot;Deployment deleted. %s&quot; % r
         except Exception as e:
-            return False, 'Deployment deleted: ' + str(e)</code></pre>
-
+            return False, 'Deployment deleted: ' + str(e)
+</code></pre>
 
 <p><code>load_kube_config</code>加载的配置文件为kubernetes主服务器上的<code>~/.kube/config</code>文件，这个文件内包含了集群相关信息，通过这个配置文件可以免认证操作集群修改资源，要妥善保管这个配置文件，当然也可以通过token的方式自己实现认证</p>
 <p>另外需要特别注意的是sdk的版本与kubernetes的版本有对应关系，且不同资源的操作对kubernetes的api版本要求也不同，使用时多参考官方文档</p>

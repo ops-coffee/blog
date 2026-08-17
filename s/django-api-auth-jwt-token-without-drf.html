@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -139,13 +140,13 @@
 <h1 id="pyjwt">PyJWT介绍</h1>
 <p>要实现上边的需求1，我们首先得引入JWT模块，python下有现成的PyJWT模块可以直接用，先看下JWT的简单用法</p>
 <h5 id="pyjwt_1">安装PyJWT</h5>
-<pre class="codehilite"><code>$ pip install pyjwt</code></pre>
-
+<pre class="codehilite"><code>$ pip install pyjwt
+</code></pre>
 
 <h5 id="pyjwttoken">利用PyJWT生成Token</h5>
 <pre class="codehilite"><code>&gt;&gt;&gt; import jwt
-&gt;&gt;&gt; encoded_jwt = jwt.encode({'username':'运维咖啡吧','site':'https://ops-coffee.com'},'secret_key',algorithm='HS256')</code></pre>
-
+&gt;&gt;&gt; encoded_jwt = jwt.encode({'username':'运维咖啡吧','site':'https://ops-coffee.com'},'secret_key',algorithm='HS256')
+</code></pre>
 
 <p>这里传了三部分内容给JWT，</p>
 <p>第一部分是一个Json对象，称为Payload，主要用来存放有效的信息，例如用户名，过期时间等等所有你想要传递的信息</p>
@@ -153,8 +154,8 @@
 <p>第三部分指定了Signature签名的算法</p>
 <h5 id="token">查看生成的Token</h5>
 <pre class="codehilite"><code>&gt;&gt;&gt; print(encoded_jwt)
-b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Ilx1OGZkMFx1N2VmNFx1NTQ5Nlx1NTU2MVx1NTQyNyIsInNpdGUiOiJodHRwczovL29wcy1jb2ZmZWUuY24ifQ.fIpSXy476r9F9i7GhdYFNkd-2Ndz8uKLgJPcd84BkJ4'</code></pre>
-
+b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Ilx1OGZkMFx1N2VmNFx1NTQ5Nlx1NTU2MVx1NTQyNyIsInNpdGUiOiJodHRwczovL29wcy1jb2ZmZWUuY24ifQ.fIpSXy476r9F9i7GhdYFNkd-2Ndz8uKLgJPcd84BkJ4'
+</code></pre>
 
 <p>JWT生成的Token是一个用两个点（.）分割的长字符串</p>
 <p>点分割成的三部分分别是Header头部，Payload负载，Signature签名：<code>Header.Payload.Signature</code></p>
@@ -165,20 +166,20 @@ b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Ilx1OGZkMFx1N2VmNFx1NTQ5N
 b'{&quot;typ&quot;:&quot;JWT&quot;,&quot;alg&quot;:&quot;HS256&quot;}'
 
 &gt;&gt;&gt; base64.b64decode('eyJ1c2VybmFtZSI6Ilx1OGZkMFx1N2VmNFx1NTQ5Nlx1NTU2MVx1NTQyNyIsInNpdGUiOiJodHRwczovL29wcy1jb2ZmZWUuY24ifQ==')
-# 这里最后加=的原因是base64解码对传入的参数长度不是2的对象，需要再参数最后加上一个或两个等号=</code></pre>
-
+# 这里最后加=的原因是base64解码对传入的参数长度不是2的对象，需要再参数最后加上一个或两个等号=
+</code></pre>
 
 <p>因为JWT不会对结果进行加密，所以不要保存敏感信息在Header或者Payload中，服务端也主要依靠最后的Signature来验证Token是否有效以及有无被篡改</p>
 <h5 id="token_1">解密Token</h5>
 <pre class="codehilite"><code>&gt;&gt;&gt; jwt.decode(encoded_jwt,'secret_key',algorithms=['HS256'])
-{'username': '运维咖啡吧', 'site': 'https://ops-coffee.com'}</code></pre>
-
+{'username': '运维咖啡吧', 'site': 'https://ops-coffee.com'}
+</code></pre>
 
 <p>服务端在有秘钥的情况下可以直接对JWT生成的Token进行解密，解密成功说明Token正确，且数据没有被篡改</p>
 <p>当然我们前文说了JWT并没有对数据进行加密，如果没有secret_key也可以直接获取到Payload里边的数据，只是缺少了签名算法无法验证数据是否准确，pyjwt也提供了直接获取Payload数据的方法，如下</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; jwt.decode(encoded_jwt, verify=False)
-{'username': '运维咖啡吧', 'site': 'https://ops-coffee.com'}</code></pre>
-
+{'username': '运维咖啡吧', 'site': 'https://ops-coffee.com'}
+</code></pre>
 
 <h1 id="django">Django案例</h1>
 <p>Django要兼容session认证的方式，还需要同时支持JWT，并且两种验证需要共用同一套权限系统，该如何处理呢？我们可以参考Django的解决方案：装饰器，例如用来检查用户是否登录的<code>login_required</code>和用来检查用户是否有权限的<code>permission_required</code>两个装饰器，我们可以自己实现一个装饰器，检查用户的认证模式，同时认证完成后验证用户是否有权限操作</p>
@@ -237,8 +238,8 @@ def auth_permission_required(perm):
 
         return _wrapped_view
 
-    return decorator</code></pre>
-
+    return decorator
+</code></pre>
 
 <p>在view使用时就可以用这个装饰器来代替原本的<code>login_required</code>和<code>permission_required</code>装饰器了</p>
 <pre class="codehilite"><code>@auth_permission_required('account.select_user')
@@ -251,8 +252,8 @@ def user(request):
 
         return JsonResponse({&quot;state&quot;: 1, &quot;message&quot;: _jsondata})
     else:
-        return JsonResponse({&quot;state&quot;: 0, &quot;message&quot;: &quot;Request method 'POST' not supported&quot;})</code></pre>
-
+        return JsonResponse({&quot;state&quot;: 0, &quot;message&quot;: &quot;Request method 'POST' not supported&quot;})
+</code></pre>
 
 <p>我们还需要一个生成用户Token的方法，通过给User model添加一个token的静态方法来处理</p>
 <pre class="codehilite"><code>class User(AbstractBaseUser, PermissionsMixin):
@@ -293,15 +294,15 @@ def user(request):
             (&quot;select_user&quot;, &quot;查看用户&quot;),
             (&quot;change_user&quot;, &quot;修改用户&quot;),
             (&quot;delete_user&quot;, &quot;删除用户&quot;),
-        )</code></pre>
-
+        )
+</code></pre>
 
 <p>可以直接通过用户对象来生成Token：</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; from accounts.models import User
 &gt;&gt;&gt; u = User.objects.get(username='admin@ops-coffee.com')
 &gt;&gt;&gt; u.token
-'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDgyMjg3NzksImlhdCI6MTU0ODE0MjM3OSwiZGF0YSI6eyJ1c2VybmFtZSI6ImFkbWluQDE2My5jb20ifX0.akZNU7t_z2kwPxDJjmc-QxtNdICK0yhnwWmKxqqXKLw'</code></pre>
-
+'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDgyMjg3NzksImlhdCI6MTU0ODE0MjM3OSwiZGF0YSI6eyJ1c2VybmFtZSI6ImFkbWluQDE2My5jb20ifX0.akZNU7t_z2kwPxDJjmc-QxtNdICK0yhnwWmKxqqXKLw'
+</code></pre>
 
 <p>生成的Token给到客户端，客户端就可以拿这个Token进行鉴权了</p>
 <pre class="codehilite"><code>&gt;&gt;&gt; import requests
@@ -309,8 +310,8 @@ def user(request):
 &gt;&gt;&gt;
 &gt;&gt;&gt; r = requests.get('http://localhost/api/user', headers={'Authorization': 'Token '+token})
 &gt;&gt;&gt; r.json()
-{'username': 'admin@ops-coffee.com', 'fullname': '运维咖啡吧', 'is_active': True}</code></pre>
-
+{'username': 'admin@ops-coffee.com', 'fullname': '运维咖啡吧', 'is_active': True}
+</code></pre>
 
 <p>这样一个<code>auth_permission_required</code>方法就可以搞定上边的全部需求了，简单好用。</p>
 

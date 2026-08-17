@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -154,8 +155,8 @@
 <p>1.安装基础环境</p>
 <pre class="codehilite"><code># apt-get update
 # apt-get install -y build-essential libgd2-xpm-dev autoconf gcc libc6 make wget
-# apt-get install -y nginx php5-fpm spawn-fcgi fcgiwrap</code></pre>
-
+# apt-get install -y nginx php5-fpm spawn-fcgi fcgiwrap
+</code></pre>
 
 <p>2.下载并解压nagios</p>
 <pre class="codehilite"><code># wget https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.0.8.tar.gz
@@ -171,8 +172,8 @@
 # make install-init
 # make install-config
 # make install-commandmode
-# cd ..</code></pre>
-
+# cd ..
+</code></pre>
 
 <ul>
 <li>nagios安装完成后就可以启动了，但是web页面是无法访问的，查看日志会报错<code>(No output on stdout) stderr: execvp(/usr/local/nagios/libexec/check_ping, ...) failed. errno is 2: No such file or directory</code>，这是因为我们只安装了nagios的core，没有安装nagios的插件，需要安装插件来支持core工作</li>
@@ -184,8 +185,8 @@
 # ./configure
 # make
 # make install
-# cd ..</code></pre>
-
+# cd ..
+</code></pre>
 
 <ul>
 <li>nagios的插件主要是添加了check_ping、checkhttp之类的辅助检查的脚本，默认位于<code>/usr/local/nagios/libexec/</code>下，可以借助这些插件来监控我们的HTTP接口或主机、服务状态</li>
@@ -205,8 +206,8 @@ else {
 # chmod +x /usr/local/bin/htpasswd.pl
 
 #利用perl脚本生成账号密码到htpasswd.users文件中
-# /usr/local/bin/htpasswd.pl nagiosadmin nagios@ops-coffee &gt; /usr/local/nagios/htpasswd.users</code></pre>
-
+# /usr/local/bin/htpasswd.pl nagiosadmin nagios@ops-coffee &gt; /usr/local/nagios/htpasswd.users
+</code></pre>
 
 <ul>
 <li>nagios默认开启了账号认证，认证相关的配置在这个文件里<code>/usr/local/nagios/etc/cgi.cfg</code></li>
@@ -254,8 +255,8 @@ else {
         include /etc/nginx/fastcgi_params;
         fastcgi_pass unix:/var/run/fcgiwrap.socket;
     }
-}</code></pre>
-
+}
+</code></pre>
 
 <p>6.检查配置文件并启动</p>
 <pre class="codehilite"><code>#检查配置文件是否有语法错误
@@ -266,15 +267,15 @@ else {
 
 #启动fcgiwrap和php5-fpm服务
 # service fcgiwrap restart
-# service php5-fpm restart</code></pre>
-
+# service php5-fpm restart
+</code></pre>
 
 <p>7.浏览器访问服务器IP或域名就可以看到nagios的页面了，默认有本机的监控数据，不需要的话可以在配置文件<code>localhost.cfg</code>中删除
 <img alt="" loading="lazy" src="/static/images/2018/0918.01.png" /></p>
 <h2 id="nagios_2">Nagios配置</h2>
 <p>Nagios的主配置文件路径为<code>/usr/local/nagios/etc/nagios.cfg</code>，里边默认已经配置了一些配置文件的路径，cfg_file=后边配置的都是配置文件，nagios程序会来这里读取配置，我们可以新添加一个专门用来监控HTTP API的配置文件</p>
-<pre class="codehilite"><code>cfg_file=/usr/local/nagios/etc/objects/check_api.cfg</code></pre>
-
+<pre class="codehilite"><code>cfg_file=/usr/local/nagios/etc/objects/check_api.cfg
+</code></pre>
 
 <h5 id="check_apicfg">check_api.cfg里边的内容如下：</h5>
 <pre class="codehilite"><code>define service{
@@ -296,8 +297,8 @@ define service{
     host_name               localhost
     service_description     web_project_03
     check_command           check_http!ops-coffee.com -S -u /action/health -k &quot;sign:e5dhn&quot;
-}</code></pre>
-
+}
+</code></pre>
 
 <ul>
 <li><strong>define service</strong>：定义一个服务，每一个页面或api属于一个服务</li>
@@ -311,8 +312,8 @@ define service{
 <pre class="codehilite"><code>define command {
     command_name    check_http
     command_line    $USER1$/check_http -H $ARG1$
-}</code></pre>
-
+}
+</code></pre>
 
 <ul>
 <li><strong>define command</strong>：定义一个command</li>
@@ -343,8 +344,8 @@ define service{
     notification_interval           60                      ; Re-notify about service problems every hour
     notification_period             24x7                    ; Notifications can be sent out at any time
     register                        0                       ; DON'T REGISTER THIS DEFINITION - ITS NOT A REAL SERVICE, JUST A TEMPLATE!
-}</code></pre>
-
+}
+</code></pre>
 
 <p>配置太多就不一一解释了，配合后边的英文注释应该看得懂，说几个重要的</p>
 <ul>
@@ -374,8 +375,8 @@ define contactgroup{
     contactgroup_name       admins
     alias                   Nagios Administrators
     members                 sa
-}</code></pre>
-
+}
+</code></pre>
 
 <ul>
 <li>contactgroup就是我们定义的联系人组admins</li>

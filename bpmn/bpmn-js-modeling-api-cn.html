@@ -80,7 +80,8 @@
             <li class="has-submenu">
               <a href="#" target="_self">产品</a>
               <ul class="sub-menu">
-                <li><a href="/img.html" target="_self">拼图工具</a></li>
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
               </ul>
             </li>
             <li><a href="/devops/index.html" target="_self">运维平台</a></li>
@@ -157,8 +158,8 @@ modeling.createShape(task, { x: 400, y: 100 }, process);
 console.log(elementRegistry.get(task.id)); // Shape { &quot;type&quot;: &quot;bpmn:Task&quot;, ... }
 
 // (5) 创建连线
-modeling.connect(startEvent, task);</code></pre>
-
+modeling.connect(startEvent, task);
+</code></pre>
 
 <h2 id="business-objects-">Business Objects - 业务对象</h2>
 <pre class="codehilite"><code>/**
@@ -203,8 +204,8 @@ const task = elementFactory.createShape({ type: 'bpmn:Task', businessObject: tas
 modeling.createShape(task, { x: 400, y: 100 }, process);
 
 // Using the `id` property we specified you can now access the new task through the element registry
-console.log(elementRegistry.get('Task_1')); // Shape { &quot;type&quot;: &quot;bpmn:Task&quot;, ... }</code></pre>
-
+console.log(elementRegistry.get('Task_1')); // Shape { &quot;type&quot;: &quot;bpmn:Task&quot;, ... }
+</code></pre>
 
 <h2 id="creating-shapes-">Creating Shapes - 创建形状</h2>
 <pre class="codehilite"><code>/**
@@ -290,8 +291,8 @@ const userTask = elementFactory.createShape({
 });
 
 // (15) 一次向流程图中添加多个shape
-modeling.createElements([ messageStartEvent, userTask ], { x: 300, y: 600 }, process);</code></pre>
-
+modeling.createElements([ messageStartEvent, userTask ], { x: 300, y: 600 }, process);
+</code></pre>
 
 <h2 id="connecting-shapes-">Connecting Shapes - 连线形状</h2>
 <pre class="codehilite"><code>/**
@@ -331,8 +332,8 @@ const endEvent = elementFactory.createShape({ type: 'bpmn:EndEvent' });
 modeling.createShape(endEvent, { x: 600, y: 100 }, process);
 
 // (8) 创建一条新的连线连接task shape到endEvent事件
-modeling.createConnection(task, endEvent, { type: 'bpmn:SequenceFlow' }, process);</code></pre>
-
+modeling.createConnection(task, endEvent, { type: 'bpmn:SequenceFlow' }, process);
+</code></pre>
 
 <h2 id="collaborations-">Collaborations - 合作开发</h2>
 <pre class="codehilite"><code>/**
@@ -381,8 +382,8 @@ const collapsedParticipant = elementFactory
 modeling.createShape(collapsedParticipant, { x: 300, y: 500 }, process);
 
 // (9) 通过message消息连接两个participant
-modeling.connect(collapsedParticipant, participant);</code></pre>
-
+modeling.connect(collapsedParticipant, participant);
+</code></pre>
 
 <h2 id="editing-elements-">Editing Elements - 编辑元素</h2>
 <pre class="codehilite"><code>/**
@@ -421,7 +422,8 @@ const multiInstanceLoopCharacteristics = bpmnFactory.create('bpmn:MultiInstanceL
 
 modeling.updateProperties(task, {
   loopCharacteristics: multiInstanceLoopCharacteristics
-});</code></pre>
+});
+</code></pre>
 
         <div>
           <ul class="article-meta">
