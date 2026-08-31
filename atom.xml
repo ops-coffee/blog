@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2026-08-17T09:38:30.383938+00:00</updated>
+  <updated>2026-08-31T10:21:18.902835+00:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/fire/wakaka-bookkeeping-fund-stock-wealth.html</id>
+    <title>哇咔财务管家｜理财模块上线，现在记账、基金、股票、理财四合一</title>
+    <updated>2026-08-31T10:21:18.902835+00:00</updated>
+    <link href="https://blog.ops-coffee.com/fire/wakaka-bookkeeping-fund-stock-wealth.html"/>
+    <summary/>
+    <published>2026-08-31T10:20:48.232428+00:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/fire/wakaka-finance-app-listed-app-store.html</id>
     <title>哇咔财务管家，正式上架 Apple Store 啦</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-01.html"/>
     <summary/>
     <published>2026-05-17T14:37:49.860940+00:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/fund-5-year-from-50-percent-loss-to-profit.html</id>
-    <title>我买基金从不亏钱</title>
-    <updated>2026-05-07T21:15:02.190671+00:00</updated>
-    <link href="https://blog.ops-coffee.com/r/fund-5-year-from-50-percent-loss-to-profit.html"/>
-    <summary>这是一篇酝酿了超过5年的复盘</summary>
-    <published>2026-05-07T21:12:51.527414+00:00</published>
   </entry>
 </feed>

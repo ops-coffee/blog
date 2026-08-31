@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <link rel="alternate" type="application/rss+xml" title="运维咖啡吧" href="https://blog.ops-coffee.com/feed.xml" />
+  <link rel="stylesheet" href="https://blog.ops-coffee.com/static/posts/css/ops-coffee.min.css" type="text/css" />
+
+  <!-- Begin SEO tag -->
+  <title>哇咔财务管家｜理财模块上线，现在记账、基金、股票、理财四合一</title>
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="运维咖啡吧" />
+  <meta property="og:url" content="https://blog.ops-coffee.comfire/wakaka-bookkeeping-fund-stock-wealth.html" />
+  <meta property="og:title" content="哇咔财务管家｜理财模块上线，现在记账、基金、股票、理财四合一" />
+  <meta property="og:description" content="" />
+  <link rel="canonical" href="https://blog.ops-coffee.comfire/wakaka-bookkeeping-fund-stock-wealth.html" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "哇咔财务管家｜理财模块上线，现在记账、基金、股票、理财四合一",
+    "description": "",
+    "url": "https://blog.ops-coffee.comfire/wakaka-bookkeeping-fund-stock-wealth.html",
+    "author": {
+      "@type": "Person",
+      "name": "运维咖啡吧"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "运维咖啡吧",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://blog.ops-coffee.com/favicon.ico"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://blog.ops-coffee.comfire/wakaka-bookkeeping-fund-stock-wealth.html"
+    }
+  }
+  </script>
+  <!-- End SEO tag -->
+</head>
+
+<body>
+  <div class="top-nav">
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-button">&#9776; 
+        <span class="menu-title">运维咖啡吧</span>
+    </label> 
+
+    <div class="container">
+      <nav class="header-site">
+        <ul>
+          <li><a href="/">首页</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">运维</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/系统运维/" target="_self">系统运维</a></li>
+                <li><a href="/elk/index.html" target="_self">ELK系列</a></li>
+                <li><a href="/ldap/index.html" target="_self">LDAP系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">开发</a>
+              <ul class="sub-menu">
+                <li><a href="/tag/Devops/" target="_self">DevOps</a></li>
+                <li><a href="/tag/Python/" target="_self">Python</a></li>
+                <li><a href="/tag/Django/" target="_self">Django</a></li>
+                <li><a href="/bpmn/index.html" target="_self">BPMN系列</a></li>
+                <li><a href="/webssh/index.html" target="_self">WebSSH系列</a></li>
+                <li><a href="/frontend/index.html" target="_self">前端开发系列</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">产品</a>
+              <ul class="sub-menu">
+                <li><a href="/fire.html" target="_self">哇咔财务管家</a></li>
+                <li><a href="/img.html" target="_self">免费拼图工具</a></li>
+              </ul>
+            </li>
+            <li><a href="/devops/index.html" target="_self">运维平台</a></li>
+            <li class="has-submenu">
+              <a href="#" target="_self">这是生活</a>
+              <ul class="sub-menu">
+                <li><a href="/life/chronicles.html" target="_self">时光印记</a></li>
+                <li><a href="/life/money.html" target="_self">副业赚钱</a></li>
+                <li><a href="/life/writing.html" target="_self">写作相关</a></li>
+                <li><a href="/tag/这是生活/" target="_self">生活随笔</a></li>
+              </ul>
+            </li>
+            <li class="has-submenu">
+              <a href="#" target="_self">房车旅行</a>
+              <ul class="sub-menu">
+                <li><a href="/rv.html" target="_self">房车体验</a></li>
+                <li><a href="/travels.html" target="_self">旅行游记</a></li>
+                <li><a href="/travel/china.html" target="_self">旅行地图</a></li>
+              </ul>
+            </li>
+            <li><a href="/tag/index.html" target="_self">标签</a></li>
+            <li><a href="/archive.html" target="_self">归档</a></li>
+          <li class="search"><a href="/search.html" target="_self" aria-label="搜索">🔍</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <header>
+    <div class="container">
+      <a href="/">
+        <div class="name">运维咖啡吧</div>
+        <div class="slogan">享受技术带来的乐趣，体验生活给予的感动</div>
+      </a>
+    </div>
+  </header>
+
+  <div id="content-wrap">
+    <div class="container">
+        <h1 id="art-title">哇咔财务管家｜理财模块上线，现在记账、基金、股票、理财四合一</h1>
+
+        <p>距离上次跟大家分享<a href="https://blog.ops-coffee.com/fire/wakaka-finance-app-listed-app-store.html" target="_blank">「哇咔财务管家上架AppStore」</a>的好消息刚好过去了两周，这两周里很多朋友下载使用了APP，同时还提了不少的意见和建议，我的时间全都花在了哇咔财务管家APP的打磨上，忙忙碌碌，以至于<a href="https://blog.ops-coffee.com/travel/2026-southwest.html" target="_blank">西南自驾旅行游记</a>这两周都停更了，还有朋友专程留言询问，没有鸽，接下来空闲一点会继续更新游记。虽然忙碌，但是充实，大家提的合理需求和建议，基本已经全部实现并完成上线了，除此之外还上线了一个新模块：理财</p>
+<p>之前哇咔财务管家已经有记账、基金、股票三大块模块，但我发现自己的资产里还有一块一直没地方记：<strong>银行定期、活期理财产品</strong>。这些钱散落在各个银行的 App 里，到期时间不一样、利率不一样，有的自动续期有的不续期，时间一长根本记不清自己到底有多少钱放在理财里、什么时候到期，尤其是对于我还想提前退休的，想要知道每个月躺着能收多少利息是刚需</p>
+<p>所以这次更新，我把这块补上了，现在哇咔财务管家正式升级为 <strong>记账 + 基金 + 股票 + 理财</strong> 四合一</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2026/0831.01.png" /></p>
+<p>以下尽量通俗的给大家介绍下新上线的理财模块</p>
+<h2 id="_1">理财</h2>
+<p>理财模块能做什么？简单说，就是把你所有银行定期存款、活期理财、大额存单这些低风险固定收益类产品统一管起来。主要包含了两大块的内容，其一是凭据管理，其二是存钱计划</p>
+<h3 id="_2">凭证管理</h3>
+<p>每一笔理财都是一个独立的「凭证」，你可以记录：<strong>本金和利率</strong>，支持年化利率录入，自动算利息，<strong>起息日和到期日</strong>，系统自动计算持有天数、剩余天数，<strong>计息方式和付息方式</strong>，到期一次付息、固定利率等，<strong>是否自动续期</strong>，到期提醒，不会忘记处理</p>
+<p>首页一目了然显示你的理财总资产、总本金、累计利息和综合年化收益率，每笔凭证的状态（持有中 / 已到期）也清清楚楚。点进任意一笔凭证，能看到详细的收益概览：当前年化收益率、预计到期收益、已产生利息，还有完整的操作记录流水，什么时候存的、有没有补过本金、利息入账情况，全都有迹可循</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2026/0831.01.jpg" /></p>
+<p>同时还基于这些存单数据生成了非常实用的统计报表，未来到期日历可以按月展示每笔理财的到期时间，提前规划资金安排，月度利息计划通过柱状图直观展示未来每个月的利息收入，一眼看到哪个月回款多，还有综合年化 &amp; 持有中 / 已到期分类，则让整体资产健康度一览无余。对于手头有多笔不同期限理财产品的人来说，这个报表基本就是你的个人理财日程表</p>
+<h2 id="_3">存钱计划</h2>
+<p>如果说凭证管理是把已有的理财记下来，那存钱计划就是帮你把存钱这件事变成一个可执行、可追踪的系统。这是我花心思很多的部分，因为它解决的是一个真实痛点，很多人想存钱，但不知道怎么存、坚持不下来、存了也不知道效果怎么样。所以我在里面内置了 <strong>7 种经典存钱方法</strong>，包括网上很火的12期存单法、36期存单法等等都可以在这里一站式管理</p>
+<p><img alt="" loading="lazy" src="https://static.ops-coffee.com/static/images/2026/0831.02.jpg" /></p>
+<p>我知道这些存钱方法网上都能搜到，但真正让哇咔财务管家不同的是，在这里存钱计划和理财模块是深度联动的，当你用存钱计划打卡存入一笔钱时，系统会自动生成一张理财凭证，记入你的理财资产。也就是说：你在存钱计划里打卡 → 自动生成理财凭证 → 理财总资产实时更新 → 报表里立刻体现</p>
+<p>这意味着什么？意味着你不再需要在一个 App 里记存钱目标、又在另一个 App 里记理财明细、再拿 Excel 算收益。从我想存钱到我存了多少钱再到这些钱赚了多少利息，全链路打通</p>
+<p>并且每个存钱计划都有独立的详情页，你都可以看到：<strong>完成进度条</strong>，已存多少、还差多少，视觉化呈现，<strong>预计收益 &amp; 综合年化</strong>，根据已存金额和利率实时计算，<strong>已生成凭证列表</strong>，每次打卡对应的理财凭证，点击可跳转查看详情，<strong>存钱记录时间线</strong>，每一笔存入的时间、金额，清清楚楚</p>
+<h2 id="_4">体验</h2>
+<p>现在打开哇咔财务管家，底部导航有五个 Tab：记账、基金、股票、理财、我的</p>
+<ul>
+<li><strong>记账</strong> 管日常收支，今天花了多少、还剩多少预算</li>
+<li><strong>基金</strong> 管投资组合，持仓成本、浮动盈亏、走势跟踪</li>
+<li><strong>股票</strong> 管个股交易，A股港股美股，买入卖出全自动计算</li>
+<li><strong>理财</strong> 管固定收益，定期活期、存钱计划、到期提醒</li>
+</ul>
+<p>以上这些所有数据汇聚到<strong>资产大盘</strong>，构成一张完整的家庭资产负债表，不需要在银行 App、支付宝、微信、券商 App 之间来回切换了，一个 App，全部搞定</p>
+<h2 id="_5">下载</h2>
+<p>目前 iOS 和 MacOS 版本已在 App Store 上架，搜索「哇咔财务管家」即可下载。安卓用户可以直接下载安装包，后续更新可在 App 内自助完成：</p>
+<p>哇咔财务管家：<a href="https://fire.ops-coffee.com" target="_blank">https://fire.ops-coffee.com</a></p>
+<p>APP内的绝大部分功能都是免费的，可以直接使用，想建几个账本记几个账本，想加几个分组加几个分组，想开几个计划开几个计划，这些都没有任何限制。只有云同步之类成本较高的功能，才会有VIP限制，不过VIP是可以一次买断的，购买一次终身有效，限制还有半价活动，只需 <strong>64 元</strong>，如果好用，欢迎支持</p>
+<h2 id="_6">后记</h2>
+<p>AI 让做产品这个事情的门槛降到了很低，但想把这个产品给做好，门槛还是很高的，VibeCoding 能快速的出产品，出来的产品基本可用，但大都还是 Demo 的程度，真的上线还需要很多很多的打磨，架构、性能、稳定性与安全性，这些看不见的地方是我这段时间花时间和精力最多的，单单一个同步就远比想象中更复杂，好在之前一直做技术，对它也感兴趣，深陷其中，乐此不疲</p>
+
+        <div>
+          <ul class="article-meta">
+            <li><a href="/fire/wakaka-bookkeeping-fund-stock-wealth.html">📅 2026-08-31</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="pagination">
+            <a href="https://blog.ops-coffee.com/fire/wakaka-finance-app-listed-app-store.html" class="pagination-item prev-page">
+                <span class="pagination-arrow">←</span>
+                <span class="pagination-text">上一篇：<br>哇咔财务管家，正式上架 Apple Store 啦</span>
+            </a>
+            <a href="/archive.html" class="pagination-item next-page">
+                <span class="pagination-text">下一篇：<br>文章列表</span>
+                <span class="pagination-arrow">→</span>
+            </a>
+        </div>
+
+        <div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8944257246828217"
+         data-ad-slot="6731434232" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<div class="nav-cell">
+    <script async src="https://giscus.app/client.js"
+            data-repo="ops-coffee/blog" data-repo-id="MDEwOlJlcG9zaXRvcnkxNDY4OTI0MTg="
+            data-category="Announcements" data-category-id="DIC_kwDOCMFmgs4CQar3"
+            data-mapping="pathname" data-strict="0" data-reactions-enabled="1"
+            data-emit-metadata="0" data-input-position="top" data-theme="light"
+            data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous">
+    </script>
+</div>
+
+        <div class="nav-cell">
+    <p class="nav-list-title">能看到这里一定是真爱，订阅一下吧</p>
+    <img alt="" loading="lazy" src="/static/images/wx.sou1.png" />
+</div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="copy"> © ops-coffee</div>
+
+      <div class="link">
+        <a href="/comments.html" title="给我留言" target="_blank">留言</a>
+        <a href="/friends.html" title="友情链接" target="_blank">友链</a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Umami -->
+<script defer src="https://umami.ops-coffee.cn/script.js" data-website-id="248e61f0-c324-444e-a56d-bf97ee44a8fc"></script>
+
+<!-- Google Adsense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8944257246828217" crossorigin="anonymous"></script>
+</body>
+</html>
