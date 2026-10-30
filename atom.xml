@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
   <id>https://blog.ops-coffee.com</id>
   <title>运维咖啡吧</title>
-  <updated>2026-08-31T10:21:18.902835+00:00</updated>
+  <updated>2026-10-30T00:26:43.152052+00:00</updated>
   <author>
     <name>运维咖啡吧</name>
   </author>
@@ -10,6 +10,14 @@
   <link href="https://blog.ops-coffee.com/atom.xml" rel="self"/>
   <generator>Custom CMS v1.0</generator>
   <subtitle>运维咖啡吧 的个人博客，欢迎订阅。</subtitle>
+  <entry>
+    <id>https://blog.ops-coffee.com/r/2026-southwest-road-trip-11-longjing.html</id>
+    <title>向云端｜西南自驾11 - 布依</title>
+    <updated>2026-10-30T00:26:43.152052+00:00</updated>
+    <link href="https://blog.ops-coffee.com/r/2026-southwest-road-trip-11-longjing.html"/>
+    <summary/>
+    <published>2026-10-30T00:26:43.152028+00:00</published>
+  </entry>
   <entry>
     <id>https://blog.ops-coffee.com/fire/wakaka-bookkeeping-fund-stock-wealth.html</id>
     <title>哇咔财务管家｜理财模块上线，现在记账、基金、股票、理财四合一</title>
@@ -161,13 +169,5 @@
     <link href="https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-02.html"/>
     <summary/>
     <published>2026-05-18T18:56:20.815085+00:00</published>
-  </entry>
-  <entry>
-    <id>https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-01.html</id>
-    <title>遂昌｜躲避人潮的五一自驾Day1 - 盲盒</title>
-    <updated>2026-05-17T14:37:49.899505+00:00</updated>
-    <link href="https://blog.ops-coffee.com/r/city-china-zhejiang-lishui-suichang-01.html"/>
-    <summary/>
-    <published>2026-05-17T14:37:49.860940+00:00</published>
   </entry>
 </feed>
